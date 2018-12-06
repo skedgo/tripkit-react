@@ -1,0 +1,27 @@
+.ServiceStopPopup {
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.ServiceStopPopup-name {
+  font-weight: 500;
+  color: black;
+}
+
+.ServiceStopPopup-stopId {
+  color: grey;
+}
+
+.ServiceStopPopup-link {
+  border-top: 1px solid #ECEBEB;
+  margin-top: 7px;
+  padding-top: 7px;
+}
+
+.ServiceStopPopup-popup .leaflet-popup-content-wrapper,
+.ServiceStopPopup-popup .leaflet-popup-content {
+  padding: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}

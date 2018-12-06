@@ -1,0 +1,371 @@
+.TripPlanner-queryPanel {
+  position: absolute;
+  width: 450px;
+  z-index: 20;
+}
+
+.TripPlanner-resultsAndMapPanel {
+  background-color: #f4f7fe;
+}
+
+.TripPlanner-subQueryPanel {
+  background-color: #f4f7fe;
+  padding: 20px;
+  width: 450px;
+  /* TODO: maybe get query height and set it by code to avoid different cases. */
+  margin-top: 178px;
+}
+
+.TripPlanner-queryTimePanelOpen .TripPlanner-subQueryPanel {
+  margin-top: 285px;
+}
+
+.TripPlanner-tripsView .TripPlanner-subQueryPanel {
+  margin-top: 263px;
+  /* On IE height is 205px */
+}
+
+.TripPlanner-tripsView.TripPlanner-queryTimePanelOpen .TripPlanner-subQueryPanel {
+  margin-top: 370px;
+}
+
+.TripPlanner-queryInput {
+  background-color: #0242ac;
+}
+
+.TripPlanner-queryInput,
+.TripPlanner-queryInput button {
+  color: white;
+}
+
+.TripPlanner-queryInput .QueryInput-iconAngleDown path {
+  fill: white;
+}
+
+.TripPlanner-queryInput .QueryInput-iconClock circle,
+.TripPlanner-queryInput .QueryInput-iconClock rect {
+  stroke: white;
+}
+
+.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-1 {
+  stroke: white;
+}
+
+.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-2 {
+  fill: white;
+}
+
+.TripPlanner-queryInput .QueryInput-locationPanel {
+  border-bottom-color: #6aa3fe;
+}
+
+.TripPlanner-queryInput .QueryInput-iconSwap {
+  border: 2px solid #6aa3fe;
+}
+
+.TripPlanner-queryInput .QueryInput-fromToLabel {
+  /*color: white;*/
+}
+
+.TripPlanner-queryInput .LocationBox-iconClear rect {
+  fill: white;
+}
+
+.TripPlanner-queryInput .LocationBox input {
+  color: white;
+}
+
+.TripPlanner-queryInput .LocationBox input::placeholder {
+  color: white;
+  opacity: .5;
+}
+
+.TripPlanner-queryInput .QueryInput-iconSwap path {
+  fill: white;
+}
+
+.TripPlanner-queryInput .LocationBox-iconLoading path {
+  fill: white;
+}
+
+.TripPlanner-queryInput .FavouriteBtn-iconStar-add path {
+  stroke: white;
+}
+
+.TripPlanner-queryInput .FavouriteBtn-iconStar-remove path {
+  fill: white;
+}
+
+.TripPlanner-mapBtn {
+  border: none;
+}
+
+.TripPlanner-queryFooter {
+  padding: 7px 30px;
+  background-color: #efefef;
+  border-bottom: 1px solid #ECEBEB;
+  font-size: 13px;
+  color: #414141;
+}
+
+.TripPlanner-queryFooter > div > *,
+.TripPlanner-queryFooter > button {
+  line-height: 36px!important;
+}
+
+.TripPlanner-queryFooter .FavouriteBtn-main {
+  margin-right: auto;
+}
+
+.TripPlanner-queryFooter .TripPlanner-mapBtn {
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+.TripPlanner-recentList {
+  margin-top: 30px;
+}
+
+.TripPlanner-iconMap {
+  height: 24px;
+  width: 24px;
+  color: grey;
+}
+
+.mainViewPanel {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row-reverse;
+  -webkit-flex-direction: row-reverse;
+}
+
+.avoidVerticalScroll {
+  overflow-y: hidden!important;
+}
+
+#map-main {
+  position: relative;
+}
+
+.map-canvas {
+  padding: 0;
+  -webkit-user-select: none; /* Safari 3.1+ */
+  -moz-user-select: none; /* Firefox 2+ */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Standard syntax */
+}
+
+.ReactModalPortal {
+  z-index: 1020;
+}
+
+.ReactModal__Overlay {
+  z-index: 1001;
+}
+
+.TripPlanner-disclaimer {
+  margin-top: 15px;
+}
+
+.mainViewPanel {
+  width: 100%;
+}
+
+.TripPlanner-tripSelected .LeafletMap-pinFrom,
+.TripPlanner-tripSelected .LeafletMap-pinTo {
+  display: none!important;
+}
+
+.TripPlanner-feedbackBtn {
+  position: absolute;
+  right: 5px;
+  bottom: 30px;
+  width: 25px;
+  height: 25px;
+  opacity: .5;
+  cursor: pointer;
+}
+
+.TripPlanner-feedbackTooltip .rc-tooltip-inner {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 13px;
+}
+
+@media (min-width: 801px) {
+
+  .TripPlanner-noTripsView .TripPlanner-queryFooter {
+    display: none;
+  }
+
+  .TripPlanner-mapBtn {
+    display: none;
+  }
+
+  .mainViewPanel {
+    height: 100%;
+    overflow-y: hidden!important;
+  }
+
+  .sg-container {
+    overflow-y: hidden!important;
+  }
+}
+
+@media (max-width: 800px) {
+
+  .mainViewPanel {
+    min-height: 236px;  /* Not sure if still need this: So map has a min height from init and does not break when drawing on it from start */
+  }
+
+  .mainViewPanel.TripPlanner-mapView {
+    height: 100vh;
+  }
+
+  .TripPlanner-queryPanel {
+    width: 100%;
+  }
+
+  .TripPlanner-subQueryPanel {
+    width: 100%;
+    z-index: 1;
+
+    margin-top: 0!important;
+  }
+
+  .TripPlanner-queryPanel {
+    position: relative;
+  }
+
+  .sg-container {
+    width: 100%;
+  }
+
+  .TripPlanner-noMapView .sg-container {
+    position: absolute;
+    height: 0;   /* hide map container, but preserve map size */
+    overflow: hidden;
+    z-index: 0;  /* redundant, to show it behind TripPlanner-subQueryPanel */
+  }
+
+  .TripPlanner-noMapView .TripPlanner-mapMain {
+    /* So hidden map height is 100vh - 227px (screen - query size), the same as the height when displayed, and so
+     * 'already fits' checks, when map is hidden, are ok. TODO: maybe get query height and set it by code to avoid
+     * different cases */
+    padding-top: 227px;
+    height: 100vh;  /* preserve map size */
+  }
+
+  .TripPlanner-mapView .TripPlanner-subQueryPanel {
+    display: none;
+  }
+
+  .TripPlanner-mapView .sg-container {
+    position: relative;
+    /*z-index: 10;*/
+  }
+
+  .TripPlanner-favsBtnPanel {
+    -webkit-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+
+  .TripPlanner-linksPanel {
+    display: -webkit-flex;
+    display: flex;
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+  }
+
+  .TripPlanner-noTripsView .TripPlanner-linksPanel {
+    display: none;
+  }
+
+  .TripPlanner-noTripsView .TripPlanner-surveyMonkey {
+    display: none;
+  }
+
+}
+
+@media all and (max-width: 800px) and (-ms-high-contrast: none),
+       (max-width: 800px) and (-ms-high-contrast: active) {
+  /* IE10+ CSS styles go here */
+  .TripPlanner-mapView .queryAndResultsPanel {
+    height: inherit;
+  }
+}
+
+/*@media all and (min-width: 801px) and (-ms-high-contrast: none),*/
+/*(min-width: 801px) and (-ms-high-contrast: active) {*/
+  /* IE10+ CSS styles go here */
+@media (min-width: 801px) {
+  .TripPlanner-resultsAndMapPanel {
+    height: 100%; /* If don't set height it grows beyond parent and scroll cuts off. IE and Firefox */
+  }
+}
+
+@media (max-width: 400px) {
+  .TripPlanner-queryFooter {
+    padding: 7px 10px;
+    background-color: #efefef;
+    border-bottom: 1px solid #ECEBEB;
+  }
+}
+
+/* spin */
+
+.sg-animate-spin {
+  -webkit-animation-name: spin;
+  -webkit-animation-duration: 1500ms;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-timing-function: linear;
+
+  -moz-animation-name: spin;
+  -moz-animation-duration: 1500ms;
+  -moz-animation-iteration-count: infinite;
+  -moz-animation-timing-function: linear;
+
+  -ms-animation-name: spin;
+  -ms-animation-duration: 1500ms;
+  -ms-animation-iteration-count: infinite;
+  -ms-animation-timing-function: linear;
+
+  animation-name: spin;
+  animation-duration: 1500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@-ms-keyframes spin {
+  from {
+    -ms-transform: rotate(0deg);
+  } to {
+      -ms-transform: rotate(360deg);
+    }
+}
+@-moz-keyframes spin {
+  from {
+    -moz-transform: rotate(0deg);
+  } to {
+      -moz-transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+  } to {
+      -webkit-transform: rotate(360deg);
+    }
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  } to {
+      transform: rotate(360deg);
+    }
+}

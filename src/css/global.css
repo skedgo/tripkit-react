@@ -1,0 +1,144 @@
+.gl-flex {
+    display: -webkit-flex;
+    display: flex;
+}
+
+.gl-center {
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+
+.gl-align-center {
+    align-items: center;
+    -webkit-align-items: center;
+}
+
+.gl-align-start {
+    align-items: flex-start;
+    -webkit-align-items: flex-start;
+}
+
+.gl-align-stretch {
+    align-items: stretch;
+    -webkit-align-items: stretch;
+}
+
+.gl-align-self-start {
+    align-self: flex-start;
+    -webkit-align-self: flex-start;
+}
+
+.gl-align-self-center {
+    align-self: center;
+    -webkit-align-self: center;
+}
+
+.gl-column {
+    flex-direction: column;
+    -webkit-flex-direction: column;
+}
+
+.gl-grow {
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+}
+
+.gl-no-shrink {
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+}
+
+.gl-space-between {
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+}
+
+.gl-space-around {
+    justify-content: space-around;
+    -webkit-justify-content: space-around;
+}
+
+.gl-justify-start {
+    justify-content: flex-start;
+    -webkit-justify-content: flex-start;
+}
+
+.gl-justify-end {
+    justify-content: flex-end;
+    -webkit-justify-content: flex-end;
+}
+
+.gl-pointer {
+    cursor: pointer;
+}
+
+.gl-input {
+    line-height: 30px;
+    font-size: 13px;
+    border: 1px solid lightgray;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: white;
+}
+
+.gl-display-none {
+    display: none;
+}
+
+.gl-hidden {
+    visibility: hidden;
+}
+
+.gl-svg-target-1 {
+
+}
+
+.gl-svg-target-2 {
+
+}
+
+.gl-svg-path-fill-currColor path {
+    fill: currentColor;
+}
+
+.gl-svg-path-stroke-currColor path {
+    stroke: currentColor;
+}
+
+.gl-charSpace {
+    margin-right: .5ch;
+}
+
+.gl-charSpaceLeft {
+    margin-left: .5ch;
+}
+
+.gl-overflow-ellipsis {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.gl-scrollable-y {
+    overflow-y: auto;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    /* IE10+ CSS styles go here */
+    .gl-scrollable-y {
+        overflow-x: hidden;
+    }
+}
+
+.gl-bold {
+    font-weight: bold;
+}
+
+.gl-rotate180 {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
+}

@@ -1,0 +1,33 @@
+.SegmentPopup {
+  padding: 7px 10px;
+  font-size: 13px;
+}
+
+.SegmentPopup-location {
+  font-weight: 500;
+  color: black;
+}
+
+.SegmentPopup-name {
+  font-weight: 500;
+  color: black;
+  white-space: nowrap;
+}
+
+.SegmentPopup-stopId {
+  color: grey;
+}
+
+.SegmentPopup-link {
+  border-top: 1px solid #ECEBEB;
+  margin-top: 7px;
+  padding-top: 7px;
+}
+
+.SegmentPopup-popup .leaflet-popup-content-wrapper,
+.SegmentPopup-popup .leaflet-popup-content {
+  padding: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}

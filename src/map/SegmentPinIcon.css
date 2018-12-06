@@ -1,0 +1,45 @@
+.SegmentPinIcon-parent {
+}
+
+.SegmentPinIcon-parent,
+.SegmentPinIcon-parent > div {
+  outline: none!important;
+}
+
+.SegmentPinIcon-parent.firstSegment:hover svg {
+  color: grey!important;
+}
+
+.SegmentPinIcon-parent.arriveSegment:hover svg {
+  color: #0242ac!important;
+}
+
+.SegmentPinIcon-parent.firstSegment:hover img,
+.SegmentPinIcon-parent.arriveSegment:hover img {
+  display: none;
+}
+
+.SegmentPinIcon-pin {
+  position: initial!important;
+  height: 35px;
+  width: 35px;
+  outline: none!important;
+}
+
+.SegmentPinIcon-whiteFill path {
+    fill: white;
+}
+
+.SegmentPinIcon-transport {
+  position: absolute;
+  z-index: 2;
+  top: 4px;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+  -moz-transform: translate(-50%);
+  -ms-transform: translate(-50%);
+  -o-transform: translate(-50%);
+  transform: translate(-50%);
+  width: 17px;
+  height: 17px;
+}

@@ -1,0 +1,69 @@
+.ResultItem {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  padding: 12px 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ResultItem {
+  border-bottom: 1px solid #cbcbcb;
+  margin: 0 5px;
+  color: #4d4c4d;
+}
+
+.ResultItem-icon {
+  margin-left: 10px;
+  height: 18px;
+  width: auto;
+}
+
+.ResultItem:last-child {
+  border-bottom: none;
+}
+
+.ResultItem.currLoc {
+  color: #0242ac;
+}
+
+.ResultItem.currLoc img {
+  margin-left: 10px;
+}
+
+.ResultItem-iconPin {
+  margin: 0 5px;
+  width: 17px;
+  height: 17px;
+}
+
+.ResultItem-address {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  justify-content: flex-start;
+  -webkit-justify-content: flex-start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.ResultItem-mainAddress {
+  color: black;
+}
+
+.ResultItem-matchingSubstr {
+  font-weight: bold;
+}
+
+.ResultItem-secondaryAddress {
+  margin-left: 5px;
+  color: grey;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: initial;
+}
