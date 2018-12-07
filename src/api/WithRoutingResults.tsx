@@ -6,17 +6,17 @@ import {ITripPlannerProps as RResultsConsumerProps} from "../trip-planner/ITripP
 import RoutingQuery from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
 
+interface IWithRoutingResultsProps {
+    urlQuery?: RoutingQuery;
+}
+
+interface IWithRoutingResultsState {
+    query: RoutingQuery;
+    trips: Trip[] | null;
+    waiting: boolean;
+}
+
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
-
-    interface IWithRoutingResultsProps {
-        urlQuery?: RoutingQuery;
-    }
-
-    interface IWithRoutingResultsState {
-        query: RoutingQuery;
-        trips: Trip[] | null;
-        waiting: boolean;
-    }
 
     return class WithRoutingResults extends React.Component<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps, IWithRoutingResultsState> {
 
@@ -78,7 +78,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
         }
 
-        private checkWaiting(waitingState: any) {
+        public checkWaiting(waitingState: any) {
             if (!this.state.query.sameApiQueries(waitingState.query)) {
                 return;
             }
@@ -88,11 +88,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
         }
 
-        private alreadyAnEquivalent(newTrip: Trip, trips:Trip[]): boolean {
+        public alreadyAnEquivalent(newTrip: Trip, trips:Trip[]): boolean {
             return !!trips.find((trip: Trip) => this.equivalentTrips(trip, newTrip));
         }
 
-        private equivalentTrips(tripA: Trip, tripB: Trip): boolean {
+        public equivalentTrips(tripA: Trip, tripB: Trip): boolean {
             return tripA.depart === tripB.depart &&
                 tripA.arrive === tripB.arrive &&
                 tripA.weightedScore === tripB.weightedScore &&
@@ -123,3 +123,4 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
 }
 
 export default withRoutingResults;
+export {IWithRoutingResultsProps, IWithRoutingResultsState};

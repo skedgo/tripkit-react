@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "build/dist",
+    "declaration": true,
+    "outDir": "./dist",
     "module": "esnext",
     "target": "es5",
     "lib": ["es6", "dom"],
     "sourceMap": true,
-    "allowJs": true,
+//    "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
     "rootDir": "src",
@@ -24,13 +25,13 @@
   "exclude": [
     "node_modules",
     "build",
+    "dist",
     "scripts",
     "acceptance-tests",
     "webpack",
     "jest",
     "src/setupTests.ts",
     "public/embed.js",
-    "src/polyfills-ie11.js",
     "public/Journey Planner Staging - Transport Canberra_files",
     "public/Map - Transport Canberra_files"
   ]

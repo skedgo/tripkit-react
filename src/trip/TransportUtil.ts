@@ -2,6 +2,8 @@ import ModeInfo from "../model/trip/ModeInfo";
 import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import Constants from "../util/Constants";
+import Trip from "../model/trip/Trip";
+import Segment from "../model/trip/Segment";
 
 class TransportUtil {
 
@@ -113,6 +115,27 @@ class TransportUtil {
             return Math.floor(distInMetres/50) * 50 + " m";
         }
         return (distInMetres/1000).toFixed(1) + " km";
+    }
+
+    public static getRepresentativeColor(trip: Trip): string | null {
+        const representativeSegment = this.getRepresentativeSegment(trip);
+        const representativeColor = representativeSegment !== null &&
+        representativeSegment.modeInfo !== null ? TransportUtil.getTransportColor(representativeSegment.modeInfo) : "black";
+        return representativeColor !== null ? representativeColor : "black";
+    }
+
+    private static getRepresentativeSegment(trip: Trip): Segment | null {
+        let representativeSegment = null;
+        for (const segment of trip.segments) {
+            if (segment.isSchoolbus()) {
+                representativeSegment = segment;
+                break;
+            }
+            if (representativeSegment === null || segment.getDuration() > representativeSegment.getDuration()) {
+                representativeSegment = segment;
+            }
+        }
+        return representativeSegment;
     }
 }
 

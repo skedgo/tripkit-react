@@ -1,8 +1,6 @@
 import * as React from "react";
 import './TripPlanner.css'
 import '../css/act-app.css';
-import '../jslib/retina';
-import '../util/Usersnap';
 import RegionsData from "../data/RegionsData";
 import LeafletMap, {default as MboxMap} from "../map/MboxMap";
 import LatLng from "../model/LatLng";
@@ -38,7 +36,6 @@ import iconFeedback from "../images/ic-feedback.svg";
 import copy from 'copy-to-clipboard';
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
-import ACTTripRow from "../trip/ACTTripRow";
 import ITripPlannerProps from "./ITripPlannerProps";
 import TripGroup from "../model/trip/TripGroup";
 
@@ -243,8 +240,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                            waiting={this.props.waiting}
                                            eventBus={this.eventBus}
                                            className="gl-no-shrink"
-                                           renderTrip={<P extends TripRowProps>(props: P) =>
-                                               true ? <TripRow {...props}/> : <ACTTripRow {...props}/>}
+                                           renderTrip={<P extends TripRowProps>(props: P) => <TripRow {...props}/>}
                                 />
                             }
                             <TPlannerDisclaimer className="TripPlanner-disclaimer gl-no-shrink" attribution={true}/>

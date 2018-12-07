@@ -7,8 +7,7 @@
       "src/jslib/*.js",
       "src/jslib/**/*.js",
       "public/js/*.js",
-      "public/js/**/*.js",
-      "src/polyfills-ie11.js"
+      "public/js/**/*.js"
     ]
   },
   "rules": {
