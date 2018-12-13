@@ -38,6 +38,7 @@ import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 import ITripPlannerProps from "./ITripPlannerProps";
 import TripGroup from "../model/trip/TripGroup";
+import TripDetail from "../trip/TripDetail";
 
 interface IState {
     map?: LeafletMap;
@@ -240,7 +241,12 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                            waiting={this.props.waiting}
                                            eventBus={this.eventBus}
                                            className="gl-no-shrink"
-                                           renderTrip={<P extends TripRowProps>(props: P) => <TripRow {...props}/>}
+                                           renderTrip={<P extends TripRowProps>(props: P) =>
+                                               <div key={(props as any).key}>
+                                                   <TripRow {...props}/>
+                                                   <TripDetail value={props.value}/>
+                                               </div>
+                                           }
                                 />
                             }
                             <TPlannerDisclaimer className="TripPlanner-disclaimer gl-no-shrink" attribution={true}/>

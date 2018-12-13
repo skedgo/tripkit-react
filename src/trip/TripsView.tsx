@@ -54,8 +54,8 @@ class TripsView extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         return (
             <div className={"TripsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
-                {this.props.values.map((trip: Trip, index: number) => {
-                    return this.props.renderTrip(
+                {this.props.values.map((trip: Trip, index: number) =>
+                    this.props.renderTrip(
                         { value: trip,
                             className: trip === this.props.value ? "selected" : undefined,
                             onClick: this.props.onChange ? () => this.props.onChange!(trip) : undefined,
@@ -64,8 +64,8 @@ class TripsView extends React.Component<IProps, {}> {
                             eventBus: this.props.eventBus,
                             key: index + trip.getKey(),
                             ref: (el: any) => this.rowRefs[index] = el
-                    });
-                })}
+                        })
+                )}
                 {this.props.waiting ?
                     <IconSpin className="TripsView-iconLoading sg-animate-spin gl-align-self-center" focusable="false"/> : null}
             </div>

@@ -4,39 +4,18 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
 import "./TripSegmentDetail.css"
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import StopLocation from "../model/StopLocation";
-import StopsData from "../data/StopsData";
 import Constants from "../util/Constants";
-import NetworkUtil from "../util/NetworkUtil";
 import TripSegmentSteps from "./TripSegmentSteps";
 import Street from "../model/trip/Street";
+import {default as SegmentDescription, SegmentDescriptionProps} from "./SegmentDescription";
 
 interface IProps {
     value: Segment;
     end?: boolean;
+    renderDescr?: <P extends SegmentDescriptionProps>(segmentDescrProps: P) => JSX.Element;
 }
 
-interface IState {
-    startStop: StopLocation | null;
-}
-
-class TripSegmentDetail extends React.Component<IProps, IState> {
-
-    private stopCancellablePromise: any;
-
-    constructor(props: Readonly<IProps>) {
-        super(props);
-        this.state = {
-            startStop: null
-        };
-        if (this.props.value.stopCode) {
-            this.stopCancellablePromise = NetworkUtil.makeCancelable(StopsData.instance.getStopFromCode("AU_ACT_Canberra", this.props.value.stopCode));
-            this.stopCancellablePromise.promise.then((stopLocation: StopLocation) => this.setState({startStop: stopLocation}))
-                .catch((error: any) => {
-                    // avoid console error.
-                });
-        }
-    }
+class TripSegmentDetail extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.value;
@@ -45,6 +24,9 @@ class TripSegmentDetail extends React.Component<IProps, IState> {
         const circleBg = modeInfo.remoteDarkIcon || modeInfo.remoteIcon === null;
         let transportColor = TransportUtil.getTransportColor(modeInfo);
         transportColor = transportColor !== null ? transportColor : "black";
+        const prevSegment = segment.isFirst() ? null : segment.trip.segments[segment.trip.segments.indexOf(segment) - 1];
+        let prevTransportColor = prevSegment ? TransportUtil.getTransportColor(prevSegment.modeInfo!) : null;
+        prevTransportColor = prevTransportColor !== null ? prevTransportColor : "black";
         const fromAddress = !this.props.end ? segment.from.address : segment.to.address;
         let stops: ServiceStopLocation[] | null = null;
         if (segment.shapes) {
@@ -58,33 +40,45 @@ class TripSegmentDetail extends React.Component<IProps, IState> {
         if (stops) {
             stops = stops.slice(1, stops.length - 1); // remove the first and last stop.
         }
-        const nonTCService = segment.isNonTCService();
+        const renderDescr = this.props.renderDescr ? this.props.renderDescr :
+            <P extends SegmentDescriptionProps>(props: P) => <SegmentDescription {...props}/>;
         return (
             <div className="TripSegmentDetail gl-flex gl-column" tabIndex={0}>
-                <div className="gl-flex gl-align-center">
-                    <div className="TripSegmentDetail-timePanel">
+                <div className="gl-flex gl-align-center gl-align-stretch">
+                    <div className="TripSegmentDetail-timePanel gl-flex">
                         {startTime}
                     </div>
-                    <div className="TripSegmentDetail-circlePanel gl-flex gl-center"
-                         aria-label="at"
-                    >
+                    <div className="TripSegmentDetail-circlePanel gl-flex gl-center gl-align-center gl-column gl-no-shrink"
+                         aria-label="at">
+                        <div className="TripSegmentDetail-line TripSegmentDetail-preStopLine gl-grow"
+                             style={{
+                                 borderColor: prevTransportColor,
+                                 // borderLeftStyle: prevSegment.isWalking() ? "dashed" : undefined
+                             }}/>
                         <div className={"TripSegmentDetail-circle"}
                              style={{borderColor: transportColor}}/>
+                        <div className="TripSegmentDetail-line TripSegmentDetail-postStopLine gl-grow"
+                             style={{
+                                 borderColor: transportColor,
+                                 // borderLeftStyle: segment.isWalking() ? "dashed" : undefined
+                             }}/>
                     </div>
-                    <div className="TripSegmentDetail-title gl-grow">{fromAddress}</div>
+                    <div className="TripSegmentDetail-title gl-flex gl-align-center gl-grow">{fromAddress}</div>
                     {
                         segment.bicycleAccessible === true ?
                             <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")}
                                  alt="Bicycle accessible trip"
                                  role="img"
-                                 className="TripRow-bikeRackIcon"
+                                 className="TripRow-bikeRackIcon gl-align-self-center"
                             /> : null
                     }
                     {
                         segment.wheelchairAccessible === true ?
                             <img src={Constants.absUrl("/images/modeicons/ic-wheelchair.svg")}
                                  alt="Wheelchair accessible"
-                                 role="img"/> : null
+                                 role="img"
+                                 className="gl-align-self-center"
+                            /> : null
                     }
                 </div>
                 {!this.props.end ?
@@ -107,41 +101,7 @@ class TripSegmentDetail extends React.Component<IProps, IState> {
                                          // borderLeftStyle: segment.isWalking() ? "dashed" : undefined
                                      }}/>
                             </div>
-                            <div className="TripSegmentDetail-descrPanel">
-                                {segment.stopCode ?
-                                    <div className="TripSegmentDetail-stopId">Stop ID: {segment.stopCode}</div> : null}
-                                { this.state.startStop && this.state.startStop.url ?
-                                    <a href={this.state.startStop.url}
-                                       target={"_blank"}
-                                       className="TripSegmentDetail-stopMapLink gl-link">
-                                        View Stop Map
-                                    </a> : null }
-                                <div className="TripSegmentDetail-subTitle">
-                                    {segment.getAction()}
-                                </div>
-                                <div className="TripSegmentDetail-notes text">
-                                    {segment.getNotes().map((note: string, i: number) =>
-                                        <div key={i}>{note}</div>
-                                    )}
-                                </div>
-                                { segment.isMyWay() ?
-                                    <div className="TripSegmentDetail-banner gl-flex gl-align-center text">
-                                        <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
-                                             alt="My way ticketing"
-                                             role="img"
-                                             className="TripSegmentDetail-myWayIcon"
-                                        />
-                                        This is a MyWay service
-                                    </div> : null }
-                                { segment.isSchoolbus() ?
-                                    <div className="TripSegmentDetail-banner gl-flex gl-align-center text">
-                                        This is a school service
-                                    </div> : null }
-                                { nonTCService ?
-                                    <div className="TripSegmentDetail-banner gl-flex gl-align-center text">
-                                        This is a non TC service
-                                    </div> : null }
-                            </div>
+                            {renderDescr({value: this.props.value})}
                         </div>
                         { stops !== null && stops.length > 0 ?
                             <TripSegmentSteps
@@ -179,12 +139,7 @@ class TripSegmentDetail extends React.Component<IProps, IState> {
             </div>
         );
     }
-
-    public componentWillUnmount(): void {
-        if (this.stopCancellablePromise) {
-            this.stopCancellablePromise.cancel();
-        }
-    }
 }
 
 export default TripSegmentDetail;
+export {IProps as SegmentDetailProps};

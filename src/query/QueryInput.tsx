@@ -27,10 +27,10 @@ import DeviceUtil from "../util/DeviceUtil";
 interface IProps {
     map?: LeafletMap;
     value?: RoutingQuery;
-    bounds?: BBox;
-    focusLatLng?: LatLng;
     onChange?: (routingQuery: RoutingQuery) => void;
     onGoClicked?: (routingQuery: RoutingQuery) => void;
+    bounds?: BBox;
+    focusLatLng?: LatLng;
     className?: string;
     isTripPlanner?: boolean;
     bottomRightComponent?: ReactElement<any>;
