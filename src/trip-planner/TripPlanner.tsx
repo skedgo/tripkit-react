@@ -24,7 +24,6 @@ import IconTrips from "-!svg-react-loader!../images/ic-bars-solid.svg";
 import IconFav from "-!svg-react-loader!../images/ic-star-solid.svg";
 import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
-import TPlannerDisclaimer from "../query-widget/TPlannerDisclaimer";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import TripRow, {IProps as TripRowProps} from "../trip/TripRow";
 import ReactResizeDetector from "react-resize-detector";
@@ -183,16 +182,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                         <div className={"TripPlanner-queryFooter gl-flex gl-column gl-no-shrink"}>
                             <div className={"TripPlanner-favsBtnPanel gl-flex gl-align-center gl-no-shrink"}>
                                 <FavouriteBtn favourite={favourite}/>
-                                <div className="TripPlanner-linksPanel">
-                                    <a href={TPlannerDisclaimer.REALTIME_URL}
-                                       target="_blank"
-                                       className="gl-link"
-                                    >Real-time</a>
-                                    <a href={TPlannerDisclaimer.DISRUPTIONS_URL}
-                                       target="_blank"
-                                       className="gl-link"
-                                    >Service disruptions</a>
-                                </div>
                             </div>
                             <button className="TripPlanner-mapBtn gl-link gl-flex gl-align-center"
                                     onClick={() => this.setState(prevState => {
@@ -243,7 +232,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                            }
                                 />
                             }
-                            <TPlannerDisclaimer className="TripPlanner-disclaimer gl-no-shrink" attribution={true}/>
                         </div>
                         <div className="sg-container gl-flex gl-grow" aria-hidden={true} tabIndex={-1}>
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">

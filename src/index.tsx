@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import QueryWidget from './query-widget/QueryWidget';
+import './css/global.css';
+import './css/device.css';
 import Location from "./model/Location";
 // import registerServiceWorker from './registerServiceWorker';
 import { unregister } from './registerServiceWorker';
@@ -18,27 +19,6 @@ import withRoutingResults from "./api/WithRoutingResults";
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
 const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
-
-// TODO: switch ACT's key by "" once embedding page sets it (Bug #10423).
-function renderQueryInputWidget(containerId: string = "act-react-root", tripgoKey: string = "", tripPlannerUrl?: string) {
-    let plannerUrl = tripPlannerUrl;
-    if (!plannerUrl && queryMap) {
-        plannerUrl = queryMap.plannerUrl;
-    }
-    if (plannerUrl && queryMap["beta-server"] !== undefined) {
-        plannerUrl += (plannerUrl.includes("?") ? "&" : "?") + "beta-server=" + queryMap["beta-server"];
-    }
-    if (plannerUrl && queryMap["beta-key"] !== undefined) {
-        plannerUrl += (plannerUrl.includes("?") ? "&" : "?") + "beta-key=" + queryMap["beta-key"];
-    }
-    TripGoApi.apiKey = tripgoKey;
-    const containerElement = document.getElementById(containerId) as HTMLElement;
-    containerElement.className = "app-style";
-    ReactDOM.render(
-        <QueryWidget plannerUrl={plannerUrl}/>, containerElement
-    );
-    DeviceUtil.initCss();
-}
 
 function renderTripPlanner(containerId: string = "act-react-root", tripgoKey: string = "") {
     let routingQuery: RoutingQuery | undefined;
@@ -71,17 +51,7 @@ TripGoApi.isBetaServer = queryMap["beta-server"] !== "false";
 // Render app based on 'app' query param when hitting deploy root
 const elementId = "act-react-root";
 if (document.getElementById(elementId)) {
-    if (queryMap.app) {
-        if (queryMap.app === "queryInput") {
-            renderQueryInputWidget(elementId, 'd4d074e6d666eb24b27f93985834fe7a');
-        } else { // queryMap.app === "tripPlanner"
-            renderTripPlanner(elementId, 'd4d074e6d666eb24b27f93985834fe7a');
-        }
-    } else {    // render trip planner by default
-        if (document.getElementById(elementId)) {
-            renderTripPlanner(elementId, 'd4d074e6d666eb24b27f93985834fe7a');
-        }
-    }
+    renderTripPlanner(elementId, 'd4d074e6d666eb24b27f93985834fe7a');
 }
 
 // TODO: re-enable for production
@@ -89,14 +59,11 @@ if (document.getElementById(elementId)) {
 // TODO: to unregister service worker
 unregister();
 
-Util.global.renderQueryInputWidget = renderQueryInputWidget;
 Util.global.renderTripPlanner = renderTripPlanner;
 
 export {default as RegionsData} from "./data/RegionsData";
 export {default as TripGoApi} from "./api/TripGoApi";
 export {default as QueryInput} from "./query/QueryInput";
-export {default as QueryWidget} from "./query-widget/QueryWidget";
-export {default as TPlannerDisclaimer} from "./query-widget/TPlannerDisclaimer";
 export {default as DeviceUtil} from "./util/DeviceUtil";
 export {default as Util} from "./util/Util";
 export {default as Constants} from "./util/Constants";
