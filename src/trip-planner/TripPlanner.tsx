@@ -194,12 +194,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     >Service disruptions</a>
                                 </div>
                             </div>
-                            <div className="TripPlanner-surveyMonkey">
-                                Please help us improve by completing a &nbsp;
-                                <a href="https://www.surveymonkey.com/r/JourneyPlannerSurvey"
-                                   target="_blank"
-                                   className="gl-link">short survey</a>
-                            </div>
                             <button className="TripPlanner-mapBtn gl-link gl-flex gl-align-center"
                                     onClick={() => this.setState(prevState => {
                                         if (!prevState.mapView && this.state.map) {

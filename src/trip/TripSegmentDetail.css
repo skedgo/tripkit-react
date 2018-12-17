@@ -102,10 +102,6 @@
 .TripSegmentDetail-icon {
   width: 25px;
   height: 25px;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  padding: 3px;
 }
 
 .TripSegmentDetail-banner {

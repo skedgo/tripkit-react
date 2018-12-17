@@ -286,10 +286,6 @@
     display: none;
   }
 
-  .TripPlanner-noTripsView .TripPlanner-surveyMonkey {
-    display: none;
-  }
-
 }
 
 @media all and (max-width: 800px) and (-ms-high-contrast: none),

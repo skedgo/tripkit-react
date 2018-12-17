@@ -1,99 +1,36 @@
 import FavouriteTrip from "../model/FavouriteTrip";
-import {JsonConvert} from "json2typescript";
-import {EventEmitter, EventSubscription} from "fbemitter";
 import Options from "../model/Options";
+import LocalStorageItemArray from "./LocalStorageItemArray";
+import Util from "../util/Util";
+import Location from "../model/Location";
 
-class FavouritesData {
+class FavouritesData extends LocalStorageItemArray<FavouriteTrip> {
 
     private static _instance: FavouritesData;
     private static _recInstance: FavouritesData;
 
-    private eventEmitter: EventEmitter = new EventEmitter();
-
     public static get instance(): FavouritesData {
         if (!this._instance) {
-            this._instance = new FavouritesData( "FAVOURITES");
+            this._instance = new FavouritesData(FavouriteTrip,"FAVOURITES");
         }
         return this._instance;
     }
 
     static get recInstance(): FavouritesData {
         if (!this._recInstance) {
-            this._recInstance = new FavouritesData("RECENT");
+            this._recInstance = new FavouritesData(FavouriteTrip, "RECENT");
         }
         return this._recInstance;
     }
 
-
-    constructor(LOCAL_STORAGE_KEY: string) {
-        this.LOCAL_STORAGE_KEY = LOCAL_STORAGE_KEY;
-    }
-
-    private readonly LOCAL_STORAGE_KEY: string;
-
-    public addChangeListener(callback: (favourites: FavouriteTrip[]) => void): EventSubscription {
-        return this.eventEmitter.addListener('change', callback);
-    }
-
-    private fireChangeEvent() {
-        this.eventEmitter.emit('change', this.loadFromLS());
-    }
-
-    public get(): FavouriteTrip[] {
-        return this.loadFromLS();
-    }
-
-    public add(favourite: FavouriteTrip, callback?: () => void) {
-        const favourites = this.loadFromLS();
-        const foundFavIndex = favourites.findIndex((element: FavouriteTrip) => favourite.getKey() === element.getKey());
-        if (foundFavIndex !== -1) {
-            favourites.splice(foundFavIndex, 1);
+    public add(elem: FavouriteTrip): void {
+        if (elem.from.isCurrLoc()) {
+            elem = Util.iAssign(elem, {from: Location.createCurrLoc()})
         }
-        favourites.unshift(favourite);
-        this.saveToLS(favourites);
-        if (callback) {
-            callback();
+        if (elem.to.isCurrLoc()) {
+            elem = Util.iAssign(elem, {to: Location.createCurrLoc()})
         }
-        this.fireChangeEvent();
-    }
-
-    public remove(favourite: FavouriteTrip, callback?: () => void) {
-        const favourites = this.loadFromLS();
-        const foundFavIndex = favourites.findIndex((element: FavouriteTrip) => favourite.getKey() === element.getKey());
-        if (foundFavIndex !== -1) {
-            favourites.splice(foundFavIndex, 1);
-            this.saveToLS(favourites);
-        }
-        if (callback) {
-            callback();
-        }
-        this.fireChangeEvent();
-    }
-
-    public has(favourite: FavouriteTrip): boolean {
-        const favourites = this.loadFromLS();
-        const foundFavIndex = favourites.findIndex((element: FavouriteTrip) => favourite.getKey() === element.getKey());
-        return foundFavIndex !== -1;
-    }
-
-    private loadFromLS(): FavouriteTrip[] {
-        const favouritesS = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-        if (favouritesS === null) {
-            return [];
-        }
-        try {
-            const favouritesJson = JSON.parse(favouritesS);
-            const jsonConvert: JsonConvert = new JsonConvert();
-            return favouritesJson.map((favouriteJson: object) => jsonConvert.deserialize(favouriteJson, FavouriteTrip));
-        } catch (e) {
-            alert("favourites format error");
-            return [];
-        }
-    }
-
-    private saveToLS(favourites: FavouriteTrip[]) {
-        const jsonConvert: JsonConvert = new JsonConvert();
-        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(jsonConvert.serialize(favourites)));
+        super.add(elem);
     }
 
     // private static getTestFavourites(): FavouriteTrip[] {

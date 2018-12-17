@@ -4,7 +4,6 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
 import "./TripSegmentDetail.css"
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import Constants from "../util/Constants";
 import TripSegmentSteps from "./TripSegmentSteps";
 import Street from "../model/trip/Street";
 import {default as SegmentDescription, SegmentDescriptionProps} from "./SegmentDescription";
@@ -13,6 +12,8 @@ interface IProps {
     value: Segment;
     end?: boolean;
     renderDescr?: <P extends SegmentDescriptionProps>(segmentDescrProps: P) => JSX.Element;
+    renderIcon?: <P extends {value: Segment}>(props: P) => JSX.Element;
+    renderTitle?: <P extends {value: Segment}>(props: P) => JSX.Element;
 }
 
 class TripSegmentDetail extends React.Component<IProps, {}> {
@@ -21,7 +22,6 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
         const segment = this.props.value;
         const startTime = DateTimeUtil.momentTZTime((!this.props.end ? segment.startTime : segment.endTime) * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
-        const circleBg = modeInfo.remoteDarkIcon || modeInfo.remoteIcon === null;
         let transportColor = TransportUtil.getTransportColor(modeInfo);
         transportColor = transportColor !== null ? transportColor : "black";
         const prevSegment = segment.isFirst() ? null : segment.trip.segments[segment.trip.segments.indexOf(segment) - 1];
@@ -63,36 +63,20 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                                  // borderLeftStyle: segment.isWalking() ? "dashed" : undefined
                              }}/>
                     </div>
-                    <div className="TripSegmentDetail-title gl-flex gl-align-center gl-grow">{fromAddress}</div>
-                    {
-                        segment.bicycleAccessible === true ?
-                            <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")}
-                                 alt="Bicycle accessible trip"
-                                 role="img"
-                                 className="TripRow-bikeRackIcon gl-align-self-center"
-                            /> : null
-                    }
-                    {
-                        segment.wheelchairAccessible === true ?
-                            <img src={Constants.absUrl("/images/modeicons/ic-wheelchair.svg")}
-                                 alt="Wheelchair accessible"
-                                 role="img"
-                                 className="gl-align-self-center"
-                            /> : null
+                    {this.props.renderTitle ? this.props.renderTitle({value: this.props.value}) :
+                        <div className="TripSegmentDetail-title gl-flex gl-align-center gl-grow">{fromAddress}</div>
                     }
                 </div>
                 {!this.props.end ?
                     <div>
                         <div className="gl-flex">
                             <div className="TripSegmentDetail-iconPanel gl-flex gl-center gl-align-center">
-                                <img src={TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, true)}
-                                     className={"TripSegmentDetail-icon " + (circleBg ? " TrackTransport-onDark" : "")}
-                                     aria-hidden={true}
-                                     style={{
-                                         backgroundColor: circleBg ? transportColor : "none",
-                                         border: !circleBg ? "1px solid " + transportColor : "none",
-                                     }}
-                                />
+                                {this.props.renderIcon ? this.props.renderIcon({value: segment}) :
+                                    <img src={TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, false)}
+                                         className="TripSegmentDetail-icon"
+                                         aria-hidden={true}
+                                    />
+                                }
                             </div>
                             <div className="TripSegmentDetail-linePanel gl-flex gl-center">
                                 <div className="TripSegmentDetail-line"

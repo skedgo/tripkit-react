@@ -22,6 +22,7 @@
       "allow-leading-underscore",
       "allow-pascal-case"
     ],
-    "object-literal-shorthand": false
+    "object-literal-shorthand": false,
+    "max-classes-per-file": [true, 2]
   }
 }

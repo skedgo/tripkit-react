@@ -50,7 +50,14 @@ class FavouriteTrip {
     }
 
     public getKey(): string {
-        return this.from.getKey() + this.to.getKey();
+        return (this.from.isCurrLoc() ? "CurrLoc" : this.from.getKey()) + (this.to.isCurrLoc() ? "CurrLoc" : this.to.getKey());
+    }
+
+    public equals(other: any): boolean {
+        if (other === undefined || other === null || other.constructor.name !== this.constructor.name) {
+            return false;
+        }
+        return this.getKey() === other.getKey();
     }
 }
 
