@@ -2,7 +2,6 @@ import * as React from "react";
 import './TripPlanner.css'
 import '../css/act-app.css';
 import RegionsData from "../data/RegionsData";
-import LeafletMap, {default as MboxMap} from "../map/MboxMap";
 import LatLng from "../model/LatLng";
 // import Location from "../model/Location";
 import QueryInput from "../query/QueryInput";
@@ -38,23 +37,32 @@ import Constants from "../util/Constants";
 import ITripPlannerProps from "./ITripPlannerProps";
 import TripGroup from "../model/trip/TripGroup";
 import TripDetail from "../trip/TripDetail";
+import ReactMap from "../map/ReactMap";
+import Location from "../model/Location";
+import MultiGeocoder from "../location_box/MultiGeocoder";
+import LocationUtil from "../util/LocationUtil";
 
 interface IState {
-    map?: LeafletMap;
     tripsSorted: Trip[] | null;
     selected: Trip | null;
     mapView: boolean;
     showOptions: boolean;
     queryInputBounds?: BBox;
     queryInputFocusLatLng?: LatLng;
+    preFrom?: Location;
+    preTo?: Location;
     queryTimePanelOpen: boolean;
     feedbackTooltip: boolean;
+    viewport: {center?: LatLng, zoom?: number};
+    mapBounds?: BBox;
 }
 
 class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private eventBus: EventEmitter = new EventEmitter();
     private ref: any;
+    private mapRef: ReactMap;
+    private geocodingData: MultiGeocoder;
 
     constructor(props: ITripPlannerProps) {
         super(props);
@@ -69,7 +77,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 LatLng.createLatLng(-35.975,148.674)),
             queryInputFocusLatLng: LatLng.createLatLng(-35.3, 149.1),
             queryTimePanelOpen: false,
-            feedbackTooltip: false
+            feedbackTooltip: false,
+            viewport: {center: LatLng.createLatLng(-35.2816099,149.1264842), zoom: 13}
         };
         // Trigger regions request asap
         RegionsData.instance.getRegionP(new LatLng()); // TODO improve
@@ -92,11 +101,14 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
         WaiAriaUtil.addTabbingDetection();
 
+        this.geocodingData = new MultiGeocoder(true);
+
         this.onQueryChange = this.onQueryChange.bind(this);
         this.onFavClicked = this.onFavClicked.bind(this);
         this.onOptionsChange = this.onOptionsChange.bind(this);
         this.onShowOptions = this.onShowOptions.bind(this);
         this.onModalRequestedClose = this.onModalRequestedClose.bind(this);
+        this.onMapLocChanged = this.onMapLocChanged.bind(this);
     }
 
     public onQueryChange(query: RoutingQuery) {
@@ -117,8 +129,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             query.options = favOptions;
         }
         this.onQueryChange(query);
-        if (this.state.map && favourite.from.isResolved() && favourite.to.isResolved()) {
-            this.state.map.fitBounds(BBox.createBBoxArray([favourite.from, favourite.to]));
+        if (this.mapRef && favourite.from.isResolved() && favourite.to.isResolved()) {
+            this.mapRef.fitBounds(BBox.createBBoxArray([favourite.from, favourite.to]));
         }
     }
 
@@ -132,6 +144,71 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         RegionsData.instance.getRegionP(new LatLng())
             .then(() => this.setState({showOptions: true}));
     }
+
+    private onMapLocChanged(from: boolean, latLng: LatLng) {
+        this.onQueryChange(Util.iAssign(this.props.query, {
+            [from ? "from" : "to"]: Location.create(latLng, "Location", "", "")
+        }));
+        this.geocodingData.reverseGeocode(latLng, loc => {
+            if (loc !== null) {
+                this.onQueryChange(Util.iAssign(this.props.query,{[from ? "from" : "to"]: loc}));
+            }
+        });
+    }
+
+    private checkFitLocation(oldLoc?: Location | null, loc?: Location | null): boolean {
+        return !!(oldLoc !== loc && loc && loc.isResolved());
+    }
+
+    private fitMap(query: RoutingQuery, preFrom?: Location | null, preTo?: Location | null) {
+        const fromLoc = preFrom ? preFrom : query.from;
+        const toLoc = preTo ? preTo : query.to;
+        const fitSet = [];
+        if (fromLoc && fromLoc.isResolved()) {
+            fitSet.push(fromLoc);
+        }
+        if (toLoc && toLoc.isResolved() && !fitSet.find((loc) => LocationUtil.equal(loc, toLoc))) {
+            fitSet.push(toLoc);
+        }
+        if (fitSet.length === 0) {
+            return;
+        }
+        if (fitSet.length === 1) {
+            this.setState({viewport: {center: fitSet[0]}});
+            return;
+        }
+        // this.setState({mapBounds: BBox.createBBoxArray(fitSet)})
+        if (this.mapRef) {
+            this.mapRef.fitBounds(BBox.createBBoxArray(fitSet));
+        }
+    }
+
+    // private fitMapOpt(fitOptions: any) {
+    //     const fromLoc = this.state.preFrom ? this.state.preFrom : this.props.query.from;
+    //     const toLoc = this.state.preTo ? this.state.preTo : this.props.query.to;
+    //
+    //     const fitFrom: boolean = fitOptions.from ? fitOptions.from : false;
+    //     const fitTo: boolean = fitOptions.to ? fitOptions.to : false;
+    //
+    //     const fitSet = [];
+    //     if (fitFrom && fromLoc !== null && fromLoc.isResolved()) {
+    //         fitSet.push(fromLoc);
+    //     }
+    //     if (fitTo && toLoc !== null && toLoc.isResolved() && !fitSet.find((loc) => LocationUtil.equal(loc, toLoc))) {
+    //         fitSet.push(toLoc); // replace push by union so if from === to then it centers instead of make fit bounds.
+    //     }
+    //     if (fitSet.length === 0) {
+    //         return;
+    //     }
+    //     if (fitSet.length === 1) {
+    //         this.setState({viewport: {center: fitSet[0]}});
+    //         return;
+    //     }
+    //     // this.setState({mapBounds: BBox.createBBoxArray(fitSet)})
+    //     if (this.mapRef) {
+    //         this.mapRef.fitBounds(BBox.createBBoxArray(fitSet));
+    //     }
+    // }
 
     public render(): React.ReactNode {
         const favourite = (this.props.query.from !== null && this.props.query.to !== null) ?
@@ -162,11 +239,23 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             >
                 <div className="avoidVerticalScroll gl-flex gl-grow gl-column">
                     <div className="TripPlanner-queryPanel gl-flex gl-column gl-no-shrink">
-                        <QueryInput map={this.state.map}
-                                    value={this.props.query}
+                        <QueryInput value={this.props.query}
                                     bounds={this.state.queryInputBounds}
                                     focusLatLng={this.state.queryInputFocusLatLng}
-                                    onChange={this.onQueryChange}
+                                    onChange={(query: RoutingQuery) => {
+                                        if (this.checkFitLocation(this.props.query.from, query.from)
+                                            || this.checkFitLocation(this.props.query.to, query.to)) {
+                                            this.fitMap(query, this.state.preFrom, this.state.preTo);
+                                        }
+                                        this.onQueryChange(query);
+                                    }}
+                                    onPreChange={(from: boolean, location?: Location) => {
+                                        if (from) {
+                                            this.setState({preFrom: location})
+                                        } else {
+                                            this.setState({preTo: location})
+                                        }
+                                    }}
                                     className="TripPlanner-queryInput"
                                     isTripPlanner={true}
                                     bottomRightComponent={
@@ -185,8 +274,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                             </div>
                             <button className="TripPlanner-mapBtn gl-link gl-flex gl-align-center"
                                     onClick={() => this.setState(prevState => {
-                                        if (!prevState.mapView && this.state.map) {
-                                            setTimeout(() => {this.state.map!.onResize()}, 100)
+                                        if (!prevState.mapView && this.mapRef) {
+                                            setTimeout(() => {this.mapRef.onResize()}, 100)
                                         }
                                         return {mapView: !prevState.mapView}
                                     })}>
@@ -235,7 +324,30 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                         </div>
                         <div className="sg-container gl-flex gl-grow" aria-hidden={true} tabIndex={-1}>
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
-                                <div id="map-canvas" className="map-canvas avoidVerticalScroll gl-flex gl-grow"/>
+                                <div id="map-canvas" className="map-canvas avoidVerticalScroll gl-flex gl-grow"
+                                     style={{visibility: "hidden", display: "none"}}
+                                />
+                                <ReactMap
+                                    viewport={this.state.viewport}
+                                    onViewportChanged={(viewport: {center?: LatLng, zoom?: number}) => {
+                                        this.setState({viewport: viewport});
+                                    }}
+                                    from={this.state.preFrom ? this.state.preFrom :
+                                        (this.props.query.from ? this.props.query.from : undefined)}
+                                    to={this.state.preTo ? this.state.preTo :
+                                        (this.props.query.to ? this.props.query.to : undefined)}
+                                    ondragend={this.onMapLocChanged}
+                                    onclick={(clickLatLng: LatLng) => {
+                                        const from = this.props.query.from;
+                                        const to = this.props.query.to;
+                                        if (from === null || to === null) {
+                                            this.onMapLocChanged(from === null, clickLatLng);
+                                            GATracker.instance.send("query input", "pick location", "drop pin");
+                                        }
+                                    }}
+                                    bounds={this.state.mapBounds}
+                                    ref={(ref: ReactMap) => this.mapRef = ref}
+                                />
                             </div>
                             <Tooltip
                                 overlay={"Feedback info copied to clipboard"}
@@ -258,7 +370,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 </div>
                 {optionsDialog}
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
-                                     onResize={() => { if (this.state.map) {this.state.map.onResize()}} }/>
+                                     onResize={() => { if (this.mapRef) {this.mapRef.onResize()}} }/>
             </div>
         );
     }
@@ -277,16 +389,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     }
 
     public componentDidMount(): void {
-        // MapUtil.initMap();
-        const map = new MboxMap("map-canvas");
-        // const map = LeafletMap.createWithHereTiles("map-canvas");
-        // map.setMapLocsEnabled(!this.state.routingQuery.isComplete());
-        this.setState({
-            map: map
-        });
-        map.setCenter(LatLng.createLatLng(-35.2816099,149.1264842));
-        map.setZoom(13);
-
         RegionsData.instance.getRegionP(new LatLng()).then((region: Region) => {
             this.setState({ queryInputBounds: region.bounds });
         });
@@ -353,11 +455,12 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             }, 2000);
         }
         if (this.state.selected !== prevState.selected) {
-            this.state.map!.showTrip(this.state.selected);
-            if (this.state.selected && this.state.map) {
+            // TODO
+            // this.mapRef!.showTrip(this.state.selected);
+            if (this.state.selected && this.mapRef) {
                 const fitBounds = MapUtil.getTripBounds(this.state.selected);
-                if (!this.state.map.alreadyFits(fitBounds)) {
-                    this.state.map.fitBounds(fitBounds);
+                if (!this.mapRef.alreadyFits(fitBounds)) {
+                    this.mapRef.fitBounds(fitBounds);
                 }
             }
             PlannedTripsTracker.instance.selected = this.state.selected;
@@ -366,8 +469,12 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         if (this.props.trips !== prevProps.trips) {
             PlannedTripsTracker.instance.trips = this.props.trips;
         }
-        if (prevProps.query.isEmpty() && this.props.query.isComplete(true)) {
-            this.state.map!.fitBounds(BBox.createBBoxArray([this.props.query.from!, this.props.query.to!]));
+        // TODO: rehabilitar esto, tal vez se llame antes de tener instanciado this.mapRef??? Ver cuando se instancian las referencias
+        // if (prevQuery.isEmpty() && query.isComplete(true)) {
+        //     this.state.map!.fitBounds(BBox.createBBoxArray([query.from!, query.to!]));
+        // }
+        if (this.checkFitLocation(prevState.preFrom , this.state.preFrom) || this.checkFitLocation(prevState.preTo, this.state.preTo)) {
+            this.fitMap(this.props.query, this.state.preFrom, this.state.preTo);
         }
     }
 }

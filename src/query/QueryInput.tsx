@@ -17,17 +17,15 @@ import Util from "../util/Util";
 import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import DateTimePicker from "../time/DateTimePicker";
-import LeafletMap from "../map/MboxMap";
-import LocationUtil from "../util/LocationUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 
 interface IProps {
-    map?: LeafletMap;
     value?: RoutingQuery;
     onChange?: (routingQuery: RoutingQuery) => void;
+    onPreChange?: (from: boolean, location?: Location) => void;
     onGoClicked?: (routingQuery: RoutingQuery) => void;
     bounds?: BBox;
     focusLatLng?: LatLng;
@@ -71,7 +69,6 @@ class QueryInput extends React.Component<IProps, IState> {
         this.geocodingData = new MultiGeocoder(true);
         this.onPrefClicked = this.onPrefClicked.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
-        this.onMapLocChanged = this.onMapLocChanged.bind(this);
     }
 
     private getTimeBtnText(): string {
@@ -103,68 +100,21 @@ class QueryInput extends React.Component<IProps, IState> {
         });
     }
 
-    private updateQuery(update: any, fitMap: boolean = false, callback?: () => void) {
-        this.setQuery(Util.iAssign(this.state.routingQuery, update), fitMap, callback);
+    private updateQuery(update: any, callback?: () => void) {
+        this.setQuery(Util.iAssign(this.state.routingQuery, update), callback);
     }
 
-    private setQuery(update: RoutingQuery, fitMap: boolean = false, callback?: () => void) {
+    private setQuery(update: RoutingQuery, callback?: () => void) {
         this.setState({
             routingQuery: update
         }, () => {
             if (this.props.onChange) {
                 this.props.onChange(this.state.routingQuery);
             }
-            this.updateMap(fitMap);
             if (callback) {
                 callback();
             }
         });
-    }
-
-    private updateMap(fit: boolean = false) {
-        if (!this.props.map) {
-            return;
-        }
-        const map = this.props.map;
-        const fromLoc = this.state.preselFrom !== null ? this.state.preselFrom : this.state.routingQuery.from;
-        const toLoc = this.state.preselTo !== null ? this.state.preselTo : this.state.routingQuery.to;
-        map.setFrom(fromLoc);
-        map.setTo(toLoc);
-        if (fit) {
-            const fitOptions = {    // Create a class fitOptions.
-                from: fromLoc !== null && fromLoc.isResolved() ? true : undefined,
-                to: toLoc !== null && toLoc.isResolved() ? true : undefined
-            };
-            this.fitMap(fitOptions);
-        }
-    }
-
-    private fitMap(fitOptions: any) {
-        if (!this.props.map) {
-            return;
-        }
-        const map = this.props.map;
-        const fromLoc = this.state.preselFrom !== null ? this.state.preselFrom : this.state.routingQuery.from;
-        const toLoc = this.state.preselTo !== null ? this.state.preselTo : this.state.routingQuery.to;
-
-        const fitFrom: boolean = fitOptions.from ? fitOptions.from : false;
-        const fitTo: boolean = fitOptions.to ? fitOptions.to : false;
-
-        const fitSet = [];
-        if (fitFrom && fromLoc !== null && fromLoc.isResolved()) {
-            fitSet.push(fromLoc);
-        }
-        if (fitTo && toLoc !== null && toLoc.isResolved() && !fitSet.find((loc) => LocationUtil.equal(loc, toLoc))) {
-            fitSet.push(toLoc); // replace push by union so if from === to then it centers instead of make fit bounds.
-        }
-        if (fitSet.length === 0) {
-            return;
-        }
-        if (fitSet.length === 1) {
-            map.setCenter(fitSet[0]);
-            return;
-        }
-        map.fitBounds(BBox.createBBoxArray(fitSet));
     }
 
     private showTooltip(from: boolean, show: boolean) {
@@ -182,33 +132,10 @@ class QueryInput extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
-        if (this.props.map && prevProps.map !== this.props.map) {
-            // TODO Put in method init map.
-            this.props.map.addClickHandler((clickLatLng: LatLng) => {
-                const from = this.state.routingQuery.from;
-                const to = this.state.routingQuery.to;
-                if (from === null || to === null) {
-                    this.onMapLocChanged(from === null, clickLatLng);
-                    GATracker.instance.send("query input", "pick location","drop pin");
-                }
-            });
-            this.props.map.setDragEndHandler(this.onMapLocChanged);
-        }
         if (this.props.value && this.props.value !== prevProps.value
             && this.props.value !== this.state.routingQuery) {
             this.setQuery(this.props.value);
         }
-    }
-
-    private onMapLocChanged(from: boolean, latLng: LatLng) {
-        this.updateQuery({
-            [from ? "from" : "to"]: Location.create(latLng, "Location", "", "")
-        });
-        this.geocodingData.reverseGeocode(latLng, loc => {
-            if (loc !== null) {
-                this.updateQuery({[from ? "from" : "to"]: loc});
-            }
-        });
     }
 
     public render(): React.ReactNode {
@@ -224,10 +151,10 @@ class QueryInput extends React.Component<IProps, IState> {
                                    focusable="false"
             />;
         const fromPlaceholder = "Choose starting point" +
-            (this.props.map ? ", or click on the map" : "") +
+            (this.props.isTripPlanner ? ", or click on the map" : "") +
             "...";
         const toPlaceholder = "Choose destination" +
-            (this.props.map && this.state.routingQuery.from !== null ? ", or click on the map" : "") +
+            (this.props.isTripPlanner && this.state.routingQuery.from !== null ? ", or click on the map" : "") +
             "...";
         const ariaLabelFrom = this.state.routingQuery.from !== null ?
             "From " + this.state.routingQuery.from.address :
@@ -258,15 +185,20 @@ class QueryInput extends React.Component<IProps, IState> {
                                         placeholder={fromPlaceholder}
                                         onChange={(value: Location | null, highlighted: boolean) => {
                                             if (!highlighted) {
-                                                this.updateQuery({from: value}, value !== null && (!value.isCurrLoc() || value.isResolved()));
+                                                this.updateQuery({from: value});
                                                 this.setState({preselFrom: null});
+                                                if (this.props.onPreChange) {
+                                                    this.props.onPreChange(true, undefined);
+                                                }
                                                 if (value !== null) {
                                                     GATracker.instance.send("query input", "pick location",
                                                         value.isCurrLoc() ? "current location" : "type address");
                                                 }
                                             } else {
-                                                this.setState({preselFrom: value},
-                                                    () => this.updateMap(value !== null && (!value.isCurrLoc() || value.isResolved())));
+                                                this.setState({preselFrom: value});
+                                                if (this.props.onPreChange) {
+                                                    this.props.onPreChange(true, value ? value : undefined);
+                                                }
                                             }
                                             this.showTooltip(true, false);
                                         }}
@@ -295,15 +227,20 @@ class QueryInput extends React.Component<IProps, IState> {
                                         placeholder={toPlaceholder}
                                         onChange={(value: Location | null, highlighted: boolean) => {
                                             if (!highlighted) {
-                                                this.updateQuery({to: value}, value !== null && (!value.isCurrLoc() || value.isResolved()));
+                                                this.updateQuery({to: value});
                                                 this.setState({preselTo: null});
+                                                if (this.props.onPreChange) {
+                                                    this.props.onPreChange(false, undefined);
+                                                }
                                                 if (value !== null) {
                                                     GATracker.instance.send("query input", "pick location",
                                                         value.isCurrLoc() ? "current location" : "type address");
                                                 }
                                             } else {
-                                                this.setState({preselTo: value},
-                                                    () => this.updateMap(value !== null && (!value.isCurrLoc() || value.isResolved())));
+                                                this.setState({preselTo: value});
+                                                if (this.props.onPreChange) {
+                                                    this.props.onPreChange(false, value ? value : undefined);
+                                                }
                                             }
                                             this.showTooltip(false, false);
                                         }}

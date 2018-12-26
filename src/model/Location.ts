@@ -37,7 +37,7 @@ class Location extends LatLng {
         super();
     }
 
-    public isResolved() {
+    public isResolved(): boolean {
         return this._lat !== 0 && this._lng !== 0;
     }
 
