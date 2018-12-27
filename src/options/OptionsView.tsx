@@ -10,7 +10,7 @@ import TransportUtil from "../trip/TransportUtil";
 import Checkbox from "../buttons/Checkbox";
 import Color from "../model/trip/Color";
 import RadioBtn from "../buttons/RadioBtn";
-import MapLocationType from "../model/location/MapLocationType";
+import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 

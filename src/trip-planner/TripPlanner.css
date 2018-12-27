@@ -184,6 +184,7 @@
   height: 25px;
   opacity: .5;
   cursor: pointer;
+  z-index: 1000;
 }
 
 .TripPlanner-feedbackTooltip .rc-tooltip-inner {

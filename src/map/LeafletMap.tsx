@@ -20,29 +20,16 @@ import LocationsResult from "../model/location/LocationsResult";
 import LeafletUtil from "../util/LeafletUtil";
 import MapLocationSet from "./MapLocationSet";
 import OptionsData from "../data/OptionsData";
-import MapLocationType, {mapLocationTypeToGALabel} from "../model/location/MapLocationType";
+import {MapLocationType, mapLocationTypeToGALabel} from "../model/location/MapLocationType";
 import Options from "../model/Options";
 import MapLocationPopup from "./MapLocationPopup";
 import Util from "../util/Util";
 import SegmentPopup from "./SegmentPopup";
-import NetworkUtil from "../util/NetworkUtil";
 import Constants from "../util/Constants";
 import FacilityLocation from "../model/location/FacilityLocation";
 import GATracker from "../analytics/GATracker";
 
 class LeafletMap {
-
-    public static createWithHereTiles(containerId: string): LeafletMap {
-        NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
-        const map = L.map(containerId);
-        // http://autocomplete.geocoder.api.here.com/6.2/suggest.json?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg&beginHighlight=<b>&endHighlight=</b>&prox=-35.306538,149.126336&&query=12 balonn
-        const layer = L.tileLayer("http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg",
-            {
-                styleId: 997
-            });
-        layer.addTo(map);
-        return new LeafletMap(map);
-    }
 
     protected map: L.Map;
 
@@ -372,7 +359,7 @@ class LeafletMap {
 
     public static renderServiceStopPopup(stop: ServiceStopLocation, containerId: string, color: string, interchangeUrl?: string) {
         ReactDOM.render(
-            <ServiceStopPopup stop={stop} color={color} interchangeUrl={interchangeUrl}/>,
+            <ServiceStopPopup stop={stop} color={color}/>,
             document.getElementById(containerId)
         );
     }
@@ -396,16 +383,6 @@ class LeafletMap {
                 (latLng: LatLng) => this.dragEndHandler!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined);
         segmentPolyline.addTo(this.map);
         this.segmentPolylines.push(segmentPolyline);
-    }
-
-    public static decodePolyline(encoded: string): LatLng[] {
-        const polyline = require('@mapbox/polyline');
-        const pointsArray = polyline.decode(encoded);
-        const decoded: LatLng[] = [];
-        for (const point of pointsArray) {
-            decoded.push(LatLng.createLatLng(point[0], point[1]));
-        }
-        return decoded;
     }
 
     public onResize() {

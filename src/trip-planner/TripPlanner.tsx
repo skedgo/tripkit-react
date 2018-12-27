@@ -44,7 +44,7 @@ import LocationUtil from "../util/LocationUtil";
 
 interface IState {
     tripsSorted: Trip[] | null;
-    selected: Trip | null;
+    selected?: Trip;
     mapView: boolean;
     showOptions: boolean;
     queryInputBounds?: BBox;
@@ -68,10 +68,9 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         super(props);
         this.state = {
             tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips,
-            selected: null,
+            selected: undefined,
             mapView: false,
             showOptions: false,
-            // showOptions: true,
             // TODO: Hardcode ACT bounding box to initalize, but not necessary (can leave undefined)
             queryInputBounds: BBox.createBBox(LatLng.createLatLng(-34.37701,149.852),
                 LatLng.createLatLng(-35.975,148.674)),
@@ -233,7 +232,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                  className={"mainViewPanel TripPlanner" +
                  (this.props.trips !== null ? " TripPlanner-tripsView" : " TripPlanner-noTripsView") +
                  (this.state.mapView ? " TripPlanner-mapView" : " TripPlanner-noMapView") +
-                 (this.state.selected !== null ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected") +
+                 (this.state.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected") +
                  (this.state.queryTimePanelOpen ? " TripPlanner-queryTimePanelOpen" : "")}
                  ref={el => this.ref = el}
             >
@@ -308,7 +307,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                 </div>
                                 :
                                 <TripsView values={this.state.tripsSorted}
-                                           value={this.state.selected !== null ? this.state.selected : undefined}
+                                           value={this.state.selected}
                                            onChange={(value: Trip) => this.setState({selected: value})}
                                            waiting={this.props.waiting}
                                            eventBus={this.eventBus}
@@ -336,6 +335,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                         (this.props.query.from ? this.props.query.from : undefined)}
                                     to={this.state.preTo ? this.state.preTo :
                                         (this.props.query.to ? this.props.query.to : undefined)}
+                                    trip={this.state.selected}
                                     ondragend={this.onMapLocChanged}
                                     onclick={(clickLatLng: LatLng) => {
                                         const from = this.props.query.from;
@@ -346,6 +346,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                         }
                                     }}
                                     bounds={this.state.mapBounds}
+                                    showLocations={true}
                                     ref={(ref: ReactMap) => this.mapRef = ref}
                                 />
                             </div>
@@ -440,23 +441,21 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             this.setState({
                 tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips
             });
-            if (this.props.trips === null || this.props.trips === []) {
+            if (!this.props.trips || this.props.trips.length === 0) {
                 this.setState({
-                    selected: null
+                    selected: undefined
                 });
             }
         }
         // If first group of trips arrived
-        if (this.state.selected === null && prevState.tripsSorted !== null && prevState.tripsSorted.length === 0 && this.state.tripsSorted !== null && this.state.tripsSorted.length > 0) {
+        if (!this.state.selected && prevState.tripsSorted !== null && prevState.tripsSorted.length === 0 && this.state.tripsSorted !== null && this.state.tripsSorted.length > 0) {
             setTimeout(() => {
                 this.setState(
                     {selected: this.state.tripsSorted !== null && this.state.tripsSorted.length > 0 ?
-                            this.state.tripsSorted[0] : null})
+                            this.state.tripsSorted[0] : undefined})
             }, 2000);
         }
         if (this.state.selected !== prevState.selected) {
-            // TODO
-            // this.mapRef!.showTrip(this.state.selected);
             if (this.state.selected && this.mapRef) {
                 const fitBounds = MapUtil.getTripBounds(this.state.selected);
                 if (!this.mapRef.alreadyFits(fitBounds)) {

@@ -1,6 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import BBox from "../BBox";
-import LeafletMap from "../../map/MboxMap";
+import LeafletUtil from "../../util/LeafletUtil";
 
 @JsonObject
 class Region {
@@ -36,7 +36,7 @@ class Region {
 
     get bounds(): BBox {
         if (this._bounds === null) {
-            this._bounds = BBox.createBBoxArray(LeafletMap.decodePolyline(this._polygon));
+            this._bounds = BBox.createBBoxArray(LeafletUtil.decodePolyline(this._polygon));
         }
         return this._bounds;
     }

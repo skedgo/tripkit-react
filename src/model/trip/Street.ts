@@ -1,6 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import LatLng from "../LatLng";
-import LeafletMap from "../../map/MboxMap";
+import LeafletUtil from "../../util/LeafletUtil";
 
 @JsonObject
 class Street {
@@ -43,7 +43,7 @@ class Street {
 
     get waypoints(): LatLng[] | null {
         if (this._waypoints === null && this._encodedWaypoints) {
-            this._waypoints = LeafletMap.decodePolyline(this._encodedWaypoints);
+            this._waypoints = LeafletUtil.decodePolyline(this._encodedWaypoints);
         }
         return this._waypoints;
     }

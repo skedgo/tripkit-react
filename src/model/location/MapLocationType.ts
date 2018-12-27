@@ -1,6 +1,6 @@
 import {JsonConverter, JsonCustomConvert} from "json2typescript";
 
-enum MapLocationType {
+export enum MapLocationType {
     BIKE_POD = "BIKE_POD",
     CAR_PARK = "CAR_PARK",
     CAR_POD = "CAR_POD",
@@ -9,6 +9,14 @@ enum MapLocationType {
     MY_WAY_FACILITY = "MY_WAY_FACILITY",
     PARK_AND_RIDE_FACILITY = "PARK_AND_RIDE_FACILITY"
 }
+
+// export namespace MapLocationType {
+    export function values(): MapLocationType[] {
+        return Object.keys(MapLocationType).filter(
+            (type) => isNaN(type as any) && type !== 'values'
+        ) as MapLocationType[];
+    }
+// }
 
 export function mapLocationTypeToGALabel(value: MapLocationType): string {
     switch (value) {

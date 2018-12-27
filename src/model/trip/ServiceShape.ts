@@ -1,8 +1,8 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import Color from "./Color";
 import LatLng from "../LatLng";
-import LeafletMap from "../../map/MboxMap";
 import ServiceStopLocation from "../ServiceStopLocation";
+import LeafletUtil from "../../util/LeafletUtil";
 
 @JsonObject
 class ServiceShape {
@@ -83,7 +83,7 @@ class ServiceShape {
 
     get waypoints(): LatLng[] | null {
         if (this._waypoints === null && this._encodedWaypoints) {
-            this._waypoints = LeafletMap.decodePolyline(this._encodedWaypoints);
+            this._waypoints = LeafletUtil.decodePolyline(this._encodedWaypoints);
         }
         return this._waypoints;
     }

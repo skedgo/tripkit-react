@@ -1,6 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import WeightingPreferences from "./WeightingPreferences";
-import MapLocationType, {MapLocationTypeConverter} from "./location/MapLocationType";
+import {MapLocationType, MapLocationTypeConverter} from "./location/MapLocationType";
 import ModeIdentifier from "./region/ModeIdentifier";
 import Features from "../env/Features";
 

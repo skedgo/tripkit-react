@@ -57,6 +57,16 @@ class LeafletUtil {
         return bounds;
     }
 
+    public static decodePolyline(encoded: string): LatLng[] {
+        const polyline = require('@mapbox/polyline');
+        const pointsArray = polyline.decode(encoded);
+        const decoded: LatLng[] = [];
+        for (const point of pointsArray) {
+            decoded.push(LatLng.createLatLng(point[0], point[1]));
+        }
+        return decoded;
+    }
+
 }
 
 export default LeafletUtil;

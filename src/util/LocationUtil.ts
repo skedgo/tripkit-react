@@ -12,7 +12,7 @@ class LocationUtil {
         return address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : null;
     }
 
-    public static equal(loc1: LatLng | null, loc2: LatLng | null) {
+    public static equal<T extends LatLng>(loc1: T | null, loc2: T | null) {
         return loc1 === null ? loc2 === null :
             (loc2 !== null && loc1.getKey() === loc2.getKey());
     }

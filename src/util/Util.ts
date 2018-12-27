@@ -23,6 +23,25 @@ class Util {
         return Object.assign(Util.clone(target), source)
     }
 
+    /**
+     * Needed this since Set type does not allow to specify a custom equality comparator:
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set.
+     * Mutable.
+     */
+    public static addNoRep<T>(array: T[], elem: T, equal: (e1: T, e2: T) => boolean): T[] {
+        if (!array.find((e: T) => equal(elem, e))) {
+            array.push(elem);
+        }
+        return array;
+    }
+
+    public static addAllNoRep<T>(array: T[], elems: T[], equal: (e1: T | null, e2: T | null) => boolean): T[] {
+        for (const elem of elems) {
+            this.addNoRep(array, elem, equal);
+        }
+        return array;
+    }
+
 }
 
 export default Util;

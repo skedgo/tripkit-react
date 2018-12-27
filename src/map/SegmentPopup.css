@@ -1,6 +1,7 @@
 .SegmentPopup {
   padding: 7px 10px;
   font-size: 13px;
+  min-width: 200px;
 }
 
 .SegmentPopup-location {

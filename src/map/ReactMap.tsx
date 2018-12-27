@@ -1,17 +1,32 @@
 import * as React from "react";
-import {Map, Marker, Popup, TileLayer} from "react-leaflet";
+import "./ReactMap.css";
+import {Map as RLMap, Marker, Popup, TileLayer, ZoomControl} from "react-leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import Constants from "../util/Constants";
-import L from "leaflet";
+import L, {FitBoundsOptions} from "leaflet";
 import BBox from "../model/BBox";
 import LeafletUtil from "../util/LeafletUtil";
-// import * as L from 'leaflet';
+import Trip from "../model/trip/Trip";
+import MapTripSegment from "./MapTripSegment";
+import Segment from "../model/trip/Segment";
+import Util from "../util/Util";
+import {MapLocationType, mapLocationTypeToGALabel, values as locTypeValues} from "../model/location/MapLocationType";
+import LocationsData from "../data/LocationsData";
+import LocationsResult from "../model/location/LocationsResult";
+import OptionsData from "../data/OptionsData";
+import LocationUtil from "../util/LocationUtil";
+import Options from "../model/Options";
+import GATracker from "../analytics/GATracker";
+import MapLocationPopup from "./MapLocationPopup";
+import {Visibility} from "../model/trip/SegmentTemplate";
 
 interface IProps {
     from?: Location;
     to?: Location;
+    trip?: Trip;
+    showLocations?: boolean;
     viewport?: {center?: LatLng, zoom?: number};
     bounds?: BBox;
     onclick?: (latLng: LatLng) => void;
@@ -19,38 +34,166 @@ interface IProps {
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
 }
 
-// interface IState {
-//     boundsSet: BBox;
-// }
+interface IState {
+    mapLayers: Map<MapLocationType, Location[]>;
+}
 
 // class ReactMap<P extends MapProps & IProps> extends React.Component<P, {}> {
-class ReactMap extends React.Component<IProps, {}> {
+class ReactMap extends React.Component<IProps, IState> {
 
-    private leafletElement: any;
+    // private readonly ZOOM_ALL_LOCATIONS = 15;
+    private readonly ZOOM_ALL_LOCATIONS = 0;    // Zoom all locations at any zoom.
+    private readonly ZOOM_PARENT_LOCATIONS = 11;
+
+    private leafletElement: L.Map;
+
+    private wasDoubleClick = false;
+
+    constructor(props: Readonly<IProps>) {
+        super(props);
+        this.state = {
+            mapLayers: new Map<MapLocationType, Location[]>()
+        };
+        LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.onLocationsChanged(locResult));
+        OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
+            if (update.mapLayers !== prev.mapLayers) {
+                this.refreshMapLocations();
+            }
+        });
+        this.onMoveEnd = this.onMoveEnd.bind(this);
+        this.onLocationsChanged = this.onLocationsChanged.bind(this);
+    }
+
+    private onMoveEnd() {
+        const mapBounds = this.leafletElement.getBounds();
+        if (mapBounds.getNorth() === 90) {  // Filter first bounds, which are like max possible bounds
+            return;
+        }
+        this.refreshMapLocations();
+    }
+
+    private onLocationsChanged(locResult: LocationsResult) {
+        if (this.leafletElement.getZoom() < this.ZOOM_PARENT_LOCATIONS || (this.leafletElement.getZoom() < this.ZOOM_ALL_LOCATIONS && locResult.level === 2)) {
+            return;
+        }
+        const enabledMapLayers = OptionsData.instance.get().mapLayers;
+        const updatedMapLayers = new Map(this.state.mapLayers);
+        for (const locType of enabledMapLayers) {
+        // for (const locType of values()) {
+            if (locResult.getByType(locType) && enabledMapLayers.indexOf(locType) !== -1) {
+                let uLayerLocs = updatedMapLayers.get(locType);
+                uLayerLocs = uLayerLocs ? uLayerLocs.slice() : [];
+                uLayerLocs = Util.addAllNoRep(uLayerLocs, locResult.getByType(locType), LocationUtil.equal);
+                updatedMapLayers.set(locType, uLayerLocs);
+            }
+        }
+        this.setState({ mapLayers: updatedMapLayers });
+    }
+
+    private refreshMapLocations() {
+        const enabledMapLayers = OptionsData.instance.get().mapLayers;
+        const showAny = this.props.showLocations && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
+            && enabledMapLayers.length > 0;
+        if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
+            LocationsData.instance.requestLocations("AU_ACT_Canberra", 1);
+            if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS) {
+                LocationsData.instance.requestLocations("AU_ACT_Canberra", 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
+            }
+        }
+    }
+
+    private isShowLocType(type: MapLocationType): boolean {
+        return !!this.props.showLocations && this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS &&
+            OptionsData.instance.get().mapLayers.indexOf(type) !== -1 && !!this.state.mapLayers.get(type);
+    }
+
+    private getLocMarker(mapLocType: MapLocationType, loc: Location): React.ReactNode {
+        const popup = <Popup
+            offset={[0, 0]}
+            closeButton={false}
+            className="ReactMap-mapLocPopup"
+        >
+            <MapLocationPopup value={loc}/>
+        </Popup>;
+        switch (mapLocType) {
+            case MapLocationType.BIKE_POD:
+                return <Marker
+                    position={loc}
+                    icon={L.icon({
+                        iconUrl: Constants.absUrl("/images/modeicons/ic-bikeShare.svg"),
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })}
+                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
+                    {popup}
+                </Marker>;
+            case MapLocationType.MY_WAY_FACILITY:
+                return <Marker
+                    position={loc}
+                    icon={L.icon({
+                        iconUrl: Constants.absUrl("/images/modeicons/ic-myway.svg"),
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })}
+                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
+                    {popup}
+                </Marker>;
+            case MapLocationType.PARK_AND_RIDE_FACILITY:
+                return <Marker
+                    position={loc}
+                    icon={L.icon({
+                        iconUrl: Constants.absUrl("/images/modeicons/ic-parkAndRide.svg"),
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })}
+                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
+                    {popup}
+                </Marker>;
+            default:
+                return <Marker position={loc}/>;
+        }
+    }
 
     public render(): React.ReactNode {
         const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
+
+        let tripSegments;
+        if (this.props.trip) {
+            const last: Segment = this.props.trip!.segments[this.props.trip!.segments.length - 1];
+            const arrival = Util.iAssign(last, {});
+            arrival.arrival = true;
+            arrival.from = last.to;
+            arrival.action = "Arrive";
+            tripSegments = this.props.trip.segments.concat([arrival]);
+        }
+
         return (
-            <Map
+            <RLMap
                 className="map-canvas avoidVerticalScroll gl-flex gl-grow"
-                // center={position}
-                // zoom={13}
-                // style={{height: "500px"}}
-                // viewport={{center: [10, 5], zoom: 13}}
                 viewport={this.props.viewport}
                 bounds={lbounds}
                 boundsOptions={{padding: [20, 20]}}
                 onViewportChanged={this.props.onViewportChanged}
                 onclick={(event: L.LeafletMouseEvent) => {
                     if (this.props.onclick) {
-                        this.props.onclick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng))
+                        setTimeout(() => {
+                            if (this.wasDoubleClick) {
+                                this.wasDoubleClick = false;
+                                return;
+                            }
+                            if (this.props.onclick) {
+                                this.props.onclick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
+                            }
+                        })
                     }
                 }}
+                onmoveend={this.onMoveEnd}
                 ref={(ref: any) => {
                     if (ref) {
                         this.leafletElement = ref.leafletElement;
                     }
                 }}
+                zoomControl={false}
             >
                 <TileLayer
                     attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -61,6 +204,7 @@ class ReactMap extends React.Component<IProps, {}> {
                     // url="https://api.mapbox.com/styles/v1/mgomezlucero/cjle1r3go0axx2rqh15dcenzo.html/tiles/256/{z}/{x}/{y}?fresh=true&title=true&access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA#12.0/48.866500/2.317600/0"
                     url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
                 />
+                <ZoomControl position={"topright"}/>
                 {this.props.from && this.props.from.isResolved() &&
                 <Marker position={this.props.from!}
                         icon={L.icon({
@@ -105,7 +249,19 @@ class ReactMap extends React.Component<IProps, {}> {
                     </Popup>
                 </Marker>
                 }
-            </Map>
+                {locTypeValues().map((locType: MapLocationType) =>
+                    this.isShowLocType(locType) &&
+                        this.state.mapLayers.get(locType)!.map((loc: Location) =>
+                            this.getLocMarker(locType, loc)
+                        )
+                )}
+                {tripSegments && tripSegments.map((segment: Segment, i: number) => {
+                    return <MapTripSegment segment={segment}
+                                           ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.ondragend ?
+                                               (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
+                                           key={i}/>;
+                })}
+            </RLMap>
         )
     }
 
@@ -113,9 +269,18 @@ class ReactMap extends React.Component<IProps, {}> {
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
+
+    public componentDidMount(): void {
+        this.refreshMapLocations();
+        this.leafletElement.on("dblclick", event1 => {
+            this.wasDoubleClick = true;
+        })
+    }
+
     public fitBounds(bounds: BBox) {
         if (this.leafletElement) {
-            this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]));
+            const options = {padding: [20, 20]} as FitBoundsOptions;
+            this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]), options);
         }
     }
 
