@@ -19,7 +19,6 @@ interface IState {
 
 class FavouriteOptions extends React.Component<IProps, IState> {
 
-
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {};

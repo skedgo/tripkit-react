@@ -7,7 +7,6 @@ import MultiGeocoder from "./MultiGeocoder";
 import Location from '../model/Location';
 import ResultItem from "./ResultItem";
 import BBox from "../model/BBox";
-import "../css/animation.css"
 import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";

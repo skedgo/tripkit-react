@@ -41,6 +41,7 @@ import ReactMap from "../map/ReactMap";
 import Location from "../model/Location";
 import MultiGeocoder from "../location_box/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
+import {TileLayer} from "react-leaflet";
 
 interface IState {
     tripsSorted: Trip[] | null;
@@ -182,33 +183,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         }
     }
 
-    // private fitMapOpt(fitOptions: any) {
-    //     const fromLoc = this.state.preFrom ? this.state.preFrom : this.props.query.from;
-    //     const toLoc = this.state.preTo ? this.state.preTo : this.props.query.to;
-    //
-    //     const fitFrom: boolean = fitOptions.from ? fitOptions.from : false;
-    //     const fitTo: boolean = fitOptions.to ? fitOptions.to : false;
-    //
-    //     const fitSet = [];
-    //     if (fitFrom && fromLoc !== null && fromLoc.isResolved()) {
-    //         fitSet.push(fromLoc);
-    //     }
-    //     if (fitTo && toLoc !== null && toLoc.isResolved() && !fitSet.find((loc) => LocationUtil.equal(loc, toLoc))) {
-    //         fitSet.push(toLoc); // replace push by union so if from === to then it centers instead of make fit bounds.
-    //     }
-    //     if (fitSet.length === 0) {
-    //         return;
-    //     }
-    //     if (fitSet.length === 1) {
-    //         this.setState({viewport: {center: fitSet[0]}});
-    //         return;
-    //     }
-    //     // this.setState({mapBounds: BBox.createBBoxArray(fitSet)})
-    //     if (this.mapRef) {
-    //         this.mapRef.fitBounds(BBox.createBBoxArray(fitSet));
-    //     }
-    // }
-
     public render(): React.ReactNode {
         const favourite = (this.props.query.from !== null && this.props.query.to !== null) ?
             FavouriteTrip.create(this.props.query.from, this.props.query.to) :
@@ -323,9 +297,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                         </div>
                         <div className="sg-container gl-flex gl-grow" aria-hidden={true} tabIndex={-1}>
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
-                                <div id="map-canvas" className="map-canvas avoidVerticalScroll gl-flex gl-grow"
-                                     style={{visibility: "hidden", display: "none"}}
-                                />
                                 <ReactMap
                                     viewport={this.state.viewport}
                                     onViewportChanged={(viewport: {center?: LatLng, zoom?: number}) => {
@@ -348,7 +319,13 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     bounds={this.state.mapBounds}
                                     showLocations={true}
                                     ref={(ref: ReactMap) => this.mapRef = ref}
-                                />
+                                >
+                                    <TileLayer
+                                        attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                        // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                                        url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
+                                    />
+                                </ReactMap>
                             </div>
                             <Tooltip
                                 overlay={"Feedback info copied to clipboard"}
@@ -468,10 +445,9 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         if (this.props.trips !== prevProps.trips) {
             PlannedTripsTracker.instance.trips = this.props.trips;
         }
-        // TODO: rehabilitar esto, tal vez se llame antes de tener instanciado this.mapRef??? Ver cuando se instancian las referencias
-        // if (prevQuery.isEmpty() && query.isComplete(true)) {
-        //     this.state.map!.fitBounds(BBox.createBBoxArray([query.from!, query.to!]));
-        // }
+        if (prevProps.query.isEmpty() && this.props.query.isComplete(true)) {
+            this.mapRef.fitBounds(BBox.createBBoxArray([this.props.query.from!, this.props.query.to!]));
+        }
         if (this.checkFitLocation(prevState.preFrom , this.state.preFrom) || this.checkFitLocation(prevState.preTo, this.state.preTo)) {
             this.fitMap(this.props.query, this.state.preFrom, this.state.preTo);
         }

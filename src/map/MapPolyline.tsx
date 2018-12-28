@@ -4,9 +4,10 @@ import {Marker, Polyline, Popup} from "react-leaflet";
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import LeafletMap from "./MboxMap";
+import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
 import L from "leaflet";
 import ServiceStopPopup from "./ServiceStopPopup";
+import {renderToStaticMarkup} from "react-dom/server";
 
 interface IProps {
     segment: Segment;
@@ -14,6 +15,12 @@ interface IProps {
 }
 
 class MapPolyline extends React.Component<IProps, {}> {
+
+    private static generateServiceStopSVGMarkup(color: string, opacity: number): string {
+        return renderToStaticMarkup(
+            <IconServiceStop style={{color: color, opacity: opacity}}/>
+        )
+    }
 
     public render(): React.ReactNode {
         const segment = this.props.segment;
@@ -34,7 +41,7 @@ class MapPolyline extends React.Component<IProps, {}> {
                     const stops = shape.stops.slice(1, shape.stops.length - 1);
                     stopMarkers = stops.map((stop: ServiceStopLocation, iStop: number) => {
                         const stopIcon = L.divIcon({
-                            html: LeafletMap.generateServiceStopSVGMarkup(shape.travelled ?
+                            html: MapPolyline.generateServiceStopSVGMarkup(shape.travelled ?
                                 segment.getColor() : "grey", shape.travelled ? 1 : .5),
                             className: "SegmentPolyline-stop"
                         });

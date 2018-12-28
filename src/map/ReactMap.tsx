@@ -1,6 +1,6 @@
 import * as React from "react";
 import "./ReactMap.css";
-import {Map as RLMap, Marker, Popup, TileLayer, ZoomControl} from "react-leaflet";
+import {Map as RLMap, Marker, Popup, ZoomControl} from "react-leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
@@ -32,6 +32,7 @@ interface IProps {
     onclick?: (latLng: LatLng) => void;
     ondragend?: (from: boolean, latLng: LatLng) => void;
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
+    attributionControl?: boolean;
 }
 
 interface IState {
@@ -166,7 +167,6 @@ class ReactMap extends React.Component<IProps, IState> {
             arrival.action = "Arrive";
             tripSegments = this.props.trip.segments.concat([arrival]);
         }
-
         return (
             <RLMap
                 className="map-canvas avoidVerticalScroll gl-flex gl-grow"
@@ -194,16 +194,8 @@ class ReactMap extends React.Component<IProps, IState> {
                     }
                 }}
                 zoomControl={false}
+                attributionControl={this.props.attributionControl !== false}
             >
-                <TileLayer
-                    attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                    // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                    // url="https://api.mapbox.com/styles/v1/mgomezlucero/cjle1r3go0axx2rqh15dcenzo.html?fresh=true&title=true&access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA#12.0/48.866500/2.317600/0"
-                    // url="https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
-                    // url="https://api.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
-                    // url="https://api.mapbox.com/styles/v1/mgomezlucero/cjle1r3go0axx2rqh15dcenzo.html/tiles/256/{z}/{x}/{y}?fresh=true&title=true&access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA#12.0/48.866500/2.317600/0"
-                    url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
-                />
                 <ZoomControl position={"topright"}/>
                 {this.props.from && this.props.from.isResolved() &&
                 <Marker position={this.props.from!}
@@ -261,6 +253,7 @@ class ReactMap extends React.Component<IProps, IState> {
                                                (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                                            key={i}/>;
                 })}
+                {this.props.children}
             </RLMap>
         )
     }
