@@ -49,8 +49,6 @@ class Segment extends SegmentTemplate {
     }
 
     private _trip: Trip;
-    private _arrival: boolean;
-
 
     get startTime(): number {
         return this._startTime;
@@ -153,14 +151,6 @@ class Segment extends SegmentTemplate {
         return visibility ?
             this === this.trip.segments.slice().reverse().find((segment: Segment) => segment.visibilityType === visibility) :
             this === this.trip.segments[this.trip.segments.length - 1];
-    }
-
-    get arrival(): boolean {
-        return this._arrival;
-    }
-
-    set arrival(value: boolean) {
-        this._arrival = value;
     }
 
     public isMyWay(): boolean {

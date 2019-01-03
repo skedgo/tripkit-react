@@ -41,6 +41,10 @@ class MapUtil {
         return LeafletUtil.toBBox(LeafletUtil.getTripBounds(trip));
     }
 
+    public static toDegrees(radians: number) {
+        return radians * 180 / Math.PI;
+    };
+
 }
 
 export default MapUtil;

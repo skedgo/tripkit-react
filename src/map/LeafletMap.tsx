@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./ReactMap.css";
+import "./LeafletMap.css";
 import {Map as RLMap, Marker, Popup, ZoomControl} from "react-leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -21,6 +21,7 @@ import Options from "../model/Options";
 import GATracker from "../analytics/GATracker";
 import MapLocationPopup from "./MapLocationPopup";
 import {Visibility} from "../model/trip/SegmentTemplate";
+import {IProps as SegmentPinIconProps, default as SegmentPinIcon} from "./SegmentPinIcon";
 
 interface IProps {
     from?: Location;
@@ -33,6 +34,7 @@ interface IProps {
     ondragend?: (from: boolean, latLng: LatLng) => void;
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
     attributionControl?: boolean;
+    renderPinIcon?: <P extends SegmentPinIconProps>(props: P) => JSX.Element;
 }
 
 interface IState {
@@ -40,7 +42,7 @@ interface IState {
 }
 
 // class ReactMap<P extends MapProps & IProps> extends React.Component<P, {}> {
-class ReactMap extends React.Component<IProps, IState> {
+class LeafletMap extends React.Component<IProps, IState> {
 
     // private readonly ZOOM_ALL_LOCATIONS = 15;
     private readonly ZOOM_ALL_LOCATIONS = 0;    // Zoom all locations at any zoom.
@@ -112,7 +114,7 @@ class ReactMap extends React.Component<IProps, IState> {
         const popup = <Popup
             offset={[0, 0]}
             closeButton={false}
-            className="ReactMap-mapLocPopup"
+            className="LeafletMap-mapLocPopup"
         >
             <MapLocationPopup value={loc}/>
         </Popup>;
@@ -157,7 +159,8 @@ class ReactMap extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
-
+        const renderPinIcon = this.props.renderPinIcon ? this.props.renderPinIcon :
+            <P extends SegmentPinIconProps>(props: P) => <SegmentPinIcon {...props}/>;
         let tripSegments;
         if (this.props.trip) {
             const last: Segment = this.props.trip!.segments[this.props.trip!.segments.length - 1];
@@ -251,6 +254,7 @@ class ReactMap extends React.Component<IProps, IState> {
                     return <MapTripSegment segment={segment}
                                            ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.ondragend ?
                                                (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
+                                           renderPinIcon={renderPinIcon}
                                            key={i}/>;
                 })}
                 {this.props.children}
@@ -286,4 +290,4 @@ class ReactMap extends React.Component<IProps, IState> {
     }
 }
 
-export default ReactMap;
+export default LeafletMap;

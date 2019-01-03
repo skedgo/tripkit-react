@@ -1,28 +1,7 @@
-.SegmentPinIcon-parent {
-}
-
-.SegmentPinIcon-parent,
-.SegmentPinIcon-parent > div {
-  outline: none!important;
-}
-
-.SegmentPinIcon-parent.firstSegment:hover svg {
-  color: grey!important;
-}
-
-.SegmentPinIcon-parent.arriveSegment:hover svg {
-  color: #0242ac!important;
-}
-
-.SegmentPinIcon-parent.firstSegment:hover img,
-.SegmentPinIcon-parent.arriveSegment:hover img {
-  display: none;
-}
-
 .SegmentPinIcon-pin {
   position: initial!important;
-  height: 35px;
-  width: 35px;
+  height: 48px;
+  width: 48px;
   outline: none!important;
 }
 
@@ -33,13 +12,31 @@
 .SegmentPinIcon-transport {
   position: absolute;
   z-index: 2;
-  top: 4px;
+  top: 10px;
   left: 50%;
   -webkit-transform: translate(-50%);
   -moz-transform: translate(-50%);
   -ms-transform: translate(-50%);
   -o-transform: translate(-50%);
   transform: translate(-50%);
-  width: 17px;
-  height: 17px;
+  width: 24px;
+  height: 24px;
+}
+
+.SegmentPinIcon-base {
+  margin-top: -12px;
+}
+
+.SegmentPinIcon-timeLabel {
+  position: absolute;
+  top: 12px;
+  left: 30px;
+  background-color: black;
+  opacity: .7;
+  color: white;
+  padding: 3px 10px 3px 14px;
+  -webkit-border-radius: 0 10px 10px 0;
+  -moz-border-radius: 0 10px 10px 0;
+  border-radius: 0 10px 10px 0;
+  z-index: -1;
 }

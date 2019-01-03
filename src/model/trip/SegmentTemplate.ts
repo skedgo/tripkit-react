@@ -4,6 +4,7 @@ import ModeInfo from "./ModeInfo";
 import ServiceShape from "./ServiceShape";
 import Street from "./Street";
 import StopLocation from "../StopLocation";
+import MapUtil from "../../util/MapUtil";
 
 export enum Visibility {
     IN_DETAILS,
@@ -40,7 +41,7 @@ class SegmentTemplate {
     @JsonProperty("type", String, true)
     private _type: string = "";
     @JsonProperty("travelDirection", Number, true)
-    private _travelDirection: number = 0;
+    private _travelDirection: number | undefined = undefined;
     @JsonProperty("location", Location, true)
     private _location: Location = new Location();
     @JsonProperty("streets", [Street], true)
@@ -78,6 +79,8 @@ class SegmentTemplate {
     constructor() {
         // Empty constructor
     }
+
+    private _arrival: boolean = false;
 
     get hashCode(): number {
         return this._hashCode;
@@ -166,11 +169,14 @@ class SegmentTemplate {
         this._type = value;
     }
 
-    get travelDirection(): number {
-        return this._travelDirection;
+    get travelDirection(): number | undefined {
+        if (this.arrival) {
+            return undefined;
+        }
+        return this._travelDirection ? this._travelDirection : 90 - this.getAngleDegrees();
     }
 
-    set travelDirection(value: number) {
+    set travelDirection(value: number | undefined) {
         this._travelDirection = value;
     }
 
@@ -285,6 +291,14 @@ class SegmentTemplate {
         return this._notesList;
     }
 
+    get arrival(): boolean {
+        return this._arrival;
+    }
+
+    set arrival(value: boolean) {
+        this._arrival = value;
+    }
+
     private static fromVisibilityS(visibilityS: string | null): Visibility {
         switch (visibilityS) {
             case "in summary":
@@ -298,6 +312,12 @@ class SegmentTemplate {
             default:
                 return Visibility.UNKNOWN;
         }
+    }
+
+    private getAngleDegrees(): number {
+        const latDiff =  this.to.lat - this.from.lat;
+        const lngDiff = this.to.lng - this.from.lng;
+        return MapUtil.toDegrees(Math.atan2(latDiff, lngDiff));
     }
 }
 

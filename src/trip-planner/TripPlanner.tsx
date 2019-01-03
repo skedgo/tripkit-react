@@ -37,7 +37,7 @@ import Constants from "../util/Constants";
 import ITripPlannerProps from "./ITripPlannerProps";
 import TripGroup from "../model/trip/TripGroup";
 import TripDetail from "../trip/TripDetail";
-import ReactMap from "../map/ReactMap";
+import LeafletMap from "../map/LeafletMap";
 import Location from "../model/Location";
 import MultiGeocoder from "../location_box/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
@@ -62,7 +62,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private eventBus: EventEmitter = new EventEmitter();
     private ref: any;
-    private mapRef: ReactMap;
+    private mapRef: LeafletMap;
     private geocodingData: MultiGeocoder;
 
     constructor(props: ITripPlannerProps) {
@@ -297,7 +297,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                         </div>
                         <div className="sg-container gl-flex gl-grow" aria-hidden={true} tabIndex={-1}>
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
-                                <ReactMap
+                                <LeafletMap
                                     viewport={this.state.viewport}
                                     onViewportChanged={(viewport: {center?: LatLng, zoom?: number}) => {
                                         this.setState({viewport: viewport});
@@ -318,14 +318,14 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     }}
                                     bounds={this.state.mapBounds}
                                     showLocations={true}
-                                    ref={(ref: ReactMap) => this.mapRef = ref}
+                                    ref={(ref: LeafletMap) => this.mapRef = ref}
                                 >
                                     <TileLayer
                                         attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                                         // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                                         url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
                                     />
-                                </ReactMap>
+                                </LeafletMap>
                             </div>
                             <Tooltip
                                 overlay={"Feedback info copied to clipboard"}

@@ -196,6 +196,31 @@
   font-size: 13px;
 }
 
+.MapTripSegment-icon-container {
+  margin-left: -20px!important; /* center anchor on 12px width */
+  margin-top: -62px!important; /* bottom anchor on 62px height */
+  width: 40px!important;
+  height: 62px!important;
+}
+
+.MapTripSegment-icon-container,
+.MapTripSegment-icon-container > div {
+  outline: none!important;
+}
+
+.MapTripSegment-icon-container.firstSegment:hover svg {
+  color: grey!important;
+}
+
+.MapTripSegment-icon-container.arriveSegment:hover svg {
+  color: #0242ac!important;
+}
+
+.MapTripSegment-icon-container.firstSegment:hover img,
+.MapTripSegment-icon-container.arriveSegment:hover img {
+  display: none;
+}
+
 @media (min-width: 801px) {
 
   .TripPlanner-noTripsView .TripPlanner-queryFooter {
