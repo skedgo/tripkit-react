@@ -3,10 +3,11 @@ import "./ServiceStopPopup.css";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
+import Segment from "../model/trip/Segment";
 
 interface IProps {
     stop: ServiceStopLocation;
-    color: string
+    segment: Segment;
 }
 
 interface IState {
@@ -22,7 +23,7 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         return (
-            <div className="ServiceStopPopup" style={{ borderLeft: "4px solid " + this.props.color }}>
+            <div className="ServiceStopPopup">
                 <div className="ServiceStopPopup-name">{this.props.stop.name}</div>
                 <div className="ServiceStopPopup-stopId">Stop ID: {this.props.stop.code}</div>
                 {this.state.interchangeUrl ?
@@ -46,4 +47,5 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
     }
 }
 
+export {IProps};
 export default ServiceStopPopup;

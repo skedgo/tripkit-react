@@ -4,14 +4,14 @@
   min-width: 200px;
 }
 
-.SegmentPopup-location {
-  font-weight: 500;
+.SegmentPopup-title {
   color: black;
+  font-size: 14px;
 }
 
-.SegmentPopup-name {
-  font-weight: 500;
+.SegmentPopup-subtitle {
   color: black;
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -23,12 +23,4 @@
   border-top: 1px solid #ECEBEB;
   margin-top: 7px;
   padding-top: 7px;
-}
-
-.SegmentPopup-popup .leaflet-popup-content-wrapper,
-.SegmentPopup-popup .leaflet-popup-content {
-  padding: 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
 }

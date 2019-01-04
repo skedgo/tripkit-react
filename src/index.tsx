@@ -14,6 +14,7 @@ export {default as LatLng} from "./model/LatLng";
 export {default as BBox} from "./model/BBox";
 export {default as Location} from "./model/Location";
 export {default as StopLocation} from "./model/StopLocation";
+export {default as ServiceStopLocation} from "./model/ServiceStopLocation";
 export {default as RoutingQuery, TimePreference} from "./model/RoutingQuery";
 export {default as withRoutingResults} from "./api/WithRoutingResults";
 export {default as LeafletMap} from "./map/LeafletMap";
@@ -30,6 +31,8 @@ export {default as TripAltBtn} from "./trip/TripAltBtn";
 export {default as Segment} from "./model/trip/Segment";
 export {default as Trip} from "./model/trip/Trip";
 export {default as TripGroup} from "./model/trip/TripGroup";
+export {default as ServiceShape} from "./model/trip/ServiceShape";
+export {default as Street} from "./model/trip/Street";
 export {default as OptionsView} from "./options/OptionsView";
 export {default as Options} from "./model/Options";
 export {default as OptionsData} from "./data/OptionsData";
@@ -47,9 +50,13 @@ export {default as LocationUtil} from "./util/LocationUtil";
 export {default as SegmentDetail, SegmentDetailProps} from "./trip/TripSegmentDetail";
 export {default as MultiGeocoder} from "./location_box/MultiGeocoder";
 export {Marker} from "react-leaflet";
-export {TileLayer, AttributionControl} from "react-leaflet";
+// Export the following so tripkit-react client can import them from tripkit-react instead of react-leaflet
+// to avoid transitive dependency issue.
+export {TileLayer, AttributionControl, PolylineProps} from "react-leaflet";
 export {default as Control} from "react-leaflet-control";
 export {IProps as SegmentPinIconProps} from "./map/SegmentPinIcon";
+export {IProps as SegmentPopupProps} from "./map/SegmentPopup";
+export {IProps as ServiceStopPopupProps} from "./map/ServiceStopPopup";
 
 
 // TODO: This is temporary until we separate the sample (tripgo-sample.tsx) from the tripkit-react library.

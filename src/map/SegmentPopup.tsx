@@ -3,6 +3,7 @@ import "./SegmentPopup.css";
 import Segment from "../model/trip/Segment";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 interface IProps {
     segment: Segment;
@@ -20,13 +21,14 @@ class SegmentPopup extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const fromAddress = this.props.segment.from.address;
+        const segment = this.props.segment;
+        const title = segment.arrival ? "Arrive to " + segment.to.getDisplayString() + " at " + DateTimeUtil.momentTZTime(segment.endTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : segment.getAction();
+        const subtitle = !segment.arrival ?
+            (segment.isFirst() ? "To " + segment.to.getDisplayString() : "From " + segment.from.getDisplayString()) : undefined;
         return (
-                <div className="SegmentPopup" style={{ borderLeft: "4px solid " + this.props.segment.getColor() }}>
-                    <div className="SegmentPopup-location gl-overflow-ellipsis">{fromAddress}</div>
-                    {this.props.segment.stopCode ?
-                        <div className="SegmentPopup-stopId">Stop ID: {this.props.segment.stopCode}</div> : null}
-                    <div className="SegmentPopup-name">{this.props.segment.getAction()}</div>
+                <div className="SegmentPopup">
+                    <div className="SegmentPopup-title gl-overflow-ellipsis">{title}</div>
+                    <div className="SegmentPopup-subtitle">{subtitle}</div>
                     {this.state.interchangeUrl ?
                         <div className="SegmentPopup-link gl-link"
                              onClick={() => window.open(this.state.interchangeUrl,'_blank')}
@@ -50,4 +52,5 @@ class SegmentPopup extends React.Component<IProps, IState> {
     }
 }
 
+export {IProps};
 export default SegmentPopup;

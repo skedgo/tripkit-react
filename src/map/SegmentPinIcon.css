@@ -12,7 +12,7 @@
 .SegmentPinIcon-transport {
   position: absolute;
   z-index: 2;
-  top: 10px;
+  top: 12px;
   left: 50%;
   -webkit-transform: translate(-50%);
   -moz-transform: translate(-50%);

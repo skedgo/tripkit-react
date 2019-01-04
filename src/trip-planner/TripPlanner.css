@@ -208,17 +208,38 @@
   outline: none!important;
 }
 
-.MapTripSegment-icon-container.firstSegment:hover svg {
-  color: grey!important;
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin circle {
+  fill: #f66967;
+  stroke: #dc5553;
 }
 
-.MapTripSegment-icon-container.arriveSegment:hover svg {
-  color: #0242ac!important;
-}
-
-.MapTripSegment-icon-container.firstSegment:hover img,
-.MapTripSegment-icon-container.arriveSegment:hover img {
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-transport:hover,
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-transport,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-transport:hover,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-transport {
   display: none;
+}
+
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover circle,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover path {
+  stroke-dasharray: 4;
+  stroke: black;
+}
+
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover {
+  opacity: .9;
+}
+
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-timeLabel,
+.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-transport:hover~.SegmentPinIcon-timeLabel,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-timeLabel,
+.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-transport:hover~.SegmentPinIcon-timeLabel {
+  display: none;
+}
+
+.MapTripSegment-popup {
+  bottom: 46px!important;
 }
 
 @media (min-width: 801px) {

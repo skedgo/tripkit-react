@@ -22,7 +22,7 @@ class SegmentPinIcon extends React.Component<IProps, {}> {
         // On dark background if there is a suitable remote icon for dark background, or there is not
         // remote icon for light background, so will use a local icon for dark background.
         const onDark = segment.arrival || (modeInfo.remoteIcon === null && modeInfo.remoteDarkIcon !== null);
-        const transIcon = segment.arrival ? Constants.absUrl("/images/map/ic-arrive-flag.svg") :
+        const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, onDark);
         const timeS = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return (
