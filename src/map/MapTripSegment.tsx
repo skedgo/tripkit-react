@@ -8,8 +8,6 @@ import LatLng from "../model/LatLng";
 import {renderToStaticMarkup} from "react-dom/server";
 import {IProps as SegmentPinIconProps} from "./SegmentPinIcon";
 import {IProps as SegmentPopupProps} from "./SegmentPopup";
-import ServiceShape from "../model/trip/ServiceShape";
-import Street from "../model/trip/Street";
 import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
 
 interface IProps {
@@ -17,8 +15,8 @@ interface IProps {
     ondragend?: (latLng: LatLng) => void;
     renderPinIcon: <P extends SegmentPinIconProps>(props: P) => JSX.Element;
     renderPopup: <P extends SegmentPopupProps>(props: P) => JSX.Element;
-    shapePolylineOptions: (shape: ServiceShape, segment: Segment) => PolylineProps | PolylineProps[] | undefined;
-    streetPolylineOptions: (street: Street, segment: Segment) => PolylineProps | PolylineProps[];
+    polylineOptions: (segment: Segment) => PolylineProps | PolylineProps[];
+    renderServiceStop: <P extends ServiceStopPopupProps>(props: P) => JSX.Element | undefined;
     renderServiceStopPopup: <P extends ServiceStopPopupProps>(props: P) => JSX.Element;
 }
 
@@ -50,8 +48,8 @@ class MapTripSegment extends React.Component<IProps, {}> {
             </Marker>,
             <MapPolyline segment={segment}
                          key={"map-polyline"}
-                         shapePolylineOptions={this.props.shapePolylineOptions}
-                         streetPolylineOptions={this.props.streetPolylineOptions}
+                         polylineOptions={this.props.polylineOptions}
+                         renderServiceStop={this.props.renderServiceStop}
                          renderServiceStopPopup={this.props.renderServiceStopPopup}
             />
         ]);

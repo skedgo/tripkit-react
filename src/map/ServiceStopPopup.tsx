@@ -4,9 +4,11 @@ import ServiceStopLocation from "../model/ServiceStopLocation";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
 import Segment from "../model/trip/Segment";
+import ServiceShape from "../model/trip/ServiceShape";
 
 interface IProps {
     stop: ServiceStopLocation;
+    shape: ServiceShape;
     segment: Segment;
 }
 

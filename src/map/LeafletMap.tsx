@@ -26,6 +26,7 @@ import {IProps as SegmentPopupProps, default as SegmentPopup} from "./SegmentPop
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import {IProps as ServiceStopPopupProps, default as ServiceStopPopup} from "./ServiceStopPopup";
+import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
 
 interface IProps {
     from?: Location;
@@ -38,11 +39,10 @@ interface IProps {
     ondragend?: (from: boolean, latLng: LatLng) => void;
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
     attributionControl?: boolean;
-    renderPinIcon?: <P extends SegmentPinIconProps>(props: P) => JSX.Element;
-    renderPopup?: <P extends SegmentPopupProps>(props: P) => JSX.Element;
-    shapePolylineOptions?: (shape: ServiceShape, segment: Segment) =>
-        PolylineProps | PolylineProps[] | undefined;  // If return undefined shape won't show.
-    streetPolylineOptions?: (street: Street, segment: Segment) => PolylineProps | PolylineProps[];
+    renderSegmentPinIcon?: <P extends SegmentPinIconProps>(props: P) => JSX.Element;
+    renderSegmentPopup?: <P extends SegmentPopupProps>(props: P) => JSX.Element;
+    segmentPolylineOptions?: (segment: Segment) => PolylineProps | PolylineProps[];
+    renderServiceStop?: <P extends ServiceStopPopupProps>(props: P) => JSX.Element | undefined;
     renderServiceStopPopup?: <P extends ServiceStopPopupProps>(props: P) => JSX.Element;
 }
 
@@ -168,46 +168,56 @@ class LeafletMap extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
-        const renderPinIcon = this.props.renderPinIcon ? this.props.renderPinIcon :
+        const renderPinIcon = this.props.renderSegmentPinIcon ? this.props.renderSegmentPinIcon :
             <P extends SegmentPinIconProps>(props: P) => <SegmentPinIcon {...props}/>;
-        const renderPopup = this.props.renderPopup ? this.props.renderPopup :
+        const renderPopup = this.props.renderSegmentPopup ? this.props.renderSegmentPopup :
             <P extends SegmentPopupProps>(props: P) => <SegmentPopup {...props}/>;
-        const shapePolylineOptions = this.props.shapePolylineOptions ? this.props.shapePolylineOptions :
-            (shape: ServiceShape, segment: Segment) => {
-                return [
-                    {
-                        positions: shape.waypoints,
-                        weight: 9,
-                        color: shape.travelled ? "black" : "lightgray",
-                        opacity: shape.travelled ? 1 : .5,
-                    } as PolylineProps,
-                    {
-                        positions: shape.waypoints,
-                        weight: 7,
-                        color: shape.travelled ? segment.getColor() : "grey",
-                        opacity: shape.travelled ? 1 : .5,
-                    } as PolylineProps
-                ];
+        const segmentPolylineOptions = this.props.segmentPolylineOptions ? this.props.segmentPolylineOptions :
+            (segment: Segment) => {
+                if (segment.shapes) {
+                    return segment.shapes.map((shape: ServiceShape) => {
+                        return {
+                            positions: shape.waypoints,
+                            weight: 9,
+                            color: shape.travelled ? "black" : "lightgray",
+                            opacity: shape.travelled ? 1 : .5,
+                        } as PolylineProps
+                    }).concat(segment.shapes.map((shape: ServiceShape) => {
+                        return {
+                            positions: shape.waypoints,
+                            weight: 7,
+                            color: shape.travelled ? segment.getColor() : "grey",
+                            opacity: shape.travelled ? 1 : .5,
+                        } as PolylineProps
+                    }));
+                } else if (segment.streets) {
+                    return segment.streets.map((street: Street) => {
+                        return {
+                            positions: street.waypoints,
+                            weight: 9,
+                            color: "black",
+                            // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
+                            opacity: 1  // Disable safe distinction for now
+                        } as PolylineProps
+                    }).concat(segment.streets.map((street: Street) => {
+                        return {
+                            positions: street.waypoints,
+                            weight: 7,
+                            color: segment.isWalking() ? "#20ce6e" : segment.getColor(),
+                            // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
+                            opacity: 1  // Disable safe distinction for now
+                        } as PolylineProps
+                    }));
+                } else {
+                    return [];
+                }
             };
-        const streetPolylineOptions = this.props.streetPolylineOptions ? this.props.streetPolylineOptions :
-            (street: Street, segment: Segment) => {
-                return [
-                    {
-                        positions: street.waypoints,
-                        weight: 9,
-                        color: "black",
-                        // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
-                        opacity: 1  // Disable safe distinction for now
-                    } as PolylineProps,
-                    {
-                        positions: street.waypoints,
-                        weight: 7,
-                        color: segment.isWalking() ? "#20ce6e" : segment.getColor(),
-                        // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
-                        opacity: 1  // Disable safe distinction for now
-                    } as PolylineProps
-                ]
-            };
+        const renderServiceStop = this.props.renderServiceStop ? this.props.renderServiceStop :
+            <P extends ServiceStopPopupProps>(props: P) =>
+                <IconServiceStop style={{
+                    color: props.shape.travelled ? props.segment.getColor() : "grey",
+                    opacity: props.shape.travelled ? 1 : .5
+                }}/>;
         const renderServiceStopPopup = this.props.renderServiceStopPopup ? this.props.renderServiceStopPopup :
             <P extends ServiceStopPopupProps>(props: P) => <ServiceStopPopup {...props}/>;
         let tripSegments;
@@ -305,8 +315,8 @@ class LeafletMap extends React.Component<IProps, IState> {
                                                (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                                            renderPinIcon={renderPinIcon}
                                            renderPopup={renderPopup}
-                                           shapePolylineOptions={shapePolylineOptions}
-                                           streetPolylineOptions={streetPolylineOptions}
+                                           polylineOptions={segmentPolylineOptions}
+                                           renderServiceStop={renderServiceStop}
                                            renderServiceStopPopup={renderServiceStopPopup}
                                            key={i}/>;
                 })}

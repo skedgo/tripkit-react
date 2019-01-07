@@ -1,49 +1,41 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
 import {Marker, Polyline, Popup, PolylineProps} from "react-leaflet";
-import Street from "../model/trip/Street";
-import ServiceShape from "../model/trip/ServiceShape";
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
 import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";
 import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
 
 interface IProps {
     segment: Segment;
-    shapePolylineOptions: (shape: ServiceShape, segment: Segment) => PolylineProps | PolylineProps[] | undefined;
-    streetPolylineOptions: (street: Street, segment: Segment) => PolylineProps | PolylineProps[];
+    polylineOptions: (segment: Segment) => PolylineProps | PolylineProps[];
+    renderServiceStop: <P extends ServiceStopPopupProps>(props: P) => JSX.Element | undefined;
     renderServiceStopPopup: <P extends ServiceStopPopupProps>(props: P) => JSX.Element;
 }
 
 class MapPolyline extends React.Component<IProps, {}> {
 
-    private static generateServiceStopSVGMarkup(color: string, opacity: number): string {
-        return renderToStaticMarkup(
-            <IconServiceStop style={{color: color, opacity: opacity}}/>
-        )
-    }
-
     public render(): React.ReactNode {
         const segment = this.props.segment;
+        const polylineOptions = this.props.polylineOptions(segment);
+        const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
+        const polylineArray = polylineOptionsArray
+            .map((options: PolylineProps, i: number) => <Polyline {...options} key={"polyline-" + segment.trip.getKey() + "-" + i}/>);
+        const stopMarkers = [];
         if (segment.shapes) {
-            const shapes = segment.shapes;
-            return shapes.map((shape: ServiceShape, i: number) => {
-                const shapePolylineOptions = this.props.shapePolylineOptions(shape, segment);
-                if (!shapePolylineOptions) {
-                    return null;
-                }
-                const shapePolylineOptionsArray = shapePolylineOptions.constructor === Array ? shapePolylineOptions : [shapePolylineOptions];
-                const polylineArray = (shapePolylineOptionsArray as PolylineProps[]).map(
-                    (options: PolylineProps) => <Polyline {...options} key={"polyline-" + i}/>);
-                let stopMarkers;
+            for (const shape of segment.shapes) {
                 if (shape.stops) {
                     const stops = shape.stops.slice(1, shape.stops.length - 1);
-                    stopMarkers = stops.map((stop: ServiceStopLocation, iStop: number) => {
+                    stopMarkers.push(stops.map((stop: ServiceStopLocation, iStop: number) => {
+                        const element = this.props.renderServiceStop({
+                                stop: stop,
+                                shape: shape,
+                                segment: this.props.segment
+                            });
+                        const iconHTML = element ? renderToStaticMarkup(element) : undefined;
                         const stopIcon = L.divIcon({
-                            html: MapPolyline.generateServiceStopSVGMarkup(shape.travelled ?
-                                segment.getColor() : "grey", shape.travelled ? 1 : .5),
-                            className: "SegmentPolyline-stop"
+                            html: iconHTML,
+                            className: "MapPolyline-stop"
                         });
                         return <Marker icon={stopIcon} position={stop} key={"stop-" + iStop}>
                             <Popup className={"ServiceStopPopup-popup"}
@@ -51,26 +43,16 @@ class MapPolyline extends React.Component<IProps, {}> {
                             >
                                 {this.props.renderServiceStopPopup({
                                     stop: stop,
+                                    shape: shape,
                                     segment: segment
                                 })}
                             </Popup>
                         </Marker>
-                    })
+                    }));
                 }
-                return [polylineArray, stopMarkers];
-            });
-        } else if (segment.streets) {
-             return segment.streets.map((street: Street, i: number) => {
-                 const streetPolylineOptions = this.props.streetPolylineOptions(street, segment);
-                 const streetPolylineOptionsArray = streetPolylineOptions.constructor === Array ? streetPolylineOptions : [streetPolylineOptions];
-                 const polylineArray = (streetPolylineOptionsArray as PolylineProps[]).map(
-                     (options: PolylineProps) => <Polyline {...options} key={"polyline-" + i}/>);
-                 return polylineArray;
-                }
-            )
-        } else {
-            return null;
+            }
         }
+        return [polylineArray, stopMarkers];
     }
 }
 
