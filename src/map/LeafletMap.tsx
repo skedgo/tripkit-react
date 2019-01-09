@@ -27,6 +27,7 @@ import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import {IProps as ServiceStopPopupProps, default as ServiceStopPopup} from "./ServiceStopPopup";
 import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
+import RegionsData from "../data/RegionsData";
 
 interface IProps {
     from?: Location;
@@ -107,9 +108,9 @@ class LeafletMap extends React.Component<IProps, IState> {
         const showAny = this.props.showLocations && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
             && enabledMapLayers.length > 0;
         if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
-            LocationsData.instance.requestLocations("AU_ACT_Canberra", 1);
+            LocationsData.instance.requestLocations(RegionsData.HARDCODED_REGION, 1);
             if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS) {
-                LocationsData.instance.requestLocations("AU_ACT_Canberra", 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
+                LocationsData.instance.requestLocations(RegionsData.HARDCODED_REGION, 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
             }
         }
     }

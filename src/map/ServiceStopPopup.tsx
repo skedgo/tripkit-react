@@ -5,6 +5,7 @@ import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
 import Segment from "../model/trip/Segment";
 import ServiceShape from "../model/trip/ServiceShape";
+import RegionsData from "../data/RegionsData";
 
 interface IProps {
     stop: ServiceStopLocation;
@@ -39,7 +40,7 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
     }
 
     public componentDidMount(): void {
-        StopsData.instance.getStopFromCode("AU_ACT_Canberra", this.props.stop.code)
+        StopsData.instance.getStopFromCode(RegionsData.HARDCODED_REGION, this.props.stop.code)
             .then((stopLocation: StopLocation) => {
                     if (stopLocation.url !== null) {
                         this.setState({ interchangeUrl: stopLocation.url });

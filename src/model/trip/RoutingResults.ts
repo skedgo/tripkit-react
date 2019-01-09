@@ -41,6 +41,8 @@ class RoutingResults {
 
     private templatesMap: Map<number, SegmentTemplate> | null = null;
 
+    // This method mutate trip group objects, but it's not a problem since it's done just once and before using
+    // them in the react system.
     private postProcess() {
         this.templatesMap = new Map<number, SegmentTemplate>();
         for (const template of this.segmentTemplates) {

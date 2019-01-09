@@ -5,6 +5,9 @@ import Trip from "../model/trip/Trip";
 import {ITripPlannerProps as RResultsConsumerProps} from "../trip-planner/ITripPlannerProps";
 import RoutingQuery from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
+import NetworkUtil from "../util/NetworkUtil";
+import RoutingResults from "../model/trip/RoutingResults";
+import {JsonConvert} from "json2typescript";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -13,12 +16,15 @@ interface IWithRoutingResultsProps {
 interface IWithRoutingResultsState {
     query: RoutingQuery;
     trips: Trip[] | null;
+    selected?: Trip;
     waiting: boolean;
 }
 
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
 
     return class WithRoutingResults extends React.Component<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps, IWithRoutingResultsState> {
+
+        public realtimeInterval: any;
 
         constructor(props: Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps) {
             super(props);
@@ -28,6 +34,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                 waiting: false
             };
             this.onQueryChange = this.onQueryChange.bind(this);
+            this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
+            this.onAlternativeChange = this.onAlternativeChange.bind(this);
         }
 
         public onQueryChange(query: RoutingQuery) {
@@ -102,6 +110,45 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                 tripA.segments.length === tripB.segments.length;
         }
 
+        public onReqRealtimeFor(selected?: Trip) {
+            if (this.realtimeInterval) {
+                clearInterval(this.realtimeInterval);
+            }
+            if (!selected || !selected.updateURL) {  // No realtime data for the trip.
+                return;
+            }
+            this.realtimeInterval = setInterval(() => {
+                const updateURL = selected.updateURL;
+                TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
+                    + "v=11", NetworkUtil.MethodType.GET)
+                    .then((routingResultsJson: any) => {
+                        const jsonConvert = new JsonConvert();
+                        const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);
+                        routingResults.setQuery(this.state.query);
+                        routingResults.setSatappQuery(selected.satappQuery);
+                        return routingResults.groups;
+                    }).then((trips: Trip[]) => {
+                    if (trips.length === 0 || updateURL !== selected.updateURL) {
+                        return; // updateURL !== selected.updateURL will happen if selected trip group changed selected
+                                // alternative, so shouldn't update.
+                    }
+                    const selectedTGroup = selected as TripGroup;
+                    selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), trips[0]);
+                    this.setState({});
+                }).catch((reason: any) => {
+                    console.log(reason);
+                });
+            }, 10000);
+        }
+
+        public onAlternativeChange(group: TripGroup, alt: Trip) {
+            if (group.trips.indexOf(alt) !== -1) {
+                group.setSelected(group.trips.indexOf(alt));
+                this.setState({});
+                return;
+            }
+        }
+
         public render(): React.ReactNode {
             const { urlQuery, ...props } = this.props as IWithRoutingResultsProps;
             return <Consumer {...props}
@@ -109,6 +156,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                              onQueryChange={this.onQueryChange}
                              trips={this.state.trips}
                              waiting={this.state.waiting}
+                             onReqRealtimeFor={this.onReqRealtimeFor}
+                             onAlternativeChange={this.onAlternativeChange}
             />;
         }
 

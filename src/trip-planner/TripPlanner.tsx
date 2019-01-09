@@ -78,7 +78,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             queryInputFocusLatLng: LatLng.createLatLng(-35.3, 149.1),
             queryTimePanelOpen: false,
             feedbackTooltip: false,
-            viewport: {center: LatLng.createLatLng(-35.2816099,149.1264842), zoom: 13}
+            viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
         // Trigger regions request asap
         RegionsData.instance.getRegionP(new LatLng()); // TODO improve
@@ -89,14 +89,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         });
 
         this.eventBus.addListener(TripRow.TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
-            this.setState(prevState => {
-                if (prevState.tripsSorted) {
-                    const tripsUpdate = prevState.tripsSorted.slice();
-                    tripsUpdate[prevState.tripsSorted.indexOf(orig)] = update;
-                    return {tripsSorted: tripsUpdate};
-                }
-                return null;
-            })
+            this.props.onAlternativeChange(orig, update.getSelectedTrip());
         });
 
         WaiAriaUtil.addTabbingDetection();
@@ -109,6 +102,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         this.onShowOptions = this.onShowOptions.bind(this);
         this.onModalRequestedClose = this.onModalRequestedClose.bind(this);
         this.onMapLocChanged = this.onMapLocChanged.bind(this);
+        this.onSelected = this.onSelected.bind(this);
     }
 
     public onQueryChange(query: RoutingQuery) {
@@ -181,6 +175,11 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         if (this.mapRef) {
             this.mapRef.fitBounds(BBox.createBBoxArray(fitSet));
         }
+    }
+
+    private onSelected(selected?: Trip) {
+        this.setState({selected: selected});
+        this.props.onReqRealtimeFor(selected);
     }
 
     public render(): React.ReactNode {
@@ -282,7 +281,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                 :
                                 <TripsView values={this.state.tripsSorted}
                                            value={this.state.selected}
-                                           onChange={(value: Trip) => this.setState({selected: value})}
+                                           onChange={this.onSelected}
                                            waiting={this.props.waiting}
                                            eventBus={this.eventBus}
                                            className="gl-no-shrink"
@@ -419,17 +418,14 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips
             });
             if (!this.props.trips || this.props.trips.length === 0) {
-                this.setState({
-                    selected: undefined
-                });
+                this.onSelected(undefined);
             }
         }
         // If first group of trips arrived
         if (!this.state.selected && prevState.tripsSorted !== null && prevState.tripsSorted.length === 0 && this.state.tripsSorted !== null && this.state.tripsSorted.length > 0) {
             setTimeout(() => {
-                this.setState(
-                    {selected: this.state.tripsSorted !== null && this.state.tripsSorted.length > 0 ?
-                            this.state.tripsSorted[0] : undefined})
+                this.onSelected(this.state.tripsSorted !== null && this.state.tripsSorted.length > 0 ?
+                    this.state.tripsSorted[0] : undefined);
             }, 2000);
         }
         if (this.state.selected !== prevState.selected) {

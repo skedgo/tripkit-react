@@ -12,6 +12,7 @@ class RegionsData {
     private regions: Map<string, Region>;
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
+    public static HARDCODED_REGION = "AU_NSW_Sydney";   // TODO: Remove hardcoded region.
 
     constructor() {
         const jsonConvert = new JsonConvert();
@@ -46,13 +47,13 @@ class RegionsData {
         if (!this.regions) {
             return null;
         }
-        const region = this.regions.get("AU_ACT_Canberra");
+        const region = this.regions.get(RegionsData.HARDCODED_REGION);
         return region ? region : Region.regionStub;
     }
 
     public getRegionP(latLng: LatLng): Promise<Region> {
         return this.regionsPromise.then((regionsMap: Map<string, Region>) => {
-            const region = this.regions.get("AU_ACT_Canberra");
+            const region = this.regions.get(RegionsData.HARDCODED_REGION);
             return region ? region : Region.regionStub;
         });
     }

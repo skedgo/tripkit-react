@@ -14,7 +14,6 @@ class TripGroup extends Trip {
 
     private selected: number;
 
-
     constructor() {
         super()
     }
@@ -31,7 +30,6 @@ class TripGroup extends Trip {
         return this._sources;
     }
 
-
     public setSelected(value: number) {
         if (this.selected) {
             Object.assign(this.trips[this.selected], new Trip());
@@ -44,6 +42,15 @@ class TripGroup extends Trip {
 
     public getSelectedTrip(): Trip {
         return this.trips[this.selected];
+    }
+
+    public replaceAlternative(orig: Trip, update: Trip) {
+        const updateIndex = this.trips.indexOf(orig);
+        this.trips[updateIndex] = update;
+        if (this.selected === updateIndex) {
+            Object.assign(this, new Trip()); // Clean fields from previous selected trip
+            Object.assign(this, this.trips[this.selected]); // Assign values of new selected trip
+        }
     }
 }
 
