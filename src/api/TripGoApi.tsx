@@ -75,6 +75,30 @@ class TripGoApi {
         return routingPromises;
     }
 
+    public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
+        const updateURL = trip.updateURL;
+        return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
+            + "v=11", NetworkUtil.MethodType.GET)
+            .then((routingResultsJson: any) => {
+                const jsonConvert = new JsonConvert();
+                const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);
+                routingResults.setQuery(query);
+                routingResults.setSatappQuery(trip.satappQuery);
+                const tripGroups = routingResults.groups;
+                if (tripGroups.length === 0) {
+                    throw new Error('Empty trip group.');
+                }
+                return tripGroups[0];
+            }).catch((reason: Error) => {
+                // Our api answers 200 with a null json when there is no update, so return undefined;
+                if (reason.message.includes("Unexpected end of JSON input")) {
+                    return undefined;
+                }
+                console.log(reason);
+                throw reason;
+            })
+    }
+
     public static findStopFromCode(regionCode: string, stopCode: string): Promise<StopLocation> {
         return this.apiCall("stopFinder.json", NetworkUtil.MethodType.POST,
             {region: regionCode, code: stopCode})

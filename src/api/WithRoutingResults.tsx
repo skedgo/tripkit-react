@@ -5,9 +5,6 @@ import Trip from "../model/trip/Trip";
 import {ITripPlannerProps as RResultsConsumerProps} from "../trip-planner/ITripPlannerProps";
 import RoutingQuery from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
-import NetworkUtil from "../util/NetworkUtil";
-import RoutingResults from "../model/trip/RoutingResults";
-import {JsonConvert} from "json2typescript";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -119,25 +116,17 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
             this.realtimeInterval = setInterval(() => {
                 const updateURL = selected.updateURL;
-                TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
-                    + "v=11", NetworkUtil.MethodType.GET)
-                    .then((routingResultsJson: any) => {
-                        const jsonConvert = new JsonConvert();
-                        const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);
-                        routingResults.setQuery(this.state.query);
-                        routingResults.setSatappQuery(selected.satappQuery);
-                        return routingResults.groups;
-                    }).then((trips: Trip[]) => {
-                    if (trips.length === 0 || updateURL !== selected.updateURL) {
-                        return; // updateURL !== selected.updateURL will happen if selected trip group changed selected
-                                // alternative, so shouldn't update.
-                    }
-                    const selectedTGroup = selected as TripGroup;
-                    selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), trips[0]);
-                    this.setState({});
-                }).catch((reason: any) => {
-                    console.log(reason);
-                });
+                TripGoApi.updateRT(selected, this.state.query)
+                    .then((tripUpdate: Trip | undefined) => {
+                        // updateURL !== selected.updateURL will happen if selected trip group changed selected
+                        // alternative, so shouldn't update.
+                        if (!tripUpdate || updateURL !== selected.updateURL) {
+                            return;
+                        }
+                        const selectedTGroup = selected as TripGroup;
+                        selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
+                        this.setState({});
+                    });
             }, 10000);
         }
 

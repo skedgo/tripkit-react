@@ -23,7 +23,7 @@ class NetworkUtil {
         if (response.status === 204) {  // No content (so, no response.json()).
             return Promise.resolve({});
         }
-        return response.json()
+        return response.json();
     }
 
     public static jsonCallback(response: any): Promise<any> {
