@@ -10,9 +10,9 @@ class RegionsData {
 
     private regionsRequest: Promise<RegionResults>;
     private regions: Map<string, Region>;
+    private regionList: Region[];
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
-    public static HARDCODED_REGION = "AU_NSW_Sydney";   // TODO: Remove hardcoded region.
 
     constructor() {
         const jsonConvert = new JsonConvert();
@@ -25,6 +25,7 @@ class RegionsData {
             for (const region of regionResults.regions) {
                 this.regions.set(region.name, region);
             }
+            this.regionList = Array.from(this.regions.values());
             for (const modeKey of Object.keys(regionResults.modes)) {
                 const modeIdentifier = jsonConvert.deserialize(regionResults.modes[modeKey], ModeIdentifier) as ModeIdentifier;
                 modeIdentifier.identifier = modeKey;
@@ -47,20 +48,32 @@ class RegionsData {
         if (!this.regions) {
             return null;
         }
-        const region = this.regions.get(RegionsData.HARDCODED_REGION);
+        const region = this.findRegionByLatLng(latLng);
         return region ? region : Region.regionStub;
     }
 
-    public getRegionP(latLng: LatLng): Promise<Region> {
+    public getRegionP(latLng?: LatLng): Promise<Region> {
         return this.regionsPromise.then((regionsMap: Map<string, Region>) => {
-            const region = this.regions.get(RegionsData.HARDCODED_REGION);
+            if (!latLng) {
+                return Region.regionStub;
+            }
+            const region = this.findRegionByLatLng(latLng);
             return region ? region : Region.regionStub;
         });
     }
 
+    private findRegionByLatLng(latLng: LatLng): Region | undefined {
+        for (const region of this.regionList) {
+            if (region.contains(latLng)) {
+                return region;
+            }
+        }
+        return undefined;
+    }
+
     public getRegionByName(name: string): Region {
         const region = this.regions.get(name);
-        return region ? region : Region.regionStub
+        return region ? region : Region.regionStub;
     }
 
     public getRegionByNameP(name: string): Promise<Region> {

@@ -110,7 +110,7 @@ class RoutingQuery {
     }
 
     public getQueryUrls(): Promise<string[]> {
-        return RegionsData.instance.getRegionP(new LatLng()).then((region: Region) => {
+        return RegionsData.instance.getRegionP(this.from ? this.from : (this.to ? this.to : new LatLng())).then((region: Region) => {
             return SchoolGeocoder.instance.getSchoolsDataP().then(() => { // To be able to sync get schools in getQueryUrlsForRegion()
                 return this.getQueryUrlsForRegion(region);
             });

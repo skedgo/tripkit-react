@@ -4,6 +4,7 @@ import LatLng from "../model/LatLng";
 import L from "leaflet";
 import Segment from "../model/trip/Segment";
 import Trip from "../model/trip/Trip";
+import inside from "point-in-polygon";
 
 class LeafletUtil {
 
@@ -65,6 +66,10 @@ class LeafletUtil {
             decoded.push(LatLng.createLatLng(point[0], point[1]));
         }
         return decoded;
+    }
+
+    public static pointInPolygon(point: LatLng, polygon: LatLng[]): boolean {
+        return inside([point.lat, point.lng], polygon.map((polyPoint: LatLng) => [polyPoint.lat, polyPoint.lng]));
     }
 
 }

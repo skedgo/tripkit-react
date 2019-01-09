@@ -72,16 +72,13 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             selected: undefined,
             mapView: false,
             showOptions: false,
-            // TODO: Hardcode ACT bounding box to initalize, but not necessary (can leave undefined)
-            queryInputBounds: BBox.createBBox(LatLng.createLatLng(-34.37701,149.852),
-                LatLng.createLatLng(-35.975,148.674)),
-            queryInputFocusLatLng: LatLng.createLatLng(-35.3, 149.1),
             queryTimePanelOpen: false,
             feedbackTooltip: false,
+            // TODO: Hardcoded viewport
             viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
         // Trigger regions request asap
-        RegionsData.instance.getRegionP(new LatLng()); // TODO improve
+        RegionsData.instance.getRegionP(); // TODO improve
         this.eventBus.addListener("onChangeView", (view: string) => {
             if (view === "mapView") {
                 this.setState({ mapView: true });
@@ -135,8 +132,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private onShowOptions() {
         GATracker.instance.send('query input', 'click', 'options button');
-        RegionsData.instance.getRegionP(new LatLng())
-            .then(() => this.setState({showOptions: true}));
+        RegionsData.instance.getRegionP().then(() => this.setState({showOptions: true}));
     }
 
     private onMapLocChanged(from: boolean, latLng: LatLng) {
@@ -193,7 +189,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 onRequestClose={this.onModalRequestedClose}
             >
                 <OptionsView value={this.props.query.options}
-                             region={RegionsData.instance.getRegion(new LatLng())!}
+                             region={RegionsData.instance.getRegion(this.state.viewport.center!)!}
                              onChange={this.onOptionsChange}
                              onClose={this.onModalRequestedClose}
                              className="app-style"
@@ -366,8 +362,11 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     }
 
     public componentDidMount(): void {
-        RegionsData.instance.getRegionP(new LatLng()).then((region: Region) => {
-            this.setState({ queryInputBounds: region.bounds });
+        RegionsData.instance.getRegionP(this.state.viewport.center).then((region: Region) => {
+            this.setState({
+                queryInputBounds: region.bounds,
+                queryInputFocusLatLng: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()
+            });
         });
 
         // TEST

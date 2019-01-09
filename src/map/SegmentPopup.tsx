@@ -5,6 +5,7 @@ import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RegionsData from "../data/RegionsData";
+import Region from "../model/region/Region";
 
 interface IProps {
     segment: Segment;
@@ -42,13 +43,15 @@ class SegmentPopup extends React.Component<IProps, IState> {
 
     public componentDidMount(): void {
         if (this.props.segment.isPT() && this.props.segment.stopCode !== null) {
-            StopsData.instance.getStopFromCode(RegionsData.HARDCODED_REGION, this.props.segment.stopCode!)
-                .then((stopLocation: StopLocation) => {
-                        if (stopLocation.url !== null) {
-                            this.setState({interchangeUrl: stopLocation.url});
+            RegionsData.instance.getRegionP(this.props.segment.from).then((region: Region) => {
+                StopsData.instance.getStopFromCode(region.name, this.props.segment.stopCode!)
+                    .then((stopLocation: StopLocation) => {
+                            if (stopLocation.url !== null) {
+                                this.setState({interchangeUrl: stopLocation.url});
+                            }
                         }
-                    }
-                )
+                    )
+            });
         }
     }
 }

@@ -1,6 +1,8 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import BBox from "../BBox";
 import LeafletUtil from "../../util/LeafletUtil";
+import LatLng from "../LatLng";
+import City from "../location/City";
 
 @JsonObject
 class Region {
@@ -15,6 +17,8 @@ class Region {
     private _timezone: string = "";
     @JsonProperty("modes", [String])
     private _modes: string[] = [];
+    @JsonProperty("cities", [City])
+    private _cities: City[] = [];
 
     private _bounds: BBox | null = null;
 
@@ -34,11 +38,19 @@ class Region {
         return this._modes;
     }
 
+    get cities(): City[] {
+        return this._cities;
+    }
+
     get bounds(): BBox {
         if (this._bounds === null) {
             this._bounds = BBox.createBBoxArray(LeafletUtil.decodePolyline(this._polygon));
         }
         return this._bounds;
+    }
+
+    public contains(latLng: LatLng): boolean {
+        return LeafletUtil.pointInPolygon(latLng, LeafletUtil.decodePolyline(this._polygon));
     }
 }
 

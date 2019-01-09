@@ -3,12 +3,12 @@ import LatLng from "../model/LatLng";
 import BBox from "../model/BBox";
 import IGeocoder from "./IGeocoder";
 import PeliasGeocoder from "./PeliasGeocoder";
-import SkedgoGeocoder from "./SkedgoGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import SchoolGeocoder from "./SchoolGeocoder";
 import GeocodingSource from "./GeocodingSource";
 import Environment from "../env/Environment";
 import Features from "../env/Features";
+import SkedgoGeocoder from "./SkedgoGeocoder";
 
 class MultiGeocoder {
 
