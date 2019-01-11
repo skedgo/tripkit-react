@@ -38,7 +38,7 @@ class Location extends LatLng {
     }
 
     public isResolved(): boolean {
-        return this._lat !== 0 && this._lng !== 0;
+        return !this.isNull();
     }
 
     public getKey(): string {

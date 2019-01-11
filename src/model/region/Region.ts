@@ -6,9 +6,6 @@ import City from "../location/City";
 
 @JsonObject
 class Region {
-
-    public static regionStub = new Region();
-
     @JsonProperty("name", String)
     private _name: string = "";
     @JsonProperty("polygon", String, true)

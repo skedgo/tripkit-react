@@ -1,6 +1,7 @@
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Environment from "../env/Environment";
+import iplocation from "iplocation";
 
 class GeolocationData {
 
@@ -24,7 +25,14 @@ class GeolocationData {
             });
     }
 
-    public requestCurrentLocation(): Promise<LatLng> {
+    public requestIPLocation(): Promise<LatLng> {
+        return iplocation('0.0.0.0', ["https://ipapi.co/json/"]).then((res) => {
+            // console.log(JSON.stringify(res));
+            return LatLng.createLatLng(res.latitude, res.longitude);
+        });
+    }
+
+    public requestCurrentLocationHTML5(): Promise<LatLng> {
         return new Promise<LatLng>((resolve, reject) => {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -36,6 +44,14 @@ class GeolocationData {
                     });
             }
         });
+    }
+
+    public requestCurrentLocation(dontAskUser?: boolean): Promise<LatLng> {
+        if (dontAskUser) {
+            return this.requestIPLocation();
+            // return this.requestCurrentLocationGMaps();
+        }
+        return this.requestCurrentLocationHTML5();
     }
 
 }

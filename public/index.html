@@ -47,6 +47,17 @@
         }
       }
     </style>
+    <script>
+        var userIpLocation;
+        function requestIPLocation() {
+            fetch("https://ipapi.co/json/").then(function(response){ return response.json() })
+                .then(function(responseJson) {
+                    console.log(JSON.stringify(responseJson));
+                    userIpLocation = [responseJson.latitude, responseJson.longitude];
+                });
+        }
+        requestIPLocation();
+    </script>
   </head>
   <body>
     <noscript>

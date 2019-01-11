@@ -65,10 +65,14 @@ class FavouriteOptions extends React.Component<IProps, IState> {
 
 
     public componentDidMount(): void {
-        RegionsData.instance.getRegionP(this.props.favourite.from)
-            .then((region: Region) => {
-                this.setState({ region: region });
-            });
+        const referenceLoc = this.props.favourite.from.isResolved() ? this.props.favourite.from :
+            (this.props.favourite.to.isResolved() ? this.props.favourite.to : undefined);
+        if (referenceLoc) {
+            RegionsData.instance.getRegionP(referenceLoc)
+                .then((region: Region) => {
+                    this.setState({region: region});
+                });
+        }
     }
 }
 

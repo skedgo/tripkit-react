@@ -109,7 +109,7 @@ class LeafletMap extends React.Component<IProps, IState> {
         const showAny = this.props.showLocations && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
             && enabledMapLayers.length > 0;
         if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
-            RegionsData.instance.getRegionP(this.props.viewport!.center).then((region: Region) => {
+            RegionsData.instance.getCloserRegionP(this.props.viewport!.center!).then((region: Region) => {
                 LocationsData.instance.requestLocations(region.name, 1);
                 if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS) {
                     LocationsData.instance.requestLocations(region.name, 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
@@ -239,7 +239,14 @@ class LeafletMap extends React.Component<IProps, IState> {
                 viewport={this.props.viewport}
                 bounds={lbounds}
                 boundsOptions={{padding: [20, 20]}}
-                onViewportChanged={this.props.onViewportChanged}
+                maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
+                onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
+                    if (this.props.onViewportChanged) {
+                        this.props.onViewportChanged({
+                            center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
+                            zoom: viewport.zoom
+                        });
+                }}}
                 onclick={(event: L.LeafletMouseEvent) => {
                     if (this.props.onclick) {
                         setTimeout(() => {
@@ -278,13 +285,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                                 const latLng = event.target.getLatLng();
                                 this.props.ondragend(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }
-                        }}
-                >
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
-                }
+                        }}/>}
                 {this.props.to && this.props.to.isResolved() &&
                 <Marker position={this.props.to!}
                         icon={L.icon({
@@ -301,12 +302,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                                 this.props.ondragend(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }
                         }}
-                >
-                    <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
-                    </Popup>
-                </Marker>
-                }
+                />}
                 {locTypeValues().map((locType: MapLocationType) =>
                     this.isShowLocType(locType) &&
                         this.state.mapLayers.get(locType)!.map((loc: Location) =>

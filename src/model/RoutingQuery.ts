@@ -4,7 +4,6 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import Options from "./Options";
 import OptionsData from "../data/OptionsData";
 import RegionsData from "../data/RegionsData";
-import LatLng from "./LatLng";
 import Region from "./region/Region";
 import OptionsView from "../options/OptionsView";
 import ModeIdentifier from "./region/ModeIdentifier";
@@ -110,15 +109,22 @@ class RoutingQuery {
     }
 
     public getQueryUrls(): Promise<string[]> {
-        return RegionsData.instance.getRegionP(this.from ? this.from : (this.to ? this.to : new LatLng())).then((region: Region) => {
-            return SchoolGeocoder.instance.getSchoolsDataP().then(() => { // To be able to sync get schools in getQueryUrlsForRegion()
-                return this.getQueryUrlsForRegion(region);
-            });
-        })
+        const referenceLatLng = this.from && this.from.isResolved() ? this.from : (this.to && this.to.isResolved() ? this.to : undefined);
+        if (referenceLatLng) {
+            return RegionsData.instance.getRegionP(referenceLatLng).then((region: Region) => {
+                if (!region) {
+                    Promise.reject("Query out of coverage.")
+                }
+                return SchoolGeocoder.instance.getSchoolsDataP().then(() => { // To be able to sync get schools in getQueryUrlsForRegion()
+                    return this.getQueryUrlsForRegion(region);
+                });
+            })
+        }
+        return Promise.reject("Cannot get query urls for empty query.");
     }
 
-    private getQueryUrlsForRegion(region: Region) {
-        const modes = region ? region.modes : [];   // getQueryUrls should by called guarded by async region request
+    private getQueryUrlsForRegion(region?: Region) {
+        const modes = region ? region.modes : [];
         const enabledModes = modes.filter((mode: string) =>
             (this.options.isModeEnabled(mode)
                 || (mode === "wa_wal" && this.options.wheelchair)) &&  // send wa_wal as mode when wheelchair is true.
@@ -142,7 +148,7 @@ class RoutingQuery {
             mode === ModeIdentifier.PUBLIC_TRANSPORT_ID || mode.startsWith(ModeIdentifier.SCHOOLBUS_ID))) {
             modeSets.push(multiModalSet);
         }
-        if (region === Region.regionStub) { // Push empty set to put something if called with region stub,
+        if (!region) {                      // Push empty set to put something if called with no region,
             modeSets.push([]);              // which happens when checking if same query on TripPlanner.componentDidMount
         }
         return modeSets.map((modeSet: string[]) => {
@@ -189,10 +195,10 @@ class RoutingQuery {
     }
 
     public sameApiQueries(other: RoutingQuery): boolean {
-        let region = RegionsData.instance.getRegion(new LatLng());
-        if (region === null) {  // This is for the case we want to check if same queries before regions arrive.
-            region = Region.regionStub;
-        }
+        const referenceLatLng = this.from && this.from.isResolved() ? this.from :
+            (this.to && this.to.isResolved() ? this.to : undefined);
+        // Region can be undefined since we want to check if queries are the same even before regions arrive.
+        const region = referenceLatLng ? RegionsData.instance.getRegion(referenceLatLng) : undefined;
         return JSON.stringify(this.getQueryUrlsForRegion(region)) === JSON.stringify(other.getQueryUrlsForRegion(region));
     }
 

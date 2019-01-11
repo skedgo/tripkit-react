@@ -5,6 +5,7 @@ import {JsonConvert} from "json2typescript";
 import RegionResults from "../model/region/RegionResults";
 import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
+import LocationUtil from "../util/LocationUtil";
 
 class RegionsData {
 
@@ -13,6 +14,7 @@ class RegionsData {
     private regionList: Region[];
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
+    private cachedRegion: Region;
 
     constructor() {
         const jsonConvert = new JsonConvert();
@@ -44,42 +46,69 @@ class RegionsData {
         return this._instance;
     }
 
-    public getRegion(latLng: LatLng): Region | null {
+    public getRegion(latLng: LatLng): Region | undefined {
         if (!this.regions) {
-            return null;
+            return undefined;
         }
-        const region = this.findRegionByLatLng(latLng);
-        return region ? region : Region.regionStub;
+        const region = this.findRegionByLatLng(latLng, false);
+        return region;
     }
 
-    public getRegionP(latLng?: LatLng): Promise<Region> {
+    public requireRegions(): Promise<void> {
+        return this.regionsPromise.then(() => {
+            return Promise.resolve();
+        })
+    }
+
+    /**
+     * latLng.isNull() should be false
+     */
+    public getCloserRegionP(latLng: LatLng): Promise<Region> {
         return this.regionsPromise.then((regionsMap: Map<string, Region>) => {
-            if (!latLng) {
-                return Region.regionStub;
-            }
-            const region = this.findRegionByLatLng(latLng);
-            return region ? region : Region.regionStub;
+            return this.findRegionByLatLng(latLng, true)!;
         });
     }
 
-    private findRegionByLatLng(latLng: LatLng): Region | undefined {
+    /**
+     * latLng.isNull() should be false
+     */
+    public getRegionP(latLng: LatLng): Promise<Region | undefined> {
+        return this.regionsPromise.then((regionsMap: Map<string, Region>) => {
+            const region = this.findRegionByLatLng(latLng, false);
+            return region ? region : undefined;
+        });
+    }
+
+    /**
+     * If approximate === true result will not be undefined.
+     */
+    private findRegionByLatLng(latLng: LatLng, approximate?: boolean): Region | undefined {
+        if (this.cachedRegion && this.cachedRegion.contains(latLng)) {
+            return this.cachedRegion;
+        }
+        let closerRegion;
         for (const region of this.regionList) {
+            if (!closerRegion || LocationUtil.distanceInMetres(latLng, region.bounds.getCenter())
+                < LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter())) {
+                closerRegion = region;
+            }
+            // console.log(JSON.stringify(latLng) + " to " + region.name + " " + JSON.stringify(region.bounds.getCenter()) + " " + ": " + LocationUtil.distanceInMetres(latLng, region.bounds.getCenter()));
+            // console.log(JSON.stringify(latLng) + " to " + closerRegion.name + " " + JSON.stringify(closerRegion.bounds.getCenter()) + " " + ": " + LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter()));
             if (region.contains(latLng)) {
+                this.cachedRegion = region;
                 return region;
             }
         }
-        return undefined;
+        return approximate ? closerRegion : undefined;
     }
 
-    public getRegionByName(name: string): Region {
-        const region = this.regions.get(name);
-        return region ? region : Region.regionStub;
+    public getRegionByName(name: string): Region | undefined {
+        return this.regions.get(name);
     }
 
-    public getRegionByNameP(name: string): Promise<Region> {
+    public getRegionByNameP(name: string): Promise<Region | undefined> {
         return this.regionsPromise.then((regionsMap: Map<string, Region>) => {
-            const region = regionsMap.get(name);
-            return region ? region : Region.regionStub;
+            return regionsMap.get(name);
         });
     }
 

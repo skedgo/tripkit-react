@@ -3,10 +3,10 @@ import {JsonObject, JsonProperty} from "json2typescript";
 
 @JsonObject
 class LatLng {
-    @JsonProperty('lat', Number)
-    protected _lat: number = 0;
-    @JsonProperty('lng', Number)
-    protected _lng: number = 0;
+    @JsonProperty('lat', Number, true)
+    protected _lat: number | undefined = undefined;
+    @JsonProperty('lng', Number, true)
+    protected _lng: number | undefined = undefined;
 
     public static createLatLng(lat: number, lng: number) {
         const instance: LatLng = new LatLng();
@@ -23,7 +23,7 @@ class LatLng {
     }
 
     get lat(): number {
-        return this._lat;
+        return this._lat ? this._lat : 0;
     }
 
     set lat(value: number) {
@@ -31,7 +31,7 @@ class LatLng {
     }
 
     get lng(): number {
-        return this._lng;
+        return this._lng ? this._lng : 0;
     }
 
     set lng(value: number) {
@@ -40,6 +40,13 @@ class LatLng {
 
     public getKey(): string {
         return String(this.lat + this.lng);
+    }
+
+    /**
+     * true just for Location instances that represent unresolved locations.
+     */
+    public isNull(): boolean {
+        return !this._lat || !this._lng;
     }
 }
 

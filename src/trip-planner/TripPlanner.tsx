@@ -42,14 +42,14 @@ import Location from "../model/Location";
 import MultiGeocoder from "../location_box/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import {TileLayer} from "react-leaflet";
+import GeolocationData from "../location_box/GeolocationData";
 
 interface IState {
     tripsSorted: Trip[] | null;
     selected?: Trip;
     mapView: boolean;
     showOptions: boolean;
-    queryInputBounds?: BBox;
-    queryInputFocusLatLng?: LatLng;
+    region?: Region;    // Once regions arrive region gets instantiated (with a valid region), and never becomes undefined.
     preFrom?: Location;
     preTo?: Location;
     queryTimePanelOpen: boolean;
@@ -67,6 +67,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     constructor(props: ITripPlannerProps) {
         super(props);
+        const userIpLocation = Util.global.userIpLocation;
         this.state = {
             tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips,
             selected: undefined,
@@ -74,11 +75,17 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             showOptions: false,
             queryTimePanelOpen: false,
             feedbackTooltip: false,
-            // TODO: Hardcoded viewport
-            viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
+            viewport: {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
+        if (!userIpLocation) {
+            GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
+                RegionsData.instance.getCloserRegionP(userLocation).then((region: Region) => {
+                    this.setState({viewport: {center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()}});
+                })
+            });
+        }
         // Trigger regions request asap
-        RegionsData.instance.getRegionP(); // TODO improve
+        RegionsData.instance.requireRegions();
         this.eventBus.addListener("onChangeView", (view: string) => {
             if (view === "mapView") {
                 this.setState({ mapView: true });
@@ -132,7 +139,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private onShowOptions() {
         GATracker.instance.send('query input', 'click', 'options button');
-        RegionsData.instance.getRegionP().then(() => this.setState({showOptions: true}));
+        RegionsData.instance.requireRegions().then(() => this.setState({showOptions: true}));
     }
 
     private onMapLocChanged(from: boolean, latLng: LatLng) {
@@ -189,13 +196,16 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 onRequestClose={this.onModalRequestedClose}
             >
                 <OptionsView value={this.props.query.options}
-                             region={RegionsData.instance.getRegion(this.state.viewport.center!)!}
+                             region={this.state.region!}
                              onChange={this.onOptionsChange}
                              onClose={this.onModalRequestedClose}
                              className="app-style"
                 />
             </Modal>
             : null;
+        const region = this.state.region;
+        const queryInputBounds = region ? region.bounds : undefined;
+        const queryInputFocusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
         return (
             <div id="mv-main-panel"
                  className={"mainViewPanel TripPlanner" +
@@ -208,8 +218,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 <div className="avoidVerticalScroll gl-flex gl-grow gl-column">
                     <div className="TripPlanner-queryPanel gl-flex gl-column gl-no-shrink">
                         <QueryInput value={this.props.query}
-                                    bounds={this.state.queryInputBounds}
-                                    focusLatLng={this.state.queryInputFocusLatLng}
+                                    bounds={queryInputBounds}
+                                    focusLatLng={queryInputFocusLatLng}
                                     onChange={(query: RoutingQuery) => {
                                         if (this.checkFitLocation(this.props.query.from, query.from)
                                             || this.checkFitLocation(this.props.query.to, query.to)) {
@@ -362,13 +372,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     }
 
     public componentDidMount(): void {
-        RegionsData.instance.getRegionP(this.state.viewport.center).then((region: Region) => {
-            this.setState({
-                queryInputBounds: region.bounds,
-                queryInputFocusLatLng: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()
-            });
-        });
-
         // TEST
         // this.onQueryChange(
             // RoutingQuery.create(
@@ -411,6 +414,20 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
 
     public componentDidUpdate(prevProps: Readonly<ITripPlannerProps>, prevState: Readonly<IState>, snapshot?: any): void {
+        if (prevState.viewport !== this.state.viewport
+            || prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to) {
+            const query = this.props.query;
+            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
+                (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
+            if (referenceLatLng) {
+                RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
+                    if (region.polygon === "") {
+                        console.log("empty region");
+                    }
+                    this.setState({region: region});
+                });
+            }
+        }
         // Clear selected
         if (prevProps.trips !== this.props.trips) {
             this.setState({
