@@ -39,7 +39,7 @@ class TripGoApi {
         return fetch(url, {
             method: method,
             headers: {
-                'X-TripGo-Version': 'w3.2015.09.03',
+                'X-TripGo-Version': 'w3.2018.12.20',
                 'X-TripGo-Key': this.apiKey,
                 'referer': 'https://tripgo.com',
                 'Accept': 'application/json',

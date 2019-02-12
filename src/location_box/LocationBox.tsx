@@ -42,6 +42,8 @@ class LocationBox extends Component<IProps, IState> {
     private inputRef: any;
     private inputFrameRef: any;
 
+    private readonly AUTOCOMPLETE_DELAY = 200;
+
     public static defaultProps: Partial<IProps> = {
         resolveCurr: true
     };
@@ -127,7 +129,17 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     private onChange(inputText: string) {
-        this.setState({inputText: inputText}, () => this.refreshResults(this.state.inputText));
+        this.setState({inputText: inputText}, () => {
+            if (inputText === '') {
+                this.refreshResults(this.state.inputText);
+            } else {
+                setTimeout(() => {
+                    if (this.state.inputText === inputText) {
+                        this.refreshResults(this.state.inputText)
+                    }
+                }, this.AUTOCOMPLETE_DELAY);
+            }
+        });
         // Remove location value when user deletes all text.
         if (inputText === '' && this.state.locationValue !== null) {
             this.setValue(null, false, true);

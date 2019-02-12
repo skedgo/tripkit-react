@@ -59,8 +59,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
         }, 1500); // Tolerance
 
-        TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET)
-            .then(NetworkUtil.jsonCallback).then((json: any) => {
+        TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET).then((json: any) => {
             if (timedOut) {
                 return
             } else {
