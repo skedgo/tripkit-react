@@ -41,8 +41,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
         }
 
-        const url = TripGoApi.SATAPP + "/geocode.json?"
-        // const endpoint = "geocode.json?"
+        const endpoint = "geocode.json?"
             + "q=" + query
             + "&allowGoogle=false"
             + (center ? "&near=" + "(" + center.lat + "," + center.lng + ")" : "")
@@ -60,10 +59,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
         }, 1500); // Tolerance
 
-        fetch(url, {
-            method: NetworkUtil.MethodType.GET
-        })
-        // TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, true)
+        TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET)
             .then(NetworkUtil.jsonCallback).then((json: any) => {
             if (timedOut) {
                 return
@@ -86,8 +82,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
             callback(results.slice(0, 2));
         }).catch(reason => {
-            console.log(url + " failed. Reason: " + reason);
-            // console.log(endpoint + " failed. Reason: " + reason);
+            console.log(endpoint + " failed. Reason: " + reason);
             callback([]);
         });
     }
