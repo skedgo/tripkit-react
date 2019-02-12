@@ -8,10 +8,9 @@ import Environment from "../env/Environment";
 
 class TripGoApi {
 
-    // TODO Remove hardcoded
     public static SATAPP = "https://api.tripgo.com/v1";
-    public static readonly SATAPP_STAGING = "https://bigbang.skedgo.com/satapp-act-staging";
-    public static readonly SATAPP_BETA = "https://bigbang.skedgo.com/satapp-beta";
+    public static SATAPP_STAGING = "https://api.tripgo.com/v1";
+    public static SATAPP_BETA = "https://bigbang.skedgo.com/satapp-beta";
 
     public static isBetaServer = false;
     public static apiKey = "";
