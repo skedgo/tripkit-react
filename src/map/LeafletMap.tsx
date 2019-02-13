@@ -111,7 +111,8 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
             RegionsData.instance.getCloserRegionP(this.props.viewport!.center!).then((region: Region) => {
                 LocationsData.instance.requestLocations(region.name, 1);
-                if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS) {
+                if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
+                    && this.leafletElement.getZoom() >= this.ZOOM_PARENT_LOCATIONS) { // To avoid crashing if ZOOM_ALL_LOCATIONS < ZOOM_PARENT_LOCATIONS
                     LocationsData.instance.requestLocations(region.name, 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
                 }
             })
