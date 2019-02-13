@@ -4,6 +4,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 
 export interface IProps {
     value: Trip;
+    brief?: boolean;
 }
 
 class TripRowTime extends React.Component<IProps, {}> {
@@ -12,7 +13,12 @@ class TripRowTime extends React.Component<IProps, {}> {
         const trip = this.props.value;
         const depart = trip.depart;
         const arrive = trip.arrive;
-        const departureTime = DateTimeUtil.momentTZTime(depart * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const departMoment = DateTimeUtil.momentTZTime(depart * 1000);
+        const queryMoment = trip.queryTime ? DateTimeUtil.momentTZTime(trip.queryTime * 1000) : undefined;
+        let departureTime = departMoment.format(DateTimeUtil.TIME_FORMAT_TRIP);
+        if (this.props.brief && queryMoment && queryMoment.format("ddd D") !== departMoment.format("ddd D")) {
+            departureTime = departMoment.format("ddd D") + ", " + departureTime;
+        }
         const arrivalTime = DateTimeUtil.momentTZTime(arrive * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         // Truncates to minutes before subtract to display a duration in minutes that is consistent with
         // departure and arrival times, which are also truncated to minutes.

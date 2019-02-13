@@ -49,7 +49,7 @@ class TripRow extends React.Component<IProps, IState> {
                  ref={el => this.ref = el}
             >
                 <div className="TripRow-body">
-                    <TripRowTime value={this.props.value}/>
+                    <TripRowTime value={this.props.value} brief={this.props.brief}/>
                     <TripRowTrack value={this.props.value}
                                   renderTransport={(props: TrackTransportProps) => <TrackTransport {...props}/>}
                     />

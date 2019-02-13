@@ -20,7 +20,7 @@ class TripGoApi {
             return this.SATAPP_STAGING;
         }
         if (Environment.isBeta()) {
-            return this.SATAPP_BETA
+            return this.SATAPP_BETA;
         }
         return this.SATAPP;
     }
