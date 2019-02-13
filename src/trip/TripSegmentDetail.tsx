@@ -24,7 +24,9 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
         const modeInfo = segment.modeInfo!;
         let transportColor = TransportUtil.getTransportColor(modeInfo);
         transportColor = transportColor !== null ? transportColor : "black";
-        const prevSegment = segment.isFirst() ? null : segment.trip.segments[segment.trip.segments.indexOf(segment) - 1];
+        const prevSegment = segment.isFirst() ? null :
+            this.props.end ? segment.trip.segments[segment.trip.segments.length - 1] :
+                segment.trip.segments[segment.trip.segments.indexOf(segment) - 1];
         let prevTransportColor = prevSegment ? TransportUtil.getTransportColor(prevSegment.modeInfo!) : null;
         prevTransportColor = prevTransportColor !== null ? prevTransportColor : "black";
         const fromAddress = !this.props.end ? segment.from.address : segment.to.address;
