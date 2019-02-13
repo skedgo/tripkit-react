@@ -33,6 +33,9 @@ class MapPolyline extends React.Component<IProps, {}> {
                                 segment: this.props.segment
                             });
                         const iconHTML = element ? renderToStaticMarkup(element) : undefined;
+                        if (!iconHTML) {
+                            return undefined;
+                        }
                         const stopIcon = L.divIcon({
                             html: iconHTML,
                             className: "MapPolyline-stop"
