@@ -61,7 +61,7 @@
 
 /* To avoid zoom in on focus on Safari for iOS */
 .device-phone .LocationBox input {
-  font-size: 16px;
+  font-size: 16px!important;
 }
 
 .LocationBox-sideMenu.rc-tooltip {

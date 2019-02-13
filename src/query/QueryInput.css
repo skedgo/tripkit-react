@@ -296,5 +296,5 @@
 
 /* To avoid zoom in on focus on Safari for iOS */
 .device-phone .QueryInput-timeCalPanel input {
-  font-size: 16px;
+  font-size: 16px!important;
 }

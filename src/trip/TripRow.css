@@ -80,3 +80,9 @@
     display: none;
   }
 }
+
+@media (max-width: 801px) {
+  .TripRow-footer > * {
+    margin: 0 5px;
+  }
+}
