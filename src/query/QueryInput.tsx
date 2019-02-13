@@ -81,6 +81,7 @@ class QueryInput extends React.Component<IProps, IState> {
 
     private onPrefClicked(e: any) {
         const timePref = e.target.name;
+        GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
         if (timePref === TimePreference.NOW) {
             this.updateQuery({
                 timePref: timePref,
