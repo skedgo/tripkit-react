@@ -216,9 +216,9 @@ class LocationBox extends Component<IProps, IState> {
                 {   this.state.waiting ?
                     <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :
                     (this.state.inputText ?
-                        <IconRemove className="LocationBox-iconClear" onClick={this.onClearClicked} aria-hidden={true}
-                                    focusable="false"
-                        /> :
+                        <button onClick={this.onClearClicked} className="LocationBox-btnClear" aria-hidden={true} tabIndex={-1}>
+                            <IconRemove aria-hidden={true} className="LocationBox-iconClear" focusable="false"/>
+                        </button> :
                         "")
                 }
             </div>
