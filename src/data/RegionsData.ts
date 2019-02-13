@@ -54,6 +54,14 @@ class RegionsData {
         return region;
     }
 
+    public getCloserRegion(latLng: LatLng): Region | undefined {
+        if (!this.regions) {
+            return undefined;
+        }
+        const region = this.findRegionByLatLng(latLng, true);
+        return region;
+    }
+
     public requireRegions(): Promise<void> {
         return this.regionsPromise.then(() => {
             return Promise.resolve();
