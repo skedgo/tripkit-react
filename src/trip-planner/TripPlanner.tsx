@@ -365,7 +365,10 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     private getFeedback(): string {
         const jsonConvert = new JsonConvert();
         const optionsJson = jsonConvert.serialize(this.props.query.options);
-        return "webapp url: " + encodeURI(this.props.query.getGoUrl("https://www.transport.act.gov.au/journey-planner/map")) + "\n\n"
+        const location = window.location;
+        const plannerUrl = location.protocol + "//" + location.hostname
+            + (location.port ? ":" + location.port : "") + location.pathname;
+        return "webapp url: " + encodeURI(this.props.query.getGoUrl(plannerUrl)) + "\n\n"
             + "options: " + JSON.stringify(optionsJson) + "\n\n"
             + "satapp url: " +  (this.state.selected ? this.state.selected.satappQuery : "") + "\n\n"
             + "trip url: " +  (this.state.selected ? this.state.selected.temporaryURL : "");

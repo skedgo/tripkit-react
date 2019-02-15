@@ -91,10 +91,10 @@ class RoutingQuery {
     }
 
     public getGoUrl(plannerUrl?: string): string {
-        if (this.from === null || this.to === null) {
-            return "";
-        }
         const goURL = (plannerUrl ? plannerUrl : "https://act.tripgo.com/?app=tripPlanner");
+        if (this.from === null || this.to === null) {
+            return goURL;
+        }
         return goURL + (goURL.includes("?") ? "&" : "?") +
             "flat=" + this.from.lat + "&flng=" + this.from.lng +
             "&fname=" + (this.from.isCurrLoc() && !this.from.isResolved() ? "My location" : this.from.address) +
