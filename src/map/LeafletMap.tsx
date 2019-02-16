@@ -227,12 +227,7 @@ class LeafletMap extends React.Component<IProps, IState> {
             <P extends ServiceStopPopupProps>(props: P) => <ServiceStopPopup {...props}/>;
         let tripSegments;
         if (this.props.trip) {
-            const last: Segment = this.props.trip!.segments[this.props.trip!.segments.length - 1];
-            const arrival = Util.iAssign(last, {});
-            arrival.arrival = true;
-            arrival.from = last.to;
-            arrival.action = "Arrive";
-            tripSegments = this.props.trip.segments.concat([arrival]);
+            tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
         }
         return (
             <RLMap

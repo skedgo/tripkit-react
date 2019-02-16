@@ -22,7 +22,7 @@ class TripDetail extends React.Component<IProps, {}> {
                 {segments.map((segment: Segment, index: number) =>
                     renderSegmentDetail({value: segment, key: index})
                 )}
-                {renderSegmentDetail({value: segments[segments.length - 1], end: true, key: segments.length})}
+                {renderSegmentDetail({value: this.props.value.arrivalSegment, key: segments.length})}
             </div>
         )
     }

@@ -10,7 +10,6 @@ import {default as SegmentDescription, SegmentDescriptionProps} from "./SegmentD
 
 interface IProps {
     value: Segment;
-    end?: boolean;
     renderDescr?: <P extends SegmentDescriptionProps>(segmentDescrProps: P) => JSX.Element;
     renderIcon?: <P extends {value: Segment}>(props: P) => JSX.Element;
     renderTitle?: <P extends {value: Segment}>(props: P) => JSX.Element;
@@ -20,16 +19,16 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.value;
-        const startTime = DateTimeUtil.momentTZTime((!this.props.end ? segment.startTime : segment.endTime) * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const startTime = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
         let transportColor = TransportUtil.getTransportColor(modeInfo);
         transportColor = transportColor !== null ? transportColor : "black";
         const prevSegment = segment.isFirst() ? null :
-            this.props.end ? segment.trip.segments[segment.trip.segments.length - 1] :
+            this.props.value.arrival ? segment.trip.segments[segment.trip.segments.length - 1] :
                 segment.trip.segments[segment.trip.segments.indexOf(segment) - 1];
         let prevTransportColor = prevSegment ? TransportUtil.getTransportColor(prevSegment.modeInfo!) : null;
         prevTransportColor = prevTransportColor !== null ? prevTransportColor : "black";
-        const fromAddress = !this.props.end ? segment.from.address : segment.to.address;
+        const fromAddress = segment.from.address;
         let stops: ServiceStopLocation[] | null = null;
         if (segment.shapes) {
             stops = [];
@@ -69,7 +68,7 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                         <div className="TripSegmentDetail-title gl-flex gl-align-center gl-grow">{fromAddress}</div>
                     }
                 </div>
-                {!this.props.end ?
+                {!this.props.value.arrival ?
                     <div>
                         <div className="gl-flex">
                             <div className="TripSegmentDetail-iconPanel gl-flex gl-center gl-align-center">
@@ -113,7 +112,7 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                     :
                     null
                 }
-                {!this.props.end ?
+                {!this.props.value.arrival ?
                     <div className="gl-flex">
                         <div className="TripSegmentDetail-iconPanel"/>
                         <div className="TripSegmentDetail-linePanel gl-flex gl-center">
