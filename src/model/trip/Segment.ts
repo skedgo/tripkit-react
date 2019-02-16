@@ -54,6 +54,10 @@ class Segment extends SegmentTemplate {
         return this._startTime;
     }
 
+    set startTime(value: number) {
+        this._startTime = value;
+    }
+
     get endTime(): number {
         return this._endTime;
     }

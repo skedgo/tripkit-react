@@ -1,5 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import Segment from "./Segment";
+import Util from "../../util/Util";
 
 @JsonObject
 class Trip {
@@ -38,6 +39,7 @@ class Trip {
     private _segments: Segment[] = [];
 
     private _satappQuery: string;
+    private _arrivalSegment: Segment;
 
 
     get depart(): number {
@@ -174,6 +176,21 @@ class Trip {
 
     set satappQuery(value: string) {
         this._satappQuery = value;
+    }
+
+    /**
+     * Artificial segment representing the trip arrival. It's not in trip segments array.
+     */
+    get arrivalSegment(): Segment {
+        if (!this._arrivalSegment) {
+            const last: Segment = this.segments[this.segments.length - 1];
+            this._arrivalSegment = Util.iAssign(last, {});
+            this._arrivalSegment.arrival = true;
+            this._arrivalSegment.from = last.to;
+            this._arrivalSegment.startTime = last.endTime;
+            this._arrivalSegment.action = "Arrive";
+        }
+        return this._arrivalSegment;
     }
 }
 
