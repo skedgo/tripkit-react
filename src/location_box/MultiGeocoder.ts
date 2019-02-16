@@ -9,6 +9,7 @@ import GeocodingSource from "./GeocodingSource";
 import Environment from "../env/Environment";
 import Features from "../env/Features";
 import SkedgoGeocoder from "./SkedgoGeocoder";
+import StopLocation from "../model/StopLocation";
 
 class MultiGeocoder {
 
@@ -130,6 +131,12 @@ class MultiGeocoder {
         //         return -1
         //     }
         // }
+
+        if (l1.source === GeocodingSource.SKEDGO && l1 instanceof StopLocation && query === (l1 as StopLocation).code) {
+            return -1;
+        } else if (l2.source === GeocodingSource.SKEDGO && l2 instanceof StopLocation && query === (l2 as StopLocation).code) {
+            return 1
+        }
 
         const relevanceDiff = LocationUtil.relevance(query, l2.address) - LocationUtil.relevance(query, l1.address);
 

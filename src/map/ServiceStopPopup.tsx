@@ -44,7 +44,7 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
         RegionsData.instance.getRegionP(this.props.segment.from).then((region: Region) => {
             StopsData.instance.getStopFromCode(region.name, this.props.stop.code)
                 .then((stopLocation: StopLocation) => {
-                        if (stopLocation.url !== null) {
+                        if (stopLocation.url) {
                             this.setState({interchangeUrl: stopLocation.url});
                         }
                     }

@@ -3,11 +3,11 @@ import GeocoderOptions from "./GeocoderOptions";
 import GeocodingCache from "./GeocodingCache";
 import BBox from "../model/BBox";
 import NetworkUtil from "../util/NetworkUtil";
-import {JsonConvert} from "json2typescript";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import GeocodingSource from "./GeocodingSource";
 import TripGoApi from "../api/TripGoApi";
+import {LocationConverter} from "../model/location/LocationConverter";
 
 class SkedgoGeocoder implements IGeocoder {
 
@@ -70,9 +70,9 @@ class SkedgoGeocoder implements IGeocoder {
                 callback(results);
                 return
             }
-            const jsonConvert = new JsonConvert();
+            const jsonConvert = new LocationConverter();
             for (const locJson of json.choices) {
-                const loc = jsonConvert.deserialize(locJson, Location) as Location;
+                const loc = jsonConvert.deserialize(locJson);
                 loc.source = GeocodingSource.SKEDGO;
                 results.push(loc);
             }

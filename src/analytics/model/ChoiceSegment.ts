@@ -13,7 +13,7 @@ class ChoiceSegment {
         const instance = new ChoiceSegment();
         const modeInfo = segment.modeInfo;
         instance._mode = modeInfo !== null ?
-            (modeInfo.identifier !== null ? modeInfo.identifier : modeInfo.alt.toLowerCase()) : "";
+            (modeInfo.identifier ? modeInfo.identifier : modeInfo.alt.toLowerCase()) : "";
         instance._duration = segment.endTime - segment.startTime;
         return instance;
     }

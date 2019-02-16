@@ -7,7 +7,7 @@ class ModeInfo {
     /**
      * Missing for stationary segments.
      */
-    @JsonProperty("identifier", String, true) private _identifier: string | null = null;
+    @JsonProperty("identifier", String, true) private _identifier: string | undefined = undefined;
 
     /**
      * Textual alternative to icon. Required.
@@ -22,17 +22,17 @@ class ModeInfo {
     /**
      * Part of icon file name that can be fetched from server.
      */
-    @JsonProperty("remoteIcon", String, true) private _remoteIcon: string | null = null;
+    @JsonProperty("remoteIcon", String, true) private _remoteIcon: string | undefined = undefined;
 
     /**
      * Part of icon file name for dark background that can be fetched from server.
      */
-    @JsonProperty("remoteDarkIcon", String, true) private _remoteDarkIcon: string | null = null;
+    @JsonProperty("remoteDarkIcon", String, true) private _remoteDarkIcon: string | undefined = undefined;
 
-    @JsonProperty("color", Color, true) private _color: Color | null = null;
+    @JsonProperty("color", Color, true) private _color: Color | undefined = undefined;
 
 
-    get identifier(): string | null {
+    get identifier(): string | undefined {
         return this._identifier;
     }
 
@@ -44,15 +44,15 @@ class ModeInfo {
         return this._localIcon;
     }
 
-    get remoteIcon(): string | null {
+    get remoteIcon(): string | undefined {
         return this._remoteIcon;
     }
 
-    get remoteDarkIcon(): string | null {
+    get remoteDarkIcon(): string | undefined {
         return this._remoteDarkIcon;
     }
 
-    get color(): Color | null {
+    get color(): Color | undefined {
         return this._color;
     }
 }

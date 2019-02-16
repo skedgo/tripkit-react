@@ -5,6 +5,8 @@ import GeocodingSource, {GeocodingSourceConverter} from "../location_box/Geocodi
 
 @JsonObject
 class Location extends LatLng {
+    @JsonProperty('class', String, true)
+    private _class: string = '';
     @JsonProperty('address', String, true)
     private _address: string = '';
     @JsonProperty('name', String, true)
@@ -43,6 +45,14 @@ class Location extends LatLng {
 
     public getKey(): string {
         return String(this.lat + this.lng);
+    }
+
+    get class(): string {
+        return this._class;
+    }
+
+    set class(value: string) {
+        this._class = value;
     }
 
     get address(): string {

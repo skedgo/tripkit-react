@@ -1,12 +1,13 @@
 import Location from "../model/Location";
 import {JsonObject, JsonProperty} from "json2typescript";
 import Options from "./Options";
+import {LocationConverter} from "./location/LocationConverter";
 
 @JsonObject
 class FavouriteTrip {
-    @JsonProperty('from', Location)
+    @JsonProperty('from', LocationConverter)
     private _from: Location = new Location();   // need to specify default value in order for json2typescript to work
-    @JsonProperty('to', Location)
+    @JsonProperty('to', LocationConverter)
     private _to: Location = new Location();     // need to specify default value in order for json2typescript to work
     @JsonProperty('options', Options, true)
     private _options: Options | undefined = undefined;
