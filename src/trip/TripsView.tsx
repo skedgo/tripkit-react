@@ -1,10 +1,11 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import TripRow, {TripRowProps} from "./TripRow";
+import TripRowProps, {TRIP_ALT_PICKED_EVENT} from "./TripRowProps";
 import "./TripsView.css";
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
 import {EventEmitter} from "fbemitter";
 import TripGroup from "../model/trip/TripGroup";
+
 
 interface IProps {
     values: Trip[]; // SOT of trips is outside, so assume trips come sorted and picking sorting criteria is handled outside.
@@ -23,7 +24,7 @@ class TripsView extends React.Component<IProps, {}> {
     constructor(props: IProps) {
         super(props);
         if (this.props.eventBus) {
-            this.props.eventBus.addListener(TripRow.TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
+            this.props.eventBus.addListener(TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
                 setTimeout(() => {
                     const updatedTripIndex = this.props.values.indexOf(update);
                     if (updatedTripIndex !== -1) {

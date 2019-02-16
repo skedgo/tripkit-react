@@ -2,10 +2,12 @@ import TripGroup from "../model/trip/TripGroup";
 import * as React from "react";
 import Tooltip from "rc-tooltip";
 import TripAlternativesView from "./TripAlternativesView";
+import TripRowProps from "./TripRowProps";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
+    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAltBtn extends React.Component<IProps, {}> {
@@ -18,6 +20,7 @@ class TripAltBtn extends React.Component<IProps, {}> {
                      overlay={
                          <TripAlternativesView value={this.props.value as TripGroup}
                                                onChange={this.props.onChange}
+                                               renderTrip={this.props.renderTrip}
                                                ref={el => this.altTripsRef = el}
                          />
                      }

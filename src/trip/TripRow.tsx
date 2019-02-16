@@ -1,30 +1,17 @@
 import * as React from "react";
-import Trip from "../model/trip/Trip";
 import "./TripRow.css";
-import {EventEmitter} from "fbemitter";
 import TripGroup from "../model/trip/TripGroup";
 import TripAltBtn from "./TripAltBtn";
 import TripRowTime from "./TripRowTime";
 import TripRowTrack from "./TripRowTrack";
 import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
-
-export interface IProps {
-    value: Trip;
-    className?: string;
-    brief?: boolean;
-    onClick?: () => void;
-    onFocus?: () => void;
-    onKeyDown?: (e: any) => void;
-    eventBus?: EventEmitter;
-}
+import {default as IProps, TRIP_ALT_PICKED_EVENT} from "./TripRowProps";
 
 interface IState {
     showDetails: boolean;
 }
 
 class TripRow extends React.Component<IProps, IState> {
-
-    public static readonly TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
 
     private ref: any;
 
@@ -59,9 +46,10 @@ class TripRow extends React.Component<IProps, IState> {
                         value={this.props.value as TripGroup}
                         onChange={(value: TripGroup) => {
                             if (this.props.eventBus) {
-                                this.props.eventBus.emit(TripRow.TRIP_ALT_PICKED_EVENT, this.props.value, value);
+                                this.props.eventBus.emit(TRIP_ALT_PICKED_EVENT, this.props.value, value);
                             }
                         }}
+                        renderTrip={<P extends IProps>(props: P) => <TripRow {...props}/>}
                     />
                 </div>
             </div>
@@ -70,4 +58,3 @@ class TripRow extends React.Component<IProps, IState> {
 }
 
 export default TripRow;
-export {IProps as TripRowProps};

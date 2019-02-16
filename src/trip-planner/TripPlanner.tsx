@@ -24,7 +24,8 @@ import IconFav from "-!svg-react-loader!../images/ic-star-solid.svg";
 import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
-import TripRow, {IProps as TripRowProps} from "../trip/TripRow";
+import TripRow from "../trip/TripRow";
+import TripRowProps, {TRIP_ALT_PICKED_EVENT} from "../trip/TripRowProps";
 import ReactResizeDetector from "react-resize-detector";
 import MapUtil from "../util/MapUtil";
 import GATracker from "../analytics/GATracker";
@@ -92,7 +93,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             }
         });
 
-        this.eventBus.addListener(TripRow.TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
+        this.eventBus.addListener(TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
             this.props.onAlternativeChange(orig, update.getSelectedTrip());
         });
 
