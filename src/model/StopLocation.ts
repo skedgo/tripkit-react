@@ -11,9 +11,9 @@ class StopLocation extends Location {
     @JsonProperty('modeInfo', ModeInfo)
     private _modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty('wheelchairAccessible', Boolean, true)
-    private _wheelchairAccessible: boolean | null = null;
+    private _wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty('url', String, true)
-    private _url: string | null = null;
+    private _url: string | undefined = undefined;
 
 
     get code(): string {
@@ -28,11 +28,11 @@ class StopLocation extends Location {
         return this._modeInfo;
     }
 
-    get wheelchairAccessible(): boolean | null {
+    get wheelchairAccessible(): boolean | undefined {
         return this._wheelchairAccessible;
     }
 
-    get url(): string | null {
+    get url(): string | undefined {
         return this._url;
     }
 }

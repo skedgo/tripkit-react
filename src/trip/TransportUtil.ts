@@ -11,10 +11,10 @@ class TransportUtil {
         if (modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID)) {  // TODO: Hardcoded for TC
             return this.getTransportIconLocal("school-bus", isRealtime, false);
         }
-        if (onDark && modeInfo.remoteDarkIcon !== null) {
+        if (onDark && modeInfo.remoteDarkIcon) {
             return TripGoApi.getServer() + "/modeicons/" + "icon-mode-" + modeInfo.remoteDarkIcon + ".svg";
         }
-        if (modeInfo.remoteIcon !== null) {
+        if (modeInfo.remoteIcon) {
             return TripGoApi.getServer() + "/modeicons/" + "icon-mode-" + modeInfo.remoteIcon + ".svg";
         }
         return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
@@ -35,7 +35,7 @@ class TransportUtil {
 
     public static getTransportColor(modeInfo: ModeInfo): string | null {
         // return this.getTransportColorByIconS(modeInfo.localIcon);
-        if (modeInfo !== null && modeInfo.identifier !== null && modeInfo.identifier.startsWith("pt_pub") && modeInfo.color !== null) {
+        if (modeInfo !== null && modeInfo.identifier && modeInfo.identifier.startsWith("pt_pub") && modeInfo.color) {
             return modeInfo.color.toRGB();
         }
         return this.getTransportColorByIconS(modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID) ?
