@@ -1,0 +1,26 @@
+.SegmentPopup {
+  padding: 7px 10px;
+  font-size: 13px;
+  min-width: 200px;
+}
+
+.SegmentPopup-title {
+  color: black;
+  font-size: 14px;
+}
+
+.SegmentPopup-subtitle {
+  color: black;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.SegmentPopup-stopId {
+  color: grey;
+}
+
+.SegmentPopup-link {
+  border-top: 1px solid #ECEBEB;
+  margin-top: 7px;
+  padding-top: 7px;
+}

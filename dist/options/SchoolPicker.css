@@ -1,0 +1,42 @@
+.SchoolPicker-inputWrapper {
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  -webkit-align-items: center;
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+  padding: 0 5px;
+  box-sizing: content-box;
+  border: 2px solid #0242ac;
+  background: white;
+}
+
+.SchoolPicker-inputWrapper.disabled {
+  /*opacity: 0.9;*/
+  border-color: #9E9E9E;
+}
+
+.SchoolPicker-inputWrapper input {
+  border: none;
+  outline: 0;
+  line-height: 30px;
+  background: none;
+  font-size: 13px;
+  flex-grow: 1;
+  -webkit-flex-grow: 1;
+}
+
+.SchoolPicker-inputWrapper input::placeholder {
+  color: black;
+}
+
+.SchoolPicker-iconClear {
+  margin: 0 5px;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.SchoolPicker-inputWrapper.disabled .SchoolPicker-iconClear {
+  visibility: hidden;
+}

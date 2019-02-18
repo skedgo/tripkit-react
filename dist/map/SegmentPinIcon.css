@@ -1,0 +1,42 @@
+.SegmentPinIcon-pin {
+  position: initial!important;
+  height: 48px;
+  width: 48px;
+  outline: none!important;
+}
+
+.SegmentPinIcon-whiteFill path {
+    fill: white;
+}
+
+.SegmentPinIcon-transport {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 50%;
+  -webkit-transform: translate(-50%);
+  -moz-transform: translate(-50%);
+  -ms-transform: translate(-50%);
+  -o-transform: translate(-50%);
+  transform: translate(-50%);
+  width: 24px;
+  height: 24px;
+}
+
+.SegmentPinIcon-base {
+  margin-top: -12px;
+}
+
+.SegmentPinIcon-timeLabel {
+  position: absolute;
+  top: 12px;
+  left: 30px;
+  background-color: black;
+  opacity: .7;
+  color: white;
+  padding: 3px 10px 3px 14px;
+  -webkit-border-radius: 0 10px 10px 0;
+  -moz-border-radius: 0 10px 10px 0;
+  border-radius: 0 10px 10px 0;
+  z-index: -1;
+}

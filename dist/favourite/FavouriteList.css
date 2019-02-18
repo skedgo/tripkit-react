@@ -1,0 +1,26 @@
+.FavouriteList {
+
+}
+
+.FavouriteList-container {
+  width: 100%;
+}
+
+.FavouriteList-container > div {
+  margin-bottom: 15px;
+}
+
+.FavouriteList-container > div:last-child {
+  margin-bottom: 0;
+}
+
+.FavouriteList-lastJourneyTitle {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.FavouriteList-favourites-info {
+  color: #6c6d6f;
+  font-size: 14px;
+}
