@@ -1,0 +1,17 @@
+.TripAlternativesView {
+  padding: 10px;
+  background-color: #f4f7fe;
+  color: black;
+}
+
+.TripAlternativesView > div > *:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.TripAlternativesView .selected {
+  background-color: #f3f3f3;
+}
+
+.TripAlternativesView-tripRow:hover:not(.selected) {
+  background-color: #fbfbfb;
+}

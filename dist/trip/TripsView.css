@@ -1,0 +1,21 @@
+.TripsView > div {
+  margin-bottom: 15px;
+}
+
+.TripsView > .selected {
+  background-color: #f3f3f3;
+}
+
+.TripsView > *:hover:not(.selected) {
+  background-color: #fbfbfb;
+}
+
+.TripsView-iconLoading {
+  margin: 0 5px;
+  width: 20px;
+  height: 20px;
+}
+
+.TripsView-iconLoading path {
+  fill: #6d6d6d;
+}

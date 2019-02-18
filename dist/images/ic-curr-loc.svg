@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18px" height="18px" viewBox="0 0 18 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.1 (57501) - http://www.bohemiancoding.com/sketch -->
+    <title>Shape</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Map---TP---autofill" transform="translate(-255.000000, -284.000000)" fill="#0042AC" fill-rule="nonzero">
+            <g id="np_location_1821971_000000" transform="translate(255.000000, 284.000000)">
+                <path d="M9.45,15.2838 L9.45,18 L8.55,18 L8.55,15.2838 C5.42952,15.063714 2.93616,12.57048 2.7162,9.45 L0,9.45 L0,8.55 L2.7162,8.55 C2.936286,5.42952 5.42952,2.93616 8.55,2.7162 L8.55,0 L9.45,0 L9.45,2.7162 C12.57048,2.936286 15.06384,5.42952 15.2838,8.55 L18,8.55 L18,9.45 L15.2838,9.45 C15.063714,12.57048 12.57048,15.06384 9.45,15.2838 Z M3.6,9 C3.6,11.9826 6.0174,14.4 9,14.4 C11.9826,14.4 14.4,11.9826 14.4,9 C14.4,6.0174 11.9826,3.6 9,3.6 C6.0174,3.6 3.6,6.0174 3.6,9 Z M9,9.9 C8.502894,9.9 8.1,9.497106 8.1,9 C8.1,8.502894 8.502894,8.1 9,8.1 C9.497106,8.1 9.9,8.502894 9.9,9 C9.9,9.497106 9.497106,9.9 9,9.9 Z" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>

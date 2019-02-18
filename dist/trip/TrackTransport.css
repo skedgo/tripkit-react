@@ -1,0 +1,18 @@
+.TrackTransport-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 3px;
+}
+
+.TrackTransport-angleRight {
+  width: 10px;
+  height: 10px;
+}
+
+.TrackTransport-info {
+  font-size: 13px;
+}
+
+.TrackTransport-info-space {
+  padding: 0 5px;
+}

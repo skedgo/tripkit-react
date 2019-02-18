@@ -1,0 +1,21 @@
+.FavouriteOptions {
+  opacity: .7;
+}
+
+.FavouriteOptions-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 3px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
+
+.FavouriteOptions-onDark {
+  padding: 3px;
+}
+
+.FavouriteOptions-iconSize {
+  width: 18px;
+  height: 18px;
+}
