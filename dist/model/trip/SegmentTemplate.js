@@ -193,12 +193,18 @@ var SegmentTemplate = /** @class */ (function () {
         get: function () {
             return this._streets;
         },
+        set: function (value) {
+            this._streets = value;
+        },
         enumerable: true,
         configurable: true
     });
     Object.defineProperty(SegmentTemplate.prototype, "shapes", {
         get: function () {
             return this._shapes;
+        },
+        set: function (value) {
+            this._shapes = value;
         },
         enumerable: true,
         configurable: true

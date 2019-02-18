@@ -46,7 +46,7 @@ import IconFav from "-!svg-react-loader!../images/ic-star-solid.svg";
 import { EventEmitter } from "fbemitter";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import TripRow from "../trip/TripRow";
-import { TRIP_ALT_PICKED_EVENT } from "../trip/TripRowProps";
+import { TRIP_ALT_PICKED_EVENT } from "../trip/ITripRowProps";
 import ReactResizeDetector from "react-resize-detector";
 import MapUtil from "../util/MapUtil";
 import GATracker from "../analytics/GATracker";

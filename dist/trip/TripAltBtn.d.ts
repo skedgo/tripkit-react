@@ -1,10 +1,10 @@
 import TripGroup from "../model/trip/TripGroup";
 import * as React from "react";
-import TripRowProps from "./TripRowProps";
+import ITripRowProps from "./ITripRowProps";
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 declare class TripAltBtn extends React.Component<IProps, {}> {
     private altTripsRef;

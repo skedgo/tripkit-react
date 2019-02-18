@@ -28,7 +28,7 @@ import TripAltBtn from "./TripAltBtn";
 import TripRowTime from "./TripRowTime";
 import TripRowTrack from "./TripRowTrack";
 import { default as TrackTransport } from "./TrackTransport";
-import { TRIP_ALT_PICKED_EVENT } from "./TripRowProps";
+import { TRIP_ALT_PICKED_EVENT } from "./ITripRowProps";
 var TripRow = /** @class */ (function (_super) {
     __extends(TripRow, _super);
     function TripRow(props) {
