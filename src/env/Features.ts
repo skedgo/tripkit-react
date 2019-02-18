@@ -16,8 +16,7 @@ class Features {
     }
 
     public schoolBuses() {
-        // return !Environment.isProd();
-        return false;
+        return !Environment.isProd();
     }
 
 }
