@@ -2,12 +2,12 @@ import TripGroup from "../model/trip/TripGroup";
 import * as React from "react";
 import Tooltip from "rc-tooltip";
 import TripAlternativesView from "./TripAlternativesView";
-import TripRowProps from "./TripRowProps";
+import ITripRowProps from "./ITripRowProps";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAltBtn extends React.Component<IProps, {}> {

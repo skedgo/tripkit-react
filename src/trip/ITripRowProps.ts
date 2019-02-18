@@ -1,7 +1,7 @@
 import Trip from "../model/trip/Trip";
 import {EventEmitter} from "fbemitter";
 
-interface TripRowProps {
+interface ITripRowProps {
     value: Trip;
     className?: string;
     brief?: boolean;
@@ -13,4 +13,4 @@ interface TripRowProps {
 
 export const TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
 
-export default TripRowProps;
+export default ITripRowProps;

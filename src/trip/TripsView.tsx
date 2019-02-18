@@ -1,6 +1,6 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import TripRowProps, {TRIP_ALT_PICKED_EVENT} from "./TripRowProps";
+import ITripRowProps, {TRIP_ALT_PICKED_EVENT} from "./ITripRowProps";
 import "./TripsView.css";
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
 import {EventEmitter} from "fbemitter";
@@ -14,7 +14,7 @@ interface IProps {
     className?: string;
     onChange?: (value: Trip) => void;
     eventBus?: EventEmitter;
-    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripsView extends React.Component<IProps, {}> {
