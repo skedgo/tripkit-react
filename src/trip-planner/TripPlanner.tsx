@@ -25,7 +25,7 @@ import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import TripRow from "../trip/TripRow";
-import TripRowProps, {TRIP_ALT_PICKED_EVENT} from "../trip/TripRowProps";
+import ITripRowProps, {TRIP_ALT_PICKED_EVENT} from "../trip/ITripRowProps";
 import ReactResizeDetector from "react-resize-detector";
 import MapUtil from "../util/MapUtil";
 import GATracker from "../analytics/GATracker";
@@ -292,7 +292,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                            waiting={this.props.waiting}
                                            eventBus={this.eventBus}
                                            className="gl-no-shrink"
-                                           renderTrip={<P extends TripRowProps>(props: P) =>
+                                           renderTrip={<P extends ITripRowProps>(props: P) =>
                                                <div key={(props as any).key}>
                                                    <TripRow {...props}/>
                                                    <TripDetail value={props.value}/>

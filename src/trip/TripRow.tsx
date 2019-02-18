@@ -5,7 +5,7 @@ import TripAltBtn from "./TripAltBtn";
 import TripRowTime from "./TripRowTime";
 import TripRowTrack from "./TripRowTrack";
 import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
-import {default as IProps, TRIP_ALT_PICKED_EVENT} from "./TripRowProps";
+import {default as IProps, TRIP_ALT_PICKED_EVENT} from "./ITripRowProps";
 
 interface IState {
     showDetails: boolean;

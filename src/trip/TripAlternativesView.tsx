@@ -1,14 +1,14 @@
 import * as React from "react";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
-import TripRowProps from "./TripRowProps";
+import ITripRowProps from "./ITripRowProps";
 import "./TripAlternativesView.css";
 import Util from "../util/Util";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAlternativesView extends React.Component<IProps, {}> {

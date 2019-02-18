@@ -192,8 +192,16 @@ class SegmentTemplate {
         return this._streets;
     }
 
+    set streets(value: Street[] | null) {
+        this._streets = value;
+    }
+
     get shapes(): ServiceShape[] | null {
         return this._shapes;
+    }
+
+    set shapes(value: ServiceShape[] | null) {
+        this._shapes = value;
     }
 
     get stopCode(): string | null {
