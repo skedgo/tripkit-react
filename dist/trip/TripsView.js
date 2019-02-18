@@ -12,7 +12,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 import * as React from "react";
-import { TRIP_ALT_PICKED_EVENT } from "./TripRowProps";
+import { TRIP_ALT_PICKED_EVENT } from "./ITripRowProps";
 import "./TripsView.css";
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
 var TripsView = /** @class */ (function (_super) {

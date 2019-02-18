@@ -57,8 +57,8 @@ declare class SegmentTemplate {
     type: string;
     travelDirection: number | undefined;
     location: Location;
-    readonly streets: Street[] | null;
-    readonly shapes: ServiceShape[] | null;
+    streets: Street[] | null;
+    shapes: ServiceShape[] | null;
     stopCode: string | null;
     endStopCode: string | null;
     serviceOperator: string;

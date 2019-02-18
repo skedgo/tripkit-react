@@ -23,7 +23,7 @@ export { default as FavouriteBtn } from "./favourite/FavouriteBtn";
 export { default as FavouriteTrip } from "./model/FavouriteTrip";
 export { default as TripsView } from "./trip/TripsView";
 export { default as TripRow } from "./trip/TripRow";
-export { TRIP_ALT_PICKED_EVENT } from "./trip/TripRowProps";
+export { TRIP_ALT_PICKED_EVENT } from "./trip/ITripRowProps";
 export { default as TripDetail } from "./trip/TripDetail";
 export { default as TripRowTime } from "./trip/TripRowTime";
 export { default as TripRowTrack } from "./trip/TripRowTrack";

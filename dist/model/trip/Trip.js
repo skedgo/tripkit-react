@@ -222,6 +222,8 @@ var Trip = /** @class */ (function () {
                 this._arrivalSegment.from = last.to;
                 this._arrivalSegment.startTime = last.endTime;
                 this._arrivalSegment.action = "Arrive";
+                this._arrivalSegment.streets = [];
+                this._arrivalSegment.shapes = [];
             }
             return this._arrivalSegment;
         },

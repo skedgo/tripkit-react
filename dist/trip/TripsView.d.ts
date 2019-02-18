@@ -1,6 +1,6 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import TripRowProps from "./TripRowProps";
+import ITripRowProps from "./ITripRowProps";
 import "./TripsView.css";
 import { EventEmitter } from "fbemitter";
 interface IProps {
@@ -10,7 +10,7 @@ interface IProps {
     className?: string;
     onChange?: (value: Trip) => void;
     eventBus?: EventEmitter;
-    renderTrip: <P extends TripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 declare class TripsView extends React.Component<IProps, {}> {
     private rowRefs;
