@@ -1,5 +1,3 @@
-import Environment from "./Environment";
-
 class Features {
 
     protected static _instance: Features;
@@ -18,7 +16,7 @@ class Features {
 
     public lightRail() {
         console.log("Features:lightRail()");
-        return !Environment.isProd();
+        return true;
     }
 
 }

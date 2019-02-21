@@ -35,7 +35,6 @@ var Environment = /** @class */ (function () {
     Environment.isDevAnd = function (cond) {
         return this.isDev() && cond;
     };
-    Environment.GMAPS_API_KEY = "AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao";
     Environment.environment = Env.PRODUCTION;
     return Environment;
 }());

@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import RoutingQuery from "../model/RoutingQuery";
 import 'rc-tooltip/assets/bootstrap_white.css';
 import { ReactElement } from "react";
-import MultiGeocoderOptions from "../location_box/MultiGeocoderOptions";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 interface IProps {
     value?: RoutingQuery;
     onChange?: (routingQuery: RoutingQuery) => void;

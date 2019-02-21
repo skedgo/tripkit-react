@@ -24,7 +24,7 @@ var __assign = (this && this.__assign) || function () {
 };
 import * as React from "react";
 import './TripPlanner.css';
-import '../css/act-app.css';
+import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 // import Location from "../model/Location";
@@ -59,10 +59,10 @@ import Constants from "../util/Constants";
 import TripDetail from "../trip/TripDetail";
 import LeafletMap from "../map/LeafletMap";
 import Location from "../model/Location";
-import MultiGeocoder from "../location_box/MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import { TileLayer } from "react-leaflet";
-import GeolocationData from "../location_box/GeolocationData";
+import GeolocationData from "../geocode/GeolocationData";
 var TripPlanner = /** @class */ (function (_super) {
     __extends(TripPlanner, _super);
     function TripPlanner(props) {
@@ -280,6 +280,7 @@ var TripPlanner = /** @class */ (function (_super) {
             + "trip url: " + (this.state.selected ? this.state.selected.temporaryURL : "");
     };
     TripPlanner.prototype.componentDidMount = function () {
+        this.refreshRegion();
         // TEST
         // this.onQueryChange(
         // RoutingQuery.create(
@@ -318,17 +319,7 @@ var TripPlanner = /** @class */ (function (_super) {
         var _this = this;
         if (prevState.viewport !== this.state.viewport
             || prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to) {
-            var query = this.props.query;
-            var referenceLatLng = query.from && query.from.isResolved() ? query.from :
-                (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
-            if (referenceLatLng) {
-                RegionsData.instance.getCloserRegionP(referenceLatLng).then(function (region) {
-                    if (region.polygon === "") {
-                        console.log("empty region");
-                    }
-                    _this.setState({ region: region });
-                });
-            }
+            this.refreshRegion();
         }
         // Clear selected
         if (prevProps.trips !== this.props.trips) {
@@ -364,6 +355,20 @@ var TripPlanner = /** @class */ (function (_super) {
         }
         if (this.checkFitLocation(prevState.preFrom, this.state.preFrom) || this.checkFitLocation(prevState.preTo, this.state.preTo)) {
             this.fitMap(this.props.query, this.state.preFrom, this.state.preTo);
+        }
+    };
+    TripPlanner.prototype.refreshRegion = function () {
+        var _this = this;
+        var query = this.props.query;
+        var referenceLatLng = query.from && query.from.isResolved() ? query.from :
+            (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
+        if (referenceLatLng) {
+            RegionsData.instance.getCloserRegionP(referenceLatLng).then(function (region) {
+                if (region.polygon === "") {
+                    console.log("empty region");
+                }
+                _this.setState({ region: region });
+            });
         }
     };
     return TripPlanner;

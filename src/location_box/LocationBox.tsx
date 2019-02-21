@@ -3,7 +3,7 @@ import Autocomplete from 'react-autocomplete';
 import './LocationBox.css';
 import IconRemove from '-!svg-react-loader!../images/ic-cross.svg'
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg'
-import MultiGeocoder from "./MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import ResultItem from "./ResultItem";
 import BBox from "../model/BBox";

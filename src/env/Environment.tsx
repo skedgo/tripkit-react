@@ -8,8 +8,6 @@ enum Env {
 
 class Environment {
 
-    public static readonly GMAPS_API_KEY: string = "AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao";
-
     private static environment = Env.PRODUCTION;
 
     public static initialize() {

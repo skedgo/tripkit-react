@@ -10,8 +10,9 @@ class Options {
     // Modes disabled by default, can be changed by user, recorded in local storage.
     private static readonly defaultDisabled = [ModeIdentifier.SCHOOLBUS_ID, ModeIdentifier.TAXI_ID, ModeIdentifier.UBER_ID, ModeIdentifier.CAR_RENTAL_SW_ID];
     // Modes forced as disabled, not recorded in local storage.
-    public static readonly overrideDisabled: string[] = [ModeIdentifier.SCHOOLBUS_ID].concat(
-        Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
+    public static get overrideDisabled(): string[] {
+        return [ModeIdentifier.SCHOOLBUS_ID].concat(Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
+    };
 
     @JsonProperty('weightingPrefs', WeightingPreferences, true)
     private _weightingPrefs: WeightingPreferences = WeightingPreferences.create(1, 1, 2);

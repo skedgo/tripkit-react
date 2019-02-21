@@ -24,6 +24,15 @@ var Options = /** @class */ (function () {
         // Avoid empty error
     }
     Options_1 = Options;
+    Object.defineProperty(Options, "overrideDisabled", {
+        // Modes forced as disabled, not recorded in local storage.
+        get: function () {
+            return [ModeIdentifier.SCHOOLBUS_ID].concat(Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ;
     Object.defineProperty(Options.prototype, "weightingPrefs", {
         get: function () {
             return this._weightingPrefs;
@@ -81,8 +90,6 @@ var Options = /** @class */ (function () {
     var Options_1;
     // Modes disabled by default, can be changed by user, recorded in local storage.
     Options.defaultDisabled = [ModeIdentifier.SCHOOLBUS_ID, ModeIdentifier.TAXI_ID, ModeIdentifier.UBER_ID, ModeIdentifier.CAR_RENTAL_SW_ID];
-    // Modes forced as disabled, not recorded in local storage.
-    Options.overrideDisabled = [ModeIdentifier.SCHOOLBUS_ID].concat(Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
     __decorate([
         JsonProperty('weightingPrefs', WeightingPreferences, true),
         __metadata("design:type", WeightingPreferences)

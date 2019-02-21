@@ -1,6 +1,6 @@
 import * as React from "react";
 import './TripPlanner.css'
-import '../css/act-app.css';
+import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 // import Location from "../model/Location";
@@ -40,10 +40,10 @@ import TripGroup from "../model/trip/TripGroup";
 import TripDetail from "../trip/TripDetail";
 import LeafletMap from "../map/LeafletMap";
 import Location from "../model/Location";
-import MultiGeocoder from "../location_box/MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import {TileLayer} from "react-leaflet";
-import GeolocationData from "../location_box/GeolocationData";
+import GeolocationData from "../geocode/GeolocationData";
 
 interface IState {
     tripsSorted: Trip[] | null;
@@ -376,6 +376,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     }
 
     public componentDidMount(): void {
+        this.refreshRegion();
         // TEST
         // this.onQueryChange(
             // RoutingQuery.create(
@@ -420,17 +421,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     public componentDidUpdate(prevProps: Readonly<ITripPlannerProps>, prevState: Readonly<IState>, snapshot?: any): void {
         if (prevState.viewport !== this.state.viewport
             || prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to) {
-            const query = this.props.query;
-            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
-                (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
-            if (referenceLatLng) {
-                RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
-                    if (region.polygon === "") {
-                        console.log("empty region");
-                    }
-                    this.setState({region: region});
-                });
-            }
+            this.refreshRegion();
         }
         // Clear selected
         if (prevProps.trips !== this.props.trips) {
@@ -466,6 +457,20 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         }
         if (this.checkFitLocation(prevState.preFrom , this.state.preFrom) || this.checkFitLocation(prevState.preTo, this.state.preTo)) {
             this.fitMap(this.props.query, this.state.preFrom, this.state.preTo);
+        }
+    }
+
+    private refreshRegion() {
+        const query = this.props.query;
+        const referenceLatLng = query.from && query.from.isResolved() ? query.from :
+            (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
+        if (referenceLatLng) {
+            RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
+                if (region.polygon === "") {
+                    console.log("empty region");
+                }
+                this.setState({region: region});
+            });
         }
     }
 }

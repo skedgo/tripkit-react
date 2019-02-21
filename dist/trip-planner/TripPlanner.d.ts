@@ -1,6 +1,6 @@
 import * as React from "react";
 import './TripPlanner.css';
-import '../css/act-app.css';
+import '../css/app.css';
 import LatLng from "../model/LatLng";
 import RoutingQuery from "../model/RoutingQuery";
 import BBox from "../model/BBox";
@@ -43,5 +43,6 @@ declare class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     private getFeedback;
     componentDidMount(): void;
     componentDidUpdate(prevProps: Readonly<ITripPlannerProps>, prevState: Readonly<IState>, snapshot?: any): void;
+    private refreshRegion;
 }
 export default TripPlanner;
