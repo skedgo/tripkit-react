@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./QueryInput.css";
 import LocationBox from "../location_box/LocationBox";
-import MultiGeocoder from "../location_box/MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
@@ -21,7 +21,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
-import MultiGeocoderOptions from "../location_box/MultiGeocoderOptions";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 
 interface IProps {
     value?: RoutingQuery;

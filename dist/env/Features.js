@@ -1,4 +1,3 @@
-import Environment from "./Environment";
 var Features = /** @class */ (function () {
     function Features() {
     }
@@ -18,7 +17,7 @@ var Features = /** @class */ (function () {
     });
     Features.prototype.lightRail = function () {
         console.log("Features:lightRail()");
-        return !Environment.isProd();
+        return true;
     };
     return Features;
 }());

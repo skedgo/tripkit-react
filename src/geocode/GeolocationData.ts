@@ -1,6 +1,4 @@
-import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
-import Environment from "../env/Environment";
 import iplocation from "iplocation";
 
 class GeolocationData {
@@ -14,16 +12,16 @@ class GeolocationData {
         return this._instance;
     }
 
-    public requestCurrentLocationGMaps(): Promise<LatLng> {
-        return fetch("https://www.googleapis.com/geolocation/v1/geolocate?key=" + Environment.GMAPS_API_KEY,
-            {
-                method: 'post'
-            })
-            .then(NetworkUtil.jsonCallback)
-            .then((jsonData) => {
-                return Promise.resolve(LatLng.createLatLng(jsonData.location.lat, jsonData.location.lng));
-            });
-    }
+    // public requestCurrentLocationGMaps(): Promise<LatLng> {
+    //     return fetch("https://www.googleapis.com/geolocation/v1/geolocate?key=" + Environment.GMAPS_API_KEY,
+    //         {
+    //             method: 'post'
+    //         })
+    //         .then(NetworkUtil.jsonCallback)
+    //         .then((jsonData) => {
+    //             return Promise.resolve(LatLng.createLatLng(jsonData.location.lat, jsonData.location.lng));
+    //         });
+    // }
 
     public requestIPLocation(): Promise<LatLng> {
         return iplocation('0.0.0.0', ["https://ipapi.co/json/"]).then((res) => {

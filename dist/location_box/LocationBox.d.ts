@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import './LocationBox.css';
-import MultiGeocoder from "./MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";

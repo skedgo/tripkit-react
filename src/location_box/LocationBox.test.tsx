@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import LocationBox from "./LocationBox";
-import MultiGeocoder from "./MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import LatLng from "../model/LatLng";
 

@@ -1,5 +1,4 @@
 declare class Environment {
-    static readonly GMAPS_API_KEY: string;
     private static environment;
     static initialize(): void;
     static isProd(): boolean;

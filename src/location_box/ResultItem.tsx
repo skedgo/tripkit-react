@@ -4,7 +4,7 @@ import './ResultItem.css';
 import IconCurrLoc from '-!svg-react-loader!../images/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
-import SkedgoGeocoder from "./SkedgoGeocoder";
+import SkedgoGeocoder from "../geocode/SkedgoGeocoder";
 
 interface IProps {
     location: Location;

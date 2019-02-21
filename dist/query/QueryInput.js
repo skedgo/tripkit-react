@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
 import * as React from "react";
 import "./QueryInput.css";
 import LocationBox from "../location_box/LocationBox";
-import MultiGeocoder from "../location_box/MultiGeocoder";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 import IconClock from "-!svg-react-loader!../images/ic-clock.svg";
 import IconAngleDown from "-!svg-react-loader!../images/ic-angle-down.svg";
 import IconCalendar from "-!svg-react-loader!../images/ic-calendar.svg";
