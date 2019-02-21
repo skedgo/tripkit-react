@@ -3,10 +3,8 @@ import Location from "../model/Location";
 import './ResultItem.css';
 import IconCurrLoc from '-!svg-react-loader!../images/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
-import GeocodingSource from "./GeocodingSource";
 import Environment from "../env/Environment";
-import TransportUtil from "../trip/TransportUtil";
-import ModeIdentifier from "../model/region/ModeIdentifier";
+import SkedgoGeocoder from "./SkedgoGeocoder";
 
 interface IProps {
     location: Location;
@@ -48,8 +46,7 @@ class ResultItem extends Component<IProps, {}> {
         } else {
             addressComponent =
                 <span className="ResultItem-address">
-                    {   (Environment.isDevAnd(this.props.location.source === GeocodingSource.ACT_SCHOOLS && false) ? "*SCH*" : "") +
-                        (Environment.isDevAnd(this.props.location.source === GeocodingSource.SKEDGO  && false) ? "*SG*" : "") +
+                    {   (Environment.isDevAnd(this.props.location.source === SkedgoGeocoder.SOURCE_ID  && false) ? "*SG*" : "") +
                         LocationUtil.getMainText(this.props.location)
                     }
                     <span key={2} className="ResultItem-secondaryAddress">{LocationUtil.getSecondaryText(this.props.location)}</span>
@@ -66,8 +63,8 @@ class ResultItem extends Component<IProps, {}> {
             >
                 {addressComponent}
                 {this.props.location.isCurrLoc() ? <IconCurrLoc aria-hidden={true} focusable="false"/> : ""}
-                {this.props.location.source === GeocodingSource.ACT_SCHOOLS ?
-                    <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(ModeIdentifier.SCHOOLBUS_ID))}
+                {this.props.location.icon ?
+                    <img src={this.props.location.icon}
                          className="ResultItem-icon"
                     /> : ""}
             </div>

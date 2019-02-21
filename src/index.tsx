@@ -18,6 +18,8 @@ export {default as ServiceStopLocation} from "./model/ServiceStopLocation";
 export {default as RoutingQuery, TimePreference} from "./model/RoutingQuery";
 export {default as withRoutingResults} from "./api/WithRoutingResults";
 export {default as LeafletMap} from "./map/LeafletMap";
+export {FavouriteRowProps} from "./favourite/FavouriteRow";
+export {default as FavouriteRow} from "./favourite/FavouriteRow";
 export {default as FavouriteList} from "./favourite/FavouriteList";
 export {default as FavouriteBtn} from "./favourite/FavouriteBtn";
 export {default as FavouriteTrip} from "./model/FavouriteTrip";
@@ -49,7 +51,12 @@ export {default as StopsData} from "./data/StopsData";
 export {default as NetworkUtil} from "./util/NetworkUtil";
 export {default as LocationUtil} from "./util/LocationUtil";
 export {default as SegmentDetail, SegmentDetailProps} from "./trip/TripSegmentDetail";
+export {default as IGeocoder} from "./location_box/IGeocoder";
 export {default as MultiGeocoder} from "./location_box/MultiGeocoder";
+export {default as MultiGeocoderOptions} from "./location_box/MultiGeocoderOptions";
+export {default as PeliasGeocoder} from "./location_box/PeliasGeocoder";
+export {default as SkedgoGeocoder} from "./location_box/SkedgoGeocoder";
+export {default as StaticGeocoder} from "./location_box/StaticGeocoder";
 export {Marker} from "react-leaflet";
 // Export the following so tripkit-react client can import them from tripkit-react instead of react-leaflet
 // to avoid transitive dependency issue.
@@ -58,6 +65,9 @@ export {default as Control} from "react-leaflet-control";
 export {IProps as SegmentPinIconProps} from "./map/SegmentPinIcon";
 export {IProps as SegmentPopupProps} from "./map/SegmentPopup";
 export {IProps as ServiceStopPopupProps} from "./map/ServiceStopPopup";
+export {default as Environment} from "./env/Environment";
+export {default as Features} from "./env/Features";
+export {default as ModeIdentifier} from "./model/region/ModeIdentifier";
 
 
 // TODO: This is temporary until we separate the sample (tripgo-sample.tsx) from the tripkit-react library.

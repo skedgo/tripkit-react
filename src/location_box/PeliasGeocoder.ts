@@ -8,23 +8,26 @@ import Util from "../util/Util";
 import GeolocationData from "./GeolocationData";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
-import GeocodingSource from "./GeocodingSource";
 
 class PeliasGeocoder implements IGeocoder {
 
-    private readonly GEOCODE_SERVER = "https://api.geocode.earth/v1";
-    // private static readonly GEOCODE_SERVER = "https://api.dev.geocode.earth/v1";
+    public static readonly SOURCE_ID = "PELIAS";
+
+    private geocodeServer: string;
+    private apiKey: string;
 
     private options: GeocoderOptions;
     private cache: GeocodingCache;
 
-    constructor() {
+    constructor(geocodeServer: string, apiKey: string) {
+        this.geocodeServer = geocodeServer;
+        this.apiKey = apiKey;
         this.options = new GeocoderOptions();
         this.cache = new GeocodingCache();
     }
 
-    public getSourceId(): GeocodingSource {
-        return GeocodingSource.PELIAS;
+    public getSourceId(): string {
+        return PeliasGeocoder.SOURCE_ID;
     }
 
     public getOptions(): GeocoderOptions {
@@ -40,7 +43,7 @@ class PeliasGeocoder implements IGeocoder {
                 return;
             }
         }
-        const url = this.GEOCODE_SERVER + "/autocomplete?api_key=ge-63f76914953caba8"
+        const url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
             + (bounds ?
                     "&boundary.rect.min_lat=" + bounds.minLat +
                     "&boundary.rect.max_lat=" + bounds.maxLat +
@@ -75,7 +78,7 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
-        const url = this.GEOCODE_SERVER + "/reverse?api_key=ge-63f76914953caba8" +
+        const url = this.geocodeServer + "/reverse?api_key=" + this.apiKey +
             "&point.lat="+ coord.lat + "&point.lon=" + coord.lng;
         fetch(url, {
             method: NetworkUtil.MethodType.GET
@@ -90,7 +93,7 @@ class PeliasGeocoder implements IGeocoder {
             }
             callback(null);
         }).catch(reason => {
-            Location.create(coord, "Location", "", "Location", GeocodingSource.PELIAS);
+            Location.create(coord, "Location", "", "Location", PeliasGeocoder.SOURCE_ID);
         });
     }
 
@@ -102,7 +105,7 @@ class PeliasGeocoder implements IGeocoder {
             (result.properties.label ? result.properties.label :
                 (result.properties.name ? result.properties.name : "")) : "";
         const name = '';
-        const location = Location.create(latLng, address, id, name, GeocodingSource.PELIAS);
+        const location = Location.create(latLng, address, id, name, this.SOURCE_ID);
         location.suggestion = result;
         return location;
     }

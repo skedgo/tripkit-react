@@ -46,6 +46,10 @@ class RegionsData {
         return this._instance;
     }
 
+    public hasRegions(): boolean {
+        return this.regions !== undefined;
+    }
+
     public getRegion(latLng: LatLng): Region | undefined {
         if (!this.regions) {
             return undefined;

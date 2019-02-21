@@ -15,10 +15,8 @@ import React, { Component } from "react";
 import './ResultItem.css';
 import IconCurrLoc from '-!svg-react-loader!../images/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
-import GeocodingSource from "./GeocodingSource";
 import Environment from "../env/Environment";
-import TransportUtil from "../trip/TransportUtil";
-import ModeIdentifier from "../model/region/ModeIdentifier";
+import SkedgoGeocoder from "./SkedgoGeocoder";
 var ResultItem = /** @class */ (function (_super) {
     __extends(ResultItem, _super);
     function ResultItem() {
@@ -56,16 +54,15 @@ var ResultItem = /** @class */ (function (_super) {
         else {
             addressComponent =
                 React.createElement("span", { className: "ResultItem-address" },
-                    (Environment.isDevAnd(this.props.location.source === GeocodingSource.ACT_SCHOOLS && false) ? "*SCH*" : "") +
-                        (Environment.isDevAnd(this.props.location.source === GeocodingSource.SKEDGO && false) ? "*SG*" : "") +
+                    (Environment.isDevAnd(this.props.location.source === SkedgoGeocoder.SOURCE_ID && false) ? "*SG*" : "") +
                         LocationUtil.getMainText(this.props.location),
                     React.createElement("span", { key: 2, className: "ResultItem-secondaryAddress" }, LocationUtil.getSecondaryText(this.props.location)));
         }
         return (React.createElement("div", { key: this.props.key, style: { background: this.props.highlighted ? '#efeded' : 'white' }, className: "gl-flex gl-space-between ResultItem" + (this.props.location.isCurrLoc() ? " currLoc" : ""), onClick: this.props.onClick, role: "option", id: this.props.id, "aria-selected": this.props.ariaSelected },
             addressComponent,
             this.props.location.isCurrLoc() ? React.createElement(IconCurrLoc, { "aria-hidden": true, focusable: "false" }) : "",
-            this.props.location.source === GeocodingSource.ACT_SCHOOLS ?
-                React.createElement("img", { src: TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(ModeIdentifier.SCHOOLBUS_ID)), className: "ResultItem-icon" }) : ""));
+            this.props.location.icon ?
+                React.createElement("img", { src: this.props.location.icon, className: "ResultItem-icon" }) : ""));
     };
     return ResultItem;
 }(Component));

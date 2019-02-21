@@ -5,6 +5,7 @@ import { ITripPlannerProps as RResultsConsumerProps } from "../trip-planner/ITri
 import RoutingQuery from "../model/RoutingQuery";
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
+    computeModeSets?: (query: RoutingQuery) => string[][];
 }
 interface IWithRoutingResultsState {
     query: RoutingQuery;
@@ -23,6 +24,11 @@ declare function withRoutingResults<P extends RResultsConsumerProps>(Consumer: R
         onAlternativeChange(group: TripGroup, alt: Trip): void;
         render(): React.ReactNode;
         componentDidMount(): void;
+        sameApiQueries(q1: RoutingQuery, q2: RoutingQuery): boolean;
+        getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]>;
+        computeModeSets(query: RoutingQuery): string[][];
+        computeTrips(query: RoutingQuery): Promise<Promise<Trip[]>[]>;
+        getRoutingResultsJSONTest(): any;
         setState<K extends "waiting" | "trips" | "selected" | "query">(state: IWithRoutingResultsState | ((prevState: Readonly<IWithRoutingResultsState>, props: Readonly<Pick<P, import("utility-types/dist/mapped-types").SetDifference<keyof P, "waiting" | "trips" | "query" | "onQueryChange" | "onReqRealtimeFor" | "onAlternativeChange">> & IWithRoutingResultsProps>) => IWithRoutingResultsState | Pick<IWithRoutingResultsState, K> | null) | Pick<IWithRoutingResultsState, K> | null, callback?: (() => void) | undefined): void;
         forceUpdate(callBack?: (() => void) | undefined): void;
         readonly props: Readonly<{

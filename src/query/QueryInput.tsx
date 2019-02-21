@@ -21,6 +21,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
+import MultiGeocoderOptions from "../location_box/MultiGeocoderOptions";
 
 interface IProps {
     value?: RoutingQuery;
@@ -35,6 +36,7 @@ interface IProps {
     bottomLeftComponent?: ReactElement<any>;
     collapsable?: boolean;
     onTimePanelOpen?: (open: boolean) => void;
+    geocoderOptions?: MultiGeocoderOptions;
 }
 
 interface IState {
@@ -66,7 +68,7 @@ class QueryInput extends React.Component<IProps, IState> {
             toTooltip: false,
             collapsed: false
         };
-        this.geocodingData = new MultiGeocoder(true);
+        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions);
         this.onPrefClicked = this.onPrefClicked.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }

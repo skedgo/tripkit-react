@@ -1,13 +1,13 @@
 import LatLng from '../model/LatLng';
-import GeocodingSource from "../location_box/GeocodingSource";
 declare class Location extends LatLng {
     private _class;
     private _address;
     private _name;
     private _id;
     private _source;
+    private _icon;
     private _suggestion?;
-    static create(latlng: LatLng, address: string, id: string, name: string, source?: GeocodingSource): Location;
+    static create(latlng: LatLng, address: string, id: string, name: string, source?: string, icon?: string): Location;
     private static readonly currLocText;
     static createCurrLoc(): Location;
     /**
@@ -20,7 +20,8 @@ declare class Location extends LatLng {
     address: string;
     name: string;
     id: string;
-    source: GeocodingSource | undefined;
+    source: string | undefined;
+    icon: string | undefined;
     suggestion: any;
     getDisplayString(): string;
     isCurrLoc(): boolean;

@@ -5,7 +5,7 @@ import MultiGeocoder from "./MultiGeocoder";
 import Location from '../model/Location';
 import LatLng from "../model/LatLng";
 var LocationBoxWithGMapsApi = function () {
-    var geocodingData = new MultiGeocoder(true);
+    var geocodingData = new MultiGeocoder();
     return React.createElement(LocationBox, { geocodingData: geocodingData, placeholder: "Enter an address...", value: Location.create(LatLng.createLatLng(10, 10), "", "", "") });
 };
 it('renders without crashing', function () {

@@ -96,7 +96,7 @@ var TripPlanner = /** @class */ (function (_super) {
             _this.props.onAlternativeChange(orig, update.getSelectedTrip());
         });
         WaiAriaUtil.addTabbingDetection();
-        _this.geocodingData = new MultiGeocoder(true);
+        _this.geocodingData = new MultiGeocoder();
         _this.onQueryChange = _this.onQueryChange.bind(_this);
         _this.onFavClicked = _this.onFavClicked.bind(_this);
         _this.onOptionsChange = _this.onOptionsChange.bind(_this);

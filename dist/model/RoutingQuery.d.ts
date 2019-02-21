@@ -24,10 +24,7 @@ declare class RoutingQuery {
     options: Options;
     isComplete(checkResolved?: boolean): boolean;
     getGoUrl(plannerUrl?: string): string;
-    getQueryUrls(): Promise<string[]>;
-    private getQueryUrlsForRegion;
     getQueryUrl(modeSet: string[]): string;
-    sameApiQueries(other: RoutingQuery): boolean;
     isEmpty(): boolean;
 }
 export default RoutingQuery;

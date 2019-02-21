@@ -16,7 +16,6 @@ import './FavouriteRow.css';
 import IconAngleRight from "-!svg-react-loader!../images/ic-angle-right.svg";
 import FavouriteBtn from "./FavouriteBtn";
 import LocationUtil from "../util/LocationUtil";
-import FavouriteOptions from "./FavouriteOptions";
 var FavouriteRow = /** @class */ (function (_super) {
     __extends(FavouriteRow, _super);
     function FavouriteRow(props) {
@@ -40,8 +39,7 @@ var FavouriteRow = /** @class */ (function (_super) {
                     React.createElement("div", { className: "FavouriteRow-addSecond gl-overflow-ellipsis", "aria-hidden": true }, LocationUtil.getSecondaryText(to)))),
             React.createElement("div", { className: "FavouriteRow-actionPanel gl-flex gl-space-between gl-align-center" },
                 React.createElement(FavouriteBtn, { favourite: this.props.favourite }),
-                this.props.favourite.options ?
-                    React.createElement(FavouriteOptions, { favourite: this.props.favourite }) : null)));
+                this.props.bottomRightComponent ? this.props.bottomRightComponent : null)));
     };
     return FavouriteRow;
 }(React.Component));

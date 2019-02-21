@@ -42,7 +42,7 @@ var QueryInput = /** @class */ (function (_super) {
             toTooltip: false,
             collapsed: false
         };
-        _this.geocodingData = new MultiGeocoder(true);
+        _this.geocodingData = new MultiGeocoder(_this.props.geocoderOptions);
         _this.onPrefClicked = _this.onPrefClicked.bind(_this);
         _this.onSwapClicked = _this.onSwapClicked.bind(_this);
         return _this;

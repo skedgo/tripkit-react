@@ -2,11 +2,10 @@ import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import GeocoderOptions from "./GeocoderOptions";
-import GeocodingSource from "./GeocodingSource";
 
 interface IGeocoder {
 
-    getSourceId(): GeocodingSource;
+    getSourceId(): string;
 
     getOptions(): GeocoderOptions;
 

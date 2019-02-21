@@ -3,12 +3,6 @@ import {Moment} from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
 import Options from "./Options";
 import OptionsData from "../data/OptionsData";
-import RegionsData from "../data/RegionsData";
-import Region from "./region/Region";
-import OptionsView from "../options/OptionsView";
-import ModeIdentifier from "./region/ModeIdentifier";
-import GeocodingSource from "../location_box/GeocodingSource";
-import SchoolGeocoder from "../location_box/SchoolGeocoder";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -108,67 +102,6 @@ class RoutingQuery {
             "&time=" + Math.floor(this.time.valueOf() / 1000);
     }
 
-    public getQueryUrls(): Promise<string[]> {
-        const referenceLatLng = this.from && this.from.isResolved() ? this.from : (this.to && this.to.isResolved() ? this.to : undefined);
-        if (referenceLatLng) {
-            return RegionsData.instance.getRegionP(referenceLatLng).then((region: Region) => {
-                if (!region) {
-                    Promise.reject("Query out of coverage.")
-                }
-                return SchoolGeocoder.instance.getSchoolsDataP().then(() => { // To be able to sync get schools in getQueryUrlsForRegion()
-                    return this.getQueryUrlsForRegion(region);
-                });
-            })
-        }
-        return Promise.reject("Cannot get query urls for empty query.");
-    }
-
-    private getQueryUrlsForRegion(region?: Region) {
-        const modes = region ? region.modes : [];
-        const enabledModes = modes.filter((mode: string) =>
-            (this.options.isModeEnabled(mode)
-                || (mode === "wa_wal" && this.options.wheelchair)) &&  // send wa_wal as mode when wheelchair is true.
-            !OptionsView.skipMode(mode) &&
-            !(mode === "pt_pub" && !this.options.isModeEnabled("pt_pub_bus")
-                && !this.options.isModeEnabled("pt_pub_tram"))
-        );
-        let busModesSet: string[] = [];
-        if (enabledModes.indexOf(ModeIdentifier.PUBLIC_TRANSPORT_ID) !== -1 &&
-            (this.from && this.from.source === GeocodingSource.ACT_SCHOOLS ||
-                this.to && this.to.source === GeocodingSource.ACT_SCHOOLS)) {
-            const busesFrom = this.from ? SchoolGeocoder.instance.getBusesForSchoolId(this.from.id, this.time.valueOf()) : [];
-            const busesTo = this.to ? SchoolGeocoder.instance.getBusesForSchoolId(this.to.id, this.time.valueOf()) : [];
-            const buses = (busesFrom ? busesFrom : []).concat(busesTo ? busesTo : []);
-            busModesSet = buses.map((bus: string) => ModeIdentifier.SCHOOLBUS_ID + "_" + bus);
-        }
-        const modeSets = enabledModes.map((mode: string) => mode === ModeIdentifier.PUBLIC_TRANSPORT_ID ? [mode].concat(busModesSet) : [mode]);
-        const multiModalSet: string[] = enabledModes.concat(busModesSet);
-        // to filter out singleton multi-modal set and multi-modal set containing just PT and SCHOOLBUS.
-        if (multiModalSet.length !== 1 && !multiModalSet.every((mode: string) =>
-            mode === ModeIdentifier.PUBLIC_TRANSPORT_ID || mode.startsWith(ModeIdentifier.SCHOOLBUS_ID))) {
-            modeSets.push(multiModalSet);
-        }
-        if (!region) {                      // Push empty set to put something if called with no region,
-            modeSets.push([]);              // which happens when checking if same query on TripPlanner.componentDidMount
-        }
-        return modeSets.map((modeSet: string[]) => {
-            return this.getQueryUrl(modeSet);
-        });
-    }
-
-    // private getExpandedModes(region: Region): string[] {
-    //     const expandedModes: string[] = [];
-    //     for (const mode of region.modes) {
-    //         if (mode === "pt_pub") {
-    //             expandedModes.push("pt_pub_bus");
-    //             expandedModes.push("pt_pub_lightRail");
-    //         } else {
-    //             expandedModes.push(mode);
-    //         }
-    //     }
-    //     return expandedModes;
-    // }
-
     public getQueryUrl(modeSet: string[]): string {
         if (this.from === null || this.to === null) {
             return "";
@@ -192,14 +125,6 @@ class RoutingQuery {
             "&wp=" + this.options.weightingPrefs.toUrlParam() +
             "&tt=0&unit=auto&v=11&locale=en&ir=1&ws=1&cs=1&includeStops=true" +
             (this.options.wheelchair ? "&wheelchair=true" : "");
-    }
-
-    public sameApiQueries(other: RoutingQuery): boolean {
-        const referenceLatLng = this.from && this.from.isResolved() ? this.from :
-            (this.to && this.to.isResolved() ? this.to : undefined);
-        // Region can be undefined since we want to check if queries are the same even before regions arrive.
-        const region = referenceLatLng ? RegionsData.instance.getRegion(referenceLatLng) : undefined;
-        return JSON.stringify(this.getQueryUrlsForRegion(region)) === JSON.stringify(other.getQueryUrlsForRegion(region));
     }
 
     public isEmpty(): boolean {

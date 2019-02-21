@@ -1,10 +1,10 @@
 import * as React from "react";
+import {ReactElement} from "react";
 import './FavouriteRow.css';
 import FavouriteTrip from "../model/FavouriteTrip";
 import IconAngleRight from "-!svg-react-loader!../images/ic-angle-right.svg";
 import FavouriteBtn from "./FavouriteBtn";
 import LocationUtil from "../util/LocationUtil";
-import FavouriteOptions from "./FavouriteOptions";
 
 interface IProps {
     favourite: FavouriteTrip;
@@ -12,6 +12,7 @@ interface IProps {
     onClick?: () => void;
     onKeyDown?: (e: any) => void;
     onFocus?: (e: any) => void;
+    bottomRightComponent?: ReactElement<any>;
 }
 
 class FavouriteRow extends React.Component<IProps, {}> {
@@ -54,8 +55,7 @@ class FavouriteRow extends React.Component<IProps, {}> {
                 </button>
                 <div className="FavouriteRow-actionPanel gl-flex gl-space-between gl-align-center">
                     <FavouriteBtn favourite={this.props.favourite}/>
-                    { this.props.favourite.options ?
-                        <FavouriteOptions favourite={this.props.favourite}/> : null}
+                    { this.props.bottomRightComponent ? this.props.bottomRightComponent : null}
                 </div>
             </div>
         );
@@ -64,3 +64,4 @@ class FavouriteRow extends React.Component<IProps, {}> {
 }
 
 export default FavouriteRow;
+export {IProps as FavouriteRowProps}

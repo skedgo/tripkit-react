@@ -5,15 +5,15 @@ import LatLng from "../model/LatLng";
 import Util from "../util/Util";
 import GeolocationData from "./GeolocationData";
 import GeocoderOptions from "./GeocoderOptions";
-import GeocodingSource from "./GeocodingSource";
 var PeliasGeocoder = /** @class */ (function () {
-    function PeliasGeocoder() {
-        this.GEOCODE_SERVER = "https://api.geocode.earth/v1";
+    function PeliasGeocoder(geocodeServer, apiKey) {
+        this.geocodeServer = geocodeServer;
+        this.apiKey = apiKey;
         this.options = new GeocoderOptions();
         this.cache = new GeocodingCache();
     }
     PeliasGeocoder.prototype.getSourceId = function () {
-        return GeocodingSource.PELIAS;
+        return PeliasGeocoder.SOURCE_ID;
     };
     PeliasGeocoder.prototype.getOptions = function () {
         return this.options;
@@ -28,7 +28,7 @@ var PeliasGeocoder = /** @class */ (function () {
                 return;
             }
         }
-        var url = this.GEOCODE_SERVER + "/autocomplete?api_key=ge-63f76914953caba8"
+        var url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
             + (bounds ?
                 "&boundary.rect.min_lat=" + bounds.minLat +
                     "&boundary.rect.max_lat=" + bounds.maxLat +
@@ -59,7 +59,7 @@ var PeliasGeocoder = /** @class */ (function () {
         }
     };
     PeliasGeocoder.prototype.reverseGeocode = function (coord, callback) {
-        var url = this.GEOCODE_SERVER + "/reverse?api_key=ge-63f76914953caba8" +
+        var url = this.geocodeServer + "/reverse?api_key=ge-63f76914953caba8" +
             "&point.lat=" + coord.lat + "&point.lon=" + coord.lng;
         fetch(url, {
             method: NetworkUtil.MethodType.GET
@@ -74,7 +74,7 @@ var PeliasGeocoder = /** @class */ (function () {
             }
             callback(null);
         }).catch(function (reason) {
-            Location.create(coord, "Location", "", "Location", GeocodingSource.PELIAS);
+            Location.create(coord, "Location", "", "Location", PeliasGeocoder.SOURCE_ID);
         });
     };
     PeliasGeocoder.locationFromAutocompleteResult = function (result) {
@@ -85,10 +85,11 @@ var PeliasGeocoder = /** @class */ (function () {
             (result.properties.label ? result.properties.label :
                 (result.properties.name ? result.properties.name : "")) : "";
         var name = '';
-        var location = Location.create(latLng, address, id, name, GeocodingSource.PELIAS);
+        var location = Location.create(latLng, address, id, name, this.SOURCE_ID);
         location.suggestion = result;
         return location;
     };
+    PeliasGeocoder.SOURCE_ID = "PELIAS";
     return PeliasGeocoder;
 }());
 export default PeliasGeocoder;
