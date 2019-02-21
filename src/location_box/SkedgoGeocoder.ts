@@ -5,11 +5,12 @@ import BBox from "../model/BBox";
 import NetworkUtil from "../util/NetworkUtil";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import GeocodingSource from "./GeocodingSource";
 import TripGoApi from "../api/TripGoApi";
 import {LocationConverter} from "../model/location/LocationConverter";
 
 class SkedgoGeocoder implements IGeocoder {
+
+    public static readonly SOURCE_ID = "SKEDGO";
 
     private options: GeocoderOptions;
     private cache: GeocodingCache;
@@ -19,8 +20,8 @@ class SkedgoGeocoder implements IGeocoder {
         this.cache = new GeocodingCache();
     }
 
-    public getSourceId(): GeocodingSource {
-        return GeocodingSource.SKEDGO;
+    public getSourceId(): string {
+        return SkedgoGeocoder.SOURCE_ID;
     }
 
     public getOptions(): GeocoderOptions {
@@ -73,7 +74,7 @@ class SkedgoGeocoder implements IGeocoder {
             const jsonConvert = new LocationConverter();
             for (const locJson of json.choices) {
                 const loc = jsonConvert.deserialize(locJson);
-                loc.source = GeocodingSource.SKEDGO;
+                loc.source = SkedgoGeocoder.SOURCE_ID;
                 results.push(loc);
             }
             if (center) {

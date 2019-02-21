@@ -39,6 +39,9 @@ var RegionsData = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    RegionsData.prototype.hasRegions = function () {
+        return this.regions !== undefined;
+    };
     RegionsData.prototype.getRegion = function (latLng) {
         if (!this.regions) {
             return undefined;

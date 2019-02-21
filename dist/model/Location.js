@@ -23,7 +23,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import { JsonObject, JsonProperty } from "json2typescript";
-import { GeocodingSourceConverter } from "../location_box/GeocodingSource";
 var Location = /** @class */ (function (_super) {
     __extends(Location, _super);
     /**
@@ -39,12 +38,13 @@ var Location = /** @class */ (function (_super) {
         return _this;
     }
     Location_1 = Location;
-    Location.create = function (latlng, address, id, name, source) {
+    Location.create = function (latlng, address, id, name, source, icon) {
         var instance = Util.iAssign(new Location_1(), latlng);
         instance._address = address;
         instance._name = name;
         instance._id = id;
         instance._source = source;
+        instance._icon = icon;
         return instance;
     };
     Location.createCurrLoc = function () {
@@ -106,6 +106,16 @@ var Location = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Location.prototype, "icon", {
+        get: function () {
+            return this._icon;
+        },
+        set: function (value) {
+            this._icon = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Location.prototype, "suggestion", {
         get: function () {
             return this._suggestion;
@@ -149,7 +159,7 @@ var Location = /** @class */ (function (_super) {
         __metadata("design:type", String)
     ], Location.prototype, "_id", void 0);
     __decorate([
-        JsonProperty('source', GeocodingSourceConverter, true),
+        JsonProperty('source', String, true),
         __metadata("design:type", Object)
     ], Location.prototype, "_source", void 0);
     Location = Location_1 = __decorate([

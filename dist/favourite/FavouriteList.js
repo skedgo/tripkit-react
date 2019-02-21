@@ -11,6 +11,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 import * as React from "react";
 import './FavouriteList.css';
 import FavouriteRow from "./FavouriteRow";
@@ -49,6 +60,10 @@ var FavouriteList = /** @class */ (function (_super) {
         if (this.props.hideWhenEmpty && values.length === 0) {
             return null;
         }
+        var renderFavourite = this.props.renderFavourite ? this.props.renderFavourite :
+            function (props) {
+                return React.createElement(FavouriteRow, __assign({}, props));
+            };
         return (React.createElement("div", { className: this.props.className, tabIndex: this.props.title ? 0 : -1, "aria-label": this.props.title },
             this.props.title ?
                 React.createElement("div", { className: "FavouriteList-lastJourneyTitle gl-flex gl-justify-start gl-align-self-start" }, this.props.title) :
@@ -67,7 +82,15 @@ var FavouriteList = /** @class */ (function (_super) {
                     React.createElement("div", { className: "gl-flex gl-grow" },
                         React.createElement("div", { className: "FavouriteList-container gl-flex gl-column gl-grow" },
                             this.state.values.slice(0, displayN).map(function (favourite, i) {
-                                return React.createElement(FavouriteRow, { key: favourite.getKey(), recent: _this.props.recent, favourite: favourite, onClick: valueClickedHandler ? function () { return valueClickedHandler(favourite); } : undefined, ref: function (el) { return _this.rowRefs[i] = el; }, onFocus: function () { return _this.focused = i; }, onKeyDown: _this.onKeyDown });
+                                return renderFavourite({
+                                    key: favourite.getKey(),
+                                    recent: _this.props.recent,
+                                    favourite: favourite,
+                                    onClick: valueClickedHandler ? function () { return valueClickedHandler(favourite); } : undefined,
+                                    ref: function (el) { return _this.rowRefs[i] = el; },
+                                    onFocus: function () { return _this.focused = i; },
+                                    onKeyDown: _this.onKeyDown
+                                });
                             }),
                             this.props.previewMax &&
                                 Math.min(values.length, showUpTo) > this.props.previewMax ?

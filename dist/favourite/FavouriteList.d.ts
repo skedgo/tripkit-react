@@ -1,6 +1,7 @@
 import * as React from "react";
 import './FavouriteList.css';
 import FavouriteTrip from "../model/FavouriteTrip";
+import { FavouriteRowProps } from "./FavouriteRow";
 interface IProps {
     recent?: boolean;
     title?: string;
@@ -10,6 +11,7 @@ interface IProps {
     onValueClicked?: (value: FavouriteTrip) => void;
     className?: string;
     moreBtnClass?: string;
+    renderFavourite?: <P extends FavouriteRowProps>(props: P) => JSX.Element;
 }
 interface IState {
     values: FavouriteTrip[];

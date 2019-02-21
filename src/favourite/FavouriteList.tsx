@@ -5,6 +5,7 @@ import FavouriteRow from "./FavouriteRow";
 import FavouritesData from "../data/FavouritesData";
 import IconAddFav from "-!svg-react-loader!../images/ic-star-outline.svg";
 import {EventSubscription} from "fbemitter";
+import {FavouriteRowProps} from "./FavouriteRow";
 
 
 interface IProps {
@@ -16,6 +17,7 @@ interface IProps {
     onValueClicked?: (value: FavouriteTrip) => void;
     className?: string;
     moreBtnClass?: string;
+    renderFavourite?: <P extends FavouriteRowProps>(props: P) => JSX.Element;
 }
 
 interface IState {
@@ -60,6 +62,10 @@ class FavouriteList extends React.Component<IProps, IState> {
         if (this.props.hideWhenEmpty && values.length === 0) {
             return null;
         }
+        const renderFavourite = this.props.renderFavourite ? this.props.renderFavourite :
+            <P extends FavouriteRowProps>(props: P) => {
+                return <FavouriteRow {...props}/>
+            };
         return (
             <div className={this.props.className}
                  tabIndex={this.props.title ? 0 : -1}
@@ -91,15 +97,15 @@ class FavouriteList extends React.Component<IProps, IState> {
                             <div className="FavouriteList-container gl-flex gl-column gl-grow">
                                 {this.state.values.slice(0, displayN).map(
                                     (favourite, i) => {
-                                        return <FavouriteRow
-                                            key={favourite.getKey()}
-                                            recent={this.props.recent}
-                                            favourite={favourite}
-                                            onClick={valueClickedHandler ? () => valueClickedHandler(favourite) : undefined}
-                                            ref={el => this.rowRefs[i] = el}
-                                            onFocus={() => this.focused = i}
-                                            onKeyDown={this.onKeyDown}
-                                        />;
+                                        return renderFavourite({
+                                            key: favourite.getKey(),
+                                            recent: this.props.recent,
+                                            favourite: favourite,
+                                            onClick: valueClickedHandler ? () => valueClickedHandler(favourite) : undefined,
+                                            ref: (el: any) => this.rowRefs[i] = el,
+                                            onFocus: () => this.focused = i,
+                                            onKeyDown: this.onKeyDown
+                                        });
                                     }
                                 )
                                 }

@@ -18,7 +18,7 @@ import ModeIdentifier from "../model/region/ModeIdentifier";
 import TransportUtil from "../trip/TransportUtil";
 import "./FavouriteOptions.css";
 import Constants from "../util/Constants";
-import GeocodingSource from "../location_box/GeocodingSource";
+import { SchoolGeocoder } from "../index";
 var FavouriteOptions = /** @class */ (function (_super) {
     __extends(FavouriteOptions, _super);
     function FavouriteOptions(props) {
@@ -35,7 +35,7 @@ var FavouriteOptions = /** @class */ (function (_super) {
                     .filter(function (mode) {
                     return options.isModeEnabled(mode.identifier) ||
                         (mode.identifier === ModeIdentifier.SCHOOLBUS_ID &&
-                            (_this.props.favourite.from.source === GeocodingSource.ACT_SCHOOLS || _this.props.favourite.to.source === GeocodingSource.ACT_SCHOOLS));
+                            (_this.props.favourite.from.source === SchoolGeocoder.SOURCE_ID || _this.props.favourite.to.source === SchoolGeocoder.SOURCE_ID));
                 })
                     .map(function (modeId, index) {
                     var circleBg = modeId.icon === null;

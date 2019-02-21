@@ -1,10 +1,5 @@
 import DateTimeUtil from "../util/DateTimeUtil";
 import OptionsData from "../data/OptionsData";
-import RegionsData from "../data/RegionsData";
-import OptionsView from "../options/OptionsView";
-import ModeIdentifier from "./region/ModeIdentifier";
-import GeocodingSource from "../location_box/GeocodingSource";
-import SchoolGeocoder from "../location_box/SchoolGeocoder";
 export var TimePreference;
 (function (TimePreference) {
     TimePreference["NOW"] = "NOW";
@@ -104,67 +99,6 @@ var RoutingQuery = /** @class */ (function () {
             "&type=" + (this.timePref === TimePreference.NOW ? "0" : (this.timePref === TimePreference.LEAVE ? "1" : "2")) +
             "&time=" + Math.floor(this.time.valueOf() / 1000);
     };
-    RoutingQuery.prototype.getQueryUrls = function () {
-        var _this = this;
-        var referenceLatLng = this.from && this.from.isResolved() ? this.from : (this.to && this.to.isResolved() ? this.to : undefined);
-        if (referenceLatLng) {
-            return RegionsData.instance.getRegionP(referenceLatLng).then(function (region) {
-                if (!region) {
-                    Promise.reject("Query out of coverage.");
-                }
-                return SchoolGeocoder.instance.getSchoolsDataP().then(function () {
-                    return _this.getQueryUrlsForRegion(region);
-                });
-            });
-        }
-        return Promise.reject("Cannot get query urls for empty query.");
-    };
-    RoutingQuery.prototype.getQueryUrlsForRegion = function (region) {
-        var _this = this;
-        var modes = region ? region.modes : [];
-        var enabledModes = modes.filter(function (mode) {
-            return (_this.options.isModeEnabled(mode)
-                || (mode === "wa_wal" && _this.options.wheelchair)) && // send wa_wal as mode when wheelchair is true.
-                !OptionsView.skipMode(mode) &&
-                !(mode === "pt_pub" && !_this.options.isModeEnabled("pt_pub_bus")
-                    && !_this.options.isModeEnabled("pt_pub_tram"));
-        });
-        var busModesSet = [];
-        if (enabledModes.indexOf(ModeIdentifier.PUBLIC_TRANSPORT_ID) !== -1 &&
-            (this.from && this.from.source === GeocodingSource.ACT_SCHOOLS ||
-                this.to && this.to.source === GeocodingSource.ACT_SCHOOLS)) {
-            var busesFrom = this.from ? SchoolGeocoder.instance.getBusesForSchoolId(this.from.id, this.time.valueOf()) : [];
-            var busesTo = this.to ? SchoolGeocoder.instance.getBusesForSchoolId(this.to.id, this.time.valueOf()) : [];
-            var buses = (busesFrom ? busesFrom : []).concat(busesTo ? busesTo : []);
-            busModesSet = buses.map(function (bus) { return ModeIdentifier.SCHOOLBUS_ID + "_" + bus; });
-        }
-        var modeSets = enabledModes.map(function (mode) { return mode === ModeIdentifier.PUBLIC_TRANSPORT_ID ? [mode].concat(busModesSet) : [mode]; });
-        var multiModalSet = enabledModes.concat(busModesSet);
-        // to filter out singleton multi-modal set and multi-modal set containing just PT and SCHOOLBUS.
-        if (multiModalSet.length !== 1 && !multiModalSet.every(function (mode) {
-            return mode === ModeIdentifier.PUBLIC_TRANSPORT_ID || mode.startsWith(ModeIdentifier.SCHOOLBUS_ID);
-        })) {
-            modeSets.push(multiModalSet);
-        }
-        if (!region) { // Push empty set to put something if called with no region,
-            modeSets.push([]); // which happens when checking if same query on TripPlanner.componentDidMount
-        }
-        return modeSets.map(function (modeSet) {
-            return _this.getQueryUrl(modeSet);
-        });
-    };
-    // private getExpandedModes(region: Region): string[] {
-    //     const expandedModes: string[] = [];
-    //     for (const mode of region.modes) {
-    //         if (mode === "pt_pub") {
-    //             expandedModes.push("pt_pub_bus");
-    //             expandedModes.push("pt_pub_lightRail");
-    //         } else {
-    //             expandedModes.push(mode);
-    //         }
-    //     }
-    //     return expandedModes;
-    // }
     RoutingQuery.prototype.getQueryUrl = function (modeSet) {
         if (this.from === null || this.to === null) {
             return "";
@@ -189,13 +123,6 @@ var RoutingQuery = /** @class */ (function () {
             "&wp=" + this.options.weightingPrefs.toUrlParam() +
             "&tt=0&unit=auto&v=11&locale=en&ir=1&ws=1&cs=1&includeStops=true" +
             (this.options.wheelchair ? "&wheelchair=true" : "");
-    };
-    RoutingQuery.prototype.sameApiQueries = function (other) {
-        var referenceLatLng = this.from && this.from.isResolved() ? this.from :
-            (this.to && this.to.isResolved() ? this.to : undefined);
-        // Region can be undefined since we want to check if queries are the same even before regions arrive.
-        var region = referenceLatLng ? RegionsData.instance.getRegion(referenceLatLng) : undefined;
-        return JSON.stringify(this.getQueryUrlsForRegion(region)) === JSON.stringify(other.getQueryUrlsForRegion(region));
     };
     RoutingQuery.prototype.isEmpty = function () {
         return this.from === null && this.to === null;

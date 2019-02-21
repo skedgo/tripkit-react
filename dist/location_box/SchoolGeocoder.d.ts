@@ -1,12 +1,12 @@
 import StaticGeocoder from "./StaticGeocoder";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import GeocodingSource from "./GeocodingSource";
 import BBox from "../model/BBox";
 declare class SchoolGeocoder extends StaticGeocoder {
+    static readonly SOURCE_ID: string;
     private schoolsRequest;
     private schoolToBusLinesData;
-    getSourceId(): GeocodingSource;
+    getSourceId(): string;
     private static _instance;
     static readonly instance: SchoolGeocoder;
     constructor();

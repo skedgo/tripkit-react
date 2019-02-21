@@ -1,7 +1,7 @@
 declare class Features {
-    private static _instance;
+    protected static _instance: Features;
+    static initialize(): void;
     static readonly instance: Features;
     lightRail(): boolean;
-    schoolBuses(): boolean;
 }
 export default Features;

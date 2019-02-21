@@ -14,7 +14,8 @@ var __extends = (this && this.__extends) || (function () {
 import StaticGeocoder from "./StaticGeocoder";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import GeocodingSource from "./GeocodingSource";
+import ModeIdentifier from "../model/region/ModeIdentifier";
+import TransportUtil from "../trip/TransportUtil";
 var SchoolGeocoder = /** @class */ (function (_super) {
     __extends(SchoolGeocoder, _super);
     function SchoolGeocoder() {
@@ -26,7 +27,7 @@ var SchoolGeocoder = /** @class */ (function (_super) {
             var schools = [];
             for (var _i = 0, _a = schoolsJson.schoolData; _i < _a.length; _i++) {
                 var schoolJson = _a[_i];
-                schools.push(Location.create(LatLng.createLatLng(Number(schoolJson.lat), Number(schoolJson.lng)), schoolJson.schoolName, schoolJson.schoolID, schoolJson.schoolName, GeocodingSource.ACT_SCHOOLS));
+                schools.push(Location.create(LatLng.createLatLng(Number(schoolJson.lat), Number(schoolJson.lng)), schoolJson.schoolName, schoolJson.schoolID, schoolJson.schoolName, SchoolGeocoder.SOURCE_ID, TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(ModeIdentifier.SCHOOLBUS_ID))));
             }
             _this.setValues(schools);
             for (var _b = 0, _c = schoolsJson.busData; _b < _c.length; _b++) {
@@ -42,7 +43,7 @@ var SchoolGeocoder = /** @class */ (function (_super) {
         return _this;
     }
     SchoolGeocoder.prototype.getSourceId = function () {
-        return GeocodingSource.ACT_SCHOOLS;
+        return SchoolGeocoder.SOURCE_ID;
     };
     Object.defineProperty(SchoolGeocoder, "instance", {
         get: function () {
@@ -85,6 +86,7 @@ var SchoolGeocoder = /** @class */ (function (_super) {
         }
         return undefined;
     };
+    SchoolGeocoder.SOURCE_ID = "ACT_SCHOOLS";
     return SchoolGeocoder;
 }(StaticGeocoder));
 export default SchoolGeocoder;

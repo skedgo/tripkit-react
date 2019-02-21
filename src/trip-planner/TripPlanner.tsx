@@ -99,7 +99,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
         WaiAriaUtil.addTabbingDetection();
 
-        this.geocodingData = new MultiGeocoder(true);
+        this.geocodingData = new MultiGeocoder();
 
         this.onQueryChange = this.onQueryChange.bind(this);
         this.onFavClicked = this.onFavClicked.bind(this);

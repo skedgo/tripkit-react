@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ReactElement } from "react";
 import './FavouriteRow.css';
 import FavouriteTrip from "../model/FavouriteTrip";
 interface IProps {
@@ -7,6 +8,7 @@ interface IProps {
     onClick?: () => void;
     onKeyDown?: (e: any) => void;
     onFocus?: (e: any) => void;
+    bottomRightComponent?: ReactElement<any>;
 }
 declare class FavouriteRow extends React.Component<IProps, {}> {
     private ref;
@@ -15,3 +17,4 @@ declare class FavouriteRow extends React.Component<IProps, {}> {
     render(): React.ReactNode;
 }
 export default FavouriteRow;
+export { IProps as FavouriteRowProps };

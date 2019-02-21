@@ -1,7 +1,6 @@
 import GeocoderOptions from "./GeocoderOptions";
 import GeocodingCache from "./GeocodingCache";
 import NetworkUtil from "../util/NetworkUtil";
-import GeocodingSource from "./GeocodingSource";
 import TripGoApi from "../api/TripGoApi";
 import { LocationConverter } from "../model/location/LocationConverter";
 var SkedgoGeocoder = /** @class */ (function () {
@@ -10,7 +9,7 @@ var SkedgoGeocoder = /** @class */ (function () {
         this.cache = new GeocodingCache();
     }
     SkedgoGeocoder.prototype.getSourceId = function () {
-        return GeocodingSource.SKEDGO;
+        return SkedgoGeocoder.SOURCE_ID;
     };
     SkedgoGeocoder.prototype.getOptions = function () {
         return this.options;
@@ -59,7 +58,7 @@ var SkedgoGeocoder = /** @class */ (function () {
             for (var _i = 0, _a = json.choices; _i < _a.length; _i++) {
                 var locJson = _a[_i];
                 var loc = jsonConvert.deserialize(locJson);
-                loc.source = GeocodingSource.SKEDGO;
+                loc.source = SkedgoGeocoder.SOURCE_ID;
                 results.push(loc);
             }
             if (center) {
@@ -77,6 +76,7 @@ var SkedgoGeocoder = /** @class */ (function () {
     SkedgoGeocoder.prototype.reverseGeocode = function (coord, callback) {
         // Empty
     };
+    SkedgoGeocoder.SOURCE_ID = "SKEDGO";
     return SkedgoGeocoder;
 }());
 export default SkedgoGeocoder;

@@ -11,6 +11,7 @@ declare class RegionsData {
     constructor();
     private static _instance;
     static readonly instance: RegionsData;
+    hasRegions(): boolean;
     getRegion(latLng: LatLng): Region | undefined;
     getCloserRegion(latLng: LatLng): Region | undefined;
     requireRegions(): Promise<void>;

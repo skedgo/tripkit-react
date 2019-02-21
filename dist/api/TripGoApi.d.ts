@@ -9,11 +9,9 @@ declare class TripGoApi {
     static apiKey: string;
     static getServer(): string;
     static apiCall(endpoint: string, method: string, body?: any): Promise<any>;
-    private static getSatappUrl;
+    static getSatappUrl(endpoint: string): string;
     static apiCallUrl(url: string, method: string, body?: any, prod?: boolean): Promise<any>;
-    static computeTrips(query: RoutingQuery): Promise<Array<Promise<Trip[]>>>;
     static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined>;
     static findStopFromCode(regionCode: string, stopCode: string): Promise<StopLocation>;
-    private static getRoutingResultsJSONTest;
 }
 export default TripGoApi;

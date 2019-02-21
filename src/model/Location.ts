@@ -1,7 +1,6 @@
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
-import GeocodingSource, {GeocodingSourceConverter} from "../location_box/GeocodingSource";
 
 @JsonObject
 class Location extends LatLng {
@@ -13,16 +12,18 @@ class Location extends LatLng {
     private _name: string = '';
     @JsonProperty('id', String, true)
     private _id: string = '';
-    @JsonProperty('source', GeocodingSourceConverter, true)
-    private _source: GeocodingSource | undefined = undefined;
+    @JsonProperty('source', String, true)
+    private _source: string | undefined = undefined;
+    private _icon: string | undefined;
     private _suggestion?: any;
 
-    public static create(latlng: LatLng, address: string, id: string, name: string, source?: GeocodingSource) {
+    public static create(latlng: LatLng, address: string, id: string, name: string, source?: string, icon?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
         instance._address = address;
         instance._name = name;
         instance._id = id;
         instance._source = source;
+        instance._icon = icon;
         return instance;
     }
 
@@ -79,12 +80,20 @@ class Location extends LatLng {
         this._id = value;
     }
 
-    get source(): GeocodingSource | undefined {
+    get source(): string | undefined {
         return this._source;
     }
 
-    set source(value: GeocodingSource | undefined) {
+    set source(value: string | undefined) {
         this._source = value;
+    }
+
+    get icon(): string | undefined {
+        return this._icon;
+    }
+
+    set icon(value: string | undefined) {
+        this._icon = value;
     }
 
     get suggestion(): any {

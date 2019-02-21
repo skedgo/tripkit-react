@@ -7,7 +7,7 @@ import LatLng from "../model/LatLng";
 
 
 const LocationBoxWithGMapsApi = () => {
-    const geocodingData: MultiGeocoder = new MultiGeocoder(true);
+    const geocodingData: MultiGeocoder = new MultiGeocoder();
     return <LocationBox
         geocodingData={geocodingData}
         placeholder="Enter an address..."

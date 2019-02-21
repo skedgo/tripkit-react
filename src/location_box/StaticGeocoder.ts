@@ -3,10 +3,11 @@ import GeocoderOptions from "./GeocoderOptions";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
-import GeocodingSource from "./GeocodingSource";
 import LocationUtil from "../util/LocationUtil";
 
 class StaticGeocoder implements IGeocoder {
+
+    public static readonly SRC_ID = "STATIC";
 
     private options: GeocoderOptions;
     private values: Location[] = [];
@@ -15,8 +16,8 @@ class StaticGeocoder implements IGeocoder {
         this.options = new GeocoderOptions();
     }
 
-    public getSourceId(): GeocodingSource {
-        return GeocodingSource.OTHER;
+    public getSourceId(): string {
+        return StaticGeocoder.SRC_ID;
     }
 
     public setValues(values: Location[]) {

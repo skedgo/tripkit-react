@@ -1,5 +1,4 @@
 import GeocoderOptions from "./GeocoderOptions";
-import GeocodingSource from "./GeocodingSource";
 import LocationUtil from "../util/LocationUtil";
 var StaticGeocoder = /** @class */ (function () {
     function StaticGeocoder() {
@@ -7,7 +6,7 @@ var StaticGeocoder = /** @class */ (function () {
         this.options = new GeocoderOptions();
     }
     StaticGeocoder.prototype.getSourceId = function () {
-        return GeocodingSource.OTHER;
+        return StaticGeocoder.SRC_ID;
     };
     StaticGeocoder.prototype.setValues = function (values) {
         this.values = values;
@@ -36,6 +35,7 @@ var StaticGeocoder = /** @class */ (function () {
     StaticGeocoder.prototype.reverseGeocode = function (coord, callback) {
         // Not empty
     };
+    StaticGeocoder.SRC_ID = "STATIC";
     return StaticGeocoder;
 }());
 export default StaticGeocoder;
