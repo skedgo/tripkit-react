@@ -13,8 +13,11 @@ var MultiGeocoderOptions = /** @class */ (function () {
     }
     MultiGeocoderOptions.default = function (showCurrLoc) {
         if (showCurrLoc === void 0) { showCurrLoc = true; }
-        var geocoders = [new PeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8"),
-            new SkedgoGeocoder()];
+        var peliasGeocoder = new PeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
+        peliasGeocoder.getOptions().resultsLimit = 5;
+        var skedgoGeocoder = new SkedgoGeocoder();
+        skedgoGeocoder.getOptions().resultsLimit = 2;
+        var geocoders = [peliasGeocoder, skedgoGeocoder];
         var compare = function (l1, l2, query) {
             if (l1.source === SkedgoGeocoder.SOURCE_ID && l1 instanceof StopLocation && query === l1.code) {
                 return -1;

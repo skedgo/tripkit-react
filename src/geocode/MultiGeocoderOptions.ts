@@ -8,8 +8,11 @@ import StopLocation from "../model/StopLocation";
 class MultiGeocoderOptions {
 
     public static default(showCurrLoc: boolean = true) {
-        const geocoders = [new PeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8"),
-            new SkedgoGeocoder()];
+        const peliasGeocoder = new PeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
+        peliasGeocoder.getOptions().resultsLimit = 5;
+        const skedgoGeocoder = new SkedgoGeocoder();
+        skedgoGeocoder.getOptions().resultsLimit = 2;
+        const geocoders = [peliasGeocoder, skedgoGeocoder];
         const compare = (l1: Location, l2: Location, query: string) => {
             if (l1.source === SkedgoGeocoder.SOURCE_ID && l1 instanceof StopLocation && query === (l1 as StopLocation).code) {
                 return -1;

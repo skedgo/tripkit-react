@@ -16,5 +16,6 @@ declare class Util {
      */
     static addNoRep<T>(array: T[], elem: T, equal: (e1: T, e2: T) => boolean): T[];
     static addAllNoRep<T>(array: T[], elems: T[], equal: (e1: T | null, e2: T | null) => boolean): T[];
+    static isEmpty(obj: any): boolean;
 }
 export default Util;
