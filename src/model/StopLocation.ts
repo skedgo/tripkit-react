@@ -1,7 +1,6 @@
 import Location from "./Location";
 import {JsonObject, JsonProperty} from "json2typescript";
 import ModeInfo from "./trip/ModeInfo";
-import ModeInfoConverter from "./trip/ModeInfoConverter";
 
 @JsonObject
 class StopLocation extends Location {
@@ -9,8 +8,7 @@ class StopLocation extends Location {
     private _code: string = '';
     @JsonProperty('popularity', Number)
     private _popularity: number = 0;
-    // Needs to use custom converter since modeInfo incorrectly comes with value {}, which causes a parsing error.
-    @JsonProperty('modeInfo', ModeInfoConverter)
+    @JsonProperty('modeInfo', ModeInfo)
     private _modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty('wheelchairAccessible', Boolean, true)
     private _wheelchairAccessible: boolean | undefined = undefined;
