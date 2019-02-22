@@ -1,1 +1,0 @@
-{"version":3,"file":"GeocoderOptions.js","sourceRoot":"","sources":["../../src/location_box/GeocoderOptions.ts"],"names":[],"mappings":"AAAA;IAAA;QAEY,8BAAyB,GAAG,IAAI,CAAC;IAS7C,CAAC;IAPG,sBAAI,qDAAwB;aAI5B;YACI,OAAO,IAAI,CAAC,yBAAyB,CAAC;QAC1C,CAAC;aAND,UAA6B,KAAc;YACvC,IAAI,CAAC,yBAAyB,GAAG,KAAK,CAAC;QAC3C,CAAC;;;OAAA;IAKL,sBAAC;AAAD,CAAC,AAXD,IAWC;AAED,eAAe,eAAe,CAAC"}

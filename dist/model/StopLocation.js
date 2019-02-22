@@ -23,14 +23,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 import Location from "./Location";
 import { JsonObject, JsonProperty } from "json2typescript";
 import ModeInfo from "./trip/ModeInfo";
-import ModeInfoConverter from "./trip/ModeInfoConverter";
 var StopLocation = /** @class */ (function (_super) {
     __extends(StopLocation, _super);
     function StopLocation() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this._code = '';
         _this._popularity = 0;
-        // Needs to use custom converter since modeInfo incorrectly comes with value {}, which causes a parsing error.
         _this._modeInfo = new ModeInfo();
         _this._wheelchairAccessible = undefined;
         _this._url = undefined;
@@ -80,7 +78,7 @@ var StopLocation = /** @class */ (function (_super) {
         __metadata("design:type", Number)
     ], StopLocation.prototype, "_popularity", void 0);
     __decorate([
-        JsonProperty('modeInfo', ModeInfoConverter),
+        JsonProperty('modeInfo', ModeInfo),
         __metadata("design:type", ModeInfo)
     ], StopLocation.prototype, "_modeInfo", void 0);
     __decorate([

@@ -7,6 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import StopLocation from "../StopLocation";
 import Location from "../Location";
 import { JsonConverter, JsonConvert } from "json2typescript";
+import Util from "../../util/Util";
+import ModeInfo from "../trip/ModeInfo";
 var LocationConverter = /** @class */ (function () {
     function LocationConverter() {
     }
@@ -18,6 +20,12 @@ var LocationConverter = /** @class */ (function () {
         var jsonConvert = new JsonConvert();
         var location;
         if (locationJson.class === "StopLocation") {
+            // Needs to set modeInfo since it incorrectly comes with value {}, which causes a parsing error.
+            // Tried setting to undefined, and put modeInfo as optional in StopLocation but json2typescript gave an
+            // exception of missing modeInfo when compiled.
+            if (locationJson.modeInfo && Util.isEmpty(locationJson.modeInfo)) {
+                locationJson.modeInfo = jsonConvert.serialize(new ModeInfo());
+            }
             location = jsonConvert.deserialize(locationJson, StopLocation);
         }
         else {
