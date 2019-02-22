@@ -144,15 +144,21 @@ class QueryInput extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const datePickerDisabled = this.state.routingQuery.timePref === TimePreference.NOW;
         const collapseBtn = this.props.collapsable ?
-            <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor" + (!this.state.collapsed ? " gl-rotate180" : "")}
-                           onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
-                           focusable="false"
-            /> : null;
+            <button onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
+                    aria-hidden={true}
+                    tabIndex={-1}>
+                <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor" + (!this.state.collapsed ? " gl-rotate180" : "")}
+                               focusable="false"
+                />
+            </button> : null;
         const expandBtn =
-            <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor gl-no-shrink" + (!this.state.collapsed ? " gl-rotate180" : "")}
-                           onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
-                                   focusable="false"
-            />;
+            <button onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
+                    aria-hidden={true}
+                    tabIndex={-1}>
+                <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor gl-no-shrink" + (!this.state.collapsed ? " gl-rotate180" : "")}
+                               focusable="false"
+                />
+            </button>;
         const fromPlaceholder = "Choose starting point" +
             (this.props.isTripPlanner ? ", or click on the map" : "") +
             "...";

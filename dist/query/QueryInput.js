@@ -114,8 +114,10 @@ var QueryInput = /** @class */ (function (_super) {
         var _this = this;
         var datePickerDisabled = this.state.routingQuery.timePref === TimePreference.NOW;
         var collapseBtn = this.props.collapsable ?
-            React.createElement(IconAngleDown, { className: "QueryInput-collapseBtn gl-svg-path-fill-currColor" + (!this.state.collapsed ? " gl-rotate180" : ""), onClick: function () { return _this.setState(function (prevState) { return ({ collapsed: !prevState.collapsed }); }); }, focusable: "false" }) : null;
-        var expandBtn = React.createElement(IconAngleDown, { className: "QueryInput-collapseBtn gl-svg-path-fill-currColor gl-no-shrink" + (!this.state.collapsed ? " gl-rotate180" : ""), onClick: function () { return _this.setState(function (prevState) { return ({ collapsed: !prevState.collapsed }); }); }, focusable: "false" });
+            React.createElement("button", { onClick: function () { return _this.setState(function (prevState) { return ({ collapsed: !prevState.collapsed }); }); }, "aria-hidden": true, tabIndex: -1 },
+                React.createElement(IconAngleDown, { className: "QueryInput-collapseBtn gl-svg-path-fill-currColor" + (!this.state.collapsed ? " gl-rotate180" : ""), focusable: "false" })) : null;
+        var expandBtn = React.createElement("button", { onClick: function () { return _this.setState(function (prevState) { return ({ collapsed: !prevState.collapsed }); }); }, "aria-hidden": true, tabIndex: -1 },
+            React.createElement(IconAngleDown, { className: "QueryInput-collapseBtn gl-svg-path-fill-currColor gl-no-shrink" + (!this.state.collapsed ? " gl-rotate180" : ""), focusable: "false" }));
         var fromPlaceholder = "Choose starting point" +
             (this.props.isTripPlanner ? ", or click on the map" : "") +
             "...";

@@ -34,6 +34,13 @@ var Util = /** @class */ (function () {
         }
         return array;
     };
+    Util.isEmpty = function (obj) {
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key))
+                return false;
+        }
+        return true;
+    };
     // must cast as any to set property on window
     Util.global = (window /* browser */ || global /* node */);
     return Util;

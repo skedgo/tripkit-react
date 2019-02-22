@@ -24,7 +24,7 @@ var PeliasGeocoder = /** @class */ (function () {
         if (center !== null) {
             var cachedResults = this.cache.getResults(query, autocomplete, center);
             if (cachedResults !== null) {
-                callback(cachedResults.slice(0, 5));
+                callback(cachedResults.slice(0, this.options.resultsLimit));
                 return;
             }
         }
@@ -45,7 +45,7 @@ var PeliasGeocoder = /** @class */ (function () {
             if (center) {
                 _this.cache.addResults(query, autocomplete, center, locationResults);
             }
-            callback(locationResults.slice(0, 5));
+            callback(locationResults.slice(0, _this.options.resultsLimit));
         }).catch(function (reason) {
             console.log(url + " failed. Reason: " + reason);
             callback([]);

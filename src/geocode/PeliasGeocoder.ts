@@ -39,7 +39,7 @@ class PeliasGeocoder implements IGeocoder {
         if (center !== null) {
             const cachedResults = this.cache.getResults(query, autocomplete, center);
             if (cachedResults !== null) {
-                callback(cachedResults.slice(0, 5));
+                callback(cachedResults.slice(0, this.options.resultsLimit));
                 return;
             }
         }
@@ -62,7 +62,7 @@ class PeliasGeocoder implements IGeocoder {
             if (center) {
                 this.cache.addResults(query, autocomplete, center, locationResults);
             }
-            callback(locationResults.slice(0, 5));
+            callback(locationResults.slice(0, this.options.resultsLimit));
         }).catch(reason => {
             console.log(url + " failed. Reason: " + reason);
             callback([]);
