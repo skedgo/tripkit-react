@@ -26,9 +26,6 @@ var ServiceStopPopup = /** @class */ (function (_super) {
         var _this = this;
         return (React.createElement("div", { className: "ServiceStopPopup" },
             React.createElement("div", { className: "ServiceStopPopup-name" }, this.props.stop.name),
-            React.createElement("div", { className: "ServiceStopPopup-stopId" },
-                "Stop ID: ",
-                this.props.stop.code),
             this.state.interchangeUrl ?
                 React.createElement("div", { className: "ServiceStopPopup-link gl-link", onClick: function () { return window.open(_this.state.interchangeUrl, '_blank'); } }, "View stop map") :
                 null));

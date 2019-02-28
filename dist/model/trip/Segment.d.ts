@@ -38,6 +38,7 @@ declare class Segment extends SegmentTemplate {
     readonly ticket: Ticket | null;
     trip: Trip;
     isPT(): boolean;
+    isTram(): boolean;
     isWalking(): boolean;
     isWheelchair(): boolean;
     isBicycle(): boolean;

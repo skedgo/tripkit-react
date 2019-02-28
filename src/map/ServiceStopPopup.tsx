@@ -29,7 +29,6 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
         return (
             <div className="ServiceStopPopup">
                 <div className="ServiceStopPopup-name">{this.props.stop.name}</div>
-                <div className="ServiceStopPopup-stopId">Stop ID: {this.props.stop.code}</div>
                 {this.state.interchangeUrl ?
                     <div className="ServiceStopPopup-link gl-link"
                          onClick={() => window.open(this.state.interchangeUrl,'_blank')}
