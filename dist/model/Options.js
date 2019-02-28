@@ -49,7 +49,7 @@ var Options = /** @class */ (function () {
             return this._modesDisabled.concat(Options_1.overrideDisabled.filter(function (mode) { return _this._modesDisabled.indexOf(mode) === -1; }));
         },
         set: function (value) {
-            this._modesDisabled = value;
+            this._modesDisabled = value.filter(function (mode) { return Options_1.overrideDisabled.indexOf(mode) === -1; });
         },
         enumerable: true,
         configurable: true

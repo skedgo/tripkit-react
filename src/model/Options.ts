@@ -43,7 +43,7 @@ class Options {
     }
 
     set modesDisabled(value: string[]) {
-        this._modesDisabled = value;
+        this._modesDisabled = value.filter((mode: string) => Options.overrideDisabled.indexOf(mode) === -1);
     }
 
     get wheelchair(): boolean {
