@@ -166,6 +166,12 @@ var Segment = /** @class */ (function (_super) {
     Segment.prototype.isPT = function () {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith("pt");
     };
+    Segment.prototype.isTram = function () {
+        // Check with modeInfo since modeIdentifier comes with "pt_pub" for trams.
+        // TODO: Check with routing team if that's the expected value.
+        return (this.modeInfo && this.modeInfo.identifier === ModeIdentifier.TRAM_ID) ||
+            (this.modeIdentifier !== null && this.modeIdentifier === ModeIdentifier.TRAM_ID);
+    };
     Segment.prototype.isWalking = function () {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith("wa_wal");
     };

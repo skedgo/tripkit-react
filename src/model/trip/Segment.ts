@@ -122,6 +122,13 @@ class Segment extends SegmentTemplate {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith("pt");
     }
 
+    public isTram(): boolean {
+        // Check with modeInfo since modeIdentifier comes with "pt_pub" for trams.
+        // TODO: Check with routing team if that's the expected value.
+        return (this.modeInfo && this.modeInfo.identifier === ModeIdentifier.TRAM_ID) ||
+            (this.modeIdentifier !== null && this.modeIdentifier === ModeIdentifier.TRAM_ID);
+    }
+
     public isWalking(): boolean {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith("wa_wal");
     }
