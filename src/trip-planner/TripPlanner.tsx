@@ -44,6 +44,12 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
+import ServiceDepartureTable from "../service/ServiceDepartureTable";
+import withServiceResults from "../api/WithServiceResults";
+import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
+import ServiceDepartureRow from "../service/ServiceDepartureRow";
+import StopLocation from "../model/StopLocation";
+import StopsData from "../data/StopsData";
 
 interface IState {
     tripsSorted: Trip[] | null;
@@ -65,6 +71,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     private ref: any;
     private mapRef: LeafletMap;
     private geocodingData: MultiGeocoder;
+    private DepartureTableWithData = withServiceResults(ServiceDepartureTable);
 
     constructor(props: ITripPlannerProps) {
         super(props);
@@ -108,6 +115,17 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         this.onModalRequestedClose = this.onModalRequestedClose.bind(this);
         this.onMapLocChanged = this.onMapLocChanged.bind(this);
         this.onSelected = this.onSelected.bind(this);
+
+        // For development:
+        // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+        RegionsData.instance.requireRegions().then(()=> {
+            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
+                .then((stop: StopLocation) =>
+                    this.onQueryChange(Util.iAssign(this.props.query, {
+                        from: stop
+                    }))
+                )
+        });
     }
 
     public onQueryChange(query: RoutingQuery) {
@@ -204,6 +222,21 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 />
             </Modal>
             : null;
+        const showDepartures = true;
+        const fromStop = this.props.query.from && this.props.query.from instanceof StopLocation ? this.props.query.from as StopLocation : undefined;
+        const departuresDialog = fromStop ?
+            <Modal
+                isOpen={showDepartures}
+                appElement={this.ref}
+            >
+                <this.DepartureTableWithData
+                    renderDeparture={<P extends IServiceDepartureRowProps>(props: P) =>
+                        <ServiceDepartureRow {...props}/>
+                    }
+                    startStop={fromStop}
+                    className="app-style"
+                />
+            </Modal> : null;
         const region = this.state.region;
         const queryInputBounds = region ? region.bounds : undefined;
         const queryInputFocusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
@@ -353,6 +386,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                     </div>
                 </div>
                 {optionsDialog}
+                {departuresDialog}
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => { if (this.mapRef) {this.mapRef.onResize()}} }/>
             </div>

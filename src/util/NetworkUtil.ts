@@ -31,6 +31,12 @@ class NetworkUtil {
             .then(NetworkUtil.json);
     }
 
+    public static deserializer<T>(classRef: { new(): T }): (json: any) => Promise<T> {
+        return (json: any) => {
+            return Promise.resolve(Util.deserialize(json, classRef));
+        }
+    }
+
     /**
      * Dynamically imports jquery, and then gets the script dynamically
      */

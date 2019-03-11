@@ -37,6 +37,21 @@ class Color {
     public toRGB(): string {
         return "rgb(" + this.red + "," + this.green + "," + this.blue + ")";
     }
+
+    public toHex(): string {
+        return "#"
+            + this.toHexString(this.red)
+            + this.toHexString(this.green)
+            + this.toHexString(this.blue);
+    }
+
+    private toHexString(rgb: number) {
+        let hex = Number(rgb).toString(16);
+        if (hex.length < 2) {
+            hex = "0" + hex;
+        }
+        return hex;
+    }
 }
 
 export default Color;
