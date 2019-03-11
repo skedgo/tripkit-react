@@ -30,6 +30,11 @@ class TripGoApi {
         return this.apiCallUrl(url, method, body);
     }
 
+    public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
+        return this.apiCall(endpoint, method, body)
+            .then(NetworkUtil.deserializer(resultClassRef));
+    }
+
     public static getSatappUrl(endpoint: string): string {
         const server = this.getServer();
         return server + "/" + endpoint;

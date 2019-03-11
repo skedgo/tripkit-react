@@ -179,9 +179,25 @@ body:not(.user-is-tabbing) .app-style * {
   color: #4e4e4e;
 }
 
+@font-face {
+  font-family: 'ProximaNova';
+  src: url('/fonts/269860_3_0.eot');
+  src: url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'),
+  url('/fonts/269860_3_0.woff') format('woff'),
+  url('/fonts/269860_3_0.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'ProximaNova';
+  src: url('/fonts/269860_2_0.eot');
+  src: url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'),
+  url('/fonts/269860_2_0.woff') format('woff'),
+  url('/fonts/269860_2_0.ttf') format('truetype');
+  font-weight: bold;
+}
+
 .app-style {
-  /*font-family: 'Source Sans Pro', 'Open Sans', sans-serif;*/
-  font-family: 'Open Sans', sans-serif;
+  font-family: ProximaNova, sans-serif;
 }
 
 .app-style h3,

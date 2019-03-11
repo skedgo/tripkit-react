@@ -1,0 +1,37 @@
+.ServiceDepartureRow-transIconPanel {
+  width: 50px;
+}
+
+.ServiceDepartureRow-transIcon {
+  border-bottom: 2px solid white;
+  padding: 3px 5px;
+}
+
+.ServiceDepartureRow-middlePanel {
+  /* Needed for gl-overflow-ellipsis to work for serviceDescription: 50px of transIconPanel + 60px of timeToDepart */
+  max-width: calc(100% - 130px);
+}
+
+.ServiceDepartureRow-timeToDepart {
+  background-color: #1cca6a;
+  color: white;
+  width: 60px;
+  height: 35px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  margin: 10px;
+}
+
+.ServiceDepartureRow-timeToDepartPast {
+  opacity: .5;
+}
+
+.ServiceDepartureRow-serviceAndTime {
+  font-size: 15px;
+}
+
+.ServiceDepartureRow-serviceDescription {
+  font-size: 13px;
+  color: grey;
+}

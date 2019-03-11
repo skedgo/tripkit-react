@@ -3,7 +3,6 @@ class Features {
     protected static _instance: Features;
 
     public static initialize() {
-        console.log("Features:initialize()");
         this._instance = new Features();
     }
 
@@ -15,7 +14,10 @@ class Features {
     }
 
     public lightRail() {
-        console.log("Features:lightRail()");
+        return true;
+    }
+
+    public realtimeEnabled() {
         return true;
     }
 

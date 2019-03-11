@@ -1,3 +1,5 @@
+import {JsonConvert} from "json2typescript";
+
 class Util {
 
     // must cast as any to set property on window
@@ -44,10 +46,24 @@ class Util {
 
     public static isEmpty(obj: any): boolean {
         for(const key in obj) {
-            if(obj.hasOwnProperty(key))
+            if(obj.hasOwnProperty(key)) {
                 return false;
+            }
         }
         return true;
+    }
+
+    private static jsonConvertI: JsonConvert;
+
+    public static jsonConvert(): JsonConvert {
+        if (!this.jsonConvertI) {
+            this.jsonConvertI = new JsonConvert();
+        }
+        return this.jsonConvertI;
+    }
+
+    public static deserialize<T>(json: any, classRef: { new(): T }): T {
+        return this.jsonConvert().deserialize(json, classRef);
     }
 
 }

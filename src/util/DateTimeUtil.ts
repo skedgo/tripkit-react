@@ -74,6 +74,20 @@ class DateTimeUtil {
         return result;
     }
 
+    public static minutesToDepartToString(minutes: number) {
+        if (0 <= minutes && minutes < 2) {
+            return "now";
+        } else if (-60 <= minutes && minutes < 60) {
+            return Math.floor(minutes) + "min";
+        } else if (-24*60 <= minutes && minutes < 24*60) {
+            const durationInHours = Math.floor(minutes / 60);
+            return durationInHours + "h";
+        } else {
+            const durationInDays = Math.floor(minutes / (24*60));
+            return durationInDays + "d";
+        }
     }
+
+}
 
 export default DateTimeUtil;

@@ -14,6 +14,8 @@ class StopLocation extends Location {
     private _wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty('url', String, true)
     private _url: string | undefined = undefined;
+    @JsonProperty('shortName', String, true)    // In api docs it's named "shortName"
+    private _shortName: string | undefined = undefined;
 
 
     get code(): string {
@@ -34,6 +36,14 @@ class StopLocation extends Location {
 
     get url(): string | undefined {
         return this._url;
+    }
+
+    get shortName(): string | undefined {
+        return this._shortName;
+    }
+
+    set shortName(value: string | undefined) {
+        this._shortName = value;
     }
 }
 
