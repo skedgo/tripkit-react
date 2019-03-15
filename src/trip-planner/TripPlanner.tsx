@@ -117,9 +117,9 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         this.onSelected = this.onSelected.bind(this);
 
         // For development:
-        // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
         RegionsData.instance.requireRegions().then(()=> {
-            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
+            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) =>
                     this.onQueryChange(Util.iAssign(this.props.query, {
                         from: stop

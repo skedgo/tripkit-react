@@ -1,3 +1,15 @@
+.ServiceDepartureRow-outerPanel {
+  border-bottom: 1px solid lightgray;
+}
+
+.ServiceDepartureRow {
+  background-color: white;
+  margin: 10px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+
 .ServiceDepartureRow-transIconPanel {
   width: 50px;
 }
@@ -15,12 +27,17 @@
 .ServiceDepartureRow-timeToDepart {
   background-color: #1cca6a;
   color: white;
-  width: 60px;
+  width: 70px;
   height: 35px;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
   margin: 10px;
+  font-size: 14px;
+}
+
+.ServiceDepartureRow-timeToDepartCancelled {
+  background-color: #E35017;
 }
 
 .ServiceDepartureRow-timeToDepartPast {
@@ -34,4 +51,41 @@
 .ServiceDepartureRow-serviceDescription {
   font-size: 13px;
   color: grey;
+}
+
+.ServiceDepartureRow-realtimeInfo {
+  font-size: 12px;
+  color: #a3a3a3;
+}
+
+.ServiceDepartureRow-wCInfoPanel {
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 0;
+  margin: 0 8px;
+}
+
+.ServiceDepartureRow-wCFrame {
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  height: 16px;
+  width: 16px;
+  margin: 0 18px 0 8px;
+}
+
+.ServiceDepartureRow-wCAccessible {
+  background-color: #3793f3;
+}
+
+.ServiceDepartureRow-wCInaccessible {
+  background-color: grey;
+}
+
+.ServiceDepartureRow-wCIcon {
+  color: white;
+}
+
+.ServiceDepartureRow-wCText {
+  font-size: 13px;
+  color: #a3a3a3;
 }

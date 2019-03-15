@@ -26,15 +26,15 @@ class ServiceDeparture {
     @JsonProperty("startTime")
     public startTime: number = -1;
     @JsonProperty("endTime", Number, true)
-    public endTime: number | undefined;
+    public endTime: number | undefined = undefined;
     @JsonProperty("modeInfo")
     public modeInfo: ModeInfo = new ModeInfo();
-    @JsonProperty("realTimeStatus", String, true)   // "IS_REAL_TIME" "CAPABLE" "INCAPABLE"
-    public realTimeStatus: string | undefined;
-    @JsonProperty("_realTimeDeparture", Number, true)
-    private _realTimeDeparture: number | undefined;
+    @JsonProperty("realTimeStatus", String, true)   // "IS_REAL_TIME" "CAPABLE" "INCAPABLE" "CANCELLED"
+    public realTimeStatus: string | undefined = undefined;
+    @JsonProperty("realTimeDeparture", Number, true)
+    private _realTimeDeparture: number | undefined = undefined;
     @JsonProperty("realTimeArrival", Number, true)
-    public realTimeArrival: number | undefined;
+    public _realTimeArrival: number | undefined = undefined;
     // @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
     // public realtimeVehicle: RealTimeVehicle | undefined = undefined;
     // @JsonProperty("realtimeVehicle", [RealTimeVehicle], true)
@@ -49,6 +49,19 @@ class ServiceDeparture {
 
     get realTimeDeparture(): number | undefined {
         return this.service && this.service.startTime ? this.service.startTime : this._realTimeDeparture;
+    }
+
+    get actualStartTime(): number {
+        return this.realTimeDeparture ? this.realTimeDeparture : this.startTime;
+    }
+
+    get realTimeArrival(): number | undefined {
+        // return this.service && this.service.startTime ? this.service.startTime : this._realTimeArrival;
+        return this._realTimeArrival;
+    }
+
+    get actualEndTime(): number | undefined {
+        return this.realTimeArrival ? this.realTimeArrival : this.endTime;
     }
 }
 

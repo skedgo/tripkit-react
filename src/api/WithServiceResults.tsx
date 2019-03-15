@@ -12,6 +12,7 @@ import ServiceDeparturesResult from "../model/service/ServiceDeparturesResult";
 import Features from "../env/Features";
 import Service from "../model/service/Service";
 import LatestResult from "../model/service/LatestResult";
+import Timer = NodeJS.Timer;
 
 interface IWithServiceResultsProps {
     startStop: StopLocation;
@@ -43,14 +44,15 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public requestsWithoutNewResults = 0;
         public prevFilter = "";
-        public prevDeparturesCount = 0;
+        public prevDeparturesCount = -1;
 
         public awaitingRealtime = false;
+        public rTSchedule: Timer;
 
         constructor(props: Subtract<P, IServiceResConsumerProps> & IWithServiceResultsProps) {
             super(props);
             // TODO in GWT implementation initialTime has the proper timezone
-            const now = DateTimeUtil.getNow();
+            const now = DateTimeUtil.getNow().add(-15, 'm');
             let initialTime;
             if (props.segment) {
                 initialTime = DateTimeUtil.momentTZTime(props.segment.startTime * 1000).add(-30, 'm');
@@ -67,22 +69,40 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 departuresFiltered: [],
                 displayLimit: 0
             };
-            // TODO: configureTimeUpdate();
             this.requestMoreDepartures = this.requestMoreDepartures.bind(this);
+            this.onFilterChange = this.onFilterChange.bind(this);
+            this.rTSchedule = setInterval(() => {
+                // TODO:
+                // fireValueChangeEvent(); //to update 'time to depart' labels
+                if (Features.instance.realtimeEnabled()) {
+                    this.realtimeUpdate();
+                }
+            }, 10000);
         }
 
         public requestMoreDepartures() {
-            if (this.state.displayLimit > this.state.departuresFiltered.length)   // That means that we are awaiting requested departures
-            {
-                return;
-            }
-            this.setState((prevState: IWithServiceResultsState) => {
-                    return { displayLimit: prevState.displayLimit + this.getDisplaySnap() }
-                },
-                () => this.coverDisplayLimit());
+            this.setState(() => {
+                if (this.isWaiting()) {
+                    return; // We are already awaiting for previously requested departures
+                }
+                this.setState({ displayLimit: this.state.displayLimit + this.getDisplaySnap() }, () => {
+                    this.coverDisplayLimit()
+                });
+            })
+        }
+
+        public onFilterChange(filter: string) {
+            console.log(filter);
+            this.setState({
+                filter: filter,
+                displayLimit: this.idealMinDisplayed
+            });
+            this.applyFilter(() => this.coverDisplayLimit());
         }
 
         public getDisplaySnap(): number {
+            // TODO: check if it should be as follows, but may trigger a lot of requests, should set a max, say, 4 times.
+            // return 45 * Math.max(this.state.departures.length / (this.state.departuresFiltered.length + 1), 1);
             return 45 * Math.max(this.state.departuresFiltered.length / (this.state.departures.length + 1), 1);
         }
 
@@ -100,6 +120,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting()}
+                             onFilterChange={this.onFilterChange}
             />;
         }
 
@@ -109,53 +130,54 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
          */
         public coverDisplayLimit() {
             if (this.state.displayLimit <= this.state.departuresFiltered.length) {
-                if (Features.instance.realtimeEnabled()) { // TODO && displayLimit > 0;
-                    this.realtimeUpdate();
-                }
+                this.prevDeparturesCount = this.state.departuresFiltered.length;
                 return;
             }
 
             // Set a limit to the number of consecutive requests that do not bring new results. Specially for the case of no results displayed at all.
-            // if (this.state.departuresFiltered.length < this.idealMinDisplayed && this.prevDeparturesCount === this.state.departuresFiltered.length && this.state.filter.startsWith(this.prevFilter)) {
-            //     this.requestsWithoutNewResults++;
-            // }
-            // else {
-            //     this.requestsWithoutNewResults = 0;
-            // }
-            //
-            // this.prevDeparturesCount = this.state.departuresFiltered.length;
-            // this.prevFilter = this.state.filter;
-            //
-            // if (this.requestsWithoutNewResults >= 6 || (this.requestsWithoutNewResults >= 3 && this.state.departuresFiltered.length === 0)) {
-            //     this.setState((prev: IWithServiceResultsState) => {
-            //         return { displayLimit: prev.departuresFiltered.length }
-            //     });
-            //     return;
-            // }
+            if (this.state.departuresFiltered.length < this.idealMinDisplayed && this.prevDeparturesCount === this.state.departuresFiltered.length && this.state.filter.startsWith(this.prevFilter)) {
+                this.requestsWithoutNewResults++;
+            } else {
+                this.requestsWithoutNewResults = 0;
+            }
+
+            this.prevDeparturesCount = this.state.departuresFiltered.length;
+            this.prevFilter = this.state.filter;
+
+            if (this.requestsWithoutNewResults >= 6 || (this.requestsWithoutNewResults >= 3 && this.state.departuresFiltered.length === 0)) {
+                this.setState((prev: IWithServiceResultsState) => {
+                    return { displayLimit: prev.departuresFiltered.length }
+                });
+                return;
+            }
 
             this.requestDepartures().then((results: ServiceDeparture[]) => {
                 this.setState((prev: IWithServiceResultsState) => {
-                    const departuresUpdate = prev.departures.concat(results);
-                    return {
-                        departures: departuresUpdate,
-                        departuresFiltered: departuresUpdate.filter((departure: ServiceDeparture) =>
-                            this.matchesFilter(departure, this.state.filter))
-                    }
-                }, () => this.coverDisplayLimit());
+                    this.updateDepartures(prev.departures.concat(results), () => this.coverDisplayLimit());
+                });
             });
-
-            // new DeparturesRequestCallback() {
-            // @Override
-            // public void onSuccess(List<GWTDeparture> result) {
-            //         fireValueChangeEvent();
-            //         coverDisplayLimit();    // (mutual) recursive call
-            //     }
-            // });
         }
 
-        public static sortDepartures(departures: ServiceDeparture[]) {
+        public updateDepartures(departures: ServiceDeparture[], callback?: () => void) {
+            const departuresUpdate = WithServiceResults.sortDepartures(departures);
+            this.setState({
+                departures: departuresUpdate
+            });
+            this.applyFilter(callback);
+        }
+
+        public applyFilter(callback?: () => void) {
+            this.setState((prevState: IWithServiceResultsState) => {
+                return {
+                    departuresFiltered: prevState.departures.filter((departure: ServiceDeparture) =>
+                        this.matchesFilter(departure, prevState.filter))
+                }
+            }, callback);
+        }
+
+        public static sortDepartures(departures: ServiceDeparture[]): ServiceDeparture[] {
             return departures.slice().sort((s1: ServiceDeparture, s2: ServiceDeparture) => {
-                return s1.startTime - s2.startTime;
+                return s1.actualStartTime - s2.actualStartTime;
             });
         }
 
@@ -193,7 +215,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         if (departuresResult.isError()) {
                             throw new Error("Error loading departures.");
                         }
-                        return WithServiceResults.sortDepartures(departuresResult.getDepartures(this.props.startStop));
+                        return departuresResult.getDepartures(this.props.startStop);
                     }
                 );
         }
@@ -203,7 +225,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             if (this.state.departures.length === 0) {
                 lastDepartureDate = Math.floor(this.state.initTime.valueOf() / 1000);
             }  else {
-                lastDepartureDate = Math.floor(this.state.departures[this.state.departures.length - 1].startTime / 1000) + 1;
+                lastDepartureDate = Math.floor(this.state.departures[this.state.departures.length - 1].startTime) + 1;
             }
             return lastDepartureDate;
         }
@@ -225,11 +247,12 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             }
 
             const departures = this.getDisplayDepartures();
-            const departuresToUpdate = departures.slice(0, 50);
 
             if (departures.length === 0) {
                 return;
             }
+
+            const departuresToUpdate = departures.slice(0, 50);
 
             const startRegionCode = RegionsData.instance.getRegion(this.props.startStop)!.name;
             const startStopCode = this.props.startStop.code;
@@ -273,6 +296,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                             departure.service = service;
                         }
                     }
+                    this.setState((state: IWithServiceResultsState) => {
+                        this.updateDepartures(this.state.departures);
+                    });
             });
 
             // NetworkUtil.requestInFailChain(serverUrls, new NetworkUtil.AsyncCallableFail() {
@@ -316,7 +342,14 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             //     }
             // });
         }
+
+        public componentWillUnmount() {
+            if (this.rTSchedule) {
+                clearInterval(this.rTSchedule);
+            }
+        }
     }
+
 }
 
 export default withServiceResults;
