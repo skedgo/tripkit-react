@@ -6,23 +6,23 @@ import RealTimeAlert from "./RealTimeAlert";
 class Service {
 
     @JsonProperty("serviceTripID")
-    public serviceTripID: string;
+    public serviceTripID: string = "";
     @JsonProperty("startStopCode", String, true)
-    public startStopCode: string | undefined;
+    public startStopCode: string | undefined = undefined;
     @JsonProperty("endStopCode", String, true)
-    public endStopCode: string | undefined;
+    public endStopCode: string | undefined = undefined;
     @JsonProperty("startTime", Number, true)
-    public startTime: number | undefined;
+    public startTime: number | undefined = undefined;
     @JsonProperty("lastUpdate", Number, true)
-    public lastUpdate: number | undefined;
+    public lastUpdate: number | undefined = undefined;
     @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
-    public realtimeVehicle: RealTimeVehicle | undefined;
+    public realtimeVehicle: RealTimeVehicle | undefined = undefined;
     @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
-    public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined;
+    public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     @JsonProperty("alerts", [RealTimeAlert], true)
-    public alerts: RealTimeAlert[] | undefined;
+    public alerts: RealTimeAlert[] | undefined = undefined;
     @JsonProperty("operator", String, true)
-    public operator: string | undefined;
+    public operator: string | undefined = undefined;
 
 }
 

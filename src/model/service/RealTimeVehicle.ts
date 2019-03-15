@@ -6,13 +6,13 @@ import VehicleComponent from "./VehicleComponent";
 class RealTimeVehicle {
 
     @JsonProperty("id")
-    public id: string;
+    public id: string = "";
     @JsonProperty("lastUpdate")
-    public lastUpdate: number;
+    public lastUpdate: number = 0;
     @JsonProperty("location", VehicleLocation)
-    public location: VehicleLocation;
-    @JsonProperty("components", [[VehicleComponent]])
-    public components: VehicleComponent[][];
+    public location: VehicleLocation = new VehicleLocation();
+    @JsonProperty("components", [[VehicleComponent]], true)
+    public components: VehicleComponent[][] | undefined = undefined;
 }
 
 export default RealTimeVehicle;

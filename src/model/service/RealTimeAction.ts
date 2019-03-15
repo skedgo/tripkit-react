@@ -4,11 +4,11 @@ import {JsonObject, JsonProperty} from "json2typescript";
 class RealTimeAction {
 
     @JsonProperty("text")
-    public text: string;
+    public text: string = "";
     @JsonProperty("type")
-    public type: string;
+    public type: string = "";
     @JsonProperty("excludedStopCodes", [String], true)
-    public excludedStopCodes: string[] | undefined;
+    public excludedStopCodes: string[] | undefined = undefined;
 
 }
 

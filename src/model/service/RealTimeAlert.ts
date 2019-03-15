@@ -6,21 +6,21 @@ import RealTimeAction from "./RealTimeAction";
 class RealTimeAlert {
 
     @JsonProperty("title")
-    public title: string;
+    public title: string = "";
     @JsonProperty("hashCode")
-    public hashCode: number;
+    public hashCode: number = -1;
     @JsonProperty("severity")
-    public severity: string;
+    public severity: string = "";
     @JsonProperty("text", String, true)
-    public text: string | undefined;
+    public text: string | undefined = undefined;
     @JsonProperty("url", String, true)
-    public url: string | undefined;
+    public url: string | undefined = undefined;
     @JsonProperty("remoteIcon", String, true)
-    public remoteIcon: string | undefined;
+    public remoteIcon: string | undefined = undefined;
     @JsonProperty("location", Location, true)
-    public location: Location | undefined;
+    public location: Location | undefined = undefined;
     @JsonProperty("action", RealTimeAction, true)
-    public action: RealTimeAction | undefined;
+    public action: RealTimeAction | undefined = undefined;
 
 }
 

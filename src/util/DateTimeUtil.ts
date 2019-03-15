@@ -32,6 +32,7 @@ class DateTimeUtil {
     }
 
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {
+        durationInMinutes = Math.floor(durationInMinutes);
         if (durationInMinutes === 0) {
             return "0" + (space ? " " : "") + "mins";
         }
@@ -75,8 +76,9 @@ class DateTimeUtil {
     }
 
     public static minutesToDepartToString(minutes: number) {
+        minutes = Math.floor(minutes);
         if (0 <= minutes && minutes < 2) {
-            return "now";
+            return "Now";
         } else if (-60 <= minutes && minutes < 60) {
             return Math.floor(minutes) + "min";
         } else if (-24*60 <= minutes && minutes < 24*60) {
