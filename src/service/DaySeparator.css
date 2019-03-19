@@ -1,0 +1,14 @@
+.DaySeparator {
+  margin: -1px 10px 0;
+  padding: 5px;
+  background-color: rgb(224, 224, 224);
+}
+
+.DaySeparator-rise {
+  z-index: 1;
+}
+
+.DaySeparator-top {
+  position: absolute;
+  width: calc(100% - 20px);
+}
