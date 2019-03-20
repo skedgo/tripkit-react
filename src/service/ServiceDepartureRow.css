@@ -21,7 +21,7 @@
 
 .ServiceDepartureRow-middlePanel {
   /* Needed for gl-overflow-ellipsis to work for serviceDescription: 50px of transIconPanel + 60px of timeToDepart */
-  max-width: calc(100% - 130px);
+  max-width: calc(100% - 140px);
 }
 
 .ServiceDepartureRow-timeToDepart {

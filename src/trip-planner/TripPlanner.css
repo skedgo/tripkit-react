@@ -242,6 +242,70 @@
   bottom: 46px!important;
 }
 
+.TripPlanner-serviceModal {
+  z-index: 1000!important;
+  /*top: 30%!important;*/
+  top: 4%!important;
+  right: auto!important;
+  width: 450px;
+  align-items: unset!important;
+  background: none!important;
+}
+
+.TripPlanner-serviceModalContainer {
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  border-top: 1px solid lightgray;
+  border-left: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+}
+
+@media (max-width: 800px) {
+  .TripPlanner-serviceModal {
+    width: 100%;
+  }
+}
+
+
+.TripPlanner-testDrawer {
+  z-index: 2000!important;
+  align-items: flex-end!important;
+  top: 35%!important;
+  /*top: 20%!important;*/
+  /*align-items: unset!important;*/
+  background: none!important;
+}
+
+.modal {
+  outline: none;
+  background: white;
+  font-size: 1.6rem;
+  width: 76rem;
+  max-width: 90%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  z-index: 15;
+  /*min-height: 47rem;*/
+  /*min-height: 25rem;*/
+  min-height: 100%;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+}
+
+
 @media (min-width: 801px) {
 
   .TripPlanner-noTripsView .TripPlanner-queryFooter {

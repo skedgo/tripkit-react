@@ -13,6 +13,7 @@ import TripsView from "../trip/TripsView";
 import Trip from "../model/trip/Trip";
 import FavouriteBtn from "../favourite/FavouriteBtn";
 import Modal from 'react-modal';
+import Drawer from 'react-drag-drawer';
 import OptionsView from "../options/OptionsView";
 import Options from "../model/Options";
 import OptionsData from "../data/OptionsData";
@@ -63,6 +64,7 @@ interface IState {
     feedbackTooltip: boolean;
     viewport: {center?: LatLng, zoom?: number};
     mapBounds?: BBox;
+    showDepartures?: boolean;
 }
 
 class TripPlanner extends React.Component<ITripPlannerProps, IState> {
@@ -83,7 +85,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             showOptions: false,
             queryTimePanelOpen: false,
             feedbackTooltip: false,
-            viewport: {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
+            viewport: {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
+            showDepartures: true
         };
         if (!userIpLocation) {
             GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
@@ -118,8 +121,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
         // For development:
         RegionsData.instance.requireRegions().then(()=> {
-            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
+            // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) =>
                     this.onQueryChange(Util.iAssign(this.props.query, {
                         from: stop
@@ -222,21 +225,27 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 />
             </Modal>
             : null;
-        const showDepartures = true;
         const fromStop = this.props.query.from && this.props.query.from instanceof StopLocation ? this.props.query.from as StopLocation : undefined;
         const departuresDialog = fromStop ?
-            <Modal
-                isOpen={showDepartures}
-                appElement={this.ref}
+            <Drawer
+                open={this.state.showDepartures}
+                containerElementClass="TripPlanner-serviceModal"
+                modalElementClass="TripPlanner-serviceModalContainer"
+                onRequestClose={() => {
+                    this.setState({showDepartures: false});
+                }}
             >
                 <this.DepartureTableWithData
                     renderDeparture={<P extends IServiceDepartureRowProps>(props: P) =>
                         <ServiceDepartureRow {...props}/>
                     }
                     startStop={fromStop}
+                    onRequestClose={() => {
+                        this.setState({showDepartures: false});
+                    }}
                     className="app-style"
                 />
-            </Modal> : null;
+            </Drawer> : null;
         const region = this.state.region;
         const queryInputBounds = region ? region.bounds : undefined;
         const queryInputFocusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
@@ -387,6 +396,18 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 </div>
                 {optionsDialog}
                 {departuresDialog}
+                {false &&
+                    <Drawer
+                        open={this.state.showDepartures}
+                        onRequestClose={() => {
+                            this.setState({showDepartures: false})
+                        }}
+                        containerElementClass="TripPlanner-testDrawer"
+                        modalElementClass="modal"
+                    >
+                        <div>Hey Im inside a drawer!</div>
+                    </Drawer>
+                }
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => { if (this.mapRef) {this.mapRef.onResize()}} }/>
             </div>
@@ -491,6 +512,9 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         }
         if (this.checkFitLocation(prevState.preFrom , this.state.preFrom) || this.checkFitLocation(prevState.preTo, this.state.preTo)) {
             this.fitMap(this.props.query, this.state.preFrom, this.state.preTo);
+        }
+        if (prevProps.query.from !== this.props.query.from && !this.state.showDepartures) {
+            this.setState({showDepartures: true});
         }
     }
 

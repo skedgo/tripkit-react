@@ -106,6 +106,12 @@
     stroke: currentColor;
 }
 
+.gl-svg-fill-currColor path,
+.gl-svg-fill-currColor rect,
+.gl-svg-fill-currColor circle {
+    fill: currentColor;
+}
+
 .gl-charSpace {
     margin-right: .5ch;
 }

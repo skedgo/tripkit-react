@@ -11,6 +11,8 @@ interface IProps {
     disabled?: boolean;
     timeFormat?: string;
     dateFormat?: string;
+    onBlur?: () => void;
+    onClose?: () => void;
 }
 
 class DateTimePicker extends React.Component<IProps, {}> {
@@ -32,12 +34,28 @@ class DateTimePicker extends React.Component<IProps, {}> {
         }
     }
 
+    /**
+     * Version of setFocus that actually sets focus to input. Needed to take action on blur.
+     */
+    public setFocusActually() {
+        if (this.datePickerRef) {   // just if Device.isDesktop
+            this.datePickerRef.setFocus();
+            this.datePickerRef.setOpen(true);
+        } else if (this.dateTimeHTML5Ref) { // just if !Device.isDesktop
+            this.dateTimeHTML5Ref.focus();
+        }
+    }
+
     private onValueChange(value: Moment) {
         const onChange = this.props.onChange ? this.props.onChange :
             () => { // Avoid empty block warning
             };
         const valueWithTimezone = DateTimeUtil.momentDefaultTZ(value.format(this.props.dateFormat), this.props.dateFormat);
         onChange(valueWithTimezone);
+    }
+
+    public isPopupOpen(): boolean {
+        return this.datePickerRef !== undefined && this.datePickerRef.state.open;
     }
 
     public render(): React.ReactNode {
@@ -53,6 +71,11 @@ class DateTimePicker extends React.Component<IProps, {}> {
                         return;
                     }
                     this.onValueChange(value);
+                    setTimeout(() => {
+                        if (!this.isPopupOpen() && this.props.onClose) {
+                            this.props.onClose();
+                        }
+                    }, 10);
                 }}
                 onChangeRaw={(date) => {
                     this.changedRaw = true;
@@ -70,6 +93,14 @@ class DateTimePicker extends React.Component<IProps, {}> {
                 preventOpenOnFocus={true}   // prevents calendar re-opening after picking time
                 ref={(el: any) => this.datePickerRef = el}
                 disabledKeyboardNavigation={true}   // Since want to enable user to navigate / update date-time text.
+                onBlur = {() => {
+                    if (this.props.onBlur) {
+                        this.props.onBlur()
+                    }
+                    if (this.props.onClose) {
+                        this.props.onClose();
+                    }
+                }}
             /> :
             <DateTimeHTML5Input
                 value = {displayValue}

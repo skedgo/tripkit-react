@@ -3,6 +3,42 @@
   background-color: rgb(229,234,235);
 }
 
+.ServiceDepartureTable-header {
+  background-color: rgb(41, 58, 76);
+  color: white;
+}
+
+.ServiceDepartureTable-timePicker {
+  background: none;
+  border: none;
+  color: #1cca6a;
+  margin: 0 0 5px 15px;
+}
+
+.ServiceDepartureTable-timePicker input {
+  color: #1cca6a;
+}
+
+
+.ServiceDepartureTable-title {
+  padding: 15px;
+}
+
+.ServiceDepartureTable-btnClear {
+  margin: 0 10px;
+  padding: 0;
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+}
+
+.ServiceDepartureTable-iconClear {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: white;
+}
+
 .ServiceDepartureTable-container {
   overflow-y: auto;
 }

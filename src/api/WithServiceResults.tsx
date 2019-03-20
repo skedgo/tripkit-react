@@ -25,14 +25,17 @@ interface IWithServiceResultsState {
     filter: string;
     departuresFiltered: ServiceDeparture[];
     displayLimit: number;
+    initTimeChanged: boolean;
 }
 
 interface IServiceResConsumerProps {
+    initTime: Moment;
     onInitTimeChange?: (initTime: Moment) => void;
     onFilterChange?: (filter: string) => void;
     onRequestMore?: () => void;
     departures: ServiceDeparture[];
     waiting: boolean;
+    title: string;
 }
 
 
@@ -52,7 +55,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         constructor(props: Subtract<P, IServiceResConsumerProps> & IWithServiceResultsProps) {
             super(props);
             // TODO in GWT implementation initialTime has the proper timezone
-            const now = DateTimeUtil.getNow().add(-15, 'm');
+            const now = DateTimeUtil.getNow();
             let initialTime;
             if (props.segment) {
                 initialTime = DateTimeUtil.momentTZTime(props.segment.startTime * 1000).add(-30, 'm');
@@ -60,17 +63,16 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     initialTime = now;
                 }
             } else {
-                initialTime = now;
+                initialTime = now.add(-15, 'm');
             }
             this.state = {
                 initTime: initialTime,
                 departures: [],
                 filter: "",
                 departuresFiltered: [],
-                displayLimit: 0
+                displayLimit: 0,
+                initTimeChanged: false
             };
-            this.requestMoreDepartures = this.requestMoreDepartures.bind(this);
-            this.onFilterChange = this.onFilterChange.bind(this);
             this.rTSchedule = setInterval(() => {
                 // TODO:
                 // fireValueChangeEvent(); //to update 'time to depart' labels
@@ -78,6 +80,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     this.realtimeUpdate();
                 }
             }, 10000);
+
+            this.requestMoreDepartures = this.requestMoreDepartures.bind(this);
+            this.onFilterChange = this.onFilterChange.bind(this);
+            this.onInitTimeChange = this.onInitTimeChange.bind(this);
         }
 
         public requestMoreDepartures() {
@@ -114,6 +120,18 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             return this.state.displayLimit > this.state.departuresFiltered.length;
         }
 
+        public onInitTimeChange(initTime: Moment) {
+            this.setState({
+                initTime: initTime,
+                departures: [],
+                departuresFiltered: [],
+                displayLimit: 0,
+                initTimeChanged: true
+            }, () => {
+                this.requestMoreDepartures();
+            });
+        }
+
         public render(): React.ReactNode {
             const {startStop, segment, ...props} = this.props as IWithServiceResultsProps;
             return <Consumer {...props}
@@ -121,6 +139,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting()}
                              onFilterChange={this.onFilterChange}
+                             title={startStop.shortName ? startStop.shortName : startStop.name}
+                             initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
+                             onInitTimeChange={this.onInitTimeChange}
             />;
         }
 
