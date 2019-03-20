@@ -4,7 +4,6 @@ import "./DaySeparator.css";
 
 interface IProps {
     date: Moment;
-    key: string;
     atTop?: boolean;
     scrollTop?: number;
 }
@@ -18,12 +17,15 @@ class DaySeparator extends React.Component<IProps, {}> {
             && (this.props.scrollTop >= this.ref.offsetTop);
         return (
             [
-                <div className={"DaySeparator" + (!showOnTop ? " DaySeparator-rise" : "")} key={this.props.key + "-1"}
+                <div className={"DaySeparator" + (!showOnTop ? " DaySeparator-rise" : "")}
+                     key={"DaySeparator-1"}
                      ref={(ref: any) => this.ref = ref}
                 >
                     {this.props.date.format("ddd D")}
                 </div>,
-                showOnTop && <div className="DaySeparator DaySeparator-top" key={this.props.key + "-2"}>
+                showOnTop && <div className="DaySeparator DaySeparator-top"
+                                  key={"DaySeparator-2"}
+                >
                     {this.props.date.format("ddd D")}
                 </div>
             ]
