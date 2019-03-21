@@ -3,6 +3,7 @@ import {Moment} from "moment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DateTimePicker from "./DateTimePicker";
 import "./DateTimePickerFace.css";
+import {default as DeviceUtil} from "../util/DeviceUtil";
 
 interface IProps {
     value: Moment;
@@ -29,7 +30,9 @@ class DateTimePickerFace extends React.Component<IProps, IState> {
     private onFaceClick() {
         if (this.dateTimePickerRef) {
             this.dateTimePickerRef.setFocusActually();
-            this.setState({textInput: true});
+            if (DeviceUtil.isDesktop) {
+                this.setState({textInput: true});
+            }
         }
     }
 

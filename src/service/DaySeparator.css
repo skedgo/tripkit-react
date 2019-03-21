@@ -6,10 +6,11 @@
 }
 
 .DaySeparator-rise {
-  z-index: 2;
+  z-index: 3;
 }
 
 .DaySeparator-top {
   position: absolute;
   width: calc(100% - 20px);
+  z-index: 2;
 }

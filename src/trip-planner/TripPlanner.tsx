@@ -121,8 +121,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
         // For development:
         RegionsData.instance.requireRegions().then(()=> {
-            // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
-            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
+            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) =>
                     this.onQueryChange(Util.iAssign(this.props.query, {
                         from: stop
@@ -396,18 +396,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 </div>
                 {optionsDialog}
                 {departuresDialog}
-                {false &&
-                    <Drawer
-                        open={this.state.showDepartures}
-                        onRequestClose={() => {
-                            this.setState({showDepartures: false})
-                        }}
-                        containerElementClass="TripPlanner-testDrawer"
-                        modalElementClass="modal"
-                    >
-                        <div>Hey Im inside a drawer!</div>
-                    </Drawer>
-                }
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => { if (this.mapRef) {this.mapRef.onResize()}} }/>
             </div>
