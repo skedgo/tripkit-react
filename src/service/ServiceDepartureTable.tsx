@@ -18,33 +18,16 @@ interface IProps extends IServiceResConsumerProps {
     className?: string;
 }
 
-interface IState {
-    scrollTop: number;
-}
-
-class ServiceDepartureTable extends React.Component<IProps, IState> {
+class ServiceDepartureTable extends React.Component<IProps, {}> {
 
     private scrollRef: any;
 
     constructor(props: IProps) {
         super(props);
-        this.state = {
-            scrollTop: 0
-        };
         if (props.onRequestMore) {
             props.onRequestMore();
         }
-        this.onScroll = this.onScroll.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
-    }
-
-    private onScroll(e: any) {
-        const scrollPanel = e.target;
-        if (this.props.onRequestMore && scrollPanel.scrollTop + scrollPanel.clientHeight > scrollPanel.scrollHeight - 30) {
-            console.log("requestMore!");
-            this.props.onRequestMore();
-        }
-        this.setState({ scrollTop: scrollPanel.scrollTop });
     }
 
     private onFilterChange(e: ChangeEvent<HTMLInputElement>) {
@@ -54,6 +37,7 @@ class ServiceDepartureTable extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        console.log("render ServiceDepartureTable");
         return (
             <div className={"ServiceDepartureTable gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
                 <div className="ServiceDepartureTable-header">
@@ -87,26 +71,27 @@ class ServiceDepartureTable extends React.Component<IProps, IState> {
                     <input className="ServiceDepartureTable-filterInput gl-grow" placeholder="Filter"
                            onChange={this.onFilterChange}/>
                 </div>
-                <div className={"ServiceDepartureTable-container gl-flex gl-column gl-grow" + (this.props.className ? " " + this.props.className : "")}
-                     onScroll={this.onScroll}
-                     ref={(scrollRef: any) => this.scrollRef = scrollRef}
-                >
-                    {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
-                        const showDayLabel = i === 0 ||
-                            DateTimeUtil.momentTZTime(this.props.departures[i - 1].actualStartTime * 1000).format("ddd D") !==
-                            DateTimeUtil.momentTZTime(departure.actualStartTime * 1000).format("ddd D");
-                        if (showDayLabel) {
-                            elems.push(<DaySeparator date={DateTimeUtil.momentTZTime(departure.actualStartTime * 1000)}
-                                                     scrollTop={this.state.scrollTop + 48} // 48px of filter panel. See how to avoid this.
-                                                     key={"day-" + i}
-                            />)
-                        }
-                        elems.push(this.props.renderDeparture({
-                            value: departure,
-                            key: i
-                        }));
-                        return elems;
-                    }, [])}
+                <div className="ServiceDepartureTable-relative gl-flex">
+                    <div className={"ServiceDepartureTable-container gl-flex gl-column gl-grow"}
+                         ref={(scrollRef: any) => this.scrollRef = scrollRef}
+                    >
+                        {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
+                            const showDayLabel = i === 0 ||
+                                DateTimeUtil.momentTZTime(this.props.departures[i - 1].actualStartTime * 1000).format("ddd D") !==
+                                DateTimeUtil.momentTZTime(departure.actualStartTime * 1000).format("ddd D");
+                            if (showDayLabel) {
+                                elems.push(<DaySeparator date={DateTimeUtil.momentTZTime(departure.actualStartTime * 1000)}
+                                                         key={"day-" + i}
+                                                         scrollRef={this.scrollRef}
+                                />)
+                            }
+                            elems.push(this.props.renderDeparture({
+                                value: departure,
+                                key: i
+                            }));
+                            return elems;
+                        }, [])}
+                    </div>
                 </div>
             </div>
         );
