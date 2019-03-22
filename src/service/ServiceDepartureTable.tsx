@@ -27,7 +27,15 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
         if (props.onRequestMore) {
             props.onRequestMore();
         }
+        this.onScroll = this.onScroll.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
+    }
+
+    private onScroll(e: any) {
+        const scrollPanel = e.target;
+        if (this.props.onRequestMore && scrollPanel.scrollTop + scrollPanel.clientHeight > scrollPanel.scrollHeight - 30) {
+            this.props.onRequestMore();
+        }
     }
 
     private onFilterChange(e: ChangeEvent<HTMLInputElement>) {
@@ -73,6 +81,7 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
                 </div>
                 <div className="ServiceDepartureTable-relative gl-flex">
                     <div className={"ServiceDepartureTable-container gl-flex gl-column gl-grow"}
+                         onScroll={this.onScroll}
                          ref={(scrollRef: any) => this.scrollRef = scrollRef}
                     >
                         {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
