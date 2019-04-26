@@ -15,7 +15,7 @@ import moment from "moment-timezone";
 interface IProps extends IServiceResConsumerProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
     onRequestClose?: () => void;
-    className?: string;
+    onSelection?: (departure: ServiceDeparture) => void;
 }
 
 class ServiceDepartureTable extends React.Component<IProps, {}> {
@@ -45,9 +45,8 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        console.log("render ServiceDepartureTable");
         return (
-            <div className={"ServiceDepartureTable gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
+            <div className={"ServiceDepartureTable gl-flex gl-column"}>
                 <div className="ServiceDepartureTable-header">
                     <div className="gl-flex gl-space-between gl-align-center">
                         <div className="ServiceDepartureTable-title gl-grow">
@@ -96,7 +95,12 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
                             }
                             elems.push(this.props.renderDeparture({
                                 value: departure,
-                                key: i
+                                key: i,
+                                onClick: () => {
+                                    if (this.props.onSelection) {
+                                        this.props.onSelection(departure)
+                                    }
+                                }
                             }));
                             return elems;
                         }, [])}

@@ -1,0 +1,41 @@
+.ServiceDetailView {
+  background-color: white;
+  height: 100%;
+}
+
+.ServiceDetailView-stop {
+  border-bottom: 1px solid lightgray;
+  margin: -1px 10px 0 10px;
+}
+
+.ServiceDetailView-pastStop {
+  opacity: .5;
+}
+
+.ServiceDetailView-currStop .TripSegmentDetail-line:first-child {
+  opacity: .5;
+}
+
+.ServiceDetailView .TripSegmentDetail-timePanel {
+  margin: 15px 15px 15px 0;
+}
+
+.ServiceDetailView .TripSegmentDetail-stopTitle {
+  margin: 15px 0 15px 15px;
+}
+
+.ServiceDetailView-crossCircle {
+  width: 18px;
+  height: 18px;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-color: gray;
+  margin-left: auto;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.ServiceDetailView-cross {
+  color: white;
+}
