@@ -10,6 +10,10 @@
   border-radius: 4px;
 }
 
+.ServiceDepartureRow-clickable {
+  cursor: pointer;
+}
+
 .ServiceDepartureRow-transIconPanel {
   width: 50px;
 }

@@ -56,7 +56,8 @@ class ServiceDepartureRow extends React.Component<IProps, {}> {
             departure.wheelchairAccessible ? "Wheelchair accessible" : "Wheelchair inaccessible";
         return (
             <div className="ServiceDepartureRow-outerPanel">
-                <div className="ServiceDepartureRow gl-flex gl-column">
+                <div className={"ServiceDepartureRow gl-flex gl-column" + (this.props.onClick ? " ServiceDepartureRow-clickable" : "")}
+                     onClick={this.props.onClick}>
                     <div className="gl-flex gl-align-center">
                         <div className="gl-flex gl-center gl-align-center gl-no-shrink ServiceDepartureRow-transIconPanel">
                             <img src={transIcon} className="ServiceDepartureRow-transIcon"
@@ -71,11 +72,14 @@ class ServiceDepartureRow extends React.Component<IProps, {}> {
                             {realtimeText &&
                             <div className="ServiceDepartureRow-realtimeInfo">{realtimeText}</div>}
                         </div>
-                        <div className={"gl-flex gl-align-center gl-center gl-no-shrink ServiceDepartureRow-timeToDepart" +
-                        (cancelled ? " ServiceDepartureRow-timeToDepartCancelled" : "") +
-                        (timeToDepart < 0 ? " ServiceDepartureRow-timeToDepartPast" : "")}>
-                            {timeToDepartS}
-                        </div>
+                        {this.props.renderRight ? this.props.renderRight() :
+                            <div
+                                className={"gl-flex gl-align-center gl-center gl-no-shrink ServiceDepartureRow-timeToDepart" +
+                                (cancelled ? " ServiceDepartureRow-timeToDepartCancelled" : "") +
+                                (timeToDepart < 0 ? " ServiceDepartureRow-timeToDepartPast" : "")}>
+                                {timeToDepartS}
+                            </div>
+                        }
                     </div>
                     { OptionsData.instance.get().wheelchair &&
                         <div className="gl-flex ServiceDepartureRow-wCInfoPanel">

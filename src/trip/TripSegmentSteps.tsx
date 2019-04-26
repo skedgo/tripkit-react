@@ -4,9 +4,10 @@ import "./TripSegmentSteps.css";
 
 interface IProps<T> {
     steps: T[];
-    toggleLabel: (open: boolean) => string;
-    leftLabel?: (step: T) => string;
-    rightLabel: (step: T) => string;
+    toggleLabel?: (open: boolean) => string;
+    leftLabel?: (step: T) => string | JSX.Element;
+    rightLabel: (step: T) => string | JSX.Element;
+    stepClassName?: (step: T) => string;
     borderColor: string;
     dashed?: boolean;
 }
@@ -23,7 +24,7 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
     constructor(props: IProps<T>) {
         super(props);
         this.state = {
-            open: false,
+            open: !this.props.toggleLabel,
         };
         this.id = "trip-segment-steps-" + TripSegmentSteps.count++;
     }
@@ -32,31 +33,33 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
         const borderLeftStyle = this.props.dashed ? "dashed" : undefined;
         return (
             <div>
-                <div className="gl-flex">
-                    <div className="TripSegmentDetail-iconPanel"/>
-                    <div className="TripSegmentDetail-linePanel gl-flex gl-center">
-                        <div className="TripSegmentDetail-line"
-                             style={{
-                                 borderColor: this.props.borderColor,
-                                 borderLeftStyle: borderLeftStyle
-                             }}/>
-                    </div>
-                    <button className="TripSegmentSteps-stopBtn gl-link"
-                            onClick={() => this.setState({open: !this.state.open})}
-                            aria-expanded={this.state.open}
-                            aria-controls={this.id}
-                    >
-                        {this.props.toggleLabel(this.state.open)}
-                        <IconAngleDown className={"TripSegmentDetail-iconAngleDown" + (this.state.open ? " gl-rotate180" : "")}
-                                       focusable="false"
-                        />
-                    </button>
-                </div>
+                {this.props.toggleLabel ?
+                    <div className="gl-flex">
+                        <div className="TripSegmentDetail-iconPanel"/>
+                        <div className="TripSegmentDetail-linePanel gl-flex gl-center">
+                            <div className="TripSegmentDetail-line"
+                                 style={{
+                                     borderColor: this.props.borderColor,
+                                     borderLeftStyle: borderLeftStyle
+                                 }}/>
+                        </div>
+                        <button className="TripSegmentSteps-stopBtn gl-link"
+                                onClick={() => this.setState({open: !this.state.open})}
+                                aria-expanded={this.state.open}
+                                aria-controls={this.id}
+                        >
+                            {this.props.toggleLabel(this.state.open)}
+                            <IconAngleDown className={"TripSegmentDetail-iconAngleDown" + (this.state.open ? " gl-rotate180" : "")}
+                                           focusable="false"
+                            />
+                        </button>
+                    </div> : undefined}
                 <div id={this.id} tabIndex={this.state.open ? 0 : -1}>
                     {this.state.open ?
                         this.props.steps.map((step: T, index: number) => {
                             return (
-                                <div className="gl-flex" key={index}>
+                                <div className={"gl-flex" + (this.props.stepClassName ? " " + this.props.stepClassName(step) : "")}
+                                     key={index}>
                                     <div className="TripSegmentDetail-timePanel gl-flex">
                                         {this.props.leftLabel ? this.props.leftLabel(step) : ""}
                                     </div>

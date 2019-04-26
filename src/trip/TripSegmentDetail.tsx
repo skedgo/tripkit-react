@@ -96,7 +96,7 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                                 rightLabel={(step: ServiceStopLocation) => step.name}
                                 borderColor={transportColor}
                             /> : null }
-                        { segment.streets !== null ?
+                        { segment.streets ?
                             <TripSegmentSteps
                                 steps={segment.streets}
                                 toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + "directions"}

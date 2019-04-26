@@ -45,9 +45,9 @@ class SegmentTemplate {
     @JsonProperty("location", Location, true)
     private _location: Location = new Location();
     @JsonProperty("streets", [Street], true)
-    private _streets: Street[] | null = null;
+    private _streets: Street[] | undefined = undefined;
     @JsonProperty("shapes", [ServiceShape], true)
-    private _shapes: ServiceShape[] | null = null;
+    private _shapes: ServiceShape[] | undefined = undefined;
     @JsonProperty("stopCode", String, true)
     private _stopCode: string | null = null;
     @JsonProperty("endStopCode", String, true)
@@ -188,19 +188,19 @@ class SegmentTemplate {
         this._location = value;
     }
 
-    get streets(): Street[] | null {
+    get streets(): Street[] | undefined {
         return this._streets;
     }
 
-    set streets(value: Street[] | null) {
+    set streets(value: Street[] | undefined) {
         this._streets = value;
     }
 
-    get shapes(): ServiceShape[] | null {
+    get shapes(): ServiceShape[] | undefined {
         return this._shapes;
     }
 
-    set shapes(value: ServiceShape[] | null) {
+    set shapes(value: ServiceShape[] | undefined) {
         this._shapes = value;
     }
 

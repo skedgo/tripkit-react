@@ -3,6 +3,7 @@ import Color from "../trip/Color";
 import ModeInfo from "../trip/ModeInfo";
 import StopLocation from "../StopLocation";
 import Service from "./Service";
+import ServiceDetail from "./ServiceDetail";
 
 @JsonObject
 class ServiceDeparture {
@@ -45,6 +46,7 @@ class ServiceDeparture {
     public startStop: StopLocation | undefined;
     public startStopCode: string;
     public service: Service;
+    public serviceDetail: ServiceDetail | undefined;
 
 
     get realTimeDeparture(): number | undefined {

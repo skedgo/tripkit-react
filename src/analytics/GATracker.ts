@@ -12,7 +12,7 @@ class GATracker {
     }
 
     public send(category: string, action: string, label: string) {
-        // 10757 request, only produdction should report to analytics
+        // 10757 request, only production should report to analytics
         if (Environment.isProd() && !Environment.isStaging()) {
             // i tried:
             // import { ga } from "google.analytics" - Module not found

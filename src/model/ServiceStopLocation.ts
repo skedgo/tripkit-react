@@ -11,7 +11,7 @@ class ServiceStopLocation extends Location {
     private _bearing: number | null = null;
     @JsonProperty('arrival', Number, true)
     private _arrival: number | null = null;
-    @JsonProperty('arrival', Number, true)
+    @JsonProperty('departure', Number, true)
     private _departure: number | null = null;
     @JsonProperty('relativeArrival', Number, true)
     private _relativeArrival: number | null = null;

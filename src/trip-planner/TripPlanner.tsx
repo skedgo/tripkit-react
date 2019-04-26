@@ -51,6 +51,8 @@ import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
 import ServiceDepartureRow from "../service/ServiceDepartureRow";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
+import ServiceDetailView from "../service/ServiceDetailView";
+import ServiceDeparture from "../model/service/ServiceDeparture";
 
 interface IState {
     tripsSorted: Trip[] | null;
@@ -65,6 +67,7 @@ interface IState {
     viewport: {center?: LatLng, zoom?: number};
     mapBounds?: BBox;
     showDepartures?: boolean;
+    selectedDeparture?: ServiceDeparture;
 }
 
 class TripPlanner extends React.Component<ITripPlannerProps, IState> {
@@ -121,7 +124,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
         // For development:
         RegionsData.instance.requireRegions().then(()=> {
-            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
+            // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) =>
                     this.onQueryChange(Util.iAssign(this.props.query, {
@@ -226,14 +230,16 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             </Modal>
             : null;
         const fromStop = this.props.query.from && this.props.query.from instanceof StopLocation ? this.props.query.from as StopLocation : undefined;
-        const departuresDialog = fromStop ?
+        const departuresView = fromStop ?
             <Drawer
                 open={this.state.showDepartures}
                 containerElementClass="TripPlanner-serviceModal"
-                modalElementClass="TripPlanner-serviceModalContainer"
-                onRequestClose={() => {
-                    this.setState({showDepartures: false});
-                }}
+                modalElementClass="TripPlanner-serviceModalContainer app-style"
+                // onRequestClose={() => {
+                //     this.setState({showDepartures: false});
+                // }}
+                allowClose={false}
+                dontApplyListeners={true}
             >
                 <this.DepartureTableWithData
                     renderDeparture={<P extends IServiceDepartureRowProps>(props: P) =>
@@ -243,7 +249,37 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                     onRequestClose={() => {
                         this.setState({showDepartures: false});
                     }}
-                    className="app-style"
+                    onSelection={(departure: ServiceDeparture) =>
+                        this.setState({
+                            selectedDeparture: departure,
+                            // showDepartures: false
+                        })}
+                />
+            </Drawer> : null;
+        const serviceDetailView = this.state.selectedDeparture ?
+            <Drawer
+                open={this.state.selectedDeparture}
+                containerElementClass="TripPlanner-serviceModal"
+                modalElementClass="TripPlanner-serviceModalContainer app-style"
+                // onRequestClose={() => {
+                //     this.setState({showDepartures: false});
+                // }}
+                allowClose={false}
+                dontApplyListeners={true}
+            >
+                <ServiceDetailView
+                    departure={this.state.selectedDeparture}
+                    onDepartureUpdate={(departure: ServiceDeparture) => this.setState({selectedDeparture: departure})}
+                    renderDeparture={
+                        <P extends IServiceDepartureRowProps>(props: P) =>
+                            <ServiceDepartureRow {...props}/>
+                    }
+                    onRequestClose={() => {
+                        this.setState({
+                            selectedDeparture: undefined,
+                            // showDepartures: true
+                        });
+                    }}
                 />
             </Drawer> : null;
         const region = this.state.region;
@@ -355,6 +391,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     to={this.state.preTo ? this.state.preTo :
                                         (this.props.query.to ? this.props.query.to : undefined)}
                                     trip={this.state.selected}
+                                    service={this.state.selectedDeparture ? this.state.selectedDeparture.serviceDetail : undefined}
                                     ondragend={this.onMapLocChanged}
                                     onclick={(clickLatLng: LatLng) => {
                                         const from = this.props.query.from;
@@ -395,7 +432,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                     </div>
                 </div>
                 {optionsDialog}
-                {departuresDialog}
+                {departuresView}
+                {serviceDetailView}
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => { if (this.mapRef) {this.mapRef.onResize()}} }/>
             </div>
