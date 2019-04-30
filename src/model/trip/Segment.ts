@@ -202,7 +202,7 @@ class Segment extends SegmentTemplate {
         }
         if (result.includes("<NUMBER>")) {
             const service = this.serviceNumber !== null ? this.serviceNumber :
-                (this.modeInfo !== null ? this.modeInfo.alt : "");
+                (this.modeInfo ? this.modeInfo.alt : "");
             result = result.replace("<NUMBER>", service)
         }
         if (result.includes("<DURATION>")) {

@@ -70,6 +70,10 @@ interface IState {
     selectedDeparture?: ServiceDeparture;
 }
 
+// SEGUIR ACÁ:
+// Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
+// Acomodar código en tccs-react
+
 class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private eventBus: EventEmitter = new EventEmitter();

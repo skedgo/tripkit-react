@@ -64,9 +64,11 @@ export {default as Control} from "react-leaflet-control";
 export {IProps as SegmentPinIconProps} from "./map/TransportPinIcon";
 export {IProps as SegmentPopupProps} from "./map/SegmentPopup";
 export {IProps as ServiceStopPopupProps} from "./map/ServiceStopPopup";
+export {IServiceStopProps as ServiceStopProps} from "./map/ShapesPolyline";
 export {default as Environment} from "./env/Environment";
 export {default as Features} from "./env/Features";
 export {default as ModeIdentifier} from "./model/region/ModeIdentifier";
+export {default as ModeInfo} from "./model/trip/ModeInfo";
 
 
 // TODO: This is temporary until we separate the sample (tripgo-sample.tsx) from the tripkit-react library.

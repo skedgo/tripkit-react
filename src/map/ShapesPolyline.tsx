@@ -7,9 +7,11 @@ import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import ServiceDetailView from "../service/ServiceDetailView";
+import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
     color: string;
+    modeInfo?: ModeInfo;
     shapes: ServiceShape[];
     polylineOptions: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
     renderServiceStop: (props: IServiceStopProps) => JSX.Element | undefined;
@@ -79,7 +81,9 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                             >
                                 {this.props.renderServiceStopPopup({
                                     stop: stop,
-                                    shape: shape
+                                    shape: shape,
+                                    color: this.props.color,
+                                    modeInfo: this.props.modeInfo
                                 })}
                             </Popup>
                         </Marker>

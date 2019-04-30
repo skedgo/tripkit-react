@@ -12,7 +12,7 @@ class ChoiceSegment {
     public static create(segment: Segment): ChoiceSegment {
         const instance = new ChoiceSegment();
         const modeInfo = segment.modeInfo;
-        instance._mode = modeInfo !== null ?
+        instance._mode = modeInfo ?
             (modeInfo.identifier ? modeInfo.identifier : modeInfo.alt.toLowerCase()) : "";
         instance._duration = segment.endTime - segment.startTime;
         return instance;
