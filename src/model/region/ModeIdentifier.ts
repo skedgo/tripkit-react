@@ -18,6 +18,7 @@ class ModeIdentifier {
     public static readonly TAXI_ID = "ps_tax";
     public static readonly PUBLIC_TRANSPORT_ID = "pt_pub";
     public static readonly TRAM_ID = "pt_pub_tram";
+    public static readonly WALK_ID = "wa_wal";
 
     /**
      * Empty constructor, necessary for Util.clone

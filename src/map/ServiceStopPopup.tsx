@@ -6,10 +6,13 @@ import StopsData from "../data/StopsData";
 import ServiceShape from "../model/trip/ServiceShape";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
+import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
     stop: ServiceStopLocation;
     shape: ServiceShape;
+    color?: string;
+    modeInfo?: ModeInfo;
 }
 
 interface IState {

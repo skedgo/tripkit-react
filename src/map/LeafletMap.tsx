@@ -33,6 +33,7 @@ import {IServiceStopProps} from "./ShapesPolyline";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import {EventEmitter} from "fbemitter";
+import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
     from?: Location;
@@ -50,7 +51,7 @@ interface IProps {
     renderSegmentPopup?: (segment: Segment) => JSX.Element;
     renderServicePinIcon?: (service: ServiceDeparture) => JSX.Element;
     shapePolylineOptions?: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    streetPolylineOptions?: (streets: Street[], color: string) => PolylineProps | PolylineProps[];
+    streetPolylineOptions?: (streets: Street[], color: string, modeInfo: ModeInfo) => PolylineProps | PolylineProps[];
     renderServiceStop?: (props: IServiceStopProps) => JSX.Element | undefined;
     renderServiceStopPopup?: (props: ServiceStopPopupProps) => JSX.Element;
     eventBus?: EventEmitter;

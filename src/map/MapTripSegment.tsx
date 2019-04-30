@@ -11,6 +11,7 @@ import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import StreetsPolyline from "./StreetsPolyline";
 import ShapesPolyline from "./ShapesPolyline";
+import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
     segment: Segment;
@@ -18,7 +19,7 @@ interface IProps {
     renderPinIcon: (segment: Segment) => JSX.Element;
     renderPopup: (segment: Segment) => JSX.Element;
     shapePolylineOptions: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    streetPolylineOptions: (streets: Street[], color: string) => PolylineProps | PolylineProps[];
+    streetPolylineOptions: (streets: Street[], color: string, modeInfo?: ModeInfo) => PolylineProps | PolylineProps[];
     renderServiceStop: (props: IServiceStopProps) => JSX.Element | undefined;
     renderServiceStopPopup: (props: ServiceStopPopupProps) => JSX.Element;
 }
@@ -53,6 +54,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                 <ShapesPolyline key={"map-polyline" + segment.trip.getKey()}
                                 id={"map-polyline" + segment.trip.getKey()}
                                 color={segment.getColor()}
+                                modeInfo={segment.modeInfo}
                                 shapes={segment.shapes}
                                 polylineOptions={this.props.shapePolylineOptions}
                                 renderServiceStop={this.props.renderServiceStop}
@@ -62,6 +64,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                     <StreetsPolyline key={"map-polyline" + segment.trip.getKey()}
                                      id={"map-polyline" + segment.trip.getKey()}
                                      color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
+                                     modeInfo={segment.modeInfo}
                                      streets={segment.streets}
                                      polylineOptions={this.props.streetPolylineOptions}
                     /> : undefined

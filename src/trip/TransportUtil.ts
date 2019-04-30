@@ -120,7 +120,7 @@ class TransportUtil {
     public static getRepresentativeColor(trip: Trip): string | null {
         const representativeSegment = this.getRepresentativeSegment(trip);
         const representativeColor = representativeSegment !== null &&
-        representativeSegment.modeInfo !== null ? TransportUtil.getTransportColor(representativeSegment.modeInfo) : "black";
+        representativeSegment.modeInfo ? TransportUtil.getTransportColor(representativeSegment.modeInfo) : "black";
         return representativeColor !== null ? representativeColor : "black";
     }
 
