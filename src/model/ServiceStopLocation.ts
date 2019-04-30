@@ -8,7 +8,7 @@ class ServiceStopLocation extends Location {
     @JsonProperty('shortName', String, true)
     private _shortName: string | null = null;
     @JsonProperty('bearing', Number, true)
-    private _bearing: number | null = null;
+    private _bearing: number | undefined = undefined;
     @JsonProperty('arrival', Number, true)
     private _arrival: number | null = null;
     @JsonProperty('departure', Number, true)
@@ -28,7 +28,7 @@ class ServiceStopLocation extends Location {
         return this._shortName;
     }
 
-    get bearing(): number | null {
+    get bearing(): number | undefined{
         return this._bearing;
     }
 

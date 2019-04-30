@@ -1,6 +1,7 @@
 import BBox from "../model/BBox";
 import Trip from "../model/trip/Trip";
 import LeafletUtil from "./LeafletUtil";
+import ServiceShape from "../model/trip/ServiceShape";
 
 class MapUtil {
 
@@ -39,6 +40,10 @@ class MapUtil {
 
     public static getTripBounds(trip: Trip): BBox {
         return LeafletUtil.toBBox(LeafletUtil.getTripBounds(trip));
+    }
+
+    public static getShapesBounds(shapes: ServiceShape[], travelledOnly: boolean = false): BBox {
+        return LeafletUtil.toBBox(LeafletUtil.getShapesBounds(shapes, travelledOnly));
     }
 
     public static toDegrees(radians: number) {

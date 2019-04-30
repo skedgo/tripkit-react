@@ -1,15 +1,15 @@
-.SegmentPinIcon-pin {
+.TransportPinIcon-pin {
   position: initial!important;
   height: 48px;
   width: 48px;
   outline: none!important;
 }
 
-.SegmentPinIcon-whiteFill path {
+.TransportPinIcon-whiteFill path {
     fill: white;
 }
 
-.SegmentPinIcon-transport {
+.TransportPinIcon-transport {
   position: absolute;
   z-index: 2;
   top: 12px;
@@ -23,11 +23,11 @@
   height: 24px;
 }
 
-.SegmentPinIcon-base {
+.TransportPinIcon-base {
   margin-top: -12px;
 }
 
-.SegmentPinIcon-timeLabel {
+.TransportPinIcon-timeLabel {
   position: absolute;
   top: 12px;
   left: 30px;

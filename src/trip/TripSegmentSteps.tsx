@@ -10,6 +10,7 @@ interface IProps<T> {
     stepClassName?: (step: T) => string;
     borderColor: string;
     dashed?: boolean;
+    onStepClicked?: (step: T) => void;
 }
 
 interface IState {
@@ -58,8 +59,13 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
                     {this.state.open ?
                         this.props.steps.map((step: T, index: number) => {
                             return (
-                                <div className={"gl-flex" + (this.props.stepClassName ? " " + this.props.stepClassName(step) : "")}
-                                     key={index}>
+                                <div className={"gl-flex" + (this.props.onStepClicked ? " gl-pointer" : "")
+                                + (this.props.stepClassName ? " " + this.props.stepClassName(step) : "")}
+                                     key={index}
+                                     onClick={this.props.onStepClicked &&
+                                     (() => {if (this.props.onStepClicked) {this.props.onStepClicked(step)}})
+                                     }
+                                >
                                     <div className="TripSegmentDetail-timePanel gl-flex">
                                         {this.props.leftLabel ? this.props.leftLabel(step) : ""}
                                     </div>

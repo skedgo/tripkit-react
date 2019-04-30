@@ -10,7 +10,6 @@ interface IProps {
     location: Location;
     highlighted: boolean;
     ariaSelected?: boolean;
-    key: number;
     onClick?: () => void;
     id?: string;
 }
@@ -53,8 +52,7 @@ class ResultItem extends Component<IProps, {}> {
                 </span>;
         }
         return (
-            <div key={this.props.key}
-                 style={{background: this.props.highlighted ? '#efeded' : 'white'}}
+            <div style={{background: this.props.highlighted ? '#efeded' : 'white'}}
                  className={"gl-flex gl-space-between ResultItem" + (this.props.location.isCurrLoc() ? " currLoc" : "")}
                  onClick={this.props.onClick}
                  role="option"

@@ -6,7 +6,7 @@ interface IProps {
     color: string;
     streets: Street[];
     polylineOptions: (streets: Street[], color: string) => PolylineProps | PolylineProps[];
-    key: string;
+    id: string;
 }
 
 class StreetsPolyline extends React.Component<IProps, {}> {
@@ -15,7 +15,7 @@ class StreetsPolyline extends React.Component<IProps, {}> {
         const polylineOptions = this.props.polylineOptions(this.props.streets, this.props.color);
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         return polylineOptionsArray
-            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.key + "-" + i}/>);
+            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
     }
 }
 

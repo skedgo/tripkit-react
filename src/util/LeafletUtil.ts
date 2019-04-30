@@ -5,6 +5,8 @@ import L from "leaflet";
 import Segment from "../model/trip/Segment";
 import Trip from "../model/trip/Trip";
 import inside from "point-in-polygon";
+import ServiceShape from "../model/trip/ServiceShape";
+import Street from "../model/trip/Street";
 
 class LeafletUtil {
 
@@ -35,27 +37,41 @@ class LeafletUtil {
     }
 
     public static getSegmentBounds(segment: Segment): LatLngBounds {
-        const bounds = L.latLngBounds([]);
-        bounds.extend(segment.from).extend(segment.to);
+        let bounds;
         if (segment.streets) {
-            for (const street of segment.streets) {
-                if (street.waypoints) {
-                    for (const waypoint of street.waypoints) {
-                        bounds.extend(waypoint);
-                    }
-                }
-            }
+            bounds = this.getStreetBounds(segment.streets);
+        } else if (segment.shapes) {
+            bounds = this.getShapesBounds(segment.shapes, true);
+        } else {
+            bounds = L.latLngBounds([]);
         }
-        if (segment.shapes) {
-            for (const shape of segment.shapes) {
-                if (shape.travelled && shape.waypoints) {
-                    for (const waypoint of shape.waypoints) {
-                        bounds.extend(waypoint);
-                    }
-                }
+        return bounds.extend(segment.from).extend(segment.to);
+    }
+
+    public static getStreetBounds(streets: Street[]): LatLngBounds {
+        const allWaypoints = streets.reduce((waypoints: LatLng[], street: Street) => {
+            if (street.waypoints) {
+                waypoints = waypoints.concat(street.waypoints);
             }
-        }
-        return bounds;
+            return waypoints;
+        }, []);
+        return this.boundsFromLatLngArray(allWaypoints);
+    }
+
+    public static getShapesBounds(shapes: ServiceShape[], travelledOnly: boolean = false): LatLngBounds {
+        const allWaypoints = shapes.reduce((waypoints: LatLng[], shape: ServiceShape) => {
+            if (shape.waypoints && (!travelledOnly || shape.travelled)) {
+                waypoints = waypoints.concat(shape.waypoints);
+            }
+            return waypoints;
+        }, []);
+        return this.boundsFromLatLngArray(allWaypoints);
+    }
+
+    public static boundsFromLatLngArray(latLngArray: LatLng[]): LatLngBounds {
+        return latLngArray.reduce((bounds: LatLngBounds, latLng: LatLng) => {
+            return bounds.extend(latLng);
+        }, L.latLngBounds([]));
     }
 
     public static decodePolyline(encoded: string): LatLng[] {
