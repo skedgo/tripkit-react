@@ -208,33 +208,33 @@
   outline: none!important;
 }
 
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin circle {
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-pin circle {
   fill: #f66967;
   stroke: #dc5553;
 }
 
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-transport:hover,
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-transport,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-transport:hover,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-transport {
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-transport:hover,
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-pin:hover~.TransportPinIcon-transport,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-transport:hover,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-pin:hover~.TransportPinIcon-transport {
   display: none;
 }
 
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover circle,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover path {
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-pin:hover circle,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-pin:hover path {
   stroke-dasharray: 4;
   stroke: black;
 }
 
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover {
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-pin:hover,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-pin:hover {
   opacity: .9;
 }
 
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-timeLabel,
-.MapTripSegment-icon-container.arriveSegment .SegmentPinIcon-transport:hover~.SegmentPinIcon-timeLabel,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-pin:hover~.SegmentPinIcon-timeLabel,
-.MapTripSegment-icon-container.firstSegment .SegmentPinIcon-transport:hover~.SegmentPinIcon-timeLabel {
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-pin:hover~.TransportPinIcon-timeLabel,
+.MapTripSegment-icon-container.arriveSegment .TransportPinIcon-transport:hover~.TransportPinIcon-timeLabel,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-pin:hover~.TransportPinIcon-timeLabel,
+.MapTripSegment-icon-container.firstSegment .TransportPinIcon-transport:hover~.TransportPinIcon-timeLabel {
   display: none;
 }
 

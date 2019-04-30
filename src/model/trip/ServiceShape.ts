@@ -33,7 +33,7 @@ class ServiceShape {
     @JsonProperty("travelled", Boolean)
     private _travelled: boolean = true;
     @JsonProperty("stops", [ServiceStopLocation], true)
-    private _stops: ServiceStopLocation[] | null = null;
+    private _stops: ServiceStopLocation[] | undefined = undefined;
 
     private _waypoints: LatLng[] | null = null;
 
@@ -77,7 +77,7 @@ class ServiceShape {
         return this._travelled;
     }
 
-    get stops(): ServiceStopLocation[] | null {
+    get stops(): ServiceStopLocation[] | undefined {
         return this._stops;
     }
 

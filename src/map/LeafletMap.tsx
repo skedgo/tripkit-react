@@ -21,22 +21,24 @@ import Options from "../model/Options";
 import GATracker from "../analytics/GATracker";
 import MapLocationPopup from "./MapLocationPopup";
 import {Visibility} from "../model/trip/SegmentTemplate";
-import {IProps as SegmentPinIconProps, default as SegmentPinIcon} from "./SegmentPinIcon";
-import {IProps as SegmentPopupProps, default as SegmentPopup} from "./SegmentPopup";
+import TransportPinIcon from "./TransportPinIcon";
+import {default as SegmentPopup} from "./SegmentPopup";
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import {IProps as ServiceStopPopupProps, default as ServiceStopPopup} from "./ServiceStopPopup";
 import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
-import {IServiceStopProps, default as ShapesPolyline} from "./ShapesPolyline";
-import ServiceDetail from "../model/service/ServiceDetail";
+import {IServiceStopProps} from "./ShapesPolyline";
+import ServiceDeparture from "../model/service/ServiceDeparture";
+import MapService from "./MapService";
+import {EventEmitter} from "fbemitter";
 
 interface IProps {
     from?: Location;
     to?: Location;
     trip?: Trip;
-    service?: ServiceDetail;
+    service?: ServiceDeparture;
     showLocations?: boolean;
     viewport?: {center?: LatLng, zoom?: number};
     bounds?: BBox;
@@ -44,12 +46,14 @@ interface IProps {
     ondragend?: (from: boolean, latLng: LatLng) => void;
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
     attributionControl?: boolean;
-    renderSegmentPinIcon?: <P extends SegmentPinIconProps>(props: P) => JSX.Element;
-    renderSegmentPopup?: <P extends SegmentPopupProps>(props: P) => JSX.Element;
+    renderSegmentPinIcon?: (segment: Segment) => JSX.Element;
+    renderSegmentPopup?: (segment: Segment) => JSX.Element;
+    renderServicePinIcon?: (service: ServiceDeparture) => JSX.Element;
     shapePolylineOptions?: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
     streetPolylineOptions?: (streets: Street[], color: string) => PolylineProps | PolylineProps[];
-    renderServiceStop?: <P extends IServiceStopProps>(props: P) => JSX.Element | undefined;
-    renderServiceStopPopup?: <P extends ServiceStopPopupProps>(props: P) => JSX.Element;
+    renderServiceStop?: (props: IServiceStopProps) => JSX.Element | undefined;
+    renderServiceStopPopup?: (props: ServiceStopPopupProps) => JSX.Element;
+    eventBus?: EventEmitter;
 }
 
 interface IState {
@@ -177,10 +181,12 @@ class LeafletMap extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
-        const renderPinIcon = this.props.renderSegmentPinIcon ? this.props.renderSegmentPinIcon :
-            <P extends SegmentPinIconProps>(props: P) => <SegmentPinIcon {...props}/>;
-        const renderPopup = this.props.renderSegmentPopup ? this.props.renderSegmentPopup :
-            <P extends SegmentPopupProps>(props: P) => <SegmentPopup {...props}/>;
+        const renderSegmentPinIcon = this.props.renderSegmentPinIcon ? this.props.renderSegmentPinIcon :
+            (segment: Segment) => TransportPinIcon.createForSegment(segment);
+        const renderSegmentPopup = this.props.renderSegmentPopup ? this.props.renderSegmentPopup :
+            (segment: Segment) => <SegmentPopup segment={segment}/>;
+        const renderServicePinIcon = this.props.renderServicePinIcon ? this.props.renderServicePinIcon :
+            (service: ServiceDeparture) => TransportPinIcon.createForService(service);
         const shapePolylineOptions = this.props.shapePolylineOptions ? this.props.shapePolylineOptions :
             (shapes: ServiceShape[], color: string) => {
                 return shapes.map((shape: ServiceShape) => {
@@ -232,7 +238,6 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (this.props.trip) {
             tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
         }
-        const service = this.props.service;
         return (
             <RLMap
                 className="map-canvas avoidVerticalScroll gl-flex gl-grow"
@@ -313,23 +318,22 @@ class LeafletMap extends React.Component<IProps, IState> {
                     return <MapTripSegment segment={segment}
                                            ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.ondragend ?
                                                (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
-                                           renderPinIcon={renderPinIcon}
-                                           renderPopup={renderPopup}
+                                           renderPinIcon={renderSegmentPinIcon}
+                                           renderPopup={renderSegmentPopup}
                                            shapePolylineOptions={shapePolylineOptions}
                                            streetPolylineOptions={streetPolylineOptions}
                                            renderServiceStop={renderServiceStop}
                                            renderServiceStopPopup={renderServiceStopPopup}
                                            key={i}/>;
                 })}
-                {service && service.shapes ?
-                    <ShapesPolyline
-                        shapes={service.shapes}
-                        color={"red"}
-                        polylineOptions={shapePolylineOptions}
-                        renderServiceStop={renderServiceStop}
-                        renderServiceStopPopup={renderServiceStopPopup}
-                        key={"map-service-polyline"}
-                    /> : undefined
+                {this.props.service && <MapService
+                    serviceDeparture={this.props.service}
+                    renderPinIcon={renderServicePinIcon}
+                    shapePolylineOptions={shapePolylineOptions}
+                    renderServiceStop={renderServiceStop}
+                    renderServiceStopPopup={renderServiceStopPopup}
+                    eventBus={this.props.eventBus}
+                />
                 }
                 {this.props.children}
             </RLMap>

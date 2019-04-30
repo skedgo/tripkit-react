@@ -269,7 +269,16 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
             >
                 <ServiceDetailView
                     departure={this.state.selectedDeparture}
-                    onDepartureUpdate={(departure: ServiceDeparture) => this.setState({selectedDeparture: departure})}
+                    onDepartureUpdate={(departure: ServiceDeparture) => {
+                        this.setState({selectedDeparture: departure});
+                        if(this.mapRef && departure.serviceDetail && departure.serviceDetail.shapes) {
+                            const fitBounds = MapUtil.getShapesBounds(departure.serviceDetail.shapes);
+                            if (!this.mapRef.alreadyFits(fitBounds)) {
+                                this.mapRef.fitBounds(fitBounds);
+                            }
+                        }
+                    }
+                    }
                     renderDeparture={
                         <P extends IServiceDepartureRowProps>(props: P) =>
                             <ServiceDepartureRow {...props}/>
@@ -280,6 +289,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                             // showDepartures: true
                         });
                     }}
+                    eventBus={this.eventBus}
                 />
             </Drawer> : null;
         const region = this.state.region;
@@ -391,7 +401,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     to={this.state.preTo ? this.state.preTo :
                                         (this.props.query.to ? this.props.query.to : undefined)}
                                     trip={this.state.selected}
-                                    service={this.state.selectedDeparture ? this.state.selectedDeparture.serviceDetail : undefined}
+                                    service={this.state.selectedDeparture && this.state.selectedDeparture.serviceDetail ?
+                                        this.state.selectedDeparture : undefined}
                                     ondragend={this.onMapLocChanged}
                                     onclick={(clickLatLng: LatLng) => {
                                         const from = this.props.query.from;
@@ -403,6 +414,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     }}
                                     bounds={this.state.mapBounds}
                                     showLocations={true}
+                                    eventBus={this.eventBus}
                                     ref={(ref: LeafletMap) => this.mapRef = ref}
                                 >
                                     <TileLayer

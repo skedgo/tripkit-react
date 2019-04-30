@@ -11,18 +11,22 @@ import TripSegmentSteps from "../trip/TripSegmentSteps";
 import "./ServiceDetailView.css"
 import ServiceShape from "../model/trip/ServiceShape";
 import IconCross from "-!svg-react-loader!../images/ic-cross.svg";
+import {EventEmitter} from "fbemitter";
 
 interface IProps {
     departure: ServiceDeparture;
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
     onDepartureUpdate: (departure: ServiceDeparture) => void;
     onRequestClose?: () => void;
+    eventBus?: EventEmitter;
 }
 
 class ServiceDetailView extends React.Component<IProps, {}> {
 
     private scrollRef: any;
     private scrolledIntoView = false;
+
+    public static readonly STOP_CLICKED_EVENT = "stopClicked";
 
     public render(): React.ReactNode {
         const departure = this.props.departure;
@@ -67,6 +71,8 @@ class ServiceDetailView extends React.Component<IProps, {}> {
                             (step.departure && step.departure < departure.startTime ? " ServiceDetailView-pastStop" :
                                 step.departure === departure.startTime ? " ServiceDetailView-currStop" : "")}
                         borderColor={departure.serviceColor ? departure.serviceColor.toHex() : "black"}
+                        onStepClicked={(step: ServiceStopLocation) =>
+                            this.props.eventBus && this.props.eventBus.emit(ServiceDetailView.STOP_CLICKED_EVENT, step)}
                     />
                     }
                 </div>

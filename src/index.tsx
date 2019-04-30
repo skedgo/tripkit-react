@@ -61,7 +61,7 @@ export {Marker} from "react-leaflet";
 // to avoid transitive dependency issue.
 export {TileLayer, AttributionControl, PolylineProps} from "react-leaflet";
 export {default as Control} from "react-leaflet-control";
-export {IProps as SegmentPinIconProps} from "./map/SegmentPinIcon";
+export {IProps as SegmentPinIconProps} from "./map/TransportPinIcon";
 export {IProps as SegmentPopupProps} from "./map/SegmentPopup";
 export {IProps as ServiceStopPopupProps} from "./map/ServiceStopPopup";
 export {default as Environment} from "./env/Environment";
