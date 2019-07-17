@@ -7,14 +7,14 @@ interface IProps {
     color: string;
     modeInfo?: ModeInfo;
     streets: Street[];
-    polylineOptions: (streets: Street[], color: string, modeInfo?: ModeInfo) => PolylineProps | PolylineProps[];
+    polylineOptions: PolylineProps | PolylineProps[];
     id: string;
 }
 
 class StreetsPolyline extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const polylineOptions = this.props.polylineOptions(this.props.streets, this.props.color, this.props.modeInfo);
+        const polylineOptions = this.props.polylineOptions;
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         return polylineOptionsArray
             .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);

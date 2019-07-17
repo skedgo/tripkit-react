@@ -3,7 +3,6 @@ import {Marker, Polyline, Popup, PolylineProps} from "react-leaflet";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";
-import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import ServiceDetailView from "../service/ServiceDetailView";
@@ -13,9 +12,9 @@ interface IProps {
     color: string;
     modeInfo?: ModeInfo;
     shapes: ServiceShape[];
-    polylineOptions: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    renderServiceStop: (props: IServiceStopProps) => JSX.Element | undefined;
-    renderServiceStopPopup: (props: ServiceStopPopupProps) => JSX.Element;
+    polylineOptions: PolylineProps | PolylineProps[];
+    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;
+    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element;
     id: string; // Since cannot pass key prop. See https://reactjs.org/warnings/special-props.html
     eventBus?: EventEmitter;
 }
@@ -23,7 +22,6 @@ interface IProps {
 interface IServiceStopProps {
     stop: ServiceStopLocation;
     shape: ServiceShape;
-    color: string;
 }
 
 class ShapesPolyline extends React.Component<IProps, {}> {
@@ -46,7 +44,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const polylineOptions = this.props.polylineOptions(this.props.shapes, this.props.color);
+        const polylineOptions = this.props.polylineOptions;
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         const polylineArray = polylineOptionsArray
             .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
@@ -56,11 +54,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                 if (shape.stops) {
                     const stops = shape.stops.slice(1, shape.stops.length - 1);
                     stopMarkers.push(stops.map((stop: ServiceStopLocation, iStop: number) => {
-                        const element = this.props.renderServiceStop({
-                                stop: stop,
-                                shape: shape,
-                                color: this.props.color
-                            });
+                        const element = this.props.renderServiceStop(stop, shape);
                         const iconHTML = element ? renderToStaticMarkup(element) : undefined;
                         if (!iconHTML) {
                             return undefined;
@@ -79,12 +73,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                             <Popup className={"ServiceStopPopup-popup"}
                                    closeButton={false}
                             >
-                                {this.props.renderServiceStopPopup({
-                                    stop: stop,
-                                    shape: shape,
-                                    color: this.props.color,
-                                    modeInfo: this.props.modeInfo
-                                })}
+                                {this.props.renderServiceStopPopup(stop, shape)}
                             </Popup>
                         </Marker>
                     }));

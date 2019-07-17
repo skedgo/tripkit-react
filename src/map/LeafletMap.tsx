@@ -25,15 +25,15 @@ import TransportPinIcon from "./TransportPinIcon";
 import {default as SegmentPopup} from "./SegmentPopup";
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
-import {IProps as ServiceStopPopupProps, default as ServiceStopPopup} from "./ServiceStopPopup";
+import {default as ServiceStopPopup} from "./ServiceStopPopup";
 import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
-import {IServiceStopProps} from "./ShapesPolyline";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import {EventEmitter} from "fbemitter";
-import ModeInfo from "../model/trip/ModeInfo";
+import TransportUtil from "../trip/TransportUtil";
+import ServiceStopLocation from "../model/ServiceStopLocation";
 
 interface IProps {
     from?: Location;
@@ -47,18 +47,28 @@ interface IProps {
     ondragend?: (from: boolean, latLng: LatLng) => void;
     onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
     attributionControl?: boolean;
-    renderSegmentPinIcon?: (segment: Segment) => JSX.Element;
-    renderSegmentPopup?: (segment: Segment) => JSX.Element;
+    segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
+    serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
+    // renderSegmentPinIcon?: (segment: Segment) => JSX.Element;
+    // renderSegmentPopup?: (segment: Segment) => JSX.Element;
     renderServicePinIcon?: (service: ServiceDeparture) => JSX.Element;
-    shapePolylineOptions?: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    streetPolylineOptions?: (streets: Street[], color: string, modeInfo: ModeInfo) => PolylineProps | PolylineProps[];
-    renderServiceStop?: (props: IServiceStopProps) => JSX.Element | undefined;
-    renderServiceStopPopup?: (props: ServiceStopPopupProps) => JSX.Element;
+    // segmentPolylineOptions?: (segment: Segment) => PolylineProps | PolylineProps[];
+    servicePolylineOptions?: (service: ServiceDeparture) => PolylineProps | PolylineProps[];
+    // renderServiceStop?: (props: IServiceStopProps) => JSX.Element | undefined;
+    // renderServiceStopPopup?: (props: ServiceStopPopupProps) => JSX.Element;
     eventBus?: EventEmitter;
 }
 
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
+}
+
+interface IMapSegmentRenderer {
+    renderPinIcon: () => JSX.Element;
+    renderPopup?: () => JSX.Element;
+    polylineOptions: PolylineProps | PolylineProps[];
+    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;
+    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element;
 }
 
 // class ReactMap<P extends MapProps & IProps> extends React.Component<P, {}> {
@@ -180,61 +190,84 @@ class LeafletMap extends React.Component<IProps, IState> {
         }
     }
 
+    private streetsRenderer(streets: Street[], color: string) {
+        return streets.map((street: Street) => {
+            return {
+                positions: street.waypoints,
+                weight: 9,
+                color: "black",
+                // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
+                opacity: 1  // Disable safe distinction for now
+            } as PolylineProps
+        }).concat(streets.map((street: Street) => {
+            return {
+                positions: street.waypoints,
+                weight: 7,
+                color: color,
+                // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
+                opacity: 1  // Disable safe distinction for now
+            } as PolylineProps
+        }));
+    }
+
+    private shapesRenderer(shapes: ServiceShape[], color: string): PolylineProps | PolylineProps[] {
+        return shapes.map((shape: ServiceShape) => {
+            return {
+                positions: shape.waypoints,
+                weight: 9,
+                color: shape.travelled ? "black" : "lightgray",
+                opacity: shape.travelled ? 1 : .5,
+            } as PolylineProps
+        }).concat(shapes.map((shape: ServiceShape) => {
+            return {
+                positions: shape.waypoints,
+                weight: 7,
+                color: shape.travelled ? color : "grey",
+                opacity: shape.travelled ? 1 : .5,
+            } as PolylineProps
+        }));
+    }
+
+
     public render(): React.ReactNode {
         const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
-        const renderSegmentPinIcon = this.props.renderSegmentPinIcon ? this.props.renderSegmentPinIcon :
-            (segment: Segment) => TransportPinIcon.createForSegment(segment);
-        const renderSegmentPopup = this.props.renderSegmentPopup ? this.props.renderSegmentPopup :
-            (segment: Segment) => <SegmentPopup segment={segment}/>;
-        const renderServicePinIcon = this.props.renderServicePinIcon ? this.props.renderServicePinIcon :
-            (service: ServiceDeparture) => TransportPinIcon.createForService(service);
-        const shapePolylineOptions = this.props.shapePolylineOptions ? this.props.shapePolylineOptions :
-            (shapes: ServiceShape[], color: string) => {
-                return shapes.map((shape: ServiceShape) => {
-                    return {
-                        positions: shape.waypoints,
-                        weight: 9,
-                        color: shape.travelled ? "black" : "lightgray",
-                        opacity: shape.travelled ? 1 : .5,
-                    } as PolylineProps
-                }).concat(shapes.map((shape: ServiceShape) => {
-                    return {
-                        positions: shape.waypoints,
-                        weight: 7,
-                        color: shape.travelled ? color : "grey",
-                        opacity: shape.travelled ? 1 : .5,
-                    } as PolylineProps
-                }));
-            };
+        const segmentRenderer = this.props.segmentRenderer ? this.props.segmentRenderer :
+            (segment: Segment) => {
+                const color = segment.getColor();
+                return {
+                    renderPinIcon: () => TransportPinIcon.createForSegment(segment),
+                    renderPopup: () => <SegmentPopup segment={segment}/>,
+                    polylineOptions: segment.shapes ? this.shapesRenderer(segment.shapes, color) :
+                        segment.streets ? this.streetsRenderer(segment.streets, color) : [],
+                    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
+                        <IconServiceStop style={{
+                            color: shape.travelled ? color : "grey",
+                            opacity: shape.travelled ? 1 : .5
+                        }}/>,
+                    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) =>
+                        <ServiceStopPopup stop={stop} shape={shape}/>
 
-        const streetPolylineOptions = this.props.streetPolylineOptions ? this.props.streetPolylineOptions :
-            (streets: Street[], color: string) => {
-                return streets.map((street: Street) => {
-                    return {
-                        positions: street.waypoints,
-                        weight: 9,
-                        color: "black",
-                        // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
-                        opacity: 1  // Disable safe distinction for now
-                    } as PolylineProps
-                }).concat(streets.map((street: Street) => {
-                    return {
-                        positions: street.waypoints,
-                        weight: 7,
-                        color: color,
-                        // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
-                        opacity: 1  // Disable safe distinction for now
-                    } as PolylineProps
-                }));
+                }
             };
-        const renderServiceStop = this.props.renderServiceStop ? this.props.renderServiceStop :
-            <P extends IServiceStopProps>(props: P) =>
-                <IconServiceStop style={{
-                    color: props.shape.travelled ? props.color : "grey",
-                    opacity: props.shape.travelled ? 1 : .5
-                }}/>;
-        const renderServiceStopPopup = this.props.renderServiceStopPopup ? this.props.renderServiceStopPopup :
-            <P extends ServiceStopPopupProps>(props: P) => <ServiceStopPopup {...props}/>;
+        const serviceRenderer = this.props.serviceRenderer ? this.props.serviceRenderer :
+            (service: ServiceDeparture) => {
+                let color = TransportUtil.getTransportColor(service.modeInfo);
+                if (!color) {
+                    color = "black";
+                }
+                return {
+                    renderPinIcon: () => TransportPinIcon.createForService(service),
+                    polylineOptions: service.serviceDetail && service.serviceDetail.shapes ?
+                        this.shapesRenderer(service.serviceDetail.shapes, color) : [],
+                    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
+                        <IconServiceStop style={{
+                            color: shape.travelled ? color : "grey",
+                            opacity: shape.travelled ? 1 : .5
+                        }}/>,
+                    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) =>
+                        <ServiceStopPopup stop={stop} shape={shape}/>
+                }
+            };
         let tripSegments;
         if (this.props.trip) {
             tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
@@ -319,20 +352,12 @@ class LeafletMap extends React.Component<IProps, IState> {
                     return <MapTripSegment segment={segment}
                                            ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.ondragend ?
                                                (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
-                                           renderPinIcon={renderSegmentPinIcon}
-                                           renderPopup={renderSegmentPopup}
-                                           shapePolylineOptions={shapePolylineOptions}
-                                           streetPolylineOptions={streetPolylineOptions}
-                                           renderServiceStop={renderServiceStop}
-                                           renderServiceStopPopup={renderServiceStopPopup}
+                                           renderer={segmentRenderer(segment)}
                                            key={i}/>;
                 })}
                 {this.props.service && <MapService
                     serviceDeparture={this.props.service}
-                    renderPinIcon={renderServicePinIcon}
-                    shapePolylineOptions={shapePolylineOptions}
-                    renderServiceStop={renderServiceStop}
-                    renderServiceStopPopup={renderServiceStopPopup}
+                    renderer={serviceRenderer(this.props.service)}
                     eventBus={this.props.eventBus}
                 />
                 }
@@ -370,3 +395,4 @@ class LeafletMap extends React.Component<IProps, IState> {
 }
 
 export default LeafletMap;
+export {IMapSegmentRenderer};

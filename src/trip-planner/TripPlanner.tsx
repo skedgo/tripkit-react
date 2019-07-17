@@ -70,9 +70,10 @@ interface IState {
     selectedDeparture?: ServiceDeparture;
 }
 
-// SEGUIR ACÁ:
-// Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
-// Acomodar código en tccs-react
+    // SEGUIR ACÁ:
+    // Acomodar código en tccs-react luego del cambio que hice.
+    // Limpiar codigo luego de todos los cambios que hice
+    // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 
 class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
@@ -378,6 +379,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     />
                                 </div>
                                 :
+                                // TODO: allow values to be undefined so no need for waiting prop.
                                 <TripsView values={this.state.tripsSorted}
                                            value={this.state.selected}
                                            onChange={this.onSelected}
