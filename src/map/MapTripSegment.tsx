@@ -1,34 +1,25 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
-import {Marker, Popup, PolylineProps} from "react-leaflet";
-import {IServiceStopProps} from "./ShapesPolyline";
+import {Marker, Popup} from "react-leaflet";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import L from "leaflet";
 import LatLng from "../model/LatLng";
 import {renderToStaticMarkup} from "react-dom/server";
-import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
-import Street from "../model/trip/Street";
-import ServiceShape from "../model/trip/ServiceShape";
 import StreetsPolyline from "./StreetsPolyline";
 import ShapesPolyline from "./ShapesPolyline";
-import ModeInfo from "../model/trip/ModeInfo";
+import {IMapSegmentRenderer} from "./LeafletMap";
 
 interface IProps {
     segment: Segment;
     ondragend?: (latLng: LatLng) => void;
-    renderPinIcon: (segment: Segment) => JSX.Element;
-    renderPopup: (segment: Segment) => JSX.Element;
-    shapePolylineOptions: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    streetPolylineOptions: (streets: Street[], color: string, modeInfo?: ModeInfo) => PolylineProps | PolylineProps[];
-    renderServiceStop: (props: IServiceStopProps) => JSX.Element | undefined;
-    renderServiceStopPopup: (props: ServiceStopPopupProps) => JSX.Element;
+    renderer: IMapSegmentRenderer;
 }
 
 class MapTripSegment extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.segment;
-        const transIconHTML = renderToStaticMarkup(this.props.renderPinIcon(segment));
+        const transIconHTML = renderToStaticMarkup(this.props.renderer.renderPinIcon());
         const icon = L.divIcon({
             html: transIconHTML,
             className: "MapTripSegment-icon-container" + (segment.isFirst(Visibility.IN_SUMMARY)? " firstSegment" : (segment.arrival ? " arriveSegment" : ""))
@@ -44,11 +35,13 @@ class MapTripSegment extends React.Component<IProps, {}> {
                         }
                     }}
             >
+                { this.props.renderer.renderPopup &&
                 <Popup className={"MapTripSegment-popup"}
                        closeButton={false}
                 >
-                    {this.props.renderPopup(segment)}
+                    {this.props.renderer.renderPopup()}
                 </Popup>
+                }
             </Marker>,
             segment.shapes ?
                 <ShapesPolyline key={"map-polyline" + segment.trip.getKey()}
@@ -56,9 +49,9 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                 color={segment.getColor()}
                                 modeInfo={segment.modeInfo}
                                 shapes={segment.shapes}
-                                polylineOptions={this.props.shapePolylineOptions}
-                                renderServiceStop={this.props.renderServiceStop}
-                                renderServiceStopPopup={this.props.renderServiceStopPopup}
+                                polylineOptions={this.props.renderer.polylineOptions}
+                                renderServiceStop={this.props.renderer.renderServiceStop}
+                                renderServiceStopPopup={this.props.renderer.renderServiceStopPopup}
                 /> :
                 segment.streets ?
                     <StreetsPolyline key={"map-polyline" + segment.trip.getKey()}
@@ -66,7 +59,8 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                      color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
                                      modeInfo={segment.modeInfo}
                                      streets={segment.streets}
-                                     polylineOptions={this.props.streetPolylineOptions}
+                                     polylineOptions={this.props.renderer.polylineOptions}
+
                     /> : undefined
         ]);
     }

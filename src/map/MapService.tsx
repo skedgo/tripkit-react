@@ -1,19 +1,16 @@
 import React from "react";
-import {Marker, PolylineProps} from "react-leaflet";
+import {Marker} from "react-leaflet";
 import ServiceShape from "../model/trip/ServiceShape";
-import {IProps as ServiceStopPopupProps} from "./ServiceStopPopup";
-import {IServiceStopProps, default as ShapesPolyline} from "./ShapesPolyline";
+import {default as ShapesPolyline} from "./ShapesPolyline";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {renderToStaticMarkup} from "react-dom/server";
 import L from "leaflet";
 import {EventEmitter} from "fbemitter";
+import {IMapSegmentRenderer} from "./LeafletMap";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;
-    renderPinIcon: (service: ServiceDeparture) => JSX.Element;
-    shapePolylineOptions: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
-    renderServiceStop: <P extends IServiceStopProps>(props: P) => JSX.Element | undefined;
-    renderServiceStopPopup: <P extends ServiceStopPopupProps>(props: P) => JSX.Element;
+    renderer: IMapSegmentRenderer;
     eventBus?: EventEmitter;
 }
 
@@ -21,7 +18,7 @@ class MapService extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const serviceDeparture = this.props.serviceDeparture;
-        const transIconHTML = renderToStaticMarkup(this.props.renderPinIcon(serviceDeparture));
+        const transIconHTML = renderToStaticMarkup(this.props.renderer.renderPinIcon());
         const icon = L.divIcon({
             html: transIconHTML,
             className: "MapTripSegment-icon-container"
@@ -37,9 +34,9 @@ class MapService extends React.Component<IProps, {}> {
                                 color={serviceDeparture.serviceColor ? serviceDeparture.serviceColor.toHex() : "black"}
                                 modeInfo={serviceDeparture.modeInfo}
                                 shapes={service.shapes}
-                                polylineOptions={this.props.shapePolylineOptions}
-                                renderServiceStop={this.props.renderServiceStop}
-                                renderServiceStopPopup={this.props.renderServiceStopPopup}
+                                polylineOptions={this.props.renderer.polylineOptions}
+                                renderServiceStop={this.props.renderer.renderServiceStop}
+                                renderServiceStopPopup={this.props.renderer.renderServiceStopPopup}
                                 eventBus={this.props.eventBus}
                 /> : undefined
         ]);
