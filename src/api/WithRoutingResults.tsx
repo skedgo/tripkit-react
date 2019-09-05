@@ -2,7 +2,7 @@ import TripGoApi from "./TripGoApi";
 import * as React from "react";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
-import {ITripPlannerProps as RResultsConsumerProps} from "../trip-planner/ITripPlannerProps";
+import {IRoutingResultsContext as RResultsConsumerProps} from "../trip-planner/RoutingResultsProvider";
 import RoutingQuery from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
 import RegionsData from "../data/RegionsData";
@@ -11,15 +11,17 @@ import NetworkUtil from "../util/NetworkUtil";
 import Environment from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
 import {JsonConvert} from "json2typescript";
+import Options from "../model/Options";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
-    computeModeSets?: (query: RoutingQuery) => string[][];
+    options: Options;
+    computeModeSets?: (query: RoutingQuery, options: Options) => string[][];
 }
 
 interface IWithRoutingResultsState {
     query: RoutingQuery;
-    trips: Trip[] | null;
+    trips?: Trip[];
     selected?: Trip;
     waiting: boolean;
 }
@@ -34,7 +36,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             super(props);
             this.state = {
                 query: RoutingQuery.create(),
-                trips: null,
                 waiting: false
             };
             this.onQueryChange = this.onQueryChange.bind(this);
@@ -44,54 +45,62 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
 
         public onQueryChange(query: RoutingQuery) {
             const prevQuery = this.state.query;
-            this.setState({ query: query });
-            if (query.isComplete(true)) {
-                if (!this.sameApiQueries(prevQuery, query)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
-                    this.setState({
-                        trips: [],
-                        waiting: true
-                    });
-                    this.computeTrips(query).then((tripPromises: Array<Promise<Trip[]>>) => {
-                        if (tripPromises.length === 0) {
-                            this.setState({waiting: false});
-                            return;
-                        }
-                        const waitingState = {
-                            query: query,
-                            remaining: tripPromises.length
-                        };
-                        tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
-                            if (!this.sameApiQueries(this.state.query, query)) {
-                                return;
-                            }
-                            if (trips !== null && this.state.trips !== null) {
-                                trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
-                            }
-                            if (tripPromises.length === 1 && trips.length > 0 && trips[0].isBicycleTrip()) {
-                                trips = (trips[0] as TripGroup).trips;
-                            }
-                            this.setState(prevState => {
-                                return {trips: prevState.trips!.concat(trips)}
-                            });
-                            this.checkWaiting(waitingState)
-                        }).catch((reason: any) => {
-                            console.log(reason);
-                            this.checkWaiting(waitingState)
-                        }))
-                    });
+            this.setState({ query: query }, () => {
+                if (query.isComplete(true)) {
+                    if (!this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
+                        this.refreshTrips();
+                    }
+                } else {
+                    if (this.state.trips !== null) {
+                        this.setState({
+                            trips: undefined,
+                            waiting: false
+                        });
+                    }
                 }
-            } else {
-                if (this.state.trips !== null) {
-                    this.setState({
-                        trips: null,
-                        waiting: false
-                    });
+            });
+        }
+
+        public refreshTrips() {
+            const query = this.state.query;
+            const options = this.props.options;
+            this.setState({
+                trips: [],
+                waiting: true
+            });
+            this.computeTrips(query).then((tripPromises: Array<Promise<Trip[]>>) => {
+                if (tripPromises.length === 0) {
+                    this.setState({waiting: false});
+                    return;
                 }
-            }
+                const waitingState = {
+                    query: query,
+                    options: options,
+                    remaining: tripPromises.length
+                };
+                tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
+                    if (!this.sameApiQueries(this.state.query, this.props.options, query, options)) {
+                        return;
+                    }
+                    if (trips !== null && this.state.trips !== null) {
+                        trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
+                    }
+                    if (tripPromises.length === 1 && trips.length > 0 && trips[0].isBicycleTrip()) {
+                        trips = (trips[0] as TripGroup).trips;
+                    }
+                    this.setState(prevState => {
+                        return {trips: prevState.trips!.concat(trips)}
+                    });
+                    this.checkWaiting(waitingState)
+                }).catch((reason: any) => {
+                    console.log(reason);
+                    this.checkWaiting(waitingState)
+                }))
+            });
         }
 
         public checkWaiting(waitingState: any) {
-            if (!this.sameApiQueries(this.state.query, waitingState.query)) {
+            if (!this.sameApiQueries(this.state.query, this.props.options, waitingState.query, waitingState.options)) {
                 return;
             }
             waitingState.remaining--;
@@ -165,22 +174,29 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
         }
 
-        public sameApiQueries(q1: RoutingQuery, q2: RoutingQuery): boolean {
+        public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>): void {
+            if (this.props.options !== prevProps.options &&
+                !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
+                this.refreshTrips();
+            }
+        }
+
+        public sameApiQueries(q1: RoutingQuery, opts1: Options, q2: RoutingQuery, opts2: Options): boolean {
             let modeSetsQ1;
             let modeSetsQ2;
             if (RegionsData.instance.hasRegions()) {
                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                modeSetsQ1 = computeModeSetsFc(q1);
-                modeSetsQ2 = computeModeSetsFc(q2);
+                modeSetsQ1 = computeModeSetsFc(q1, opts1);
+                modeSetsQ2 = computeModeSetsFc(q2, opts2);
             } else {
                 modeSetsQ1 = [[]]; // Put empty set to put something if called with no region,
                 modeSetsQ2 = [[]]; // which happens when checking if same query on TripPlanner.componentDidMount
             }
             const q1Urls = modeSetsQ1.map((modeSet: string[]) => {
-                return q1.getQueryUrl(modeSet);
+                return q1.getQueryUrl(modeSet, opts1);
             });
             const q2Urls = modeSetsQ2.map((modeSet: string[]) => {
-                return q2.getQueryUrl(modeSet);
+                return q2.getQueryUrl(modeSet, opts2);
             });
             return JSON.stringify(q1Urls) === JSON.stringify(q2Urls);
         }
@@ -188,13 +204,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                return computeModeSetsFc(query).map((modeSet: string[]) => {
-                    return query.getQueryUrl(modeSet);
+                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
+                    return query.getQueryUrl(modeSet, this.props.options);
                 });
             });
         }
 
-        public computeModeSets(query: RoutingQuery): string[][] {
+        public computeModeSets(query: RoutingQuery, options: Options): string[][] {
             const referenceLatLng = query.from && query.from.isResolved() ? query.from : (query.to && query.to.isResolved() ? query.to : undefined);
             if (!referenceLatLng) {
                 return [];
@@ -205,11 +221,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
             const modes = region ? region.modes : [];
             const enabledModes = modes.filter((mode: string) =>
-                (query.options.isModeEnabled(mode)
-                    || (mode === "wa_wal" && query.options.wheelchair)) &&  // send wa_wal as mode when wheelchair is true.
+                (options.isModeEnabled(mode)
+                    || (mode === "wa_wal" && options.wheelchair)) &&  // send wa_wal as mode when wheelchair is true.
                 !OptionsView.skipMode(mode) &&
-                !(mode === "pt_pub" && !query.options.isModeEnabled("pt_pub_bus")
-                    && !query.options.isModeEnabled("pt_pub_tram"))
+                !(mode === "pt_pub" && !options.isModeEnabled("pt_pub_bus")
+                    && !options.isModeEnabled("pt_pub_tram"))
             );
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();

@@ -5,13 +5,15 @@ import RoutingQuery, {TimePreference} from "./model/RoutingQuery";
 import Location from "./model/Location";
 import DateTimeUtil from "./util/DateTimeUtil";
 import Util from "./util/Util";
-// import * as queryString from "querystring";
 import * as queryString from "query-string";
 import TripGoApi from "./api/TripGoApi";
-import withRoutingResults from "./api/WithRoutingResults";
 import {unregister} from "./registerServiceWorker";
 import LatLng from "./model/LatLng";
 import TripPlanner from "./trip-planner/TripPlanner";
+import RoutingResultsProvider, {RoutingResultsContext} from "./trip-planner/RoutingResultsProvider";
+import ITripPlannerProps from "./trip-planner/ITripPlannerProps";
+import TripSelectionProvider, {ITripSelectionContext, TripSelectionContext} from "./trip-planner/TripSelectionProvider";
+import Options from "./model/Options";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -33,8 +35,20 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     const containerElement = document.getElementById(containerId) as HTMLElement;
     containerElement.className = "app-style";
     import("./trip-planner/TripPlanner").then((module) => {
-        const TripPlannerWithApi = withRoutingResults(TripPlanner);
-        ReactDOM.render(<TripPlannerWithApi urlQuery={routingQuery}/>, containerElement);
+        ReactDOM.render(
+            <RoutingResultsProvider initQuery={routingQuery} options={new Options()}> // TODO fix
+                <TripSelectionProvider>
+                    <RoutingResultsContext.Consumer>
+                        {(routingResultsContext: ITripPlannerProps) => (
+                            <TripSelectionContext.Consumer>
+                                {(tripSelectionContext: ITripSelectionContext) =>
+                                    <TripPlanner {...routingResultsContext} {...tripSelectionContext}/>}
+                            </TripSelectionContext.Consumer>
+                        )}
+                    </RoutingResultsContext.Consumer>
+                </TripSelectionProvider>
+            </RoutingResultsProvider>,
+            containerElement);
         // ReactDOM.render(<TripPlanner urlQuery={routingQuery}/>, containerElement);
     });
     DeviceUtil.initCss();

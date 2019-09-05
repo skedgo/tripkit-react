@@ -17,7 +17,7 @@ class PlannedTripsTracker {
         return this._instance;
     }
 
-    private _trips: Trip[] | null = null;
+    private _trips: Trip[] | undefined;
     private _selected: Trip | undefined;
 
     private timeoutId: Timer | null;
@@ -27,7 +27,7 @@ class PlannedTripsTracker {
         this.track = this.track.bind(this);
     }
 
-    public set trips(value: Trip[] | null) {
+    public set trips(value: Trip[] | undefined) {
         this._trips = value;
     }
 
@@ -43,7 +43,7 @@ class PlannedTripsTracker {
     }
 
     private track() {
-        if (this._trips === null || !this._selected) {
+        if (!this._trips || !this._selected) {
             return
         }
         const trackData = PlannedTrip.create("manual", this._trips, this._selected);

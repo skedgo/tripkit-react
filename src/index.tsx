@@ -73,5 +73,6 @@ export {default as ModeInfo} from "./model/trip/ModeInfo";
 
 // TODO: This is temporary until we separate the sample (tripgo-sample.tsx) from the tripkit-react library.
 if (document.getElementById("tripgo-sample-root")) {
-    import("./tripgo-sample");
+    // import("./tripgo-sample");
+    import("./example/client-sample");
 }
