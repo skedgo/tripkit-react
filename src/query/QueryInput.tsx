@@ -22,6 +22,9 @@ import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import ITripPlannerProps from "../trip-planner/ITripPlannerProps";
+import Trip from "../model/trip/Trip";
 
 interface IProps {
     value?: RoutingQuery;
@@ -379,5 +382,36 @@ class QueryInput extends React.Component<IProps, IState> {
         );
     }
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = props => {
+    return (
+        <RoutingResultsContext.Consumer>
+            {(routingResultsContext: ITripPlannerProps) => {
+                const consumerProps: Partial<IProps> = {
+                    value: routingResultsContext.query,
+                    onChange: routingResultsContext.onQueryChange
+                };
+                return props.children!(consumerProps);
+            }}
+        </RoutingResultsContext.Consumer>
+    );
+};
+
+export const TKUIQueryInputView = (addProps: any) =>
+    <Connector>
+        {(props: any) => {
+            let onChangeToPass;
+            if (addProps.onChange && props.onChange) {
+                onChangeToPass = (trip: Trip) => {
+                    props.onChange(trip);
+                    addProps.onChange(trip);
+                }
+            } else {
+                onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
+            }
+            return <QueryInput {...addProps} {...props} onChange={onChangeToPass}/>
+        }}
+    </Connector>;
+
 
 export default QueryInput;

@@ -7,15 +7,20 @@ import {CSSProperties} from "react";
 
 interface IProps {
     value: Trip;
-    renderSegmentDetail?: <P extends SegmentDetailProps & {key: number}>(props: P) => JSX.Element;
     style?: CSSProperties;
+    config: TKUITripDetailConfig;
+}
+
+class TKUITripDetailConfig {
+    public renderSegmentDetail: <P extends SegmentDetailProps & {key: number}>(props: P) => JSX.Element
+        = <P extends SegmentDetailProps & {key: number}>(props: P) => <TripSegmentDetail {...props}/>;
 }
 
 class TripDetail extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segments = this.props.value.segments;
-        const renderSegmentDetail = this.props.renderSegmentDetail ? this.props.renderSegmentDetail :
+        const renderSegmentDetail = this.props.config.renderSegmentDetail ? this.props.config.renderSegmentDetail :
             <P extends SegmentDetailProps & {key: number}>(props: P) => <TripSegmentDetail {...props}/>;
         return (
             <div className="TripDetail" style={this.props.style}>
@@ -29,3 +34,4 @@ class TripDetail extends React.Component<IProps, {}> {
 }
 
 export default TripDetail;
+export {TKUITripDetailConfig};

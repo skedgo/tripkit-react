@@ -13,14 +13,20 @@ import RadioBtn from "../buttons/RadioBtn";
 import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
+import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 
-interface IProps {
+interface IConnectionProps {
     value: Options
-    region: Region
     onChange?: (value: Options) => void;    // Fired only if change should be applied
+}
+
+interface ITKUIOptionsViewProps {
+    region: Region
     onClose?: () => void;
     className?: string;
 }
+
+interface IProps extends IConnectionProps, ITKUIOptionsViewProps {}
 
 interface IState {
     update: Options;
@@ -484,5 +490,20 @@ class OptionsView extends React.Component<IProps, IState> {
         );
     }
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) => (
+                props.children!(optionsContext)
+            )}
+        </OptionsContext.Consumer>
+    );
+};
+
+export const TKUIOptionsView = (props: ITKUIOptionsViewProps) =>
+    <Connector>
+        {(cProps: IConnectionProps) => <OptionsView {...props} {...cProps}/>}
+    </Connector>;
 
 export default OptionsView;

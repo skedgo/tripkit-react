@@ -3,18 +3,15 @@ import './TripPlanner.css'
 import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
-// import Location from "../model/Location";
-import QueryInput from "../query/QueryInput";
+import {TKUIQueryInputView} from "../query/QueryInput";
 import RoutingQuery from "../model/RoutingQuery";
 import FavouriteList from "../favourite/FavouriteList";
 import FavouriteTrip from "../model/FavouriteTrip";
 import BBox from "../model/BBox";
-import TripsView from "../trip/TripsView";
-import Trip from "../model/trip/Trip";
 import FavouriteBtn from "../favourite/FavouriteBtn";
 import Modal from 'react-modal';
 import Drawer from 'react-drag-drawer';
-import OptionsView from "../options/OptionsView";
+import {TKUIOptionsView} from "../options/OptionsView";
 import Options from "../model/Options";
 import OptionsData from "../data/OptionsData";
 import Util from "../util/Util";
@@ -25,8 +22,7 @@ import IconFav from "-!svg-react-loader!../images/ic-star-solid.svg";
 import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
-import TripRow from "../trip/TripRow";
-import ITripRowProps, {TRIP_ALT_PICKED_EVENT} from "../trip/ITripRowProps";
+import {TRIP_ALT_PICKED_EVENT} from "../trip/ITripRowProps";
 import ReactResizeDetector from "react-resize-detector";
 import MapUtil from "../util/MapUtil";
 import GATracker from "../analytics/GATracker";
@@ -38,7 +34,6 @@ import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 import ITripPlannerProps from "./ITripPlannerProps";
 import TripGroup from "../model/trip/TripGroup";
-import TripDetail from "../trip/TripDetail";
 import LeafletMap from "../map/LeafletMap";
 import Location from "../model/Location";
 import MultiGeocoder from "../geocode/MultiGeocoder";
@@ -50,13 +45,15 @@ import withServiceResults from "../api/WithServiceResults";
 import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
 import ServiceDepartureRow from "../service/ServiceDepartureRow";
 import StopLocation from "../model/StopLocation";
-import StopsData from "../data/StopsData";
 import ServiceDetailView from "../service/ServiceDetailView";
 import ServiceDeparture from "../model/service/ServiceDeparture";
+import {ITripSelectionContext, TripSelectionContext} from "./TripSelectionProvider";
+import {TKUIResultsView, TKUIResultsViewConfig} from "../trip/TripsView";
+import {RoutingResultsContext} from "./RoutingResultsProvider";
+import TripDetail, {TKUITripDetailConfig} from "../trip/TripDetail";
+import Trip from "../model/trip/Trip";
 
 interface IState {
-    tripsSorted: Trip[] | null;
-    selected?: Trip;
     mapView: boolean;
     showOptions: boolean;
     region?: Region;    // Once regions arrive region gets instantiated (with a valid region), and never becomes undefined.
@@ -68,14 +65,30 @@ interface IState {
     mapBounds?: BBox;
     showDepartures?: boolean;
     selectedDeparture?: ServiceDeparture;
+    showTripDetail?: boolean;
 }
 
-    // SEGUIR ACÁ:
+    // TODO:
+    // - Seguir desintegrando el TripPlanner, conectando cada componente, individualmente, con providers. Solo dejar
+    // cuestiones de navegación y de layout y ocultar / mostrar en TripPlanner.
+    // - hacer que en el onChange de TKUIResultsView muestre la vista de detalle de un trip.
+    // - Render props pasadas a través de configuraciones, como TKUITripPlannerConfig o TKUIResultsViewConfig. Ver
+    // Component-level customization en https://docs.google.com/document/d/1-TefPUgLV7RoK1qkr_j1XGSS9XSCUv0w9bMLk6__fUQ/edit#heading=h.s7sw7zyaie11
+    // -------------------------------------------------------------------------------------------------------------
     // Acomodar código en tccs-react luego del cambio que hice.
     // Limpiar codigo luego de todos los cambios que hice
     // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 
-class TripPlanner extends React.Component<ITripPlannerProps, IState> {
+class TKUITripPlannerConfig {
+    public resultsViewConfig: TKUIResultsViewConfig = new TKUIResultsViewConfig();
+    public tripDetailConfig: TKUITripDetailConfig = new TKUITripDetailConfig();
+}
+
+class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionContext, IState> {
+
+    public static defaultProps: Partial<ITripPlannerProps> = {
+        config: new TKUITripPlannerConfig()
+    };
 
     private eventBus: EventEmitter = new EventEmitter();
     private ref: any;
@@ -83,12 +96,10 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     private geocodingData: MultiGeocoder;
     private DepartureTableWithData = withServiceResults(ServiceDepartureTable);
 
-    constructor(props: ITripPlannerProps) {
+    constructor(props: ITripPlannerProps & ITripSelectionContext) {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
-            tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips,
-            selected: undefined,
             mapView: false,
             showOptions: false,
             queryTimePanelOpen: false,
@@ -125,19 +136,18 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         this.onShowOptions = this.onShowOptions.bind(this);
         this.onModalRequestedClose = this.onModalRequestedClose.bind(this);
         this.onMapLocChanged = this.onMapLocChanged.bind(this);
-        this.onSelected = this.onSelected.bind(this);
 
         // For development:
-        RegionsData.instance.requireRegions().then(()=> {
-            StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
+        // RegionsData.instance.requireRegions().then(()=> {
+        //     StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
-                .then((stop: StopLocation) =>
-                    this.onQueryChange(Util.iAssign(this.props.query, {
-                        from: stop
-                    }))
-                )
-        });
+            //     .then((stop: StopLocation) =>
+            //         this.onQueryChange(Util.iAssign(this.props.query, {
+            //             from: stop
+            //         }))
+            //     )
+        // });
     }
 
     public onQueryChange(query: RoutingQuery) {
@@ -153,9 +163,8 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     private onFavClicked(favourite: FavouriteTrip) {
         const query = RoutingQuery.create(favourite.from, favourite.to);
         if (favourite.options) {
-            const favOptions = Util.iAssign(query.options, FavouritesData.getFavOptionsPart(favourite.options));
+            const favOptions = Util.iAssign(OptionsData.instance.get(), FavouritesData.getFavOptionsPart(favourite.options));
             OptionsData.instance.save(favOptions);
-            query.options = favOptions;
         }
         this.onQueryChange(query);
         if (this.mapRef && favourite.from.isResolved() && favourite.to.isResolved()) {
@@ -211,11 +220,6 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
         }
     }
 
-    private onSelected(selected?: Trip) {
-        this.setState({selected: selected});
-        this.props.onReqRealtimeFor(selected);
-    }
-
     public render(): React.ReactNode {
         const favourite = (this.props.query.from !== null && this.props.query.to !== null) ?
             FavouriteTrip.create(this.props.query.from, this.props.query.to) :
@@ -226,11 +230,10 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                 appElement={this.ref}
                 onRequestClose={this.onModalRequestedClose}
             >
-                <OptionsView value={this.props.query.options}
-                             region={this.state.region!}
-                             onChange={this.onOptionsChange}
-                             onClose={this.onModalRequestedClose}
-                             className="app-style"
+                <TKUIOptionsView
+                    region={this.state.region!}
+                    onClose={this.onModalRequestedClose}
+                    className={"app-style"}
                 />
             </Modal>
             : null;
@@ -305,21 +308,22 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                  className={"mainViewPanel TripPlanner" +
                  (this.props.trips !== null ? " TripPlanner-tripsView" : " TripPlanner-noTripsView") +
                  (this.state.mapView ? " TripPlanner-mapView" : " TripPlanner-noMapView") +
-                 (this.state.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected") +
+                 (this.props.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected") +
                  (this.state.queryTimePanelOpen ? " TripPlanner-queryTimePanelOpen" : "")}
                  ref={el => this.ref = el}
             >
                 <div className="avoidVerticalScroll gl-flex gl-grow gl-column">
                     <div className="TripPlanner-queryPanel gl-flex gl-column gl-no-shrink">
-                        <QueryInput value={this.props.query}
+                        <TKUIQueryInputView
+                                    // value={this.props.query}
                                     bounds={queryInputBounds}
                                     focusLatLng={queryInputFocusLatLng}
                                     onChange={(query: RoutingQuery) => {
+                                        // TODO: Try to remove this onChange handler, improve connection / integration with map
                                         if (this.checkFitLocation(this.props.query.from, query.from)
                                             || this.checkFitLocation(this.props.query.to, query.to)) {
                                             this.fitMap(query, this.state.preFrom, this.state.preTo);
                                         }
-                                        this.onQueryChange(query);
                                     }}
                                     onPreChange={(from: boolean, location?: Location) => {
                                         if (from) {
@@ -362,7 +366,7 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                     </div>
                     <div className="gl-flex gl-grow TripPlanner-resultsAndMapPanel">
                         <div className="TripPlanner-subQueryPanel gl-flex gl-scrollable-y gl-column gl-space-between">
-                            {this.state.tripsSorted === null ?
+                            {!this.props.trips ?
                                 <div className="gl-no-shrink">
                                     <FavouriteList recent={false}
                                                    previewMax={3}
@@ -379,56 +383,67 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
                                     />
                                 </div>
                                 :
-                                // TODO: allow values to be undefined so no need for waiting prop.
-                                <TripsView values={this.state.tripsSorted}
-                                           value={this.state.selected}
-                                           onChange={this.onSelected}
-                                           waiting={this.props.waiting}
-                                           eventBus={this.eventBus}
-                                           className="gl-no-shrink"
-                                           renderTrip={<P extends ITripRowProps>(props: P) =>
-                                               <div key={(props as any).key}>
-                                                   <TripRow {...props}/>
-                                                   <TripDetail value={props.value}/>
-                                               </div>
-                                           }
-                                />
+                                (this.state.showTripDetail && this.props.selected ?
+                                    <div>
+                                        <button onClick={() => this.setState({showTripDetail: false})}>
+                                            Routes
+                                        </button>
+                                        <TripDetail
+                                            value={this.props.selected}
+                                            config={this.props.config.tripDetailConfig}
+                                        />
+                                    </div>
+                                    :
+                                    <TKUIResultsView
+                                        eventBus={this.eventBus}
+                                        className="gl-no-shrink"
+                                        config={this.props.config.resultsViewConfig}
+                                        onChange={(value: Trip) => this.setState({showTripDetail: true})}
+                                    />)
                             }
                         </div>
                         <div className="sg-container gl-flex gl-grow" aria-hidden={true} tabIndex={-1}>
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
-                                <LeafletMap
-                                    viewport={this.state.viewport}
-                                    onViewportChanged={(viewport: {center?: LatLng, zoom?: number}) => {
-                                        this.setState({viewport: viewport});
-                                    }}
-                                    from={this.state.preFrom ? this.state.preFrom :
-                                        (this.props.query.from ? this.props.query.from : undefined)}
-                                    to={this.state.preTo ? this.state.preTo :
-                                        (this.props.query.to ? this.props.query.to : undefined)}
-                                    trip={this.state.selected}
-                                    service={this.state.selectedDeparture && this.state.selectedDeparture.serviceDetail ?
-                                        this.state.selectedDeparture : undefined}
-                                    ondragend={this.onMapLocChanged}
-                                    onclick={(clickLatLng: LatLng) => {
-                                        const from = this.props.query.from;
-                                        const to = this.props.query.to;
-                                        if (from === null || to === null) {
-                                            this.onMapLocChanged(from === null, clickLatLng);
-                                            GATracker.instance.send("query input", "pick location", "drop pin");
-                                        }
-                                    }}
-                                    bounds={this.state.mapBounds}
-                                    showLocations={true}
-                                    eventBus={this.eventBus}
-                                    ref={(ref: LeafletMap) => this.mapRef = ref}
-                                >
-                                    <TileLayer
-                                        attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                        // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                                        url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
-                                    />
-                                </LeafletMap>
+                                <RoutingResultsContext.Consumer>
+                                    {(routingResultsContext: ITripPlannerProps) => (
+                                        <TripSelectionContext.Consumer>
+                                            { (tripSelectionContext: ITripSelectionContext) =>
+                                                <LeafletMap
+                                                    viewport={this.state.viewport}
+                                                    onViewportChanged={(viewport: { center?: LatLng, zoom?: number }) => {
+                                                        this.setState({viewport: viewport});
+                                                    }}
+                                                    from={this.state.preFrom ? this.state.preFrom :
+                                                        (routingResultsContext.query.from ? routingResultsContext.query.from : undefined)}
+                                                    to={this.state.preTo ? this.state.preTo :
+                                                        (routingResultsContext.query.to ? routingResultsContext.query.to : undefined)}
+                                                    trip={tripSelectionContext.selected}
+                                                    service={this.state.selectedDeparture && this.state.selectedDeparture.serviceDetail ?
+                                                        this.state.selectedDeparture : undefined}
+                                                    ondragend={this.onMapLocChanged}
+                                                    onclick={(clickLatLng: LatLng) => {
+                                                        const from = routingResultsContext.query.from;
+                                                        const to = routingResultsContext.query.to;
+                                                        if (from === null || to === null) {
+                                                            this.onMapLocChanged(from === null, clickLatLng);
+                                                            GATracker.instance.send("query input", "pick location", "drop pin");
+                                                        }
+                                                    }}
+                                                    bounds={this.state.mapBounds}
+                                                    showLocations={true}
+                                                    eventBus={this.eventBus}
+                                                    ref={(ref: LeafletMap) => this.mapRef = ref}
+                                                >
+                                                    <TileLayer
+                                                        attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                                        // url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                                                        url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
+                                                    />
+                                                </LeafletMap>
+                                            }
+                                        </TripSelectionContext.Consumer>
+                                    )}
+                                </RoutingResultsContext.Consumer>
                             </div>
                             <Tooltip
                                 overlay={"Feedback info copied to clipboard"}
@@ -464,14 +479,14 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 
     private getFeedback(): string {
         const jsonConvert = new JsonConvert();
-        const optionsJson = jsonConvert.serialize(this.props.query.options);
+        const optionsJson = jsonConvert.serialize(OptionsData.instance.get());
         const location = window.location;
         const plannerUrl = location.protocol + "//" + location.hostname
             + (location.port ? ":" + location.port : "") + location.pathname;
         return "webapp url: " + encodeURI(this.props.query.getGoUrl(plannerUrl)) + "\n\n"
             + "options: " + JSON.stringify(optionsJson) + "\n\n"
-            + "satapp url: " +  (this.state.selected ? this.state.selected.satappQuery : "") + "\n\n"
-            + "trip url: " +  (this.state.selected ? this.state.selected.temporaryURL : "");
+            + "satapp url: " +  (this.props.selected ? this.props.selected.satappQuery : "") + "\n\n"
+            + "trip url: " +  (this.props.selected ? this.props.selected.temporaryURL : "");
     }
 
     public componentDidMount(): void {
@@ -517,37 +532,29 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
     }
 
 
-    public componentDidUpdate(prevProps: Readonly<ITripPlannerProps>, prevState: Readonly<IState>, snapshot?: any): void {
+    public componentDidUpdate(prevProps: Readonly<ITripPlannerProps & ITripSelectionContext>, prevState: Readonly<IState>, snapshot?: any): void {
         if (prevState.viewport !== this.state.viewport
             || prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to) {
             this.refreshRegion();
         }
         // Clear selected
         if (prevProps.trips !== this.props.trips) {
-            this.setState({
-                tripsSorted: this.props.trips ? TripsView.sortTrips(this.props.trips) : this.props.trips
-            });
             if (!this.props.trips || this.props.trips.length === 0) {
-                this.onSelected(undefined);
+                this.props.onChange(undefined);
             }
         }
-        // If first group of trips arrived
-        if (!this.state.selected && prevState.tripsSorted !== null && prevState.tripsSorted.length === 0 && this.state.tripsSorted !== null && this.state.tripsSorted.length > 0) {
-            setTimeout(() => {
-                this.onSelected(this.state.tripsSorted !== null && this.state.tripsSorted.length > 0 ?
-                    this.state.tripsSorted[0] : undefined);
-            }, 2000);
-        }
-        if (this.state.selected !== prevState.selected) {
-            if (this.state.selected && this.mapRef) {
-                const fitBounds = MapUtil.getTripBounds(this.state.selected);
+
+        if (this.props.selected !== prevProps.selected) {
+            if (this.props.selected && this.mapRef) {
+                const fitBounds = MapUtil.getTripBounds(this.props.selected);
                 if (!this.mapRef.alreadyFits(fitBounds)) {
                     this.mapRef.fitBounds(fitBounds);
                 }
             }
-            PlannedTripsTracker.instance.selected = this.state.selected;
+            PlannedTripsTracker.instance.selected = this.props.selected;
             PlannedTripsTracker.instance.scheduleTrack(true);
         }
+
         if (this.props.trips !== prevProps.trips) {
             PlannedTripsTracker.instance.trips = this.props.trips;
         }
@@ -578,3 +585,4 @@ class TripPlanner extends React.Component<ITripPlannerProps, IState> {
 }
 
 export default TripPlanner;
+export {TKUITripPlannerConfig};
