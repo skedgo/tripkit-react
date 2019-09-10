@@ -18,6 +18,7 @@ import {SegmentDescriptionProps, SegmentDetail, SegmentDetailProps} from "..";
 import {default as SegmentDescription} from "../trip/SegmentDescription";
 import Segment from "../model/trip/Segment";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -75,16 +76,24 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                     {(optionsContext: IOptionsContext) => (
                         <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}>
                             <TripSelectionProvider>
-                                <RoutingResultsContext.Consumer>
-                                    {(routingResultsContext: ITripPlannerProps) => (
-                                        <TripSelectionContext.Consumer>
-                                            {(tripSelectionContext: ITripSelectionContext) =>
-                                                <TripPlanner{...routingResultsContext} {...tripSelectionContext}
-                                                            config={config}
-                                                />}
-                                        </TripSelectionContext.Consumer>
-                                    )}
-                                </RoutingResultsContext.Consumer>
+                                <ServiceResultsProvider>
+                                    <RoutingResultsContext.Consumer>
+                                        {(routingResultsContext: ITripPlannerProps) => (
+                                            <TripSelectionContext.Consumer>
+                                                {(tripSelectionContext: ITripSelectionContext) =>
+                                                    <ServiceResultsContext.Consumer>
+                                                        {(serviceContext: IServiceResultsContext) =>
+                                                            <TripPlanner {...routingResultsContext}
+                                                                         {...tripSelectionContext}
+                                                                         {...serviceContext}
+                                                                         config={config}
+                                                            />}
+                                                    </ServiceResultsContext.Consumer>
+                                                }
+                                            </TripSelectionContext.Consumer>
+                                        )}
+                                    </RoutingResultsContext.Consumer>
+                                </ServiceResultsProvider>
                             </TripSelectionProvider>
                         </RoutingResultsProvider>
                     )}

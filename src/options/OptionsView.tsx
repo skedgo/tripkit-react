@@ -16,12 +16,12 @@ import Constants from "../util/Constants";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 
 interface IConnectionProps {
-    value: Options
+    value: Options;
     onChange?: (value: Options) => void;    // Fired only if change should be applied
 }
 
 interface ITKUIOptionsViewProps {
-    region: Region
+    region: Region;
     onClose?: () => void;
     className?: string;
 }

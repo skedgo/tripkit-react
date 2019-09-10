@@ -66,6 +66,10 @@ class Util {
         return this.jsonConvert().deserialize(json, classRef);
     }
 
+    public static serialize<T>(value: T): any {
+        return this.jsonConvert().serialize(value);
+    }
+
 }
 
 export default Util;

@@ -1,10 +1,6 @@
 import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import IServiceDepartureRowProps from "./IServiceDepartureRowProps";
-import NetworkUtil from "../util/NetworkUtil";
-import TripGoApi from "../api/TripGoApi";
-import ServiceDetail from "../model/service/ServiceDetail";
-import RegionsData from "../data/RegionsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import TripSegmentSteps from "../trip/TripSegmentSteps";
@@ -12,14 +8,19 @@ import "./ServiceDetailView.css"
 import ServiceShape from "../model/trip/ServiceShape";
 import IconCross from "-!svg-react-loader!../images/ic-cross.svg";
 import {EventEmitter} from "fbemitter";
+import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
 
-interface IProps {
-    departure: ServiceDeparture;
+interface ITKUIServiceViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
-    onDepartureUpdate: (departure: ServiceDeparture) => void;
     onRequestClose?: () => void;
     eventBus?: EventEmitter;
 }
+
+interface IConnectionProps {
+    departure: ServiceDeparture;
+}
+
+interface IProps extends ITKUIServiceViewProps, IConnectionProps {}
 
 class ServiceDetailView extends React.Component<IProps, {}> {
 
@@ -80,29 +81,6 @@ class ServiceDetailView extends React.Component<IProps, {}> {
         );
     }
 
-    public componentDidMount(): void {
-        const departure = this.props.departure;
-        if (departure.serviceDetail) {
-            return
-        }
-        const endpoint = "service.json"
-            + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
-            + "&serviceTripID=" + departure.serviceTripID
-            + "&startStopCode=" + departure.startStopCode
-            + "&embarkationDate=" + departure.startTime
-            + "&encode=true";
-        TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, ServiceDetail)
-            .then((result: ServiceDetail) => {
-                    // if (result.isError()) {
-                    //     throw new Error("Error loading departures.");
-                    // }
-                    const departureUpdate = this.props.departure;
-                    departureUpdate.serviceDetail = result;
-                    this.props.onDepartureUpdate(departureUpdate);
-                }
-            );
-    }
-
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {
         if (!this.scrolledIntoView && this.props.departure.serviceDetail && this.scrollRef) {
             this.scrolledIntoView = true;
@@ -110,5 +88,23 @@ class ServiceDetailView extends React.Component<IProps, {}> {
         }
     }
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <ServiceResultsContext.Consumer>
+            {(serviceContext: IServiceResultsContext) => (
+                props.children!({
+                    departure: serviceContext.selectedService
+                })
+            )}
+        </ServiceResultsContext.Consumer>
+    );
+};
+
+export const TKUIServiceView = (props: ITKUIServiceViewProps) =>
+    <Connector>
+        {(cProps: IConnectionProps) => <ServiceDetailView {...props} {...cProps}/>}
+    </Connector>;
+
 
 export default ServiceDetailView;

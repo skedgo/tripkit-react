@@ -1,5 +1,8 @@
 import * as React from "react";
-import {IServiceResConsumerProps} from "../api/WithServiceResults";
+import {
+    IServiceResultsContext,
+    ServiceResultsContext
+} from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import IServiceDepartureRowProps from "./IServiceDepartureRowProps";
 import "./ServiceDepartureTable.css";
@@ -12,11 +15,12 @@ import DateTimePickerFace from "../time/DateTimePickerFace";
 import {Moment} from "moment";
 import moment from "moment-timezone";
 
-interface IProps extends IServiceResConsumerProps {
+interface ITKUIDeparturesViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
     onRequestClose?: () => void;
-    onSelection?: (departure: ServiceDeparture) => void;
 }
+
+interface IProps extends IServiceResultsContext, ITKUIDeparturesViewProps {}
 
 class ServiceDepartureTable extends React.Component<IProps, {}> {
 
@@ -97,8 +101,8 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
                                 value: departure,
                                 key: i,
                                 onClick: () => {
-                                    if (this.props.onSelection) {
-                                        this.props.onSelection(departure)
+                                    if (this.props.onServiceSelection) {
+                                        this.props.onServiceSelection(departure)
                                     }
                                 }
                             }));
@@ -126,5 +130,20 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
     }
 
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <ServiceResultsContext.Consumer>
+            {(serviceContext: IServiceResultsContext) => (
+                props.children!(serviceContext)
+            )}
+        </ServiceResultsContext.Consumer>
+    );
+};
+
+export const TKUIDeparturesView = (props: ITKUIDeparturesViewProps) =>
+    <Connector>
+        {(cProps: IServiceResultsContext) => <ServiceDepartureTable {...props} {...cProps}/>}
+    </Connector>;
 
 export default ServiceDepartureTable;
