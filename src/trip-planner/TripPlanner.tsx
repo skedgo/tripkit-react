@@ -32,7 +32,6 @@ import {TKUIDeparturesView} from "../service/ServiceDepartureTable";
 import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
 import ServiceDepartureRow from "../service/ServiceDepartureRow";
 import {TKUIServiceView} from "../service/ServiceDetailView";
-import {ITripSelectionContext} from "./TripSelectionProvider";
 import {TKUIResultsView, TKUIResultsViewConfig} from "../trip/TripsView";
 import TripDetail, {TKUITripDetailConfig} from "../trip/TripDetail";
 import Trip from "../model/trip/Trip";
@@ -46,14 +45,20 @@ interface IState {
     showDepartures?: boolean;
     showTripDetail?: boolean;
     viewport: {center?: LatLng, zoom?: number};
-    region?: Region;    // Once regions arrive region gets instantiated (with a valid region), and never becomes undefined.
 }
 
     // TODO:
-    // - Seguir desintegrando el TripPlanner, conectando cada componente, individualmente, con providers. Solo dejar
-    // cuestiones de navegación y de layout y ocultar / mostrar en TripPlanner.
-    // - hacer que en el onChange de TKUIResultsView muestre la vista de detalle de un trip.
-    // - Render props pasadas a través de configuraciones, como TKUITripPlannerConfig o TKUIResultsViewConfig. Ver
+    // - Finish desitegrating TripPlanner, connecting each component individually with providers. E.g. get rid of
+    // event bus, favourites.
+    // - Define TripPlanner props (interface) to receive flags that allow to implement navigation / what shows and
+    // that hides. Think interface props can be used by other customizations.
+    // - Move client sample consumers to a connector for TripPlanner (as the other classes) and export TKUITripPlanner.
+    // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
+    // - Improve the way components are connected, so tripkit-react clients can easily connect their own custom
+    // component implementations.
+    // - Maybe group different providers in unique comosite provider. Analyze. Make all the changes grounded on expected
+    // use cases.
+    // - Render props passed along configurations, like TKUITripPlannerConfig or TKUIResultsViewConfig. Ver
     // Component-level customization en https://docs.google.com/document/d/1-TefPUgLV7RoK1qkr_j1XGSS9XSCUv0w9bMLk6__fUQ/edit#heading=h.s7sw7zyaie11
     // -------------------------------------------------------------------------------------------------------------
     // Acomodar código en tccs-react luego del cambio que hice.
@@ -65,7 +70,7 @@ class TKUITripPlannerConfig {
     public tripDetailConfig: TKUITripDetailConfig = new TKUITripDetailConfig();
 }
 
-class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionContext & IServiceResultsContext, IState> {
+class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsContext, IState> {
 
     public static defaultProps: Partial<ITripPlannerProps> = {
         config: new TKUITripPlannerConfig()
@@ -75,7 +80,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
     private ref: any;
     private mapRef: LeafletMap;
 
-    constructor(props: ITripPlannerProps & ITripSelectionContext & IServiceResultsContext) {
+    constructor(props: ITripPlannerProps & IServiceResultsContext) {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
@@ -88,7 +93,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
         if (!userIpLocation) {
             GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
                 RegionsData.instance.getCloserRegionP(userLocation).then((region: Region) => {
-                    this.setState({viewport: {center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()}});
+                    this.props.onViewportChange({center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()});
                 })
             });
         }
@@ -165,7 +170,6 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
                 onRequestClose={this.onModalRequestedClose}
             >
                 <TKUIOptionsView
-                    region={this.state.region!}
                     onClose={this.onModalRequestedClose}
                     className={"app-style"}
                 />
@@ -205,9 +209,6 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
                     eventBus={this.eventBus}
                 />
             </Drawer> : null;
-        const region = this.state.region;
-        const queryInputBounds = region ? region.bounds : undefined;
-        const queryInputFocusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
         return (
             <div id="mv-main-panel"
                  className={"mainViewPanel TripPlanner" +
@@ -221,8 +222,8 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
                     <div className="TripPlanner-queryPanel gl-flex gl-column gl-no-shrink">
                         <TKUIQueryInputView
                                     // value={this.props.query}
-                                    bounds={queryInputBounds}
-                                    focusLatLng={queryInputFocusLatLng}
+                                    // bounds={queryInputBounds}
+                                    // focusLatLng={queryInputFocusLatLng}
                                     className="TripPlanner-queryInput"
                                     isTripPlanner={true}
                                     bottomRightComponent={
@@ -297,9 +298,9 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
                             <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                                 <TKUIMapView
                                     viewport={this.state.viewport}
-                                    onViewportChanged={(viewport: { center?: LatLng, zoom?: number }) => {
-                                        this.setState({viewport: viewport});
-                                    }}
+                                    // onViewportChange={(viewport: { center?: LatLng, zoom?: number }) => {
+                                    //     this.setState({viewport: viewport});
+                                    // }}
                                     showLocations={true}
                                     eventBus={this.eventBus}
                                     refAdHoc={(ref: any) => {
@@ -328,7 +329,6 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
     }
 
     public componentDidMount(): void {
-        this.refreshRegion();
         // TEST
         // this.onQueryChange(
             // RoutingQuery.create(
@@ -370,33 +370,9 @@ class TripPlanner extends React.Component<ITripPlannerProps & ITripSelectionCont
     }
 
 
-    public componentDidUpdate(prevProps: Readonly<ITripPlannerProps & ITripSelectionContext>, prevState: Readonly<IState>, snapshot?: any): void {
-        if (prevState.viewport !== this.state.viewport
-            || prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to) {
-            this.refreshRegion();
-        }
-        // Clear selected
-        if (prevProps.trips !== this.props.trips) {
-            if (!this.props.trips || this.props.trips.length === 0) {
-                this.props.onChange(undefined);
-            }
-        }
+    public componentDidUpdate(prevProps: Readonly<ITripPlannerProps>, prevState: Readonly<IState>, snapshot?: any): void {
         if (prevProps.query.from !== this.props.query.from && !this.state.showDepartures) {
             this.setState({showDepartures: true});
-        }
-    }
-
-    private refreshRegion() {
-        const query = this.props.query;
-        const referenceLatLng = query.from && query.from.isResolved() ? query.from :
-            (query.to && query.to.isResolved() ? query.to : this.state.viewport.center);
-        if (referenceLatLng) {
-            RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
-                if (region.polygon === "") {
-                    console.log("empty region");
-                }
-                this.setState({region: region});
-            });
         }
     }
 }

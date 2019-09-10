@@ -13,6 +13,8 @@ import RoutingResults from "../model/trip/RoutingResults";
 import {JsonConvert} from "json2typescript";
 import Options from "../model/Options";
 import Location from "../model/Location";
+import Region from "../model/region/Region";
+import LatLng from "../model/LatLng";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -24,6 +26,8 @@ interface IWithRoutingResultsState {
     query: RoutingQuery;
     preFrom?: Location;
     preTo?: Location;
+    viewport?: {center?: LatLng, zoom?: number};
+    region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     trips?: Trip[];
     selected?: Trip;
     waiting: boolean;
@@ -42,6 +46,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                 waiting: false
             };
             this.onQueryChange = this.onQueryChange.bind(this);
+            this.onChange = this.onChange.bind(this);
+            this.onViewportChange = this.onViewportChange.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
         }
@@ -49,6 +55,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
         public onQueryChange(query: RoutingQuery) {
             const prevQuery = this.state.query;
             this.setState({ query: query }, () => {
+                this.refreshRegion();
+                // TODO: Next logic currently does not depend on this.state.region, although it should (in computeModeSets).
+                // In that execute next code after refreshRegion took effect on state.
                 if (query.isComplete(true)) {
                     if (!this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
                         this.refreshTrips();
@@ -62,6 +71,32 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                     }
                 }
             });
+        }
+
+        public onChange(select?: Trip): void {
+            this.setState({
+                selected: select
+            });
+        }
+
+        public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
+            this.setState({viewport: viewport},
+                () => this.refreshRegion());
+        }
+
+        public refreshRegion() {
+            const query = this.state.query;
+            const viewport = this.state.viewport;
+            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
+                (query.to && query.to.isResolved() ? query.to : (viewport && viewport.center));
+            if (referenceLatLng) {
+                RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
+                    if (region.polygon === "") {
+                        console.log("empty region");
+                    }
+                    this.setState({region: region});
+                });
+            }
         }
 
         public refreshTrips() {
@@ -171,8 +206,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                                      this.setState({preTo: location})
                                  }
                              }}
+                             onViewportChange={this.onViewportChange}
+                             region={this.state.region}
                              trips={this.state.trips}
                              waiting={this.state.waiting}
+                             selected={this.state.selected}
+                             onChange={this.onChange}
                              onReqRealtimeFor={this.onReqRealtimeFor}
                              onAlternativeChange={this.onAlternativeChange}
             />;
@@ -186,10 +225,17 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             }
         }
 
-        public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>): void {
+        public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
+                                  prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
+            }
+            // Clear selected
+            if (prevState.trips !== this.state.trips) {
+                if (!this.state.trips || this.state.trips.length === 0) {
+                    this.onChange(undefined);
+                }
             }
         }
 

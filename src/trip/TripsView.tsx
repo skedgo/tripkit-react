@@ -5,9 +5,7 @@ import "./TripsView.css";
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
 import {EventEmitter} from "fbemitter";
 import TripGroup from "../model/trip/TripGroup";
-import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import ITripPlannerProps from "../trip-planner/ITripPlannerProps";
-import {ITripSelectionContext, TripSelectionContext} from "../trip-planner/TripSelectionProvider";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripRow from "./TripRow";
 
 // TODO: maybe define TKUIResultsViewProps subtracting ConnectionProps (those injected by the connector) from
@@ -124,28 +122,22 @@ const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNod
 // const Connector: React.SFC<any> = (props: any) => {
     return (
         <RoutingResultsContext.Consumer>
-            {(routingResultsContext: ITripPlannerProps) => {
-                return (
-                    <TripSelectionContext.Consumer>
-                        {(tripSelectionContext: ITripSelectionContext) => {
-                            const consumerProps: Partial<IProps> = {
-                                // TODO: very inefficient, move sort inside TripView component, should also receive a sort criteria.
-                                // Or define provider TripSortProvider, that receives trips, and provides tripsSorted and
-                                // onSortChange, and maintains in an internal state the trips sorted. Should consume from
-                                // RoutingResultsProvider, so will come below it. Notice I'm doing something like Redux but
-                                // with several providers, instead of a unique store provider.
-                                values: TripsView.sortTrips(routingResultsContext.trips!),
-                                waiting: routingResultsContext.waiting,
-                                value: tripSelectionContext.selected,
-                                onChange: (trip: Trip) => {
-                                    tripSelectionContext.onChange(trip);
-                                    routingResultsContext.onReqRealtimeFor(trip);
-                                }
-                            };
-                            return props.children!(consumerProps);
-                        }}
-                    </TripSelectionContext.Consumer>
-                )
+            {(routingContext: IRoutingResultsContext) => {
+                const consumerProps: Partial<IProps> = {
+                    // TODO: very inefficient, move sort inside TripView component, should also receive a sort criteria.
+                    // Or define provider TripSortProvider, that receives trips, and provides tripsSorted and
+                    // onSortChange, and maintains in an internal state the trips sorted. Should consume from
+                    // RoutingResultsProvider, so will come below it. Notice I'm doing something like Redux but
+                    // with several providers, instead of a unique store provider.
+                    values: TripsView.sortTrips(routingContext.trips!),
+                    waiting: routingContext.waiting,
+                    value: routingContext.selected,
+                    onChange: (trip: Trip) => {
+                        routingContext.onChange(trip);
+                        routingContext.onReqRealtimeFor(trip);
+                    }
+                };
+                return props.children!(consumerProps);
             }}
         </RoutingResultsContext.Consumer>
     );

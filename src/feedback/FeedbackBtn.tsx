@@ -7,11 +7,9 @@ import OptionsData from "../data/OptionsData";
 import Util from "../util/Util";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {ITripSelectionContext, TripSelectionContext} from "../trip-planner/TripSelectionProvider";
-import ITripPlannerProps from "../trip-planner/ITripPlannerProps";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 
-interface IProps extends IRoutingResultsContext, ITripSelectionContext, IServiceResultsContext {}
+interface IProps extends IRoutingResultsContext, IServiceResultsContext {}
 
 interface IState {
     feedbackTooltip: boolean;
@@ -76,19 +74,14 @@ class FeedbackBtn extends React.Component<IProps, IState> {
 const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
     return (
         <RoutingResultsContext.Consumer>
-            {(routingResultsContext: ITripPlannerProps) => (
-                <TripSelectionContext.Consumer>
-                    {(tripSelectionContext: ITripSelectionContext) =>
-                        <ServiceResultsContext.Consumer>
-                            {(serviceContext: IServiceResultsContext) =>
-                                <FeedbackBtn {...routingResultsContext}
-                                             {...tripSelectionContext}
-                                             {...serviceContext}
-                                />}
-                        </ServiceResultsContext.Consumer>
-                    }
-                </TripSelectionContext.Consumer>
-            )}
+            {(routingResultsContext: IRoutingResultsContext) =>
+                <ServiceResultsContext.Consumer>
+                    {(serviceContext: IServiceResultsContext) =>
+                        <FeedbackBtn {...routingResultsContext}
+                                     {...serviceContext}
+                        />}
+                </ServiceResultsContext.Consumer>
+            }
         </RoutingResultsContext.Consumer>
     );
 };
