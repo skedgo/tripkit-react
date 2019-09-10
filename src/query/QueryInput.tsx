@@ -22,8 +22,7 @@ import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
-import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import ITripPlannerProps from "../trip-planner/ITripPlannerProps";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import Trip from "../model/trip/Trip";
 
 interface IProps {
@@ -386,10 +385,11 @@ class QueryInput extends React.Component<IProps, IState> {
 const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = props => {
     return (
         <RoutingResultsContext.Consumer>
-            {(routingResultsContext: ITripPlannerProps) => {
+            {(routingResultsContext: IRoutingResultsContext) => {
                 const consumerProps: Partial<IProps> = {
                     value: routingResultsContext.query,
-                    onChange: routingResultsContext.onQueryChange
+                    onChange: routingResultsContext.onQueryChange,
+                    onPreChange: routingResultsContext.onPreChange
                 };
                 return props.children!(consumerProps);
             }}

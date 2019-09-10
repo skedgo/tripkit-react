@@ -1,6 +1,5 @@
 import * as React from "react";
 import {Moment} from "moment-timezone";
-import StopLocation from "../model/StopLocation";
 import Segment from "../model/trip/Segment";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {Subtract} from "utility-types";
@@ -13,29 +12,24 @@ import Features from "../env/Features";
 import Service from "../model/service/Service";
 import LatestResult from "../model/service/LatestResult";
 import Timer = NodeJS.Timer;
+import {IServiceResultsContext as IServiceResConsumerProps} from "../service/ServiceResultsProvider";
+import StopLocation from "../model/StopLocation";
+import ServiceDetail from "../model/service/ServiceDetail";
 
 interface IWithServiceResultsProps {
-    startStop: StopLocation;
+    // TODO: Move to state, as startStop
     segment?: Segment;
 }
 
 interface IWithServiceResultsState {
+    startStop?: StopLocation;
     initTime: Moment;       // Default to now - 30mins(?)
     departures: ServiceDeparture[];    // It's sorted.
+    selected?: ServiceDeparture;
     filter: string;
     departuresFiltered: ServiceDeparture[];
     displayLimit: number;
     initTimeChanged: boolean;
-}
-
-interface IServiceResConsumerProps {
-    initTime: Moment;
-    onInitTimeChange?: (initTime: Moment) => void;
-    onFilterChange?: (filter: string) => void;
-    onRequestMore?: () => void;
-    departures: ServiceDeparture[];
-    waiting: boolean;
-    title: string;
 }
 
 
@@ -84,6 +78,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.requestMoreDepartures = this.requestMoreDepartures.bind(this);
             this.onFilterChange = this.onFilterChange.bind(this);
             this.onInitTimeChange = this.onInitTimeChange.bind(this);
+            this.onServiceSelection = this.onServiceSelection.bind(this);
         }
 
         public requestMoreDepartures() {
@@ -132,16 +127,46 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             });
         }
 
+        public onServiceSelection(departure?: ServiceDeparture) {
+            this.setState({selected: departure});
+            if (!departure || departure.serviceDetail) {
+                return
+            }
+            const endpoint = "service.json"
+                + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
+                + "&serviceTripID=" + departure.serviceTripID
+                + "&startStopCode=" + departure.startStopCode
+                + "&embarkationDate=" + departure.startTime
+                + "&encode=true";
+            TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, ServiceDetail)
+                .then((result: ServiceDetail) => {
+                        // if (result.isError()) {
+                        //     throw new Error("Error loading departures.");
+                        // }
+                        const departureUpdate = departure;
+                        departureUpdate.serviceDetail = result;
+                        if (departure === this.state.selected) {
+                            this.setState({selected: departureUpdate});
+                        }
+                    }
+                );
+        }
+
         public render(): React.ReactNode {
-            const {startStop, segment, ...props} = this.props as IWithServiceResultsProps;
+            const {...props} = this.props as IWithServiceResultsProps;
+            const startStop = this.state.startStop;
             return <Consumer {...props}
+                             stop={startStop}
+                             onStopChange={(stop?: StopLocation) => this.setState({startStop: stop})}
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting()}
                              onFilterChange={this.onFilterChange}
-                             title={startStop.shortName ? startStop.shortName : startStop.name}
+                             title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
                              initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
                              onInitTimeChange={this.onInitTimeChange}
+                             selectedService={this.state.selected}
+                             onServiceSelection={this.onServiceSelection}
             />;
         }
 
@@ -203,8 +228,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public requestDepartures(): Promise<ServiceDeparture[]> {
-            let startStopCode = this.props.startStop.code;
-            const startRegionCode = RegionsData.instance.getRegion(this.props.startStop)!.name;
+            let startStopCode = this.state.startStop!.code;
+            const startRegionCode = RegionsData.instance.getRegion(this.state.startStop!)!.name;
             // Remove 'Region_Code-' from stop codes. Shouldn't come from backend anymore
             if (startStopCode.startsWith(startRegionCode + "-")) {
                 startStopCode = startStopCode.substring((startRegionCode + "-").length);
@@ -236,7 +261,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         if (departuresResult.isError()) {
                             throw new Error("Error loading departures.");
                         }
-                        return departuresResult.getDepartures(this.props.startStop);
+                        return departuresResult.getDepartures(this.state.startStop!);
                     }
                 );
         }
@@ -275,8 +300,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
             const departuresToUpdate = departures.slice(0, 50);
 
-            const startRegionCode = RegionsData.instance.getRegion(this.props.startStop)!.name;
-            const startStopCode = this.props.startStop.code;
+            const startRegionCode = RegionsData.instance.getRegion(this.state.startStop!)!.name;
+            const startStopCode = this.state.startStop!.code;
             const services = departuresToUpdate.filter((departure: ServiceDeparture) => {
                 return departure.realTimeStatus === "IS_REAL_TIME";
             }).map((departure: ServiceDeparture) => {
@@ -321,47 +346,6 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         this.updateDepartures(this.state.departures);
                     });
             });
-
-            // NetworkUtil.requestInFailChain(serverUrls, new NetworkUtil.AsyncCallableFail() {
-            // @Override
-            // public void asyncCall(String serverUrl, final NetworkUtil.ChainCallbackFail failCallback) {
-            //         NetworkUtil.getLatestRest(serverUrl, latest, new MethodCallback<Latest>() {
-            //         @Override
-            //         public void onSuccess(Method method, Latest response) {
-            //                 awaitingRealtime = false;
-            //                 Messages.getInstance().removeMessage(messageType, messageContent);
-            //                 realtimeServicesById.clear();
-            //                 for (Latest.Service service : response.getServices())
-            //                 realtimeServicesById.put(service.getServiceTripID(), service);
-            //                 List<GWTDeparture> departures = getAllDepartures();
-            //                 for (GWTDeparture departure : departures) {
-            //                     // Remove realtime entry once applied to avoid it to be applied to future services that
-            //                     // accidentally have the same id.
-            //                     Latest.Service realtimeService = realtimeServicesById.remove(departure.getServiceTripID());
-            //                     // Check that stop codes coincide to avoid wrong matchings when it's a loop service that
-            //                     // is going in the other direction. Stop allow to disambiguate since different directions
-            //                     // correspond to different stops.
-            //                     if (realtimeService != null
-            //                         && (realtimeService.getStartStopCode() == null || realtimeService.getStartStopCode().equals(departure.getStartStopCode())))
-            //                         departure.setRealtimeService(realtimeService);
-            //                 }
-            //                 sortDepartures();
-            //                 refreshFilter();
-            //                 fireValueChangeEvent();
-            //             }
-            //
-            //         @Override
-            //         public void onFailure(Method method, Throwable exception) {
-            //                 failCallback.nextRequest(exception);
-            //             }
-            //         });
-            //     }
-            //
-            // @Override
-            // public void onChainFailed(Throwable caught) {
-            //         Messages.getInstance().addErrorMessage(messageType, messageContent);
-            //     }
-            // });
         }
 
         public componentWillUnmount() {
@@ -374,5 +358,4 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 }
 
 export default withServiceResults;
-export {IServiceResConsumerProps};
 

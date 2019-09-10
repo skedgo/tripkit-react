@@ -4,10 +4,18 @@ import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
 import Options from "../model/Options";
+import Location from "../model/Location";
 
 export interface IRoutingResultsContext {
+    // TODO: Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
+    // RoutingQuery as props (similar to OptionsView). So TKRoutingResultsProvider is a consumer of TKQueryProvider.
+    // Just pass the query to TKRoutingResultsProvider, not the onQueryChange.
     query: RoutingQuery;
     onQueryChange: (query: RoutingQuery) => void;
+    preFrom?: Location;
+    preTo?: Location;
+    onPreChange?: (from: boolean, location?: Location) => void;
+
     trips?: Trip[];
     waiting: boolean;
     onReqRealtimeFor: (trip?: Trip) => void;

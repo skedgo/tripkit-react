@@ -34,33 +34,40 @@ import MapService from "./MapService";
 import {EventEmitter} from "fbemitter";
 import TransportUtil from "../trip/TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import {ITripSelectionContext, TripSelectionContext} from "../trip-planner/TripSelectionProvider";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import MultiGeocoder from "../geocode/MultiGeocoder";
+import ReactResizeDetector from "react-resize-detector";
+import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import {MapUtil} from "../index";
 
-interface IProps {
+interface ITKUIMapViewProps {
+    showLocations?: boolean;
+    viewport?: {center?: LatLng, zoom?: number};
+    onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
+    bounds?: BBox;
+    // TODO: Put the following props inside config?
+    attributionControl?: boolean;
+    segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
+    serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
+    eventBus?: EventEmitter;
+}
+
+interface IConnectionProps {
     from?: Location;
     to?: Location;
     trip?: Trip;
     service?: ServiceDeparture;
-    showLocations?: boolean;
-    viewport?: {center?: LatLng, zoom?: number};
-    bounds?: BBox;
-    onclick?: (latLng: LatLng) => void;
-    ondragend?: (from: boolean, latLng: LatLng) => void;
-    onViewportChanged?: (viewport: {center?: LatLng, zoom?: number}) => void;
-    attributionControl?: boolean;
-    segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
-    serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
-    // renderSegmentPinIcon?: (segment: Segment) => JSX.Element;
-    // renderSegmentPopup?: (segment: Segment) => JSX.Element;
-    renderServicePinIcon?: (service: ServiceDeparture) => JSX.Element;
-    // segmentPolylineOptions?: (segment: Segment) => PolylineProps | PolylineProps[];
-    servicePolylineOptions?: (service: ServiceDeparture) => PolylineProps | PolylineProps[];
-    // renderServiceStop?: (props: IServiceStopProps) => JSX.Element | undefined;
-    // renderServiceStopPopup?: (props: ServiceStopPopupProps) => JSX.Element;
-    eventBus?: EventEmitter;
+    onClick?: (latLng: LatLng) => void;
+    onDragEnd?: (from: boolean, latLng: LatLng) => void;
 }
+
+interface IProps extends ITKUIMapViewProps, IConnectionProps {}
 
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
+    viewport: {center?: LatLng, zoom?: number};
 }
 
 interface IMapSegmentRenderer {
@@ -85,7 +92,9 @@ class LeafletMap extends React.Component<IProps, IState> {
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
-            mapLayers: new Map<MapLocationType, Location[]>()
+            mapLayers: new Map<MapLocationType, Location[]>(),
+            viewport: this.props.viewport ? this.props.viewport :
+                {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
         LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.onLocationsChanged(locResult));
         OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
@@ -128,7 +137,7 @@ class LeafletMap extends React.Component<IProps, IState> {
         const showAny = this.props.showLocations && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
             && enabledMapLayers.length > 0;
         if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
-            RegionsData.instance.getCloserRegionP(this.props.viewport!.center!).then((region: Region) => {
+            RegionsData.instance.getCloserRegionP(this.state.viewport!.center!).then((region: Region) => {
                 LocationsData.instance.requestLocations(region.name, 1);
                 if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
                     && this.leafletElement.getZoom() >= this.ZOOM_PARENT_LOCATIONS) { // To avoid crashing if ZOOM_ALL_LOCATIONS < ZOOM_PARENT_LOCATIONS
@@ -228,9 +237,38 @@ class LeafletMap extends React.Component<IProps, IState> {
         }));
     }
 
+    private checkFitLocation(oldLoc?: Location | null, loc?: Location | null): boolean {
+        return !!(oldLoc !== loc && loc && loc.isResolved());
+    }
+
+    private fitMap(from: Location | null, to: Location | null) {
+        const fromLoc = from;
+        const toLoc = to;
+        const fitSet = [];
+        if (fromLoc && fromLoc.isResolved()) {
+            fitSet.push(fromLoc);
+        }
+        if (toLoc && toLoc.isResolved() && !fitSet.find((loc) => LocationUtil.equal(loc, toLoc))) {
+            fitSet.push(toLoc);
+        }
+        if (fitSet.length === 0) {
+            return;
+        }
+        if (fitSet.length === 1) {
+            this.setViewport(Util.iAssign(this.state.viewport, {center: fitSet[0]}), true);
+            return;
+        }
+        this.fitBounds(BBox.createBBoxArray(fitSet));
+    }
+
+    private setViewport(viewport: {center?: LatLng, zoom?: number}, fireEvents: boolean = false) {
+        this.setState({viewport: viewport});
+        if (fireEvents && this.props.onViewportChanged) {
+            this.props.onViewportChanged(viewport);
+        }
+    }
 
     public render(): React.ReactNode {
-        const lbounds = this.props.bounds ? L.latLngBounds([this.props.bounds.sw, this.props.bounds.ne]) : undefined;
         const segmentRenderer = this.props.segmentRenderer ? this.props.segmentRenderer :
             (segment: Segment) => {
                 const color = segment.getColor();
@@ -273,96 +311,99 @@ class LeafletMap extends React.Component<IProps, IState> {
             tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
         }
         return (
-            <RLMap
-                className="map-canvas avoidVerticalScroll gl-flex gl-grow"
-                viewport={this.props.viewport}
-                bounds={lbounds}
-                boundsOptions={{padding: [20, 20]}}
-                maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
-                onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
-                    if (this.props.onViewportChanged) {
-                        this.props.onViewportChanged({
+            <div className={"gl-flex gl-grow"}>
+                <RLMap
+                    className="map-canvas avoidVerticalScroll gl-flex gl-grow"
+                    viewport={this.state.viewport}
+                    boundsOptions={{padding: [20, 20]}}
+                    maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
+                    onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
+                        this.setViewport({
                             center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
                             zoom: viewport.zoom
-                        });
-                }}}
-                onclick={(event: L.LeafletMouseEvent) => {
-                    if (this.props.onclick) {
-                        setTimeout(() => {
-                            if (this.wasDoubleClick) {
-                                this.wasDoubleClick = false;
-                                return;
-                            }
-                            if (this.props.onclick) {
-                                this.props.onclick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
-                            }
-                        })
-                    }
-                }}
-                onmoveend={this.onMoveEnd}
-                ref={(ref: any) => {
-                    if (ref) {
-                        this.leafletElement = ref.leafletElement;
-                    }
-                }}
-                zoomControl={false}
-                attributionControl={this.props.attributionControl !== false}
-            >
-                <ZoomControl position={"topright"}/>
-                {this.props.from && this.props.from.isResolved() &&
-                <Marker position={this.props.from!}
-                        icon={L.icon({
-                            iconUrl: Constants.absUrl("/images/map/ic-map-pin-from.svg"),
-                            iconSize: [35, 35],
-                            iconAnchor: [17, 35],
-                            className: "LeafletMap-pinFrom"
-                        })}
-                        draggable={true}
-                        riseOnHover={true}
-                        ondragend={(event: L.DragEndEvent) => {
-                            if (this.props.ondragend) {
-                                const latLng = event.target.getLatLng();
-                                this.props.ondragend(true, LatLng.createLatLng(latLng.lat, latLng.lng));
-                            }
-                        }}/>}
-                {this.props.to && this.props.to.isResolved() &&
-                <Marker position={this.props.to!}
-                        icon={L.icon({
-                            iconUrl: Constants.absUrl("/images/map/ic-map-pin.svg"),
-                            iconSize: [35, 35],
-                            iconAnchor: [17, 35],
-                            className: "LeafletMap-pinTo"
-                        })}
-                        draggable={true}
-                        riseOnHover={true}
-                        ondragend={(event: L.DragEndEvent) => {
-                            if (this.props.ondragend) {
-                                const latLng = event.target.getLatLng();
-                                this.props.ondragend(false, LatLng.createLatLng(latLng.lat, latLng.lng));
-                            }
-                        }}
-                />}
-                {locTypeValues().map((locType: MapLocationType) =>
-                    this.isShowLocType(locType) &&
+                        }, true);
+                    }}
+                    onclick={(event: L.LeafletMouseEvent) => {
+                        if (this.props.onClick) {
+                            setTimeout(() => {
+                                if (this.wasDoubleClick) {
+                                    this.wasDoubleClick = false;
+                                    return;
+                                }
+                                if (this.props.onClick) {
+                                    this.props.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
+                                }
+                            })
+                        }
+                    }}
+                    onmoveend={this.onMoveEnd}
+                    ref={(ref: any) => {
+                        if (ref) {
+                            this.leafletElement = ref.leafletElement;
+                        }
+                    }}
+                    zoomControl={false}
+                    attributionControl={this.props.attributionControl !== false}
+                >
+                    <ZoomControl position={"topright"}/>
+                    {this.props.from && this.props.from.isResolved() &&
+                    <Marker position={this.props.from!}
+                            icon={L.icon({
+                                iconUrl: Constants.absUrl("/images/map/ic-map-pin-from.svg"),
+                                iconSize: [35, 35],
+                                iconAnchor: [17, 35],
+                                className: "LeafletMap-pinFrom"
+                            })}
+                            draggable={true}
+                            riseOnHover={true}
+                            ondragend={(event: L.DragEndEvent) => {
+                                if (this.props.onDragEnd) {
+                                    const latLng = event.target.getLatLng();
+                                    this.props.onDragEnd(true, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                }
+                            }}/>}
+                    {this.props.to && this.props.to.isResolved() &&
+                    <Marker position={this.props.to!}
+                            icon={L.icon({
+                                iconUrl: Constants.absUrl("/images/map/ic-map-pin.svg"),
+                                iconSize: [35, 35],
+                                iconAnchor: [17, 35],
+                                className: "LeafletMap-pinTo"
+                            })}
+                            draggable={true}
+                            riseOnHover={true}
+                            ondragend={(event: L.DragEndEvent) => {
+                                if (this.props.onDragEnd) {
+                                    const latLng = event.target.getLatLng();
+                                    this.props.onDragEnd(false, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                }
+                            }}
+                    />}
+                    {locTypeValues().map((locType: MapLocationType) =>
+                        this.isShowLocType(locType) &&
                         this.state.mapLayers.get(locType)!.map((loc: Location) =>
                             this.getLocMarker(locType, loc)
                         )
-                )}
-                {tripSegments && tripSegments.map((segment: Segment, i: number) => {
-                    return <MapTripSegment segment={segment}
-                                           ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.ondragend ?
-                                               (latLng: LatLng) => this.props.ondragend!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
-                                           renderer={segmentRenderer(segment)}
-                                           key={i}/>;
-                })}
-                {this.props.service && <MapService
-                    serviceDeparture={this.props.service}
-                    renderer={serviceRenderer(this.props.service)}
-                    eventBus={this.props.eventBus}
+                    )}
+                    {tripSegments && tripSegments.map((segment: Segment, i: number) => {
+                        return <MapTripSegment segment={segment}
+                                               ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.onDragEnd ?
+                                                   (latLng: LatLng) => this.props.onDragEnd!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
+                                               renderer={segmentRenderer(segment)}
+                                               key={i}/>;
+                    })}
+                    {this.props.service && <MapService
+                        serviceDeparture={this.props.service}
+                        renderer={serviceRenderer(this.props.service)}
+                        eventBus={this.props.eventBus}
+                    />
+                    }
+                    {this.props.children}
+                </RLMap>
+                <ReactResizeDetector handleWidth={true} handleHeight={true}
+                                     onResize={() => this.onResize()}
                 />
-                }
-                {this.props.children}
-            </RLMap>
+            </div>
         )
     }
 
@@ -375,7 +416,41 @@ class LeafletMap extends React.Component<IProps, IState> {
         this.refreshMapLocations();
         this.leafletElement.on("dblclick", event1 => {
             this.wasDoubleClick = true;
-        })
+        });
+
+        // TODO Delete:
+        setTimeout(() => this.onResize(), 5000);
+    }
+
+    public componentDidUpdate(prevProps: IProps): void {
+        if (this.checkFitLocation(prevProps.from, this.props.from) || this.checkFitLocation(prevProps.to, this.props.to)) {
+            // TODO: avoid switching from undefined to null, use one or the other.
+            this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
+        }
+        if (this.props.viewport && (prevProps.viewport !== this.props.viewport)) {
+            this.setViewport(this.props.viewport, true);
+        }
+        // TODO: check that this is used to fit the map when setting a favourite or when comming from query input widget.
+        if (!prevProps.from && !prevProps.to &&
+            this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
+            this.fitBounds(BBox.createBBoxArray([this.props.from, this.props.to]));
+        }
+        const trip = this.props.trip;
+        if (trip !== prevProps.trip && trip) {
+            const fitBounds = MapUtil.getTripBounds(trip);
+            if (!this.alreadyFits(fitBounds)) {
+                this.fitBounds(fitBounds);
+            }
+        }
+        const service = this.props.service;
+        if (service !== prevProps.service) {
+            if (service && service.serviceDetail && service.serviceDetail.shapes) {
+                const fitBounds = MapUtil.getShapesBounds(service.serviceDetail.shapes);
+                if (!this.alreadyFits(fitBounds)) {
+                    this.fitBounds(fitBounds);
+                }
+            }
+        }
     }
 
     public fitBounds(bounds: BBox) {
@@ -393,6 +468,66 @@ class LeafletMap extends React.Component<IProps, IState> {
         this.leafletElement.invalidateSize();
     }
 }
+
+const geocodingData: MultiGeocoder = new MultiGeocoder();
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <RoutingResultsContext.Consumer>
+            {(routingContext: IRoutingResultsContext) =>
+                <TripSelectionContext.Consumer>
+                    {(tripSelectionContext: ITripSelectionContext) =>
+                        <ServiceResultsContext.Consumer>
+                            {(serviceContext: IServiceResultsContext) =>
+                                <OptionsContext.Consumer>
+                                    {(optionsContext: IOptionsContext) => {
+                                        const from = routingContext.preFrom ? routingContext.preFrom :
+                                            (routingContext.query.from ? routingContext.query.from : undefined);
+                                        const to = routingContext.preTo ? routingContext.preTo :
+                                            (routingContext.query.to ? routingContext.query.to : undefined);
+                                        const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
+                                            routingContext.onQueryChange(Util.iAssign(routingContext.query, {
+                                                [isFrom ? "from" : "to"]: Location.create(latLng, "Location", "", "")
+                                            }));
+                                            geocodingData.reverseGeocode(latLng, loc => {
+                                                if (loc !== null) {
+                                                    routingContext.onQueryChange(Util.iAssign(routingContext.query, {[isFrom ? "from" : "to"]: loc}));
+                                                }
+                                            })
+                                        };
+                                        const consumerProps: Partial<IProps> = {
+                                            from: from,
+                                            to: to,
+                                            trip: tripSelectionContext.selected,
+                                            onDragEnd: onMapLocChanged,
+                                            onClick: (clickLatLng: LatLng) => {
+                                                if (!from || !to) {
+                                                    onMapLocChanged(!from, clickLatLng);
+                                                    GATracker.instance.send("query input", "pick location", "drop pin");
+                                                }
+                                            },
+                                            service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                                                serviceContext.selectedService : undefined
+                                        };
+                                        return (
+                                            props.children!(consumerProps)
+                                        );
+                                    }}
+                                </OptionsContext.Consumer>
+                            }
+                        </ServiceResultsContext.Consumer>
+                    }
+                </TripSelectionContext.Consumer>
+            }
+        </RoutingResultsContext.Consumer>
+    );
+};
+
+export const TKUIMapView = (props: ITKUIMapViewProps & {refAdHoc: (ref: any) => void}) =>
+    <Connector>
+        {(cProps: IConnectionProps) => <LeafletMap {...props} {...cProps}
+                                                   ref={(ref: any) => props.refAdHoc(ref)}/>}
+    </Connector>;
 
 export default LeafletMap;
 export {IMapSegmentRenderer};

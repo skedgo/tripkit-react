@@ -12,6 +12,7 @@ import Environment from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
 import {JsonConvert} from "json2typescript";
 import Options from "../model/Options";
+import Location from "../model/Location";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -21,6 +22,8 @@ interface IWithRoutingResultsProps {
 
 interface IWithRoutingResultsState {
     query: RoutingQuery;
+    preFrom?: Location;
+    preTo?: Location;
     trips?: Trip[];
     selected?: Trip;
     waiting: boolean;
@@ -159,6 +162,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
             return <Consumer {...props}
                              query={this.state.query}
                              onQueryChange={this.onQueryChange}
+                             preFrom={this.state.preFrom}
+                             preTo={this.state.preTo}
+                             onPreChange={(from: boolean, location?: Location) => {
+                                 if (from) {
+                                     this.setState({preFrom: location})
+                                 } else {
+                                     this.setState({preTo: location})
+                                 }
+                             }}
                              trips={this.state.trips}
                              waiting={this.state.waiting}
                              onReqRealtimeFor={this.onReqRealtimeFor}
