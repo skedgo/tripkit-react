@@ -14,14 +14,13 @@ import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 
-interface IConnectionProps {
-    value: Options;
-    onChange?: (value: Options) => void;    // Fired only if change should be applied
+interface IConnectionProps extends IOptionsContext {
+    region?: Region;
 }
 
 interface ITKUIOptionsViewProps {
-    region: Region;
     onClose?: () => void;
     className?: string;
 }
@@ -494,9 +493,13 @@ class OptionsView extends React.Component<IProps, IState> {
 const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
     return (
         <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) => (
-                props.children!(optionsContext)
-            )}
+            {(optionsContext: IOptionsContext) =>
+                <RoutingResultsContext.Consumer>
+                    {(routingContext: IRoutingResultsContext) =>
+                        props.children!({...optionsContext, region: routingContext.region})
+                    }
+                </RoutingResultsContext.Consumer>
+            }
         </OptionsContext.Consumer>
     );
 };

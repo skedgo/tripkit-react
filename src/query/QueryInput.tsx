@@ -385,11 +385,17 @@ class QueryInput extends React.Component<IProps, IState> {
 const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = props => {
     return (
         <RoutingResultsContext.Consumer>
-            {(routingResultsContext: IRoutingResultsContext) => {
+            {(routingContext: IRoutingResultsContext) => {
+                const region = routingContext.region;
+                const bounds = region ? region.bounds : undefined;
+                const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
                 const consumerProps: Partial<IProps> = {
-                    value: routingResultsContext.query,
-                    onChange: routingResultsContext.onQueryChange,
-                    onPreChange: routingResultsContext.onPreChange
+                    value: routingContext.query,
+                    onChange: routingContext.onQueryChange,
+                    onPreChange: routingContext.onPreChange,
+                    bounds: bounds,
+                    focusLatLng: focusLatLng
+
                 };
                 return props.children!(consumerProps);
             }}

@@ -10,9 +10,10 @@ import TripGoApi from "../api/TripGoApi";
 import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
 import TripPlanner, {TKUITripPlannerConfig} from "../trip-planner/TripPlanner";
-import RoutingResultsProvider, {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import ITripPlannerProps from "../trip-planner/ITripPlannerProps";
-import TripSelectionProvider, {ITripSelectionContext, TripSelectionContext} from "../trip-planner/TripSelectionProvider";
+import RoutingResultsProvider, {
+    IRoutingResultsContext,
+    RoutingResultsContext
+} from "../trip-planner/RoutingResultsProvider";
 import ITripRowProps from "../trip/ITripRowProps";
 import {SegmentDescriptionProps, SegmentDetail, SegmentDetailProps} from "..";
 import {default as SegmentDescription} from "../trip/SegmentDescription";
@@ -75,26 +76,19 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                 <OptionsContext.Consumer>
                     {(optionsContext: IOptionsContext) => (
                         <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}>
-                            <TripSelectionProvider>
-                                <ServiceResultsProvider>
-                                    <RoutingResultsContext.Consumer>
-                                        {(routingResultsContext: ITripPlannerProps) => (
-                                            <TripSelectionContext.Consumer>
-                                                {(tripSelectionContext: ITripSelectionContext) =>
-                                                    <ServiceResultsContext.Consumer>
-                                                        {(serviceContext: IServiceResultsContext) =>
-                                                            <TripPlanner {...routingResultsContext}
-                                                                         {...tripSelectionContext}
-                                                                         {...serviceContext}
-                                                                         config={config}
-                                                            />}
-                                                    </ServiceResultsContext.Consumer>
-                                                }
-                                            </TripSelectionContext.Consumer>
-                                        )}
-                                    </RoutingResultsContext.Consumer>
-                                </ServiceResultsProvider>
-                            </TripSelectionProvider>
+                            <ServiceResultsProvider>
+                                <RoutingResultsContext.Consumer>
+                                    {(routingResultsContext: IRoutingResultsContext) =>
+                                        <ServiceResultsContext.Consumer>
+                                            {(serviceContext: IServiceResultsContext) =>
+                                                <TripPlanner {...routingResultsContext}
+                                                             {...serviceContext}
+                                                             config={config}
+                                                />}
+                                        </ServiceResultsContext.Consumer>
+                                    }
+                                </RoutingResultsContext.Consumer>
+                            </ServiceResultsProvider>
                         </RoutingResultsProvider>
                     )}
                 </OptionsContext.Consumer>
