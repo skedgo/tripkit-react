@@ -1,31 +1,29 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import ITripRowProps, {TRIP_ALT_PICKED_EVENT} from "./ITripRowProps";
+import ITripRowProps from "./ITripRowProps";
 import "./TripsView.css";
 import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
-import {EventEmitter} from "fbemitter";
-import TripGroup from "../model/trip/TripGroup";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripRow from "./TripRow";
-
-// TODO: maybe define TKUIResultsViewProps subtracting ConnectionProps (those injected by the connector) from
-// IProps, and adding MergeHandlerProps (handler we want to merge)
+import TripGroup from "../model/trip/TripGroup";
+import TKUICard from "../card/TKUICard";
 
 interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
+    onClicked?: () => void;
     className?: string;
-    eventBus?: EventEmitter;
+    onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
     config?: TKUIResultsViewConfig;
 }
 
-interface IConnectionProps {
+interface IConsumedProps {
     values: Trip[]; // SOT of trips is outside, so assume trips come sorted and picking sorting criteria is handled outside.
     value?: Trip;
     onChange?: (value: Trip) => void;
     waiting?: boolean; // TODO: allow values to be undefined so no need for waiting prop.
 }
 
-interface IProps extends ITKUIResultsViewProps, IConnectionProps {
+interface IProps extends ITKUIResultsViewProps, IConsumedProps {
     config: TKUIResultsViewConfig;
 }
 
@@ -44,17 +42,19 @@ class TripsView extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
-        if (this.props.eventBus) {
-            this.props.eventBus.addListener(TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
-                setTimeout(() => {
-                    const updatedTripIndex = this.props.values.indexOf(update);
-                    if (updatedTripIndex !== -1) {
-                        this.rowRefs[updatedTripIndex].focus();
-                    }
-                }, 100);
-
-            });
-        }
+        // if (this.props.eventBus) {
+            // TODO: chech why this is no longer necessary. If still needed put this logic in a wrapper of
+            // onAlternativeChange passed to TripRow.
+            // this.props.eventBus.addListener(TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
+            //     setTimeout(() => {
+            //         const updatedTripIndex = this.props.values.indexOf(update);
+            //         if (updatedTripIndex !== -1) {
+            //             this.rowRefs[updatedTripIndex].focus();
+            //         }
+            //     }, 100);
+            //
+            // });
+        // }
         this.onKeyDown = this.onKeyDown.bind(this);
     }
 
@@ -75,22 +75,33 @@ class TripsView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         return (
-            <div className={"TripsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
-                {this.props.values && this.props.values.map((trip: Trip, index: number) =>
-                    this.props.config.renderTrip(
-                        { value: trip,
-                            className: trip === this.props.value ? "selected" : undefined,
-                            onClick: this.props.onChange ? () => this.props.onChange!(trip) : undefined,
-                            onFocus: this.props.onChange ? () => this.props.onChange!(trip) : undefined,
-                            onKeyDown: this.onKeyDown,
-                            eventBus: this.props.eventBus,
-                            key: index + trip.getKey(),
-                            ref: (el: any) => this.rowRefs[index] = el
-                        })
-                )}
-                {this.props.waiting ?
-                    <IconSpin className="TripsView-iconLoading sg-animate-spin gl-align-self-center" focusable="false"/> : null}
-            </div>
+            <TKUICard
+                title={"Routing results"}
+            >
+                <div className={"TripsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
+                    {this.props.values && this.props.values.map((trip: Trip, index: number) =>
+                        this.props.config.renderTrip(
+                            { value: trip,
+                                className: trip === this.props.value ? "selected" : undefined,
+                                onClick: this.props.onChange ?
+                                    () => {
+                                        if (this.props.onClicked) {
+                                            this.props.onClicked();
+                                        }
+                                        return this.props.onChange!(trip);
+                                    } :
+                                    undefined,
+                                onFocus: this.props.onChange ? () => this.props.onChange!(trip) : undefined,
+                                onKeyDown: this.onKeyDown,
+                                onAlternativeChange: this.props.onAlternativeChange,
+                                key: index + trip.getKey(),
+                                ref: (el: any) => this.rowRefs[index] = el
+                            })
+                    )}
+                    {this.props.waiting ?
+                        <IconSpin className="TripsView-iconLoading sg-animate-spin gl-align-self-center" focusable="false"/> : null}
+                </div>
+            </TKUICard>
         );
     }
 
@@ -118,8 +129,7 @@ class TripsView extends React.Component<IProps, {}> {
     }
 }
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
-// const Connector: React.SFC<any> = (props: any) => {
+const Consumer: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
@@ -135,7 +145,8 @@ const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNod
                     onChange: (trip: Trip) => {
                         routingContext.onChange(trip);
                         routingContext.onReqRealtimeFor(trip);
-                    }
+                    },
+                    onAlternativeChange: routingContext.onAlternativeChange
                 };
                 return props.children!(consumerProps);
             }}
@@ -143,22 +154,29 @@ const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNod
     );
 };
 
-export const TKUIResultsView = (addProps: ITKUIResultsViewProps) =>
-    <Connector>
-        {(props: IConnectionProps) => {
-            let onChangeToPass;
-            if (addProps.onChange && props.onChange) {
-                onChangeToPass = (trip: Trip) => {
-                    props.onChange!(trip);
-                    addProps.onChange!(trip);
-                }
-            } else {
-                onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
-            }
-            const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
-            return <TripsView {...tripsViewProps}/>;
-        }}
-    </Connector>;
+export const Connect = (RawComponent: React.ComponentType<IProps>) =>
+    (addProps: ITKUIResultsViewProps) => {
+        return (
+            <Consumer>
+                {(props: IConsumedProps) => {
+                    let onChangeToPass;
+                    if (addProps.onChange && props.onChange) {
+                        onChangeToPass = (trip: Trip) => {
+                            props.onChange!(trip);
+                            addProps.onChange!(trip);
+                        }
+                    } else {
+                        onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
+                    }
+                    const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
+                    return <RawComponent {...tripsViewProps}/>;
+                }}
+            </Consumer>
+        )
+    };
+
+// export const TKUIResultsView = (addProps: ITKUIResultsViewProps) =>
+export const TKUIResultsView = Connect(TripsView);
 
 export default TripsView;
 export {TKUIResultsViewConfig};

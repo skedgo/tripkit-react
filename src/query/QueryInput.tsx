@@ -24,6 +24,8 @@ import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import Trip from "../model/trip/Trip";
+import FavouriteTrip from "../model/FavouriteTrip";
+import FavouritesData from "../data/FavouritesData";
 
 interface IProps {
     value?: RoutingQuery;
@@ -37,7 +39,6 @@ interface IProps {
     bottomRightComponent?: ReactElement<any>;
     bottomLeftComponent?: ReactElement<any>;
     collapsable?: boolean;
-    onTimePanelOpen?: (open: boolean) => void;
     geocoderOptions?: MultiGeocoderOptions;
 }
 
@@ -110,6 +111,12 @@ class QueryInput extends React.Component<IProps, IState> {
     }
 
     private setQuery(update: RoutingQuery, callback?: () => void) {
+        const prevQuery = this.state.routingQuery;
+        if (update.isComplete(true) &&
+            (JSON.stringify(update.from) !== JSON.stringify(prevQuery.from)
+                || JSON.stringify(update.to) !== JSON.stringify(prevQuery.to))) {
+            FavouritesData.recInstance.add(FavouriteTrip.create(update.from!, update.to!));
+        }
         this.setState({
             routingQuery: update
         }, () => {
@@ -276,9 +283,6 @@ class QueryInput extends React.Component<IProps, IState> {
                             className="QueryInput-timeBtn gl-flex gl-align-center"
                             onClick={() => {
                                 this.setState({timePanelOpen: !this.state.timePanelOpen});
-                                if (this.props.onTimePanelOpen) {
-                                    this.props.onTimePanelOpen(!this.state.timePanelOpen);
-                                }
                             }}
                             aria-label={"Time preference, " + this.getTimeBtnText()}
                             aria-expanded={this.state.timePanelOpen}

@@ -6,19 +6,29 @@ import FavouritesData from "../data/FavouritesData";
 import IconAddFav from "-!svg-react-loader!../images/ic-star-outline.svg";
 import {EventSubscription} from "fbemitter";
 import {FavouriteRowProps} from "./FavouriteRow";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import RoutingQuery from "../model/RoutingQuery";
+import Util from "../util/Util";
+import OptionsData from "../data/OptionsData";
 
 
-interface IProps {
+interface ITKUIFavouriteListProps {
     recent?: boolean;
     title?: string;
     previewMax?: number;
     showMax?: number;
     hideWhenEmpty?: boolean;
-    onValueClicked?: (value: FavouriteTrip) => void;
     className?: string;
     moreBtnClass?: string;
     renderFavourite?: <P extends FavouriteRowProps>(props: P) => JSX.Element;
+    onValueClicked?: (value: FavouriteTrip) => void;
 }
+
+interface IConnectionProps {
+    onValueClicked?: (value: FavouriteTrip) => void;
+}
+
+interface IProps extends ITKUIFavouriteListProps, IConnectionProps {}
 
 interface IState {
     values: FavouriteTrip[];
@@ -145,5 +155,46 @@ class FavouriteList extends React.Component<IProps, IState> {
         this.favChangeSubscr.remove();
     }
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <RoutingResultsContext.Consumer>
+            {(routingContext: IRoutingResultsContext) => {
+                const consumerProps: Partial<IProps> = {
+                    onValueClicked: (favourite: FavouriteTrip) => {
+                        const query = RoutingQuery.create(favourite.from, favourite.to);
+                        if (favourite.options) {
+                            const favOptions = Util.iAssign(OptionsData.instance.get(), FavouritesData.getFavOptionsPart(favourite.options));
+                            OptionsData.instance.save(favOptions);
+                        }
+                        routingContext.onQueryChange(query);
+                        // TODO: check -> see if this is necessary.
+                        // if (this.mapRef && favourite.from.isResolved() && favourite.to.isResolved()) {
+                        //     this.mapRef.fitBounds(BBox.createBBoxArray([favourite.from, favourite.to]));
+                        // }
+                    }
+                };
+                return props.children!(consumerProps);
+            }}
+        </RoutingResultsContext.Consumer>
+    );
+};
+
+export const TKUIFavouritesView = (addProps: ITKUIFavouriteListProps) =>
+    <Connector>
+        {(props: IConnectionProps) => {
+            let onValueClickedToPass;
+            if (addProps.onValueClicked && props.onValueClicked) {
+                onValueClickedToPass = (value: FavouriteTrip) => {
+                    props.onValueClicked!(value);
+                    addProps.onValueClicked!(value);
+                }
+            } else {
+                onValueClickedToPass = addProps.onValueClicked ? addProps.onValueClicked : props.onValueClicked;
+            }
+            const tripsViewProps = {...addProps, ...props, onChange: onValueClickedToPass} as IProps;
+            return <FavouriteList {...tripsViewProps}/>;
+        }}
+    </Connector>;
 
 export default FavouriteList;

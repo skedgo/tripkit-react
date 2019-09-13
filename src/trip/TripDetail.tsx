@@ -4,11 +4,13 @@ import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {SegmentDetailProps, default as TripSegmentDetail} from "./TripSegmentDetail";
 import {CSSProperties} from "react";
+import TKUICard from "../card/TKUICard";
 
 interface IProps {
     value: Trip;
     style?: CSSProperties;
     config: TKUITripDetailConfig;
+    onRequestClose?: () => void;
 }
 
 class TKUITripDetailConfig {
@@ -23,12 +25,17 @@ class TripDetail extends React.Component<IProps, {}> {
         const renderSegmentDetail = this.props.config.renderSegmentDetail ? this.props.config.renderSegmentDetail :
             <P extends SegmentDetailProps & {key: number}>(props: P) => <TripSegmentDetail {...props}/>;
         return (
-            <div className="TripDetail" style={this.props.style}>
-                {segments.map((segment: Segment, index: number) =>
-                    renderSegmentDetail({value: segment, key: index})
-                )}
-                {renderSegmentDetail({value: this.props.value.arrivalSegment, key: segments.length})}
-            </div>
+            <TKUICard
+                title={"Trip detail"}
+                onRequestClose={this.props.onRequestClose}
+            >
+                <div className="TripDetail" style={this.props.style}>
+                    {segments.map((segment: Segment, index: number) =>
+                        renderSegmentDetail({value: segment, key: index})
+                    )}
+                    {renderSegmentDetail({value: this.props.value.arrivalSegment, key: segments.length})}
+                </div>
+            </TKUICard>
         )
     }
 }
