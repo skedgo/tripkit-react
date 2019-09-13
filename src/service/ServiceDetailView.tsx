@@ -6,18 +6,18 @@ import ServiceStopLocation from "../model/ServiceStopLocation";
 import TripSegmentSteps from "../trip/TripSegmentSteps";
 import "./ServiceDetailView.css"
 import ServiceShape from "../model/trip/ServiceShape";
-import IconCross from "-!svg-react-loader!../images/ic-cross.svg";
 import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
+import TKUICard from "../card/TKUICard";
 
 interface ITKUIServiceViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
     onRequestClose?: () => void;
-    eventBus?: EventEmitter;
 }
 
 interface IConnectionProps {
     departure: ServiceDeparture;
+    eventBus?: EventEmitter;
 }
 
 interface IProps extends ITKUIServiceViewProps, IConnectionProps {}
@@ -45,39 +45,35 @@ class ServiceDetailView extends React.Component<IProps, {}> {
             }
         }
         return (
-            <div className="ServiceDetailView gl-flex gl-column">
-                {this.props.renderDeparture({
-                    value: this.props.departure,
-                    renderRight: () => {
-                        return (
-                            <div className="ServiceDetailView-crossCircle gl-flex gl-align-center"
-                                 onClick={this.props.onRequestClose}
-                            >
-                                <IconCross className="gl-svg-fill-currColor ServiceDetailView-cross"/>
-                            </div>
-                        )
-                    }
-                })}
-                <div className="gl-scrollable-y" ref={(scrollRef: any) => this.scrollRef = scrollRef}>
-                    {stops &&
-                    <TripSegmentSteps
-                        steps={stops}
-                        // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
-                        leftLabel = {(step: ServiceStopLocation) => step.departure ?
-                            DateTimeUtil.momentTZTime(step.departure * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-                            step.arrival ? DateTimeUtil.momentTZTime(step.arrival * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""}
-                        rightLabel={(step: ServiceStopLocation) => step.departure === departure.startTime ?
-                            <div className="ServiceDetailView-currStopTitle">{step.name}</div> : step.name}
-                        stepClassName={(step: ServiceStopLocation) => "ServiceDetailView-stop" +
-                            (step.departure && step.departure < departure.startTime ? " ServiceDetailView-pastStop" :
-                                step.departure === departure.startTime ? " ServiceDetailView-currStop" : "")}
-                        borderColor={departure.serviceColor ? departure.serviceColor.toHex() : "black"}
-                        onStepClicked={(step: ServiceStopLocation) =>
-                            this.props.eventBus && this.props.eventBus.emit(ServiceDetailView.STOP_CLICKED_EVENT, step)}
-                    />
-                    }
+            <TKUICard
+                title={""}
+                onRequestClose={this.props.onRequestClose}
+            >
+                <div className="ServiceDetailView gl-flex gl-column">
+                    {this.props.renderDeparture({
+                        value: this.props.departure,
+                    })}
+                    <div className="gl-scrollable-y" ref={(scrollRef: any) => this.scrollRef = scrollRef}>
+                        {stops &&
+                        <TripSegmentSteps
+                            steps={stops}
+                            // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
+                            leftLabel = {(step: ServiceStopLocation) => step.departure ?
+                                DateTimeUtil.momentTZTime(step.departure * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) :
+                                step.arrival ? DateTimeUtil.momentTZTime(step.arrival * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""}
+                            rightLabel={(step: ServiceStopLocation) => step.departure === departure.startTime ?
+                                <div className="ServiceDetailView-currStopTitle">{step.name}</div> : step.name}
+                            stepClassName={(step: ServiceStopLocation) => "ServiceDetailView-stop" +
+                                (step.departure && step.departure < departure.startTime ? " ServiceDetailView-pastStop" :
+                                    step.departure === departure.startTime ? " ServiceDetailView-currStop" : "")}
+                            borderColor={departure.serviceColor ? departure.serviceColor.toHex() : "black"}
+                            onStepClicked={(step: ServiceStopLocation) =>
+                                this.props.eventBus && this.props.eventBus.emit(ServiceDetailView.STOP_CLICKED_EVENT, step)}
+                        />
+                        }
+                    </div>
                 </div>
-            </div>
+            </TKUICard>
         );
     }
 
@@ -94,7 +90,8 @@ const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNod
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (
                 props.children!({
-                    departure: serviceContext.selectedService
+                    departure: serviceContext.selectedService,
+                    eventBus: serviceContext.servicesEventBus
                 })
             )}
         </ServiceResultsContext.Consumer>

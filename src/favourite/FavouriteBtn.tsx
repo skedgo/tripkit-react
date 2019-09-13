@@ -6,9 +6,10 @@ import IconRemove from "-!svg-react-loader!../images/ic-star-filled.svg";
 import FavouriteTrip from "../model/FavouriteTrip";
 import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 
 interface IProps {
-    favourite: FavouriteTrip | null;
+    favourite?: FavouriteTrip;
 }
 
 class FavouriteBtn extends React.Component<IProps, {}> {
@@ -18,14 +19,14 @@ class FavouriteBtn extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const exists = this.props.favourite !== null && FavouritesData.instance.has(this.props.favourite);
+        const exists = this.props.favourite && FavouritesData.instance.has(this.props.favourite);
         return (
-            this.props.favourite !== null ?
+            this.props.favourite ?
                 <button className="FavouriteBtn-main gl-link gl-flex gl-align-center"
                         aria-label={"Add to favourites"}
                         aria-pressed={exists}
                         onClick={() => {
-                            if (this.props.favourite === null) {
+                            if (!this.props.favourite) {
                                 return;
                             }
                             if (exists) {
@@ -53,5 +54,24 @@ class FavouriteBtn extends React.Component<IProps, {}> {
         FavouritesData.instance.addChangeListener(() => this.forceUpdate());
     }
 }
+
+const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+    return (
+        <RoutingResultsContext.Consumer>
+            {(routingContext: IRoutingResultsContext) => {
+                const favourite = routingContext.query.isComplete() ?
+                    FavouriteTrip.create(routingContext.query.from!, routingContext.query.to!) : undefined;
+                return props.children!({
+                    favourite
+                });
+            }}
+        </RoutingResultsContext.Consumer>
+    );
+};
+
+export const TKUIFavQueryBtn = (props: {}) =>
+    <Connector>
+        {(cProps: Partial<IProps>) => <FavouriteBtn {...props} {...cProps}/>}
+    </Connector>;
 
 export default FavouriteBtn;

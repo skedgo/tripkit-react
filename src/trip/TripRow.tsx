@@ -5,7 +5,7 @@ import TripAltBtn from "./TripAltBtn";
 import TripRowTime from "./TripRowTime";
 import TripRowTrack from "./TripRowTrack";
 import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
-import {default as IProps, TRIP_ALT_PICKED_EVENT} from "./ITripRowProps";
+import {default as IProps} from "./ITripRowProps";
 
 interface IState {
     showDetails: boolean;
@@ -45,8 +45,8 @@ class TripRow extends React.Component<IProps, IState> {
                     <TripAltBtn
                         value={this.props.value as TripGroup}
                         onChange={(value: TripGroup) => {
-                            if (this.props.eventBus) {
-                                this.props.eventBus.emit(TRIP_ALT_PICKED_EVENT, this.props.value, value);
+                            if (this.props.onAlternativeChange) {
+                                this.props.onAlternativeChange(this.props.value as TripGroup, value.getSelectedTrip());
                             }
                         }}
                         renderTrip={<P extends IProps>(props: P) => <TripRow {...props}/>}

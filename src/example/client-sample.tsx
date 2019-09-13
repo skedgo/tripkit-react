@@ -14,7 +14,7 @@ import RoutingResultsProvider, {
     IRoutingResultsContext,
     RoutingResultsContext
 } from "../trip-planner/RoutingResultsProvider";
-import ITripRowProps from "../trip/ITripRowProps";
+// import ITripRowProps from "../trip/ITripRowProps";
 import {SegmentDescriptionProps, SegmentDetail, SegmentDetailProps} from "..";
 import {default as SegmentDescription} from "../trip/SegmentDescription";
 import Segment from "../model/trip/Segment";
@@ -42,17 +42,17 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     containerElement.className = "app-style";
 
     const config = new TKUITripPlannerConfig();
-    config.resultsViewConfig.renderTrip = <P extends ITripRowProps>(props: P) => {
-        return (
-            <div className={props.className}
-                 onClick={props.onClick}
-                 onFocus={props.onFocus}
-                 onKeyDown={props.onKeyDown}
-            >
-                {props.value.segments[0].getAction()}
-            </div>
-        )
-    };
+    // config.resultsViewConfig.renderTrip = <P extends ITripRowProps>(props: P) => {
+    //     return (
+    //         <div className={props.className}
+    //              onClick={props.onClick}
+    //              onFocus={props.onFocus}
+    //              onKeyDown={props.onKeyDown}
+    //         >
+    //             {props.value.segments[0].getAction()}
+    //         </div>
+    //     )
+    // };
     config.tripDetailConfig.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
         return (
             <SegmentDetail {...props}

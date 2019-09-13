@@ -7,13 +7,13 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import IServiceDepartureRowProps from "./IServiceDepartureRowProps";
 import "./ServiceDepartureTable.css";
 import IconGlass from "-!svg-react-loader!../images/ic-glass.svg";
-import IconRemove from '-!svg-react-loader!../images/ic-cross.svg'
 import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import DateTimePickerFace from "../time/DateTimePickerFace";
 import {Moment} from "moment";
 import moment from "moment-timezone";
+import TKUICard from "../card/TKUICard";
 
 interface ITKUIDeparturesViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
@@ -50,17 +50,9 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         return (
-            <div className={"ServiceDepartureTable gl-flex gl-column"}>
-                <div className="ServiceDepartureTable-header">
-                    <div className="gl-flex gl-space-between gl-align-center">
-                        <div className="ServiceDepartureTable-title gl-grow">
-                            {this.props.title}
-                        </div>
-                        <button onClick={this.props.onRequestClose} className="ServiceDepartureTable-btnClear" aria-hidden={true}
-                                tabIndex={-1}>
-                            <IconRemove aria-hidden={true} className="ServiceDepartureTable-iconClear gl-svg-fill-currColor" focusable="false"/>
-                        </button>
-                    </div>
+            <TKUICard
+                title={this.props.title}
+                renderSubHeader={() =>
                     <div className="ServiceDepartureTable-timePicker">
                         <DateTimePickerFace
                             value={this.props.initTime}
@@ -76,41 +68,45 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
                             }}
                         />
                     </div>
-                </div>
-                <div className="ServiceDepartureTable-filterWrapper gl-flex gl-align-center gl-no-shrink">
-                    <IconGlass className="ServiceDepartureTable-glassIcon gl-svg-path-fill-currColor"/>
-                    <input className="ServiceDepartureTable-filterInput gl-grow" placeholder="Filter"
-                           onChange={this.onFilterChange}/>
-                </div>
-                <div className="ServiceDepartureTable-relative gl-flex">
-                    <div className={"ServiceDepartureTable-container gl-flex gl-column gl-grow"}
-                         onScroll={this.onScroll}
-                         ref={(scrollRef: any) => this.scrollRef = scrollRef}
-                    >
-                        {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
-                            const showDayLabel = i === 0 ||
-                                DateTimeUtil.momentTZTime(this.props.departures[i - 1].actualStartTime * 1000).format("ddd D") !==
-                                DateTimeUtil.momentTZTime(departure.actualStartTime * 1000).format("ddd D");
-                            if (showDayLabel) {
-                                elems.push(<DaySeparator date={DateTimeUtil.momentTZTime(departure.actualStartTime * 1000)}
-                                                         key={"day-" + i}
-                                                         scrollRef={this.scrollRef}
-                                />)
-                            }
-                            elems.push(this.props.renderDeparture({
-                                value: departure,
-                                key: i,
-                                onClick: () => {
-                                    if (this.props.onServiceSelection) {
-                                        this.props.onServiceSelection(departure)
-                                    }
+                }
+                onRequestClose={this.props.onRequestClose}
+            >
+                <div className={"ServiceDepartureTable gl-flex gl-column"}>
+                    <div className="ServiceDepartureTable-filterWrapper gl-flex gl-align-center gl-no-shrink">
+                        <IconGlass className="ServiceDepartureTable-glassIcon gl-svg-path-fill-currColor"/>
+                        <input className="ServiceDepartureTable-filterInput gl-grow" placeholder="Filter"
+                               onChange={this.onFilterChange}/>
+                    </div>
+                    <div className="ServiceDepartureTable-relative gl-flex">
+                        <div className={"ServiceDepartureTable-container gl-flex gl-column gl-grow"}
+                             onScroll={this.onScroll}
+                             ref={(scrollRef: any) => this.scrollRef = scrollRef}
+                        >
+                            {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
+                                const showDayLabel = i === 0 ||
+                                    DateTimeUtil.momentTZTime(this.props.departures[i - 1].actualStartTime * 1000).format("ddd D") !==
+                                    DateTimeUtil.momentTZTime(departure.actualStartTime * 1000).format("ddd D");
+                                if (showDayLabel) {
+                                    elems.push(<DaySeparator date={DateTimeUtil.momentTZTime(departure.actualStartTime * 1000)}
+                                                             key={"day-" + i}
+                                                             scrollRef={this.scrollRef}
+                                    />)
                                 }
-                            }));
-                            return elems;
-                        }, [])}
+                                elems.push(this.props.renderDeparture({
+                                    value: departure,
+                                    key: i,
+                                    onClick: () => {
+                                        if (this.props.onServiceSelection) {
+                                            this.props.onServiceSelection(departure)
+                                        }
+                                    }
+                                }));
+                                return elems;
+                            }, [])}
+                        </div>
                     </div>
                 </div>
-            </div>
+            </TKUICard>
         );
     }
 

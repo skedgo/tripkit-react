@@ -15,6 +15,7 @@ import Timer = NodeJS.Timer;
 import {IServiceResultsContext as IServiceResConsumerProps} from "../service/ServiceResultsProvider";
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
+import {EventEmitter} from "fbemitter";
 
 interface IWithServiceResultsProps {
     // TODO: Move to state, as startStop
@@ -45,6 +46,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public awaitingRealtime = false;
         public rTSchedule: Timer;
+
+        public eventBus: EventEmitter = new EventEmitter();
 
         constructor(props: Subtract<P, IServiceResConsumerProps> & IWithServiceResultsProps) {
             super(props);
@@ -167,6 +170,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              onInitTimeChange={this.onInitTimeChange}
                              selectedService={this.state.selected}
                              onServiceSelection={this.onServiceSelection}
+                             servicesEventBus={this.eventBus}
             />;
         }
 

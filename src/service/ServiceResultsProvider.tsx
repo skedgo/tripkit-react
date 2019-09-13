@@ -3,6 +3,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import {Moment} from "moment-timezone";
 import withServiceResults from "../api/WithServiceResults";
 import StopLocation from "../model/StopLocation";
+import {EventEmitter} from "fbemitter";
 
 export interface IServiceResultsContext {
     // stop query. Maybe group in class, similar to RoutingQuery. E.g. DeparturesQuery
@@ -18,6 +19,7 @@ export interface IServiceResultsContext {
     title: string;
     selectedService?: ServiceDeparture;
     onServiceSelection: (departure?: ServiceDeparture) => void;
+    servicesEventBus: EventEmitter;
 }
 
 export const ServiceResultsContext = React.createContext<IServiceResultsContext | undefined>(undefined);

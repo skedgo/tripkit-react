@@ -31,7 +31,6 @@ import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
-import {EventEmitter} from "fbemitter";
 import TransportUtil from "../trip/TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
@@ -49,7 +48,6 @@ interface ITKUIMapViewProps {
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
-    eventBus?: EventEmitter;
 }
 
 interface IConnectionProps {
@@ -391,10 +389,10 @@ class LeafletMap extends React.Component<IProps, IState> {
                                                renderer={segmentRenderer(segment)}
                                                key={i}/>;
                     })}
-                    {this.props.service && <MapService
+                    {this.props.service &&
+                    <MapService
                         serviceDeparture={this.props.service}
                         renderer={serviceRenderer(this.props.service)}
-                        eventBus={this.props.eventBus}
                     />
                     }
                     {this.props.children}
@@ -429,8 +427,10 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (this.props.viewport && (prevProps.viewport !== this.props.viewport)) {
             this.setViewport(this.props.viewport, true);
         }
-        // TODO: check that this is used to fit the map when setting a favourite or when comming from query input widget.
-        if (!prevProps.from && !prevProps.to &&
+        // TODO: check that this is used to fit the map when comming from query input widget.
+        // TODO: check is the change done to fit favourites will cause other undesired fits.
+        // if (!prevProps.from && !prevProps.to &&
+        if (this.props.from !== prevProps.from && this.props.to !== prevProps.to &&
             this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
             this.fitBounds(BBox.createBBoxArray([this.props.from, this.props.to]));
         }

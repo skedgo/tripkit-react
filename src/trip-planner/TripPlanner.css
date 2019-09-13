@@ -16,19 +16,6 @@
   margin-top: 178px;
 }
 
-.TripPlanner-queryTimePanelOpen .TripPlanner-subQueryPanel {
-  margin-top: 285px;
-}
-
-.TripPlanner-tripsView .TripPlanner-subQueryPanel {
-  margin-top: 263px;
-  /* On IE height is 205px */
-}
-
-.TripPlanner-tripsView.TripPlanner-queryTimePanelOpen .TripPlanner-subQueryPanel {
-  margin-top: 370px;
-}
-
 .TripPlanner-queryInput {
   background-color: #0242ac;
 }
