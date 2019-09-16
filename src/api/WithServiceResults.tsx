@@ -11,7 +11,6 @@ import ServiceDeparturesResult from "../model/service/ServiceDeparturesResult";
 import Features from "../env/Features";
 import Service from "../model/service/Service";
 import LatestResult from "../model/service/LatestResult";
-import Timer = NodeJS.Timer;
 import {IServiceResultsContext as IServiceResConsumerProps} from "../service/ServiceResultsProvider";
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
@@ -34,7 +33,8 @@ interface IWithServiceResultsState {
 }
 
 
-function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.ComponentType<P>) {
+// function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.ComponentType<P>) {
+function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.ComponentType<any>) {
 
     return class WithServiceResults extends React.Component<Subtract<P, IServiceResConsumerProps> & IWithServiceResultsProps, IWithServiceResultsState> {
 
@@ -45,7 +45,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public prevDeparturesCount = -1;
 
         public awaitingRealtime = false;
-        public rTSchedule: Timer;
+        public rTSchedule: any;
 
         public eventBus: EventEmitter = new EventEmitter();
 

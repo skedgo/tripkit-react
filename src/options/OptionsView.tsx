@@ -1,7 +1,7 @@
 import * as React from "react";
 import Options from "../model/Options";
 import Util from "../util/Util";
-import IconClose from '-!svg-react-loader!../images/ic-cross.svg';
+import {ReactComponent as IconClose} from '../images/ic-cross.svg';
 import "./OptionsView.css";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
@@ -48,7 +48,7 @@ class OptionsView extends React.Component<IProps, IState> {
             update: this.props.value,
             pickSchoolError: false
         };
-        RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId: ModeIdentifier) =>
+        RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
         this.onModeCheckboxChange = this.onModeCheckboxChange.bind(this);
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
@@ -490,7 +490,7 @@ class OptionsView extends React.Component<IProps, IState> {
     }
 }
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
     return (
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>

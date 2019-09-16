@@ -1,7 +1,7 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
 import {TrackTransportProps} from "./TrackTransport";
-import IconAngleRight from "-!svg-react-loader!../images/ic-angle-right.svg";
+import {ReactComponent as IconAngleRight} from "../images/ic-angle-right.svg";
 import Trip from "../model/trip/Trip";
 
 export interface IProps {

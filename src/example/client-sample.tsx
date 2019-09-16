@@ -15,11 +15,11 @@ import RoutingResultsProvider, {
     RoutingResultsContext
 } from "../trip-planner/RoutingResultsProvider";
 // import ITripRowProps from "../trip/ITripRowProps";
-import {SegmentDescriptionProps, SegmentDetail, SegmentDetailProps} from "..";
-import {default as SegmentDescription} from "../trip/SegmentDescription";
+import {default as SegmentDescription, SegmentDescriptionProps} from "../trip/SegmentDescription";
 import Segment from "../model/trip/Segment";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import {SegmentDetailProps, default as TripSegmentDetail} from "../trip/TripSegmentDetail";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -55,7 +55,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     // };
     config.tripDetailConfig.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
         return (
-            <SegmentDetail {...props}
+            <TripSegmentDetail {...props}
                            renderDescr={<Q extends SegmentDescriptionProps>(props1: Q) =>
                                <SegmentDescription {...props1}/>}
                            renderIcon={(iconProps: {value: Segment}) =>

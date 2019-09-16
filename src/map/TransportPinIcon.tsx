@@ -1,7 +1,7 @@
 import * as React from "react";
 import "./TransportPinIcon.css";
-import IconPinHead from "-!svg-react-loader!../images/ic-map-pin-head.svg";
-import IconPinHeadPointer from "-!svg-react-loader!../images/ic-map-pin-head-pointer.svg";
+import {ReactComponent as IconPinHead} from "../images/ic-map-pin-head.svg";
+import {ReactComponent as IconPinHeadPointer} from "../images/ic-map-pin-head-pointer.svg";
 import iconPinBase from "../images/ic-map-pin-base.png";
 import Segment from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
@@ -10,7 +10,7 @@ import TransportUtil from "../trip/TransportUtil";
 import ServiceShape from "../model/trip/ServiceShape";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 
-interface IProps {
+export interface IProps {
     icon: string;
     label: string;
     rotation?: number;
@@ -53,8 +53,8 @@ class TransportPinIcon extends React.Component<IProps, {}> {
                              {
                                  transform: "rotate(" + rotation + "deg)",
                                  WebkitTransform: "rotate(" + rotation + "deg)",
-                                 MsTransform: "rotate(" + rotation + "deg)",
-                                 MozTransform: "rotate(" + rotation + "deg)"
+                                 // MsTransform: "rotate(" + rotation + "deg)",
+                                 // MozTransform: "rotate(" + rotation + "deg)"
                              } : undefined}
                              focusable="false"
                     />
@@ -69,5 +69,5 @@ class TransportPinIcon extends React.Component<IProps, {}> {
     }
 }
 
-export {IProps}
 export default TransportPinIcon;
+// export {IProps};

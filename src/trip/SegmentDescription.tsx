@@ -5,6 +5,8 @@ interface IProps {
     value: Segment;
 }
 
+export interface SegmentDescriptionProps extends IProps {}
+
 class SegmentDescription extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
@@ -25,4 +27,3 @@ class SegmentDescription extends React.Component<IProps, {}> {
 }
 
 export default SegmentDescription;
-export {IProps as SegmentDescriptionProps};

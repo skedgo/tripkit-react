@@ -2,11 +2,11 @@ import * as React from "react";
 import {ReactElement} from "react";
 import './FavouriteRow.css';
 import FavouriteTrip from "../model/FavouriteTrip";
-import IconAngleRight from "-!svg-react-loader!../images/ic-angle-right.svg";
+import {ReactComponent as IconAngleRight} from "../images/ic-angle-right.svg";
 import FavouriteBtn from "./FavouriteBtn";
 import LocationUtil from "../util/LocationUtil";
 
-interface IProps {
+export interface IProps {
     favourite: FavouriteTrip;
     recent?: boolean;
     onClick?: () => void;
@@ -64,4 +64,3 @@ class FavouriteRow extends React.Component<IProps, {}> {
 }
 
 export default FavouriteRow;
-export {IProps as FavouriteRowProps}

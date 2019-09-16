@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Location from "../model/Location";
 import './ResultItem.css';
-import IconCurrLoc from '-!svg-react-loader!../images/ic-curr-loc.svg';
+import {ReactComponent as IconCurrLoc} from '../images/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
 import SkedgoGeocoder from "../geocode/SkedgoGeocoder";

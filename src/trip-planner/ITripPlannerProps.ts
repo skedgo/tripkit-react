@@ -18,4 +18,3 @@ interface ITripPlannerProps {
 }
 
 export default ITripPlannerProps;
-export {ITripPlannerProps};

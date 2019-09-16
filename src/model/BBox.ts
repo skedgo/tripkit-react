@@ -2,8 +2,8 @@ import LatLng from "./LatLng";
 import L from "leaflet";
 
 class BBox {
-    private _ne: LatLng;
-    private _sw: LatLng;
+    private _ne: LatLng = LatLng.createLatLng(0, 0);
+    private _sw: LatLng = LatLng.createLatLng(0, 0);
 
     public static createBBox(ne: LatLng, sw: LatLng): BBox {
         const instance: BBox = new BBox();
@@ -25,7 +25,6 @@ class BBox {
     constructor() {
         // Avoid empty error
     }
-
 
     get ne(): LatLng {
         return this._ne;

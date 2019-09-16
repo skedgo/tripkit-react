@@ -37,7 +37,7 @@ class SegmentTemplate {
     private _warnings: string = "";
     @JsonProperty("visibility", String, true)
     private _visibility: string | null = null;
-    private _visibilityType: Visibility;
+    private _visibilityType: Visibility | undefined;
     @JsonProperty("type", String, true)
     private _type: string = "";
     @JsonProperty("travelDirection", Number, true)
@@ -70,7 +70,7 @@ class SegmentTemplate {
     @JsonProperty("mini", Any, true)
     private _mini: any = {};
 
-    private _stop: StopLocation | null;
+    private _stop: StopLocation | null = null;
     private _notesList: string[] | null = null;
 
     /**

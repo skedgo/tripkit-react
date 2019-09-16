@@ -26,7 +26,7 @@ import {default as SegmentPopup} from "./SegmentPopup";
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import {default as ServiceStopPopup} from "./ServiceStopPopup";
-import IconServiceStop from "-!svg-react-loader!../images/ic-service-stop.svg";
+import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import ServiceDeparture from "../model/service/ServiceDeparture";
@@ -38,7 +38,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {MapUtil} from "../index";
+import MapUtil from "../util/MapUtil";
 
 interface ITKUIMapViewProps {
     showLocations?: boolean;
@@ -48,6 +48,7 @@ interface ITKUIMapViewProps {
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
+    children: any;
 }
 
 interface IConnectionProps {
@@ -67,7 +68,7 @@ interface IState {
     viewport: {center?: LatLng, zoom?: number};
 }
 
-interface IMapSegmentRenderer {
+export interface IMapSegmentRenderer {
     renderPinIcon: () => JSX.Element;
     renderPopup?: () => JSX.Element;
     polylineOptions: PolylineProps | PolylineProps[];
@@ -82,7 +83,7 @@ class LeafletMap extends React.Component<IProps, IState> {
     private readonly ZOOM_ALL_LOCATIONS = 0;    // Zoom all locations at any zoom.
     private readonly ZOOM_PARENT_LOCATIONS = 11;
 
-    private leafletElement: L.Map;
+    private leafletElement?: L.Map;
 
     private wasDoubleClick = false;
 
@@ -104,7 +105,7 @@ class LeafletMap extends React.Component<IProps, IState> {
     }
 
     private onMoveEnd() {
-        const mapBounds = this.leafletElement.getBounds();
+        const mapBounds = this.leafletElement!.getBounds();
         if (mapBounds.getNorth() === 90) {  // Filter first bounds, which are like max possible bounds
             return;
         }
@@ -112,7 +113,7 @@ class LeafletMap extends React.Component<IProps, IState> {
     }
 
     private onLocationsChanged(locResult: LocationsResult) {
-        if (this.leafletElement.getZoom() < this.ZOOM_PARENT_LOCATIONS || (this.leafletElement.getZoom() < this.ZOOM_ALL_LOCATIONS && locResult.level === 2)) {
+        if (this.leafletElement!.getZoom() < this.ZOOM_PARENT_LOCATIONS || (this.leafletElement!.getZoom() < this.ZOOM_ALL_LOCATIONS && locResult.level === 2)) {
             return;
         }
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
@@ -131,12 +132,12 @@ class LeafletMap extends React.Component<IProps, IState> {
 
     private refreshMapLocations() {
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
-        const showAny = this.props.showLocations && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
+        const showAny = this.props.showLocations && this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
             && enabledMapLayers.length > 0;
         if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
             RegionsData.instance.getCloserRegionP(this.state.viewport!.center!).then((region: Region) => {
                 LocationsData.instance.requestLocations(region.name, 1);
-                if (this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
+                if (this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
                     && this.leafletElement.getZoom() >= this.ZOOM_PARENT_LOCATIONS) { // To avoid crashing if ZOOM_ALL_LOCATIONS < ZOOM_PARENT_LOCATIONS
                     LocationsData.instance.requestLocations(region.name, 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
                 }
@@ -145,7 +146,7 @@ class LeafletMap extends React.Component<IProps, IState> {
     }
 
     private isShowLocType(type: MapLocationType): boolean {
-        return !!this.props.showLocations && this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS &&
+        return !!this.props.showLocations && !!this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS &&
             OptionsData.instance.get().mapLayers.indexOf(type) !== -1 && !!this.state.mapLayers.get(type);
     }
 
@@ -296,7 +297,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                         this.shapesRenderer(service.serviceDetail.shapes, color) : [],
                     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
                         <IconServiceStop style={{
-                            color: shape.travelled ? color : "grey",
+                            color: shape.travelled ? color! : "grey",
                             opacity: shape.travelled ? 1 : .5
                         }}/>,
                     renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) =>
@@ -411,7 +412,7 @@ class LeafletMap extends React.Component<IProps, IState> {
 
     public componentDidMount(): void {
         this.refreshMapLocations();
-        this.leafletElement.on("dblclick", event1 => {
+        this.leafletElement!.on("dblclick", event1 => {
             this.wasDoubleClick = true;
         });
 
@@ -464,13 +465,13 @@ class LeafletMap extends React.Component<IProps, IState> {
     }
 
     public onResize() {
-        this.leafletElement.invalidateSize();
+        this.leafletElement!.invalidateSize();
     }
 }
 
 const geocodingData: MultiGeocoder = new MultiGeocoder();
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) =>
@@ -526,4 +527,3 @@ export const TKUIMapView = (props: ITKUIMapViewProps & {refAdHoc: (ref: any) => 
     </Connector>;
 
 export default LeafletMap;
-export {IMapSegmentRenderer};

@@ -1,7 +1,7 @@
 import {Component, default as React} from "react";
 import Autocomplete from 'react-autocomplete';
 import "./SchoolPicker.css";
-import IconRemove from '-!svg-react-loader!../images/ic-cross.svg';
+import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 
 interface IProps {
     values: string[];

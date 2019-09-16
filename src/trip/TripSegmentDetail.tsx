@@ -126,5 +126,5 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
     }
 }
 
+export interface SegmentDetailProps extends IProps {}
 export default TripSegmentDetail;
-export {IProps as SegmentDetailProps};

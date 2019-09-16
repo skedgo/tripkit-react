@@ -1,5 +1,5 @@
+import React from "react";
 import TripGoApi from "./TripGoApi";
-import * as React from "react";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
 import {IRoutingResultsContext as RResultsConsumerProps} from "../trip-planner/RoutingResultsProvider";
@@ -33,7 +33,8 @@ interface IWithRoutingResultsState {
     waiting: boolean;
 }
 
-function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
+// function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
+function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
     return class WithRoutingResults extends React.Component<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps, IWithRoutingResultsState> {
 
@@ -194,7 +195,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
 
         public render(): React.ReactNode {
             const { urlQuery, ...props } = this.props as IWithRoutingResultsProps;
-            return <Consumer {...props}
+            return <Consumer
+                            {...props}
                              query={this.state.query}
                              onQueryChange={this.onQueryChange}
                              preFrom={this.state.preFrom}
@@ -206,8 +208,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
                                      this.setState({preTo: location})
                                  }
                              }}
-                             onViewportChange={this.onViewportChange}
                              region={this.state.region}
+                             onViewportChange={this.onViewportChange}
                              trips={this.state.trips}
                              waiting={this.state.waiting}
                              selected={this.state.selected}
@@ -326,4 +328,3 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.Com
 }
 
 export default withRoutingResults;
-export {IWithRoutingResultsProps, IWithRoutingResultsState};

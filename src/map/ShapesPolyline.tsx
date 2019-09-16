@@ -19,7 +19,7 @@ interface IProps {
     eventBus?: EventEmitter;
 }
 
-interface IServiceStopProps {
+export interface IServiceStopProps {
     stop: ServiceStopLocation;
     shape: ServiceShape;
 }
@@ -85,4 +85,3 @@ class ShapesPolyline extends React.Component<IProps, {}> {
 }
 
 export default ShapesPolyline;
-export {IServiceStopProps};

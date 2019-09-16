@@ -2,7 +2,7 @@ import * as React from "react";
 import Trip from "../model/trip/Trip";
 import ITripRowProps from "./ITripRowProps";
 import "./TripsView.css";
-import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg';
+import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripRow from "./TripRow";
 import TripGroup from "../model/trip/TripGroup";
@@ -12,7 +12,6 @@ interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
     onClicked?: () => void;
     className?: string;
-    onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
     config?: TKUIResultsViewConfig;
 }
 
@@ -21,6 +20,7 @@ interface IConsumedProps {
     value?: Trip;
     onChange?: (value: Trip) => void;
     waiting?: boolean; // TODO: allow values to be undefined so no need for waiting prop.
+    onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
 }
 
 interface IProps extends ITKUIResultsViewProps, IConsumedProps {
@@ -129,11 +129,11 @@ class TripsView extends React.Component<IProps, {}> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
-                const consumerProps: Partial<IProps> = {
+                const consumerProps: IConsumedProps = {
                     // TODO: very inefficient, move sort inside TripView component, should also receive a sort criteria.
                     // Or define provider TripSortProvider, that receives trips, and provides tripsSorted and
                     // onSortChange, and maintains in an internal state the trips sorted. Should consume from

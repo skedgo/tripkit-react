@@ -1,13 +1,13 @@
 import * as React from "react";
-import {IServiceDepartureRowProps as IProps} from "./IServiceDepartureRowProps";
+import {default as IProps} from "./IServiceDepartureRowProps";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import "./ServiceDepartureRow.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import IconWCAccessible from "-!svg-react-loader!../images/service/ic_wheelchair_accessible.svg";
-import IconWCInaccessible from "-!svg-react-loader!../images/service/ic_wheelchair_inaccessible.svg";
-import IconWCUnknown from "-!svg-react-loader!../images/service/ic_wheelchair_unknown.svg";
+import {ReactComponent as IconWCAccessible} from "../images/service/ic_wheelchair_accessible.svg";
+import {ReactComponent as IconWCInaccessible} from "../images/service/ic_wheelchair_inaccessible.svg";
+import {ReactComponent as IconWCUnknown} from "../images/service/ic_wheelchair_unknown.svg";
 import OptionsData from "../data/OptionsData";
 
 class ServiceDepartureRow extends React.Component<IProps, {}> {

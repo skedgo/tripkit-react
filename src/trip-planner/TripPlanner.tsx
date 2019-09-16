@@ -9,9 +9,9 @@ import {TKUIFavQueryBtn} from "../favourite/FavouriteBtn";
 import Modal from 'react-modal';
 import {TKUIOptionsView} from "../options/OptionsView";
 import Util from "../util/Util";
-import IconMap from "-!svg-react-loader!../images/ic-map-marked.svg";
-import IconTrips from "-!svg-react-loader!../images/ic-bars-solid.svg";
-import IconFav from "-!svg-react-loader!../images/ic-star-solid.svg";
+import {ReactComponent as IconMap} from "../images/ic-map-marked.svg";
+import {ReactComponent as IconTrips} from "../images/ic-bars-solid.svg";
+import {ReactComponent as IconFav} from "../images/ic-star-solid.svg";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
@@ -69,7 +69,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
     };
 
     private ref: any;
-    private mapRef: LeafletMap;
+    private mapRef?: LeafletMap;
 
     constructor(props: ITripPlannerProps & IServiceResultsContext) {
         super(props);
@@ -187,7 +187,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
                             <button className="TripPlanner-mapBtn gl-link gl-flex gl-align-center"
                                     onClick={() => this.setState(prevState => {
                                         if (!prevState.mapView && this.mapRef) {
-                                            setTimeout(() => {this.mapRef.onResize()}, 100)
+                                            setTimeout(() => {this.mapRef && this.mapRef.onResize()}, 100)
                                         }
                                         return {mapView: !prevState.mapView}
                                     })}>

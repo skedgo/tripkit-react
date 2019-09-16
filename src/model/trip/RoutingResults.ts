@@ -16,8 +16,8 @@ class RoutingResults {
     private _groups: TripGroup[] = [];
     // @Json private List<GWTSegmentAlert> alerts;
 
-    private query: RoutingQuery;
-    private satappQuery: string;
+    private query: RoutingQuery = new RoutingQuery();
+    private satappQuery: string = "";
 
     get region(): string {
         return this._region;

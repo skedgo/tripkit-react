@@ -1,4 +1,4 @@
-// import * as React from 'react';
+import * as React from 'react';
 // import * as ReactDOM from 'react-dom';
 // import DeviceUtil from "./util/DeviceUtil";
 // import RoutingQuery, {TimePreference} from "./model/RoutingQuery";

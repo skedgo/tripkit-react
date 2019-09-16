@@ -1,4 +1,4 @@
-import * as moment from 'moment-timezone';
+import {default as moment} from 'moment-timezone';
 import {Moment} from "moment-timezone";
 
 class DateTimeUtil {

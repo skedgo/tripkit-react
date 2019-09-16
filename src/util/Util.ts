@@ -13,9 +13,14 @@ class Util {
      * Generic clone, requires T to have a default constructor
      */
 
-    public static clone<T>(instance: T): T {
+    public static clone<T extends {constructor: any}>(instance: T): T {
         return Object.assign(new (instance.constructor as { new (): T })(), instance);
     }
+
+    // Didn't tried this one:
+    // public static clone<T>(instance: T): T {
+    //     return JSON.parse(JSON.stringify(instance));
+    // }
 
     /**
      * Generic immutable assign, requires T to have a default constructor Util.clone can be used.
