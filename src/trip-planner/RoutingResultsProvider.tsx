@@ -28,7 +28,15 @@ export interface IRoutingResultsContext {
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
 }
 
-export const RoutingResultsContext = React.createContext<IRoutingResultsContext | undefined>(undefined);
+export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
+    query: new RoutingQuery(),
+    onQueryChange: (query: RoutingQuery) => {},
+    onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
+    waiting: true,
+    onChange: (select?: Trip) => {},
+    onReqRealtimeFor: (trip?: Trip) => {},
+    onAlternativeChange: (group: TripGroup, alt: Trip) => {}
+});
 
 class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: Options}, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) =>

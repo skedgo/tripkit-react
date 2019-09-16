@@ -6,7 +6,7 @@ import {
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import IServiceDepartureRowProps from "./IServiceDepartureRowProps";
 import "./ServiceDepartureTable.css";
-import IconGlass from "-!svg-react-loader!../images/ic-glass.svg";
+import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
@@ -127,7 +127,7 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
 
 }
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Connector: React.SFC<{children: (props: IServiceResultsContext) => React.ReactNode}> = (props: {children: (props: IServiceResultsContext) => React.ReactNode}) => {
     return (
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (

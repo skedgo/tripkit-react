@@ -1,6 +1,6 @@
-import * as React from "react";
+import React from "react";
 import Drawer from 'react-drag-drawer';
-import IconRemove from '-!svg-react-loader!../images/ic-cross.svg'
+import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
 import './TKUICard.css';
 
 interface IProps {

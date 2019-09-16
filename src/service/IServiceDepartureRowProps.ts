@@ -7,4 +7,3 @@ interface IServiceDepartureRowProps {
 }
 
 export default IServiceDepartureRowProps;
-export {IServiceDepartureRowProps}

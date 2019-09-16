@@ -31,6 +31,8 @@ class RoutingQuery {
     constructor() {
         this._from = null;
         this._to = null;
+        this._timePref = TimePreference.NOW;
+        this._time = DateTimeUtil.getNow();
     }
 
     get from(): Location | null {

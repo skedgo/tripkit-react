@@ -7,7 +7,7 @@ import ServiceShape from "../model/trip/ServiceShape";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 
-interface IProps {
+export interface IProps {
     stop: ServiceStopLocation;
     shape: ServiceShape;
 }
@@ -38,7 +38,10 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
     }
 
     public componentDidMount(): void {
-        RegionsData.instance.getRegionP(this.props.stop).then((region: Region) => {
+        RegionsData.instance.getRegionP(this.props.stop).then((region?: Region) => {
+            if (!region) {
+                return;
+            }
             StopsData.instance.getStopFromCode(region.name, this.props.stop.code)
                 .then((stopLocation: StopLocation) => {
                         if (stopLocation.url) {
@@ -50,5 +53,4 @@ class ServiceStopPopup extends React.Component<IProps, IState> {
     }
 }
 
-export {IProps};
 export default ServiceStopPopup;

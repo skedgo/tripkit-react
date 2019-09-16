@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Autocomplete from 'react-autocomplete';
 import './LocationBox.css';
-import IconRemove from '-!svg-react-loader!../images/ic-cross.svg'
-import IconSpin from '-!svg-react-loader!../images/ic-loading2.svg'
+import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
+import {ReactComponent as IconSpin} from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import ResultItem from "./ResultItem";
@@ -36,7 +36,7 @@ interface IState {
 
 class LocationBox extends Component<IProps, IState> {
 
-    private itemToLocationMap: object = [];
+    private itemToLocationMap: Map<string, Location> = new Map<string, Location>();
     private highlightedItem: string | null = null;
     private geocodingData: MultiGeocoder;
     private inputRef: any;
@@ -101,7 +101,7 @@ class LocationBox extends Component<IProps, IState> {
                             locationValue: resolvedLocation,
                             waiting: false
                         }, () => {
-                            this.itemToLocationMap[LocationBox.itemText(locationValue)] = resolvedLocation;
+                            this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
                             this.fireLocationChange(highlighted);
                         });
                     }
@@ -158,12 +158,12 @@ class LocationBox extends Component<IProps, IState> {
         }
         this.setState({ waiting: false });
         const items: object[] = [];
-        this.itemToLocationMap = [];
+        this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
                 const displayText = LocationBox.itemText(results[i]);
                 items.push({label: displayText});
-                this.itemToLocationMap[displayText] = results[i];
+                this.itemToLocationMap.set(displayText, results[i]);
             }
         }
         // Next two lines are to reset highlighted item
@@ -180,8 +180,8 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     private onSelect(selectedItem: string) {
-        const locationValue = this.itemToLocationMap[selectedItem];
-        this.setValue(locationValue, false, true);
+        const locationValue = this.itemToLocationMap.get(selectedItem);
+        this.setValue(locationValue!, false, true);
         this.inputRef.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
     }
 
@@ -200,7 +200,7 @@ class LocationBox extends Component<IProps, IState> {
         if (this.state.items.length === 0) {
             return null;
         }
-        return this.highlightedItem ? this.itemToLocationMap[this.highlightedItem] : null;
+        return this.highlightedItem ? this.itemToLocationMap.get(this.highlightedItem)! : null;
     }
 
     private fireLocationChange(preselect: boolean) {
@@ -283,10 +283,10 @@ class LocationBox extends Component<IProps, IState> {
             <ResultItem
                 id={"item-" + this.state.items.indexOf(item)}
                 key={this.state.items.indexOf(item)}
-                location={this.itemToLocationMap[item.label]}
+                location={this.itemToLocationMap.get(item.label)!}
                 highlighted={isHighlighted}
                 ariaSelected={isHighlighted}
-                onClick={() => this.setValue(this.itemToLocationMap[item.label], false, true)}
+                onClick={() => this.setValue(this.itemToLocationMap.get(item.label)!, false, true)}
             />
         );
     }

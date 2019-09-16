@@ -3,9 +3,9 @@ import './FavouriteList.css';
 import FavouriteTrip from "../model/FavouriteTrip";
 import FavouriteRow from "./FavouriteRow";
 import FavouritesData from "../data/FavouritesData";
-import IconAddFav from "-!svg-react-loader!../images/ic-star-outline.svg";
+import {ReactComponent as IconAddFav} from "../images/ic-star-outline.svg";
 import {EventSubscription} from "fbemitter";
-import {FavouriteRowProps} from "./FavouriteRow";
+import {IProps as FavouriteRowProps} from "./FavouriteRow";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import RoutingQuery from "../model/RoutingQuery";
 import Util from "../util/Util";
@@ -38,7 +38,7 @@ interface IState {
 class FavouriteList extends React.Component<IProps, IState> {
 
     private data: FavouritesData;
-    private favChangeSubscr: EventSubscription;
+    private favChangeSubscr?: EventSubscription;
     private rowRefs: any[] = [];
     private focused: number = -1;
 
@@ -152,7 +152,9 @@ class FavouriteList extends React.Component<IProps, IState> {
     }
 
     public componentWillUnmount(): void {
-        this.favChangeSubscr.remove();
+        if (this.favChangeSubscr) {
+            this.favChangeSubscr.remove();
+        }
     }
 }
 

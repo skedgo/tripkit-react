@@ -16,7 +16,7 @@ interface IState {
 class DaySeparator extends React.Component<IProps, IState> {
 
     private ref: any;
-    private hasScrollHandler: boolean;
+    private hasScrollHandler: boolean = false;
 
 
     constructor(props: IProps) {

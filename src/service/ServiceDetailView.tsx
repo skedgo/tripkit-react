@@ -85,10 +85,11 @@ class ServiceDetailView extends React.Component<IProps, {}> {
     }
 }
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
     return (
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (
+                serviceContext.selectedService &&
                 props.children!({
                     departure: serviceContext.selectedService,
                     eventBus: serviceContext.servicesEventBus

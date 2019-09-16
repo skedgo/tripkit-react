@@ -4,6 +4,7 @@ import {Moment} from "moment-timezone";
 import withServiceResults from "../api/WithServiceResults";
 import StopLocation from "../model/StopLocation";
 import {EventEmitter} from "fbemitter";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 export interface IServiceResultsContext {
     // stop query. Maybe group in class, similar to RoutingQuery. E.g. DeparturesQuery
@@ -22,7 +23,15 @@ export interface IServiceResultsContext {
     servicesEventBus: EventEmitter;
 }
 
-export const ServiceResultsContext = React.createContext<IServiceResultsContext | undefined>(undefined);
+export const ServiceResultsContext = React.createContext<IServiceResultsContext>({
+    onStopChange: (stop?: StopLocation) => {},
+    initTime: DateTimeUtil.getNow(),
+    departures: [],
+    waiting: true,
+    title: "",
+    onServiceSelection: (departure?: ServiceDeparture) => {},
+    servicesEventBus: new EventEmitter()
+});
 
 class ServiceResultsProvider extends React.Component<{}, {}> {
     private ContextWithValue = withServiceResults((props: IServiceResultsContext) =>

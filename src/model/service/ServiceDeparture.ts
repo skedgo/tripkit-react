@@ -44,8 +44,8 @@ class ServiceDeparture {
     // public alerts: [RealTimeAlert] | undefined = undefined;
 
     public startStop: StopLocation | undefined;
-    public startStopCode: string;
-    public service: Service;
+    public startStopCode: string = "";
+    public service: Service = new Service();
     public serviceDetail: ServiceDetail | undefined;
 
 

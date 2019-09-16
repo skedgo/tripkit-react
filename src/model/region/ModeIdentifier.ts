@@ -10,7 +10,7 @@ class ModeIdentifier {
     @JsonProperty("icon", String, true)
     private _icon: string | null = null;
 
-    private _identifier: string;
+    private _identifier: string = "";
 
     public static readonly SCHOOLBUS_ID = "pt_ltd_SCHOOLBUS";
     public static readonly UBER_ID = "ps_tnc_UBER";

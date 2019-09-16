@@ -1,5 +1,5 @@
 import * as React from "react";
-import IconAngleDown from "-!svg-react-loader!../images/ic-angle-down.svg";
+import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import "./TripSegmentSteps.css";
 
 interface IProps<T> {

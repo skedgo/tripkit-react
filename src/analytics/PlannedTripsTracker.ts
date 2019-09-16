@@ -4,7 +4,6 @@ import Environment from "../env/Environment";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import {JsonConvert} from "json2typescript";
-import Timer = NodeJS.Timer;
 
 class PlannedTripsTracker {
 
@@ -20,7 +19,7 @@ class PlannedTripsTracker {
     private _trips: Trip[] | undefined;
     private _selected: Trip | undefined;
 
-    private timeoutId: Timer | null;
+    private timeoutId: any;
 
 
     constructor() {

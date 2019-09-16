@@ -12,7 +12,7 @@ class TripGroup extends Trip {
     @JsonProperty("sources", [Any], true)
     private _sources: any[] = [];
 
-    private selected: number;
+    private selected?: number;
 
     constructor() {
         super()
@@ -41,7 +41,7 @@ class TripGroup extends Trip {
     }
 
     public getSelectedTrip(): Trip {
-        return this.trips[this.selected];
+        return this.trips[this.selected!];
     }
 
     public replaceAlternative(orig: Trip, update: Trip) {

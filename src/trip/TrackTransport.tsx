@@ -51,5 +51,6 @@ class TrackTransport extends React.Component<IProps, {}> {
     }
 }
 
+export interface TrackTransportProps extends IProps {}
+
 export default TrackTransport;
-export {IProps as TrackTransportProps}

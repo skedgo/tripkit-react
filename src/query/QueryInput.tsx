@@ -5,11 +5,11 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
-import IconClock from "-!svg-react-loader!../images/ic-clock.svg";
-import IconAngleDown from "-!svg-react-loader!../images/ic-angle-down.svg";
-import IconCalendar from "-!svg-react-loader!../images/ic-calendar.svg";
-import IconFromTo from "-!svg-react-loader?name=IconFromTo!../images/ic-from-to.svg"; // https://github.com/jhamlet/svg-react-loader/issues/86
-import IconSwap from '-!svg-react-loader!../images/ic-swap-arrows.svg';
+import {ReactComponent as IconClock} from "../images/ic-clock.svg";
+import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
+import {ReactComponent as IconCalendar} from "../images/ic-calendar.svg";
+import {ReactComponent as IconFromTo} from "../images/ic-from-to.svg"; // https://github.com/jhamlet/svg-react-loader/issues/86
+import {ReactComponent as IconSwap} from '../images/ic-swap-arrows.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";

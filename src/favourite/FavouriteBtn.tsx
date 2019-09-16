@@ -1,8 +1,8 @@
 import * as React from "react";
 import "./FavouriteBtn.css"
 import FavouritesData from "../data/FavouritesData";
-import IconAdd from "-!svg-react-loader!../images/ic-star-outline.svg";
-import IconRemove from "-!svg-react-loader!../images/ic-star-filled.svg";
+import {ReactComponent as IconAdd} from "../images/ic-star-outline.svg";
+import {ReactComponent as IconRemove} from "../images/ic-star-filled.svg";
 import FavouriteTrip from "../model/FavouriteTrip";
 import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";

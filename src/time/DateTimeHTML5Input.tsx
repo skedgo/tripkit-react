@@ -25,7 +25,8 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
     public focus() {
         if (this.inputRef) {
             this.inputRef.focus();
-            $("#query-datetime-picker").trigger("click");
+            // TODO: re-enable
+            // $("#query-datetime-picker").trigger("click");
         }
     }
 

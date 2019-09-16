@@ -38,8 +38,8 @@ class Trip {
     @JsonProperty("segments", [Segment], true)
     private _segments: Segment[] = [];
 
-    private _satappQuery: string;
-    private _arrivalSegment: Segment;
+    private _satappQuery: string = "";
+    private _arrivalSegment: Segment | undefined;
 
 
     get depart(): number {

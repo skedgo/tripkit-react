@@ -48,7 +48,7 @@ class Segment extends SegmentTemplate {
         super();
     }
 
-    private _trip: Trip;
+    private _trip: Trip = new Trip();
 
     get startTime(): number {
         return this._startTime;

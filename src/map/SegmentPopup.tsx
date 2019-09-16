@@ -7,7 +7,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 
-interface IProps {
+export interface IProps {
     segment: Segment;
 }
 
@@ -43,7 +43,10 @@ class SegmentPopup extends React.Component<IProps, IState> {
 
     public componentDidMount(): void {
         if (this.props.segment.isPT() && this.props.segment.stopCode !== null) {
-            RegionsData.instance.getRegionP(this.props.segment.from).then((region: Region) => {
+            RegionsData.instance.getRegionP(this.props.segment.from).then((region?: Region) => {
+                if (!region) {
+                    return;
+                }
                 StopsData.instance.getStopFromCode(region.name, this.props.segment.stopCode!)
                     .then((stopLocation: StopLocation) => {
                             if (stopLocation.url) {
@@ -56,5 +59,4 @@ class SegmentPopup extends React.Component<IProps, IState> {
     }
 }
 
-export {IProps};
 export default SegmentPopup;

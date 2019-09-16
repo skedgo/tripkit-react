@@ -71,15 +71,13 @@ class FeedbackBtn extends React.Component<IProps, IState> {
     }
 }
 
-const Connector: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = (props: {children: (props: Partial<IProps>) => React.ReactNode}) => {
+const Connector: React.SFC<{children: (props: IProps) => React.ReactNode}> = (props: {children: (props: IProps) => React.ReactNode}) => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingResultsContext: IRoutingResultsContext) =>
                 <ServiceResultsContext.Consumer>
                     {(serviceContext: IServiceResultsContext) =>
-                        <FeedbackBtn {...routingResultsContext}
-                                     {...serviceContext}
-                        />}
+                        props.children!({...routingResultsContext, ...serviceContext})}
                 </ServiceResultsContext.Consumer>
             }
         </RoutingResultsContext.Consumer>

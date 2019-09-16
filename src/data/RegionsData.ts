@@ -7,14 +7,14 @@ import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import LocationUtil from "../util/LocationUtil";
 
-class RegionsData {
+export class RegionsData {
 
     private regionsRequest: Promise<RegionResults>;
-    private regions: Map<string, Region>;
-    private regionList: Region[];
+    private regions?: Map<string, Region>;
+    private regionList?: Region[];
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
-    private cachedRegion: Region;
+    private cachedRegion?: Region;
 
     constructor() {
         const jsonConvert = new JsonConvert();
@@ -28,8 +28,9 @@ class RegionsData {
                 this.regions.set(region.name, region);
             }
             this.regionList = Array.from(this.regions.values());
-            for (const modeKey of Object.keys(regionResults.modes)) {
-                const modeIdentifier = jsonConvert.deserialize(regionResults.modes[modeKey], ModeIdentifier) as ModeIdentifier;
+            const modes: {[index: string]:any} = regionResults.modes;
+            for (const modeKey of Object.keys(modes)) {
+                const modeIdentifier = jsonConvert.deserialize(modes[modeKey], ModeIdentifier) as ModeIdentifier;
                 modeIdentifier.identifier = modeKey;
                 this._modes.set(modeKey, modeIdentifier);
             }
@@ -99,7 +100,7 @@ class RegionsData {
             return this.cachedRegion;
         }
         let closerRegion;
-        for (const region of this.regionList) {
+        for (const region of this.regionList!) {
             if (!closerRegion || LocationUtil.distanceInMetres(latLng, region.bounds.getCenter())
                 < LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter())) {
                 closerRegion = region;
@@ -115,7 +116,7 @@ class RegionsData {
     }
 
     public getRegionByName(name: string): Region | undefined {
-        return this.regions.get(name);
+        return this.regions!.get(name);
     }
 
     public getRegionByNameP(name: string): Promise<Region | undefined> {
