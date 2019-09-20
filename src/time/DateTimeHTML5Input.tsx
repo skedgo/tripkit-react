@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Moment} from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
-import * as $ from "jquery";
+// import * as $ from "jquery";
 
 interface IProps {
     value: Moment;
