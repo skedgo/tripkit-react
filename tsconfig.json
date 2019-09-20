@@ -23,6 +23,7 @@
     "emitDecoratorMetadata": true,
     "isolatedModules": true,
     "suppressImplicitAnyIndexErrors": true
+//    "noUnusedLocals": true
   },
   "include": [
     "src"

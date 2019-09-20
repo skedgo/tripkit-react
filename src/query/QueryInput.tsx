@@ -58,7 +58,7 @@ class QueryInput extends React.Component<IProps, IState> {
     private dateTimePickerRef: any;
     private fromLocRef: any;
     private toLocRef: any;
-    private goBtnRef: any;
+    // private goBtnRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -358,7 +358,7 @@ class QueryInput extends React.Component<IProps, IState> {
                                                 this.props.onGoClicked(this.state.routingQuery)
                                             }
                                         }}
-                                        ref={(el:any) => this.goBtnRef = el}
+                                        // ref={(el:any) => this.goBtnRef = el}
                                 >
                                     Continue
                                 </button> : null }

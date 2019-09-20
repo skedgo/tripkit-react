@@ -40,7 +40,6 @@ class LocationBox extends Component<IProps, IState> {
     private highlightedItem: string | null = null;
     private geocodingData: MultiGeocoder;
     private inputRef: any;
-    private inputFrameRef: any;
 
     private readonly AUTOCOMPLETE_DELAY = 200;
 
@@ -211,7 +210,7 @@ class LocationBox extends Component<IProps, IState> {
 
     private renderInput(props: any) {
         return (
-            <div className="LocationBox" ref={el => this.inputFrameRef = el}>
+            <div className="LocationBox">
                 <input type="text" {...props}/>
                 {   this.state.waiting ?
                     <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :

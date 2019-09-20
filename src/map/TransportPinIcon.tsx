@@ -53,8 +53,8 @@ class TransportPinIcon extends React.Component<IProps, {}> {
                              {
                                  transform: "rotate(" + rotation + "deg)",
                                  WebkitTransform: "rotate(" + rotation + "deg)",
-                                 // MsTransform: "rotate(" + rotation + "deg)",
-                                 // MozTransform: "rotate(" + rotation + "deg)"
+                                 ['MsTransform' as any]: "rotate(" + rotation + "deg)",
+                                 ['MozTransform' as any]: "rotate(" + rotation + "deg)"
                              } : undefined}
                              focusable="false"
                     />
