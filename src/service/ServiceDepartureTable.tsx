@@ -13,7 +13,7 @@ import DaySeparator from "./DaySeparator";
 import DateTimePickerFace from "../time/DateTimePickerFace";
 import {Moment} from "moment";
 import moment from "moment-timezone";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {tKUICardWithStyle} from "../card/TKUICard";
 
 interface ITKUIDeparturesViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
@@ -21,6 +21,12 @@ interface ITKUIDeparturesViewProps {
 }
 
 interface IProps extends IServiceResultsContext, ITKUIDeparturesViewProps {}
+
+// const CustomTKUICard = tKUICardWithStyle({
+//     main: {
+//         color: 'orange!important'
+//     }
+// });
 
 class ServiceDepartureTable extends React.Component<IProps, {}> {
 
