@@ -4,55 +4,50 @@ import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
 import './TKUICard.css';
 import genStyles from "../css/general.module.css";
 import classNames from "classnames";
-import injectSheet, {CSSProperties, Styles, WithSheet} from 'react-jss'
+import injectSheet, {CSSProperties, ClassNameMap, Styles, WithSheet} from 'react-jss';
 import * as CSS from 'csstype';
+import {Subtract} from "utility-types";
+import {withStyleProp} from "../jss/StyleHelper";
 
-
-// interface IProps extends WithStyles<typeof tKUICardDefaultStyle>{
-interface IProps extends WithStyles {
+interface ITKUICardProps {
     title: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
+    styles?: any;
 }
 
+// interface IProps extends ITKUICardProps, WithSheet<keyof ITKUICardStyle, object, IProps> {}
+interface IProps extends ITKUICardProps {
+    classes: ClassNameMap<keyof ITKUICardStyle>
+};
 
-interface ITKUICardStyle {
-    main: CSSProperties<IProps>;
-    header: CSSProperties<IProps>;
+export interface ITKUICardStyle {
+    main: CSS.Properties & CSSProperties<IProps>;
+    header: CSS.Properties & CSSProperties<IProps>;
 }
 
-// This interface is just to get autocomplete, which CSSProperties<Props> does not provide.
-// Derive it as a mapped type from ITKUICardStyle. Also make all fields optional?
-interface ITKUICardStyleCSS {
-    main: CSS.Properties;
-    header: CSS.Properties;
-}
-
-// export const tKUICardDefaultStyle: Record<keyof ITKUICardStyle, CSS.Properties<IProps>>  = {
-export const tKUICardDefaultStyle: ITKUICardStyleCSS = {
+export const tKUICardDefaultStyle: ITKUICardStyle = {
     main: {
         color: 'blue!important',
         textAlign: 'center'
     },
     header: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        '&:hover': {
+            backgroundColor: 'orange'
+        }
     }
 };
-
-const test: CSSProperties<IProps> = {
-
-}
-
-const test1: CSS.Properties<IProps> = {
-    flexGrow: 1
-}
-
-type WithStyles = WithSheet<keyof ITKUICardStyle, object, IProps>;
 
 class TKUICardUnstyled extends React.Component<IProps, {}> {
 
     // Pass as parameter, or put in global config
     private asCard: boolean = true;
+
+    constructor(props: IProps) {
+        super(props);
+    }
 
     public render(): React.ReactNode {
         // const style: TKUICardStyle = {
@@ -62,9 +57,10 @@ class TKUICardUnstyled extends React.Component<IProps, {}> {
         // const cssStyle: CSSProperties<{}> = {
         //     color: "red"
         // };
+        const classes = this.props.classes;
         const body =
-            <div className={classNames(this.props.classes.main, "TKUICard-main")}>
-                <div className={classNames("ServiceDepartureTable-header", this.props.classes.header)}>
+            <div className={classNames(classes.main, "TKUICard-main")}>
+                <div className={classNames("ServiceDepartureTable-header", classes.header)}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
                         <div className="ServiceDepartureTable-title gl-grow">
                             {this.props.title}
@@ -97,10 +93,22 @@ class TKUICardUnstyled extends React.Component<IProps, {}> {
     }
 }
 
-const tKUICardWithStyle = (style: ITKUICardStyleCSS) =>
-    injectSheet(style as ITKUICardStyle)(TKUICardUnstyled);
+// class TKUICard extends React.Component<ITKUICardProps, {}> {
+//     private TKUICardStyled: any;
+//
+//     constructor(props: ITKUICardProps) {
+//         super(props);
+//         this.TKUICardStyled = this.props.styles ?
+//             injectSheet(this.props.styles)(TKUICardUnstyled) :
+//             injectSheet(tKUICardDefaultStyle)(TKUICardUnstyled);
+//     }
+//
+//     public render(): React.ReactNode {
+//         return <this.TKUICardStyled {...this.props}/>
+//     }
+//
+// }
 
-const TKUICard = tKUICardWithStyle(tKUICardDefaultStyle);
+// const tKUICardWithStyle = (style: ITKUICardStyle) => injectSheet(style)(TKUICardUnstyled);
 
-export default TKUICard;
-export {tKUICardWithStyle};
+export default withStyleProp(TKUICardUnstyled, tKUICardDefaultStyle);
