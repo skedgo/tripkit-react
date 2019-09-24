@@ -1,7 +1,6 @@
 import Trip from "../model/trip/Trip";
 import RoutingQuery from "../model/RoutingQuery";
 import TripGroup from "../model/trip/TripGroup";
-import {TKUITripPlannerConfig} from "./TripPlanner";
 import LatLng from "../model/LatLng";
 
 interface ITripPlannerProps {
@@ -14,7 +13,6 @@ interface ITripPlannerProps {
     waiting: boolean;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
-    config: TKUITripPlannerConfig;
 }
 
 export default ITripPlannerProps;

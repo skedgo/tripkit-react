@@ -13,7 +13,7 @@ import DaySeparator from "./DaySeparator";
 import DateTimePickerFace from "../time/DateTimePickerFace";
 import {Moment} from "moment";
 import moment from "moment-timezone";
-import TKUICard, {ITKUICardStyle, tKUICardDefaultStyle} from "../card/TKUICard";
+import TKUICard from "../card/TKUICard";
 
 interface ITKUIDeparturesViewProps {
     renderDeparture: <P extends IServiceDepartureRowProps>(departureProps: P) => JSX.Element;
@@ -21,16 +21,6 @@ interface ITKUIDeparturesViewProps {
 }
 
 interface IProps extends IServiceResultsContext, ITKUIDeparturesViewProps {}
-
-const styleSheet: ITKUICardStyle = {
-    main: {
-        color: 'orange!important'
-    },
-    header: {
-        ...tKUICardDefaultStyle.header,
-        backgroundColor: 'lightgreen',
-    }
-};
 
 class ServiceDepartureTable extends React.Component<IProps, {}> {
 
@@ -80,7 +70,6 @@ class ServiceDepartureTable extends React.Component<IProps, {}> {
                     </div>
                 }
                 onRequestClose={this.props.onRequestClose}
-                styles={styleSheet}
             >
                 <div className={"ServiceDepartureTable gl-flex gl-column"}>
                     <div className="ServiceDepartureTable-filterWrapper gl-flex gl-align-center gl-no-shrink">

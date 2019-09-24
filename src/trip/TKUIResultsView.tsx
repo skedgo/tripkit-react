@@ -1,18 +1,21 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
 import ITripRowProps from "./ITripRowProps";
-import "./TripsView.css";
+import {tKUIResultsDefaultStyle} from "./TKUIResultsView.css";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripRow from "./TripRow";
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard from "../card/TKUICard";
+import {ClassNameMap, CSSProperties} from "react-jss";
+import {CSSProps, withStyleProp} from "../jss/StyleHelper";
+import classNames from "classnames";
 
 interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
     onClicked?: () => void;
     className?: string;
-    config?: TKUIResultsViewConfig;
+    styles?: any;
 }
 
 interface IConsumedProps {
@@ -24,19 +27,25 @@ interface IConsumedProps {
 }
 
 interface IProps extends ITKUIResultsViewProps, IConsumedProps {
-    config: TKUIResultsViewConfig;
+    classes: ClassNameMap<keyof ITKUIResultsStyle>
+}
+
+export interface ITKUIResultsStyle {
+    main: CSSProps<IProps>;
+    row: CSSProps<IProps>;
+    rowSelected: CSSProps<IProps>;
+    iconLoading: CSSProps<IProps>;
 }
 
 class TKUIResultsViewConfig {
+    public styles: ITKUIResultsStyle = tKUIResultsDefaultStyle;
     public renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element
         = <P extends ITripRowProps>(props: P) => <TripRow {...props}/>;
+
+    public static instance = new TKUIResultsViewConfig();
 }
 
-class TripsView extends React.Component<IProps, {}> {
-
-    public static defaultProps: Partial<IProps> = {
-        config: new TKUIResultsViewConfig()
-    };
+class TKUIResultsView extends React.Component<IProps, {}> {
 
     private rowRefs: any[] = [];
 
@@ -74,15 +83,16 @@ class TripsView extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
+        const classes = this.props.classes;
         return (
             <TKUICard
                 title={"Routing results"}
             >
-                <div className={"TripsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
+                <div className={classNames("TKUIResultsView", this.props.className, classes.main)}>
                     {this.props.values && this.props.values.map((trip: Trip, index: number) =>
-                        this.props.config.renderTrip(
+                        TKUIResultsViewConfig.instance.renderTrip(
                             { value: trip,
-                                className: trip === this.props.value ? "selected" : undefined,
+                                className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
                                 onClick: this.props.onChange ?
                                     () => {
                                         if (this.props.onClicked) {
@@ -99,7 +109,7 @@ class TripsView extends React.Component<IProps, {}> {
                             })
                     )}
                     {this.props.waiting ?
-                        <IconSpin className="TripsView-iconLoading sg-animate-spin gl-align-self-center" focusable="false"/> : null}
+                        <IconSpin className={classes.iconLoading} focusable="false"/> : null}
                 </div>
             </TKUICard>
         );
@@ -130,6 +140,7 @@ class TripsView extends React.Component<IProps, {}> {
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+    // TODO: Can also consume styles property from a global styles provider.
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
@@ -139,7 +150,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     // onSortChange, and maintains in an internal state the trips sorted. Should consume from
                     // RoutingResultsProvider, so will come below it. Notice I'm doing something like Redux but
                     // with several providers, instead of a unique store provider.
-                    values: TripsView.sortTrips(routingContext.trips!),
+                    values: TKUIResultsView.sortTrips(routingContext.trips!),
                     waiting: routingContext.waiting,
                     value: routingContext.selected,
                     onChange: (trip: Trip) => {
@@ -154,8 +165,9 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) =>
-    (addProps: ITKUIResultsViewProps) => {
+export const Connect = (RawComponent: React.ComponentType<IProps>) => {
+    const RawComponentStyled = withStyleProp(RawComponent, tKUIResultsDefaultStyle);
+    return (addProps: ITKUIResultsViewProps) => {
         return (
             <Consumer>
                 {(props: IConsumedProps) => {
@@ -169,14 +181,14 @@ export const Connect = (RawComponent: React.ComponentType<IProps>) =>
                         onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
                     }
                     const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
-                    return <RawComponent {...tripsViewProps}/>;
+                    const stylesToPass = addProps.styles || TKUIResultsViewConfig.instance.styles;
+                    return <RawComponentStyled {...tripsViewProps} styles={stylesToPass}/>;
                 }}
             </Consumer>
         )
     };
+};
 
-// export const TKUIResultsView = (addProps: ITKUIResultsViewProps) =>
-export const TKUIResultsView = Connect(TripsView);
+export default Connect(TKUIResultsView);
 
-export default TripsView;
 export {TKUIResultsViewConfig};

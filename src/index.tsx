@@ -27,7 +27,7 @@ export {default as FavouriteRow} from "./favourite/FavouriteRow";
 export {default as FavouriteList} from "./favourite/FavouriteList";
 export {default as FavouriteBtn} from "./favourite/FavouriteBtn";
 export {default as FavouriteTrip} from "./model/FavouriteTrip";
-export {default as TripsView} from "./trip/TripsView";
+export {default as TKUIResultsView} from "./trip/TKUIResultsView";
 export {default as TripRow} from "./trip/TripRow";
 // export {default as ITripRowProps, TRIP_ALT_PICKED_EVENT} from "./trip/ITripRowProps";
 // export {SegmentDescriptionProps} from "./trip/SegmentDescription";
