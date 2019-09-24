@@ -23,7 +23,7 @@ import {TKUIDeparturesView} from "../service/ServiceDepartureTable";
 import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
 import ServiceDepartureRow from "../service/ServiceDepartureRow";
 import {TKUIServiceView} from "../service/ServiceDetailView";
-import {TKUIResultsView, TKUIResultsViewConfig} from "../trip/TripsView";
+import TKUIResultsView, {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
 import TripDetail, {TKUITripDetailConfig} from "../trip/TripDetail";
 import {IServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
@@ -64,10 +64,6 @@ class TKUITripPlannerConfig {
 
 class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsContext, IState> {
 
-    public static defaultProps: Partial<ITripPlannerProps> = {
-        config: new TKUITripPlannerConfig()
-    };
-
     private ref: any;
     private mapRef?: LeafletMap;
 
@@ -99,7 +95,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) => {
-                        this.props.onStopChange(stop);
+                        // this.props.onStopChange(stop);
                     }
                 )
         });
@@ -145,14 +141,18 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
         const routingResultsView = this.props.trips ?
             <TKUIResultsView
                 className="gl-no-shrink"
-                config={this.props.config.resultsViewConfig}
                 onClicked={() => this.setState({showTripDetail: true})}
+                // styles={Util.iAssign(tKUIResultsDefaultStyle, {
+                //     main: {
+                //         ...tKUIResultsDefaultStyle.main,
+                //         backgroundColor: 'lightcoral'
+                //     }
+                // })}
             /> : null;
 
         const tripDetailView = this.state.showTripDetail && this.props.selected ?
             <TripDetail
                 value={this.props.selected}
-                config={this.props.config.tripDetailConfig}
                 onRequestClose={() => {
                     this.setState({showTripDetail: false})
                 }}

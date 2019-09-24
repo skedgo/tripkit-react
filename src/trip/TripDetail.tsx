@@ -9,21 +9,21 @@ import TKUICard from "../card/TKUICard";
 interface IProps {
     value: Trip;
     style?: CSSProperties;
-    config: TKUITripDetailConfig;
     onRequestClose?: () => void;
 }
 
 class TKUITripDetailConfig {
     public renderSegmentDetail: <P extends SegmentDetailProps & {key: number}>(props: P) => JSX.Element
         = <P extends SegmentDetailProps & {key: number}>(props: P) => <TripSegmentDetail {...props}/>;
+
+    public static instance = new TKUITripDetailConfig();
 }
 
 class TripDetail extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segments = this.props.value.segments;
-        const renderSegmentDetail = this.props.config.renderSegmentDetail ? this.props.config.renderSegmentDetail :
-            <P extends SegmentDetailProps & {key: number}>(props: P) => <TripSegmentDetail {...props}/>;
+        const renderSegmentDetail = TKUITripDetailConfig.instance.renderSegmentDetail;
         return (
             <TKUICard
                 title={"Trip detail"}

@@ -1,19 +1,24 @@
 import * as React from "react";
 import injectSheet from "react-jss";
 import { Subtract } from "utility-types";
-import { ClassNameMap } from "react-jss";
+import { ClassNameMap, Styles, StyleCreator, WithSheet, CSSProperties } from "react-jss";
+import {TKUITheme} from "../example/client-sample";
+import * as CSS from 'csstype';
+
+export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;
 
 function withStyleProp<
-        // ST extends Record<string, CSSProperties<IProps>>,
-        ST extends any,
+        // S,
+        // ST extends Record<S extends string & Styles & StyleCreator<keyof S, any>, ST>,
+        ST,
         // CP extends WithSheet<keyof ST, object, CP>,
         CP extends {classes: ClassNameMap<keyof ST>},
         ExtS extends string,
         // P extends Subtract<CP, WithSheet<keyof ST, object, CP>> & {styles: Styles<ExtS, CP>}>
         // P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}> & {styles: Styles<ExtS, CP>}>
-        P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}> & {styles?: any}>
+        P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}> & {styles?: TKUIStyles<ST, CP>}>
         // (Consumer: React.ComponentType<any>, obj: ST) {
-        (Consumer: React.ComponentType<CP>, defaultStyle: any) {
+        (Consumer: React.ComponentType<CP>, defaultStyle: TKUIStyles<ST, CP>) {
 
     return class WithStyleProp extends React.Component<P, {}> {
 
@@ -23,7 +28,7 @@ function withStyleProp<
             super(props);
             this.StyledComponent =
                 this.props.styles ?
-                injectSheet(this.props.styles)(Consumer as any) :
+                injectSheet(this.props.styles as TKUIStyles<ST, CP>)(Consumer as any) :
                 injectSheet(defaultStyle)(Consumer as any);
         }
 
@@ -36,4 +41,14 @@ function withStyleProp<
     }
 }
 
-export {withStyleProp};
+function emptyValues<T>(sample: T): T {
+    const emptyValues = {};
+    for (const key of Object.keys(sample)) {
+        emptyValues[key] = {};
+    }
+    return emptyValues as T;
+}
+
+export type CSSProps<T> = CSS.Properties & CSSProperties<T>
+
+export {withStyleProp, emptyValues};
