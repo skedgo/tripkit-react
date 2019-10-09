@@ -1,16 +1,52 @@
 import * as React from "react";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import "./TripSegmentSteps.css";
+import {tKUITripSergmentStepsDefaultStyle} from "./TripSegmentSteps.css";
+import {ClassNameMap} from "react-jss";
+import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import ServiceStopLocation from "../model/ServiceStopLocation";
+import Street from "../model/trip/Street";
+import classNames from "classnames";
 
-interface IProps<T> {
+interface ITKUITripSergmentStepsProps<T> extends IStyleRelevantProps,
+    TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
     steps: T[];
     toggleLabel?: (open: boolean) => string;
     leftLabel?: (step: T) => string | JSX.Element;
     rightLabel: (step: T) => string | JSX.Element;
-    stepClassName?: (step: T) => string;
+    stepMarker?: (step: T) => JSX.Element | undefined;
+    stepClassName?: (step: T) => string | undefined;
+    onStepClicked?: (step: T) => void;
+}
+
+export interface IStyleRelevantProps {
     borderColor: string;
     dashed?: boolean;
-    onStepClicked?: (step: T) => void;
+}
+
+interface IProps<T> extends ITKUITripSergmentStepsProps<T> {
+    classes: ClassNameMap<keyof ITKUITripSergmentStepsStyle>
+}
+
+export interface ITKUITripSergmentStepsStyle {
+    step: CSSProps<IStyleRelevantProps>;
+    stepClickable: CSSProps<IStyleRelevantProps>;
+    leftLabel: CSSProps<IStyleRelevantProps>;
+    rightLabel: CSSProps<IStyleRelevantProps>;
+    linePanel: CSSProps<IStyleRelevantProps>;
+    line: CSSProps<IStyleRelevantProps>;
+    linePanelFirst: CSSProps<IStyleRelevantProps>;
+    linePanelLast: CSSProps<IStyleRelevantProps>;
+    circle: CSSProps<IStyleRelevantProps>;
+    circleFirstLast: CSSProps<IStyleRelevantProps>;
+}
+
+export class ITKUITripSergmentStepsConfig implements TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
+    public styles = tKUITripSergmentStepsDefaultStyle;
+    public suffixClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
+                                              // JssProvider, but in this case is true since multiple instances are
+                                              // rendered, each with a different service color.
+
+    public static instance = new ITKUITripSergmentStepsConfig();
 }
 
 interface IState {
@@ -32,12 +68,13 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
 
     public render(): React.ReactNode {
         const borderLeftStyle = this.props.dashed ? "dashed" : undefined;
+        const classes = this.props.classes;
         return (
             <div>
                 {this.props.toggleLabel ?
                     <div className="gl-flex">
                         <div className="TripSegmentDetail-iconPanel"/>
-                        <div className="TripSegmentDetail-linePanel gl-flex gl-center">
+                        <div className={classNames(classes.linePanel, "TripSegmentDetail-linePanel gl-flex gl-center")}>
                             <div className="TripSegmentDetail-line"
                                  style={{
                                      borderColor: this.props.borderColor,
@@ -58,32 +95,29 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
                 <div id={this.id} tabIndex={this.state.open ? 0 : -1}>
                     {this.state.open ?
                         this.props.steps.map((step: T, index: number) => {
+                            const stepMarker = this.props.stepMarker && this.props.stepMarker(step);
                             return (
-                                <div className={"gl-flex" + (this.props.onStepClicked ? " gl-pointer" : "")
-                                + (this.props.stepClassName ? " " + this.props.stepClassName(step) : "")}
+                                <div className={classNames(
+                                    classes.step,
+                                    this.props.onStepClicked && classes.stepClickable,
+                                    this.props.stepClassName && this.props.stepClassName(step))}
                                      key={index}
                                      onClick={this.props.onStepClicked &&
-                                     (() => {if (this.props.onStepClicked) {this.props.onStepClicked(step)}})
-                                     }
+                                     (() => this.props.onStepClicked && this.props.onStepClicked(step))}
                                 >
-                                    <div className="TripSegmentDetail-timePanel gl-flex">
+                                    <div className={classes.leftLabel}>
                                         {this.props.leftLabel ? this.props.leftLabel(step) : ""}
                                     </div>
-                                    <div className="TripSegmentDetail-linePanel gl-flex gl-column gl-center gl-align-center">
-                                        <div className="TripSegmentDetail-line gl-grow"
-                                             style={{
-                                                 borderColor: this.props.borderColor,
-                                                 borderLeftStyle: borderLeftStyle
-                                             }}/>
-                                        <div className={"TripSegmentDetail-smallCircle"}
-                                             style={{borderColor: this.props.borderColor}}/>
-                                        <div className="TripSegmentDetail-line gl-grow"
-                                             style={{
-                                                 borderColor: this.props.borderColor,
-                                                 borderLeftStyle: borderLeftStyle
-                                             }}/>
+                                    <div className={classNames(classes.linePanel,
+                                        index === 0 && classes.linePanelFirst,
+                                        index === this.props.steps.length - 1 && classes.linePanelLast)}>
+                                        <div className={classes.line}/>
+                                        { stepMarker ? stepMarker :
+                                            <div className={classNames(classes.circle,
+                                                (index === 0 || index === this.props.steps.length - 1) && classes.circleFirstLast)}/>}
+                                        <div className={classes.line}/>
                                     </div>
-                                    <div className="TripSegmentDetail-stopTitle">
+                                    <div className={classes.rightLabel}>
                                         {this.props.rightLabel(step)}
                                     </div>
                                 </div>
@@ -94,4 +128,19 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
     }
 }
 
-export default TripSegmentSteps;
+function applyStyleFc<T>(RawComponent: React.ComponentType<IProps<T>>): React.ComponentType<ITKUITripSergmentStepsProps<T>> {
+    const RawComponentStyled = withStyleProp(RawComponent);
+    return (props: ITKUITripSergmentStepsProps<T>) => {
+        const stylesToPass = props.styles || ITKUITripSergmentStepsConfig.instance.styles;
+        const sufixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
+            ITKUITripSergmentStepsConfig.instance.suffixClassNames;
+        return <RawComponentStyled {...props} styles={stylesToPass} suffixClassNames={sufixClassNamesToPass}/>;
+    };
+}
+
+// TODO: make applyStyleFc to return a generic component, as the original TripSegmentSteps
+class StopSteps extends TripSegmentSteps<ServiceStopLocation> {}
+class StreetSteps extends TripSegmentSteps<Street> {}
+
+export const TKUIStopSteps = applyStyleFc(StopSteps);
+export const TKUIStreetSteps = applyStyleFc(StreetSteps);

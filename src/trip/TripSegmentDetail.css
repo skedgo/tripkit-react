@@ -36,12 +36,6 @@
   border-style: solid;
 }
 
-.TripSegmentDetail-linePanel {
-  width: 15px;
-  flex-shrink: 0;
-  -webkit-flex-shrink: 0;
-}
-
 .TripSegmentDetail:first-child .TripSegmentDetail-preStopLine {
   visibility: hidden;
 }
@@ -50,10 +44,10 @@
   visibility: hidden;
 }
 
-.TripSegmentDetail-line {
-  border-left-width: 3px;
-  border-left-style: solid;
-}
+/*.TripSegmentDetail-line {*/
+  /*border-left-width: 3px;*/
+  /*border-left-style: solid;*/
+/*}*/
 
 .TripSegmentDetail-title {
   font-size: 14px;
@@ -76,20 +70,20 @@
   margin-bottom: 10px!important;
 }
 
-.TripSegmentDetail-smallCircle {
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  width: 11px;
-  height: 11px;
-  border-width: 2px;
-  border-style: solid;
-}
+/*.TripSegmentDetail-smallCircle {*/
+  /*-webkit-border-radius: 50%;*/
+  /*-moz-border-radius: 50%;*/
+  /*border-radius: 50%;*/
+  /*width: 11px;*/
+  /*height: 11px;*/
+  /*border-width: 2px;*/
+  /*border-style: solid;*/
+/*}*/
 
 .TripSegmentDetail-stopTitle {
   font-size: 13px;
   margin: 10px 0 10px 15px;
-  color: #4e4e4e;
+  color: #212A33;
 }
 
 .TripSegmentDetail-iconAngleDown {

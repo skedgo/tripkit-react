@@ -5,7 +5,7 @@ import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
-import ServiceDetailView from "../service/ServiceDetailView";
+import {STOP_CLICKED_EVENT} from "../service/TKUIServiceView";
 import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
@@ -32,7 +32,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
         super(props);
         this.openPopup = this.openPopup.bind(this);
         if (props.eventBus) {
-            props.eventBus.addListener(ServiceDetailView.STOP_CLICKED_EVENT, this.openPopup)
+            props.eventBus.addListener(STOP_CLICKED_EVENT, this.openPopup)
         }
     }
 

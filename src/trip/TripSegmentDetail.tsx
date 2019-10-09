@@ -4,7 +4,8 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
 import "./TripSegmentDetail.css"
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import TripSegmentSteps from "./TripSegmentSteps";
+import {TKUIStopSteps} from "./TripSegmentSteps";
+import {TKUIStreetSteps} from "./TripSegmentSteps";
 import Street from "../model/trip/Street";
 import {default as SegmentDescription, SegmentDescriptionProps} from "./SegmentDescription";
 
@@ -89,7 +90,7 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                             {renderDescr({value: this.props.value})}
                         </div>
                         { stops !== null && stops.length > 0 ?
-                            <TripSegmentSteps
+                            <TKUIStopSteps
                                 steps={stops}
                                 toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
                                 leftLabel = {(step: ServiceStopLocation) => step.departure ? DateTimeUtil.momentTZTime(step.departure * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""}
@@ -97,7 +98,7 @@ class TripSegmentDetail extends React.Component<IProps, {}> {
                                 borderColor={transportColor}
                             /> : null }
                         { segment.streets ?
-                            <TripSegmentSteps
+                            <TKUIStreetSteps
                                 steps={segment.streets}
                                 toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + "directions"}
                                 leftLabel = {(step: Street) => step.metres !== null ? TransportUtil.distanceToBriefString(step.metres) : ""}

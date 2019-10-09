@@ -166,7 +166,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 };
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, tKUIResultsDefaultStyle);
+    const RawComponentStyled = withStyleProp(RawComponent);
     return (addProps: ITKUIResultsViewProps) => {
         return (
             <Consumer>

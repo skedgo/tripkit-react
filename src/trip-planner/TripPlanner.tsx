@@ -15,22 +15,22 @@ import {ReactComponent as IconFav} from "../images/ic-star-solid.svg";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
-import ITripPlannerProps from "./ITripPlannerProps";
 import LeafletMap, {TKUIMapView} from "../map/LeafletMap";
 import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
-import {TKUIDeparturesView} from "../service/ServiceDepartureTable";
-import IServiceDepartureRowProps from "../service/IServiceDepartureRowProps";
-import ServiceDepartureRow from "../service/ServiceDepartureRow";
-import {TKUIServiceView} from "../service/ServiceDetailView";
-import TKUIResultsView, {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
-import TripDetail, {TKUITripDetailConfig} from "../trip/TripDetail";
-import {IServiceResultsContext} from "../service/ServiceResultsProvider";
+import TKUITimetableView from "../service/TKUITimetableView";
+import TKUIResultsView from "../trip/TKUIResultsView";
+import TripDetail from "../trip/TripDetail";
+import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
 import StopsData from "../data/StopsData";
 import StopLocation from "../model/StopLocation";
+import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
+import TKUIServiceView from "../service/TKUIServiceView";
 
-interface IState {
+interface ITKUITripPlannerProps extends IRoutingResultsContext, IServiceResultsContext {}
+
+    interface IState {
     mapView: boolean;
     showOptions: boolean;
     showTripDetail?: boolean;
@@ -43,7 +43,6 @@ interface IState {
     // - Style customizations: see if allow passing classes or style objects.
     // - Migrate to newer version of CRA typescript to get css modules. Add (at least) genStyles as modules. The other
     // depends on approach to get customization.
-    // - Move client sample consumers to a connector for TripPlanner (as the other classes) and export TKUITripPlanner.
     // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
     // - Improve the way components are connected, so tripkit-react clients can easily connect their own custom
     // component implementations.
@@ -57,17 +56,17 @@ interface IState {
     // Limpiar codigo luego de todos los cambios que hice
     // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 
-class TKUITripPlannerConfig {
-    public resultsViewConfig: TKUIResultsViewConfig = new TKUIResultsViewConfig();
-    public tripDetailConfig: TKUITripDetailConfig = new TKUITripDetailConfig();
-}
+// class TKUITripPlannerConfig {
+//     public resultsViewConfig: TKUIResultsViewConfig = new TKUIResultsViewConfig();
+//     public tripDetailConfig: TKUITripDetailConfig = new TKUITripDetailConfig();
+// }
 
-class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsContext, IState> {
+class TripPlanner extends React.Component<ITKUITripPlannerProps, IState> {
 
     private ref: any;
     private mapRef?: LeafletMap;
 
-    constructor(props: ITripPlannerProps & IServiceResultsContext) {
+    constructor(props: ITKUITripPlannerProps) {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
@@ -90,12 +89,14 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
 
         // For development:
         RegionsData.instance.requireRegions().then(()=> {
-            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
+            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
                 .then((stop: StopLocation) => {
-                        // this.props.onStopChange(stop);
+                        this.props.onStopChange(stop);
                     }
                 )
         });
@@ -120,10 +121,7 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
             </Modal> : null;
 
         const departuresView = this.props.stop ?
-            <TKUIDeparturesView
-                renderDeparture={<P extends IServiceDepartureRowProps>(props: P) =>
-                    <ServiceDepartureRow {...props}/>
-                }
+            <TKUITimetableView
                 onRequestClose={() => {
                     this.props.onStopChange(undefined);
                 }}
@@ -131,10 +129,6 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
 
         const serviceDetailView = this.props.selectedService ?
             <TKUIServiceView
-                renderDeparture={
-                    <P extends IServiceDepartureRowProps>(props: P) =>
-                        <ServiceDepartureRow {...props}/>
-                }
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
             /> : null;
 
@@ -253,5 +247,20 @@ class TripPlanner extends React.Component<ITripPlannerProps & IServiceResultsCon
     }
 }
 
-export default TripPlanner;
-export {TKUITripPlannerConfig};
+export const Connect = (RawComponent: React.ComponentType<ITKUITripPlannerProps>) => {
+    return () => (
+        <RoutingResultsContext.Consumer>
+            {(routingResultsContext: IRoutingResultsContext) =>
+                <ServiceResultsContext.Consumer>
+                    {(serviceContext: IServiceResultsContext) =>
+                        <TripPlanner {...routingResultsContext}
+                                     {...serviceContext}
+                        />
+                    }
+                </ServiceResultsContext.Consumer>
+            }
+        </RoutingResultsContext.Consumer>
+    )
+};
+
+export default Connect(TripPlanner);
