@@ -20,8 +20,7 @@
 
 .app-style input[type=text],
 .app-style textarea,
-.app-style select,
-.app-style button {
+.app-style select {
   font-size: 13px;
 }
 
@@ -49,7 +48,8 @@
 }
 
 body:not(.user-is-tabbing) .app-style * {
-  box-shadow: none!important;     /* To avoid glow effet on focus */
+  /*box-shadow: none!important;     !* To avoid glow effet on focus *!*/
+  box-shadow: none;     /* Removed the important since I need to put shadows on some elements. TODO: check */
   outline: none!important;  /* To avoid glow effet on focus */
 }
 
@@ -100,23 +100,6 @@ body:not(.user-is-tabbing) .app-style * {
   margin: unset;
   z-index: unset;
   overflow: unset;
-}
-
-.app-style button {
-  background: initial;
-  font-size: 14px;
-  color: unset;
-  text-transform: initial;
-  text-align: center;
-  line-height: initial;
-  font-family: unset;
-  letter-spacing: initial;
-  text-decoration: initial;
-  -webkit-appearance: initial;
-  -moz-appearance: initial;
-  appearance: initial;
-  cursor: pointer;
-  border: none;
 }
 
 .app-style .gl-link {

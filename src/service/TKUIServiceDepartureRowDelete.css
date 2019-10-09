@@ -1,18 +1,18 @@
-.ServiceDepartureRow-outerPanel {
-  border-bottom: 1px solid lightgray;
-}
+/*.ServiceDepartureRow-outerPanel {*/
+  /*border-bottom: 1px solid lightgray;*/
+/*}*/
 
-.ServiceDepartureRow {
-  background-color: white;
-  margin: 10px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-}
+/*.ServiceDepartureRow { */
+  /*background-color: white;*/
+  /*margin: 10px;*/
+  /*-webkit-border-radius: 4px;*/
+  /*-moz-border-radius: 4px;*/
+  /*border-radius: 4px;*/
+/*}*/
 
-.ServiceDepartureRow-clickable {
-  cursor: pointer;
-}
+/*.ServiceDepartureRow-clickable {*/
+  /*cursor: pointer;*/
+/*}*/
 
 .ServiceDepartureRow-transIconPanel {
   width: 50px;
@@ -25,19 +25,19 @@
 
 .ServiceDepartureRow-middlePanel {
   /* Needed for gl-overflow-ellipsis to work for serviceDescription: 50px of transIconPanel + 60px of timeToDepart */
-  max-width: calc(100% - 140px);
+  /*max-width: calc(100% - 70px);*/
 }
 
 .ServiceDepartureRow-timeToDepart {
-  background-color: #1cca6a;
-  color: white;
+  /*background-color: #1cca6a;*/
+  /*color: white;*/
   width: 70px;
   height: 35px;
-  -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;
-  border-radius: 2px;
-  margin: 10px;
-  font-size: 14px;
+  /*-webkit-border-radius: 2px;*/
+  /*-moz-border-radius: 2px;*/
+  /*border-radius: 2px;*/
+  /*margin: 10px;*/
+  /*font-size: 14px;*/
 }
 
 .ServiceDepartureRow-timeToDepartCancelled {
@@ -52,10 +52,9 @@
   font-size: 15px;
 }
 
-.ServiceDepartureRow-serviceDescription {
-  font-size: 13px;
-  color: grey;
-}
+/*.ServiceDepartureRow-serviceDescription {*/
+  /*color: grey;*/
+/*}*/
 
 .ServiceDepartureRow-realtimeInfo {
   font-size: 12px;

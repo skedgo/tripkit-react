@@ -4,11 +4,14 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import DateTimePicker from "./DateTimePicker";
 import "./DateTimePickerFace.css";
 import {default as DeviceUtil} from "../util/DeviceUtil";
+import {default as moment} from 'moment-timezone';
+import classNames from "classnames";
 
 interface IProps {
     value: Moment;
     onChange?: (value: Moment) => void;
-    format: (value: Moment) => string;
+    renderFaceButton: (value: Moment, onClick: (e: any) => void, onFocus: (e: any) => void) => JSX.Element;
+    textInputEnabled: boolean;
 }
 
 interface IState {
@@ -16,6 +19,27 @@ interface IState {
 }
 
 class DateTimePickerFace extends React.Component<IProps, IState> {
+
+    public static defaultProps: Partial<IProps> = {
+        renderFaceButton: (value: Moment, onClick: (e: any) => void, onFocus: (e: any) => void) => {
+            let timeText;
+            if (Math.abs(moment.duration(value.diff(DateTimeUtil.getNow())).asMinutes()) <= 1) {
+                timeText = "Now"
+            } else if (DateTimeUtil.getNow().format("ddd D") !== value.format("ddd D")) {
+                timeText = value.format("ddd D, " + DateTimeUtil.TIME_FORMAT_TRIP);
+            } else {
+                timeText = value.format(DateTimeUtil.TIME_FORMAT_TRIP);
+            }
+            return (
+                <button className={classNames("DateTimePickerFace-label")}
+                        onClick={onClick}
+                        onFocus={onFocus}>
+                    {timeText}
+                </button>
+            );
+        },
+        textInputEnabled: false
+    };
 
     private dateTimePickerRef: any;
 
@@ -30,7 +54,7 @@ class DateTimePickerFace extends React.Component<IProps, IState> {
     private onFaceClick() {
         if (this.dateTimePickerRef) {
             this.dateTimePickerRef.setFocusActually();
-            if (DeviceUtil.isDesktop) {
+            if (DeviceUtil.isDesktop && this.props.textInputEnabled) {
                 this.setState({textInput: true});
             }
         }
@@ -38,12 +62,8 @@ class DateTimePickerFace extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         return (
-            <div className={"DateTimePickerFace" + (this.state.textInput ? " DateTimePickerFace-textInput" : " DateTimePickerFace-face")}>
-                <button className="DateTimePickerFace-label"
-                        onClick={this.onFaceClick}
-                        onFocus={this.onFaceClick}>
-                    {this.props.format(this.props.value)}
-                </button>
+            <div className={classNames("DateTimePickerFace", this.state.textInput ? "DateTimePickerFace-textInput" : "DateTimePickerFace-face")}>
+                {this.props.renderFaceButton(this.props.value, this.onFaceClick, this.onFaceClick)}
                 <div className="DateTimePickerFace-hidden">
                     <DateTimePicker
                         value={this.props.value}

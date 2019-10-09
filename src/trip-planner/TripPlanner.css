@@ -229,32 +229,11 @@
   bottom: 46px!important;
 }
 
-.TripPlanner-serviceModal {
-  z-index: 1000!important;
-  /*top: 30%!important;*/
-  top: 4%!important;
-  right: auto!important;
-  width: 450px;
-  align-items: unset!important;
-  background: none!important;
-}
-
-.TripPlanner-serviceModalContainer {
-  width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  overflow: hidden;
-  border-top: 1px solid lightgray;
-  border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-}
-
 @media (max-width: 800px) {
   .TripPlanner-serviceModal {
     width: 100%;
   }
 }
-
 
 .TripPlanner-testDrawer {
   z-index: 2000!important;

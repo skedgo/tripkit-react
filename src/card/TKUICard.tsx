@@ -1,17 +1,17 @@
 import React from "react";
 import Drawer from 'react-drag-drawer';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
-import './TKUICard.css';
 import genStyles from "../css/general.module.css";
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
 import {Subtract} from "utility-types";
 import {TKUIStyles, withStyleProp} from "../jss/StyleHelper";
-import {TKUITheme} from "../example/client-sample";
+import {tKUICardDefaultStyle} from "./TKUICard.css";
 
 export interface ITKUICardProps {
     title: string;
+    subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
     styles?: any;
@@ -23,24 +23,17 @@ interface IProps extends ITKUICardProps {
 }
 
 export interface ITKUICardStyle {
+    modal: CSS.Properties & CSSProperties<IProps>;
+    modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
+    body: CSS.Properties & CSSProperties<IProps>;
+    headerLeft: CSS.Properties & CSSProperties<IProps>;
+    title: CSS.Properties & CSSProperties<IProps>;
+    subtitle: CSS.Properties & CSSProperties<IProps>;
+    btnClear: CSS.Properties & CSSProperties<IProps>;
+    iconClear: CSS.Properties & CSSProperties<IProps>;
 }
-
-export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =
-    (theme: TKUITheme) => ({
-        main: {
-            color: 'blue!important',
-            textAlign: 'center'
-        },
-        header: {
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            '&:hover': {
-                backgroundColor: 'orange'
-            }
-        }
-    });
 
 class TKUICardConfig {
     public styles: TKUIStyles<ITKUICardStyle, ITKUICardProps> = tKUICardDefaultStyle;
@@ -58,31 +51,30 @@ class TKUICard extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        // const style: TKUICardStyle = {
-        //     backgroundColor: 'black',
-        //     titleTextColor: 'red'
-        // };
-        // const cssStyle: CSSProperties<{}> = {
-        //     color: "red"
-        // };
         const classes = this.props.classes;
         const body =
-            <div className={classNames(classes.main, "TKUICard-main")}>
-                <div className={classNames("ServiceDepartureTable-header", classes.header)}>
+            <div className={classNames(classes.main, "app-style")}>
+                <div className={classes.header}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
-                        <div className="ServiceDepartureTable-title gl-grow">
-                            {this.props.title}
+                        <div className={classes.headerLeft}>
+                            <div className={classes.title}>
+                                {this.props.title}
+                            </div>
+                            {this.props.subtitle &&
+                            <div className={classes.subtitle}>
+                                {this.props.subtitle}
+                            </div>}
                         </div>
-                        <button onClick={this.props.onRequestClose} className="ServiceDepartureTable-btnClear"
+                        <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
                                 aria-hidden={true}>
                             <IconRemove aria-hidden={true}
-                                        className="ServiceDepartureTable-iconClear gl-svg-fill-currColor"
+                                        className={classes.iconClear}
                                         focusable="false"/>
                         </button>
                     </div>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <div className={"gl-scrollable-y"}>
+                <div className={classes.body}>
                     {this.props.children}
                 </div>
             </div>;
@@ -90,8 +82,8 @@ class TKUICard extends React.Component<IProps, {}> {
             this.asCard ?
             <Drawer
                 open={true}
-                containerElementClass="TripPlanner-serviceModal"
-                modalElementClass="TripPlanner-serviceModalContainer app-style"
+                modalElementClass={classes.modal}
+                containerElementClass={classes.modalContainer}
                 allowClose={false}
                 dontApplyListeners={true}
             >
@@ -101,25 +93,7 @@ class TKUICard extends React.Component<IProps, {}> {
     }
 }
 
-// class TKUICard extends React.Component<ITKUICardProps, {}> {
-//     private TKUICardStyled: any;
-//
-//     constructor(props: ITKUICardProps) {
-//         super(props);
-//         this.TKUICardStyled = this.props.styles ?
-//             injectSheet(this.props.styles)(TKUICardUnstyled) :
-//             injectSheet(tKUICardDefaultStyle)(TKUICardUnstyled);
-//     }
-//
-//     public render(): React.ReactNode {
-//         return <this.TKUICardStyled {...this.props}/>
-//     }
-//
-// }
-
-// const tKUICardWithStyle = (style: ITKUICardStyle) => injectSheet(style)(TKUICardUnstyled);
-
-const TKUICardWithStyleProp = withStyleProp(TKUICard, tKUICardDefaultStyle);
+const TKUICardWithStyleProp = withStyleProp(TKUICard);
 
 export default (props: ITKUICardProps & {children: any}) => {
     const stylesToPass = props.styles || TKUICardConfig.instance.styles;

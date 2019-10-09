@@ -101,6 +101,17 @@ class DateTimePicker extends React.Component<IProps, {}> {
                         this.props.onClose();
                     }
                 }}
+                popperModifiers={{
+                    offset: {
+                        enabled: true,
+                        offset: "-260px, 0"
+                    },
+                    preventOverflow: {
+                        enabled: true,
+                        escapeWithReference: false,
+                        boundariesElement: "viewport"
+                    }
+                }}
             /> :
             <DateTimeHTML5Input
                 value = {displayValue}

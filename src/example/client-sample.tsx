@@ -9,30 +9,25 @@ import * as queryString from "query-string";
 import TripGoApi from "../api/TripGoApi";
 import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
-import TripPlanner, {TKUITripPlannerConfig} from "../trip-planner/TripPlanner";
-import RoutingResultsProvider, {
-    IRoutingResultsContext,
-    RoutingResultsContext
-} from "../trip-planner/RoutingResultsProvider";
-// import ITripRowProps from "../trip/ITripRowProps";
+import TripPlanner from "../trip-planner/TripPlanner";
+import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
 import {default as SegmentDescription, SegmentDescriptionProps} from "../trip/SegmentDescription";
 import Segment from "../model/trip/Segment";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {SegmentDetailProps, default as TripSegmentDetail} from "../trip/TripSegmentDetail";
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
-import * as CSS from 'csstype';
 import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
-import genStyles from "../css/GenStyle.css";
-import TKUIResultsView, {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
+import {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
 import {TKUITripDetailConfig} from "../trip/TripDetail";
 import ITripRowProps from "../trip/ITripRowProps";
-import TKUICard, {ITKUICardProps, ITKUICardStyle, TKUICardConfig, tKUICardDefaultStyle} from "../card/TKUICard";
-import {emptyValues, TKUIStyles} from "../jss/StyleHelper";
+import {default as TKStyleProvider} from "../jss/TKStyleProvider";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
 const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
+
+// TKUIServiceDepartureRowConfig.instance.suffixClassNames = false;
 
 export function renderTripPlanner(containerId: string = "tripgo-sample-root", tripgoKey: string = "") {
     let routingQuery: RoutingQuery | undefined;
@@ -50,16 +45,16 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     const containerElement = document.getElementById(containerId) as HTMLElement;
     containerElement.className = "app-style";
 
-    const tkUICardDefStyle = tKUICardDefaultStyle as StyleCreator<keyof ITKUICardStyle, TKUITheme, ITKUICardProps>;
-    TKUICardConfig.instance.styles = (theme: TKUITheme) => ({
-        main: {
-            color: theme.colorPrimary
-        },
-        header: {
-            ...tkUICardDefStyle(theme).header,
-            backgroundColor: 'lightgreen'
-        }
-    });
+    // const tkUICardDefStyle = tKUICardDefaultStyle as StyleCreator<keyof ITKUICardStyle, TKUITheme, ITKUICardProps>;
+    // TKUICardConfig.instance.styles = (theme: TKUITheme) => ({
+    //     main: {
+    //         color: theme.colorPrimary
+    //     },
+    //     header: {
+    //         ...tkUICardDefStyle(theme).header,
+    //         backgroundColor: 'lightgreen'
+    //     }
+    // });
     // TKUICardConfig.instance.styles = emptyValues(tKUICardDefaultStyle);
 
     TKUIResultsViewConfig.instance.renderTrip = <P extends ITripRowProps>(props: P) => {
@@ -97,9 +92,9 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
         )
     };
 
-    const theme: TKUITheme = {
-        colorPrimary: 'green'
-    };
+    // const theme: TKUITheme = {
+    //     colorPrimary: 'brown'
+    // };
 
     import("../trip-planner/TripPlanner").then((module) => {
         const generateClassName = (rule: any, sheet: any) => {
@@ -111,20 +106,10 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                     {(optionsContext: IOptionsContext) => (
                         <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}>
                             <ServiceResultsProvider>
-                                <RoutingResultsContext.Consumer>
-                                    {(routingResultsContext: IRoutingResultsContext) =>
-                                        <ServiceResultsContext.Consumer>
-                                            {(serviceContext: IServiceResultsContext) =>
-                                                <JssProvider generateClassName={generateClassName}>
-                                                    <ThemeProvider theme={theme}>
-                                                        <TripPlanner {...routingResultsContext}
-                                                                     {...serviceContext}
-                                                        />
-                                                    </ThemeProvider>
-                                                </JssProvider>}
-                                        </ServiceResultsContext.Consumer>
-                                    }
-                                </RoutingResultsContext.Consumer>
+                                {/*<TKStyleProvider theme={theme}>*/}
+                                <TKStyleProvider>
+                                    <TripPlanner/>
+                                </TKStyleProvider>
                             </ServiceResultsProvider>
                         </RoutingResultsProvider>
                     )}
@@ -141,10 +126,6 @@ TripGoApi.isBetaServer = queryMap["beta-server"] !== "false";
 const elementId = "tripgo-sample-root";
 if (document.getElementById(elementId)) {
     renderTripPlanner(elementId, '790892d5eae024712cfd8616496d7317');
-}
-
-export interface TKUITheme {
-    colorPrimary: CSS.Color
 }
 
 unregister();
