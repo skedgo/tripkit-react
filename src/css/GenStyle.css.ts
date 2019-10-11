@@ -8,6 +8,7 @@ interface ITKUIGenStyle {
     spaceBetween: CSS.Properties;
     justifyEnd: CSS.Properties;
     alignCenter: CSS.Properties;
+    alignStretch: CSS.Properties;
     alignSelfCenter: CSS.Properties;
     alignSelfStart: CSS.Properties;
     grow: CSS.Properties;
@@ -17,6 +18,7 @@ interface ITKUIGenStyle {
     svgPathFillCurrColor: CSSProps<{}>;
     scrollableY: CSSProps<{}>;
     relative: CSSProps<{}>;
+    hidden: CSSProps<{}>;
 
     fontL: CSSProps<{}>;
     fontM: CSSProps<{}>;
@@ -60,6 +62,11 @@ const genStyles: ITKUIGenStyle = {
         WebkitAlignItems: 'center'
     },
 
+    alignStretch: {
+        alignItems: 'stretch',
+        WebkitAlignItems: 'stretch'
+    },
+
     alignSelfCenter: {
         alignSelf: 'center',
         WebkitAlignSelf: 'center'
@@ -84,6 +91,9 @@ const genStyles: ITKUIGenStyle = {
         position: 'relative'
     },
 
+    hidden: {
+        visibility: 'hidden'
+    },
 
     animateSpin: {
         animation: 'spin 1.5s linear infinite'

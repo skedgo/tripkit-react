@@ -11,16 +11,11 @@ import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
 import TripPlanner from "../trip-planner/TripPlanner";
 import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
-import {default as SegmentDescription, SegmentDescriptionProps} from "../trip/SegmentDescription";
-import Segment from "../model/trip/Segment";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {SegmentDetailProps, default as TripSegmentDetail} from "../trip/TripSegmentDetail";
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
 import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
 import {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
-import {TKUITripDetailConfig} from "../trip/TripDetail";
-import ITripRowProps from "../trip/ITripRowProps";
 import {default as TKStyleProvider} from "../jss/TKStyleProvider";
 
 const searchStr = window.location.search;
@@ -57,17 +52,17 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     // });
     // TKUICardConfig.instance.styles = emptyValues(tKUICardDefaultStyle);
 
-    TKUIResultsViewConfig.instance.renderTrip = <P extends ITripRowProps>(props: P) => {
-        return (
-            <div className={props.className}
-                 onClick={props.onClick}
-                 onFocus={props.onFocus}
-                 onKeyDown={props.onKeyDown}
-            >
-                {props.value.segments[0].getAction()}
-            </div>
-        )
-    };
+    // TKUIResultsViewConfig.instance.renderTrip = <P extends ITripRowProps>(props: P) => {
+    //     return (
+    //         <div className={props.className}
+    //              onClick={props.onClick}
+    //              onFocus={props.onFocus}
+    //              onKeyDown={props.onKeyDown}
+    //         >
+    //             {props.value.segments[0].getAction()}
+    //         </div>
+    //     )
+    // };
     TKUIResultsViewConfig.instance.styles = Util.iAssign(tKUIResultsDefaultStyle,
         {
             main: {
@@ -75,22 +70,22 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                 backgroundColor: 'lightblue'
             },
         });
-    TKUITripDetailConfig.instance.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
-        return (
-            <TripSegmentDetail {...props}
-                           renderDescr={<Q extends SegmentDescriptionProps>(props1: Q) =>
-                               <SegmentDescription {...props1}/>}
-                           renderIcon={(iconProps: {value: Segment}) =>
-                               <div style={{color: "orange"}}>
-                                   {iconProps.value.modeIdentifier}
-                               </div>}
-                           renderTitle={(iconProps: {value: Segment}) =>
-                               <div style={{color: "blue"}}>
-                                   {iconProps.value.getAction()}
-                               </div>}
-            />
-        )
-    };
+    // TKUITripDetailConfig.instance.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
+    //     return (
+    //         <TripSegmentDetail {...props}
+    //                        renderDescr={<Q extends SegmentDescriptionProps>(props1: Q) =>
+    //                            <SegmentDescription {...props1}/>}
+    //                        renderIcon={(iconProps: {value: Segment}) =>
+    //                            <div style={{color: "orange"}}>
+    //                                {iconProps.value.modeIdentifier}
+    //                            </div>}
+    //                        renderTitle={(iconProps: {value: Segment}) =>
+    //                            <div style={{color: "blue"}}>
+    //                                {iconProps.value.getAction()}
+    //                            </div>}
+    //         />
+    //     )
+    // };
 
     // const theme: TKUITheme = {
     //     colorPrimary: 'brown'

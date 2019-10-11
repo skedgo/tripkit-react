@@ -20,13 +20,11 @@ import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
-import TripDetail from "../trip/TripDetail";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
-import StopsData from "../data/StopsData";
-import StopLocation from "../model/StopLocation";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
+import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 
 interface ITKUITripPlannerProps extends IRoutingResultsContext, IServiceResultsContext {}
 
@@ -72,6 +70,7 @@ class TripPlanner extends React.Component<ITKUITripPlannerProps, IState> {
         this.state = {
             mapView: false,
             showOptions: false,
+            showTripDetail: true,   // For development
             viewport: {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
         if (!userIpLocation) {
@@ -88,18 +87,18 @@ class TripPlanner extends React.Component<ITKUITripPlannerProps, IState> {
         this.onOptionsRequestedClose = this.onOptionsRequestedClose.bind(this);
 
         // For development:
-        RegionsData.instance.requireRegions().then(()=> {
+        // RegionsData.instance.requireRegions().then(()=> {
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
-            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
-                .then((stop: StopLocation) => {
-                        this.props.onStopChange(stop);
-                    }
-                )
-        });
+            //     .then((stop: StopLocation) => {
+            //             this.props.onStopChange(stop);
+            //         }
+            //     )
+        // });
     }
 
     private onShowOptions() {
@@ -145,7 +144,7 @@ class TripPlanner extends React.Component<ITKUITripPlannerProps, IState> {
             /> : null;
 
         const tripDetailView = this.state.showTripDetail && this.props.selected ?
-            <TripDetail
+            <TKUITripOverviewView
                 value={this.props.selected}
                 onRequestClose={() => {
                     this.setState({showTripDetail: false})

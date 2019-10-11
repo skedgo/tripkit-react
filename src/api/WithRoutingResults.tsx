@@ -15,6 +15,7 @@ import Options from "../model/Options";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
+import Features from "../env/Features";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -166,6 +167,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (this.realtimeInterval) {
                 clearInterval(this.realtimeInterval);
             }
+            if (!Features.instance.realtimeEnabled()) {
+                return;
+            }
             if (!selected || !selected.updateURL) {  // No realtime data for the trip.
                 return;
             }
@@ -298,7 +302,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public computeTrips(query: RoutingQuery): Promise<Array<Promise<Trip[]>>> {
             const routingPromises: Promise<Array<Promise<Trip[]>>> = this.getQueryUrlsWaitRegions(query).then((queryUrls: string[]) => {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
-                    return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET)
+                    return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, true)
                         .then((routingResultsJson: any) => {
                             const jsonConvert = new JsonConvert();
                             const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);

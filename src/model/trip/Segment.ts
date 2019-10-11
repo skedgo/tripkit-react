@@ -145,6 +145,10 @@ class Segment extends SegmentTemplate {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith(ModeIdentifier.SCHOOLBUS_ID);
     }
 
+    public isStationay(): boolean {
+        return this.type === 'stationary';
+    }
+
     public isNonTCService() {
         return this.isPT()
             && this.serviceOperator.toLowerCase() !== "transport canberra"
@@ -162,6 +166,11 @@ class Segment extends SegmentTemplate {
         return visibility ?
             this === this.trip.segments.slice().reverse().find((segment: Segment) => segment.visibilityType === visibility) :
             this === this.trip.segments[this.trip.segments.length - 1];
+    }
+
+    public prevSegment(): Segment | undefined {
+        return this.isFirst() ? undefined : this.arrival ? this.trip.segments[this.trip.segments.length - 1] :
+            this.trip.segments[this.trip.segments.indexOf(this) - 1];
     }
 
     public isMyWay(): boolean {
