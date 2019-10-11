@@ -2,10 +2,10 @@ import * as React from "react";
 import "./TripRow.css";
 import TripGroup from "../model/trip/TripGroup";
 import TripAltBtn from "./TripAltBtn";
-import TripRowTime from "./TripRowTime";
 import TripRowTrack from "./TripRowTrack";
 import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
 import {default as IProps} from "./ITripRowProps";
+import TKUITripTime from "./TKUITripTime";
 
 interface IState {
     showDetails: boolean;
@@ -36,7 +36,7 @@ class TripRow extends React.Component<IProps, IState> {
                  ref={el => this.ref = el}
             >
                 <div className="TripRow-body">
-                    <TripRowTime value={this.props.value} brief={this.props.brief}/>
+                    <TKUITripTime value={this.props.value} brief={this.props.brief}/>
                     <TripRowTrack value={this.props.value}
                                   renderTransport={(props: TrackTransportProps) => <TrackTransport {...props}/>}
                     />

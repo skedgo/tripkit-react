@@ -9,7 +9,7 @@ export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =
 
         modalContainer: {
             zIndex: '1000!important',
-            top: '4%!important',
+            top: '15%!important',
             right: 'auto!important',
             width: '450px',
             alignItems: 'unset!important',

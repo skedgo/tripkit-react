@@ -25,9 +25,9 @@ class TripGoApi {
         return this.SATAPP;
     }
 
-    public static apiCall(endpoint: string, method: string, body?: any): Promise<any> {
+    public static apiCall(endpoint: string, method: string, body?: any, cache: boolean = false): Promise<any> {
         const url = this.getSatappUrl(endpoint);
-        return this.apiCallUrl(url, method, body);
+        return this.apiCallUrl(url, method, body, cache);
     }
 
     public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
@@ -51,8 +51,8 @@ class TripGoApi {
                 'Content-Type': 'application/json'
             },
             body: body ? JSON.stringify(body) : undefined
-        })
-            .then(NetworkUtil.jsonCallback);
+        }, cache)
+            // .then(NetworkUtil.jsonCallback); // TODO: Comment since NetworkUtil.fetch already calls jsonCallback.
     }
 
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {

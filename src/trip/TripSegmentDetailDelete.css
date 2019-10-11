@@ -4,7 +4,6 @@
 }
 
 .TripSegmentDetail-iconPanel {
-  width: 70px;
   margin: 10px 0;
   flex-shrink: 0;
   -webkit-flex-shrink: 0;
@@ -20,10 +19,6 @@
   align-items: center;
   -webkit-align-items: center;
   margin: 10px 15px 10px 0;
-}
-
-.TripSegmentDetail-circlePanel {
-  width: 15px;
 }
 
 .TripSegmentDetail-circle {

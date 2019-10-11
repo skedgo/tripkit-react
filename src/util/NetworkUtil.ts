@@ -97,6 +97,55 @@ class NetworkUtil {
             },
         };
     };
+
+    // For now it's just for development, to avoid doing so much api calls and accelerating answers.
+
+    private static LS_FETCH_CACHE = "FETCH_CACHE";
+
+    private static loadCacheFromLS(): Map<string, any> {
+        const fetchChacheItem = localStorage.getItem(this.LS_FETCH_CACHE);
+        return fetchChacheItem ? new Map<string, any>(JSON.parse(fetchChacheItem)) : new Map<string, any>();
+    }
+
+    private static saveCacheToLS(fetchCache: Map<string, any>) {
+        localStorage.setItem(this.LS_FETCH_CACHE, JSON.stringify(Array.from(fetchCache.entries())));
+    }
+
+    private static fetchCache: Map<string, any>;
+    private static getCache(): Map<string, any> {
+        if (!NetworkUtil.fetchCache) {
+            console.log("get cache");
+            NetworkUtil.fetchCache = NetworkUtil.loadCacheFromLS();
+            console.log("got it!");
+        }
+        return NetworkUtil.fetchCache;
+    }
+    private static setCache(cacheKey: string, response: any) {
+        NetworkUtil.fetchCache.set(cacheKey, response);
+        this.saveCacheToLS(this.fetchCache);
+    }
+
+    public static fetch(url: string, options: any, cache: boolean = true): Promise<any>  {
+        if (!cache) {
+            return fetch(url, options).then(NetworkUtil.jsonCallback);
+        }
+        const cacheKey = url + JSON.stringify(options);
+        if (!NetworkUtil.getCache().has(cacheKey)) {
+            const fetchPromise = fetch(url, options).then(NetworkUtil.jsonCallback);
+            fetchPromise
+                .then((json: any) => NetworkUtil.setCache(cacheKey, json))
+                .catch((reason: Error) => {
+                    // Our api answers 200 with a null json when there is no update, so return undefined;
+                    if (reason.message.includes("Unexpected end of JSON input")) {
+                        return undefined;
+                    }
+                    console.log(reason);
+                    throw reason;
+                });
+            return fetchPromise;
+        }
+        return Promise.resolve(NetworkUtil.getCache().get(cacheKey));
+    }
 }
 
 // Exports to gwt
