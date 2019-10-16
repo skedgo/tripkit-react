@@ -3,7 +3,7 @@ import iconFeedback from "./images/ic-feedback.svg";
 import {IProps as FavouriteRowPropsImported} from "./favourite/FavouriteRow";
 export {default as RegionsData} from "./data/RegionsData";
 export {default as TripGoApi} from "./api/TripGoApi";
-export {default as QueryInput} from "./query/QueryInput";
+export {default as TKUIRoutingQueryInput} from "./query/TKUIRoutingQueryInput";
 export {default as DeviceUtil} from "./util/DeviceUtil";
 export {default as Util} from "./util/Util";
 export {default as Constants} from "./util/Constants";

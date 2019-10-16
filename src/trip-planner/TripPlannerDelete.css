@@ -1,7 +1,9 @@
 .TripPlanner-queryPanel {
   position: absolute;
   width: 450px;
-  z-index: 20;
+  z-index: 1000;
+  top: 10px;
+  left: 10px;
 }
 
 .TripPlanner-resultsAndMapPanel {
@@ -16,72 +18,72 @@
   margin-top: 178px;
 }
 
-.TripPlanner-queryInput {
-  background-color: #0242ac;
-}
+/*.TripPlanner-queryInput {*/
+  /*background-color: #0242ac;*/
+/*}*/
 
-.TripPlanner-queryInput,
-.TripPlanner-queryInput button {
-  color: white;
-}
-
-.TripPlanner-queryInput .QueryInput-iconAngleDown path {
-  fill: white;
-}
-
-.TripPlanner-queryInput .QueryInput-iconClock circle,
-.TripPlanner-queryInput .QueryInput-iconClock rect {
-  stroke: white;
-}
-
-.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-1 {
-  stroke: white;
-}
-
-.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-2 {
-  fill: white;
-}
-
-.TripPlanner-queryInput .QueryInput-locationPanel {
-  border-bottom-color: #6aa3fe;
-}
-
-.TripPlanner-queryInput .QueryInput-iconSwap {
-  border: 2px solid #6aa3fe;
-}
-
-.TripPlanner-queryInput .QueryInput-fromToLabel {
+/*.TripPlanner-queryInput,*/
+/*.TripPlanner-queryInput button {*/
   /*color: white;*/
-}
+/*}*/
 
-.TripPlanner-queryInput .LocationBox-iconClear rect {
-  fill: white;
-}
+/*.TripPlanner-queryInput .QueryInput-iconAngleDown path {*/
+  /*fill: white;*/
+/*}*/
 
-.TripPlanner-queryInput .LocationBox input {
-  color: white;
-}
+/*.TripPlanner-queryInput .QueryInput-iconClock circle,*/
+/*.TripPlanner-queryInput .QueryInput-iconClock rect {*/
+  /*stroke: white;*/
+/*}*/
 
-.TripPlanner-queryInput .LocationBox input::placeholder {
-  color: white;
-  opacity: .5;
-}
+/*.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-1 {*/
+  /*stroke: white;*/
+/*}*/
 
-.TripPlanner-queryInput .QueryInput-iconSwap path {
-  fill: white;
-}
+/*.TripPlanner-queryInput .QueryInput-fromToIcon .gl-svg-target-2 {*/
+  /*fill: white;*/
+/*}*/
 
-.TripPlanner-queryInput .LocationBox-iconLoading path {
-  fill: white;
-}
+/*.TripPlanner-queryInput .QueryInput-locationPanel {*/
+  /*border-bottom-color: #6aa3fe;*/
+/*}*/
 
-.TripPlanner-queryInput .FavouriteBtn-iconStar-add path {
-  stroke: white;
-}
+/*.TripPlanner-queryInput .QueryInput-iconSwap {*/
+  /*border: 2px solid #6aa3fe;*/
+/*}*/
 
-.TripPlanner-queryInput .FavouriteBtn-iconStar-remove path {
-  fill: white;
-}
+/*.TripPlanner-queryInput .QueryInput-fromToLabel {*/
+  /*!*color: white;*!*/
+/*}*/
+
+/*.TripPlanner-queryInput .LocationBox-iconClear rect {*/
+  /*fill: white;*/
+/*}*/
+
+/*.TripPlanner-queryInput .LocationBox input {*/
+  /*color: white;*/
+/*}*/
+
+/*.TripPlanner-queryInput .LocationBox input::placeholder {*/
+  /*color: white;*/
+  /*opacity: .5;*/
+/*}*/
+
+/*.TripPlanner-queryInput .QueryInput-iconSwap path {*/
+  /*fill: white;*/
+/*}*/
+
+/*.TripPlanner-queryInput .LocationBox-iconLoading path {*/
+  /*fill: white;*/
+/*}*/
+
+/*.TripPlanner-queryInput .FavouriteBtn-iconStar-add path {*/
+  /*stroke: white;*/
+/*}*/
+
+/*.TripPlanner-queryInput .FavouriteBtn-iconStar-remove path {*/
+  /*fill: white;*/
+/*}*/
 
 .TripPlanner-mapBtn {
   border: none;

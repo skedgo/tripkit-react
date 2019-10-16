@@ -6,11 +6,13 @@ interface ITKUIGenStyle {
     column: CSS.Properties;
     center: CSS.Properties;
     spaceBetween: CSS.Properties;
+    spaceAround: CSS.Properties;
     justifyEnd: CSS.Properties;
     alignCenter: CSS.Properties;
     alignStretch: CSS.Properties;
     alignSelfCenter: CSS.Properties;
     alignSelfStart: CSS.Properties;
+    alignSelfStretch: CSS.Properties;
     grow: CSS.Properties;
     noShrink: CSS.Properties;
     animateSpin: CSS.Properties;
@@ -52,6 +54,11 @@ const genStyles: ITKUIGenStyle = {
         WebkitJustifyContent: 'space-between'
     },
 
+    spaceAround: {
+        justifyContent: 'space-around',
+        WebkitJustifyContent: 'space-around'
+    },
+
     justifyEnd: {
         justifyContent: 'flex-end',
         WebkitJustifyContent: 'flex-end'
@@ -75,6 +82,11 @@ const genStyles: ITKUIGenStyle = {
     alignSelfStart: {
         alignSelf: 'flex-start',
         WebkitAlignSelf: 'flex-start'
+    },
+
+    alignSelfStretch: {
+        alignSelf: 'stretch',
+        WebkitAlignSelf: 'stretch'
     },
 
     grow: {
