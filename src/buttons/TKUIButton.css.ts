@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
-import {ITKUIButtonProps, ITKUIButtonStyle} from "./TKUIButton";
+import {ITKUIButtonProps, ITKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
@@ -13,12 +13,17 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             ...genStyles.alignCenter,
             ...genStyles.center,
             ...genStyles.fontM,
-            padding: '8px 20px',
+            padding: (props: ITKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
             borderRadius: '20px',
             '& svg': {
                 width: '100%',
                 height: '100%'
-            }
+            },
+            height: (props: ITKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
+            width: (props: ITKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial'
         },
 
         primary: {
@@ -49,12 +54,20 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
         },
 
         iconContainer: {
-            width: '20px',
-            height: '20px',
-            marginRight: '15px',
+            width: '24px',
+            height: '24px',
+            marginRight: (props: ITKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '0' : '15px',
             '& svg': {
                 ...genStyles.svgFillCurrColor
             }
+        },
+
+        verticalPanel: {
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.alignCenter,
+            ...genStyles.fontM
         }
 
     });

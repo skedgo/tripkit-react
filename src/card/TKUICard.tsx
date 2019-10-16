@@ -1,6 +1,6 @@
 import React from "react";
 import Drawer from 'react-drag-drawer';
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
+import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import genStyles from "../css/general.module.css";
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
@@ -65,12 +65,13 @@ class TKUICard extends React.Component<IProps, {}> {
                                 {this.props.subtitle}
                             </div>}
                         </div>
+                        {this.props.onRequestClose &&
                         <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
                                 aria-hidden={true}>
                             <IconRemove aria-hidden={true}
                                         className={classes.iconClear}
                                         focusable="false"/>
-                        </button>
+                        </button>}
                     </div>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>

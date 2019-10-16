@@ -9,14 +9,12 @@ import * as queryString from "query-string";
 import TripGoApi from "../api/TripGoApi";
 import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
-import TripPlanner from "../trip-planner/TripPlanner";
 import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
-import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
-import {TKUIResultsViewConfig} from "../trip/TKUIResultsView";
 import {default as TKStyleProvider} from "../jss/TKStyleProvider";
+import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -63,13 +61,13 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //         </div>
     //     )
     // };
-    TKUIResultsViewConfig.instance.styles = Util.iAssign(tKUIResultsDefaultStyle,
-        {
-            main: {
-                ...tKUIResultsDefaultStyle.main,
-                backgroundColor: 'lightblue'
-            },
-        });
+    // TKUIResultsViewConfig.instance.styles = Util.iAssign(tKUIResultsDefaultStyle,
+    //     {
+    //         main: {
+    //             ...tKUIResultsDefaultStyle.main,
+    //             backgroundColor: 'lightblue'
+    //         },
+    //     });
     // TKUITripDetailConfig.instance.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
     //     return (
     //         <TripSegmentDetail {...props}
@@ -91,7 +89,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //     colorPrimary: 'brown'
     // };
 
-    import("../trip-planner/TripPlanner").then((module) => {
+    import("../trip-planner/TKUITripPlanner").then((module) => {
         const generateClassName = (rule: any, sheet: any) => {
             return sheet.options.classNamePrefix + rule.key;
         };
@@ -103,7 +101,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                             <ServiceResultsProvider>
                                 {/*<TKStyleProvider theme={theme}>*/}
                                 <TKStyleProvider>
-                                    <TripPlanner/>
+                                    <TKUITripPlanner/>
                                 </TKStyleProvider>
                             </ServiceResultsProvider>
                         </RoutingResultsProvider>

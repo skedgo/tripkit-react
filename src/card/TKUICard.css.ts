@@ -9,19 +9,20 @@ export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =
 
         modalContainer: {
             zIndex: '1000!important',
-            top: '15%!important',
+            top: '195px!important',
             right: 'auto!important',
+            left: '10px!important',
             width: '450px',
             alignItems: 'unset!important',
             background: 'none!important',
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)'
-        },
-
-        modal: {
-            width: '100%',
+            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)',
             borderTopLeftRadius: '12px',
             borderTopRightRadius: '12px',
             overflow: 'hidden'
+        },
+
+        modal: {
+            width: '100%'
         },
 
         main: {

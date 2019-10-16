@@ -1,15 +1,21 @@
 import * as React from "react";
-import "./TripDetailDelete.css";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {CSSProperties} from "react";
 import TKUICard from "../card/TKUICard";
-
-import {TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {ITKUISegmentOverviewProps, default as TKUISegmentOverview} from "./TKUISegmentOverview";
 import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";
+import {Observable} from 'rxjs';
+import TKUIFavouriteTripAction from "./TKUIFavouriteTripAction";
+import FavouriteTrip from "../model/FavouriteTrip";
+import TKUIAction from "../action/TKUIAction";
+import TKUIActionsView from "../action/TKUIActionsView";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
+import {ReactComponent as IconShare} from "../images/ic-share.svg";
 
 export interface ITKUITripOverviewViewProps extends TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
     value: Trip;
@@ -21,7 +27,7 @@ interface IProps extends ITKUITripOverviewViewProps {
 }
 
 export interface ITKUITripOverviewViewStyle {
-
+    main: CSSProps<ITKUITripOverviewViewProps>;
 }
 
 export class TKUITripOverviewViewConfig implements TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
@@ -29,6 +35,18 @@ export class TKUITripOverviewViewConfig implements TKUIWithStyle<ITKUITripOvervi
     public suffixClassNames?: boolean;
     public renderSegmentDetail: <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => JSX.Element
         = <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => <TKUISegmentOverview {...props}/>;
+
+    public actions: (trip: Trip) => TKUIAction[] = (trip: Trip) => [
+        {
+            render: () => <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
+            handler: () => {return false}
+        },
+        new TKUIFavouriteTripAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)),
+        {
+            render: () => <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>,
+            handler: () => {return false}
+        }
+    ];
 
     public static instance = new TKUITripOverviewViewConfig();
 }
@@ -42,13 +60,15 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;
         const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? "Arrives " + arrivalTime : "Departs " + departureTime);
+        const classes = this.props.classes;
         return (
             <TKUICard
                 title={title}
                 subtitle={subtitle}
+                renderSubHeader={() => <TKUIActionsView actions={TKUITripOverviewViewConfig.instance.actions(trip)}/>}
                 onRequestClose={this.props.onRequestClose}
             >
-                <div className="TripDetail">
+                <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>
                         renderSegmentDetail({value: segment, key: index})
                     )}

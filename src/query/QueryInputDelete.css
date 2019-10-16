@@ -2,9 +2,9 @@
 
 }
 
-.QueryInput-fromToPanel {
-  margin: 25px 15px 0;
-}
+/*.QueryInput-fromToPanel {*/
+  /*margin: 25px 15px 0;*/
+/*}*/
 
 .QueryInput-fromToInputsPanel {
 
@@ -30,30 +30,30 @@
   margin: 0 15px;
 }
 
-.QueryInput-iconSwap {
-  height: 32px;
-  width: 32px;
-  border: 2px solid #0242ac;
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-  padding: 5px;
-  margin-bottom: 2px;
-}
+/*.QueryInput-iconSwap {*/
+  /*height: 32px;*/
+  /*width: 32px;*/
+  /*border: 2px solid #0242ac;*/
+  /*-webkit-border-radius: 50%;*/
+  /*-moz-border-radius: 50%;*/
+  /*border-radius: 50%;*/
+  /*padding: 5px;*/
+  /*margin-bottom: 2px;*/
+/*}*/
 
-.QueryInput-iconSwap path {
-  fill: black;
-}
+/*.QueryInput-iconSwap path {*/
+  /*fill: black;*/
+/*}*/
 
-.QueryInput-locationPanel {
-  border-bottom: 2px solid #0242ac;
-  font-size: 13px;
-  font-weight: bold;
-}
+/*.QueryInput-locationPanel {*/
+  /*border-bottom: 2px solid #0242ac;*/
+  /*font-size: 13px;*/
+  /*font-weight: bold;*/
+/*}*/
 
-.QueryInput-locationPanel:first-child {
-  margin-bottom: 15px;
-}
+/*.QueryInput-locationPanel:first-child {*/
+  /*margin-bottom: 15px;*/
+/*}*/
 
 .QueryInput-locationPanel > div {
   flex-grow: 1;
@@ -151,9 +151,9 @@
   display: block!important;  /* With display: flex button content is displayed one below the other */
 }
 
-.QueryInput-timeBtnPanel {
-  margin: 15px 52px;
-}
+/*.QueryInput-timeBtnPanel {*/
+  /*margin: 15px 52px;*/
+/*}*/
 
 .QueryInput-bottomPanel {
   margin: 0 55px 15px;
