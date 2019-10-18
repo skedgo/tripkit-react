@@ -67,6 +67,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 subtitle={subtitle}
                 renderSubHeader={() => <TKUIActionsView actions={TKUITripOverviewViewConfig.instance.actions(trip)}/>}
                 onRequestClose={this.props.onRequestClose}
+                asCard={false}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>

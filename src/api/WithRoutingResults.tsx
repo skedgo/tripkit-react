@@ -302,7 +302,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public computeTrips(query: RoutingQuery): Promise<Array<Promise<Trip[]>>> {
             const routingPromises: Promise<Array<Promise<Trip[]>>> = this.getQueryUrlsWaitRegions(query).then((queryUrls: string[]) => {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
-                    return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, true)
+                    return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
                             const jsonConvert = new JsonConvert();
                             const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);

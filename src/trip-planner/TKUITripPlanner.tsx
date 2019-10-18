@@ -14,6 +14,10 @@ import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
+// TODO: Good strategy to import this way (the entire module), and then access things inside like:
+// TKUIResults.config, TKUIResults.View, TKUIResults.Connect, TKUIResults.Props, etc.
+// Evaluate better, but can be good to make internal and external use more simple / intuitive / easy.
+import * as TKUIResults from "../trip/TKUIResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
@@ -23,6 +27,10 @@ import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput from "query/TKUIRoutingQueryInput";
+import { Carousel } from 'react-responsive-carousel';
+import Trip from "../model/trip/Trip";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import TKUICardCarousel from "../card/TKUICardCarousel";
 
 export interface ITKUITripPlannerProps extends TKUIWithStyle<ITKUITripPlannerStyle, IProps> {}
 
@@ -51,7 +59,7 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
 }
 
     // TODO:
-    // - Integrate carousel widget (did I used any) to be used with TripDetail.
+    // Improve scheme to import, from class / element to entire module (see TODO on imports above)
     // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
     // - Maybe group different providers in unique composite provider. Analyze. Make all the changes grounded on expected
     // use cases.
@@ -134,7 +142,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
             /> : null;
 
-        const routingResultsView = this.props.trips ?
+        const routingResultsView = this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
                 className="gl-no-shrink"
                 onClicked={() => this.setState({showTripDetail: true})}
@@ -146,13 +154,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 // })}
             /> : null;
 
-        const tripDetailView = this.state.showTripDetail && this.props.selected ?
-            <TKUITripOverviewView
-                value={this.props.selected}
-                onRequestClose={() => {
-                    this.setState({showTripDetail: false})
-                }}
-            /> : null;
+        let tripDetailView;
+        if (this.state.showTripDetail && this.props.selected) {
+            const sortedTrips = TKUIResults.sortTrips(this.props.trips ? this.props.trips : []);
+            const selected = sortedTrips.indexOf(this.props.selected);
+            tripDetailView =
+                <TKUICardCarousel selected={selected} onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}>
+                    {sortedTrips.map((trip: Trip, i: number) =>
+                        <TKUITripOverviewView
+                            value={trip}
+                            onRequestClose={() => {
+                                this.setState({showTripDetail: false})
+                            }}
+                            key={i + "-" + trip.getKey()}
+                        />)}
+                </TKUICardCarousel>;
+        }
         const classes = this.props.classes;
         return (
             <div id="mv-main-panel"
@@ -176,6 +193,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         refAdHoc={(ref: any) => {
                             return this.mapRef = ref;
                         }}
+                        padding={{left: 500}}
                     >
                         <TileLayer
                             attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"

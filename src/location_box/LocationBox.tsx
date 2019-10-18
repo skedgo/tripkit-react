@@ -10,6 +10,7 @@ import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
+import {resetStyles} from "../css/ResetStyle.css";
 
 interface IProps {
     geocodingData: MultiGeocoder,
@@ -215,7 +216,11 @@ class LocationBox extends Component<IProps, IState> {
                 {   this.state.waiting ?
                     <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :
                     (this.state.inputText ?
-                        <button onClick={this.onClearClicked} className="LocationBox-btnClear" aria-hidden={true} tabIndex={-1}>
+                        <button onClick={this.onClearClicked}
+                                className="LocationBox-btnClear"
+                                style={resetStyles.button}
+                                aria-hidden={true}
+                                tabIndex={-1}>
                             <IconRemove aria-hidden={true} className="LocationBox-iconClear" focusable="false"/>
                         </button> :
                         "")

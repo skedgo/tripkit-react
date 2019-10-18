@@ -5,13 +5,11 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
-import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import {ReactComponent as IconSwap} from '../images/ic-swap.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import Util from "../util/Util";
-import Tooltip from 'rc-tooltip';
 import 'rc-tooltip/assets/bootstrap_white.css';
 import DateTimePicker from "../time/DateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
@@ -26,9 +24,9 @@ import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import classNames from "classnames";
 
 export interface ITKUIRoutingQueryInputProps extends TKUIWithStyle<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> {
-    onGoClicked?: (routingQuery: RoutingQuery) => void;
     onShowOptions?: () => void;
     isTripPlanner?: boolean;
     collapsable?: boolean;
@@ -36,7 +34,7 @@ export interface ITKUIRoutingQueryInputProps extends TKUIWithStyle<ITKUIRoutingQ
 }
 
 interface IConsumedProps {
-    value?: RoutingQuery;
+    value: RoutingQuery;
     onChange?: (routingQuery: RoutingQuery) => void;
     onPreChange?: (from: boolean, location?: Location) => void;
     bounds?: BBox;
@@ -54,8 +52,10 @@ export interface ITKUIRoutingQueryInputStyle {
     btnClear: CSSProps<IProps>;
     iconClear: CSSProps<IProps>;
     fromToPanel: CSSProps<IProps>;
+    fromToInputsPanel: CSSProps<IProps>;
     locSelector: CSSProps<IProps>;
     locIcon: CSSProps<IProps>;
+    locTarget: CSSProps<IProps>;
     dotIcon: CSSProps<IProps>;
     divider: CSSProps<IProps>;
     swap: CSSProps<IProps>;
@@ -73,13 +73,9 @@ export class ITKUIRoutingQueryInputConfig implements TKUIWithStyle<ITKUIRoutingQ
 }
 
 interface IState {
-    routingQuery: RoutingQuery;
-    preselFrom: Location | null;
-    preselTo: Location | null;
     timePanelOpen: boolean;
     fromTooltip: boolean;
     toTooltip: boolean;
-    collapsed: boolean;
 }
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
@@ -93,25 +89,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            routingQuery: props.value ? props.value : RoutingQuery.create(),
-            preselFrom: null,
-            preselTo: null,
             timePanelOpen: false,
             fromTooltip: false,
-            toTooltip: false,
-            collapsed: false
+            toTooltip: false
         };
         this.geocodingData = new MultiGeocoder(this.props.geocoderOptions);
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
-    }
-
-    private getTimeBtnText(): string {
-        return this.state.routingQuery.timePref === TimePreference.NOW ? "Leaving now" :
-            (this.state.routingQuery.timePref === TimePreference.LEAVE ?
-                    "Leaving after " + this.state.routingQuery.time.format(DateTimeUtil.DATE_TIME_FORMAT) :
-                    "Arriving before " + this.state.routingQuery.time.format(DateTimeUtil.DATE_TIME_FORMAT)
-            );
     }
 
     private onPrefChange(timePref: TimePreference) {
@@ -130,32 +114,25 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private onSwapClicked() {
         this.updateQuery({
-            from: this.state.routingQuery.to,
-            to: this.state.routingQuery.from
+            from: this.props.value.to,
+            to: this.props.value.from
         });
     }
 
     private updateQuery(update: any, callback?: () => void) {
-        this.setQuery(Util.iAssign(this.state.routingQuery, update), callback);
+        this.setQuery(Util.iAssign(this.props.value, update));
     }
 
-    private setQuery(update: RoutingQuery, callback?: () => void) {
-        const prevQuery = this.state.routingQuery;
+    private setQuery(update: RoutingQuery) {
+        const prevQuery = this.props.value;
         if (update.isComplete(true) &&
             (JSON.stringify(update.from) !== JSON.stringify(prevQuery.from)
                 || JSON.stringify(update.to) !== JSON.stringify(prevQuery.to))) {
             FavouritesData.recInstance.add(FavouriteTrip.create(update.from!, update.to!));
         }
-        this.setState({
-            routingQuery: update
-        }, () => {
-            if (this.props.onChange) {
-                this.props.onChange(this.state.routingQuery);
-            }
-            if (callback) {
-                callback();
-            }
-        });
+        if (this.props.onChange) {
+            this.props.onChange(update);
+        }
     }
 
     private showTooltip(from: boolean, show: boolean) {
@@ -172,38 +149,16 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>, snapshot?: any): void {
-        if (this.props.value && this.props.value !== prevProps.value
-            && this.props.value !== this.state.routingQuery) {
-            this.setQuery(this.props.value);
-        }
-    }
-
     public render(): React.ReactNode {
-        const datePickerDisabled = this.state.routingQuery.timePref === TimePreference.NOW;
-        const collapseBtn = this.props.collapsable ?
-            <button onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
-                    aria-hidden={true}
-                    tabIndex={-1}>
-                <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor" + (!this.state.collapsed ? " gl-rotate180" : "")}
-                               focusable="false"
-                />
-            </button> : null;
-        const expandBtn =
-            <button onClick={() => this.setState(prevState => ({collapsed: !prevState.collapsed}))}
-                    aria-hidden={true}
-                    tabIndex={-1}>
-                <IconAngleDown className={"QueryInput-collapseBtn gl-svg-path-fill-currColor gl-no-shrink" + (!this.state.collapsed ? " gl-rotate180" : "")}
-                               focusable="false"
-                />
-            </button>;
+        const routingQuery = this.props.value;
+        const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
         const fromPlaceholder = "Where are you going from?";
         const toPlaceholder = "Where do you want to go?";
-        const ariaLabelFrom = this.state.routingQuery.from !== null ?
-            "From " + this.state.routingQuery.from.address :
+        const ariaLabelFrom = routingQuery.from !== null ?
+            "From " + routingQuery.from.address :
             fromPlaceholder.substring(0, fromPlaceholder.length - 3);
-        const ariaLabelTo = this.state.routingQuery.to !== null ?
-            "To " + this.state.routingQuery.to.address :
+        const ariaLabelTo = routingQuery.to !== null ?
+            "To " + routingQuery.to.address :
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
         return (
@@ -222,98 +177,74 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     focusable="false"/>
                     </button>
                 </div>
-                <div className={classes.fromToPanel + " QueryInput-fromToPanel gl-flex gl-align-center"}>
+                <div className={classes.fromToPanel}>
                     <div className={classes.locSelector}>
-                        <div className={classes.locIcon}/>
+                        <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)}/>
                         <div className={classes.dotIcon}/>
                         <div className={classes.dotIcon}/>
                         <div className={classes.dotIcon}/>
-                        <div className={classes.locIcon}/>
+                        <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)}/>
                     </div>
-                    <div className="QueryInput-fromToInputsPanel gl-flex gl-column gl-grow">
-                        <Tooltip
-                            placement="top"
-                            overlay={"Enter a location"}
-                            arrowContent={<div className="rc-tooltip-arrow-inner"/>}
-                            visible={this.state.fromTooltip}
-                            overlayClassName="QueryInput-tooltip"
-                        >
-                            <div className="QueryInput-locationPanel">
-                                <LocationBox
-                                    geocodingData={this.geocodingData}
-                                    bounds={this.props.bounds}
-                                    focus={this.props.focusLatLng}
-                                    value={this.state.routingQuery.from}
-                                    placeholder={fromPlaceholder}
-                                    onChange={(value: Location | null, highlighted: boolean) => {
-                                        if (!highlighted) {
-                                            this.updateQuery({from: value});
-                                            this.setState({preselFrom: null});
-                                            if (this.props.onPreChange) {
-                                                this.props.onPreChange(true, undefined);
-                                            }
-                                            if (value !== null) {
-                                                GATracker.instance.send("query input", "pick location",
-                                                    value.isCurrLoc() ? "current location" : "type address");
-                                            }
-                                        } else {
-                                            this.setState({preselFrom: value});
-                                            if (this.props.onPreChange) {
-                                                this.props.onPreChange(true, value ? value : undefined);
-                                            }
-                                        }
-                                        this.showTooltip(true, false);
-                                    }}
-                                    resolveCurr={!!this.props.isTripPlanner}
-                                    ref={(el:any) => this.fromLocRef = el}
-                                    inputAriaLabel={ariaLabelFrom}
-                                    inputId={"input-from"}
-                                    sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                                />
-                            </div>
-                        </Tooltip>
+                    <div className={classes.fromToInputsPanel}>
+                        <LocationBox
+                            geocodingData={this.geocodingData}
+                            bounds={this.props.bounds}
+                            focus={this.props.focusLatLng}
+                            value={routingQuery.from}
+                            placeholder={fromPlaceholder}
+                            onChange={(value: Location | null, highlighted: boolean) => {
+                                if (!highlighted) {
+                                    this.updateQuery({from: value});
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(true, undefined);
+                                    }
+                                    if (value !== null) {
+                                        GATracker.instance.send("query input", "pick location",
+                                            value.isCurrLoc() ? "current location" : "type address");
+                                    }
+                                } else {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(true, value ? value : undefined);
+                                    }
+                                }
+                                this.showTooltip(true, false);
+                            }}
+                            resolveCurr={!!this.props.isTripPlanner}
+                            ref={(el:any) => this.fromLocRef = el}
+                            inputAriaLabel={ariaLabelFrom}
+                            inputId={"input-from"}
+                            sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                        />
                         <div className={classes.divider}/>
-                        <Tooltip
-                            placement="top"
-                            overlay={"Enter a location"}
-                            arrowContent={<div className="rc-tooltip-arrow-inner"/>}
-                            visible={this.state.toTooltip}
-                            overlayClassName="QueryInput-tooltip"
-                        >
-                            <div className="QueryInput-locationPanel gl-flex gl-align-center">
-                                <LocationBox
-                                    geocodingData={this.geocodingData}
-                                    bounds={this.props.bounds}
-                                    focus={this.props.focusLatLng}
-                                    value={this.state.routingQuery.to}
-                                    placeholder={toPlaceholder}
-                                    onChange={(value: Location | null, highlighted: boolean) => {
-                                        if (!highlighted) {
-                                            this.updateQuery({to: value});
-                                            this.setState({preselTo: null});
-                                            if (this.props.onPreChange) {
-                                                this.props.onPreChange(false, undefined);
-                                            }
-                                            if (value !== null) {
-                                                GATracker.instance.send("query input", "pick location",
-                                                    value.isCurrLoc() ? "current location" : "type address");
-                                            }
-                                        } else {
-                                            this.setState({preselTo: value});
-                                            if (this.props.onPreChange) {
-                                                this.props.onPreChange(false, value ? value : undefined);
-                                            }
-                                        }
-                                        this.showTooltip(false, false);
-                                    }}
-                                    resolveCurr={!!this.props.isTripPlanner}
-                                    ref={(el:any) => this.toLocRef = el}
-                                    inputAriaLabel={ariaLabelTo}
-                                    inputId={"input-to"}
-                                    sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                                />
-                            </div>
-                        </Tooltip>
+                        <LocationBox
+                            geocodingData={this.geocodingData}
+                            bounds={this.props.bounds}
+                            focus={this.props.focusLatLng}
+                            value={routingQuery.to}
+                            placeholder={toPlaceholder}
+                            onChange={(value: Location | null, highlighted: boolean) => {
+                                if (!highlighted) {
+                                    this.updateQuery({to: value});
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(false, undefined);
+                                    }
+                                    if (value !== null) {
+                                        GATracker.instance.send("query input", "pick location",
+                                            value.isCurrLoc() ? "current location" : "type address");
+                                    }
+                                } else {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(false, value ? value : undefined);
+                                    }
+                                }
+                                this.showTooltip(false, false);
+                            }}
+                            resolveCurr={!!this.props.isTripPlanner}
+                            ref={(el:any) => this.toLocRef = el}
+                            inputAriaLabel={ariaLabelTo}
+                            inputId={"input-to"}
+                            sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                        />
                     </div>
                     <IconSwap className={classes.swap}
                               aria-hidden={true}
@@ -329,9 +260,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             <option value={TimePreference.ARRIVE}>Arrive</option>
                         </select>
                     </div>
-                    {this.state.routingQuery.timePref !== TimePreference.NOW &&
+                    {routingQuery.timePref !== TimePreference.NOW &&
                         <DateTimePicker
-                            value={this.state.routingQuery.time}
+                            value={routingQuery.time}
                             onChange={(date: Moment) => {
                                 this.updateQuery({time: date});
                                 // if (DeviceUtil.isDesktop && this.goBtnRef) {    // give focus to go button after selecting time.
@@ -344,15 +275,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             ref={(el: any) => this.dateTimePickerRef = el}
                         />
                     }
-                    <div className="gl-flex gl-align-center">
-                        {this.props.onShowOptions &&
-                            <button className={classes.transportsBtn}
-                                    onClick={this.props.onShowOptions}
-                            >
-                                Transport options
-                            </button>
-                        }
-                    </div>
+                    {this.props.onShowOptions &&
+                    <button className={classes.transportsBtn}
+                            onClick={this.props.onShowOptions}
+                    >
+                        Transport options
+                    </button>
+                    }
                 </div>
             </div>
         );

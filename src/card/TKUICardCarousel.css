@@ -1,0 +1,98 @@
+.TKUICardCarousel-modalContainer {
+    z-index: 1000 !important;
+    top: 195px !important;
+    right: auto !important;
+    left: 0 !important;
+    width: 470px;
+    align-items: unset !important;
+    background: none !important;
+    overflow: hidden;
+}
+
+.TKUICardCarousel-modal,
+.TKUICardCarousel-middle {
+    width: 100%;
+    height: 100%;
+}
+
+.TKUICardCarousel-middle > *,
+.TKUICardCarousel-modal .carousel-slider,
+.TKUICardCarousel-modal .slider-wrapper,
+.TKUICardCarousel-modal .slider.animated {
+    height: 100%;
+}
+
+.TKUICardCarousel-modal .slider.animated .slide {
+    height: 100%;
+    padding: 35px 10px 0;
+    background: none;
+}
+
+.TKUICardCarousel-modal .carousel .slide > * {
+    text-align: initial;
+}
+
+.TKUICardCarousel-modal .carousel .slide img {
+    width: initial;
+}
+
+.TKUICardCarousel-modal .carousel.carousel-slider .control-arrow {
+    background: rgba(0, 0, 0, .4);
+    height: 30px;
+    margin-right: 30px;
+    margin-left: 30px;
+    opacity: 1;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.TKUICardCarousel-modal .carousel.carousel-slider .control-arrow:hover {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.TKUICardCarousel-modal .carousel .control-arrow:before,
+.TKUICardCarousel-modal .carousel.carousel-slider .control-arrow:before {
+    margin: 0 10px;
+    display: inline-block;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    content: '';
+}
+
+.TKUICardCarousel-modal .carousel .control-dots {
+    top: 5px;
+    position: absolute;
+    text-align: center;
+    width: 70%;
+    height: 25px;
+    margin: 0 15% 0 15%;
+    padding: 0;
+}
+
+.TKUICardCarousel-modal .carousel .control-dots .dot {
+    transition: opacity .25s ease-in;
+    opacity: .5;
+    /* box-shadow: 1px 1px 2px rgba(0,0,0,.9); */
+    background: black;
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.TKUICardCarousel-modal .carousel .control-dots .dot.selected {
+    opacity: 1;
+}
+
+.TKUICardCarousel-pageWrapper {
+    height: 100%;
+    width: 450px;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
+    -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
+}
