@@ -53,7 +53,7 @@ export interface ITKUITripPlannerStyle {
 
 export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyle, IProps> {
     public styles = tKUITripPlannerDefaultStyle;
-    public suffixClassNames?: boolean;
+    public randomizeClassNames?: boolean;
 
     public static instance = new TKUITripPlannerConfig();
 }
@@ -239,19 +239,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripPlanner");
     return (props: ITKUITripPlannerProps) => (
         <RoutingResultsContext.Consumer>
             {(routingResultsContext: IRoutingResultsContext) =>
                 <ServiceResultsContext.Consumer>
                     {(serviceContext: IServiceResultsContext) => {
                         const stylesToPass = props.styles || TKUITripPlannerConfig.instance.styles;
-                        const suffixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-                            TKUITripPlannerConfig.instance.suffixClassNames;
+                        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+                            TKUITripPlannerConfig.instance.randomizeClassNames;
                         return <RawComponentStyled {...routingResultsContext}
                                                    {...serviceContext}
                                                    styles={stylesToPass}
-                                                   suffixClassNames={suffixClassNamesToPass}/>;
+                                                   randomizeClassNames={randomizeClassNamesToPass}/>;
                     }}
                 </ServiceResultsContext.Consumer>
             }

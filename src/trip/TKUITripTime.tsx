@@ -44,7 +44,7 @@ class TKUITripTime extends React.Component<IProps, {}> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripTime");
     return (props: ITKUITripTimeProps) => {
         const stylesToPass = props.styles || tKUITripTimeDefaultStyle;
         return <RawComponentStyled {...props} styles={stylesToPass}/>

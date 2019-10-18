@@ -190,7 +190,7 @@ const Consumer: React.SFC<{children: (props: IServiceResultsContext) => React.Re
 };
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUITimetableView");
     return (props: ITKUITimetableViewProps) =>
         <Consumer>
             {(cProps: IServiceResultsContext) => {

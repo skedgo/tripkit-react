@@ -98,7 +98,7 @@ class TKUICard extends React.Component<IProps, {}> {
     }
 }
 
-const TKUICardWithStyleProp = withStyleProp(TKUICard);
+const TKUICardWithStyleProp = withStyleProp(TKUICard, "TKUICard");
 
 export default (props: ITKUICardProps & {children: any}) => {
     const stylesToPass = props.styles || TKUICardConfig.instance.styles;

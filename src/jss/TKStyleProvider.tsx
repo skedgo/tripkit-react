@@ -29,9 +29,12 @@ export const tKUIColors = {
     white1: '#fff9'
 };
 
-export const generateClassName = (rule: any, sheet: any) => {
-    return sheet.options.classNamePrefix + rule.key;
-};
+export const generateClassNameFactory = (prefix: string) =>
+    (rule: any, sheet: any) => {
+        console.log(rule);
+        console.log(sheet);
+        return prefix + "-" + rule.key;
+    };
 
 export const generateClassNameSeed = createGenerateClassName();
 
@@ -43,7 +46,7 @@ class TKStyleProvider extends React.Component<ITKStyleProviderProps, {}> {
 
     public render(): React.ReactNode {
         return (
-            <JssProvider generateClassName={generateClassName}>
+            <JssProvider generateClassName={generateClassNameSeed}>
                 <ThemeProvider theme={this.props.theme || tKUIDeaultTheme}>
                     <>
                         {this.props.children}
