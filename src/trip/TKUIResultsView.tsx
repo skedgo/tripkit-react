@@ -11,7 +11,7 @@ import {ClassNameMap, CSSProperties} from "react-jss";
 import {CSSProps, withStyleProp} from "../jss/StyleHelper";
 import classNames from "classnames";
 
-interface ITKUIResultsViewProps {
+export interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
     onClicked?: () => void;
     className?: string;
@@ -115,27 +115,34 @@ class TKUIResultsView extends React.Component<IProps, {}> {
         );
     }
 
+    private automaticSelectionTimeout: any;
+
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
         if (!prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
             this.rowRefs[this.props.values.indexOf(this.props.value)].focus();
         }
 
-        // If first group of trips arrived
-        if (!prevProps.value &&
-            // prevState.tripsSorted && prevState.tripsSorted.length === 0 &&
-            this.props.values && this.props.values.length > 0) {
-            setTimeout(() => {
-                if (this.props.values && this.props.values.length > 0 && this.props.onChange) {
-                    this.props.onChange(this.props.values[0])
+        // Clear automatic selection timeout when resetting trips
+        if (!this.props.values || this.props.values.length === 0) {
+            clearTimeout(this.automaticSelectionTimeout);
+            this.automaticSelectionTimeout = undefined;
+        }
+
+        // Automatic trip selection a while after first group of trips arrived
+        if (!prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
+            this.automaticSelectionTimeout = setTimeout(() => {
+                if (this.props.values && this.props.values.length > 0 && this.props.onChange && !this.props.value) {
+                    this.props.onChange(this.props.values[0]);
                 }
             }, 2000);
         }
     }
 
-    public static sortTrips(trips: Trip[]) {
-        return trips.slice().sort((t1: Trip, t2: Trip) => {
-            return t1.weightedScore - t2.weightedScore;
-        });
+    public componentWillUnmount() {
+        // Clear automatic selection timeout
+        if (this.automaticSelectionTimeout) {
+            clearTimeout(this.automaticSelectionTimeout);
+        }
     }
 }
 
@@ -150,7 +157,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     // onSortChange, and maintains in an internal state the trips sorted. Should consume from
                     // RoutingResultsProvider, so will come below it. Notice I'm doing something like Redux but
                     // with several providers, instead of a unique store provider.
-                    values: TKUIResultsView.sortTrips(routingContext.trips!),
+                    values: routingContext.trips ? sortTrips(routingContext.trips) : [],
                     waiting: routingContext.waiting,
                     value: routingContext.selected,
                     onChange: (trip: Trip) => {
@@ -188,6 +195,12 @@ export const Connect = (RawComponent: React.ComponentType<IProps>) => {
         )
     };
 };
+
+export function sortTrips(trips: Trip[]) {
+    return trips.slice().sort((t1: Trip, t2: Trip) => {
+        return t1.weightedScore - t2.weightedScore;
+    });
+}
 
 export default Connect(TKUIResultsView);
 

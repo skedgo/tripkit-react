@@ -14,6 +14,7 @@ export interface ITKUICardProps {
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
+    asCard?: boolean;
     styles?: any;
 }
 
@@ -26,6 +27,7 @@ export interface ITKUICardStyle {
     modal: CSS.Properties & CSSProperties<IProps>;
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
+    mainAsCard: CSS.Properties & CSSProperties<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
     headerLeft: CSS.Properties & CSSProperties<IProps>;
@@ -43,8 +45,9 @@ class TKUICardConfig {
 
 class TKUICard extends React.Component<IProps, {}> {
 
-    // Pass as parameter, or put in global config
-    private asCard: boolean = true;
+    public static defaultProps: Partial<IProps> = {
+        asCard: true
+    };
 
     constructor(props: IProps) {
         super(props);
@@ -53,7 +56,7 @@ class TKUICard extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const body =
-            <div className={classNames(classes.main, "app-style")}>
+            <div className={classNames(classes.main, this.props.asCard && classes.mainAsCard, "app-style")}>
                 <div className={classes.header}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
                         <div className={classes.headerLeft}>
@@ -79,8 +82,9 @@ class TKUICard extends React.Component<IProps, {}> {
                     {this.props.children}
                 </div>
             </div>;
+        const asCard = this.props.asCard;
         return (
-            this.asCard ?
+            asCard ?
             <Drawer
                 open={true}
                 modalElementClass={classes.modal}

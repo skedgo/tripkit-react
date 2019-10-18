@@ -29,7 +29,7 @@ export interface IRoutingResultsContext {
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
-    query: new RoutingQuery(),
+    query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     waiting: true,

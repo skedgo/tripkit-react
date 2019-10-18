@@ -44,11 +44,12 @@ interface ITKUIMapViewProps {
     showLocations?: boolean;
     viewport?: {center?: LatLng, zoom?: number};
     bounds?: BBox;
+    padding?: {top?: number, right?: number, bottom?: number, left?: number}
+    children: any;
     // TODO: Put the following props inside config?
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
-    children: any;
 }
 
 interface IConnectionProps {
@@ -455,7 +456,8 @@ class LeafletMap extends React.Component<IProps, IState> {
 
     public fitBounds(bounds: BBox) {
         if (this.leafletElement) {
-            const options = {padding: [20, 20]} as FitBoundsOptions;
+            const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
+            const options = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
             this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]), options);
         }
     }

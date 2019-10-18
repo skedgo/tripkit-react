@@ -53,6 +53,12 @@ body:not(.user-is-tabbing) .app-style * {
   outline: none!important;  /* To avoid glow effet on focus */
 }
 
+body:not(.user-is-tabbing) .app-style input,
+body:not(.user-is-tabbing) .app-style button,
+body:not(.user-is-tabbing) .app-style *[tabindex] {
+  box-shadow: none!important;     /* To avoid glow effet on focus */
+}
+
 .app-style .TripPlanner-queryInput input[type=text]:focus,
 .app-style .TripPlanner-queryInput textarea:focus,
 .app-style .TripPlanner-queryInput select:focus,
