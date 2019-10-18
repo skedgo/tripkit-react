@@ -20,7 +20,7 @@ const searchStr = window.location.search;
 // Put query string manipulation in Util class
 const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
 
-// TKUIServiceDepartureRowConfig.instance.suffixClassNames = false;
+// TKUIServiceDepartureRowConfig.instance.randomizeClassNames = false;
 
 export function renderTripPlanner(containerId: string = "tripgo-sample-root", tripgoKey: string = "") {
     let routingQuery: RoutingQuery | undefined;

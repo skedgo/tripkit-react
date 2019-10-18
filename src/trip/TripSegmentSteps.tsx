@@ -42,7 +42,7 @@ export interface ITKUITripSergmentStepsStyle {
 
 export class ITKUITripSergmentStepsConfig implements TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
     public styles = tKUITripSergmentStepsDefaultStyle;
-    public suffixClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
+    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
                                               // JssProvider, but in this case is true since multiple instances are
                                               // rendered, each with a different service color.
 
@@ -128,13 +128,13 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
     }
 }
 
-function applyStyleFc<T>(RawComponent: React.ComponentType<IProps<T>>): React.ComponentType<ITKUITripSergmentStepsProps<T>> {
-    const RawComponentStyled = withStyleProp(RawComponent);
+function applyStyleFc<T>(RawComponent: React.ComponentType<IProps<T>>, classPrefix: string): React.ComponentType<ITKUITripSergmentStepsProps<T>> {
+    const RawComponentStyled = withStyleProp(RawComponent, classPrefix);
     return (props: ITKUITripSergmentStepsProps<T>) => {
         const stylesToPass = props.styles || ITKUITripSergmentStepsConfig.instance.styles;
-        const sufixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-            ITKUITripSergmentStepsConfig.instance.suffixClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} suffixClassNames={sufixClassNamesToPass}/>;
+        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+            ITKUITripSergmentStepsConfig.instance.randomizeClassNames;
+        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
     };
 }
 
@@ -142,5 +142,5 @@ function applyStyleFc<T>(RawComponent: React.ComponentType<IProps<T>>): React.Co
 class StopSteps extends TripSegmentSteps<ServiceStopLocation> {}
 class StreetSteps extends TripSegmentSteps<Street> {}
 
-export const TKUIStopSteps = applyStyleFc(StopSteps);
-export const TKUIStreetSteps = applyStyleFc(StreetSteps);
+export const TKUIStopSteps = applyStyleFc(StopSteps, "TKUIStopSteps");
+export const TKUIStreetSteps = applyStyleFc(StreetSteps, "TKUIStreetSteps");

@@ -28,7 +28,7 @@ export interface ITKUIServiceViewStyle {
 
 export class TKUIServiceViewConfig implements TKUIWithStyle<ITKUIServiceViewStyle, ITKUIServiceViewProps>{
     public styles = tKUIServiceViewDefaultStyle;
-    public suffixClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
+    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
                                               // JssProvider, but in this case is true since multiple instances are
                                               // rendered, each with a different service color.
     renderDeparture: <P extends ITKUIServiceDepartureRowProps>(departureProps: P) => JSX.Element
@@ -138,16 +138,16 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
 };
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUIServiceView");
     return (props: ITKUIServiceViewProps) =>
         <Connector>
             {(cProps: IConnectionProps) => {
                 const stylesToPass = props.styles || TKUIServiceViewConfig.instance.styles;
-                const sufixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-                    TKUIServiceViewConfig.instance.suffixClassNames;
+                const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+                    TKUIServiceViewConfig.instance.randomizeClassNames;
                 return <RawComponentStyled {...props} {...cProps}
                                            styles={stylesToPass}
-                                           suffixClassNames={sufixClassNamesToPass}/>;
+                                           randomizeClassNames={randomizeClassNamesToPass}/>;
             }}
         </Connector>;
 };

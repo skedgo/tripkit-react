@@ -32,7 +32,7 @@ export interface ITKUITripOverviewViewStyle {
 
 export class TKUITripOverviewViewConfig implements TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
     public styles = tKUITripOverviewViewDefaultStyle;
-    public suffixClassNames?: boolean;
+    public randomizeClassNames?: boolean;
     public renderSegmentDetail: <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => JSX.Element
         = <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => <TKUISegmentOverview {...props}/>;
 
@@ -81,12 +81,12 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripOverviewView");
     return (props: ITKUITripOverviewViewProps) => {
         const stylesToPass = props.styles || TKUITripOverviewViewConfig.instance.styles;
-        const suffixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-            TKUITripOverviewViewConfig.instance.suffixClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} suffixClassNames={suffixClassNamesToPass}/>;
+        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+            TKUITripOverviewViewConfig.instance.randomizeClassNames;
+        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
     };
 };
 

@@ -54,9 +54,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "cd src; find ./* \\( ! -name '*.tsx' \\) \\( ! -name '*.ts' \\) -type f | cpio -vdump ../dist; cd ..; tsc --declaration",
+    "_build": "cd src; find ./* \\( ! -name '*.tsx' \\) \\( ! -name '*.ts' \\) -type f | cpio -vdump ../dist; cd ..; tsc --declaration",
+    "build": "react-scripts build",
     "__build": "mkdir -p ./dist; cp ./images.d.ts ./dist/; cd src; find ./* \\( ! -name '*.tsx' \\) \\( ! -name '*.ts' \\) -type f | cpio -vdump ../dist; cd ..; tsc --declaration",
-    "_build": "react-scripts-ts build",
     "__postbuild": "MAIN_JS_NAME=\"$(ls build/static/js/main.*.js | xargs -n 1 basename)\" ; COMMAND=\"sed -i '.bak' 's/main.%MAIN_JS_HASH%.js/$MAIN_JS_NAME/g' build/embed.js\" ; eval \"$COMMAND\" ; MAIN_CSS_NAME=\"$(ls build/static/css/main.*.css | xargs -n 1 basename)\" ; COMMAND=\"sed -i '.bak' 's/main.%MAIN_CSS_HASH%.css/$MAIN_CSS_NAME/g' build/embed.js\" ; eval \"$COMMAND\"",
     "_postbuild": "rm -rf ../skedgo-java/TripGoWebApp/src/main/webapp/react-build; mv build ../skedgo-java/TripGoWebApp/src/main/webapp/react-build",
     "test": "react-scripts-ts test --env=jsdom",

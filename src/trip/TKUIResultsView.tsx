@@ -173,7 +173,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 };
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUIResultsView");
     return (addProps: ITKUIResultsViewProps) => {
         return (
             <Consumer>

@@ -77,7 +77,7 @@ class TKUIButton extends React.Component<IProps, {}> {
 
 }
 
-const TKUIButtonWithStyleProp = withStyleProp(TKUIButton);
+const TKUIButtonWithStyleProp = withStyleProp(TKUIButton, "TKUIButton");
 
 export default (props: ITKUIButtonProps) => {
     const stylesToPass = props.styles || TKUIButtonConfig.instance.styles;

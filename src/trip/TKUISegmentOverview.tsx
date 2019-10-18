@@ -38,7 +38,7 @@ export interface ITKUISegmentOverviewStyle {
 
 export class TKUISegmentOverviewConfig implements TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
     public styles = tKUISegmentOverviewDefaultStyle;
-    public suffixClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
+    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
                                               // JssProvider, but in this case is true since multiple instances are
                                               // rendered, each with a different service color.
 
@@ -111,12 +111,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUISegmentOverview");
     return (props: ITKUISegmentOverviewProps) => {
         const stylesToPass = props.styles || TKUISegmentOverviewConfig.instance.styles;
-        const sufixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-            TKUISegmentOverviewConfig.instance.suffixClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} suffixClassNames={sufixClassNamesToPass}/>;
+        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+            TKUISegmentOverviewConfig.instance.randomizeClassNames;
+        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
     };
 };
 

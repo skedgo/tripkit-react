@@ -67,7 +67,7 @@ export interface ITKUIRoutingQueryInputStyle {
 
 export class ITKUIRoutingQueryInputConfig implements TKUIWithStyle<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> {
     public styles = tKUIRoutingQueryInputDefaultStyle;
-    public suffixClassNames?: boolean;
+    public randomizeClassNames?: boolean;
 
     public static instance = new ITKUIRoutingQueryInputConfig();
 }
@@ -310,17 +310,17 @@ const Consumer: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode
 };
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUIRoutingQueryInput");
     return (addProps: ITKUIRoutingQueryInputProps) => {
         const stylesToPass = addProps.styles || ITKUIRoutingQueryInputConfig.instance.styles;
-        const suffixClassNamesToPass = addProps.suffixClassNames !== undefined ? addProps.suffixClassNames :
-            ITKUIRoutingQueryInputConfig.instance.suffixClassNames;
+        const randomizeClassNamesToPass = addProps.randomizeClassNames !== undefined ? addProps.randomizeClassNames :
+            ITKUIRoutingQueryInputConfig.instance.randomizeClassNames;
         return (
             <Consumer>
                 {(props: any) => {
                     return <RawComponentStyled {...addProps} {...props}
                                                   styles={stylesToPass}
-                                                  suffixClassNames={suffixClassNamesToPass}/>
+                                                  randomizeClassNames={randomizeClassNamesToPass}/>
                 }}
             </Consumer>
         );

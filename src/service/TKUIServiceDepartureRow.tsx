@@ -38,7 +38,7 @@ export interface ITKUIServiceDepartureRowStyle {
 
 export class TKUIServiceDepartureRowConfig implements TKUIWithStyle<ITKUIServiceDepartureRowStyle, ITKUIServiceDepartureRowProps> {
     public styles = tKUIServiceDepartureRowDefaultStyle;
-    public suffixClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
+    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
                                               // JssProvider, but in this case is true since multiple instances are
                                               // rendered, each with a different service color.
 
@@ -157,12 +157,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent);
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUIServiceDepartureRow");
     return (props: ITKUIServiceDepartureRowProps) => {
         const stylesToPass = props.styles || TKUIServiceDepartureRowConfig.instance.styles;
-        const sufixClassNamesToPass = props.suffixClassNames !== undefined ? props.suffixClassNames :
-            TKUIServiceDepartureRowConfig.instance.suffixClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} suffixClassNames={sufixClassNamesToPass}/>;
+        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+            TKUIServiceDepartureRowConfig.instance.randomizeClassNames;
+        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
     };
 };
 
