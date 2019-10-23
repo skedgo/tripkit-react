@@ -1,11 +1,14 @@
 import genStyles from "../css/GenStyle.css";
 import {ITKUIResultsStyle} from "./TKUIResultsView";
+import Constants from "../util/Constants";
+import {tKUIColors} from "../jss/TKStyleProvider";
 
 export const tKUIResultsDefaultStyle: ITKUIResultsStyle = {
 
     main: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        background: '#f5f6f7'
     },
 
     row: {
@@ -27,6 +30,34 @@ export const tKUIResultsDefaultStyle: ITKUIResultsStyle = {
         ...genStyles.alignSelfCenter,
         ...genStyles.animateSpin,
         ...genStyles.svgFillCurrColor
+    },
+
+    sortBar: {
+        ...genStyles.flex,
+        ...genStyles.spaceBetween,
+        padding: '10px',
+        ...genStyles.fontS,
+        color: tKUIColors.black1
+    },
+
+    sortSelectContainer: {
+        minWidth: '200px',
+        ...genStyles.grow
+    },
+
+    sortSelectControl: {
+        border: 'none',
+        backgroundImage: 'url('+ Constants.absUrl("/images/ic-sort.svg") + ')!important',
+        backgroundRepeat: 'no-repeat!important',
+        backgroundPosition: '10px 50%!important',
+        backgroundSize: '18px',
+        paddingLeft: '35px',
+        cursor: 'pointer',
+        backgroundColor: '#00000000'
+    },
+
+    sortSelectSingleValue: {
+        color: tKUIColors.black1
     }
 
 };

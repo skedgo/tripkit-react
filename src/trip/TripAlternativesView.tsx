@@ -1,14 +1,14 @@
 import * as React from "react";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
-import ITripRowProps from "./ITripRowProps";
 import "./TripAlternativesView.css";
 import Util from "../util/Util";
+import {ITKUITripRowProps} from "./TKUITripRow";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAlternativesView extends React.Component<IProps, {}> {
@@ -43,7 +43,7 @@ class TripAlternativesView extends React.Component<IProps, {}> {
                                 },
                                 onKeyDown: (e: any) => this.onKeyDown(e, i),
                                 key: i + trip.getKey(),
-                                ref: (el: any) => this.rowRefs[i] = el
+                                reference: (el: any) => this.rowRefs[i] = el
                             })
                     )}
                 </div>

@@ -1,12 +1,12 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
 import {TrackTransportProps} from "./TrackTransport";
-import {ReactComponent as IconAngleRight} from "../images/ic-angle-right.svg";
 import Trip from "../model/trip/Trip";
 
 export interface IProps {
     value: Trip;
     renderTransport: <P extends TrackTransportProps>(transportProps: P) => JSX.Element;
+    className?: string;
 }
 
 class TripRowTrack extends React.Component<IProps, {}> {
@@ -21,20 +21,10 @@ class TripRowTrack extends React.Component<IProps, {}> {
         }
         const TrackTransport = this.props.renderTransport;
         return (
-            <div className="TripRow-trackPanel gl-flex gl-align-center">
+            <div className={this.props.className}>
                 { this.props.value.segments.reduce((accum: any[], segment: Segment, i: number) => {
                         if (segment.visibilityType === Segment.Visibility.IN_SUMMARY) {
                             accum.push(<TrackTransport segment={segment} brief={brief} key={i}/>);
-                            const last = segment.isLast(Segment.Visibility.IN_SUMMARY);
-                            if (!last) {
-                                accum.push(<IconAngleRight
-                                    className={"TrackTransport-angleRight" + (brief === false ? " gl-charSpace gl-charSpaceLeft" : "")}
-                                    role="img"  // Needed to be read by iOS VoiceOver
-                                    aria-label=", then"
-                                    focusable="false"
-                                    key={i + "icAngleRight"}
-                                />)
-                            }
                         }
                         return accum;
                     },

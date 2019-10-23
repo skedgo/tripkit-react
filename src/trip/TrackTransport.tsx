@@ -18,13 +18,20 @@ class TrackTransport extends React.Component<IProps, {}> {
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
             infoSubtitle = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        } else if (segment.trip.isSingleSegment() && (segment.isBicycle() || segment.isWheelchair())) {
+            // TODO getDurationWithContinuation
+            const duration = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+            const friendlinessPct = (segment.metresSafe !== null && segment.metres !== null) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
+            if (friendlinessPct) {
+                infoTitle = duration;
+                infoSubtitle = friendlinessPct + (segment.isBicycle() ? " % cycle friendly" : " % wheelchair friendly");
+            } else {
+                infoSubtitle = duration;
+            }
         } else if (segment.trip.isSingleSegment() && segment.metres !== null) {
             infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
         } else if (segment.realTime) {
             infoSubtitle = "Live traffic";
-        } else if (segment.trip.isSingleSegment() && (segment.isWalking() || segment.isWheelchair())) {
-            // TODO getDurationWithContinuation
-            infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
         } else {
             // TODO more cases
             infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
@@ -39,12 +46,12 @@ class TrackTransport extends React.Component<IProps, {}> {
                      aria-label={modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + infoSubtitle}
                 />
                 { this.props.brief ? null :
-                    <div className={"TrackTransport-info gl-flex gl-column gl-align-center"
+                    <div className={"TrackTransport-info gl-flex gl-column gl-align-start"
                     + (this.props.brief === false ? " TrackTransport-info-space" : "")}
                          aria-hidden={true}
                     >
                         {infoTitle ? <div>{infoTitle}</div> : null}
-                        <div>{infoSubtitle}</div>
+                        <div className={"TrackTransport-subtitle"}>{infoSubtitle}</div>
                     </div> }
             </div>
         );

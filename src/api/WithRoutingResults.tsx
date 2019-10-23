@@ -3,7 +3,7 @@ import TripGoApi from "./TripGoApi";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
 import {IRoutingResultsContext as RResultsConsumerProps} from "../trip-planner/RoutingResultsProvider";
-import RoutingQuery from "../model/RoutingQuery";
+import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
 import RegionsData from "../data/RegionsData";
 import OptionsView from "../options/OptionsView";
@@ -31,7 +31,16 @@ interface IWithRoutingResultsState {
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     trips?: Trip[];
     selected?: Trip;
+    sort: TripSort;
     waiting: boolean;
+}
+
+export enum TripSort {
+    OVERALL = "Preferred",
+    TIME = "Arrival",
+    DURATION = "Duration",
+    PRICE = "Price",
+    CARBON = "Greener"
 }
 
 // function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
@@ -45,13 +54,38 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             super(props);
             this.state = {
                 query: RoutingQuery.create(),
+                sort: TripSort.OVERALL,
                 waiting: false
             };
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onChange = this.onChange.bind(this);
+            this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
+        }
+
+        private sortTrips(trips: Trip[], sort: TripSort) {
+            return trips.slice().sort((t1: Trip, t2: Trip) => {
+                switch (sort) {
+                    case TripSort.TIME: {
+                        return this.state.query.timePref === TimePreference.ARRIVE ?
+                            t2.depart - t1.depart : t1.arrive - t2.arrive;
+                    }
+                    case TripSort.DURATION: {
+                        return (t1.arrive - t1.depart) - (t2.arrive - t2.depart);
+                    }
+                    case TripSort.PRICE: {
+                        const t1Cost = t1.moneyCost === null ? Number.MAX_SAFE_INTEGER : t1.moneyCost;
+                        const t2Cost = t2.moneyCost === null ? Number.MAX_SAFE_INTEGER : t2.moneyCost;
+                        return t1Cost - t2Cost;
+                    }
+                    case TripSort.CARBON: {
+                        return t1.carbonCost - t2.carbonCost;
+                    }
+                    default: return t1.weightedScore - t2.weightedScore;
+                }
+            });
         }
 
         public onQueryChange(query: RoutingQuery) {
@@ -79,6 +113,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.setState({
                 selected: select
             });
+        }
+
+        public onSortChange(sort: TripSort): void {
+            this.setState((prev: IWithRoutingResultsState) => ({
+                sort: sort,
+                trips: prev.trips && this.sortTrips(prev.trips, sort)
+            }));
         }
 
         public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
@@ -129,7 +170,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         trips = (trips[0] as TripGroup).trips;
                     }
                     this.setState(prevState => {
-                        return {trips: prevState.trips!.concat(trips)}
+                        return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
                     });
                     this.checkWaiting(waitingState)
                 }).catch((reason: any) => {
@@ -200,26 +241,28 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public render(): React.ReactNode {
             const { urlQuery, ...props } = this.props as IWithRoutingResultsProps;
             return <Consumer
-                            {...props}
-                             query={this.state.query}
-                             onQueryChange={this.onQueryChange}
-                             preFrom={this.state.preFrom}
-                             preTo={this.state.preTo}
-                             onPreChange={(from: boolean, location?: Location) => {
-                                 if (from) {
-                                     this.setState({preFrom: location})
-                                 } else {
-                                     this.setState({preTo: location})
-                                 }
-                             }}
-                             region={this.state.region}
-                             onViewportChange={this.onViewportChange}
-                             trips={this.state.trips}
-                             waiting={this.state.waiting}
-                             selected={this.state.selected}
-                             onChange={this.onChange}
-                             onReqRealtimeFor={this.onReqRealtimeFor}
-                             onAlternativeChange={this.onAlternativeChange}
+                {...props}
+                query={this.state.query}
+                onQueryChange={this.onQueryChange}
+                preFrom={this.state.preFrom}
+                preTo={this.state.preTo}
+                onPreChange={(from: boolean, location?: Location) => {
+                    if (from) {
+                        this.setState({preFrom: location})
+                    } else {
+                        this.setState({preTo: location})
+                    }
+                }}
+                region={this.state.region}
+                onViewportChange={this.onViewportChange}
+                trips={this.state.trips}
+                waiting={this.state.waiting}
+                selected={this.state.selected}
+                onChange={this.onChange}
+                sort={this.state.sort}
+                onSortChange={this.onSortChange}
+                onReqRealtimeFor={this.onReqRealtimeFor}
+                onAlternativeChange={this.onAlternativeChange}
             />;
         }
 

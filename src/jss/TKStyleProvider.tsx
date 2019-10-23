@@ -31,8 +31,6 @@ export const tKUIColors = {
 
 export const generateClassNameFactory = (prefix: string) =>
     (rule: any, sheet: any) => {
-        console.log(rule);
-        console.log(sheet);
         return prefix + "-" + rule.key;
     };
 

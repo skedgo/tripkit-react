@@ -14,7 +14,8 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             ...genStyles.center,
             ...genStyles.fontM,
             padding: (props: ITKUIButtonProps) =>
-                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' :
+                    props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '6px 20px',
             borderRadius: '20px',
             '& svg': {
                 width: '100%',
@@ -51,6 +52,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             '& svg': {
                 color: tKUIColors.black1
             }
+        },
+
+        link: {
+            color: theme.colorPrimary,
         },
 
         iconContainer: {

@@ -2,12 +2,13 @@ import TripGroup from "../model/trip/TripGroup";
 import * as React from "react";
 import Tooltip from "rc-tooltip";
 import TripAlternativesView from "./TripAlternativesView";
-import ITripRowProps from "./ITripRowProps";
+import {ITKUITripRowProps} from "./TKUITripRow";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element;
+    renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAltBtn extends React.Component<IProps, {}> {
@@ -29,15 +30,13 @@ class TripAltBtn extends React.Component<IProps, {}> {
                      trigger={["click"]}
                      onVisibleChange={visible => {
                          setTimeout(() => {
-                             if (visible) {
+                             if (visible && this.altTripsRef) {
                                  this.altTripsRef.focus();
                              }
                          }, 500);
                      }}
             >
-                <button className="gl-link gl-charSpace">
-                    Alternatives
-                </button>
+                <TKUIButton text={"More routes"} type={TKUIButtonType.PRIMARY_LINK}/>
             </Tooltip>;
     }
 }
