@@ -32,15 +32,15 @@
   padding: 1px;
 }
 
-.app-style input[type=text]:focus,
-.app-style textarea:focus,
-.app-style select:focus,
-.app-style button:focus,
-.app-style a:focus,
-.app-style svg:focus,
-.app-style div:focus,
-.app-style .TripRow:focus,
-.app-style .App-tabBtn:focus {
+body.user-is-tabbing .app-style input[type=text]:focus,
+body.user-is-tabbing .app-style textarea:focus,
+body.user-is-tabbing .app-style select:focus,
+body.user-is-tabbing .app-style button:focus,
+body.user-is-tabbing .app-style a:focus,
+body.user-is-tabbing .app-style svg:focus,
+body.user-is-tabbing .app-style div:focus,
+body.user-is-tabbing .app-style .TripRow:focus,
+body.user-is-tabbing .app-style .App-tabBtn:focus {
   outline: 2px solid #024dff;
   -webkit-box-shadow: 0 0 14px #024dff;
   -moz-box-shadow: 0 0 14px #024dff;
@@ -48,24 +48,17 @@
 }
 
 body:not(.user-is-tabbing) .app-style * {
-  /*box-shadow: none!important;     !* To avoid glow effet on focus *!*/
-  box-shadow: none;     /* Removed the important since I need to put shadows on some elements. TODO: check */
+  box-shadow: none;     /* To avoid glow effet on focus */
   outline: none!important;  /* To avoid glow effet on focus */
 }
 
-body:not(.user-is-tabbing) .app-style input,
-body:not(.user-is-tabbing) .app-style button,
-body:not(.user-is-tabbing) .app-style *[tabindex] {
-  box-shadow: none!important;     /* To avoid glow effet on focus */
-}
-
-.app-style .TripPlanner-queryInput input[type=text]:focus,
-.app-style .TripPlanner-queryInput textarea:focus,
-.app-style .TripPlanner-queryInput select:focus,
-.app-style .TripPlanner-queryInput button:focus,
-.app-style .TripPlanner-queryInput a:focus,
-.app-style .TripPlanner-queryInput svg:focus,
-.app-style .TripPlanner-queryInput div:focus {
+body.user-is-tabbing .app-style .TripPlanner-queryInput input[type=text]:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput textarea:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput select:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput button:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput a:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput svg:focus,
+body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   outline-color: white; /* White glow on dark background */
   -webkit-box-shadow: 0 0 14px white; /* White glow on dark background */
   -moz-box-shadow: 0 0 14px white;
@@ -249,16 +242,6 @@ body:not(.user-is-tabbing) .app-style *[tabindex] {
   font-family: "Courier New", Courier, monospace;
 }
 
-.app-style.rc-tooltip,
-.app-style .rc-tooltip-content {
-  background-color: black;
-}
-
-.app-style.rc-tooltip.errorTooltip,
-.app-style.errorTooltip .rc-tooltip-content {
-  background-color: red;
-}
-
 .app-style .rc-tooltip-inner {
   color: #e1e1e1;
   background-color: black;
@@ -273,7 +256,7 @@ body:not(.user-is-tabbing) .app-style *[tabindex] {
 
 .app-style.rc-tooltip-placement-right .rc-tooltip-arrow {
   border-right-color: black;
-  left: -8px;
+  left: -7px;
   margin-top: -8px;
   border-width: 8px 8px 8px 0;
 }

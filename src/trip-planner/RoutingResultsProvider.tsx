@@ -1,5 +1,5 @@
 import * as React from "react";
-import withRoutingResults from "../api/WithRoutingResults";
+import withRoutingResults, {TripSort} from "../api/WithRoutingResults";
 import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
@@ -24,6 +24,8 @@ export interface IRoutingResultsContext {
     waiting: boolean;
     selected?: Trip;
     onChange: (select?: Trip) => void;
+    sort: TripSort;
+    onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
 }
@@ -34,6 +36,8 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     waiting: true,
     onChange: (select?: Trip) => {},
+    sort: TripSort.OVERALL,
+    onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
     onAlternativeChange: (group: TripGroup, alt: Trip) => {}
 });

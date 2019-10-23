@@ -37,7 +37,10 @@ export const resetStyles: ITKUIResetStyle = {
         border: 'none!important',
         WebkitBoxShadow: 'none!important',
         MozBoxShadow: 'none!important',
-        boxShadow: 'none!important'
+        boxShadow: 'none!important',
+        borderRadius: 'initial',
+        WebkitBorderRadius: 'initial',
+        MozBorderRadius: 'initial'
     },
     input: {
         border: 'none',

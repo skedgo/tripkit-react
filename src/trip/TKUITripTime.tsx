@@ -1,7 +1,7 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
 import DateTimeUtil from "../util/DateTimeUtil";
-import {TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITripTimeDefaultStyle} from "./TKUITripTime.css";
 import TripUtil from "./TripUtil";
@@ -16,7 +16,9 @@ interface IProps extends ITKUITripTimeProps {
 }
 
 export interface ITKUITripTimeStyle {
-
+    main: CSSProps<ITKUITripTimeProps>;
+    timePrimary: CSSProps<ITKUITripTimeProps>;
+    timeSecondary: CSSProps<ITKUITripTimeProps>;
 }
 
 class TKUITripTime extends React.Component<IProps, {}> {
@@ -24,20 +26,21 @@ class TKUITripTime extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const trip = this.props.value;
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip, this.props.brief);
+        const classes = this.props.classes;
         return (
-            <div>
+            <div className={classes.main}>
                 {(hasPT ?
-                    <div>
-                        <span className="h5-text"><span>{departureTime}</span> <span>-</span> <span>{arrivalTime}</span></span>
-                        <span className="text gl-charSpaceLeft">({duration})</span>
-                    </div>
+                    [
+                        <span className={classes.timePrimary} key={0}><span>{departureTime}</span> <span>-</span> <span>{arrivalTime}</span></span>,
+                        <span className={classes.timeSecondary} key={1}>{duration}</span>
+                    ]
                     :
-                    <div>
-                        <span className="h5-text">{duration}</span>
-                        <span className="text gl-charSpaceLeft">
-                                ({trip.queryIsLeaveAfter ? "arrive " + arrivalTime : "depart " + departureTime})
+                    [
+                        <span className={classes.timePrimary} key={0}>{duration}</span>,
+                        <span className={classes.timeSecondary} key={1}>
+                                {trip.queryIsLeaveAfter ? "arrive " + arrivalTime : "depart " + departureTime}
                                     </span>
-                    </div>)}
+                    ])}
             </div>
         );
     }

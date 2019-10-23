@@ -31,6 +31,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Trip from "../model/trip/Trip";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
+import StopLocation from "../model/StopLocation";
 
 export interface ITKUITripPlannerProps extends TKUIWithStyle<ITKUITripPlannerStyle, IProps> {}
 
@@ -59,6 +60,13 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
 }
 
     // TODO:
+// SEGUIR ACÁ
+    // Definir TODO list (con redmine de Tripkit react a la vista). Actualizar progreso y TODO list en redmine.
+    //      - mostrar stops en mapa
+    //      - agregar skedgo geocoding source
+    //      - Transport options view
+    //      - Mode by mode instructions
+    //      - ...
     // Improve scheme to import, from class / element to entire module (see TODO on imports above)
     // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
     // - Maybe group different providers in unique composite provider. Analyze. Make all the changes grounded on expected
@@ -130,7 +138,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 />
             </Modal> : null;
 
-        const departuresView = this.props.stop ?
+        const departuresView = this.props.stop && !this.props.trips ?
             <TKUITimetableView
                 onRequestClose={() => {
                     this.props.onStopChange(undefined);
@@ -145,7 +153,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const routingResultsView = this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
                 className="gl-no-shrink"
-                onClicked={() => this.setState({showTripDetail: true})}
+                onDetailsClicked={() => {
+                    this.setState({showTripDetail: true});
+                }}
                 // styles={Util.iAssign(tKUIResultsDefaultStyle, {
                 //     main: {
                 //         ...tKUIResultsDefaultStyle.main,
@@ -156,7 +166,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         let tripDetailView;
         if (this.state.showTripDetail && this.props.selected) {
-            const sortedTrips = TKUIResults.sortTrips(this.props.trips ? this.props.trips : []);
+            const sortedTrips = this.props.trips || [];
             const selected = sortedTrips.indexOf(this.props.selected);
             tripDetailView =
                 <TKUICardCarousel selected={selected} onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}>
@@ -210,31 +220,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {serviceDetailView}
             </div>
         );
-
-        {/*<div className="TripPlanner-subQueryPanel gl-flex gl-scrollable-y gl-column gl-space-between">*/}
-        {/*{!this.props.trips ?*/}
-        {/*<div className="gl-no-shrink">*/}
-        {/*<TKUIFavouritesView*/}
-        {/*recent={false}*/}
-        {/*previewMax={3}*/}
-        {/*title={"MY FAVOURITE JOURNEYS"}*/}
-        {/*moreBtnClass={"gl-button"}*/}
-        {/*/>*/}
-        {/*<TKUIFavouritesView*/}
-        {/*recent={true}*/}
-        {/*showMax={3}*/}
-        {/*title={"MY RECENT JOURNEYS"}*/}
-        {/*className="TripPlanner-recentList"*/}
-        {/*moreBtnClass={"gl-button"}*/}
-        {/*/>*/}
-        {/*</div>*/}
-        {/*: null*/}
-        {/*}*/}
-        {/*</div>*/}
     }
 
     private onOptionsRequestedClose() {
         this.setState({showOptions: false});
+    }
+
+    public componentDidUpdate(prevProps: Readonly<IProps>): void {
+        if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from.class === "StopLocation") {
+            this.props.onStopChange(this.props.query.from as StopLocation);
+        }
     }
 }
 

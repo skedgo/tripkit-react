@@ -67,6 +67,9 @@ class Trip {
     }
 
     get moneyCost(): number | null {
+        if (!this.hasPublicTransport() && this._moneyCost) {
+            return Math.ceil(this._moneyCost)
+        }
         return this._moneyCost;
     }
 
@@ -193,6 +196,10 @@ class Trip {
             this._arrivalSegment.shapes = [];
         }
         return this._arrivalSegment;
+    }
+
+    get duration(): number {
+        return this.arrive - this.depart;
     }
 }
 

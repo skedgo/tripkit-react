@@ -1,19 +1,23 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import ITripRowProps from "./ITripRowProps";
 import {tKUIResultsDefaultStyle} from "./TKUIResultsView.css";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TripRow from "./TripRow";
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard from "../card/TKUICard";
 import {ClassNameMap, CSSProperties} from "react-jss";
 import {CSSProps, withStyleProp} from "../jss/StyleHelper";
 import classNames from "classnames";
+import {TripSort} from "../api/WithRoutingResults";
+import {TimePreference} from "..";
+import RoutingQuery from "../model/RoutingQuery";
+import Select, { components } from 'react-select';
+import TKUITripRow, {ITKUITripRowProps} from "./TKUITripRow";
+import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 
 export interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
-    onClicked?: () => void;
+    onDetailsClicked?: () => void;
     className?: string;
     styles?: any;
 }
@@ -24,10 +28,13 @@ interface IConsumedProps {
     onChange?: (value: Trip) => void;
     waiting?: boolean; // TODO: allow values to be undefined so no need for waiting prop.
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
+    query: RoutingQuery;
+    sort: TripSort;
+    onSortChange: (sort: TripSort) => void;
 }
 
 interface IProps extends ITKUIResultsViewProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUIResultsStyle>
+    classes: ClassNameMap<keyof ITKUIResultsStyle>;
 }
 
 export interface ITKUIResultsStyle {
@@ -35,22 +42,34 @@ export interface ITKUIResultsStyle {
     row: CSSProps<IProps>;
     rowSelected: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
+    sortBar: CSSProps<IProps>;
+    sortSelectContainer: CSSProps<IProps>;
+    sortSelectControl: CSSProps<IProps>;
+    sortSelectSingleValue: CSSProps<IProps>;
 }
 
 class TKUIResultsViewConfig {
     public styles: ITKUIResultsStyle = tKUIResultsDefaultStyle;
-    public renderTrip: <P extends ITripRowProps>(tripRowProps: P) => JSX.Element
-        = <P extends ITripRowProps>(props: P) => <TripRow {...props}/>;
+    public renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element
+        = <P extends ITKUITripRowProps>(props: P) => <TKUITripRow {...props}/>;
 
     public static instance = new TKUIResultsViewConfig();
 }
 
-class TKUIResultsView extends React.Component<IProps, {}> {
+interface IState {
+    tripToBadge: Map<Trip, Badges>;
+}
+
+class TKUIResultsView extends React.Component<IProps, IState> {
 
     private rowRefs: any[] = [];
+    private justFocused: boolean = false;
 
     constructor(props: IProps) {
         super(props);
+        this.state = {
+            tripToBadge: new Map<Trip, Badges>()
+        };
         // if (this.props.eventBus) {
             // TODO: chech why this is no longer necessary. If still needed put this logic in a wrapper of
             // onAlternativeChange passed to TripRow.
@@ -65,6 +84,19 @@ class TKUIResultsView extends React.Component<IProps, {}> {
             // });
         // }
         this.onKeyDown = this.onKeyDown.bind(this);
+    }
+
+    private getSortOptions(): any[] {
+        return Object.values(TripSort)
+            .filter((value: string) => value !== TripSort.CARBON)
+            .map((value: string) => {
+                let label = value;
+                if (value === TripSort.TIME && this.props.query.timePref === TimePreference.ARRIVE) {
+                    label = "Departure";
+                }
+                label = "Sort by " + label;
+                return { value: value, label: label};
+            });
     }
 
     private onKeyDown(e: any) {
@@ -84,35 +116,65 @@ class TKUIResultsView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const sortOptions = this.getSortOptions();
         return (
             <TKUICard
                 title={"Routing results"}
             >
-                <div className={classNames("TKUIResultsView", this.props.className, classes.main)}>
+                <div className={classNames(this.props.className, classes.main)}>
+                    <div className={classes.sortBar}>
+                        <Select
+                            options={sortOptions}
+                            value={sortOptions.find((option: any) => option.value === this.props.sort)}
+                            onChange={(option) => this.props.onSortChange(option.value as TripSort)}
+                            isSearchable={false}
+                            styles={{
+                                container: styles => ({...styles, ...this.props.styles.sortSelectContainer}),
+                                control: styles => ({...styles, ...this.props.styles.sortSelectControl}),
+                                indicatorsContainer: styles => ({...styles, display: 'none'}),
+                                singleValue: styles => ({...styles, ...this.props.styles.sortSelectSingleValue})
+                            }}
+                        />
+                        <div>
+
+                        </div>
+                    </div>
                     {this.props.values && this.props.values.map((trip: Trip, index: number) =>
-                        TKUIResultsViewConfig.instance.renderTrip(
-                            { value: trip,
-                                className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
-                                onClick: this.props.onChange ?
-                                    () => {
-                                        if (this.props.onClicked) {
-                                            this.props.onClicked();
-                                        }
-                                        return this.props.onChange!(trip);
-                                    } :
-                                    undefined,
-                                onFocus: this.props.onChange ? () => this.props.onChange!(trip) : undefined,
-                                onKeyDown: this.onKeyDown,
-                                onAlternativeChange: this.props.onAlternativeChange,
-                                key: index + trip.getKey(),
-                                ref: (el: any) => this.rowRefs[index] = el
-                            })
+                        TKUIResultsViewConfig.instance.renderTrip({
+                            value: trip,
+                            className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
+                            onClick: this.props.onChange ?
+                                () => {
+                                    // Trigger details clicked when trip is clicked and it is already selected.
+                                    if (this.props.onDetailsClicked && this.props.value === trip && !this.justFocused) {
+                                        this.props.onDetailsClicked();
+                                    }
+                                    return this.props.onChange!(trip);
+                                } :
+                                undefined,
+                            onFocus: this.props.onChange ?
+                                () => {
+                                    this.justFocused = true;
+                                    this.props.onChange!(trip);
+                                    setTimeout(() => this.justFocused = false, 100)
+                                } : undefined,
+                            onKeyDown: this.onKeyDown,
+                            onDetailClick: this.props.onDetailsClicked,
+                            onAlternativeChange: this.props.onAlternativeChange,
+                            key: index + trip.getKey(),
+                            reference: (el: any) => this.rowRefs[index] = el,
+                            badge: this.state.tripToBadge.get(trip)
+                        })
                     )}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
                 </div>
             </TKUICard>
         );
+    }
+
+    private refreshBadges() {
+        this.setState({tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values)});
     }
 
     private automaticSelectionTimeout: any;
@@ -136,6 +198,14 @@ class TKUIResultsView extends React.Component<IProps, {}> {
                 }
             }, 2000);
         }
+
+        if (this.props.values && prevProps.values !== this.props.values) {
+            this.refreshBadges();
+        }
+    }
+
+    public componentDidMount() {
+        this.refreshBadges();
     }
 
     public componentWillUnmount() {
@@ -147,24 +217,21 @@ class TKUIResultsView extends React.Component<IProps, {}> {
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
-    // TODO: Can also consume styles property from a global styles provider.
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
                 const consumerProps: IConsumedProps = {
-                    // TODO: very inefficient, move sort inside TripView component, should also receive a sort criteria.
-                    // Or define provider TripSortProvider, that receives trips, and provides tripsSorted and
-                    // onSortChange, and maintains in an internal state the trips sorted. Should consume from
-                    // RoutingResultsProvider, so will come below it. Notice I'm doing something like Redux but
-                    // with several providers, instead of a unique store provider.
-                    values: routingContext.trips ? sortTrips(routingContext.trips) : [],
+                    values: routingContext.trips || [],
                     waiting: routingContext.waiting,
                     value: routingContext.selected,
                     onChange: (trip: Trip) => {
                         routingContext.onChange(trip);
                         routingContext.onReqRealtimeFor(trip);
                     },
-                    onAlternativeChange: routingContext.onAlternativeChange
+                    onAlternativeChange: routingContext.onAlternativeChange,
+                    query: routingContext.query,
+                    sort: routingContext.sort,
+                    onSortChange: routingContext.onSortChange
                 };
                 return props.children!(consumerProps);
             }}
@@ -195,12 +262,6 @@ export const Connect = (RawComponent: React.ComponentType<IProps>) => {
         )
     };
 };
-
-export function sortTrips(trips: Trip[]) {
-    return trips.slice().sort((t1: Trip, t2: Trip) => {
-        return t1.weightedScore - t2.weightedScore;
-    });
-}
 
 export default Connect(TKUIResultsView);
 

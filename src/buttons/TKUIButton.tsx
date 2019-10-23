@@ -6,7 +6,7 @@ import {tKUIButtonDefaultStyle} from "./TKUIButton.css";
 import * as CSS from 'csstype';
 
 export enum TKUIButtonType {
-    PRIMARY, SECONDARY, PRIMARY_VERTICAL, SECONDARY_VERTICAL
+    PRIMARY, SECONDARY, PRIMARY_VERTICAL, SECONDARY_VERTICAL, PRIMARY_LINK
 }
 
 export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIButtonProps> {
@@ -14,6 +14,7 @@ export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIB
     text?: string;
     icon?: JSX.Element;
     style?: CSS.Properties;
+    onClick?: (e: any) => void;
 }
 
 interface IProps extends ITKUIButtonProps {
@@ -24,6 +25,7 @@ export interface ITKUIButtonStyle {
     main: CSSProps<IProps>;
     primary: CSSProps<IProps>;
     secondary: CSSProps<IProps>;
+    link: CSSProps<IProps>;
     iconContainer: CSSProps<IProps>;
     verticalPanel: CSSProps<IProps>;
 }
@@ -45,6 +47,17 @@ class TKUIButton extends React.Component<IProps, {}> {
         const type = this.props.type;
         const secondary = type === TKUIButtonType.SECONDARY || type === TKUIButtonType.SECONDARY_VERTICAL;
         const vertical = type === TKUIButtonType.PRIMARY_VERTICAL || type === TKUIButtonType.SECONDARY_VERTICAL;
+        const link = type === TKUIButtonType.PRIMARY_LINK;
+        if (link) {
+            return (
+                <button className={classNames(classes.main, classes.link)}
+                        style={this.props.style}
+                        onClick={this.props.onClick}
+                >
+                    {this.props.text}
+                </button>
+            )
+        }
         return (
             vertical ?
                 <div className={classes.verticalPanel}

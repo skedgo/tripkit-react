@@ -45,7 +45,7 @@ function withStyleProp<
 
         public render(): React.ReactNode {
             const {...props} = this.props as P;
-            return <JssProvider generateClassName={this.props.randomizeClassNames ?
+            return <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
                 generateClassNameSeed : this.generateClassName}>
                 <this.StyledComponent {...props}/>
             </JssProvider>
