@@ -198,7 +198,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 </div>
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                     <TKUIMapView
-                        showLocations={true}
+                        hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                         refAdHoc={(ref: any) => {
                             return this.mapRef = ref;
                         }}
