@@ -12,14 +12,11 @@ import Trip from "../model/trip/Trip";
 import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
-import {MapLocationType, mapLocationTypeToGALabel, values as locTypeValues} from "../model/location/MapLocationType";
-import LocationsData from "../data/LocationsData";
-import LocationsResult from "../model/location/LocationsResult";
+import {MapLocationType} from "../model/location/MapLocationType";
 import OptionsData from "../data/OptionsData";
 import LocationUtil from "../util/LocationUtil";
 import Options from "../model/Options";
 import GATracker from "../analytics/GATracker";
-import MapLocationPopup from "./MapLocationPopup";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import TransportPinIcon from "./TransportPinIcon";
 import {default as SegmentPopup} from "./SegmentPopup";
@@ -28,7 +25,6 @@ import ServiceShape from "../model/trip/ServiceShape";
 import {default as ServiceStopPopup} from "./ServiceStopPopup";
 import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
 import RegionsData from "../data/RegionsData";
-import Region from "../model/region/Region";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import TransportUtil from "../trip/TransportUtil";
@@ -39,6 +35,9 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
+import StopLocation from "../model/StopLocation";
+import {renderToStaticMarkup} from "react-dom/server";
+import TKUIMapLocations from "./TKUIMapLocations";
 
 interface ITKUIMapViewProps {
     showLocations?: boolean;
@@ -60,6 +59,7 @@ interface IConnectionProps {
     onClick?: (latLng: LatLng) => void;
     onDragEnd?: (from: boolean, latLng: LatLng) => void;
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
+    onStopChange: (stop?: StopLocation) => void;
 }
 
 interface IProps extends ITKUIMapViewProps, IConnectionProps {}
@@ -80,10 +80,6 @@ export interface IMapSegmentRenderer {
 // class ReactMap<P extends MapProps & IProps> extends React.Component<P, {}> {
 class LeafletMap extends React.Component<IProps, IState> {
 
-    // private readonly ZOOM_ALL_LOCATIONS = 15;
-    private readonly ZOOM_ALL_LOCATIONS = 0;    // Zoom all locations at any zoom.
-    private readonly ZOOM_PARENT_LOCATIONS = 11;
-
     private leafletElement?: L.Map;
 
     private wasDoubleClick = false;
@@ -95,106 +91,13 @@ class LeafletMap extends React.Component<IProps, IState> {
             viewport: this.props.viewport ? this.props.viewport :
                 {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
-        LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.onLocationsChanged(locResult));
-        OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
-            if (update.mapLayers !== prev.mapLayers) {
-                this.refreshMapLocations();
-            }
-        });
         this.onMoveEnd = this.onMoveEnd.bind(this);
-        this.onLocationsChanged = this.onLocationsChanged.bind(this);
     }
 
     private onMoveEnd() {
         const mapBounds = this.leafletElement!.getBounds();
         if (mapBounds.getNorth() === 90) {  // Filter first bounds, which are like max possible bounds
             return;
-        }
-        this.refreshMapLocations();
-    }
-
-    private onLocationsChanged(locResult: LocationsResult) {
-        if (this.leafletElement!.getZoom() < this.ZOOM_PARENT_LOCATIONS || (this.leafletElement!.getZoom() < this.ZOOM_ALL_LOCATIONS && locResult.level === 2)) {
-            return;
-        }
-        const enabledMapLayers = OptionsData.instance.get().mapLayers;
-        const updatedMapLayers = new Map(this.state.mapLayers);
-        for (const locType of enabledMapLayers) {
-        // for (const locType of values()) {
-            if (locResult.getByType(locType) && enabledMapLayers.indexOf(locType) !== -1) {
-                let uLayerLocs = updatedMapLayers.get(locType);
-                uLayerLocs = uLayerLocs ? uLayerLocs.slice() : [];
-                uLayerLocs = Util.addAllNoRep(uLayerLocs, locResult.getByType(locType), LocationUtil.equal);
-                updatedMapLayers.set(locType, uLayerLocs);
-            }
-        }
-        this.setState({ mapLayers: updatedMapLayers });
-    }
-
-    private refreshMapLocations() {
-        const enabledMapLayers = OptionsData.instance.get().mapLayers;
-        const showAny = this.props.showLocations && this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
-            && enabledMapLayers.length > 0;
-        if (showAny) { // TODO: replace by requesting just modes that correspond to selected location types.
-            RegionsData.instance.getCloserRegionP(this.state.viewport!.center!).then((region: Region) => {
-                LocationsData.instance.requestLocations(region.name, 1);
-                if (this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS
-                    && this.leafletElement.getZoom() >= this.ZOOM_PARENT_LOCATIONS) { // To avoid crashing if ZOOM_ALL_LOCATIONS < ZOOM_PARENT_LOCATIONS
-                    LocationsData.instance.requestLocations(region.name, 2, LeafletUtil.toBBox(this.leafletElement.getBounds()));
-                }
-            })
-        }
-    }
-
-    private isShowLocType(type: MapLocationType): boolean {
-        return !!this.props.showLocations && !!this.leafletElement && this.leafletElement.getZoom() >= this.ZOOM_ALL_LOCATIONS &&
-            OptionsData.instance.get().mapLayers.indexOf(type) !== -1 && !!this.state.mapLayers.get(type);
-    }
-
-    private getLocMarker(mapLocType: MapLocationType, loc: Location): React.ReactNode {
-        const popup = <Popup
-            offset={[0, 0]}
-            closeButton={false}
-            className="LeafletMap-mapLocPopup"
-        >
-            <MapLocationPopup value={loc}/>
-        </Popup>;
-        switch (mapLocType) {
-            case MapLocationType.BIKE_POD:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-bikeShare.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
-                    {popup}
-                </Marker>;
-            case MapLocationType.MY_WAY_FACILITY:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-myway.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
-                    {popup}
-                </Marker>;
-            case MapLocationType.PARK_AND_RIDE_FACILITY:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-parkAndRide.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}>
-                    {popup}
-                </Marker>;
-            default:
-                return <Marker position={loc}/>;
         }
     }
 
@@ -309,6 +212,8 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (this.props.trip) {
             tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
         }
+        const region = RegionsData.instance.getRegion(this.state.viewport!.center!);
+        const enabledMapLayers = OptionsData.instance.get().mapLayers;
         return (
             <div className={"gl-flex gl-grow"}>
                 <RLMap
@@ -378,12 +283,19 @@ class LeafletMap extends React.Component<IProps, IState> {
                                 }
                             }}
                     />}
-                    {locTypeValues().map((locType: MapLocationType) =>
-                        this.isShowLocType(locType) &&
-                        this.state.mapLayers.get(locType)!.map((loc: Location) =>
-                            this.getLocMarker(locType, loc)
-                        )
-                    )}
+                    {region && this.leafletElement &&
+                        <TKUIMapLocations
+                            region={region.name}
+                            bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
+                            enabledMapLayers={enabledMapLayers}
+                            zoom={this.leafletElement.getZoom()}
+                            onLocAction={(locType: MapLocationType, loc: Location) => {
+                                if (locType === MapLocationType.STOP) {
+                                    this.props.onStopChange(loc as StopLocation);
+                                }
+                            }}
+                        />
+                    }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
                                                ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.onDragEnd ?
@@ -412,7 +324,6 @@ class LeafletMap extends React.Component<IProps, IState> {
 
 
     public componentDidMount(): void {
-        this.refreshMapLocations();
         this.leafletElement!.on("dblclick", event1 => {
             this.wasDoubleClick = true;
         });
@@ -471,7 +382,14 @@ class LeafletMap extends React.Component<IProps, IState> {
     }
 }
 
-const geocodingData: MultiGeocoder = new MultiGeocoder();
+let geocodingData: MultiGeocoder;
+
+function getGeocodingData() {
+    if (!geocodingData) {
+        geocodingData = new MultiGeocoder();
+    }
+    return geocodingData;
+}
 
 const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
     return (
@@ -487,15 +405,17 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                     (routingContext.query.to ? routingContext.query.to : undefined);
                                 const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
                                     routingContext.onQueryChange(Util.iAssign(routingContext.query, {
-                                        [isFrom ? "from" : "to"]: Location.create(latLng, "Location", "", "")
+                                        [isFrom ? "from" : "to"]:
+                                            latLng instanceof StopLocation ? latLng as StopLocation :
+                                                Location.create(latLng, "Location", "", "")
                                     }));
-                                    geocodingData.reverseGeocode(latLng, loc => {
+                                    getGeocodingData().reverseGeocode(latLng, loc => {
                                         if (loc !== null) {
                                             routingContext.onQueryChange(Util.iAssign(routingContext.query, {[isFrom ? "from" : "to"]: loc}));
                                         }
                                     })
                                 };
-                                const consumerProps: Partial<IProps> = {
+                                const consumerProps: IConnectionProps = {
                                     from: from,
                                     to: to,
                                     trip: routingContext.selected,
@@ -508,7 +428,8 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                     },
                                     service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
                                         serviceContext.selectedService : undefined,
-                                    onViewportChange: routingContext.onViewportChange
+                                    onViewportChange: routingContext.onViewportChange,
+                                    onStopChange: serviceContext.onStopChange
                                 };
                                 return (
                                     props.children!(consumerProps)

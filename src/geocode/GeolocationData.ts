@@ -25,7 +25,6 @@ class GeolocationData {
 
     public requestIPLocation(): Promise<LatLng> {
         return iplocation('0.0.0.0', ["https://ipapi.co/json/"]).then((res) => {
-            // console.log(JSON.stringify(res));
             return LatLng.createLatLng(res.latitude, res.longitude);
         });
     }

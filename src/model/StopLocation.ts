@@ -45,6 +45,10 @@ class StopLocation extends Location {
     set shortName(value: string | undefined) {
         this._shortName = value;
     }
+
+    public getKey(): string {
+        return super.getKey() + this.code;
+    }
 }
 
 export default StopLocation;

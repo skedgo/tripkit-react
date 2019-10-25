@@ -8,7 +8,7 @@ import {Subtract} from "utility-types";
 import RegionsData from "../data/RegionsData";
 import OptionsView from "../options/OptionsView";
 import NetworkUtil from "../util/NetworkUtil";
-import Environment from "../env/Environment";
+import Environment, {Env} from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
 import {JsonConvert} from "json2typescript";
 import Options from "../model/Options";
@@ -16,6 +16,7 @@ import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
 import Features from "../env/Features";
+import Util from "../util/Util";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -135,7 +136,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (referenceLatLng) {
                 RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
                     if (region.polygon === "") {
-                        console.log("empty region");
+                        Util.log("empty region");
                     }
                     this.setState({region: region});
                 });
@@ -174,7 +175,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     });
                     this.checkWaiting(waitingState)
                 }).catch((reason: any) => {
-                    console.log(reason);
+                    Util.log(reason, Env.PRODUCTION);
                     this.checkWaiting(waitingState)
                 }))
             });

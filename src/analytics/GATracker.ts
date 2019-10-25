@@ -1,4 +1,5 @@
 import Environment from "../env/Environment";
+import Util from "../util/Util";
 
 class GATracker {
 
@@ -18,9 +19,7 @@ class GATracker {
                 (window as any).ga('send', 'event', category, action, label);
             }
         }
-        if (Environment.isDev()) {
-            console.log("GA Track event -" + " category: " + category + ", action: " + action + ", label: " + label + ".");
-        }
+        Util.log("GA Track event -" + " category: " + category + ", action: " + action + ", label: " + label + ".");
     }
 
 }

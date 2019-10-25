@@ -11,6 +11,7 @@ import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
 import {resetStyles} from "../css/ResetStyle.css";
+import City from "../model/location/City";
 
 interface IProps {
     geocodingData: MultiGeocoder,
@@ -77,7 +78,7 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     private static itemText(location: Location): string {
-        return location.address;
+        return location instanceof City ? location.name : location.address;
     }
 
     /**

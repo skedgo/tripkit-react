@@ -82,6 +82,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.onFilterChange = this.onFilterChange.bind(this);
             this.onInitTimeChange = this.onInitTimeChange.bind(this);
             this.onServiceSelection = this.onServiceSelection.bind(this);
+            this.onStopChange = this.onStopChange.bind(this);
         }
 
         public requestMoreDepartures() {
@@ -96,7 +97,6 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public onFilterChange(filter: string) {
-            console.log(filter);
             this.setState({
                 filter: filter,
                 displayLimit: this.idealMinDisplayed
@@ -155,12 +155,20 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 );
         }
 
+        public onStopChange(stop?: StopLocation) {
+            this.setState({startStop: stop}, () => {
+                if (stop) {
+                    this.onInitTimeChange(DateTimeUtil.getNow().add(-15, 'm'));
+                }
+            })
+        }
+
         public render(): React.ReactNode {
             const {...props} = this.props as IWithServiceResultsProps;
             const startStop = this.state.startStop;
             return <Consumer {...props}
                              stop={startStop}
-                             onStopChange={(stop?: StopLocation) => this.setState({startStop: stop})}
+                             onStopChange={this.onStopChange}
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting()}

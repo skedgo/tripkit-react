@@ -7,6 +7,7 @@ import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import TripGoApi from "../api/TripGoApi";
 import {LocationConverter} from "../model/location/LocationConverter";
+import Util from "../util/Util";
 
 class SkedgoGeocoder implements IGeocoder {
 
@@ -54,7 +55,7 @@ class SkedgoGeocoder implements IGeocoder {
         const timeoutId = setTimeout(() => {
             timedOut = true;
             if (!resultsArrived) {
-                console.log("query " + query + " timed out ");
+                Util.log("query " + query + " timed out ");
                 callback(results);
             }
         }, 1500); // Tolerance
@@ -81,7 +82,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
             callback(results.slice(0, this.options.resultsLimit));
         }).catch(reason => {
-            console.log(endpoint + " failed. Reason: " + reason);
+            Util.log(endpoint + " failed. Reason: " + reason);
             callback([]);
         });
     }

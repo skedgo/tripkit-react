@@ -4,6 +4,9 @@ import PeliasGeocoder from "./PeliasGeocoder";
 import SkedgoGeocoder from "./SkedgoGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import StopLocation from "../model/StopLocation";
+import StaticGeocoder from "./StaticGeocoder";
+import RegionsData from "../data/RegionsData";
+import Util from "../util/Util";
 
 class MultiGeocoderOptions {
 
@@ -12,7 +15,11 @@ class MultiGeocoderOptions {
         peliasGeocoder.getOptions().resultsLimit = 5;
         const skedgoGeocoder = new SkedgoGeocoder();
         skedgoGeocoder.getOptions().resultsLimit = 2;
-        const geocoders = [peliasGeocoder, skedgoGeocoder];
+        const citiesGeocoder = new StaticGeocoder();
+        RegionsData.instance.requireRegions().then(() => {
+            citiesGeocoder.setValues(RegionsData.instance.getCities()!);
+        });
+        const geocoders = [peliasGeocoder, skedgoGeocoder, citiesGeocoder];
         const compare = (l1: Location, l2: Location, query: string) => {
             if (l1.source === SkedgoGeocoder.SOURCE_ID && l1 instanceof StopLocation && query === (l1 as StopLocation).code) {
                 return -1;
@@ -46,7 +53,7 @@ class MultiGeocoderOptions {
             const relevance = Math.max(LocationUtil.relevance(r1.address, r2.address) , LocationUtil.relevance(r2.address, r1.address));
             const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
             if (r1.source !== r2.source) {
-                console.log(r1.address + " (" + r1.source + ")" + " | " + r2.address + " (" + r2.source + ")" + " dist: " + distanceInMetres + " relevance: " + relevance);
+                Util.log(r1.address + " (" + r1.source + ")" + " | " + r2.address + " (" + r2.source + ")" + " dist: " + distanceInMetres + " relevance: " + relevance);
             }
             if (r1.source !== r2.source && relevance > .7 && (LocationUtil.distanceInMetres(r1, r2) < 100)) {
                 return true;

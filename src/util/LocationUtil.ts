@@ -1,8 +1,12 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
+import City from "../model/location/City";
 
 class LocationUtil {
     public static getMainText(loc: Location): string {
+        if (loc instanceof City) {
+            return loc.name;
+        }
         const address = loc.address;
         return address.includes(",") ? address.substr(0, address.indexOf(",")) : address;
     }

@@ -2,6 +2,7 @@ import BBox from "../model/BBox";
 import Trip from "../model/trip/Trip";
 import LeafletUtil from "./LeafletUtil";
 import ServiceShape from "../model/trip/ServiceShape";
+import LatLng from "../model/LatLng";
 
 class MapUtil {
 
@@ -36,6 +37,16 @@ class MapUtil {
     private static degreeToCellCoordinate(coordInDegrees: number, cellsPerDegree: number): number {
         const x = coordInDegrees * cellsPerDegree;
         return Math.trunc(x < 0 ? x - 1 : x);
+    }
+
+    public static expand(bounds: BBox, factor: number): BBox {
+        const sw = bounds.sw;
+        const ne = bounds.ne;
+        const expandedSW = LatLng.createLatLng(sw.lat - (ne.lat - sw.lat) * factor / 2,
+            sw.lng - (ne.lng - sw.lng) * factor / 2);
+        const expandedNE = LatLng.createLatLng(ne.lat + (ne.lat - sw.lat) * factor / 2,
+            ne.lng + (ne.lng - sw.lng) * factor / 2);
+        return BBox.createBBox(expandedNE, expandedSW);
     }
 
     public static getTripBounds(trip: Trip): BBox {
