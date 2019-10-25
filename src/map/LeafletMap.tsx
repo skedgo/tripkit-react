@@ -15,7 +15,6 @@ import Util from "../util/Util";
 import {MapLocationType} from "../model/location/MapLocationType";
 import OptionsData from "../data/OptionsData";
 import LocationUtil from "../util/LocationUtil";
-import Options from "../model/Options";
 import GATracker from "../analytics/GATracker";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import TransportPinIcon from "./TransportPinIcon";
@@ -24,7 +23,6 @@ import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
 import {default as ServiceStopPopup} from "./ServiceStopPopup";
 import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
-import RegionsData from "../data/RegionsData";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import TransportUtil from "../trip/TransportUtil";
@@ -41,7 +39,6 @@ import TKUIMapLocations from "./TKUIMapLocations";
 
 interface ITKUIMapViewProps {
     showLocations?: boolean;
-    viewport?: {center?: LatLng, zoom?: number};
     bounds?: BBox;
     padding?: {top?: number, right?: number, bottom?: number, left?: number}
     children: any;
@@ -58,6 +55,7 @@ interface IConnectionProps {
     service?: ServiceDeparture;
     onClick?: (latLng: LatLng) => void;
     onDragEnd?: (from: boolean, latLng: LatLng) => void;
+    viewport?: {center?: LatLng, zoom?: number};
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
     onStopChange: (stop?: StopLocation) => void;
 }
@@ -66,7 +64,6 @@ interface IProps extends ITKUIMapViewProps, IConnectionProps {}
 
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
-    viewport: {center?: LatLng, zoom?: number};
 }
 
 export interface IMapSegmentRenderer {
@@ -88,8 +85,6 @@ class LeafletMap extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             mapLayers: new Map<MapLocationType, Location[]>(),
-            viewport: this.props.viewport ? this.props.viewport :
-                {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
     }
@@ -157,15 +152,14 @@ class LeafletMap extends React.Component<IProps, IState> {
             return;
         }
         if (fitSet.length === 1) {
-            this.setViewport(Util.iAssign(this.state.viewport, {center: fitSet[0]}), true);
+            this.onViewportChange(Util.iAssign(this.props.viewport || {}, {center: fitSet[0]}));
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));
     }
 
-    private setViewport(viewport: {center?: LatLng, zoom?: number}, fireEvents: boolean = false) {
-        this.setState({viewport: viewport});
-        if (fireEvents && this.props.onViewportChange) {
+    private onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
+        if (this.props.onViewportChange) {
             this.props.onViewportChange(viewport);
         }
     }
@@ -212,20 +206,19 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (this.props.trip) {
             tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
         }
-        const region = RegionsData.instance.getRegion(this.state.viewport!.center!);
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
         return (
             <div className={"gl-flex gl-grow"}>
                 <RLMap
                     className="map-canvas avoidVerticalScroll gl-flex gl-grow"
-                    viewport={this.state.viewport}
+                    viewport={this.props.viewport}
                     boundsOptions={{padding: [20, 20]}}
                     maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
                     onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
-                        this.setViewport({
+                        this.onViewportChange({
                             center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
                             zoom: viewport.zoom
-                        }, true);
+                        });
                     }}
                     onclick={(event: L.LeafletMouseEvent) => {
                         if (this.props.onClick) {
@@ -283,9 +276,8 @@ class LeafletMap extends React.Component<IProps, IState> {
                                 }
                             }}
                     />}
-                    {region && this.leafletElement &&
+                    {this.leafletElement &&
                         <TKUIMapLocations
-                            region={region.name}
                             bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
                             enabledMapLayers={enabledMapLayers}
                             zoom={this.leafletElement.getZoom()}
@@ -336,9 +328,6 @@ class LeafletMap extends React.Component<IProps, IState> {
         if (this.checkFitLocation(prevProps.from, this.props.from) || this.checkFitLocation(prevProps.to, this.props.to)) {
             // TODO: avoid switching from undefined to null, use one or the other.
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
-        }
-        if (this.props.viewport && (prevProps.viewport !== this.props.viewport)) {
-            this.setViewport(this.props.viewport, true);
         }
         // TODO: check that this is used to fit the map when comming from query input widget.
         // TODO: check is the change done to fit favourites will cause other undesired fits.
@@ -428,6 +417,7 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                     },
                                     service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
                                         serviceContext.selectedService : undefined,
+                                    viewport: routingContext.viewport,
                                     onViewportChange: routingContext.onViewportChange,
                                     onStopChange: serviceContext.onStopChange
                                 };

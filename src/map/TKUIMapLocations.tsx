@@ -15,9 +15,9 @@ import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
 import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";
+import RegionsData from "../data/RegionsData";
 
 interface IProps {
-    region: string,
     zoom: number,
     bounds: BBox,
     prefetchFactor?: number,
@@ -52,6 +52,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
             offset={[0, 0]}
             closeButton={false}
             className="LeafletMap-mapLocPopup"
+            // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
+            autoPan={false}
         >
             <MapLocationPopup value={loc} onAction={actionHandler}/>
         </Popup>;
@@ -119,21 +121,21 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
 
 
     public render(): React.ReactNode {
-        const region = this.props.region;
+        const region = RegionsData.instance.getRegion(this.props.bounds.getCenter());
         let locMarkers: React.ReactNode[] = [];
         const enabledMapLayers = this.props.enabledMapLayers;
         if (region && enabledMapLayers.length > 0) {
             const bounds = MapUtil.expand(this.props.bounds, .5);
             const zoom = this.props.zoom;
             if (zoom >= this.ZOOM_PARENT_LOCATIONS) {
-                const level1Result = LocationsData.instance.getRequestLocations(region, 1);
+                const level1Result = LocationsData.instance.getRequestLocations(region.name, 1);
                 for (const locType of enabledMapLayers) {
                     locMarkers.push(...level1Result.getByType(locType)
                         .map((loc: Location) => this.getLocMarker(locType, loc)));
                 }
             }
             if (zoom >= this.ZOOM_ALL_LOCATIONS) {
-                const level2Result = LocationsData.instance.getRequestLocations(region, 2, bounds);
+                const level2Result = LocationsData.instance.getRequestLocations(region.name, 2, bounds);
                 for (const locType of enabledMapLayers) {
                     locMarkers.push(...level2Result.getByType(locType)
                         .map((loc: Location) => this.getLocMarker(locType, loc)));
@@ -144,8 +146,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     }
 
     public shouldComponentUpdate(nextProps: IProps): boolean {
-        return (nextProps.region !== this.props.region || nextProps.zoom !== this.props.zoom
-            || JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
+        return nextProps.zoom !== this.props.zoom
+            || (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
             !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree)));
     }
 
