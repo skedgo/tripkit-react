@@ -38,7 +38,7 @@ import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
 
 interface ITKUIMapViewProps {
-    showLocations?: boolean;
+    hideLocations?: boolean;
     bounds?: BBox;
     padding?: {top?: number, right?: number, bottom?: number, left?: number}
     children: any;
@@ -276,7 +276,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                                 }
                             }}
                     />}
-                    {this.leafletElement &&
+                    {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
                             bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
                             enabledMapLayers={enabledMapLayers}
