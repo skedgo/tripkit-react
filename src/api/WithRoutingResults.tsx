@@ -56,7 +56,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.state = {
                 query: RoutingQuery.create(),
                 sort: TripSort.OVERALL,
-                waiting: false
+                waiting: false,
+                viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
             };
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onChange = this.onChange.bind(this);
@@ -255,6 +256,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                 }}
                 region={this.state.region}
+                viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}
                 trips={this.state.trips}
                 waiting={this.state.waiting}

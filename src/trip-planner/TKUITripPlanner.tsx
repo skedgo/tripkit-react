@@ -41,7 +41,6 @@ interface IState {
     mapView: boolean;
     showOptions: boolean;
     showTripDetail?: boolean;
-    viewport: {center?: LatLng, zoom?: number};
 }
 
 export interface IProps extends ITKUITripPlannerProps, IConsumedProps {
@@ -89,9 +88,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.state = {
             mapView: false,
             showOptions: false,
-            showTripDetail: false,
-            viewport: {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
+            showTripDetail: false
         };
+        const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
+        this.props.onViewportChange(initViewport);
         if (!userIpLocation) {
             GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
                 RegionsData.instance.getCloserRegionP(userLocation).then((region: Region) => {
@@ -198,7 +198,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 </div>
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                     <TKUIMapView
-                        viewport={this.state.viewport}
                         showLocations={true}
                         refAdHoc={(ref: any) => {
                             return this.mapRef = ref;
