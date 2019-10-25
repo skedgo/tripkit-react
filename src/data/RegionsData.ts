@@ -6,6 +6,7 @@ import RegionResults from "../model/region/RegionResults";
 import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import LocationUtil from "../util/LocationUtil";
+import City from "../model/location/City";
 
 export class RegionsData {
 
@@ -49,6 +50,15 @@ export class RegionsData {
 
     public hasRegions(): boolean {
         return this.regions !== undefined;
+    }
+
+    public getCities(): City[] | undefined {
+        if (!this.regionList) {
+            return undefined
+        }
+        return this.regionList.reduce((accum: City[], region: Region) => {
+            return accum.concat(region.cities);
+        }, [])
     }
 
     public getRegion(latLng: LatLng): Region | undefined {
@@ -105,8 +115,6 @@ export class RegionsData {
                 < LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter())) {
                 closerRegion = region;
             }
-            // console.log(JSON.stringify(latLng) + " to " + region.name + " " + JSON.stringify(region.bounds.getCenter()) + " " + ": " + LocationUtil.distanceInMetres(latLng, region.bounds.getCenter()));
-            // console.log(JSON.stringify(latLng) + " to " + closerRegion.name + " " + JSON.stringify(closerRegion.bounds.getCenter()) + " " + ": " + LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter()));
             if (region.contains(latLng)) {
                 this.cachedRegion = region;
                 return region;

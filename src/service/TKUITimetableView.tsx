@@ -168,7 +168,6 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             const nextDepartureIndex = this.props.departures.findIndex((departure: ServiceDeparture) => {
                 return departure.actualStartTime >= now;
             });
-            console.log("nextDepartureIndex: " + nextDepartureIndex);
             if (nextDepartureIndex !== -1 && this.scrollRef) {
                 Array.prototype.slice.call(this.scrollRef.children).filter((child: any) =>
                     !child.className.includes("DaySeparator")

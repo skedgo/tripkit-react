@@ -30,7 +30,10 @@ class LocationsData {
         this.eventEmitter.emit('change', locData);
     }
 
-    public requestLocations(region: string, level: 1 | 2, bounds?: BBox) {
+    /*
+     * Return locations for cells found in cache, and requests locations for the other cells.
+     */
+    public getRequestLocations(region: string, level: 1 | 2, bounds?: BBox): LocationsResult {
         const cachedResults = new LocationsResult(level);
         const cellIDs = level === 1 ? [region] : MapUtil.cellsForBounds(bounds!, LocationsData.cellsPerDegree);
         const requestCells = [];
@@ -44,32 +47,28 @@ class LocationsData {
                 this.cellToLocResult.set(cellID, new LocationsResult(level));
             }
         }
-        if (!cachedResults.isEmpty()) {
-            this.fireChangeEvent(cachedResults);
-        }
-        if (requestCells.length === 0) {
-            return;
-        }
-        const locationsReq = {
-          region: region,
-          level: level,
-          cellIDs: level === 2 ? requestCells : undefined,
-          cellsPerDegree: level === 2 ? 75 : undefined,
-          // modes: ["pt_pub", "cy_bic", "cy_bic-s_ACT", "cy_bic-s", "me_car"]
-          modes: ["cy_bic", "cy_bic-s_ACT", "cy_bic-s", "me_car"]
-        };
+        if (requestCells.length !== 0) {
+            const locationsReq = {
+                region: region,
+                level: level,
+                cellIDs: level === 2 ? requestCells : undefined,
+                cellsPerDegree: level === 2 ? 75 : undefined,
+                modes: ["cy_bic", "cy_bic-s_ACT", "cy_bic-s", "me_car", "pt_pub"]
+            };
 
-        TripGoApi.apiCall("locations.json", NetworkUtil.MethodType.POST, locationsReq)
-            .then((groupsJson: any) => {
-                const jsonConvert = new JsonConvert();
-                const groups: LocationsResult[] = groupsJson.groups.map((group: any) => jsonConvert.deserialize(group, LocationsResult));
-                const result = new LocationsResult(level);
-                for (const group of groups) {
-                    this.cellToLocResult.set(group.key, group);
-                    result.add(group);
-                }
-                this.fireChangeEvent(result);
-            });
+            TripGoApi.apiCall("locations.json", NetworkUtil.MethodType.POST, locationsReq)
+                .then((groupsJson: any) => {
+                    const jsonConvert = new JsonConvert();
+                    const groups: LocationsResult[] = groupsJson.groups.map((group: any) => jsonConvert.deserialize(group, LocationsResult));
+                    const result = new LocationsResult(level);
+                    for (const group of groups) {
+                        this.cellToLocResult.set(group.key, group);
+                        result.add(group);
+                    }
+                    this.fireChangeEvent(result);
+                });
+        }
+        return cachedResults;
     }
 }
 

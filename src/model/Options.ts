@@ -54,8 +54,9 @@ class Options {
         this._wheelchair = value;
     }
 
+    // TODO: Harcoded STOP layer as enabled.
     get mapLayers(): MapLocationType[] {
-        return this._mapLayers;
+        return this._mapLayers.concat([MapLocationType.STOP].filter((locType: MapLocationType) => !this._mapLayers.includes(locType)));
     }
 
     set mapLayers(value: MapLocationType[]) {

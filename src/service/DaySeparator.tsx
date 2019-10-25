@@ -55,19 +55,29 @@ class DaySeparator extends React.Component<IProps, IState> {
         );
     }
 
+    private scrollHandler?: () => void;
+
     public componentDidMount() {
         if (!DeviceUtil.isIOS && !this.hasScrollHandler && this.props.scrollRef) {
-            this.props.scrollRef.addEventListener("scroll", () => {
+            this.scrollHandler = () => {
                 const newScrollTop = Math.floor(this.props.scrollRef.scrollTop);
                 const showOnTop = this.ref !== undefined && newScrollTop >= this.ref.offsetTop;
                 if (this.state.showOnTop !== showOnTop) {
                     this.setState(() => {
                         return {
                             showOnTop: showOnTop,
-                        }})
+                        }
+                    })
                 }
-            });
+            };
+            this.props.scrollRef.addEventListener("scroll", this.scrollHandler);
             this.hasScrollHandler = true;
+        }
+    }
+
+    public componentWillUnmount() {
+        if (this.props.scrollRef && this.scrollHandler) {
+            this.props.scrollRef.removeEventListener("scroll", this.scrollHandler);
         }
     }
 

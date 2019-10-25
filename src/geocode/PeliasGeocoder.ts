@@ -8,6 +8,7 @@ import Util from "../util/Util";
 import GeolocationData from "./GeolocationData";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
+import {Env} from "../env/Environment";
 
 class PeliasGeocoder implements IGeocoder {
 
@@ -64,7 +65,7 @@ class PeliasGeocoder implements IGeocoder {
             }
             callback(locationResults.slice(0, this.options.resultsLimit));
         }).catch(reason => {
-            console.log(url + " failed. Reason: " + reason);
+            Util.log(url + " failed. Reason: " + reason, Env.PRODUCTION);
             callback([]);
         });
     }

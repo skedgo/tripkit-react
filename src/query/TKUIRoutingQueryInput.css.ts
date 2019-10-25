@@ -9,8 +9,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<ITKUIRoutingQueryInpu
         main: {
             backgroundColor: 'white',
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
-            ...genStyles.borderRadius(12, "px"),
-            overflow: 'hidden'
+            ...genStyles.borderRadius(12, "px")
         },
         header: {
             padding: '12px 16px',
@@ -79,6 +78,8 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<ITKUIRoutingQueryInpu
         },
         footer: {
             backgroundColor: '#e6eff2',
+            borderBottomLeftRadius: '12px',
+            borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,
             padding: '0 15px',
             '& input': {

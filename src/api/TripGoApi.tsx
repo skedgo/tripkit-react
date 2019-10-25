@@ -4,7 +4,8 @@ import NetworkUtil from "../util/NetworkUtil";
 import {JsonConvert} from "json2typescript";
 import Trip from "../model/trip/Trip";
 import StopLocation from "../model/StopLocation";
-import Environment from "../env/Environment";
+import Environment, {Env} from "../env/Environment";
+import Util from "../util/Util";
 
 class TripGoApi {
 
@@ -74,7 +75,7 @@ class TripGoApi {
                 if (reason.message.includes("Unexpected end of JSON input")) {
                     return undefined;
                 }
-                console.log(reason);
+                Util.log(reason, Env.PRODUCTION);
                 throw reason;
             })
     }

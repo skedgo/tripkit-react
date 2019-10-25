@@ -1,4 +1,5 @@
 import Util from "./Util";
+import {Env} from "../env/Environment";
 
 enum MethodType {
     GET = "GET",
@@ -114,9 +115,7 @@ class NetworkUtil {
     private static fetchCache: Map<string, any>;
     private static getCache(): Map<string, any> {
         if (!NetworkUtil.fetchCache) {
-            console.log("get cache");
             NetworkUtil.fetchCache = NetworkUtil.loadCacheFromLS();
-            console.log("got it!");
         }
         return NetworkUtil.fetchCache;
     }
@@ -139,7 +138,7 @@ class NetworkUtil {
                     if (reason.message.includes("Unexpected end of JSON input")) {
                         return undefined;
                     }
-                    console.log(reason);
+                    Util.log(reason, Env.PRODUCTION);
                     throw reason;
                 });
             return fetchPromise;

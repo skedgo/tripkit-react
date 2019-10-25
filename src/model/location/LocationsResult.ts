@@ -4,6 +4,7 @@ import FacilityLocation from "./FacilityLocation";
 import CarParkLocation from "./CarParkLocation";
 import {MapLocationType} from "./MapLocationType";
 import Location from "../Location";
+import StopLocation from "../StopLocation";
 
 class LocationsResult {
 
@@ -25,6 +26,9 @@ class LocationsResult {
 
     @JsonProperty("carParks", [CarParkLocation], true)
     private _carParks: CarParkLocation[] | undefined = undefined;
+
+    @JsonProperty("stops", [StopLocation], true)
+    private _stops: StopLocation[] | undefined = undefined;
 
     private _level: 1 | 2;
 
@@ -68,6 +72,14 @@ class LocationsResult {
         this._carParks = value;
     }
 
+    get stops(): StopLocation[] | undefined {
+        return this._stops;
+    }
+
+    set stops(value: StopLocation[] | undefined) {
+        this._stops = value;
+    }
+
     get level(): 1 | 2 {
         return this._level;
     }
@@ -95,6 +107,12 @@ class LocationsResult {
             }
             this.carParks = this.carParks.concat(other.carParks);
         }
+        if (other.stops) {
+            if (!this.stops) {
+                this.stops = [];
+            }
+            this.stops = this.stops.concat(other.stops);
+        }
     }
 
     public isEmpty(): boolean {
@@ -113,6 +131,8 @@ class LocationsResult {
                     facility.facilityType.toLowerCase() === "myway-retail-agent") : [];
             case MapLocationType.CAR_PARK:
                 return this.carParks ? this.carParks : [];
+            case MapLocationType.STOP:
+                return this.stops ? this.stops : [];
             default: // TODO Complete with other location types.
                 return [];
         }

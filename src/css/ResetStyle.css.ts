@@ -26,7 +26,8 @@ export const resetStyles: ITKUIResetStyle = {
         MozAppearance: 'initial',
         appearance: 'initial',
         cursor: 'pointer',
-        border: 'none'
+        border: 'none',
+        padding: 'initial'
     },
     select: {
         WebkitAppearance: 'none',

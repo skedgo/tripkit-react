@@ -1,4 +1,5 @@
 import {JsonConvert} from "json2typescript";
+import Environment, {Env} from "../env/Environment";
 
 class Util {
 
@@ -73,6 +74,14 @@ class Util {
 
     public static serialize<T>(value: T): any {
         return this.jsonConvert().serialize(value);
+    }
+
+    public static log(obj: any, level: Environment = Env.DEVELOPMENT) {
+        if (Environment.isDev()
+            || Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION)
+            || Environment.isProd() && level === Env.PRODUCTION) {
+            console.log(obj);
+        }
     }
 
 }

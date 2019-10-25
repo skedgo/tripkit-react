@@ -1,6 +1,6 @@
 import Constants from "../util/Constants";
 
-enum Env {
+export enum Env {
     PRODUCTION = "PRODUCTION",
     BETA = "BETA",
     DEVELOPMENT = "DEVELOPMENT"
