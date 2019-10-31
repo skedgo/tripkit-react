@@ -64,6 +64,7 @@
   font-size: 13px;
   flex-grow: 1;
   -webkit-flex-grow: 1;
+  margin: 0; /* Safari puts a margin of 2 */
 }
 
 /* To avoid zoom in on focus on Safari for iOS */

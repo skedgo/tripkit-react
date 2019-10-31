@@ -16,6 +16,7 @@ import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
 import {ReactComponent as IconShare} from "../images/ic-share.svg";
+import {Visibility} from "../model/trip/SegmentTemplate";
 
 export interface ITKUITripOverviewViewProps extends TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
     value: Trip;
@@ -54,7 +55,8 @@ export class TKUITripOverviewViewConfig implements TKUIWithStyle<ITKUITripOvervi
 class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const segments = this.props.value.segments;
+        const segments = this.props.value.getSegments(Visibility.IN_DETAILS)
+            .filter((segment: Segment) => !segment.isStationay());
         const renderSegmentDetail = TKUITripOverviewViewConfig.instance.renderSegmentDetail;
         const trip = this.props.value;
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);

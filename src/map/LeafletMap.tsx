@@ -204,7 +204,7 @@ class LeafletMap extends React.Component<IProps, IState> {
             };
         let tripSegments;
         if (this.props.trip) {
-            tripSegments = this.props.trip.segments.concat([this.props.trip.arrivalSegment]);
+            tripSegments = this.props.trip.getSegments(Visibility.ON_MAP).concat([this.props.trip.arrivalSegment]);
         }
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
         return (

@@ -2,7 +2,7 @@ import LocationsResult from "../model/location/LocationsResult";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import {JsonConvert} from "json2typescript";
-import {EventEmitter} from "fbemitter";
+import {EventEmitter, EventSubscription} from "fbemitter";
 import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
 
@@ -22,8 +22,8 @@ class LocationsData {
 
     private eventEmitter: EventEmitter = new EventEmitter();
 
-    public addChangeListener(callback: (locData: LocationsResult) => void) {
-        this.eventEmitter.addListener('change', callback);
+    public addChangeListener(callback: (locData: LocationsResult) => void): EventSubscription {
+        return this.eventEmitter.addListener('change', callback);
     }
 
     private fireChangeEvent(locData: LocationsResult) {

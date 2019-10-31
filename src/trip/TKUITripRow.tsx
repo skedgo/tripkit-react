@@ -1,7 +1,5 @@
 import * as React from "react";
-import "./TripRowDelete.css";
 import TripGroup from "../model/trip/TripGroup";
-import TripAltBtn from "./TripAltBtn";
 import TripRowTrack from "./TripRowTrack";
 import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
 import TKUITripTime from "./TKUITripTime";
@@ -13,6 +11,7 @@ import {tTKUITripRowDefaultStyle} from "./TKUITripRow.css";
 import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
+import classNames from "classnames";
 
 export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, ITKUITripRowProps> {
     value: Trip;
@@ -20,12 +19,15 @@ export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, ITKU
     brief?: boolean;
     onClick?: () => void;
     onFocus?: () => void;
-    onKeyDown?: (e: any) => void;
+    onAlternativeClick?: (group: TripGroup, alt: Trip) => void;
     onDetailClick?: () => void;
+    onKeyDown?: (e: any) => void;
     eventBus?: EventEmitter;
-    onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
     reference?: (ref: any) => void;
     badge?: Badges;
+    visibleAlternatives?: number;
+    expanded?: boolean;
+    onExpand?: (expand: boolean) => void;
 }
 
 export const TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
@@ -37,6 +39,8 @@ export interface ITKUITripRowStyle {
     trackAndAction: CSSProps<ITKUITripRowProps>;
     track: CSSProps<ITKUITripRowProps>;
     footer: CSSProps<ITKUITripRowProps>;
+    alternative: CSSProps<ITKUITripRowProps>;
+    selectedAlternative: CSSProps<ITKUITripRowProps>;
 }
 
 interface IProps extends ITKUITripRowProps {
@@ -91,9 +95,17 @@ class TKUITripRow extends React.Component<IProps, {}> {
         if (carbon) {
             info += (info ? " · " : "") + carbon;
         }
+        const alternatives = (trip as TripGroup).trips;
+        let nOfAlts = this.props.expanded ? alternatives.length :
+            Math.min(alternatives.length, this.props.visibleAlternatives ? this.props.visibleAlternatives : 2);
+        const visibleAlternatives = alternatives.slice(0, nOfAlts);
+        const selectedAlt = (trip as TripGroup).getSelectedTrip();
+        if (!visibleAlternatives.includes(selectedAlt)) {
+            visibleAlternatives.push(selectedAlt)
+        }
         const classes = this.props.classes;
         return (
-            <div className={classes.main + " TKUITripRow" + (this.props.className ? " " + this.props.className : "")}
+            <div className={classNames(classes.main, this.props.className)}
                  onClick={this.props.onClick}
                  tabIndex={0}
                  onFocus={this.props.onFocus}
@@ -109,33 +121,40 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     {this.props.badge}
                 </div>
                 }
-                <div className="TripRow-body">
-                    <TKUITripTime value={trip} brief={this.props.brief}/>
-                    <div className={classes.trackAndAction}>
-                        <TripRowTrack value={trip}
-                                      renderTransport={(props: TrackTransportProps) => <TrackTransport {...props}/>}
-                                      className={classes.track}
-                        />
-                        <TKUIButton
-                            type={TKUIButtonType.PRIMARY_LINK}
-                            text={"Detail"}
-                            onClick={this.props.onDetailClick}
-                        />
+                {visibleAlternatives.map((altTrip: Trip) =>
+                    <div className={classNames(classes.alternative,
+                        nOfAlts > 1 && altTrip === selectedAlt && classes.selectedAlternative)}
+                         onClick={() => this.props.onAlternativeClick &&
+                         this.props.onAlternativeClick(trip as TripGroup, altTrip)}
+                    >
+                        <TKUITripTime value={altTrip} brief={this.props.brief}/>
+                        <div className={classes.trackAndAction}>
+                            <TripRowTrack value={altTrip}
+                                          renderTransport={(props: TrackTransportProps) => <TrackTransport {...props}/>}
+                                          className={classes.track}
+                            />
+                            <TKUIButton
+                                type={TKUIButtonType.PRIMARY_LINK}
+                                text={"Detail"}
+                                onClick={this.props.onDetailClick}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
                 <div className={classes.footer}>
                     <div className={classes.info}>
                         {info}
                     </div>
-                    <TripAltBtn
-                        value={trip as TripGroup}
-                        onChange={(value: TripGroup) => {
-                            if (this.props.onAlternativeChange) {
-                                this.props.onAlternativeChange(this.props.value as TripGroup, value.getSelectedTrip());
-                            }
-                        }}
-                        renderTrip={<P extends ITKUITripRowProps>(props: P) => <Connected {...props}/>}
-                    />
+                    {alternatives.length > 1 &&
+                        <TKUIButton
+                            text={this.props.expanded ? "Less routes" : "More routes"}
+                            type={TKUIButtonType.PRIMARY_LINK}
+                            onClick={(e: any) => {
+                                this.props.onExpand && this.props.onExpand(!this.props.expanded);
+                                e.stopPropagation();
+                            }}
+                        />
+                    }
                 </div>
             </div>
         )

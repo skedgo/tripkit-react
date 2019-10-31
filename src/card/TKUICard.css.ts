@@ -16,7 +16,9 @@ export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =
             width: '450px',
             alignItems: 'unset!important',
             background: 'none!important',
-            overflow: 'hidden'
+            // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
+            // so need to explicitly set overflowY to hidden to override overflowY value.
+            overflowY: 'hidden!important'
         },
 
         modal: {

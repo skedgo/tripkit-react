@@ -33,6 +33,24 @@ export const tKUITimetableDefaultStyle: ITKUITimetableViewStyle = {
             ...genStyles.noShrink
         }
     },
+    subHeader: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    serviceList: {
+        marginTop: '8px',
+        minHeight: '20px',
+        overflowX: 'hidden',
+        ...genStyles.flex,
+        ...genStyles.alignCenter
+    },
+    serviceNumber: {
+        color: 'white',
+        borderRadius: '4px',
+        padding: '2px 4px',
+        marginLeft: '4px',
+        ...genStyles.fontSM
+    },
     buttonsPanel: {
         marginTop: '16px',
         '&>*': {

@@ -157,15 +157,12 @@ class Segment extends SegmentTemplate {
     }
 
     public isFirst(visibility?: Visibility): boolean {
-        return visibility ?
-            this === this.trip.segments.find((segment: Segment) => segment.visibilityType === visibility) :
-            this === this.trip.segments[0];
+        return this === this.trip.getSegments(visibility)[0];
     }
 
     public isLast(visibility?: Visibility): boolean {
-        return visibility ?
-            this === this.trip.segments.slice().reverse().find((segment: Segment) => segment.visibilityType === visibility) :
-            this === this.trip.segments[this.trip.segments.length - 1];
+        const segments = this.trip.getSegments(visibility);
+        return this === segments[segments.length - 1];
     }
 
     public prevSegment(): Segment | undefined {
@@ -219,9 +216,8 @@ class Segment extends SegmentTemplate {
             const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);
             result = result.replace("<DURATION>", " about " + duration)
         }
-        if (result.includes("<TIME>")) {
-            const time = DateTimeUtil.momentTZTime(this.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
-            result = result.replace("<TIME>", time)
+        if (result.includes("<TIME>: ")) {  // Remove time from action since now it's displayed elsewhere
+            result = result.replace("<TIME>: ", "")
         }
         return result;
     }

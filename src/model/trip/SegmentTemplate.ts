@@ -7,10 +7,10 @@ import StopLocation from "../StopLocation";
 import MapUtil from "../../util/MapUtil";
 
 export enum Visibility {
+    HIDDEN,
     IN_DETAILS,
     ON_MAP,
     IN_SUMMARY,
-    HIDDEN,
     UNKNOWN
 }
 
@@ -159,6 +159,10 @@ class SegmentTemplate {
             this._visibilityType = SegmentTemplate.fromVisibilityS(this.visibility);
         }
         return this._visibilityType;
+    }
+
+    public hasVisibility(visibility: Visibility): boolean {
+        return (visibility <= this.visibilityType);
     }
 
     get type(): string {

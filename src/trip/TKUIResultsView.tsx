@@ -58,6 +58,7 @@ class TKUIResultsViewConfig {
 
 interface IState {
     tripToBadge: Map<Trip, Badges>;
+    expanded?: Trip;
 }
 
 class TKUIResultsView extends React.Component<IProps, IState> {
@@ -143,27 +144,24 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         TKUIResultsViewConfig.instance.renderTrip({
                             value: trip,
                             className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
-                            onClick: this.props.onChange ?
-                                () => {
-                                    // Trigger details clicked when trip is clicked and it is already selected.
-                                    if (this.props.onDetailsClicked && this.props.value === trip && !this.justFocused) {
-                                        this.props.onDetailsClicked();
-                                    }
-                                    return this.props.onChange!(trip);
-                                } :
-                                undefined,
-                            onFocus: this.props.onChange ?
-                                () => {
-                                    this.justFocused = true;
-                                    this.props.onChange!(trip);
-                                    setTimeout(() => this.justFocused = false, 100)
-                                } : undefined,
-                            onKeyDown: this.onKeyDown,
+                            onClick: () => {
+                                this.props.onChange && this.props.onChange(trip);
+                            },
+                            onFocus: () => {
+                                this.props.onChange && this.props.onChange(trip);
+                            },
+                            onAlternativeClick: this.props.onAlternativeChange,
                             onDetailClick: this.props.onDetailsClicked,
-                            onAlternativeChange: this.props.onAlternativeChange,
+                            onKeyDown: this.onKeyDown,
                             key: index + trip.getKey(),
                             reference: (el: any) => this.rowRefs[index] = el,
-                            badge: this.state.tripToBadge.get(trip)
+                            badge: this.state.tripToBadge.get(trip),
+                            expanded: trip === this.state.expanded,
+                            onExpand: (expand: boolean) => {
+                                this.setState({
+                                    expanded: expand ? trip : undefined
+                                })
+                            }
                         })
                     )}
                     {this.props.waiting ?
