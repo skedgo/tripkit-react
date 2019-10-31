@@ -5,7 +5,7 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<ITKUITripPlannerStyle, IPro
     queryPanel: {
         position: 'absolute',
         width: '450px',
-        zIndex: '1000',
+        zIndex: '1001', // 1 above card modal container
         top: '10px',
         left: '10px'
     }

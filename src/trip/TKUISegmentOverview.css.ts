@@ -22,14 +22,22 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
             marginLeft: '15px',
             ...genStyles.fontM,
             ...genStyles.flex,
-            ...genStyles.alignCenter,
+            ...genStyles.column,
+            ...genStyles.center,
             ...genStyles.grow
+        },
+        subtitle: {
+            ...genStyles.fontS,
+            color: tKUIColors.black1,
+            fontWeight: 'normal'
         },
         time: {
             color: tKUIColors.black1,
             margin: '0 16px',
             ...genStyles.fontS,
-            ...genStyles.flex
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.center
         },
         track: {
             width: '56px',
@@ -44,7 +52,10 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
         },
         preLine: {
             borderLeft: (props: ITKUISegmentOverviewProps) => {
-                const prevSegment = props.value.prevSegment();
+                let prevSegment = props.value.prevSegment();
+                if (prevSegment && prevSegment.isStationay()) { // Skip stationary segment.
+                    prevSegment = prevSegment.prevSegment();
+                }
                 return prevSegment ? '4px solid ' + TransportUtil.getTransportColor(prevSegment.modeInfo!) : 'none';
             },
             ...genStyles.grow

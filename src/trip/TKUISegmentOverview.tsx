@@ -21,6 +21,7 @@ export interface ITKUISegmentOverviewStyle {
     main: CSSProps<ITKUISegmentOverviewProps>;
     header: CSSProps<ITKUISegmentOverviewProps>;
     title: CSSProps<ITKUISegmentOverviewProps>;
+    subtitle: CSSProps<ITKUISegmentOverviewProps>;
     time: CSSProps<ITKUISegmentOverviewProps>;
     track: CSSProps<ITKUISegmentOverviewProps>;
     body: CSSProps<ITKUISegmentOverviewProps>;
@@ -49,6 +50,10 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.value;
+        const prevSegment = segment.prevSegment();
+        const prevWaitingSegment = prevSegment && prevSegment.isStationay() ? prevSegment : undefined;
+        const prevWaitingSegmentTime = prevWaitingSegment ?
+            DateTimeUtil.momentTZTime(prevWaitingSegment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : undefined;
         const startTime = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
         const transportColor = TransportUtil.getTransportColor(modeInfo);
@@ -76,8 +81,13 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             <IconPinStart className={classes.iconPin}/> : <div className={classes.circle}/>}
                         <div className={classes.posLine}/>
                     </div>
-                    <div className={classes.title}>{fromAddress}</div>
+                    <div className={classes.title}>
+                        {fromAddress}
+                        {prevWaitingSegment &&
+                        <span className={classes.subtitle}>{prevWaitingSegment.getAction()}</span>}
+                    </div>
                     <div className={classes.time}>
+                        <span>{prevWaitingSegmentTime}</span>
                         {startTime}
                     </div>
                 </div>

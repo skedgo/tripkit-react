@@ -16,6 +16,7 @@ import LocationsResult from "../model/location/LocationsResult";
 import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";
 import RegionsData from "../data/RegionsData";
+import {EventSubscription} from "fbemitter";
 
 interface IProps {
     zoom: number,
@@ -31,13 +32,16 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         prefetchFactor: 1.5
     };
 
-    private readonly ZOOM_ALL_LOCATIONS = 15;
+    private readonly ZOOM_ALL_LOCATIONS = 16;
     private readonly ZOOM_PARENT_LOCATIONS = 11;
+
+    private locListenerSubscription: EventSubscription;
+    private optionsListenerSubscription: EventSubscription;
 
     constructor(props: Readonly<IProps>) {
         super(props);
-        LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
-        OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
+        this.locListenerSubscription = LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
+        this.optionsListenerSubscription = OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
             // TODO: receive Options through prop so don't need to force update.
             if (update.mapLayers !== prev.mapLayers) {
                 this.forceUpdate()
@@ -149,6 +153,15 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         return nextProps.zoom !== this.props.zoom
             || (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
             !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree)));
+    }
+
+    public componentWillUnmount() {
+        if (this.locListenerSubscription) {
+            this.locListenerSubscription.remove();
+        }
+        if (this.optionsListenerSubscription) {
+            this.optionsListenerSubscription.remove();
+        }
     }
 
 }

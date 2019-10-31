@@ -4,6 +4,7 @@ import Tooltip from "rc-tooltip";
 import TripAlternativesView from "./TripAlternativesView";
 import {ITKUITripRowProps} from "./TKUITripRow";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import "./TripAltBtn.css";
 
 interface IProps {
     value: TripGroup;

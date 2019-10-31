@@ -36,6 +36,9 @@ export interface ITKUITimetableViewStyle {
     main: CSSProps<IProps>;
     listPanel: CSSProps<IProps>;
     containerPanel: CSSProps<IProps>;
+    subHeader: CSSProps<IProps>;
+    serviceList: CSSProps<IProps>;
+    serviceNumber: CSSProps<IProps>;
     buttonsPanel: CSSProps<IProps>;
     secondaryBar: CSSProps<IProps>;
     filterPanel: CSSProps<IProps>;
@@ -84,22 +87,40 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
+        const serviceListSamples = this.props.departures
+            .reduce((elems: ServiceDeparture[], departure: ServiceDeparture, i: number) => {
+                if (!elems.find((elem: ServiceDeparture) => departure.serviceNumber === elem.serviceNumber)) {
+                    elems.push(departure)
+                }
+                return elems;
+            }, []);
         const classes = this.props.classes;
         return (
             <TKUICard
                 title={this.props.title}
                 subtitle={subtitle}
                 renderSubHeader={() =>
-                    <div className={classNames(classes.buttonsPanel, genStyles.flex, genStyles.spaceBetween)}>
-                        <TKUIButton
-                            text={"Direction"}
-                            icon={<IconDirections/>}
-                        />
-                        <TKUIButton
-                            text={"Favorite"}
-                            icon={<IconFavorite/>}
-                            type={TKUIButtonType.SECONDARY}
-                        />
+                    <div className={classes.subHeader}>
+                        <div className={classes.serviceList}>
+                            {serviceListSamples.map((service: ServiceDeparture) => {
+                                return service.serviceNumber &&
+                                    <div className={classes.serviceNumber}
+                                         style={{backgroundColor: service.serviceColor ? service.serviceColor.toHex() : 'lightgray'}}>
+                                        {service.serviceNumber}
+                                    </div>
+                            })}
+                        </div>
+                        <div className={classNames(classes.buttonsPanel, genStyles.flex, genStyles.spaceBetween)}>
+                            <TKUIButton
+                                text={"Direction"}
+                                icon={<IconDirections/>}
+                            />
+                            <TKUIButton
+                                text={"Favorite"}
+                                icon={<IconFavorite/>}
+                                type={TKUIButtonType.SECONDARY}
+                            />
+                        </div>
                     </div>
                 }
                 onRequestClose={this.props.onRequestClose}
@@ -142,10 +163,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                              scrollRef={this.scrollRef}
                                     />)
                                 }
-                                elems.push(<div className={classes.dapartureRow}>
+                                elems.push(<div className={classes.dapartureRow} key={i}>
                                     {TKUITimetableViewConfig.instance.renderDeparture({
                                         value: departure,
-                                        key: i,
                                         onClick: () => {
                                             if (this.props.onServiceSelection) {
                                                 this.props.onServiceSelection(departure)

@@ -1,6 +1,7 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import Segment from "./Segment";
 import Util from "../../util/Util";
+import {Visibility} from "./SegmentTemplate";
 
 @JsonObject
 class Trip {
@@ -107,6 +108,10 @@ class Trip {
 
     get segments(): Segment[] {
         return this._segments;
+    }
+
+    public getSegments(visibility?: Visibility): Segment[] {
+        return !visibility ? this._segments : this._segments.filter((segment: Segment) => segment.hasVisibility(visibility));
     }
 
     public hasPublicTransport(): boolean {
