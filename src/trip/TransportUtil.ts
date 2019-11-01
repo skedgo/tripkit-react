@@ -80,8 +80,14 @@ class TransportUtil {
         if (modeId.startsWith("pt_pub_lightRail") || modeId.startsWith("pt_pub_tram")) {
             return "lightRail";
         }
+        if (modeId.startsWith("pt_pub_ferry")) {
+            return "ferry";
+        }
         if (modeId.startsWith("pt_pub")) {
             return "publicTransport";
+        }
+        if (modeId.startsWith("ps_shu")) {
+            return "shuttle";
         }
         if (modeId.startsWith(ModeIdentifier.SCHOOLBUS_ID)) {
             return "school-bus";
@@ -98,11 +104,20 @@ class TransportUtil {
         if (modeId.startsWith("ps_tax")) {
             return "taxi";
         }
-        if (modeId.startsWith("ps_tnc_UBER")) {
+        if (modeId.startsWith("ps_tnc")) {
+            return "rideShare";
+        }
+        if (modeId.startsWith("me_car-r") || modeId.startsWith("me_car-s")) {
             return "car-share";
         }
-        if (modeId.startsWith("me_car-r")) {
-            return "car-share";
+        if (modeId.startsWith("me_car")) {
+            return "car";
+        }
+        if (modeId.startsWith("me_mot")) {
+            return "motorbike";
+        }
+        if (modeId.startsWith("in_air")) {
+            return "plane";
         }
         return "wait";
     }

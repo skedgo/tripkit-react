@@ -15,6 +15,7 @@ interface ITKUIGenStyle {
     alignSelfStretch: CSS.Properties;
     grow: CSS.Properties;
     noShrink: CSS.Properties;
+    wrap: CSS.Properties;
     animateSpin: CSS.Properties;
     svgFillCurrColor: CSSProps<{}>;
     svgPathFillCurrColor: CSSProps<{}>;
@@ -97,6 +98,11 @@ const genStyles: ITKUIGenStyle = {
     noShrink: {
         flexShrink: 0,
         WebkitFlexShrink: 0
+    },
+
+    wrap: {
+        flexWrap: 'wrap',
+        WebkitFlexWrap: 'wrap'
     },
 
     relative: {
