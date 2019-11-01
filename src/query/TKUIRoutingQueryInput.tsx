@@ -25,6 +25,9 @@ import {ClassNameMap} from "react-jss";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import classNames from "classnames";
+import Tooltip from "rc-tooltip";
+import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
+import "../trip/TripAltBtn.css";
 
 export interface ITKUIRoutingQueryInputProps extends TKUIWithStyle<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> {
     onShowOptions?: () => void;
@@ -276,11 +279,18 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         />
                     }
                     {this.props.onShowOptions &&
-                    <button className={classes.transportsBtn}
-                            onClick={this.props.onShowOptions}
+                    <Tooltip placement="right"
+                             overlay={<TKUITransportOptionsView/>}
+                             overlayClassName="app-style TripRow-altTooltip"
+                             mouseEnterDelay={.5}
+                             trigger={["click"]}
                     >
-                        Transport options
-                    </button>
+                        <button className={classes.transportsBtn}
+                                // onClick={this.props.onShowOptions}
+                        >
+                            Transport options
+                        </button>
+                    </Tooltip>
                     }
                 </div>
             </div>

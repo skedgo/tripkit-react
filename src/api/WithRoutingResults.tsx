@@ -6,7 +6,6 @@ import {IRoutingResultsContext as RResultsConsumerProps} from "../trip-planner/R
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import {Subtract} from "utility-types";
 import RegionsData from "../data/RegionsData";
-import OptionsView from "../options/OptionsView";
 import NetworkUtil from "../util/NetworkUtil";
 import Environment, {Env} from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
@@ -168,9 +167,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     if (trips !== null && this.state.trips !== null) {
                         trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
                     }
-                    if (tripPromises.length === 1 && trips.length > 0 && trips[0].isBicycleTrip()) {
-                        trips = (trips[0] as TripGroup).trips;
-                    }
                     this.setState(prevState => {
                         return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
                     });
@@ -331,11 +327,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
             const modes = region ? region.modes : [];
             const enabledModes = modes.filter((mode: string) =>
-                (options.isModeEnabled(mode)
-                    || (mode === "wa_wal" && options.wheelchair)) &&  // send wa_wal as mode when wheelchair is true.
-                !OptionsView.skipMode(mode) &&
-                !(mode === "pt_pub" && !options.isModeEnabled("pt_pub_bus")
-                    && !options.isModeEnabled("pt_pub_tram"))
+                (options.transportOptions.isModeEnabled(mode)
+                    || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();

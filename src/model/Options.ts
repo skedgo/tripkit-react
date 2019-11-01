@@ -3,6 +3,7 @@ import WeightingPreferences from "./WeightingPreferences";
 import {MapLocationType, MapLocationTypeConverter} from "./location/MapLocationType";
 import ModeIdentifier from "./region/ModeIdentifier";
 import Features from "../env/Features";
+import TKTransportOptions from "./options/TKTransportOptions";
 
 @JsonObject
 class Options {
@@ -18,6 +19,8 @@ class Options {
     private _weightingPrefs: WeightingPreferences = WeightingPreferences.create(1, 1, 2);
     @JsonProperty('modesDisabled', [String], true)
     private _modesDisabled: string[] = Options.defaultDisabled;
+    @JsonProperty('transportOptions', TKTransportOptions, true)
+    public transportOptions: TKTransportOptions = new TKTransportOptions();
     @JsonProperty('wheelchair', Boolean, true)
     private _wheelchair: boolean = false;
     @JsonProperty('mapLayers', MapLocationTypeConverter, true)

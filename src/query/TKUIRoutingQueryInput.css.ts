@@ -81,7 +81,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<ITKUIRoutingQueryInpu
             borderBottomLeftRadius: '12px',
             borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,
-            padding: '0 15px',
+            padding: '0 5px 0 15px',
             '& input': {
                 border: 'none',
                 background: 'initial',
@@ -114,7 +114,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<ITKUIRoutingQueryInpu
             position: 'relative'
         },
         transportsBtn: {
-            padding: '10px 0',
-            ...resetStyles.button
+            ...resetStyles.button,
+            padding: '10px'
         }
     });
