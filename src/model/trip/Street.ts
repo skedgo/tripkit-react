@@ -11,6 +11,8 @@ class Street {
      */
     @JsonProperty("safe", Boolean, true)
     private _safe: boolean | null = null;
+    @JsonProperty("dismount", Boolean, true)
+    public dismount: boolean = false;
     @JsonProperty("name", String, true)
     private _name: string | null = null;
     @JsonProperty("cyclingNetwork", String, true)
