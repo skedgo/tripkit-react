@@ -8,6 +8,7 @@ import {ClassNameMap} from "react-jss";
 import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
+import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
 
 export interface ITKUISegmentOverviewProps extends TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
     value: Segment;
@@ -71,6 +72,8 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             stops = stops.slice(1, stops.length - 1); // remove the first and last stop.
         }
         const iconOnDark = isIconOnDark(segment);
+        const wcSegmentInfo = segment.isBicycle() || segment.isWheelchair() ?
+            <TKUIWCSegmentInfo value={segment}/> : undefined;
         const classes = this.props.classes;
         return (
             <div className={classes.main} tabIndex={0}>
@@ -105,6 +108,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             <div className={classes.action}>
                                 {segment.getAction()}
                             </div>
+                            {wcSegmentInfo}
                             <div className={classes.notes}>
                                 {segment.getNotes().map((note: string, i: number) =>
                                     <div key={i}>{note}</div>

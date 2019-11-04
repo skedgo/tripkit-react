@@ -61,11 +61,13 @@ class SegmentTemplate {
     @JsonProperty("durationWithoutTraffic", Number, true)
     private _durationWithoutTraffic: number | null = null;
     @JsonProperty("metres", Number, true)
-    private _metres: number | null = null;
+    public metres: number | undefined = undefined;
     @JsonProperty("metresSafe", Number, true)
-    private _metresSafe: number | null = null;
+    public metresSafe: number | undefined = undefined;
     @JsonProperty("metresUnsafe", Number, true)
-    private _metresUnsafe: number | null = null;
+    public metresUnsafe: number | undefined = undefined;
+    @JsonProperty("metresDismount", Number, true)
+    public metresDismount: number | undefined = undefined;
     // @Json GWTJsonMini mini;
     @JsonProperty("mini", Any, true)
     private _mini: any = {};
@@ -254,30 +256,6 @@ class SegmentTemplate {
 
     set durationWithoutTraffic(value: number | null) {
         this._durationWithoutTraffic = value;
-    }
-
-    get metres(): number | null {
-        return this._metres;
-    }
-
-    set metres(value: number | null) {
-        this._metres = value;
-    }
-
-    get metresSafe(): number | null {
-        return this._metresSafe;
-    }
-
-    set metresSafe(value: number | null) {
-        this._metresSafe = value;
-    }
-
-    get metresUnsafe(): number | null {
-        return this._metresUnsafe;
-    }
-
-    set metresUnsafe(value: number | null) {
-        this._metresUnsafe = value;
     }
 
     get mini(): any {

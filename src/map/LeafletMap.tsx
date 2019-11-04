@@ -36,6 +36,7 @@ import MapUtil from "../util/MapUtil";
 import StopLocation from "../model/StopLocation";
 import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
+import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 
 interface ITKUIMapViewProps {
     hideLocations?: boolean;
@@ -96,21 +97,24 @@ class LeafletMap extends React.Component<IProps, IState> {
         }
     }
 
-    private streetsRenderer(streets: Street[], color: string) {
+    /**
+     * if color === null show friendliness (which makes sense for bicycle and wheelchair segments)
+     */
+    private streetsRenderer(streets: Street[], color: string | null) {
         return streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
                 weight: 9,
                 color: "black",
-                // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
                 opacity: 1  // Disable safe distinction for now
             } as PolylineProps
         }).concat(streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
                 weight: 7,
-                color: color,
-                // opacity: !this.segment.isBicycle() || street.safe ? 1 : .3
+                color: color ? color : street.safe ? tKUIFriendlinessColors.safe :
+                    street.safe === false ? tKUIFriendlinessColors.unsafe :
+                        street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
                 opacity: 1  // Disable safe distinction for now
             } as PolylineProps
         }));
@@ -172,7 +176,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                     renderPinIcon: () => TransportPinIcon.createForSegment(segment),
                     renderPopup: () => <SegmentPopup segment={segment}/>,
                     polylineOptions: segment.shapes ? this.shapesRenderer(segment.shapes, color) :
-                        segment.streets ? this.streetsRenderer(segment.streets, color) : [],
+                        segment.streets ? this.streetsRenderer(segment.streets, segment.isBicycle() || segment.isWheelchair() ? null : color) : [],
                     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
                         <IconServiceStop style={{
                             color: shape.travelled ? color : "grey",

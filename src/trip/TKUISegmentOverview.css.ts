@@ -110,7 +110,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
         },
         description: {
             padding: '10px 0',
-            margin: '10px 0 10px 15px',
+            margin: '10px 16px 10px 0',
             borderTop: '1px solid ' + tKUIColors.black4,
             borderBottom: '1px solid ' + tKUIColors.black4,
             ...genStyles.grow,

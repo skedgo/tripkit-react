@@ -21,14 +21,14 @@ class TrackTransport extends React.Component<IProps, {}> {
         } else if (segment.trip.isSingleSegment() && (segment.isBicycle() || segment.isWheelchair())) {
             // TODO getDurationWithContinuation
             const duration = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
-            const friendlinessPct = (segment.metresSafe !== null && segment.metres !== null) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
+            const friendlinessPct = (segment.metresSafe !== undefined && segment.metres !== undefined) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
             if (friendlinessPct) {
                 infoTitle = duration;
                 infoSubtitle = friendlinessPct + (segment.isBicycle() ? " % cycle friendly" : " % wheelchair friendly");
             } else {
                 infoSubtitle = duration;
             }
-        } else if (segment.trip.isSingleSegment() && segment.metres !== null) {
+        } else if (segment.trip.isSingleSegment() && segment.metres !== undefined) {
             infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
         } else if (segment.realTime) {
             infoSubtitle = "Live traffic";
