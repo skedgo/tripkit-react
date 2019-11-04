@@ -9,6 +9,7 @@ interface ITKUIGenStyle {
     spaceAround: CSS.Properties;
     justifyEnd: CSS.Properties;
     alignCenter: CSS.Properties;
+    alignStart: CSS.Properties;
     alignStretch: CSS.Properties;
     alignSelfCenter: CSS.Properties;
     alignSelfStart: CSS.Properties;
@@ -68,6 +69,11 @@ const genStyles: ITKUIGenStyle = {
     alignCenter: {
         alignItems: 'center',
         WebkitAlignItems: 'center'
+    },
+
+    alignStart: {
+        alignItems: 'flex-start',
+        WebkitAlignItems: 'flex-start'
     },
 
     alignStretch: {

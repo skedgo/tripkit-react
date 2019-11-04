@@ -99,14 +99,15 @@ class RoutingQuery {
         for (const mode of modeSet) {
             modeParams += "&modes[]=" + mode;
         }
-        if (modeSet.indexOf("pt_pub") !== -1) {
-            if (!options.isModeEnabled("pt_pub_bus")) {
-                modeParams += "&avoidModes[]=" + "pt_pub_bus";
-            }
-            if (!options.isModeEnabled("pt_pub_tram")) {
-                modeParams += "&avoidModes[]=" + "pt_pub_tram";
-            }
-        }
+        // TODO: Model avoided modes
+        // if (modeSet.indexOf("pt_pub") !== -1) {
+        //     if (!options.isModeEnabled("pt_pub_bus")) {
+        //         modeParams += "&avoidModes[]=" + "pt_pub_bus";
+        //     }
+        //     if (!options.isModeEnabled("pt_pub_tram")) {
+        //         modeParams += "&avoidModes[]=" + "pt_pub_tram";
+        //     }
+        // }
         return "routing.json?" +
             "from=(" + this.from.lat + "," + this.from.lng + ")&to=(" + this.to.lat + "," + this.to.lng + ")&" +
             (this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter") + "=" + Math.floor(this.time.valueOf()/1000) +

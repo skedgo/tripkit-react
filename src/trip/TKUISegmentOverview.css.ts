@@ -19,7 +19,6 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
         },
         title: {
             fontWeight: '600',
-            marginLeft: '15px',
             ...genStyles.fontM,
             ...genStyles.flex,
             ...genStyles.column,
@@ -104,7 +103,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
                 const modeInfo = props.value.modeInfo!;
                 return isIconOnDark(props.value) || modeInfo.remoteIcon ? '1' : '.6';
             },
-            width: '24px',
+            width: '24px!important',
             height: '24px',
             ...genStyles.borderRadius(50, '%')
         },

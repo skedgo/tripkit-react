@@ -12,9 +12,11 @@ import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import "../trip/TripAltBtn.css";
 import Util from "../util/Util";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import genStyles from "../css/GenStyle.css";
 
 export interface ITKUITransportOptionsViewProps extends TKUIWithStyle<ITKUITransportOptionsViewStyle, ITKUITransportOptionsViewProps> {
-
+    onMoreOptions: () => void;
 }
 
 interface IConsumedProps {
@@ -25,6 +27,7 @@ interface IConsumedProps {
 
 export interface ITKUITransportOptionsViewStyle {
     main: CSSProps<ITKUITransportOptionsViewProps>;
+    modeSelector: CSSProps<ITKUITransportOptionsViewProps>;
     modeIcon: CSSProps<ITKUITransportOptionsViewProps>;
     modeIconDisabled: CSSProps<ITKUITransportOptionsViewProps>;
     tooltip: CSSProps<ITKUITransportOptionsViewProps>;
@@ -58,39 +61,49 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                {region.modes.map((mode: string, index: number) => {
-                        const modeOption = transOptions.getTransportOption(mode);
-                        const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                        const tooltip =
-                            <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
-                                <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
-                                <div className={classes.tooltipRight}>
-                                    <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
-                                    <div className={modeOption === DisplayConf.HIDDEN ?
-                                        classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
-                                        {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
-                                    </div>
-                                </div>
-                            </div>;
-                        return (
-                            <Tooltip placement="top"
-                                     overlay={tooltip}
-                                     overlayClassName={classNames("app-style", "TripRow-altTooltip", classes.tooltip)}
-                                     mouseEnterDelay={.5}
-                                     arrowContent={null}
-                                     key={index}
-                            >
-                                <button
-                                    className={classNames(classes.modeIcon,
-                                        modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                    onClick={() => this.onChange(mode)}
-                                >
+                <div className={classes.modeSelector}>
+                    {region.modes.map((mode: string, index: number) => {
+                            const modeOption = transOptions.getTransportOption(mode);
+                            const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
+                            const tooltip =
+                                <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
                                     <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
-                                </button>
-                            </Tooltip>
-                        );
-                    }
-                )}
+                                    <div className={classes.tooltipRight}>
+                                        <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
+                                        <div className={modeOption === DisplayConf.HIDDEN ?
+                                            classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
+                                            {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
+                                        </div>
+                                    </div>
+                                </div>;
+                            return (
+                                <Tooltip placement="top"
+                                         overlay={tooltip}
+                                         overlayClassName={classNames("app-style", "TripRow-altTooltip", classes.tooltip)}
+                                         mouseEnterDelay={.5}
+                                         arrowContent={null}
+                                         key={index}
+                                >
+                                    <button
+                                        className={classNames(classes.modeIcon,
+                                            modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
+                                        onClick={() => this.onChange(mode)}
+                                    >
+                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
+                                    </button>
+                                </Tooltip>
+                            );
+                        }
+                    )}
+                </div>
+                <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
+                            text={"More options"}
+                            style={{
+                                marginLeft: '10px',
+                                ...genStyles.fontS
+                            }}
+                            onClick={this.props.onMoreOptions}
+                />
             </div>
         )
     }

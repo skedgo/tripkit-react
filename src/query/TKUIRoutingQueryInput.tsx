@@ -280,14 +280,12 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                     }
                     {this.props.onShowOptions &&
                     <Tooltip placement="right"
-                             overlay={<TKUITransportOptionsView/>}
+                             overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
                              overlayClassName="app-style TripRow-altTooltip"
                              mouseEnterDelay={.5}
                              trigger={["click"]}
                     >
-                        <button className={classes.transportsBtn}
-                                // onClick={this.props.onShowOptions}
-                        >
+                        <button className={classes.transportsBtn}>
                             Transport options
                         </button>
                     </Tooltip>

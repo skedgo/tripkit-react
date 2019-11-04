@@ -19,6 +19,7 @@ export interface ITKUIWCSegmentInfoStyle {
     safeRef: CSSProps<ITKUIWCSegmentInfoProps>;
     unsafeRef: CSSProps<ITKUIWCSegmentInfoProps>;
     dismountRef: CSSProps<ITKUIWCSegmentInfoProps>;
+    unknownRef: CSSProps<ITKUIWCSegmentInfoProps>;
     bar: CSSProps<ITKUIWCSegmentInfoProps>;
     safeBar: CSSProps<ITKUIWCSegmentInfoProps>;
     unsafeBar: CSSProps<ITKUIWCSegmentInfoProps>;
@@ -27,6 +28,7 @@ export interface ITKUIWCSegmentInfoStyle {
     safeMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
     unsafeMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
     dismountMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
+    unknownMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
 }
 
 class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
@@ -44,6 +46,7 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
         const safePct = ((metresSafe / metres) * 100);
         const unsafePct = ((metresUnsafe / metres) * 100);
         const dismountPct = ((metresDismount / metres) * 100);
+        const unknownPct = ((metresUnknown / metres) * 100);
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
@@ -63,6 +66,11 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
                         <div className={classes.dismountRef}/>
                         Dismount
                     </div>}
+                    {unknownPct> 0 &&
+                    <div>
+                        <div className={classes.unknownRef}/>
+                        Unknown
+                    </div>}
                 </div>
                 <div className={classes.bar}>
                     <div className={classes.safeBar} style={{width: safePct + "%"}}/>
@@ -81,6 +89,10 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
                     {dismountPct > 0 &&
                     <div className={classes.dismountMtsLabel} style={{minWidth: dismountPct * .85 + "%"}}>
                         {TransportUtil.distanceToBriefString(metresDismount)}
+                    </div>}
+                    {unknownPct > 0 &&
+                    <div className={classes.unknownMtsLabel} style={{minWidth: unknownPct * .85 + "%"}}>
+                        {TransportUtil.distanceToBriefString(metresUnknown)}
                     </div>}
                 </div>
             </div>
