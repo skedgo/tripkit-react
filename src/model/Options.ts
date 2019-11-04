@@ -67,14 +67,9 @@ class Options {
     }
 
     get bikeRacks(): boolean {
-        return this.isModeEnabled("pt_pub_bus") && this.isModeEnabled("cy_bic");
-    }
-
-    public isModeEnabled(mode: string): boolean {
-        return this.modesDisabled.find((modeD: string) => {
-            return mode === modeD ||
-                (mode.startsWith(modeD) && mode.charAt(modeD.length) === "_")   // mode is a particular case of (more specific than) modeD
-        }) === undefined
+        // TODO: need to be modeled on tripgo / tripkit?
+        return false;
+        // return this.isModeEnabled("pt_pub_bus") && this.isModeEnabled("cy_bic");
     }
 }
 

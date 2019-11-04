@@ -46,6 +46,13 @@ export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<ITKUIWCSegmentInfoStyle, 
         ...genStyles.borderRadius(50, '%'),
         margin: '0 5px 0 10px'
     },
+    unknownRef: {
+        width: '15px',
+        height: '15px',
+        backgroundColor: tKUIFriendlinessColors.unknown,
+        ...genStyles.borderRadius(50, '%'),
+        margin: '0 5px 0 10px'
+    },
     bar: {
         height: '10px',
         backgroundColor: tKUIFriendlinessColors.unknown,
@@ -84,6 +91,12 @@ export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<ITKUIWCSegmentInfoStyle, 
     },
     dismountMtsLabel: {
         color: tKUIFriendlinessColors.dismount,
+        whiteSpace: 'nowrap',
+        paddingRight: '10px',
+        ...genStyles.noShrink
+    },
+    unknownMtsLabel: {
+        color: tKUIFriendlinessColors.unknown,
         whiteSpace: 'nowrap',
         paddingRight: '10px',
         ...genStyles.noShrink

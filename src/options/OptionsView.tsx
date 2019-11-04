@@ -145,10 +145,6 @@ class OptionsView extends React.Component<IProps, IState> {
         });
     }
 
-    private isModeEnabled(mode: string) {
-        return this.state.update.isModeEnabled(mode);
-    }
-
     private close(apply: boolean) {
         if (apply) {
             if (!this.checkValid()) {
@@ -204,33 +200,6 @@ class OptionsView extends React.Component<IProps, IState> {
             const id = modeId.identifier;
             return id.startsWith(ModeIdentifier.UBER_ID) || id.startsWith(ModeIdentifier.CAR_RENTAL_SW_ID) ||
                 id.startsWith(ModeIdentifier.TAXI_ID)};
-        const modeToCheckbox = (modeId: ModeIdentifier, index: number) => {
-            const circleBg = modeId.icon === null;
-            const modeOptionDisabled = Options.overrideDisabled.indexOf(modeId.identifier) !== -1;
-            const transportColor = modeOptionDisabled ? "#b1aeae" : TransportUtil.getTransportColorByIconS(TransportUtil.modeIdToIconS(modeId.identifier));
-            const onDark = !modeId.identifier.includes(ModeIdentifier.SCHOOLBUS_ID); // TODO: Hardcoded for TC
-            return(
-                <div key={index} className="gl-flex gl-align-center">
-                    <img src={TransportUtil.getTransportIconModeId(modeId, false, onDark)}
-                         className={"OptionsView-icon " + (circleBg ? " OptionsView-onDark" : "")}
-                         style={{
-                             backgroundColor: circleBg ? (transportColor !== null ? transportColor : "black") : "none",
-                             border: !circleBg ? "1px solid " + (transportColor !== null ? transportColor : "black") : "none",
-                         }}
-                         aria-hidden="true"
-                    />
-                    <Checkbox id={"chbox-" + modeId.identifier}
-                              checked={this.isModeEnabled(modeId.identifier)}
-                              onChange={(checked: boolean) => this.onModeCheckboxChange(modeId.identifier, checked)}
-                              ariaLabelledby={"label-" + modeId.identifier}
-                              disabled={modeOptionDisabled}
-                    />
-                    <label htmlFor={"chbox-" + modeId.identifier} id={"label-" + modeId.identifier} >
-                        {modeId!.title}
-                    </label>
-                </div>
-            )
-        };
         return (
             <div className={"OptionsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
                 <div className="gl-flex gl-align-center gl-space-between OptionsView-header">
@@ -240,14 +209,6 @@ class OptionsView extends React.Component<IProps, IState> {
                     </button>
                 </div>
                 <div className="OptionsView-scrollPanel gl-scrollable-y">
-                    <div className="OptionsView-headerSeparation"/>
-                    <div className="h4-text OptionsView-sectionTitle"
-                         tabIndex={0}
-                    >Modes</div>
-                    <div className="OptionsView-modesPanel">
-                        {this.props.region ? OptionsView.getOptionsModeIds(this.props.region)
-                            .filter(modesSectionFilter).map(modeToCheckbox): null}
-                    </div>
                     <div className="h4-text OptionsView-separation OptionsView-sectionTitle"
                          tabIndex={0}>Journey Preferences</div>
                     <div className="OptionsView-journey-prefs gl-flex gl-space-around" role="radiogroup">
@@ -404,25 +365,6 @@ class OptionsView extends React.Component<IProps, IState> {
                                      }}
                                      aria-hidden="true"
                                 />
-                                <Tooltip
-                                    placement="top"
-                                    overlay={
-                                        <div className="OptionsView-tooltip">
-                                            This option will display both dedicated school services and regular route services.
-                                        </div>
-                                    }
-                                    align={{offset: [0, -10]}}
-                                    overlayClassName="app-style OptionsView-tooltip"
-                                    mouseEnterDelay={.5}
-                                >
-                                    <div className="gl-flex gl-align-center">
-                                        <Checkbox checked={this.isModeEnabled(schoolModeId.identifier)}
-                                                  onChange={(checked: boolean) => this.onModeCheckboxChange(schoolModeId.identifier, checked)}/>
-                                        <label>
-                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}/>
-                                        </label>
-                                    </div>
-                                </Tooltip>
                             </div> : null
                         }
                     </div>
@@ -476,12 +418,6 @@ class OptionsView extends React.Component<IProps, IState> {
                                 </div>
                             </Tooltip>
                         </div>
-                    </div>
-                    <div className="h4-text OptionsView-separation OptionsView-sectionTitle"
-                         tabIndex={0}>Third Party Options</div>
-                    <div className="OptionsView-modesPanel">
-                        {this.props.region ? OptionsView.getOptionsModeIds(this.props.region)
-                            .filter(thirdPartySectionFilter).map(modeToCheckbox): null}
                     </div>
                 </div>
                 <button className="gl-button gl-no-shrink" onClick={() => this.close(true)}>Apply</button>

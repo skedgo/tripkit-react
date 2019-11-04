@@ -58,7 +58,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         const startTime = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
         const transportColor = TransportUtil.getTransportColor(modeInfo);
-        const fromAddress = segment.from.address;
+        const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "") + segment.from.address;
         let stops: ServiceStopLocation[] | null = null;
         if (segment.shapes) {
             stops = [];
@@ -85,7 +85,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                         <div className={classes.posLine}/>
                     </div>
                     <div className={classes.title}>
-                        {fromAddress}
+                        {from}
                         {prevWaitingSegment &&
                         <span className={classes.subtitle}>{prevWaitingSegment.getAction()}</span>}
                     </div>
