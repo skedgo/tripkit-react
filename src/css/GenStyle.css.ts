@@ -23,6 +23,7 @@ interface ITKUIGenStyle {
     scrollableY: CSSProps<{}>;
     relative: CSSProps<{}>;
     hidden: CSSProps<{}>;
+    rotate180: CSSProps<{}>;
 
     fontL: CSSProps<{}>;
     fontM: CSSProps<{}>;
@@ -143,6 +144,13 @@ const genStyles: ITKUIGenStyle = {
 
     scrollableY: {
         overflowY: 'auto'
+    },
+
+    rotate180: {
+        WebkitTransform: 'rotate(180deg)',
+        MozTransform: 'rotate(180deg)',
+        OTransform: 'rotate(180deg)',
+        transform: 'rotate(180deg)'
     },
 
     fontL: {

@@ -5,6 +5,8 @@ import * as CSS from 'csstype';
 export interface TKUITheme {
     colorPrimary: CSS.Color,
     colorSuccess: CSS.Color,
+    colorInfo: CSS.Color,
+    colorWarning: CSS.Color,
     colorError: CSS.Color,
     fontFamily: CSS.FontFamilyProperty
     colorPrimaryOpacity: (opacity: number) => CSS.Color,
@@ -13,6 +15,8 @@ export interface TKUITheme {
 const tKUIDeaultTheme: TKUITheme = {
     colorPrimary: '#23b15e',
     colorSuccess: '#23b15e',
+    colorInfo: '#2b7eed',
+    colorWarning: '#fcba1e',
     colorError: '#e34040',
     fontFamily: 'ProximaNova',
     colorPrimaryOpacity: (opacity: number) => 'rgba(35, 177, 94, ' + opacity + ')'

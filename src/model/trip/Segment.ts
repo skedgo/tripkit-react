@@ -6,6 +6,7 @@ import TransportUtil from "../../trip/TransportUtil";
 import DateTimeUtil from "../../util/DateTimeUtil";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Ticket from "./Ticket";
+import RealTimeVehicle from "../service/RealTimeVehicle";
 
 @JsonObject
 class Segment extends SegmentTemplate {
@@ -30,7 +31,10 @@ class Segment extends SegmentTemplate {
     private _realTime: boolean | null = null;
     @JsonProperty("isCancelled", Boolean, true)
     private _isCancelled: boolean | null = null;
-    // @Json GWTRealTimeVehicle realtimeVehicle;
+    @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
+    public realtimeVehicle: RealTimeVehicle | undefined = undefined;
+    @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
+    public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     @JsonProperty("alertHashCodes", [Number], true)
     private _alertHashCodes: number[] = [];
     // @Json GWTJsonBooking booking;

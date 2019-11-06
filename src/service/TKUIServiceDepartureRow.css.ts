@@ -26,11 +26,10 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartu
         },
         transIcon:{
             opacity: '.4',
-            marginLeft: '4px'
+            margin: '0 4px'
         },
         wheelCIcon: {
             color: tKUIColors.black1,
-            marginLeft: '4px',
             width: '16px',
             height: '16px',
             ...genStyles.svgFillCurrColor
@@ -45,7 +44,12 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartu
         },
         time: {
             color: tKUIColors.black1,
-            marginTop: '5px'
+            marginRight: '10px'
+        },
+        timeAndOccupancy: {
+            marginTop: '5px',
+            ...genStyles.flex,
+            ...genStyles.alignCenter
         },
         serviceDescription: {
             marginTop: '5px',
@@ -72,5 +76,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartu
         },
         timeToDepartPast: {
             opacity: '.5'
+        },
+        occupancy: {
+
         }
     });

@@ -9,6 +9,7 @@ import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
 import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
+import TKUIOccupancySign from "../occupancy/TKUIOccupancySign";
 
 export interface ITKUISegmentOverviewProps extends TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
     value: Segment;
@@ -36,6 +37,7 @@ export interface ITKUISegmentOverviewStyle {
     description: CSSProps<ITKUISegmentOverviewProps>;
     action: CSSProps<ITKUISegmentOverviewProps>;
     notes: CSSProps<ITKUISegmentOverviewProps>;
+    occupancy: CSSProps<ITKUISegmentOverviewProps>;
 }
 
 export class TKUISegmentOverviewConfig implements TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
@@ -72,9 +74,16 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             stops = stops.slice(1, stops.length - 1); // remove the first and last stop.
         }
         const iconOnDark = isIconOnDark(segment);
+        const hasBusOccupancy = segment.isPT() && segment.realtimeVehicle && segment.realtimeVehicle.components &&
+            segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
+            segment.realtimeVehicle.components[0][0].occupancy;
+        const classes = this.props.classes;
+        const occupancy = hasBusOccupancy ?
+            <div className={classes.occupancy}>
+                <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!}/>
+            </div> : undefined;
         const wcSegmentInfo = segment.isBicycle() || segment.isWheelchair() ?
             <TKUIWCSegmentInfo value={segment}/> : undefined;
-        const classes = this.props.classes;
         return (
             <div className={classes.main} tabIndex={0}>
                 <div className={classes.header}>
@@ -108,6 +117,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             <div className={classes.action}>
                                 {segment.getAction()}
                             </div>
+                            {occupancy}
                             {wcSegmentInfo}
                             <div className={classes.notes}>
                                 {segment.getNotes().map((note: string, i: number) =>

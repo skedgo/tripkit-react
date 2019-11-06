@@ -4,6 +4,7 @@ import ModeInfo from "../trip/ModeInfo";
 import StopLocation from "../StopLocation";
 import Service from "./Service";
 import ServiceDetail from "./ServiceDetail";
+import RealTimeVehicle from "./RealTimeVehicle";
 
 @JsonObject
 class ServiceDeparture {
@@ -36,10 +37,10 @@ class ServiceDeparture {
     private _realTimeDeparture: number | undefined = undefined;
     @JsonProperty("realTimeArrival", Number, true)
     public _realTimeArrival: number | undefined = undefined;
-    // @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
-    // public realtimeVehicle: RealTimeVehicle | undefined = undefined;
-    // @JsonProperty("realtimeVehicle", [RealTimeVehicle], true)
-    // public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
+    @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
+    public realtimeVehicle: RealTimeVehicle | undefined = undefined;
+    @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
+    public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     // @JsonProperty("alerts", [RealTimeAlert], true)
     // public alerts: [RealTimeAlert] | undefined = undefined;
 
