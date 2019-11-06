@@ -89,6 +89,10 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //     colorPrimary: 'brown'
     // };
 
+    const testTripsJson = require("../test/tripsWithRTVehicle.json");
+    // const testTrips = Util.deserialize(testTripsJson, RoutingResults).groups;
+    const testTrips = undefined;
+
     import("../trip-planner/TKUITripPlanner").then((module) => {
         const generateClassName = (rule: any, sheet: any) => {
             return sheet.options.classNamePrefix + rule.key;
@@ -97,7 +101,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             <OptionsProvider>
                 <OptionsContext.Consumer>
                     {(optionsContext: IOptionsContext) => (
-                        <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}>
+                        <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value} testTrips={testTrips}>
                             <ServiceResultsProvider>
                                 {/*<TKStyleProvider theme={theme}>*/}
                                 <TKStyleProvider>

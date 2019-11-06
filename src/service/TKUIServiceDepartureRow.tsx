@@ -10,9 +10,10 @@ import {ReactComponent as IconWCInaccessible} from "../images/service/ic_wheelch
 import {ReactComponent as IconWCUnknown} from "../images/service/ic_wheelchair_unknown.svg";
 import OptionsData from "../data/OptionsData";
 import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
-import {ClassNameMap, CSSProperties, JssProvider, createGenerateClassName} from "react-jss";
+import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
+import TKUIOccupancySign from "../occupancy/TKUIOccupancySign";
 
 interface IProps extends ITKUIServiceDepartureRowProps {
     classes: ClassNameMap<keyof ITKUIServiceDepartureRowStyle>
@@ -23,6 +24,7 @@ export interface ITKUIServiceDepartureRowStyle {
     clickable: CSSProps<ITKUIServiceDepartureRowProps>;
     leftPanel: CSSProps<ITKUIServiceDepartureRowProps>;
     header: CSSProps<ITKUIServiceDepartureRowProps>;
+    timeAndOccupancy: CSSProps<ITKUIServiceDepartureRowProps>;
     serviceNumber: CSSProps<ITKUIServiceDepartureRowProps>;
     transIcon: CSSProps<ITKUIServiceDepartureRowProps>;
     wheelCIcon: CSSProps<ITKUIServiceDepartureRowProps>;
@@ -34,6 +36,7 @@ export interface ITKUIServiceDepartureRowStyle {
     timeToDepartCancelled: CSSProps<ITKUIServiceDepartureRowProps>;
     timeToDepartPast: CSSProps<ITKUIServiceDepartureRowProps>;
     serviceDescription: CSSProps<ITKUIServiceDepartureRowProps>;
+    occupancy: CSSProps<ITKUIServiceDepartureRowProps>;
 }
 
 export class TKUIServiceDepartureRowConfig implements TKUIWithStyle<ITKUIServiceDepartureRowStyle, ITKUIServiceDepartureRowProps> {
@@ -112,13 +115,18 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const time = this.getTime(departure);
         const WCIcon = departure.wheelchairAccessible === undefined ? IconWCUnknown :
             departure.wheelchairAccessible ? IconWCAccessible : IconWCInaccessible;
-        const wCText = departure.wheelchairAccessible === undefined ? "Wheelchair accessibility unknown" :
-            departure.wheelchairAccessible ? "Wheelchair accessible" : "Wheelchair inaccessible";
+        const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
+            departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
+            departure.realtimeVehicle.components[0][0].occupancy;
         const classes = this.props.classes;
+        const detailed = this.props.detailed;
+        const briefOccupancy = !detailed && hasBusOccupancy ?
+            <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!} brief={true}/> : undefined;
+        const briefWheelchair = !detailed && OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
+            <WCIcon className={classes.wheelCIcon}/>;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
                  onClick={this.props.onClick}>
-                {/*<div className="gl-flex gl-align-center">*/}
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
                         {departure.serviceNumber &&
@@ -126,10 +134,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                             {departure.serviceNumber}
                         </div>}
                         <img src={transIcon} className={classes.transIcon}/>
-                        {OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
-                        <WCIcon className={classes.wheelCIcon}/>}
+                        {briefWheelchair}
                     </div>
-                    {time}
+                    <div className={classes.timeAndOccupancy}>
+                        {time}
+                        {briefOccupancy}
+                    </div>
                     <div className={classNames(classes.serviceDescription, "ServiceDepartureRow-serviceDescription gl-overflow-ellipsis")}>{serviceDescrText}</div>
                 </div>
                 {this.props.renderRight ? this.props.renderRight() :
@@ -139,18 +149,6 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                         {timeToDepartS}
                     </div>
                 }
-                {/*</div>*/}
-                {/*{ OptionsData.instance.get().wheelchair &&*/}
-                {/*<div className="gl-flex ServiceDepartureRow-wCInfoPanel">*/}
-                {/*<div className={"ServiceDepartureRow-wCFrame gl-flex gl-center gl-align-center" +*/}
-                {/*(departure.wheelchairAccessible ? " ServiceDepartureRow-wCAccessible" : " ServiceDepartureRow-wCInaccessible")}>*/}
-                {/*<WCIcon className="gl-svg-path-fill-currColor ServiceDepartureRow-wCIcon"/>*/}
-                {/*</div>*/}
-                {/*<div className="gl-flex gl-grow ServiceDepartureRow-wCText">*/}
-                {/*{wCText}*/}
-                {/*</div>*/}
-                {/*</div>*/}
-                {/*}*/}
             </div>
         );
     }

@@ -44,9 +44,11 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onAlternativeChange: (group: TripGroup, alt: Trip) => {}
 });
 
-class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: Options}, {}> {
-    private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) =>
-        <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>);
+class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: Options, testTrips?: Trip[]}, {}> {
+    private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
+        props = {...props, trips: this.props.testTrips};
+        return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
+    });
 
     public render(): React.ReactNode {
         return (

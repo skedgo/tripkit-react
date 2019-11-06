@@ -1,0 +1,2276 @@
+{
+  "groups": [
+    {
+      "frequency": 60,
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "name": "Transdev NSW"
+          }
+        },
+        {
+          "provider": {
+            "name": "Transit Systems"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": 1573073044,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573069302,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "id": "7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "mainSegmentHashCode": 1564626825,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573069800,
+              "id": "wdKQMxYL",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573069302
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573072080,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_413",
+                  "stopId": "200064"
+                }
+              },
+              "id": "vgQNexuq",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2459_413",
+              "segmentTemplateHashCode": 1564626825,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Campsie Station",
+              "serviceName": "Campsie to City Martin Place",
+              "serviceNumber": "413",
+              "serviceTripID": "1029845",
+              "startTime": 1573069800,
+              "stops": 43,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573073044,
+              "id": "aBkv5HEh",
+              "segmentTemplateHashCode": 2060685625,
+              "startTime": 1573072080
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/7437d7e9-507f-4dae-95f9-7f29c821b21f",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/7437d7e9-507f-4dae-95f9-7f29c821b21f?hash=-1074390337",
+          "weightedScore": 110.4
+        },
+        {
+          "arrive": 1573051875,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573047282,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/170141f1-dca6-4756-96ae-da27678e36ad",
+          "id": "170141f1-dca6-4756-96ae-da27678e36ad",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/170141f1-dca6-4756-96ae-da27678e36ad",
+          "mainSegmentHashCode": -1670903532,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/170141f1-dca6-4756-96ae-da27678e36ad",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/170141f1-dca6-4756-96ae-da27678e36ad",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573047780,
+              "id": "yY9nY7ER",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573047282
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573050780,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_412",
+                  "stopId": "200064"
+                }
+              },
+              "id": "Zcr2ST92",
+              "platform": "Stand M",
+              "realtimeVehicle": {
+                "components": [
+                  [
+                    {
+                      "airConditioned": true,
+                      "model": "Scania~K320~Custom Bus~CB80",
+                      "occupancy": "CRUSHED_STANDING_ROOM_ONLY",
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 1,
+                      "wifi": false
+                    }
+                  ]
+                ],
+                "id": "1029726",
+                "label": "",
+                "lastUpdate": 1573050579,
+                "location": {
+                  "bearing": 155,
+                  "lat": -33.91444,
+                  "lng": 151.09865
+                },
+                "occupancy": "CRUSHED_STANDING_ROOM_ONLY",
+                "wifi": false
+              },
+              "routeDirection": 0,
+              "routeId": "2459_412",
+              "segmentTemplateHashCode": -1670903532,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Campsie Station",
+              "serviceName": "Campsie to City Martin Place via Earlwood",
+              "serviceNumber": "412",
+              "serviceTripID": "1029726",
+              "startTime": 1573047780,
+              "stops": 55,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573051875,
+              "id": "72ZHZVIU",
+              "segmentTemplateHashCode": -1522334212,
+              "startTime": 1573050780
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/170141f1-dca6-4756-96ae-da27678e36ad",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/170141f1-dca6-4756-96ae-da27678e36ad?hash=966330839",
+          "weightedScore": 305.7
+        },
+        {
+          "arrive": 1573063156,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573060062,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "id": "9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "mainSegmentHashCode": -1851311339,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573060560,
+              "id": "NM0EthXN",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573060062
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573062060,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N40",
+                  "stopId": "200064"
+                }
+              },
+              "id": "gjv8E6ST",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N40",
+              "segmentTemplateHashCode": -1851311339,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "East Hills Station",
+              "serviceName": "East Hills to City Town Hall",
+              "serviceNumber": "N40",
+              "serviceTripID": "1006500",
+              "startTime": 1573060560,
+              "stops": 8,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573063156,
+              "id": "hhqNFuBB",
+              "segmentTemplateHashCode": 910665793,
+              "startTime": 1573062060
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/9fb9c681-541d-43b4-953a-cc9113a6dbd3",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/9fb9c681-541d-43b4-953a-cc9113a6dbd3?hash=1086002249",
+          "weightedScore": 68.1
+        },
+        {
+          "arrive": 1573051624,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573048182,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "id": "8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "mainSegmentHashCode": 1564626825,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573048680,
+              "id": "R5qQ12RO",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573048182
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573050660,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_413",
+                  "stopId": "200064"
+                }
+              },
+              "id": "3x6aNAuD",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2459_413",
+              "segmentTemplateHashCode": 1564626825,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Campsie Station",
+              "serviceName": "Campsie to City Martin Place",
+              "serviceNumber": "413",
+              "serviceTripID": "983148",
+              "startTime": 1573048680,
+              "stops": 43,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573051624,
+              "id": "0WOs1ete",
+              "segmentTemplateHashCode": 2060685625,
+              "startTime": 1573050660
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/8248bbdb-b8e3-497c-9fea-060556ba6a80",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/8248bbdb-b8e3-497c-9fea-060556ba6a80?hash=1561206124",
+          "weightedScore": 225.4
+        },
+        {
+          "arrive": 1573059556,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573056462,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "id": "e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "mainSegmentHashCode": -1851311339,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573056960,
+              "id": "rvy3gpgT",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573056462
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573058460,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N40",
+                  "stopId": "200064"
+                }
+              },
+              "id": "liXqLcnY",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N40",
+              "segmentTemplateHashCode": -1851311339,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "East Hills Station",
+              "serviceName": "East Hills to City Town Hall",
+              "serviceNumber": "N40",
+              "serviceTripID": "1006499",
+              "startTime": 1573056960,
+              "stops": 8,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573059556,
+              "id": "qohs7IYz",
+              "segmentTemplateHashCode": 910665793,
+              "startTime": 1573058460
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/e85046ec-509b-472c-aa7c-cc6a97b8b073",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/e85046ec-509b-472c-aa7c-cc6a97b8b073?hash=-474495049",
+          "weightedScore": 53.3
+        },
+        {
+          "arrive": 1573055956,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573052862,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "id": "7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "mainSegmentHashCode": -1851311339,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573053360,
+              "id": "OEZunB1x",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573052862
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573054860,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N40",
+                  "stopId": "200064"
+                }
+              },
+              "id": "2wKkEWwA",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N40",
+              "segmentTemplateHashCode": -1851311339,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "East Hills Station",
+              "serviceName": "East Hills to City Town Hall",
+              "serviceNumber": "N40",
+              "serviceTripID": "1006498",
+              "startTime": 1573053360,
+              "stops": 8,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573055956,
+              "id": "ZxKWeSJ1",
+              "segmentTemplateHashCode": 910665793,
+              "startTime": 1573054860
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/7b5d9483-1fe9-43fc-8bc3-cd20ebaf5ae7?hash=-451617564",
+          "weightedScore": 38.5
+        },
+        {
+          "arrive": 1573052372,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.6,
+          "currencySymbol": "$",
+          "depart": 1573049331,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/29c45082-0aa0-4337-8b84-e9a040350645",
+          "id": "29c45082-0aa0-4337-8b84-e9a040350645",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/29c45082-0aa0-4337-8b84-e9a040350645",
+          "mainSegmentHashCode": -1851311339,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/29c45082-0aa0-4337-8b84-e9a040350645",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/29c45082-0aa0-4337-8b84-e9a040350645",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573049829,
+              "id": "ej1IuQrU",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573049331
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573051276,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N40",
+                  "stopId": "200064"
+                }
+              },
+              "id": "W2GCHlGg",
+              "platform": "Stand M",
+              "realTime": true,
+              "realtimeVehicle": {
+                "components": [
+                  [
+                    {
+                      "airConditioned": true,
+                      "model": "Volvo~B8RLE~Bustech~VST",
+                      "occupancy": "FULL",
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 1,
+                      "wifi": false
+                    }
+                  ]
+                ],
+                "id": "1006497",
+                "label": "",
+                "lastUpdate": 1573050561,
+                "location": {
+                  "bearing": 256,
+                  "lat": -33.91584,
+                  "lng": 151.15024
+                },
+                "occupancy": "FEW_SEATS_AVAILABLE",
+                "wifi": false
+              },
+              "routeDirection": 0,
+              "routeId": "2444_N40",
+              "segmentTemplateHashCode": -1851311339,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "East Hills Station",
+              "serviceName": "East Hills to City Town Hall",
+              "serviceNumber": "N40",
+              "serviceTripID": "1006497",
+              "startTime": 1573049829,
+              "stops": 8,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573052372,
+              "id": "k8tdNxM2",
+              "segmentTemplateHashCode": 910665793,
+              "startTime": 1573051276
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/29c45082-0aa0-4337-8b84-e9a040350645",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/29c45082-0aa0-4337-8b84-e9a040350645?hash=735236509",
+          "weightedScore": 134
+        }
+      ]
+    },
+    {
+      "frequency": 65,
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "name": "State Transit Sydney"
+          }
+        },
+        {
+          "provider": {
+            "name": "Transit Systems"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": 1573061654,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.8,
+          "currencySymbol": "$",
+          "depart": 1573057662,
+          "hassleCost": 5,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/61b2c930-d7bb-4a00-a204-206befc441b3",
+          "id": "61b2c930-d7bb-4a00-a204-206befc441b3",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/61b2c930-d7bb-4a00-a204-206befc441b3",
+          "mainSegmentHashCode": 2059916538,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/61b2c930-d7bb-4a00-a204-206befc441b3",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/61b2c930-d7bb-4a00-a204-206befc441b3",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573058160,
+              "id": "Xre4bEti",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573057662
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573059180,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "State Transit Sydney",
+                  "routeId": "2441_N11",
+                  "stopId": "200064"
+                }
+              },
+              "id": "reiurP3k",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2441_N11",
+              "segmentTemplateHashCode": 2059916538,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Cronulla Station",
+              "serviceName": "Cronulla to City Town Hall",
+              "serviceNumber": "N11",
+              "serviceTripID": "950979",
+              "startTime": 1573058160,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573059660,
+              "id": "OoPThLwb",
+              "segmentTemplateHashCode": 930295870,
+              "startTime": 1573059180
+            },
+            {
+              "availability": "AVAILABLE",
+              "endPlatform": "Stand G",
+              "endTime": 1573060620,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 1,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_420N",
+                  "stopId": "221622"
+                }
+              },
+              "id": "aFy8sYLQ",
+              "routeDirection": 1,
+              "routeId": "2459_420N",
+              "segmentTemplateHashCode": 1691211090,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Burwood",
+              "serviceName": "Eastgardens to Burwood via Sydney Airport & Rockdale (Night Service)",
+              "serviceNumber": "420N",
+              "serviceTripID": "982885",
+              "startTime": 1573059660,
+              "stops": 7,
+              "ticket": {
+                "name": "Opal (bus)"
+              },
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573061654,
+              "id": "Ekui9Hxh",
+              "segmentTemplateHashCode": -416034610,
+              "startTime": 1573060620
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/61b2c930-d7bb-4a00-a204-206befc441b3",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/61b2c930-d7bb-4a00-a204-206befc441b3?hash=1675781400",
+          "weightedScore": 65
+        },
+        {
+          "arrive": 1573054454,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.8,
+          "currencySymbol": "$",
+          "depart": 1573050462,
+          "hassleCost": 5,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "id": "d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "mainSegmentHashCode": 2059916538,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573050960,
+              "id": "ySwdvZk3",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573050462
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573051980,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "State Transit Sydney",
+                  "routeId": "2441_N11",
+                  "stopId": "200064"
+                }
+              },
+              "id": "GWx3AAym",
+              "platform": "Stand M",
+              "realTime": true,
+              "realtimeVehicle": {
+                "components": [
+                  [
+                    {
+                      "airConditioned": true,
+                      "model": "Scania~K310UB4X2~Custom Bus~CB80",
+                      "occupancy": "MANY_SEATS_AVAILABLE",
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 1,
+                      "wifi": false
+                    }
+                  ]
+                ],
+                "id": "950977",
+                "label": "",
+                "lastUpdate": 1573050550,
+                "location": {
+                  "bearing": 355,
+                  "lat": -33.87113,
+                  "lng": 151.20554
+                },
+                "occupancy": "MANY_SEATS_AVAILABLE",
+                "wifi": false
+              },
+              "routeDirection": 0,
+              "routeId": "2441_N11",
+              "segmentTemplateHashCode": 2059916538,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Cronulla Station",
+              "serviceName": "Cronulla to City Town Hall",
+              "serviceNumber": "N11",
+              "serviceTripID": "950977",
+              "startTime": 1573050960,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573052460,
+              "id": "cO0vjZ26",
+              "segmentTemplateHashCode": 930295870,
+              "startTime": 1573051980
+            },
+            {
+              "availability": "AVAILABLE",
+              "endPlatform": "Stand G",
+              "endTime": 1573053420,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 1,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_420N",
+                  "stopId": "221622"
+                }
+              },
+              "id": "knMT0LSW",
+              "realTime": true,
+              "realtimeVehicle": {
+                "components": [
+                  [
+                    {
+                      "airConditioned": true,
+                      "model": "Scania~K320~Custom Bus~CB80",
+                      "occupancy": "STANDING_ROOM_ONLY",
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 1,
+                      "wifi": false
+                    }
+                  ]
+                ],
+                "id": "982883",
+                "label": "",
+                "lastUpdate": 1573050563,
+                "location": {
+                  "bearing": 186,
+                  "lat": -33.94454,
+                  "lng": 151.22635
+                },
+                "occupancy": "MANY_SEATS_AVAILABLE",
+                "wifi": false
+              },
+              "routeDirection": 1,
+              "routeId": "2459_420N",
+              "segmentTemplateHashCode": 1691211090,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Burwood",
+              "serviceName": "Eastgardens to Burwood via Sydney Airport & Rockdale (Night Service)",
+              "serviceNumber": "420N",
+              "serviceTripID": "982883",
+              "startTime": 1573052460,
+              "stops": 7,
+              "ticket": {
+                "name": "Opal (bus)"
+              },
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573054454,
+              "id": "UiTSsSyz",
+              "segmentTemplateHashCode": -416034610,
+              "startTime": 1573053420
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/d0e4d41c-ba61-458e-b567-3060d7a29f9c",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/d0e4d41c-ba61-458e-b567-3060d7a29f9c?hash=1274116647",
+          "weightedScore": 42.1
+        },
+        {
+          "arrive": 1573058054,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.8,
+          "currencySymbol": "$",
+          "depart": 1573054062,
+          "hassleCost": 5,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "id": "dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "mainSegmentHashCode": 2059916538,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573054560,
+              "id": "1YBFZAgC",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573054062
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573055580,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "State Transit Sydney",
+                  "routeId": "2441_N11",
+                  "stopId": "200064"
+                }
+              },
+              "id": "NpAP1dXH",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2441_N11",
+              "segmentTemplateHashCode": 2059916538,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Cronulla Station",
+              "serviceName": "Cronulla to City Town Hall",
+              "serviceNumber": "N11",
+              "serviceTripID": "950978",
+              "startTime": 1573054560,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573056060,
+              "id": "2KNX8MPv",
+              "segmentTemplateHashCode": 930295870,
+              "startTime": 1573055580
+            },
+            {
+              "availability": "AVAILABLE",
+              "endPlatform": "Stand G",
+              "endTime": 1573057020,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 1,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_420N",
+                  "stopId": "221622"
+                }
+              },
+              "id": "0lVSJz0K",
+              "routeDirection": 1,
+              "routeId": "2459_420N",
+              "segmentTemplateHashCode": 1691211090,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Burwood",
+              "serviceName": "Eastgardens to Burwood via Sydney Airport & Rockdale (Night Service)",
+              "serviceNumber": "420N",
+              "serviceTripID": "982884",
+              "startTime": 1573056060,
+              "stops": 7,
+              "ticket": {
+                "name": "Opal (bus)"
+              },
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573058054,
+              "id": "Da0J6HsB",
+              "segmentTemplateHashCode": -416034610,
+              "startTime": 1573057020
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/dcb36b2d-db4c-4d3c-94d3-c6a97d34e2d2?hash=924549414",
+          "weightedScore": 50.2
+        },
+        {
+          "arrive": 1573066154,
+          "availability": "AVAILABLE",
+          "caloriesCost": 60,
+          "carbonCost": 0.8,
+          "currencySymbol": "$",
+          "depart": 1573061262,
+          "hassleCost": 5,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "id": "253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "mainSegmentHashCode": 2059916538,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573061760,
+              "id": "tFP84YHr",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573061262
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573062780,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "State Transit Sydney",
+                  "routeId": "2441_N11",
+                  "stopId": "200064"
+                }
+              },
+              "id": "iQjVpz3m",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2441_N11",
+              "segmentTemplateHashCode": 2059916538,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Cronulla Station",
+              "serviceName": "Cronulla to City Town Hall",
+              "serviceNumber": "N11",
+              "serviceTripID": "950980",
+              "startTime": 1573061760,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573064100,
+              "id": "CrmsfoIU",
+              "segmentTemplateHashCode": 930295870,
+              "startTime": 1573062780
+            },
+            {
+              "availability": "AVAILABLE",
+              "endPlatform": "Stand G",
+              "endTime": 1573065120,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 1,
+                  "operatorName": "Transit Systems",
+                  "routeId": "2459_420",
+                  "stopId": "221622"
+                }
+              },
+              "id": "oT9hCTI9",
+              "routeDirection": 1,
+              "routeId": "2459_420",
+              "segmentTemplateHashCode": 1691211090,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Burwood",
+              "serviceName": "Eastgardens to Burwood via Sydney Airport & Rockdale",
+              "serviceNumber": "420",
+              "serviceTripID": "1030549",
+              "startTime": 1573064100,
+              "stops": 7,
+              "ticket": {
+                "name": "Opal (bus)"
+              },
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573066154,
+              "id": "19wr1SLz",
+              "segmentTemplateHashCode": -416034610,
+              "startTime": 1573065120
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/253cfb12-7d4f-4f8f-b821-b0f6c75b02ea?hash=1647300572",
+          "weightedScore": 82.4
+        }
+      ]
+    },
+    {
+      "frequency": 60,
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "name": "Transdev NSW"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": 1573059641,
+          "availability": "AVAILABLE",
+          "caloriesCost": 118,
+          "carbonCost": 0.7,
+          "currencySymbol": "$",
+          "depart": 1573055862,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "id": "7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "mainSegmentHashCode": -515036123,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573056360,
+              "id": "iM2TlqfT",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573055862
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573057500,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N30",
+                  "stopId": "200064"
+                }
+              },
+              "id": "FFocHoVf",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N30",
+              "segmentTemplateHashCode": -515036123,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur Station",
+              "serviceName": "Macarthur to City Town Hall",
+              "serviceNumber": "N30",
+              "serviceTripID": "1006489",
+              "startTime": 1573056360,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573059641,
+              "id": "qksM4vKr",
+              "segmentTemplateHashCode": 521674998,
+              "startTime": 1573057500
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/7ee6031a-7f53-45e2-bea4-b2f17e89c9f3?hash=-1376647155",
+          "weightedScore": 62.6
+        },
+        {
+          "arrive": 1573063241,
+          "availability": "AVAILABLE",
+          "caloriesCost": 118,
+          "carbonCost": 0.7,
+          "currencySymbol": "$",
+          "depart": 1573059462,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/02394120-8f72-476c-8673-d2c81af15356",
+          "id": "02394120-8f72-476c-8673-d2c81af15356",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/02394120-8f72-476c-8673-d2c81af15356",
+          "mainSegmentHashCode": -515036123,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/02394120-8f72-476c-8673-d2c81af15356",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/02394120-8f72-476c-8673-d2c81af15356",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573059960,
+              "id": "4ba0ohHN",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573059462
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573061100,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N30",
+                  "stopId": "200064"
+                }
+              },
+              "id": "jWPEMWi2",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N30",
+              "segmentTemplateHashCode": -515036123,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur Station",
+              "serviceName": "Macarthur to City Town Hall",
+              "serviceNumber": "N30",
+              "serviceTripID": "1006491",
+              "startTime": 1573059960,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573063241,
+              "id": "a3QQjlUk",
+              "segmentTemplateHashCode": 521674998,
+              "startTime": 1573061100
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/02394120-8f72-476c-8673-d2c81af15356",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/02394120-8f72-476c-8673-d2c81af15356?hash=-977524366",
+          "weightedScore": 77.4
+        },
+        {
+          "arrive": 1573052441,
+          "availability": "AVAILABLE",
+          "caloriesCost": 118,
+          "carbonCost": 0.7,
+          "currencySymbol": "$",
+          "depart": 1573048662,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "id": "d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "mainSegmentHashCode": -515036123,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573049160,
+              "id": "RI5wadu9",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573048662
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573050300,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N30",
+                  "stopId": "200064"
+                }
+              },
+              "id": "k9J9APqn",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N30",
+              "segmentTemplateHashCode": -515036123,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur Station",
+              "serviceName": "Macarthur to City Town Hall",
+              "serviceNumber": "N30",
+              "serviceTripID": "1006485",
+              "startTime": 1573049160,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573052441,
+              "id": "5gozaqIo",
+              "segmentTemplateHashCode": 521674998,
+              "startTime": 1573050300
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/d439fd6b-d6f5-4f59-a3bc-09a034ac0603",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/d439fd6b-d6f5-4f59-a3bc-09a034ac0603?hash=-736921550",
+          "weightedScore": 195.1
+        },
+        {
+          "arrive": 1573056041,
+          "availability": "AVAILABLE",
+          "caloriesCost": 118,
+          "carbonCost": 0.7,
+          "currencySymbol": "$",
+          "depart": 1573052262,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/f7180de9-8b89-4781-92d2-33a22210565f",
+          "id": "f7180de9-8b89-4781-92d2-33a22210565f",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/f7180de9-8b89-4781-92d2-33a22210565f",
+          "mainSegmentHashCode": -515036123,
+          "moneyCost": 4.8,
+          "moneyUSDCost": 3.46,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/f7180de9-8b89-4781-92d2-33a22210565f",
+          "queryIsLeaveAfter": true,
+          "queryTime": 1573050420,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/f7180de9-8b89-4781-92d2-33a22210565f",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573052760,
+              "id": "eFYMXrJr",
+              "segmentTemplateHashCode": -1616173803,
+              "startTime": 1573052262
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573053900,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Transdev NSW",
+                  "routeId": "2444_N30",
+                  "stopId": "200064"
+                }
+              },
+              "id": "6hAZPWEW",
+              "platform": "Stand M",
+              "routeDirection": 0,
+              "routeId": "2444_N30",
+              "segmentTemplateHashCode": -515036123,
+              "serviceColor": {
+                "blue": 239,
+                "green": 181,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur Station",
+              "serviceName": "Macarthur to City Town Hall",
+              "serviceNumber": "N30",
+              "serviceTripID": "1006487",
+              "startTime": 1573052760,
+              "stops": 7,
+              "ticket": {
+                "cost": 4.8,
+                "exchange": 0.72,
+                "name": "Opal (bus)"
+              },
+              "ticketWebsiteURL": "https://www.opal.com.au/en/fares-and-benefits/",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1573056041,
+              "id": "wbnQX8M9",
+              "segmentTemplateHashCode": 521674998,
+              "startTime": 1573053900
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/f7180de9-8b89-4781-92d2-33a22210565f",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/f7180de9-8b89-4781-92d2-33a22210565f?hash=-1881450355",
+          "weightedScore": 47.8
+        }
+      ]
+    }
+  ],
+  "realTimeStamp": 1573050542,
+  "realTimeStateURL": "https://inflationary.buzzhives.com/satapp/realTimeState/new",
+  "region": "AU_NSW_Sydney",
+  "regions": [
+    "AU_NSW_Sydney"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Near Central Station Platform 12",
+        "class": "Location",
+        "lat": -33.8836,
+        "lng": 151.2067,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -1616173803,
+      "metres": 584,
+      "mini": {
+        "description": "Central Station, Railway Square, Stand M",
+        "instruction": "Walk",
+        "mainValue": "600m"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 600m",
+      "streets": [
+        {
+          "encodedWaypoints": "n{xmE{p{y[TNsAI@?]SSQAJe@x@Qf@c@TSd@Ul@nAr@ERCL??BFDNDJHDLFJFJNPn@?^BNOZIJ????H`@AB",
+          "metres": 431,
+          "name": ""
+        },
+        {
+          "encodedWaypoints": "bxxmEu`{y[g@G",
+          "metres": 21,
+          "name": "Lee Street"
+        },
+        {
+          "encodedWaypoints": "zvxmE}`{y[Z\\??n@z@RVx@bAFS",
+          "metres": 131,
+          "name": "George Street"
+        }
+      ],
+      "to": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 283,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "219481",
+      "from": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 1564626825,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 4.8,
+        "costComponents": [
+          {
+            "cost": 4.8,
+            "name": "Opal (bus)",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Opal (bus) ($4.80)",
+      "operatorID": "2459",
+      "serviceOperator": "Transit Systems",
+      "shapes": [
+        {
+          "encodedWaypoints": "h}umEgd|y[jBZbCNj@DzAFNBp@BhCNhAC??ALxG`@L?dDD??ALbBHfKl@n@D`BC??ALJ@`ETg@fFxCf@hBXhANx@PzBb@LBHDHD|@N??MVRNLHlAzAVXn@b@RXxBpCDLb@rAD\\L\\t@|@\\TXPPL??",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "|{xmE{{zy[??GHf@`ARr@VzAh@nCBRHvG@d@FvFT~D??????Q?@t@DfD@rAFbD@~ADhBTzA??M@RjDXlF@`APpA??K?@xAKjLFhC??G??~@HtCRhCNnB^pB??GLHp@tAtMn@lFx@fE??????MBd@hDh@hDj@vD\\xChAbG??MBf@dDTfDPtDJjBJ~ARlB??M?R|H`@dJXbD??M@^hK\\pE??M?HxB?h@MfAq@jGGfB?@????KGGb@?nAFxBPnBp@~FFh@h@nEd@xB??M@XbCJnANbBZtB??KJNzB^dDh@xDxArI??KGHh@TxAhALFBJO??DP^@J?t@IrD_BfAo@vAqA??DNf@[~@k@dBbAdAz@_@|E?A????KACVOz@_@dBu@xDc@pBM`APHn@ZNDt@\\x@l@`@XdAp@??EPFHv@z@JPR`@@JBJLbAb@|C@XDb@?n@Dp@B^HZFd@Fx@Nv@??M@@tA@`E@H@nCBf@H`@U?ApB??GEGrAGvAKjBApC??K?Cn@OdDFBHDDJ@JCNGHIDIAIdE@xD??KCAh@fD@L?GpBEnCGjCGxBBxA??I?EfCA`D??GFCj@KvFCdBEnCmAEDjA??G@MnHN`@BbB??GF?n@EvESZFfA??IE?LGbFFHNBdBoBhBm@??@BnIoC??@DHCLA@K@IFEL?HBDF@JrGrBvBt@`A^rAN??EP^JrDpAbCf@??ENr@Tj@PDKHEF?HFFJ?PCFIFM@GEeBhDw@~ADH@LONMEi@dB??MIaC|Ew@xB??KIe@`AFH?LIHMB}AjC}BpF??YFMTaAjBCdE??MH?RJJ@PGHQBaBMIBWjL??OAA^HD@HbFXfEC??_@XJ@J@`ANBKHCHD@LtDT??CPtHfADKFIFAJ@DFBH@NEFj@j@FGLCFDFH?REHbAv@??EPx@hAhA|At@`A`CdC??GLFJbCbDv@b@??IPV\\JGF@HDDF?HzDQ?A?????NnAAVCf@OrAQ@Lv@jCp@YlCs@Ug@??",
+          "travelled": true
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Transit Systems"
+        }
+      ],
+      "stopCode": "200064",
+      "to": {
+        "address": "North Pde opp Campsie Station",
+        "class": "Location",
+        "lat": -33.91,
+        "lng": 151.10322,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 255,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "North Pde opp Campsie Station",
+        "class": "Location",
+        "lat": -33.91,
+        "lng": 151.10322,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 2060685625,
+      "metres": 1104,
+      "mini": {
+        "description": "Near Albert Street & Alma Avenue",
+        "instruction": "Walk",
+        "mainValue": "1.2km"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 1.2km",
+      "streets": [
+        {
+          "encodedWaypoints": "p`~mEajgy[HSHv@",
+          "metres": 37,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "da~mE}hgy[N~@Jt@VrCN|A",
+          "metres": 170,
+          "name": "Wilfred Avenue"
+        },
+        {
+          "encodedWaypoints": "hc~mEu}fy[yBfA",
+          "metres": 75,
+          "name": "Assets Street"
+        },
+        {
+          "encodedWaypoints": "n_~mEm{fy[?@h@fBn@vBTv@ZbAzAfFLj@~@zCJ^DLnAlE?AHb@J\\\\z@G^?@??FJtAzEHV@NCHEF_Ad@Tb@",
+          "metres": 820,
+          "name": "Campsie Street"
+        }
+      ],
+      "to": {
+        "address": "Near Albert Street & Alma Avenue",
+        "class": "Location",
+        "lat": -33.91237,
+        "lng": 151.09309,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 275,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "219416",
+      "from": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -1670903532,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 4.8,
+        "costComponents": [
+          {
+            "cost": 4.8,
+            "name": "Opal (bus)",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Opal (bus) ($4.80)",
+      "operatorID": "2459",
+      "serviceOperator": "Transit Systems",
+      "shapes": [
+        {
+          "encodedWaypoints": "h}umEgd|y[jBZbCNj@DzAFNBp@BhCNhAC??ALxG`@L?dDD??ALbBHfKl@n@D`BC??ALJ@`ETg@fFxCf@hBXhANx@PzBb@LBHDHD|@N??MVRNLHlAzAVXn@b@RXxBpCDLb@rAD\\L\\t@|@\\TXPPL??",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "|{xmE{{zy[??GHf@`ARr@VzAh@nCBRHvG@d@FvFT~D??????Q?@t@DfD@rAFbD@~ADhBTzA??M@RjDXlF@`APpA??K?@xAKjLFhC??G??~@HtCRhCNnB^pB??GLHp@tAtMn@lFx@fE??????MBd@hDL?HADGn@o@Li@??HNz@aApAwArAyAnAoAx@wA??FJ~@eANELGpE_Al@OtCo@^I^KHf@@NNb@??K@@H?R@VAbACRSbBQhAe@zBKx@E`@C\\ARBl@Td@??KBH^Jp@HFAJ@PRnATrAJl@Hd@Xz@??G@DTPhABLNv@Hd@@JATKnAI|@IfAKpE??KGIfAMjBI|AKxAK~AF~@??OKAV@P?^PD@TILCVD~AF~ADnARh@Nf@JVNADHBLGLl@jBJTp@nA??KDx@|BjClHz@~BbB`@Dj@Jh@?B????UIC^eAtHUfBWfBaAjHCjA??MCG`@WfBUjBhCl@rBf@RDU~BG|APZ?@????KNDb@FVHd@lAlDDXF~@H?LJBJCHKPHjA\\|DFrAD|CnB}@fCiB??FLx@a@TWdBgDJMj@c@ZIP?bGNdAM??CPn@BdEHh@@|BJn@@dBI???N~FPpCHn@K??LNpCJjBDhADJ@`@G??@P\\BnAT`BV|AXvDp@zCnB??BV`DhCj@nBn@|BDJ\\d@??MDb@tAj@n@f@l@RTbBfB^b@XH??GFnApAZ^xAxAvAv@b@tB??OANvAp@zFFz@dAlB??MFTn@HCH@FFBH?NILGBI?IGsBzBsAzAkCzCi@]??JMgBuCcAaBcAdAIpC??SEQxANP|BxBL\\bEpH??GPHP`@t@tC`Gh@`AtDdIz@hA??KFj@lAFNHEHBFBBJ@HEN`EfKNCFBDL@JENVv@??IDzApHAjE??KAARI|@ATkAvFAl@AZTfG??OH@\\~B^H?JAHENQDUD}@TMPKt@_@`A}@JEPCL@zAXBe@Km@??L??_@vDb@zDf@`D^BMLG@{@??L@x@}KICGM?K@KHIJARsE??J?PoClBnAzEzBr@?PQ???P\\Aj@FpGt@pAP_@~ECn@OtE??MAEr@OdBAZDXJZN\\h@z@b@j@HJz@XA?????KTZ\\T@Ph@`AxDj@pE??????O@Db@BpIH@HH@LALGHKBDz@|AhC?A????IHXn@lDjG??????IDBHf@`AlAdCXl@~A`Df@fAbAtA?@????OCJT`AnBjBtDnAhCp@lALZNj@OnD??????MCYlCa@DwC^oC\\mAb@??OKq@HaC\\uDf@gCr@??CS{@JiJfB??COUBsIxAwDdByAdA??QKWLcF|BoDrB??IOgGjCyArAuAdB]P{ABiAR??AOoIJiAR??AOuCD}@@_EHS@}@V???QsCNUB_Dp@???S_@FeAJe@cC",
+          "travelled": true
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Transit Systems"
+        }
+      ],
+      "stopCode": "200064",
+      "to": {
+        "address": "Campsie Station, South Pde",
+        "class": "Location",
+        "lat": -33.91041,
+        "lng": 151.10434,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 254,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Campsie Station, South Pde",
+        "class": "Location",
+        "lat": -33.91041,
+        "lng": 151.10434,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -1522334212,
+      "metres": 1244,
+      "mini": {
+        "description": "Near Albert Street & Alma Avenue",
+        "instruction": "Walk",
+        "mainValue": "1.3km"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 1.3km",
+      "streets": [
+        {
+          "encodedWaypoints": "`c~mEcqgy[TPF|@",
+          "metres": 42,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "~c~mEsngy[Fr@",
+          "metres": 24,
+          "name": "South Parade"
+        },
+        {
+          "encodedWaypoints": "fd~mE_mgy[MBgAJK@",
+          "metres": 55,
+          "name": "Beamish Street"
+        },
+        {
+          "encodedWaypoints": "da~mEmlgy[ILA??J@\\Hv@",
+          "metres": 54,
+          "name": "North Parade"
+        },
+        {
+          "encodedWaypoints": "da~mE}hgy[N~@Jt@VrCN|A",
+          "metres": 170,
+          "name": "Wilfred Avenue"
+        },
+        {
+          "encodedWaypoints": "hc~mEu}fy[yBfA",
+          "metres": 75,
+          "name": "Assets Street"
+        },
+        {
+          "encodedWaypoints": "n_~mEm{fy[?@h@fBn@vBTv@ZbAzAfFLj@~@zCJ^DLnAlE?AHb@J\\\\z@G^?@??FJtAzEHV@NCHEF_Ad@Tb@",
+          "metres": 820,
+          "name": "Campsie Street"
+        }
+      ],
+      "to": {
+        "address": "Near Albert Street & Alma Avenue",
+        "class": "Location",
+        "lat": -33.91237,
+        "lng": 151.09309,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 272,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "219415",
+      "from": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -1851311339,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 4.8,
+        "costComponents": [
+          {
+            "cost": 4.8,
+            "name": "Opal (bus)",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Opal (bus) ($4.80)",
+      "operatorID": "2444",
+      "serviceOperator": "Transdev NSW",
+      "shapes": [
+        {
+          "encodedWaypoints": "fyvmEcx{y[??Ns@VsELoCL@hG`@rLv@fBHpCPz@FzCRt@FbALBOhBh@TBn@DjBTzAP~Db@`@LPBCTSd@g@nAu@`BaApBQb@e@fAKh@VZl@b@TVxBrCBLb@rAF\\L\\r@|@^TVRRJ??",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "|{xmE{{zy[??IFh@dATp@VzAf@nCBRHvG@d@DvFV~D??????Ot@DhD@pAFbDFXBV@RDHFFRJXHx@ZzGxBfBj@d@Rl@d@j@p@b@n@f@`AVf@\\z@|CfGAD????OFXj@P\\f@b@^Zr@h@zAtAnCtCb@t@`B`Bb@b@f@j@HLHPL^Rx@TjAn@lD^`CXlBBVNp@Jd@Xf@Xf@HNdAnAf@l@^^r@p@r@r@RRhAfA`@^\\^f@h@j@v@R^NXx@pBb@|@HLHLLLdBpAZ\\h@H@C????GNtA`Al@b@fAr@^ZLFLFNBN?J?TCrAUdAYJCVtATrAs@TaCz@_Bh@kA`@TpFDbARnDFxANnCNjBBVLp@BVPx@FXXv@Zd@nBz@zCvA~EzB`Bt@tB~@p@\\hDzAvGxC?NBb@Dh@d@zE@NFj@NhAd@h@NNbChBjBvAtDpCxGbF~LhJfAz@Kl@{A|Ds@nBc@hAQf@}@~BINq@pBQ`@v@t@vC`Dp@n@nCjDZXj@p@`A`AVPPNJD`Bt@??????CFn@\\HFFFhAx@NX`@x@JTR`@t@fBfB`EaCdFgAxBwBnEkB`Eb@hEn@zFJz@jAdDHCF@FHDF?HAJGFEBK?ECwBvBqA|AmCxCQNgApAiAnAWVGX??GKQJkCtBoB|AkBjEFHELI@}@`Cd@nANhHVdAJb@LnG`@jADLi@r@??????GOi@^P`@h@rA@PHzGKnA]pDETGj@c@bEq@dHo@tGi@f@iAdAnCtEd@r@RV`FtInFdJJPh@v@??GDDNvA~BNXbA~AVt@VlAHpAFhABd@b@nB|A~Ev@hC}Av@_Bx@qAn@i@Xg@VmAl@a@Ri@VeEtB}BjAw@^e@RgAj@\\dDv@vId@hF`@nEF?HBDH@NAJEFIB\\hDNhBRx@?@",
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "jd~mEungy[??KEFz@eALa@JI@uBToBTsANk@@h@tDz@dG|@fGbAbHf@jDR~AJAFDDHBFALCFEDFp@J?DBFH@H?JEHGDb@dDf@pDLTHPNJRLRFPFPNPTrApEhAnDb@xAPl@Hx@Fr@P~@r@hChAjD`@lA|AtEL`@`@nAj@bBpG_DtCyAZOzAw@h@Yj@WLGPGx@u@??????BNVKHCHvAJlBh@~InDtLqCrAAHl@tEH?BJEJfA~E|@~DPh@rAfEHAJ@JN@LAJIJz@tC@T?x@n@jBAA????GBBNHZXjAH?FJALjAxFj@fDLAFDDFBJ?HEJIDz@lDJAHBDF@J?HCJGDx@rDdAtE~B`KFTb@lA??IB~E`TLAFBDHBHAHEJED~@dEv@hDNx@ZhB\\jDBNVjFHpBZpADx@V~FH@BJAJGDFpBPt@@?????O@@r@A^IvBMp@j@nA^dAIH[p@]b@gP|TeLtNeHpJ{AxBo@dAQ`@q@`Ba@nAU`AUjAQnAKjAKtAExAHdEJ`FLDBH?LCHI@RfHF?HH@LlC~@fBh@nBVc@bFQ|Bo@IcBUkAUQCMGIaDE{@Ga@QHOJBhC",
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Transdev NSW"
+        }
+      ],
+      "stopCode": "200064",
+      "to": {
+        "address": "South Pde opp Campsie Station",
+        "class": "Location",
+        "lat": -33.91061,
+        "lng": 151.10396,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 254,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "South Pde opp Campsie Station",
+        "class": "Location",
+        "lat": -33.91061,
+        "lng": 151.10396,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 910665793,
+      "metres": 1208,
+      "mini": {
+        "description": "Near Albert Street & Alma Avenue",
+        "instruction": "Walk",
+        "mainValue": "1.3km"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 1.3km",
+      "streets": [
+        {
+          "encodedWaypoints": "jd~mEungy[K@",
+          "metres": 6,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "~c~mEsngy[Fr@",
+          "metres": 24,
+          "name": "South Parade"
+        },
+        {
+          "encodedWaypoints": "fd~mE_mgy[MBgAJK@",
+          "metres": 55,
+          "name": "Beamish Street"
+        },
+        {
+          "encodedWaypoints": "da~mEmlgy[ILA??J@\\Hv@",
+          "metres": 54,
+          "name": "North Parade"
+        },
+        {
+          "encodedWaypoints": "da~mE}hgy[N~@Jt@VrCN|A",
+          "metres": 170,
+          "name": "Wilfred Avenue"
+        },
+        {
+          "encodedWaypoints": "hc~mEu}fy[yBfA",
+          "metres": 75,
+          "name": "Assets Street"
+        },
+        {
+          "encodedWaypoints": "n_~mEm{fy[?@h@fBn@vBTv@ZbAzAfFLj@~@zCJ^DLnAlE?AHb@J\\\\z@G^?@??FJtAzEHV@NCHEF_Ad@Tb@",
+          "metres": 820,
+          "name": "Campsie Street"
+        }
+      ],
+      "to": {
+        "address": "Near Albert Street & Alma Avenue",
+        "class": "Location",
+        "lat": -33.91237,
+        "lng": 151.09309,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 277,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "221622",
+      "from": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 2059916538,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 4.8,
+        "costComponents": [
+          {
+            "cost": 4.8,
+            "name": "Opal (bus)",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Opal (bus) ($4.80)",
+      "operatorID": "2441",
+      "serviceOperator": "State Transit Sydney",
+      "shapes": [
+        {
+          "encodedWaypoints": "fyvmEcx{y[??Ns@VsELoCL@hG`@rLv@fBHpCPz@FzCPt@H`AJDKhBf@TDn@BlBTxAP~Db@^LRBCRQf@k@lAu@bB_ApBQb@e@fAMj@NJHLn@b@PVzBrCBLb@pAF\\L^r@|@^TVRRJ??",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "|{xmE{{zy[??GFf@bARr@bEkArA\\RHdC`AdAlAh@n@d@f@j@H~BZfABt@F`@AVCnAYNC\\GT?R?ND`@JdEpB\\NRHxATr@J`@FN?l@N\\L`@NdBl@??????CJPFNFfDtAfBj@|Bz@\\H\\H\\DJB`@CnAQbASTEt@zDl@bDj@fDb@tCB|@bA`@rEdBbAx@zAnAxArAt@j@dA~@`FlEzDhDVXHEF@FF?JpH|GHGHEHBHFDH?LAJlG~Fh@d@hD`DZNZHKnAYvDu@lJOzBGpAHzALX?B????G@@b@Hr@L^NTRRTB|Dh@d@F\\D^LdAZzMjF`Bl@f@^vAlA~AnA~@z@d@l@xCxEt@hBdBrGh@|ABJ^`AJZvAlCzBxD~FvI~AlB?E????ILx@lAjAvAvAdBPRxCrEJXz@pCNp@Nv@`@fCJt@RhAPf@Xf@f@r@xAjBlFnG~AtBlApA??????@JJL|AjBl@t@l@p@xAjBbA`ARL~B|A\\TdAt@bT|RdB`A??????KRzBxBbEfCvBxAbAf@TRJDdBdCdA~Ab@f@~@nA`Az@zHvFv@^?@????CDvIrG`CbB|@v@vAnBpD|EzBzCVXpCjD~DdFPT|BfAE^g@pBOZOj@Gb@EXGfAAf@~@LJ}AKECKBKBGJAHBFHALXPlA\\??",
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "x{dnEyqny[??CD`@RdCdARFtCtAfBx@lD~AhF|BHDxBfBNLtClA|EtBhBf@??????OHd@RPJT`@r@Nb@APKPYVkABS?MCOCIGQIKaAiAG]Ms@?_@ZBbABfJYvJ[~GUpAG|CIRCr@A\\@x@LxC^C^M~Aa@vFVh@hA|BtBdEjBvC??????KJVd@n@lAxCr@d@JXFd@Pb@LVJb@Rb@P`@T`@Th@`@zAjAxAbBb@h@FLX`@\\l@d@|@P^Th@L\\Rp@JVLf@Pv@FZHZPfARdA@JJp@p@`Fr@~D??OBNrAl@hFj@`FhAdKl@jFl@xE\\fCXzCFfCA`BCdAAXHN??KCALEXAVAPYpBE^On@UnA[jAELaCjJY~AOrAI~ACbAA`@BhBNhBPjCEpB?\\DlBOnDANJ~BFdBDp@@`@TjGMLYTo@f@yBdBk@OMIGGMO_@{@z@{@RWDOL_A?@",
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "State Transit Sydney"
+        }
+      ],
+      "stopCode": "200064",
+      "to": {
+        "address": "Banksia Station, Railway St",
+        "class": "Location",
+        "lat": -33.94509,
+        "lng": 151.1403,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 225,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Wait ",
+      "hashCode": 930295870,
+      "location": {
+        "address": "Banksia Station, Railway St",
+        "class": "Location",
+        "lat": -33.94509,
+        "lng": 151.1403,
+        "timezone": "Australia/Sydney"
+      },
+      "mini": {
+        "instruction": "Wait",
+        "mainValue": "<DURATION>"
+      },
+      "modeInfo": {
+        "alt": "Transfer",
+        "identifier": "stationary_transfer",
+        "localIcon": "transfer"
+      },
+      "notes": "<DURATION>",
+      "type": "stationary",
+      "visibility": "in details"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "219411",
+      "from": {
+        "address": "Banksia Station, Railway St",
+        "class": "Location",
+        "lat": -33.94509,
+        "lng": 151.1403,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 1691211090,
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS>",
+      "operatorID": "2459",
+      "serviceOperator": "Transit Systems",
+      "shapes": [
+        {
+          "encodedWaypoints": "r~`nE_rxy[MCg@xGu@bMAA????KACVIdBnCKnDKTCb@EVIXUhAqALB|AtAd@Rx@TdCb@XDx@NbCd@r@HlATJBNBv@Nx@Nn@P\\HhAXfARVDA\\Id@_@tAMVeClEg@n@c@\\g@Tm@Nq@Dg@?_@AeBOqD_@[Ak@?w@LoAn@aBlBk@dAWl@M|@i@jEQpABl@??????MCa@nCQxAAh@?j@Bt@p@vFT|BH|@FzAVpInD~]\\zAh@vAdAlBlD|GxAxBp@`Ad@n@TVn@x@pAjAF?tBdBZPRFNATAJ?PGTI`@c@d@cAZeAXo@Z_@LOh@KZ]zBa@n@OtB[~Cx@??????EL`@NNHV^x@tAT`@L\\LRZb@DP@tCQ`@e@h@q@BY?uDFcBVKBM@OJKHGFU^GRCLIz@HlCh@pEj@rEL~@TjAZhA`@vAXp@`@`AvAlClAxBd@z@|@~AfC`E\\n@P\\PVz@jBd@dAVjAfAtBdCX~ARa@hHAlC??????MAE`AMbCK`A`CdB|@t@xAnBlDzE|B~CVVnChD`EfFPV|BfAG^e@lBO^Of@Gd@l@\\DGLEJF@TZNlA\\A@",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "x{dnEyqny[??CD`@RdCdARFtCtAfBx@lD`BhFzBHDxBfBNLtClAl@XnDzAhBf@??????MJb@PPJT`@SRUv@e@hB_B|FHRdA~BlBfEmB|AcBvAiBxAKH}AnAyAnAMHmEpDqB~AqAdAmCjE??????MMk@v@]b@iDnCyBdBSPO^GZEVBn@VhCPvAB`@?j@GdAEPGVGNGNKPQTGFKFOJ}DpBa@T_Bx@q@b@_@`@_@f@Q\\CHKTGTKXEf@E^CXAVBhC??KACz@KlAWnAEH_@l@e@h@UXyD|CwCrCcC~BWT{@p@I@w@\\??AUkAJMBgAH{APYFMJUZSd@Kd@c@hBWbAKXIPc@t@WTUVGDKH{@n@s@h@}EfDIBkAl@q@JcDVg@Ba@BwC`@oC^mC^m@JuARuDd@gCr@??CS{@JcKzAsIxAwDdBcChAcFzBaMnFwArAwAdB]R{A@iAR??AOoIJaFH}@@aEHQ@qETUB_Ed@eAJeAL_@JK@q@T",
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "b_~mEmkgy[?KcAJoBTqANk@BWBiGDANGFS@GEEIyAEiCF{FD_@C~AtKF?FFALGDz@vFuEhA}AGsACiBIsAIcD~Ag@N}@Kc@EkAQmFm@KAcAOmDa@YC_BUgAF??BS_BSaI_AeAD??BSaBSuGw@cC]KTI@GAIKAS_QyBgDc@UCi@Cm@D??AQqCa@}De@QAqEg@_@Ee@GkEg@CLGFK@IEEIAS{Eg@cBU[CeD]QEoFk@kFa@???M{@MmAQa@ESAyBY_Fk@OA@yA",
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Transit Systems"
+        }
+      ],
+      "stopCode": "221622",
+      "to": {
+        "address": "Beamish St at North Pde",
+        "class": "Location",
+        "lat": -33.90978,
+        "lng": 151.10343,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 314,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Beamish St at North Pde",
+        "class": "Location",
+        "lat": -33.90978,
+        "lng": 151.10343,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -416034610,
+      "metres": 1179,
+      "mini": {
+        "description": "Near Albert Street & Alma Avenue",
+        "instruction": "Walk",
+        "mainValue": "1.2km"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 1.2km",
+      "streets": [
+        {
+          "encodedWaypoints": "b_~mEmkgy[?K",
+          "metres": 5,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "b_~mEykgy[gAFiBR",
+          "metres": 100,
+          "name": "Beamish Street"
+        },
+        {
+          "encodedWaypoints": "py}mE}jgy[??BRp@~Bp@~Bj@lB??h@lB?@h@fBn@vBTv@ZbAzAfFLj@~@zCJ^DLnAlE?AHb@J\\\\z@G^?@??FJtAzEHV@NCHEF_Ad@Tb@",
+          "metres": 1074,
+          "name": "Campsie Street"
+        }
+      ],
+      "to": {
+        "address": "Near Albert Street & Alma Avenue",
+        "class": "Location",
+        "lat": -33.91237,
+        "lng": 151.09309,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 268,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "219218",
+      "from": {
+        "address": "Central Station, Railway Square, Stand M",
+        "class": "Location",
+        "lat": -33.88366,
+        "lng": 151.20334,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -515036123,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 4.8,
+        "costComponents": [
+          {
+            "cost": 4.8,
+            "name": "Opal (bus)",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Bus",
+        "color": {
+          "blue": 104,
+          "green": 197,
+          "red": 45
+        },
+        "identifier": "pt_pub_bus",
+        "localIcon": "bus"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Opal (bus) ($4.80)",
+      "operatorID": "2444",
+      "serviceOperator": "Transdev NSW",
+      "shapes": [
+        {
+          "encodedWaypoints": "fyvmEcx{y[??Ns@VsELoCL@hG`@rLv@fBHpCPz@FzCRt@FbALBOhBh@TBn@DjBTzAP~Db@`@LPBCTSd@g@nAu@`BaApBQb@e@fAKh@VZl@b@TVxBrCBLb@rAF\\L\\r@|@^TVRRJ??",
+          "travelled": false
+        },
+        {
+          "encodedWaypoints": "|{xmE{{zy[??IFh@dATp@VzAf@nCBRHvG@d@DvFV~D??????Ot@DhD@pAFbDFXBV@RDHFFRJXHx@ZzGxBfBj@d@Rl@d@j@p@b@n@f@`AVf@\\z@|CfGAD????OFXj@P\\f@b@^Zr@h@zAtAnCtCb@t@`B`Bb@b@f@j@HLHPL^Rx@TjAn@lD^`CXlBBVNp@Jd@Xf@Xf@HNdAnAf@l@^^r@p@r@r@RRhAfA`@^\\^f@h@j@v@R^NXx@pBb@|@HLHLLLdBpAZ\\h@H@C????GNtA`Al@b@fAr@^ZLFLFNBN?J?TCrAUdAYJCVtATrAs@TaCz@_Bh@kA`@TpFDbARnDFxANnCNjBBVLp@BVPx@FXXv@Zd@{@rCu@jCm@xBy@rCoBbHWz@mAhEsC`KcAhDE`@E\\C\\@l@@`@DNJf@XtAHZTbAFdA?H?TIt@kAlF[|A_@~Am@nCz@|Gt@bGRzA\\bCLjADXFVRp@l@tBH\\d@bBCZC|@I\\OfA]pBQ|@ApA^fBb@`AjBlClGzI\\Zh@TpBTbD\\pD^nCZLd@Nn@fAfDJZh@j@??????KJJTRb@Pd@DNp@~Bt@fCnAtEh@jBbB`GlCjJHh@BZHrFA\\MXy@nBy@tBEHG`BKzDQlGGhCBxB??????MAChAWb@TRtAlA`ErDTR`Az@rDfDJLj@z@t@dAJTDHdBxClCtEd@r@RX`FpInFfJHRj@t@??GDDNvA~BNXbA~AVt@VlAHpAFhABd@b@nB|A~Ev@hC^lAt@~BjA|D^jAtAnEb@zAn@tBf@~AJZbAbDpAfEdAhDX`An@lB`@vALb@Tp@Tt@ZdAtAtEX|@n@pBlA`ElA|DjAnDl@jBpA`EfAfD`CpHHRtAnDL\\pAdD^|@tBrE^z@Nf@^pAH^DZf@dCd@`CxBhI@?",
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "x`anEagdy[??WJVpAzB`L^lBPx@j@rCh@dCfAtFRdAr@pDJf@~@rEBT~@nEp@lDNr@jA`GJf@j@fEZ`D^jDD`@JfAj@nDDZn@~E@Np@nFPvAVzBBLr@lFV|BThBp@jF\\lC\\rCFjBNpFBdBD`B@z@H`IB|GFxFFxCPdDn@lJr@zK@N@T?fEAbF?dFJjC@A????O??|AAtJ@~@Bz@LdBHx@PxBHh@Nn@P^BLtBnDP^j@pAZb@pAhERp@Jf@N|@Dd@Dv@?lA?n@Cp@?b@AVOdAMfBMvBY`FsArW?j@KlAGz@Cv@Bl@Fn@\\tA|@fBbDzGdHjN|CfGtDhHTf@Jb@F^@^A|@Gv@_@fByAdHk@hCu@xCaB~GoAbFk@`Cg@vBoBzIqDxOg@zBaDtKoChJ_CzIy@~C_@vA_AtDg@rC_A~GMhAwDfZKbAi@~HeAhPKlCClBBhBDpAHxA|@jJHpB@|BIxAOnA_@tB_BfHs@fDu@hDeAfFUlBMfCAxAHvAJlAPhAbA|ETtALnBFdFBvCP|PP`Qd@hh@P~OPjQH~JFfA??EFBpCJrINtM@vCFdBD`@RtAtAvGd@rCRpCD`AGnBOlB[lBU`AqD|MeBtGcAdEEPi@pBy@lC_@z@_FnOcA`DSp@Yt@M`@I@K^bCtALBLCJCFIFKFS?_@G]Kg@_@q@CG]][UKGsAu@]K[Ks@McCSyAkB?A????cEv@B]Es@OaBMu@`@QN@LLNPP`@nCrAhAf@INIBUEi@SOIeB{@OMKOGUEWEKEGIEKAe@DLt@N`BDr@C\\i@jHK`B]jFhLpAf@Rj@bAFLj@dAV`@T^`BfCrBdDv@n@PH\\b@fA`Cx@pAHF`BrB`Al@n@b@XDfIfAt@LlHvBnE|A~@ZpCrAzJ`GlBfA|A`ArAl@d@Vv@`@rB~@|Bn@tExAvHdCfGnBnBp@~@`@j@`@hEjE~BbCtE|E`BfBfCfClCrCZZpEnFbApAhCtDxCzFxBxEdDdIjA`DfFhOp@nB`@jAn@hClDpQx@zFr@nDn@nCj@~Ad@rA^p@f@x@vC~Dv@p@NJN?RANKREbC}Cb@u@`@{@DOPo@Jo@Bi@B}BHuE@sA?eE?uG@yADcDDqBBo@HaABg@HkAJkAPwBb@_GDk@De@HeAB[D]D[B[HWFYNa@JSJQLQLS^g@NS`@e@`@k@RS`@a@b@]FGPILGLILCTENC\\AV?V@RD^PPHNLd@j@rDrFhEpF`BxBHTLb@BZDrAHFDH@LCJEJIBI?KCEKCKK@SAWA_@KQI[SSSSWMWKYI]CSA]?_@B_@Fk@DWzAqFdAyDGIEIAOa@?]@QHKLGJEJ?LAR@NBPHTP\\TVDHx@`A~BpCtKfM~EzFbBpBjExE|@l@?D????GHdFrG`@b@VZl@n@`BlBzN`QZZh@j@vGfFl@p@d@f@lF`EjAj@jA`@f@LdJvBBKFEHAJ@DJBHzJjAtBT~Eh@tKt@",
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Transdev NSW"
+        }
+      ],
+      "stopCode": "200064",
+      "to": {
+        "address": "Canterbury Rd before Chapel St",
+        "class": "Location",
+        "lat": -33.9254,
+        "lng": 151.08737,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 250,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Canterbury Rd before Chapel St",
+        "class": "Location",
+        "lat": -33.9254,
+        "lng": 151.08737,
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 521674998,
+      "metres": 2415,
+      "mini": {
+        "description": "Near Albert Street & Alma Avenue",
+        "instruction": "Walk",
+        "mainValue": "2.5km"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 2.5km",
+      "streets": [
+        {
+          "encodedWaypoints": "x`anEagdy[YF",
+          "metres": 14,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "~_anEyfdy[cBsIUiAu@{DG]Mk@Mg@M_@}@b@",
+          "metres": 405,
+          "name": "Canterbury Road"
+        },
+        {
+          "encodedWaypoints": "~v`nEa}dy[uBdA_@TqAl@i@Ry@HA?g@F_AFoHt@{AN_D~AMD??w@\\cCpAe@Ty@`@OHwAr@m@ZyAp@]N",
+          "metres": 933,
+          "name": "Burwood Road"
+        },
+        {
+          "encodedWaypoints": "df_nEygdy[e@gB",
+          "metres": 53,
+          "name": "Etela Street"
+        },
+        {
+          "encodedWaypoints": "~d_nEakdy[kLxF",
+          "metres": 264,
+          "name": "Redman Lane"
+        },
+        {
+          "encodedWaypoints": "rw~mEgcdy[c@mAMa@}AuEa@mAcAyCI]",
+          "metres": 305,
+          "name": "Lakemba Street"
+        },
+        {
+          "encodedWaypoints": "ro~mEsudy[q@eCGYI]Ea@Gq@AOCOCOM_@Uw@ISgAsD",
+          "metres": 306,
+          "name": "Albert Street"
+        },
+        {
+          "encodedWaypoints": "`i~mEuhey[pDgBTb@",
+          "metres": 130,
+          "name": "Alma Avenue"
+        }
+      ],
+      "to": {
+        "address": "Near Albert Street & Alma Avenue",
+        "class": "Location",
+        "lat": -33.91237,
+        "lng": 151.09309,
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 71,
+      "turn-by-turn": "WALKING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    }
+  ]
+}

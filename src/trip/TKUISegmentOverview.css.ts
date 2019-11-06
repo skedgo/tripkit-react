@@ -121,6 +121,10 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
         notes: {
             ...genStyles.fontS,
             color: tKUIColors.black1
+        },
+        occupancy: {
+            marginBottom: '8px',
+            ...genStyles.flex
         }
     });
 
