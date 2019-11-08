@@ -39,7 +39,7 @@ class Segment extends SegmentTemplate {
     private _alertHashCodes: number[] = [];
     // @Json GWTJsonBooking booking;
     @JsonProperty("wheelchairAccessible", Boolean, true)
-    private _wheelchairAccessible: boolean | null = null;
+    public wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)
     private _bicycleAccessible: boolean | null = null;
     @JsonProperty("ticket", Ticket, true)
@@ -100,10 +100,6 @@ class Segment extends SegmentTemplate {
 
     get alertHashCodes(): number[] {
         return this._alertHashCodes;
-    }
-
-    get wheelchairAccessible(): boolean | null {
-        return this._wheelchairAccessible;
     }
 
     get bicycleAccessible(): boolean | null {

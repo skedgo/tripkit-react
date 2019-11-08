@@ -144,7 +144,7 @@ class Trip {
                 if (segment.wheelchairAccessible === false) {
                     return false;   // if one segment is not accessible, the trip is not accessible
                 }
-                if (segment.wheelchairAccessible === null) {
+                if (segment.wheelchairAccessible === undefined) {
                     wheelchairAccessible = null;   // trip accessibility is at most null, can still become false
                 }
             }

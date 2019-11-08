@@ -1,29 +1,29 @@
 import * as React from "react";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, withStyleProp} from "../jss/StyleHelper";
-import {tKUIOccupancySignDefaultStyle} from "./TKUIOccupancySign.css";
-import {OccupancyStatus} from "../model/service/VehicleComponent";
-import {ReactComponent as IconPassenger} from '../images/ic-passenger.svg';
+import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
+import {tKUIOccupancyInfoDefaultStyle} from "./TKUIOccupancyInfo.css";
+import {OccupancyStatus} from "../../model/service/VehicleComponent";
+import {ReactComponent as IconPassenger} from '../../images/ic-passenger.svg';
 import classNames from "classnames";
 
-export interface ITKUIOccupancySignProps {
+export interface ITKUIOccupancyInfoProps {
     status: OccupancyStatus;
     brief?: boolean;
 }
 
-interface IProps extends ITKUIOccupancySignProps {
-    classes: ClassNameMap<keyof ITKUIOccupancySignStyle>
+interface IProps extends ITKUIOccupancyInfoProps {
+    classes: ClassNameMap<keyof ITKUIOccupancyInfoStyle>
 }
 
-export interface ITKUIOccupancySignStyle {
-    main: CSSProps<ITKUIOccupancySignProps>;
-    passengers: CSSProps<ITKUIOccupancySignProps>;
-    passengerSlot: CSSProps<ITKUIOccupancySignProps>;
-    passenger: CSSProps<ITKUIOccupancySignProps>;
-    text: CSSProps<ITKUIOccupancySignProps>;
+export interface ITKUIOccupancyInfoStyle {
+    main: CSSProps<ITKUIOccupancyInfoProps>;
+    passengers: CSSProps<ITKUIOccupancyInfoProps>;
+    passengerSlot: CSSProps<ITKUIOccupancyInfoProps>;
+    passenger: CSSProps<ITKUIOccupancyInfoProps>;
+    text: CSSProps<ITKUIOccupancyInfoProps>;
 }
 
-class TKUIOccupancySign extends React.Component<IProps, {}> {
+class TKUIOccupancyInfo extends React.Component<IProps, {}> {
 
     private static toSlots(status: OccupancyStatus): number  {
         switch (status) {
@@ -60,17 +60,17 @@ class TKUIOccupancySign extends React.Component<IProps, {}> {
             <div className={classes.main}>
                 <div className={classes.passengers}>
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancySign.toSlots(this.props.status) > 0 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 0 ? classes.passenger : undefined)}/>
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancySign.toSlots(this.props.status) > 1 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 1 ? classes.passenger : undefined)}/>
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancySign.toSlots(this.props.status) > 2? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 2? classes.passenger : undefined)}/>
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancySign.toSlots(this.props.status) > 3 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 3 ? classes.passenger : undefined)}/>
                 </div>
                 {!brief ?
                     <div className={classes.text}>
-                        {TKUIOccupancySign.getText(this.props.status)}
+                        {TKUIOccupancyInfo.getText(this.props.status)}
                     </div> : undefined
                 }
             </div>
@@ -79,10 +79,10 @@ class TKUIOccupancySign extends React.Component<IProps, {}> {
 }
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIOccupancySign");
-    return (props: ITKUIOccupancySignProps) => {
-        return <RawComponentStyled {...props} styles={tKUIOccupancySignDefaultStyle}/>;
+    const RawComponentStyled = withStyleProp(RawComponent, "TKUIOccupancyInfo");
+    return (props: ITKUIOccupancyInfoProps) => {
+        return <RawComponentStyled {...props} styles={tKUIOccupancyInfoDefaultStyle}/>;
     };
 };
 
-export default Connect(TKUIOccupancySign);
+export default Connect(TKUIOccupancyInfo);

@@ -46,7 +46,9 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
 
 class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: Options, testTrips?: Trip[]}, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
-        props = {...props, trips: this.props.testTrips};
+        props = {...props,
+            // trips: this.props.testTrips
+        };
         return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
     });
 

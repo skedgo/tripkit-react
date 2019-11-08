@@ -59,13 +59,12 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
 }
 
     // TODO:
-// SEGUIR ACÁ
-    // Definir TODO list (con redmine de Tripkit react a la vista). Actualizar progreso y TODO list en redmine.
-    //      - mostrar stops en mapa
-    //      - agregar skedgo geocoding source
-    //      - Transport options view
-    //      - Mode by mode instructions
-    //      - ...
+    // SEGUIR ACÁ
+    // [ ] Start with architecture change.
+    // - mostrar stops en mapa
+    // - agregar skedgo geocoding source
+    // - Transport options view
+    // - Mode by mode instructions
     // Improve scheme to import, from class / element to entire module (see TODO on imports above)
     // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
     // - Maybe group different providers in unique composite provider. Analyze. Make all the changes grounded on expected
@@ -73,7 +72,6 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
     // - Configuration points: provide all tripkit-iOS customization points. Then add more.
     //     - Component-level customization en https://docs.google.com/document/d/1-TefPUgLV7RoK1qkr_j1XGSS9XSCUv0w9bMLk6__fUQ/edit#heading=h.s7sw7zyaie11
     // -------------------------------------------------------------------------------------------------------------
-    // Acomodar código en tccs-react luego del cambio que hice.
     // Limpiar codigo luego de todos los cambios que hice
     // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 

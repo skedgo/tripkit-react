@@ -53,20 +53,5 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<ITKUIServiceViewStyle, ITKU
             '& > *:not(:first-child)': {
                 marginTop: '10px'
             },
-        },
-        wheelchairInfo: {
-            color: tKUIColors.black1,
-            ...genStyles.fontS,
-            ...genStyles.flex,
-            ...genStyles.alignCenter,
-            '& svg': {
-                margin: '0 15px 0 10px'
-            }
-        },
-        wheelCIcon: {
-            color: tKUIColors.black1,
-            width: '16px',
-            height: '16px',
-            ...genStyles.svgFillCurrColor
         }
     });

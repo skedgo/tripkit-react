@@ -5,15 +5,13 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import "./TKUIServiceDepartureRowDelete.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {ReactComponent as IconWCAccessible} from "../images/service/ic_wheelchair_accessible.svg";
-import {ReactComponent as IconWCInaccessible} from "../images/service/ic_wheelchair_inaccessible.svg";
-import {ReactComponent as IconWCUnknown} from "../images/service/ic_wheelchair_unknown.svg";
 import OptionsData from "../data/OptionsData";
 import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
-import TKUIOccupancySign from "../occupancy/TKUIOccupancySign";
+import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
+import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 
 interface IProps extends ITKUIServiceDepartureRowProps {
     classes: ClassNameMap<keyof ITKUIServiceDepartureRowStyle>
@@ -27,7 +25,6 @@ export interface ITKUIServiceDepartureRowStyle {
     timeAndOccupancy: CSSProps<ITKUIServiceDepartureRowProps>;
     serviceNumber: CSSProps<ITKUIServiceDepartureRowProps>;
     transIcon: CSSProps<ITKUIServiceDepartureRowProps>;
-    wheelCIcon: CSSProps<ITKUIServiceDepartureRowProps>;
     time: CSSProps<ITKUIServiceDepartureRowProps>;
     delayed: CSSProps<ITKUIServiceDepartureRowProps>;
     onTime: CSSProps<ITKUIServiceDepartureRowProps>;
@@ -113,8 +110,6 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
         const timeToDepartS = cancelled ? "Cancelled" : DateTimeUtil.minutesToDepartToString(timeToDepart);
         const time = this.getTime(departure);
-        const WCIcon = departure.wheelchairAccessible === undefined ? IconWCUnknown :
-            departure.wheelchairAccessible ? IconWCAccessible : IconWCInaccessible;
         const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
             departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
             departure.realtimeVehicle.components[0][0].occupancy;
@@ -123,7 +118,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const briefOccupancy = !detailed && hasBusOccupancy ?
             <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!} brief={true}/> : undefined;
         const briefWheelchair = !detailed && OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
-            <WCIcon className={classes.wheelCIcon}/>;
+            <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
                  onClick={this.props.onClick}>

@@ -15,11 +15,9 @@ import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
 import genStyles from "../css/GenStyle.css";
 import OptionsData from "../data/OptionsData";
-import {ReactComponent as IconWCAccessible} from "../images/service/ic_wheelchair_accessible.svg";
-import {ReactComponent as IconWCInaccessible} from "../images/service/ic_wheelchair_inaccessible.svg";
-import {ReactComponent as IconWCUnknown} from "../images/service/ic_wheelchair_unknown.svg";
-import TKUIOccupancySign from "../occupancy/TKUIOccupancySign";
+import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
+import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 
 export interface ITKUIServiceViewProps extends TKUIWithStyle<ITKUIServiceViewStyle, ITKUIServiceViewProps> {
     onRequestClose?: () => void;
@@ -35,8 +33,6 @@ export interface ITKUIServiceViewStyle {
     iconAngleDown: CSSProps<ITKUIServiceViewProps>;
     realtimeInfo: CSSProps<ITKUIServiceViewProps>;
     realtimeInfoDetailed: CSSProps<ITKUIServiceViewProps>;
-    wheelchairInfo: CSSProps<ITKUIServiceViewProps>;
-    wheelCIcon: CSSProps<ITKUIServiceViewProps>;
 }
 
 export class TKUIServiceViewConfig implements TKUIWithStyle<ITKUIServiceViewStyle, ITKUIServiceViewProps>{
@@ -98,19 +94,11 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
             departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
             departure.realtimeVehicle.components[0][0].occupancy;
-        const WCIcon = departure.wheelchairAccessible === undefined ? IconWCUnknown :
-            departure.wheelchairAccessible ? IconWCAccessible : IconWCInaccessible;
-        const wCText = departure.wheelchairAccessible === undefined ? "Wheelchair accessibility unknown" :
-            departure.wheelchairAccessible ? "Wheelchair accessible" : "Wheelchair inaccessible";
         const classes = this.props.classes;
         const realtimePanel = hasWheelchair || hasBusOccupancy ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
-                    {hasWheelchair &&
-                    <div className={classes.wheelchairInfo}>
-                        <WCIcon className={classes.wheelCIcon}/>
-                        {this.state.realtimeOpen ? wCText : undefined}
-                    </div>}
+                    {hasWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
                     {hasBusOccupancy ?
                         <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!}
                                            brief={!this.state.realtimeOpen}/> : undefined}
