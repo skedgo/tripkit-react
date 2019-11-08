@@ -28,12 +28,6 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartu
             opacity: '.4',
             margin: '0 4px'
         },
-        wheelCIcon: {
-            color: tKUIColors.black1,
-            width: '16px',
-            height: '16px',
-            ...genStyles.svgFillCurrColor
-        },
         serviceNumber: {
             color: 'white',
             borderRadius: '4px',

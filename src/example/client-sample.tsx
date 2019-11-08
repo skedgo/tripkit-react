@@ -101,7 +101,9 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             <OptionsProvider>
                 <OptionsContext.Consumer>
                     {(optionsContext: IOptionsContext) => (
-                        <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value} testTrips={testTrips}>
+                        <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}
+                                                // testTrips={testTrips}
+                        >
                             <ServiceResultsProvider>
                                 {/*<TKStyleProvider theme={theme}>*/}
                                 <TKStyleProvider>

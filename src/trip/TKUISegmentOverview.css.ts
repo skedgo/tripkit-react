@@ -123,7 +123,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
             color: tKUIColors.black1
         },
         occupancy: {
-            marginBottom: '8px',
+            marginBottom: '4px',
             ...genStyles.flex
         }
     });

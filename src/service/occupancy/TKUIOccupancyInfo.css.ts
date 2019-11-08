@@ -1,9 +1,9 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUIOccupancySignProps, ITKUIOccupancySignStyle} from "./TKUIOccupancySign";
-import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
-import genStyles from "../css/GenStyle.css";
+import {TKUIStyles} from "../../jss/StyleHelper";
+import {ITKUIOccupancyInfoProps, ITKUIOccupancyInfoStyle} from "./TKUIOccupancyInfo";
+import {tKUIColors, TKUITheme} from "../../jss/TKStyleProvider";
+import genStyles from "../../css/GenStyle.css";
 
-export const tKUIOccupancySignDefaultStyle: TKUIStyles<ITKUIOccupancySignStyle, ITKUIOccupancySignProps> =
+export const tKUIOccupancyInfoDefaultStyle: TKUIStyles<ITKUIOccupancyInfoStyle, ITKUIOccupancyInfoProps> =
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,

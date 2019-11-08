@@ -9,7 +9,9 @@ import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
 import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
-import TKUIOccupancySign from "../occupancy/TKUIOccupancySign";
+import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
+import OptionsData from "../data/OptionsData";
+import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 
 export interface ITKUISegmentOverviewProps extends TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
     value: Segment;
@@ -78,7 +80,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
             segment.realtimeVehicle.components[0][0].occupancy;
         const classes = this.props.classes;
-        const occupancy = hasBusOccupancy ?
+        const hasWheelchair = OptionsData.instance.get().wheelchair && segment.isPT();
+        const wheelchairInfo = hasWheelchair &&
+            <div className={classes.occupancy}>
+                <TKUIWheelchairInfo accessible={segment.wheelchairAccessible}/>
+            </div>;
+        const occupancyInfo = hasBusOccupancy ?
             <div className={classes.occupancy}>
                 <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!}/>
             </div> : undefined;
@@ -117,7 +124,8 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             <div className={classes.action}>
                                 {segment.getAction()}
                             </div>
-                            {occupancy}
+                            {wheelchairInfo}
+                            {occupancyInfo}
                             {wcSegmentInfo}
                             <div className={classes.notes}>
                                 {segment.getNotes().map((note: string, i: number) =>
