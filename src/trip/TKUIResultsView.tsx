@@ -12,8 +12,10 @@ import {TripSort} from "../api/WithRoutingResults";
 import {TimePreference} from "..";
 import RoutingQuery from "../model/RoutingQuery";
 import Select, { components } from 'react-select';
-import TKUITripRow, {ITKUITripRowProps} from "./TKUITripRow";
+import {connect, default as TKUITripRow, MapperType} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
+import {Subtract} from "utility-types";
+import {default as ITKUIConfig, ITKUIComponentConfig} from "../config/TKUIConfig";
 
 export interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
@@ -31,9 +33,10 @@ interface IConsumedProps {
     query: RoutingQuery;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
+    // renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
-interface IProps extends ITKUIResultsViewProps, IConsumedProps {
+export interface IProps extends ITKUIResultsViewProps, IConsumedProps {
     classes: ClassNameMap<keyof ITKUIResultsStyle>;
 }
 
@@ -48,13 +51,17 @@ export interface ITKUIResultsStyle {
     sortSelectSingleValue: CSSProps<IProps>;
 }
 
-class TKUIResultsViewConfig {
-    public styles: ITKUIResultsStyle = tKUIResultsDefaultStyle;
-    public renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element
-        = <P extends ITKUITripRowProps>(props: P) => <TKUITripRow {...props}/>;
+// class TKUIResultsViewConfig {
+//     public styles: ITKUIResultsStyle = tKUIResultsDefaultStyle;
+//
+//     public static instance = new TKUIResultsViewConfig();
+// }
 
-    public static instance = new TKUIResultsViewConfig();
-}
+export const tKUIResultsViewDefaultConfig: ITKUIComponentConfig<IProps, ITKUIResultsStyle> = {
+    render: props => <TKUIResultsView {...props}/>,
+    styles: tKUIResultsDefaultStyle
+    // classNamePrefix: "TKUIResultsView"
+};
 
 interface IState {
     tripToBadge: Map<Trip, Badges>;
@@ -141,28 +148,45 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         </div>
                     </div>
                     {this.props.values && this.props.values.map((trip: Trip, index: number) =>
-                        TKUIResultsViewConfig.instance.renderTrip({
-                            value: trip,
-                            className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
-                            onClick: () => {
-                                this.props.onChange && this.props.onChange(trip);
-                            },
-                            onFocus: () => {
-                                this.props.onChange && this.props.onChange(trip);
-                            },
-                            onAlternativeClick: this.props.onAlternativeChange,
-                            onDetailClick: this.props.onDetailsClicked,
-                            onKeyDown: this.onKeyDown,
-                            key: index + trip.getKey(),
-                            reference: (el: any) => this.rowRefs[index] = el,
-                            badge: this.state.tripToBadge.get(trip),
-                            expanded: trip === this.state.expanded,
-                            onExpand: (expand: boolean) => {
-                                this.setState({
-                                    expanded: expand ? trip : undefined
-                                })
-                            }
-                        })
+                            <TKUITripRow
+                                value={trip}
+                                className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
+                                onClick={() => this.props.onChange && this.props.onChange(trip)}
+                                onFocus={() => this.props.onChange && this.props.onChange(trip)}
+                                onAlternativeClick={this.props.onAlternativeChange}
+                                onDetailClick={this.props.onDetailsClicked}
+                                onKeyDown={this.onKeyDown}
+                                key={index + trip.getKey()}
+                                reference={(el: any) => this.rowRefs[index] = el}
+                                badge={this.state.tripToBadge.get(trip)}
+                                expanded={trip === this.state.expanded}
+                                onExpand={(expand: boolean) =>
+                                    this.setState({
+                                        expanded: expand ? trip : undefined
+                                    })}
+                            />
+                        // this.props.renderTrip({
+                        //     value: trip,
+                        //     className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
+                        //     onClick: () => {
+                        //         this.props.onChange && this.props.onChange(trip);
+                        //     },
+                        //     onFocus: () => {
+                        //         this.props.onChange && this.props.onChange(trip);
+                        //     },
+                        //     onAlternativeClick: this.props.onAlternativeChange,
+                        //     onDetailClick: this.props.onDetailsClicked,
+                        //     onKeyDown: this.onKeyDown,
+                        //     key: index + trip.getKey(),
+                        //     reference: (el: any) => this.rowRefs[index] = el,
+                        //     badge: this.state.tripToBadge.get(trip),
+                        //     expanded: trip === this.state.expanded,
+                        //     onExpand: (expand: boolean) => {
+                        //         this.setState({
+                        //             expanded: expand ? trip : undefined
+                        //         })
+                        //     }
+                        // })
                     )}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
@@ -214,53 +238,101 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
-    return (
-        <RoutingResultsContext.Consumer>
-            {(routingContext: IRoutingResultsContext) => {
-                const consumerProps: IConsumedProps = {
-                    values: routingContext.trips || [],
-                    waiting: routingContext.waiting,
-                    value: routingContext.selected,
-                    onChange: (trip: Trip) => {
-                        routingContext.onChange(trip);
-                        routingContext.onReqRealtimeFor(trip);
-                    },
-                    onAlternativeChange: routingContext.onAlternativeChange,
-                    query: routingContext.query,
-                    sort: routingContext.sort,
-                    onSortChange: routingContext.onSortChange
-                };
-                return props.children!(consumerProps);
-            }}
-        </RoutingResultsContext.Consumer>
-    );
-};
+// const Complete: React.SFC<{clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode}> =
+//     (props: {clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode}) => {
+//         return (
+//             <RoutingResultsContext.Consumer>
+//                 {(routingContext: IRoutingResultsContext) => {
+//                     const consumerProps: IConsumedProps = {
+//                         values: routingContext.trips || [],
+//                         waiting: routingContext.waiting,
+//                         value: routingContext.selected,
+//                         onChange: (trip: Trip) => {
+//                             routingContext.onChange(trip);
+//                             routingContext.onReqRealtimeFor(trip);
+//                         },
+//                         onAlternativeChange: routingContext.onAlternativeChange,
+//                         query: routingContext.query,
+//                         sort: routingContext.sort,
+//                         onSortChange: routingContext.onSortChange
+//                     };
+//                     return props.children!(consumerProps);
+//                 }}
+//             </RoutingResultsContext.Consumer>
+//         );
+//     };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIResultsView");
-    return (addProps: ITKUIResultsViewProps) => {
+// export const Connect = (RawComponent: React.ComponentType<IProps>) => {
+//     const RawComponentStyled = withStyleProp(RawComponent, "TKUIResultsView");
+//     return (addProps: ITKUIResultsViewProps) => {
+//         return (
+//             <Consumer>
+//                 {(props: IConsumedProps) => {
+//                     let onChangeToPass;
+//                     if (addProps.onChange && props.onChange) {
+//                         onChangeToPass = (trip: Trip) => {
+//                             props.onChange!(trip);
+//                             addProps.onChange!(trip);
+//                         }
+//                     } else {
+//                         onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
+//                     }
+//                     const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
+//                     const stylesToPass = addProps.styles || TKUIResultsViewConfig.instance.styles;
+//                     return <RawComponentStyled {...tripsViewProps} styles={stylesToPass}/>;
+//                 }}
+//             </Consumer>
+//         )
+//     };
+// };
+
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
+    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
         return (
-            <Consumer>
-                {(props: IConsumedProps) => {
-                    let onChangeToPass;
-                    if (addProps.onChange && props.onChange) {
-                        onChangeToPass = (trip: Trip) => {
-                            props.onChange!(trip);
-                            addProps.onChange!(trip);
-                        }
-                    } else {
-                        onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
-                    }
-                    const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
-                    const stylesToPass = addProps.styles || TKUIResultsViewConfig.instance.styles;
-                    return <RawComponentStyled {...tripsViewProps} styles={stylesToPass}/>;
+            <RoutingResultsContext.Consumer>
+                {(routingContext: IRoutingResultsContext) => {
+                    const consumerProps: IConsumedProps = {
+                        values: routingContext.trips || [],
+                        waiting: routingContext.waiting,
+                        value: routingContext.selected,
+                        onChange: (trip: Trip) => {
+                            routingContext.onChange(trip);
+                            routingContext.onReqRealtimeFor(trip);
+                        },
+                        onAlternativeChange: routingContext.onAlternativeChange,
+                        query: routingContext.query,
+                        sort: routingContext.sort,
+                        onSortChange: routingContext.onSortChange
+                    };
+                    return props.children!(consumerProps);
                 }}
-            </Consumer>
-        )
+            </RoutingResultsContext.Consumer>
+        );
     };
-};
 
-export default Connect(TKUIResultsView);
+const merger: (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) =>
+    Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}> =
+    (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) => {
+        let onChangeToPass;
+        if (clientProps.onChange && consumedProps.onChange) {
+            onChangeToPass = (trip: Trip) => {
+                consumedProps.onChange!(trip);
+                clientProps.onChange!(trip);
+            }
+        } else {
+            onChangeToPass = clientProps.onChange ? clientProps.onChange : consumedProps.onChange;
+        }
+        return {...clientProps, ...consumedProps, onChange: onChangeToPass} as IProps;
+    };
 
-export {TKUIResultsViewConfig};
+const Mapper: MapperType<ITKUIResultsViewProps, IProps, ITKUIResultsStyle> =
+    // (props: { clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode }) =>
+    ({clientProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!(merger(clientProps, consumedProps))}
+        </Consumer>;
+
+
+export default connect((config: ITKUIConfig) => config.TKUIRoutingResultsView,
+    tKUIResultsViewDefaultConfig, "TKUIResultsView", Mapper);

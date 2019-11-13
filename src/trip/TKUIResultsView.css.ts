@@ -2,8 +2,10 @@ import genStyles from "../css/GenStyle.css";
 import {ITKUIResultsStyle} from "./TKUIResultsView";
 import Constants from "../util/Constants";
 import {tKUIColors} from "../jss/TKStyleProvider";
+import {TKUIStyles} from "../jss/StyleHelper";
+import {IProps} from "./TKUIResultsView";
 
-export const tKUIResultsDefaultStyle: ITKUIResultsStyle = {
+export const tKUIResultsDefaultStyle: TKUIStyles<ITKUIResultsStyle, IProps> = {
 
     main: {
         ...genStyles.flex,
