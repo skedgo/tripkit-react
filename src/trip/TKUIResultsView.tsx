@@ -6,16 +6,17 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard from "../card/TKUICard";
 import {ClassNameMap, CSSProperties} from "react-jss";
-import {CSSProps, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, withStyleProp} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {TripSort} from "../api/WithRoutingResults";
 import {TimePreference} from "..";
 import RoutingQuery from "../model/RoutingQuery";
 import Select, { components } from 'react-select';
-import {connect, default as TKUITripRow, MapperType} from "./TKUITripRow";
+import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
 import {default as ITKUIConfig, ITKUIComponentConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 
 export interface ITKUIResultsViewProps {
     onChange?: (value: Trip) => void;
@@ -36,9 +37,7 @@ interface IConsumedProps {
     // renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
-export interface IProps extends ITKUIResultsViewProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUIResultsStyle>;
-}
+export interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle> {}
 
 export interface ITKUIResultsStyle {
     main: CSSProps<IProps>;
@@ -51,16 +50,11 @@ export interface ITKUIResultsStyle {
     sortSelectSingleValue: CSSProps<IProps>;
 }
 
-// class TKUIResultsViewConfig {
-//     public styles: ITKUIResultsStyle = tKUIResultsDefaultStyle;
-//
-//     public static instance = new TKUIResultsViewConfig();
-// }
-
 export const tKUIResultsViewDefaultConfig: ITKUIComponentConfig<IProps, ITKUIResultsStyle> = {
     render: props => <TKUIResultsView {...props}/>,
-    styles: tKUIResultsDefaultStyle
-    // classNamePrefix: "TKUIResultsView"
+    styles: tKUIResultsDefaultStyle,
+    classNamePrefix: "TKUIResultsView",
+    randomizeClassNames: false
 };
 
 interface IState {
@@ -238,54 +232,6 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     }
 }
 
-// const Complete: React.SFC<{clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode}> =
-//     (props: {clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode}) => {
-//         return (
-//             <RoutingResultsContext.Consumer>
-//                 {(routingContext: IRoutingResultsContext) => {
-//                     const consumerProps: IConsumedProps = {
-//                         values: routingContext.trips || [],
-//                         waiting: routingContext.waiting,
-//                         value: routingContext.selected,
-//                         onChange: (trip: Trip) => {
-//                             routingContext.onChange(trip);
-//                             routingContext.onReqRealtimeFor(trip);
-//                         },
-//                         onAlternativeChange: routingContext.onAlternativeChange,
-//                         query: routingContext.query,
-//                         sort: routingContext.sort,
-//                         onSortChange: routingContext.onSortChange
-//                     };
-//                     return props.children!(consumerProps);
-//                 }}
-//             </RoutingResultsContext.Consumer>
-//         );
-//     };
-
-// export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-//     const RawComponentStyled = withStyleProp(RawComponent, "TKUIResultsView");
-//     return (addProps: ITKUIResultsViewProps) => {
-//         return (
-//             <Consumer>
-//                 {(props: IConsumedProps) => {
-//                     let onChangeToPass;
-//                     if (addProps.onChange && props.onChange) {
-//                         onChangeToPass = (trip: Trip) => {
-//                             props.onChange!(trip);
-//                             addProps.onChange!(trip);
-//                         }
-//                     } else {
-//                         onChangeToPass = addProps.onChange ? addProps.onChange : props.onChange;
-//                     }
-//                     const tripsViewProps = {...addProps, ...props, onChange: onChangeToPass} as IProps;
-//                     const stylesToPass = addProps.styles || TKUIResultsViewConfig.instance.styles;
-//                     return <RawComponentStyled {...tripsViewProps} styles={stylesToPass}/>;
-//                 }}
-//             </Consumer>
-//         )
-//     };
-// };
-
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
     (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
         return (
@@ -311,7 +257,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     };
 
 const merger: (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) =>
-    Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}> =
+    Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle>> =
     (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) => {
         let onChangeToPass;
         if (clientProps.onChange && consumedProps.onChange) {
@@ -325,14 +271,12 @@ const merger: (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps
         return {...clientProps, ...consumedProps, onChange: onChangeToPass} as IProps;
     };
 
-const Mapper: MapperType<ITKUIResultsViewProps, IProps, ITKUIResultsStyle> =
-    // (props: { clientProps: ITKUIResultsViewProps, children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUIResultsStyle>}>) => React.ReactNode }) =>
-    ({clientProps, children}) =>
+const Mapper: PropsMapper<ITKUIResultsViewProps, Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle>>> =
+    ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!(merger(clientProps, consumedProps))}
+                children!(merger(inputProps, consumedProps))}
         </Consumer>;
 
-
 export default connect((config: ITKUIConfig) => config.TKUIRoutingResultsView,
-    tKUIResultsViewDefaultConfig, "TKUIResultsView", Mapper);
+    tKUIResultsViewDefaultConfig, Mapper);

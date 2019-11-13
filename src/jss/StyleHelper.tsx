@@ -17,20 +17,17 @@ export interface TKUIWithStyle<ST, CP> {
     randomizeClassNames?: boolean
 }
 
+export interface TKUIWithClasses<ST> {
+    classes: ClassNameMap<keyof ST>;
+}
+
 function withStyleProp<
-        // S,
-        // ST extends Record<S extends string & Styles & StyleCreator<keyof S, any>, ST>,
         ST,
-        // CP extends WithSheet<keyof ST, object, CP>,
         CP extends {classes: ClassNameMap<keyof ST>},
         ExtS extends string,
-        // P extends Subtract<CP, WithSheet<keyof ST, object, CP>> & {styles: Styles<ExtS, CP>}>
-        // P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}> & {styles: Styles<ExtS, CP>}>
         P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}>
-            & {styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean}>
-        // (Consumer: React.ComponentType<any>, obj: ST) {
-        // (Consumer: React.ComponentType<CP>, defaultStyle: TKUIStyles<ST, CP>) {
-        (Consumer: React.ComponentType<CP>, classPrefix: string) {
+            & {styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string}> // TODO: make it required
+        (Consumer: React.ComponentType<CP>, classPrefix?: string) {
 
     return class WithStyleProp extends React.Component<P, {}> {
 
@@ -40,7 +37,7 @@ function withStyleProp<
         constructor(props: P) {
             super(props);
             this.StyledComponent = injectSheet(this.props.styles as TKUIStyles<ST, CP>)(Consumer as any);
-            this.generateClassName = generateClassNameFactory(classPrefix);
+            this.generateClassName = generateClassNameFactory(classPrefix ? classPrefix : props.classNamePrefix!);
         }
 
         public render(): React.ReactNode {
