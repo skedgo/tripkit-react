@@ -93,16 +93,16 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     // };
 
     const config: Partial<ITKUIConfig> = {
-        TKUITripRow: {
-            render: (props: ITKUITripRowProps) =>
-                <div className={props.className}
-                     onClick={props.onClick}
-                     onFocus={props.onFocus}
-                     onKeyDown={props.onKeyDown}
-                >
-                    {props.value.segments[0].getAction()}
-                </div>
-        }
+        // TKUITripRow: {
+        //     render: (props: ITKUITripRowProps) =>
+        //         <div className={props.className}
+        //              onClick={props.onClick}
+        //              onFocus={props.onFocus}
+        //              onKeyDown={props.onKeyDown}
+        //         >
+        //             {props.value.segments[0].getAction()}
+        //         </div>
+        // }
     };
 
     const testTripsJson = require("../test/tripsWithRTVehicle.json");

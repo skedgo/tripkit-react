@@ -94,5 +94,5 @@ const TKUIButtonWithStyleProp = withStyleProp(TKUIButton, "TKUIButton");
 
 export default (props: ITKUIButtonProps) => {
     const stylesToPass = props.styles || TKUIButtonConfig.instance.styles;
-    return <TKUIButtonWithStyleProp {...props} styles={stylesToPass}/>
+    return <TKUIButtonWithStyleProp {...props} styles={stylesToPass} classNamePrefix={"TKUIButton"}/>
 };

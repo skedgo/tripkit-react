@@ -11,7 +11,7 @@ export interface ITKUIComponentConfig<P, S> {
     render: (props: P) => JSX.Element;
     styles: TKUIStyles<S, P>;
     randomizeClassNames?: boolean;
-    // classPrefix: string,
+    classNamePrefix: string;
 }
 
 export const tKUIDefaultConfig: ITKUIConfig = {
