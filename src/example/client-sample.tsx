@@ -15,6 +15,9 @@ import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} f
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
 import {default as TKStyleProvider} from "../jss/TKStyleProvider";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
+import TKUIConfigProvider from "../config/TKUIConfigProvider";
+import ITKUIConfig from "../config/TKUIConfig";
+import {IProps as ITKUITripRowProps} from "../trip/TKUITripRow";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -89,6 +92,19 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //     colorPrimary: 'brown'
     // };
 
+    const config: Partial<ITKUIConfig> = {
+        TKUITripRow: {
+            render: (props: ITKUITripRowProps) =>
+                <div className={props.className}
+                     onClick={props.onClick}
+                     onFocus={props.onFocus}
+                     onKeyDown={props.onKeyDown}
+                >
+                    {props.value.segments[0].getAction()}
+                </div>
+        }
+    };
+
     const testTripsJson = require("../test/tripsWithRTVehicle.json");
     // const testTrips = Util.deserialize(testTripsJson, RoutingResults).groups;
     const testTrips = undefined;
@@ -98,22 +114,24 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             return sheet.options.classNamePrefix + rule.key;
         };
         ReactDOM.render(
-            <OptionsProvider>
-                <OptionsContext.Consumer>
-                    {(optionsContext: IOptionsContext) => (
-                        <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}
-                                                // testTrips={testTrips}
-                        >
-                            <ServiceResultsProvider>
-                                {/*<TKStyleProvider theme={theme}>*/}
-                                <TKStyleProvider>
-                                    <TKUITripPlanner/>
-                                </TKStyleProvider>
-                            </ServiceResultsProvider>
-                        </RoutingResultsProvider>
-                    )}
-                </OptionsContext.Consumer>
-            </OptionsProvider>,
+            <TKUIConfigProvider config={config}>
+                <OptionsProvider>
+                    <OptionsContext.Consumer>
+                        {(optionsContext: IOptionsContext) => (
+                            <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}
+                                // testTrips={testTrips}
+                            >
+                                <ServiceResultsProvider>
+                                    {/*<TKStyleProvider theme={theme}>*/}
+                                    <TKStyleProvider>
+                                        <TKUITripPlanner/>
+                                    </TKStyleProvider>
+                                </ServiceResultsProvider>
+                            </RoutingResultsProvider>
+                        )}
+                    </OptionsContext.Consumer>
+                </OptionsProvider>
+            </TKUIConfigProvider>,
             containerElement);
     });
     DeviceUtil.initCss();

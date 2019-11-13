@@ -12,8 +12,12 @@ import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
 import classNames from "classnames";
+import {ITKUIComponentConfig, default as ITKUIConfig} from "../config/TKUIConfig";
+import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {Subtract} from "utility-types";
+import {IRoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 
-export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, ITKUITripRowProps> {
+export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, IProps> {
     value: Trip;
     className?: string;
     brief?: boolean;
@@ -33,26 +37,31 @@ export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, ITKU
 export const TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
 
 export interface ITKUITripRowStyle {
-    main: CSSProps<ITKUITripRowProps>;
-    badge: CSSProps<ITKUITripRowProps>;
-    info: CSSProps<ITKUITripRowProps>;
-    trackAndAction: CSSProps<ITKUITripRowProps>;
-    track: CSSProps<ITKUITripRowProps>;
-    footer: CSSProps<ITKUITripRowProps>;
-    alternative: CSSProps<ITKUITripRowProps>;
-    selectedAlternative: CSSProps<ITKUITripRowProps>;
+    main: CSSProps<IProps>;
+    badge: CSSProps<IProps>;
+    info: CSSProps<IProps>;
+    trackAndAction: CSSProps<IProps>;
+    track: CSSProps<IProps>;
+    footer: CSSProps<IProps>;
+    alternative: CSSProps<IProps>;
+    selectedAlternative: CSSProps<IProps>;
 }
 
-interface IProps extends ITKUITripRowProps {
+export interface IProps extends ITKUITripRowProps {
     classes: ClassNameMap<keyof ITKUITripRowStyle>;
 }
 
-export class TKUITKUITripRowConfig implements TKUIWithStyle<ITKUITripRowStyle, ITKUITripRowProps> {
-    public styles = tTKUITripRowDefaultStyle;
-    public randomizeClassNames?: boolean;
+export const tKUITripRowDefaultConfig: ITKUIComponentConfig<IProps, ITKUITripRowStyle> = {
+    render: props => <TKUITripRow {...props}/>,
+    styles: tTKUITripRowDefaultStyle
+};
 
-    public static instance = new TKUITKUITripRowConfig();
-}
+// export class TKUITKUITripRowConfig implements TKUIWithStyle<ITKUITripRowStyle, IProps> {
+//     public styles = tTKUITripRowDefaultStyle;
+//     public randomizeClassNames?: boolean;
+//
+//     public static instance = new TKUITKUITripRowConfig();
+// }
 
 function badgeIcon(badge: Badges): JSX.Element {
     return <IconBadge/>;
@@ -161,15 +170,110 @@ class TKUITripRow extends React.Component<IProps, {}> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripRow");
-    return (props: ITKUITripRowProps) => {
-        const stylesToPass = props.styles || TKUITKUITripRowConfig.instance.styles;
-        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-            TKUITKUITripRowConfig.instance.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-};
+// export const Connect = (config: ITKUIComponentConfig<IProps, ITKUITripRowStyle>) => {
+//     const RawComponentStyled = withStyleProp(config.render, "TKUITripRow");
+//     return (props: ITKUITripRowProps) => {
+//         const stylesToPass = props.styles || config.styles;
+//         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+//             config.randomizeClassNames;
+//         return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
+//     }
+// };
 
-const Connected = Connect(TKUITripRow);
-export default Connected;
+
+function dependencyInjector<P>(configToRenderMapper: (config: ITKUIConfig) => ((props: P) => JSX.Element) | undefined,
+                               defaultRender: (props: P) => JSX.Element): (props: P) => JSX.Element {
+    return (props: P) =>
+        <TKUIConfigContext.Consumer>
+            {(config: ITKUIConfig) => {
+                const renderFromConfig = configToRenderMapper(config);
+                const render = renderFromConfig || defaultRender;
+                return render(props);
+            }}
+        </TKUIConfigContext.Consumer>;
+}
+
+export type MapperType<OP, IP extends {classes: ClassNameMap<keyof STYLE>}, STYLE> =
+    React.SFC<{clientProps: OP, children: (props: Subtract<IP, {classes: ClassNameMap<keyof STYLE>}>) => React.ReactNode}>
+
+export function connect<
+    // IP extends {classes: ClassNameMap<keyof STYLE>} & CONS,
+    // OP extends Subtract<IP, CONS & {classes: ClassNameMap<keyof STYLE>}> & TKUIWithStyle<STYLE, IP>,
+    // CONS,
+    // STYLE
+    IP extends OP & CONS & {classes: ClassNameMap<keyof STYLE>},
+    OP extends TKUIWithStyle<STYLE, IP>,
+    CONS,
+    STYLE
+    >(confToCompMapper: (config: ITKUIConfig) => Partial<ITKUIComponentConfig<IP, STYLE>>,
+      defaultConfig: ITKUIComponentConfig<IP, STYLE>,
+      classPrefix: string,
+      Mapper: MapperType<OP, IP, STYLE>
+      // Mapper: React.SFC<{clientProps: OP, children: (props: Subtract<IP, {classes: ClassNameMap<keyof STYLE>}>) => React.ReactNode}>
+      // Mapper: ({clientProps: OP, children: (props: Subtract<IP, {classes: ClassNameMap<keyof STYLE>}>) => React.ReactNode
+      // = ({clientProps, children}) => children(clientProps);
+) {
+    // Renderer injector
+    const configToRenderMapper = (config: ITKUIConfig) => confToCompMapper(config).render;
+    const ComponentRenderer = dependencyInjector(configToRenderMapper, defaultConfig.render);
+    // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
+    const WithStyleInjector = withStyleProp(ComponentRenderer, classPrefix);
+    // Wraps prev component to the final component, mapping interface / use props to the raw component full props.
+    return (props: OP) =>
+        <Mapper clientProps={props}>
+            {(implProps: Subtract<IP, {classes: ClassNameMap<keyof STYLE>}>) =>
+                <TKUIConfigContext.Consumer>
+                    {(config: ITKUIConfig) => {
+                        const componentConfig = confToCompMapper(config);
+                        // TODO: merge styles instead of next line.
+                        const stylesToPass = props.styles || componentConfig.styles || defaultConfig.styles;
+                        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+                            componentConfig.randomizeClassNames;
+                        return <WithStyleInjector {...implProps} styles={stylesToPass}
+                                                  randomizeClassNames={randomizeClassNamesToPass}/>;
+                    }}
+                </TKUIConfigContext.Consumer>
+            }
+        </Mapper>
+}
+
+// const Connect = () => {
+//     // Renderer injector
+//     // TODO: create helper to implement the Connect. See how to make it also work when we have consumers, as in
+//     // TKUIResultsView. Probably make override of common props to happen outside, and pass this as a parameter to
+//     // the helper. The Consumer needs also to be outside since it's specific to each component.
+//     const configToComponentMapper = (config: ITKUIConfig) => config.TKUITripRow;
+//     const configToRenderMapper = (config: ITKUIConfig) => configToComponentMapper(config).render;
+//     const ComponentRenderer = dependencyInjector(configToRenderMapper, tKUITripRowDefaultConfig.render);
+//     // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
+//     const WithStyleInjector = withStyleProp(ComponentRenderer, "TKUITripRow");
+//     // Wraps prev component to the final component, mapping interface / use props to the raw component full props.
+//     return (props: ITKUITripRowProps) =>
+//         <TKUIConfigContext.Consumer>
+//             {(config: ITKUIConfig) => {
+//                 const tripRowConfig = configToComponentMapper(config);
+//                 // TODO: merge styles instead of next line.
+//                 const stylesToPass = props.styles || tripRowConfig.styles || tKUITripRowDefaultConfig.styles;
+//                 const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
+//                     tripRowConfig.randomizeClassNames;
+//                 return <WithStyleInjector {...props} styles={stylesToPass}
+//                                           randomizeClassNames={randomizeClassNamesToPass}/>;
+//             }}
+//         </TKUIConfigContext.Consumer>;
+// };
+
+const Mapper = (props: {
+    clientProps: ITKUITripRowProps,
+    children: (props: Subtract<IProps, {classes: ClassNameMap<keyof ITKUITripRowStyle>}>) => React.ReactNode
+}) =>
+    <>
+        {props.children!(props.clientProps)}
+    </>;
+
+// export default Connect();
+export default connect(
+    (config: ITKUIConfig) => config.TKUITripRow,
+    tKUITripRowDefaultConfig,
+    "TKUITripRow",
+    Mapper
+);
