@@ -60,6 +60,10 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
 
     // TODO:
     // SEGUIR ACÁ
+    // - Remove class TKUIWithStyle? Probably it doesn't make sense anymore to pass style or randomizeClassNames directly to components,
+    // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
+    // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
+
     // [ ] Start with architecture change.
     // - mostrar stops en mapa
     // - agregar skedgo geocoding source

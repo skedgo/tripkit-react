@@ -36,7 +36,7 @@ interface IConsumedProps {
     onSortChange: (sort: TripSort) => void;
 }
 
-export interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle> {}
+export interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle, IProps> {}
 
 export interface ITKUIResultsStyle {
     main: CSSProps<IProps>;
@@ -118,9 +118,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const sortOptions = this.getSortOptions();
-        // TODO: default theme is harcoded here. Get proper theme other way, or pass styles to Select differently.
-        const defaultStyle = (this.props.styles as StyleCreator<keyof ITKUIResultsStyle, TKUITheme, ITKUIResultsViewProps>)(tKUIDeaultTheme);
-        // const defaultStyle = (this.props.styles as Styles<keyof ITKUIResultsStyle, ITKUIResultsViewProps>);
+        const injectedStyles = (this.props.injectedStyles as Styles<keyof ITKUIResultsStyle, IProps>);
         return (
             <TKUICard
                 title={"Routing results"}
@@ -133,10 +131,10 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                             onChange={(option) => this.props.onSortChange(option.value as TripSort)}
                             isSearchable={false}
                             styles={{
-                                container: styles => ({...styles, ...defaultStyle.sortSelectContainer}),
-                                control: styles => ({...styles, ...defaultStyle.sortSelectControl}),
+                                container: styles => ({...styles, ...injectedStyles.sortSelectContainer}),
+                                control: styles => ({...styles, ...injectedStyles.sortSelectControl}),
                                 indicatorsContainer: styles => ({...styles, display: 'none'}),
-                                singleValue: styles => ({...styles, ...defaultStyle.sortSelectSingleValue})
+                                singleValue: styles => ({...styles, ...injectedStyles.sortSelectSingleValue})
                             }}
                         />
                         <div>
@@ -237,7 +235,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     };
 
 const merger: (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) =>
-    Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle>> =
+    Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle, IProps>> =
     (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps) => {
         let onChangeToPass;
         if (clientProps.onChange && consumedProps.onChange) {
@@ -251,7 +249,7 @@ const merger: (clientProps: ITKUIResultsViewProps, consumedProps: IConsumedProps
         return {...clientProps, ...consumedProps, onChange: onChangeToPass} as IProps;
     };
 
-const Mapper: PropsMapper<ITKUIResultsViewProps, Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle>>> =
+const Mapper: PropsMapper<ITKUIResultsViewProps, Subtract<IProps, TKUIWithClasses<ITKUIResultsStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
