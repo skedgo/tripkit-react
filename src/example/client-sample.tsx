@@ -11,9 +11,9 @@ import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
 import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
 import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
-import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
-import {default as TKStyleProvider} from "../jss/TKStyleProvider";
+import ServiceResultsProvider from "../service/ServiceResultsProvider";
+import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator, Styles, CSSProperties} from 'react-jss'
+import {default as TKStyleProvider, TKUITheme} from "../jss/TKStyleProvider";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import TKUIConfigProvider from "../config/TKUIConfigProvider";
 import ITKUIConfig from "../config/TKUIConfig";
@@ -93,7 +93,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     // };
 
     const config: Partial<ITKUIConfig> = {
-        // TKUITripRow: {
+        TKUITripRow: {
         //     render: (props: ITKUITripRowProps) =>
         //         <div className={props.className}
         //              onClick={props.onClick}
@@ -102,7 +102,26 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
         //         >
         //             {props.value.segments[0].getAction()}
         //         </div>
-        // }
+            styles: (theme: TKUITheme) => {
+                return ({
+                    main: (defaultStyle: CSSProperties<ITKUITripRowProps>) => ({
+                        ...defaultStyle,
+                        background: 'red'
+                    }),
+                    badge: (defaultStyle) => ({
+                        ...defaultStyle,
+                        color: 'yellow',
+                        '& svg': {
+                            width: '24px',
+                            height: '24px',
+                            marginRight: '10px',
+                        }
+                    }),
+                    info: {
+                        color: 'blue',
+                    }
+                })}
+        }
     };
 
     const testTripsJson = require("../test/tripsWithRTVehicle.json");

@@ -1,5 +1,5 @@
 import {IProps, ITKUITripRowStyle} from "../trip/TKUITripRow";
-import {TKUIStyles} from "../jss/StyleHelper";
+import {TKUICustomStyles, TKUIStyles} from "../jss/StyleHelper";
 import {IProps as ITKUIRoutingResultsImplProps, ITKUIResultsStyle} from "../trip/TKUIResultsView";
 
 interface ITKUIConfig {
@@ -7,9 +7,16 @@ interface ITKUIConfig {
     TKUIRoutingResultsView: Partial<ITKUIComponentConfig<ITKUIRoutingResultsImplProps, ITKUIResultsStyle>>
 }
 
-export interface ITKUIComponentConfig<P, S> {
+export interface ITKUIComponentDefaultConfig<P, S> {
     render: (props: P) => JSX.Element;
     styles: TKUIStyles<S, P>;
+    randomizeClassNames?: boolean;
+    classNamePrefix: string;
+}
+
+export interface ITKUIComponentConfig<P, S> {
+    render: (props: P) => JSX.Element;
+    styles: TKUICustomStyles<S, P>;
     randomizeClassNames?: boolean;
     classNamePrefix: string;
 }

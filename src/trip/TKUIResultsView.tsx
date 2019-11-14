@@ -5,8 +5,8 @@ import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard from "../card/TKUICard";
-import {ClassNameMap, CSSProperties} from "react-jss";
-import {CSSProps, TKUIWithClasses, withStyleProp} from "../jss/StyleHelper";
+import {ClassNameMap, CSSProperties, StyleCreator, Styles} from "react-jss";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {TripSort} from "../api/WithRoutingResults";
 import {TimePreference} from "..";
@@ -17,12 +17,12 @@ import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
 import {default as ITKUIConfig, ITKUIComponentConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {tKUIDeaultTheme, TKUITheme} from "../jss/TKStyleProvider";
 
-export interface ITKUIResultsViewProps {
+export interface ITKUIResultsViewProps extends TKUIWithStyle<ITKUIResultsStyle, IProps> {
     onChange?: (value: Trip) => void;
     onDetailsClicked?: () => void;
     className?: string;
-    styles?: any;
 }
 
 interface IConsumedProps {
@@ -34,7 +34,6 @@ interface IConsumedProps {
     query: RoutingQuery;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
-    // renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 export interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle> {}
@@ -119,6 +118,9 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const sortOptions = this.getSortOptions();
+        // TODO: default theme is harcoded here. Get proper theme other way, or pass styles to Select differently.
+        const defaultStyle = (this.props.styles as StyleCreator<keyof ITKUIResultsStyle, TKUITheme, ITKUIResultsViewProps>)(tKUIDeaultTheme);
+        // const defaultStyle = (this.props.styles as Styles<keyof ITKUIResultsStyle, ITKUIResultsViewProps>);
         return (
             <TKUICard
                 title={"Routing results"}
@@ -131,10 +133,10 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                             onChange={(option) => this.props.onSortChange(option.value as TripSort)}
                             isSearchable={false}
                             styles={{
-                                container: styles => ({...styles, ...this.props.styles.sortSelectContainer}),
-                                control: styles => ({...styles, ...this.props.styles.sortSelectControl}),
+                                container: styles => ({...styles, ...defaultStyle.sortSelectContainer}),
+                                control: styles => ({...styles, ...defaultStyle.sortSelectControl}),
                                 indicatorsContainer: styles => ({...styles, display: 'none'}),
-                                singleValue: styles => ({...styles, ...this.props.styles.sortSelectSingleValue})
+                                singleValue: styles => ({...styles, ...defaultStyle.sortSelectSingleValue})
                             }}
                         />
                         <div>
@@ -142,45 +144,23 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         </div>
                     </div>
                     {this.props.values && this.props.values.map((trip: Trip, index: number) =>
-                            <TKUITripRow
-                                value={trip}
-                                className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
-                                onClick={() => this.props.onChange && this.props.onChange(trip)}
-                                onFocus={() => this.props.onChange && this.props.onChange(trip)}
-                                onAlternativeClick={this.props.onAlternativeChange}
-                                onDetailClick={this.props.onDetailsClicked}
-                                onKeyDown={this.onKeyDown}
-                                key={index + trip.getKey()}
-                                reference={(el: any) => this.rowRefs[index] = el}
-                                badge={this.state.tripToBadge.get(trip)}
-                                expanded={trip === this.state.expanded}
-                                onExpand={(expand: boolean) =>
-                                    this.setState({
-                                        expanded: expand ? trip : undefined
-                                    })}
-                            />
-                        // this.props.renderTrip({
-                        //     value: trip,
-                        //     className: classNames(classes.row, trip === this.props.value && classes.rowSelected),
-                        //     onClick: () => {
-                        //         this.props.onChange && this.props.onChange(trip);
-                        //     },
-                        //     onFocus: () => {
-                        //         this.props.onChange && this.props.onChange(trip);
-                        //     },
-                        //     onAlternativeClick: this.props.onAlternativeChange,
-                        //     onDetailClick: this.props.onDetailsClicked,
-                        //     onKeyDown: this.onKeyDown,
-                        //     key: index + trip.getKey(),
-                        //     reference: (el: any) => this.rowRefs[index] = el,
-                        //     badge: this.state.tripToBadge.get(trip),
-                        //     expanded: trip === this.state.expanded,
-                        //     onExpand: (expand: boolean) => {
-                        //         this.setState({
-                        //             expanded: expand ? trip : undefined
-                        //         })
-                        //     }
-                        // })
+                        <TKUITripRow
+                            value={trip}
+                            className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
+                            onClick={() => this.props.onChange && this.props.onChange(trip)}
+                            onFocus={() => this.props.onChange && this.props.onChange(trip)}
+                            onAlternativeClick={this.props.onAlternativeChange}
+                            onDetailClick={this.props.onDetailsClicked}
+                            onKeyDown={this.onKeyDown}
+                            key={index + trip.getKey()}
+                            reference={(el: any) => this.rowRefs[index] = el}
+                            badge={this.state.tripToBadge.get(trip)}
+                            expanded={trip === this.state.expanded}
+                            onExpand={(expand: boolean) =>
+                                this.setState({
+                                    expanded: expand ? trip : undefined
+                                })}
+                        />
                     )}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}

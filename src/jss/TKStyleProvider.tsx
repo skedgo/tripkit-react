@@ -12,7 +12,7 @@ export interface TKUITheme {
     colorPrimaryOpacity: (opacity: number) => CSS.Color,
 }
 
-const tKUIDeaultTheme: TKUITheme = {
+export const tKUIDeaultTheme: TKUITheme = {
     colorPrimary: '#23b15e',
     colorSuccess: '#23b15e',
     colorInfo: '#2b7eed',

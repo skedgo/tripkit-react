@@ -12,7 +12,7 @@ import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
 import classNames from "classnames";
-import {ITKUIComponentConfig, default as ITKUIConfig} from "../config/TKUIConfig";
+import {default as ITKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
@@ -50,11 +50,11 @@ export interface IProps extends ITKUITripRowProps {
     classes: ClassNameMap<keyof ITKUITripRowStyle>;
 }
 
-export const tKUITripRowDefaultConfig: ITKUIComponentConfig<IProps, ITKUITripRowStyle> = {
+export const tKUITripRowDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUITripRowStyle> = {
     render: props => <TKUITripRow {...props}/>,
     styles: tTKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",
-    randomizeClassNames: true
+    randomizeClassNames: false
 };
 
 function badgeIcon(badge: Badges): JSX.Element {
