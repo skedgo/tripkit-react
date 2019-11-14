@@ -12,6 +12,21 @@ import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKSt
 
 export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;
 
+export type TKUICustomStyles<ST, PR> = Partial<CustomStyles<keyof ST, PR>> | TKUICustomStyleCreator<keyof ST, TKUITheme, PR>;
+
+export type TKUICustomStyleCreator<C extends string | number | symbol = string, T extends {} = {}, Props = {}> = (
+    theme: T
+) => Partial<CustomStyles<C, Props>>;
+
+export type CustomStyles<ClassKey extends string | number | symbol = string, Props = {}> = Record<
+    ClassKey,
+    TKUICustomCSSProperties<Props>
+    >;
+
+export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProperties<Props>) => CSSProperties<Props>);
+
+export type TKUICustomCSSProperties<Props> = CSSProperties<Props> | CSSPropertiesCreator<Props>;
+
 export interface TKUIWithStyle<ST, CP> {
     styles?: TKUIStyles<ST, CP>,
     randomizeClassNames?: boolean
@@ -26,8 +41,8 @@ function withStyleProp<
         CP extends {classes: ClassNameMap<keyof ST>},
         ExtS extends string,
         P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}>
-            & {styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string}> // TODO: make it required
-        (Consumer: React.ComponentType<CP>, classPrefix?: string) {
+            & {styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string}>
+        (Consumer: React.ComponentType<CP>, classPrefix?: string) { // TODO: remove classPrefix and make classNamePrefix required
 
     return class WithStyleProp extends React.Component<P, {}> {
 
@@ -41,7 +56,8 @@ function withStyleProp<
         }
 
         public render(): React.ReactNode {
-            const {...props} = this.props as P;
+            const props = this.props;
+            // const {...props} = this.props as P;
             return <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
                 generateClassNameSeed : this.generateClassName}>
                 <this.StyledComponent {...props}/>
