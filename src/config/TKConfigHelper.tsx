@@ -1,18 +1,13 @@
 import * as React from "react";
 import {
-    CSSPropertiesCreator,
-    CustomStyles,
-    TKUICustomCSSProperties,
-    TKUICustomStyleCreator,
     TKUIWithClasses,
-    TKUIWithStyle,
-    withStyleProp
+    TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
 import {default as ITKUIConfig, ITKUIComponentConfig} from "./TKUIConfig";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
 import {Subtract} from "utility-types";
-import {TKUITheme} from "../jss/TKStyleProvider";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
+import {useContext} from "react";
 
 function dependencyInjector<P>(configToRenderMapper: (config: ITKUIConfig) => ((props: P) => JSX.Element) | undefined,
                                defaultRender: (props: P) => JSX.Element): (props: P) => JSX.Element {
@@ -67,65 +62,35 @@ export function mapperFromFunction<INPUT_PROPS, OUTPUT_PROPS>(mapperFc: (inputPr
         </>
 }
 
-function isFunction(functionToCheck: any) {
-    console.log(functionToCheck && {}.toString.call(functionToCheck));
-    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
-}
-
 export function connect<
-    IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE>,
+    IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS>,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,
     STYLE
     >(confToCompMapper: (config: ITKUIConfig) => Partial<ITKUIComponentConfig<IMPL_PROPS, STYLE>>,
       defaultConfig: ITKUIComponentConfig<IMPL_PROPS, STYLE>,
-      PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE>>>) {
+      PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>>) {
     // Renderer injector
     const configToRenderMapper = (config: ITKUIConfig) => confToCompMapper(config).render;
     const ComponentRenderer = dependencyInjector(configToRenderMapper, defaultConfig.render);
     // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
-    const WithStyleInjector = withStyleProp(ComponentRenderer);
+    const WithStyleInjector = withStyleInjection(ComponentRenderer);
     // Wraps prev component to the final component, mapping interface / use props to the raw component full props.
     return (props: CLIENT_PROPS) =>
         <PropsMapper inputProps={props}>
-            {(implProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE>>) =>
-                <TKUIConfigContext.Consumer>
+            {(implProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => {
+                return <TKUIConfigContext.Consumer>
                     {(config: ITKUIConfig) => {
                         const componentConfig = confToCompMapper(config);
-                        // TODO: merge styles instead of next line.
-                        // const stylesToPass = props.styles || componentConfig.styles || defaultConfig.styles;
-                        // TODO: move this inside constructor of withStyleProp
-                        const stylesToPass = (theme: TKUITheme) => {
-                            const defaultStyles = (isFunction(defaultConfig.styles) ?
-                                (defaultConfig.styles as StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>)(theme) :
-                                defaultConfig.styles as Styles<keyof STYLE, IMPL_PROPS>);
-                            const customStyles: Partial<CustomStyles<keyof STYLE, IMPL_PROPS>> = (isFunction(componentConfig.styles) ?
-                                (componentConfig.styles as TKUICustomStyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>)(theme) :
-                                componentConfig.styles as Partial<Styles<keyof STYLE, IMPL_PROPS>>);
-                            const overrideStyles = customStyles ?
-                                Object.keys(customStyles)
-                                    .reduce((overrideStyles: Partial<Styles<keyof STYLE, IMPL_PROPS>>, className: string) => {
-                                        const customStyle: TKUICustomCSSProperties<IMPL_PROPS> = customStyles[className];
-                                        const customJssStyle: CSSProperties<IMPL_PROPS> = isFunction(customStyle) ?
-                                            (customStyle as CSSPropertiesCreator<IMPL_PROPS>)(defaultStyles[className]) :
-                                            customStyle as CSSProperties<IMPL_PROPS>;
-                                        return {
-                                            ...overrideStyles,
-                                            [className]: customJssStyle
-                                        }
-                                    }, {}) : {};
-                            console.log("overrideStyles: ");
-                            console.log(overrideStyles);
-                            return {...defaultStyles, ...overrideStyles};
-                        };
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
                             componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
                         return <WithStyleInjector {...implProps}
-                                                  styles={stylesToPass}
+                                                  defaultStyles={defaultConfig.styles}
+                                                  configStyles={componentConfig.styles}
                                                   randomizeClassNames={randomizeClassNamesToPass}
                                                   classNamePrefix={componentConfig.classNamePrefix || defaultConfig.classNamePrefix}
                         />;
                     }}
                 </TKUIConfigContext.Consumer>
-            }
+            }}
         </PropsMapper>
 }

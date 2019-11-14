@@ -6,7 +6,7 @@ import TKUITripTime from "./TKUITripTime";
 import Trip from "../model/trip/Trip";
 import {EventEmitter} from "fbemitter";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tTKUITripRowDefaultStyle} from "./TKUITripRow.css";
 import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
@@ -46,9 +46,7 @@ export interface ITKUITripRowStyle {
     selectedAlternative: CSSProps<IProps>;
 }
 
-export interface IProps extends ITKUITripRowProps {
-    classes: ClassNameMap<keyof ITKUITripRowStyle>;
-}
+export interface IProps extends ITKUITripRowProps, TKUIWithClasses<ITKUITripRowStyle, IProps> {}
 
 export const tKUITripRowDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUITripRowStyle> = {
     render: props => <TKUITripRow {...props}/>,
