@@ -16,7 +16,7 @@ import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator, Style
 import {default as TKStyleProvider, TKUITheme} from "../jss/TKStyleProvider";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import TKUIConfigProvider from "../config/TKUIConfigProvider";
-import ITKUIConfig from "../config/TKUIConfig";
+import {TKUIConfig} from "../config/TKUIConfig";
 import {IProps as ITKUITripRowProps} from "../trip/TKUITripRow";
 
 const searchStr = window.location.search;
@@ -92,7 +92,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //     colorPrimary: 'brown'
     // };
 
-    const config: Partial<ITKUIConfig> = {
+    const config: TKUIConfig = {
         TKUITripRow: {
         //     render: (props: ITKUITripRowProps) =>
         //         <div className={props.className}
@@ -108,7 +108,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                         ...defaultStyle,
                         background: 'red'
                     }),
-                    badge: (defaultStyle) => ({
+                    badge: (defaultStyle: CSSProperties<ITKUITripRowProps>) => ({
                         ...defaultStyle,
                         color: 'yellow',
                         '& svg': {

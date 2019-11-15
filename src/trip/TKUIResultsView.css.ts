@@ -5,7 +5,7 @@ import {tKUIColors} from "../jss/TKStyleProvider";
 import {TKUICustomStyles, TKUIStyles} from "../jss/StyleHelper";
 import {IProps} from "./TKUIResultsView";
 
-export const tKUIResultsDefaultStyle: TKUICustomStyles<ITKUIResultsStyle, IProps> = {
+export const tKUIResultsDefaultStyle: TKUIStyles<ITKUIResultsStyle, IProps> = {
 
     main: {
         ...genStyles.flex,

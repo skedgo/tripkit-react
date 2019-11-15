@@ -15,9 +15,8 @@ import Select, { components } from 'react-select';
 import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
-import {default as ITKUIConfig, ITKUIComponentConfig} from "../config/TKUIConfig";
+import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {tKUIDeaultTheme, TKUITheme} from "../jss/TKStyleProvider";
 
 export interface ITKUIResultsViewProps extends TKUIWithStyle<ITKUIResultsStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -49,7 +48,7 @@ export interface ITKUIResultsStyle {
     sortSelectSingleValue: CSSProps<IProps>;
 }
 
-export const tKUIResultsViewDefaultConfig: ITKUIComponentConfig<IProps, ITKUIResultsStyle> = {
+export const tKUIResultsViewDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUIResultsStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",
@@ -256,5 +255,5 @@ const Mapper: PropsMapper<ITKUIResultsViewProps, Subtract<IProps, TKUIWithClasse
                 children!(merger(inputProps, consumedProps))}
         </Consumer>;
 
-export default connect((config: ITKUIConfig) => config.TKUIRoutingResultsView,
+export default connect((config: TKUIConfig) => config.TKUIRoutingResultsView,
     tKUIResultsViewDefaultConfig, Mapper);

@@ -3,17 +3,17 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import {default as ITKUIConfig, ITKUIComponentConfig} from "./TKUIConfig";
+import {TKUIConfig, ITKUIComponentConfig, ITKUIComponentDefaultConfig} from "./TKUIConfig";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
 import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
 import {useContext} from "react";
 
-function dependencyInjector<P>(configToRenderMapper: (config: ITKUIConfig) => ((props: P) => JSX.Element) | undefined,
+function dependencyInjector<P>(configToRenderMapper: (config: TKUIConfig) => ((props: P) => JSX.Element) | undefined,
                                defaultRender: (props: P) => JSX.Element): (props: P) => JSX.Element {
     return (props: P) =>
         <TKUIConfigContext.Consumer>
-            {(config: ITKUIConfig) => {
+            {(config: TKUIConfig) => {
                 const renderFromConfig = configToRenderMapper(config);
                 const render = renderFromConfig || defaultRender;
                 return render(props);
@@ -66,11 +66,11 @@ export function connect<
     IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS>,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,
     STYLE
-    >(confToCompMapper: (config: ITKUIConfig) => Partial<ITKUIComponentConfig<IMPL_PROPS, STYLE>>,
-      defaultConfig: ITKUIComponentConfig<IMPL_PROPS, STYLE>,
+    >(confToCompMapper: (config: TKUIConfig) => Partial<ITKUIComponentConfig<IMPL_PROPS, STYLE>> | undefined,
+      defaultConfig: ITKUIComponentDefaultConfig<IMPL_PROPS, STYLE>,
       PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>>) {
     // Renderer injector
-    const configToRenderMapper = (config: ITKUIConfig) => confToCompMapper(config).render;
+    const configToRenderMapper = (config: TKUIConfig) => confToCompMapper(config) ?  confToCompMapper(config)!.render : undefined;
     const ComponentRenderer = dependencyInjector(configToRenderMapper, defaultConfig.render);
     // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
     const WithStyleInjector = withStyleInjection(ComponentRenderer);
@@ -79,15 +79,15 @@ export function connect<
         <PropsMapper inputProps={props}>
             {(implProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => {
                 return <TKUIConfigContext.Consumer>
-                    {(config: ITKUIConfig) => {
+                    {(config: TKUIConfig) => {
                         const componentConfig = confToCompMapper(config);
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-                            componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
+                            componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
                         return <WithStyleInjector {...implProps}
                                                   defaultStyles={defaultConfig.styles}
-                                                  configStyles={componentConfig.styles}
+                                                  configStyles={componentConfig && componentConfig.styles}
                                                   randomizeClassNames={randomizeClassNamesToPass}
-                                                  classNamePrefix={componentConfig.classNamePrefix || defaultConfig.classNamePrefix}
+                                                  classNamePrefix={(componentConfig && componentConfig.classNamePrefix) || defaultConfig.classNamePrefix}
                         />;
                     }}
                 </TKUIConfigContext.Consumer>

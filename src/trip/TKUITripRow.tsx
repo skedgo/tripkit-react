@@ -12,7 +12,7 @@ import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
 import classNames from "classnames";
-import {default as ITKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
+import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
@@ -163,5 +163,5 @@ class TKUITripRow extends React.Component<IProps, {}> {
 }
 
 export default connect(
-    (config: ITKUIConfig) => config.TKUITripRow, tKUITripRowDefaultConfig,
+    (config: TKUIConfig) => config.TKUITripRow, tKUITripRowDefaultConfig,
     mapperFromFunction((clientProps: ITKUITripRowProps) => clientProps));
