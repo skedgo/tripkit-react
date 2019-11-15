@@ -3,12 +3,11 @@ import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
 import "./TripAlternativesView.css";
 import Util from "../util/Util";
-import {ITKUITripRowProps} from "./TKUITripRow";
+import {default as TKUITripRow} from "./TKUITripRow";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAlternativesView extends React.Component<IProps, {}> {
@@ -33,19 +32,18 @@ class TripAlternativesView extends React.Component<IProps, {}> {
                  aria-label="Trip alternatives list. Browse through alternatives using tab key, and press return to pick alternative."
             >
                 <div className="gl-scrollable-y gl-grow">
-                    { this.props.value.trips.map((trip: Trip, i: number) =>
-                        this.props.renderTrip(
-                            { value: trip,
-                                brief: true,
-                                className: "TripAlternativesView-tripRow" + (trip === this.props.value.getSelectedTrip() ? " selected" : ""),
-                                onClick: () => {
-                                    return this.onSelected(i);
-                                },
-                                onKeyDown: (e: any) => this.onKeyDown(e, i),
-                                key: i + trip.getKey(),
-                                reference: (el: any) => this.rowRefs[i] = el
-                            })
-                    )}
+                    {this.props.value.trips.map((trip: Trip, i: number) =>
+                        <TKUITripRow
+                            value={trip}
+                            brief={true}
+                            className={"TripAlternativesView-tripRow" + (trip === this.props.value.getSelectedTrip() ? " selected" : "")}
+                            onClick={() => {
+                                return this.onSelected(i);
+                            }}
+                            onKeyDown={(e: any) => this.onKeyDown(e, i)}
+                            key={i + trip.getKey()}
+                            reference={(el: any) => this.rowRefs[i] = el}
+                        />)}
                 </div>
             </div>
         );

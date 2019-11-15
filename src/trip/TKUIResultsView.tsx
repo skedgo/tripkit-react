@@ -18,7 +18,7 @@ import {Subtract} from "utility-types";
 import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 
-export interface ITKUIResultsViewProps extends TKUIWithStyle<ITKUIResultsStyle, IProps> {
+interface ITKUIResultsViewProps extends TKUIWithStyle<ITKUIResultsStyle, IProps> {
     onChange?: (value: Trip) => void;
     onDetailsClicked?: () => void;
     className?: string;
@@ -35,7 +35,9 @@ interface IConsumedProps {
     onSortChange: (sort: TripSort) => void;
 }
 
-export interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle, IProps> {}
+interface IProps extends ITKUIResultsViewProps, IConsumedProps, TKUIWithClasses<ITKUIResultsStyle, IProps> {}
+
+export type TKUIResultsViewProps = IProps;
 
 export interface ITKUIResultsStyle {
     main: CSSProps<IProps>;
@@ -48,7 +50,7 @@ export interface ITKUIResultsStyle {
     sortSelectSingleValue: CSSProps<IProps>;
 }
 
-export const tKUIResultsViewDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUIResultsStyle> = {
+const tKUIResultsViewDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUIResultsStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",

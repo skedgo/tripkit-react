@@ -13,7 +13,7 @@ import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator, Style
 import {TKUITheme} from "../jss/TKUITheme";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import {TKUIConfig} from "../config/TKUIConfig";
-import {IProps as ITKUITripRowProps} from "../trip/TKUITripRow";
+import {TKUITripRowProps} from "../trip/TKUITripRow";
 import TKUIProvider from "../config/TKUIProvider";
 
 const searchStr = window.location.search;
@@ -91,21 +91,21 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             colorPrimary: 'brown'
         },
         TKUITripRow: {
-            // render: (props: ITKUITripRowProps) =>
-            //     <div className={props.className}
-            //          onClick={props.onClick}
-            //          onFocus={props.onFocus}
-            //          onKeyDown={props.onKeyDown}
-            //     >
-            //         {props.value.segments[0].getAction()}
-            //     </div>,
+            render: (props: TKUITripRowProps) =>
+                <div className={props.className}
+                     onClick={props.onClick}
+                     onFocus={props.onFocus}
+                     onKeyDown={props.onKeyDown}
+                >
+                    {props.value.segments[0].getAction()}
+                </div>,
             styles: (theme: TKUITheme) => {
                 return ({
-                    main: (defaultStyle: CSSProperties<ITKUITripRowProps>) => ({
+                    main: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
                         ...defaultStyle,
                         background: 'red'
                     }),
-                    badge: (defaultStyle: CSSProperties<ITKUITripRowProps>) => ({
+                    badge: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
                         ...defaultStyle,
                         color: 'yellow',
                         '& svg': {
