@@ -16,7 +16,7 @@ import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, IProps> {
+interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, IProps> {
     value: Trip;
     className?: string;
     brief?: boolean;
@@ -46,9 +46,11 @@ export interface ITKUITripRowStyle {
     selectedAlternative: CSSProps<IProps>;
 }
 
-export interface IProps extends ITKUITripRowProps, TKUIWithClasses<ITKUITripRowStyle, IProps> {}
+interface IProps extends ITKUITripRowProps, TKUIWithClasses<ITKUITripRowStyle, IProps> {}
 
-export const tKUITripRowDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUITripRowStyle> = {
+export type TKUITripRowProps = IProps;
+
+const tKUITripRowDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUITripRowStyle> = {
     render: props => <TKUITripRow {...props}/>,
     styles: tTKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",

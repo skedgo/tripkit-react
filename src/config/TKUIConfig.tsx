@@ -1,12 +1,12 @@
-import {IProps, ITKUITripRowStyle} from "../trip/TKUITripRow";
+import {ITKUITripRowStyle, TKUITripRowProps} from "../trip/TKUITripRow";
 import {TKUICustomStyles, TKUIStyles} from "../jss/StyleHelper";
-import {IProps as ITKUIRoutingResultsImplProps, ITKUIResultsStyle} from "../trip/TKUIResultsView";
+import {ITKUIResultsStyle, TKUIResultsViewProps} from "../trip/TKUIResultsView";
 import {TKUITheme} from "../jss/TKUITheme";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
-    TKUITripRow: Partial<ITKUIComponentConfig<IProps, ITKUITripRowStyle>>;
-    TKUIRoutingResultsView: Partial<ITKUIComponentConfig<ITKUIRoutingResultsImplProps, ITKUIResultsStyle>>;
+    TKUITripRow: Partial<ITKUIComponentConfig<TKUITripRowProps, ITKUITripRowStyle>>;
+    TKUIRoutingResultsView: Partial<ITKUIComponentConfig<TKUIResultsViewProps, ITKUIResultsStyle>>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

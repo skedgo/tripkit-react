@@ -2,14 +2,12 @@ import TripGroup from "../model/trip/TripGroup";
 import * as React from "react";
 import Tooltip from "rc-tooltip";
 import TripAlternativesView from "./TripAlternativesView";
-import {ITKUITripRowProps} from "./TKUITripRow";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import "./TripAltBtn.css";
 
 interface IProps {
     value: TripGroup;
     onChange: (value: TripGroup) => void;
-    renderTrip: <P extends ITKUITripRowProps>(tripRowProps: P) => JSX.Element;
 }
 
 class TripAltBtn extends React.Component<IProps, {}> {
@@ -22,7 +20,6 @@ class TripAltBtn extends React.Component<IProps, {}> {
                      overlay={
                          <TripAlternativesView value={this.props.value as TripGroup}
                                                onChange={this.props.onChange}
-                                               renderTrip={this.props.renderTrip}
                                                ref={el => this.altTripsRef = el}
                          />
                      }
