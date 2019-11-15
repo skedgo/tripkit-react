@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUITripOverviewViewProps, ITKUITripOverviewViewStyle} from "./TKUITripOverviewView";
+import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "./TKUITripOverviewView";
 
-export const tKUITripOverviewViewDefaultStyle: TKUIStyles<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> = {
+export const tKUITripOverviewViewDefaultStyle: TKUIStyles<TKUITripOverviewViewStyle, TKUITripOverviewViewProps> = {
     main: {
         padding: '15px 0'
     }
