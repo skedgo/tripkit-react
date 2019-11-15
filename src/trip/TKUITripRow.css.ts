@@ -1,9 +1,9 @@
-import {badgeColor, TKUITripRowProps, ITKUITripRowStyle} from "./TKUITripRow";
+import {badgeColor, TKUITripRowProps, TKUITripRowStyle} from "./TKUITripRow";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
-export const tTKUITripRowDefaultStyle: TKUIStyles<ITKUITripRowStyle, TKUITripRowProps> =
+export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
     (theme: TKUITheme) => ({
         main: {
             background: 'white',

@@ -16,7 +16,7 @@ import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     className?: string;
     brief?: boolean;
@@ -35,7 +35,7 @@ interface ITKUITripRowProps extends TKUIWithStyle<ITKUITripRowStyle, IProps> {
 
 export const TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
 
-export interface ITKUITripRowStyle {
+interface IStyle {
     main: CSSProps<IProps>;
     badge: CSSProps<IProps>;
     info: CSSProps<IProps>;
@@ -46,11 +46,12 @@ export interface ITKUITripRowStyle {
     selectedAlternative: CSSProps<IProps>;
 }
 
-interface IProps extends ITKUITripRowProps, TKUIWithClasses<ITKUITripRowStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUITripRowProps = IProps;
+export type TKUITripRowStyle = IStyle;
 
-const tKUITripRowDefaultConfig: ITKUIComponentDefaultConfig<IProps, ITKUITripRowStyle> = {
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripRow {...props}/>,
     styles: tTKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",
@@ -165,5 +166,5 @@ class TKUITripRow extends React.Component<IProps, {}> {
 }
 
 export default connect(
-    (config: TKUIConfig) => config.TKUITripRow, tKUITripRowDefaultConfig,
-    mapperFromFunction((clientProps: ITKUITripRowProps) => clientProps));
+    (config: TKUIConfig) => config.TKUITripRow, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));
