@@ -9,15 +9,12 @@ import * as queryString from "query-string";
 import TripGoApi from "../api/TripGoApi";
 import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
-import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
-import OptionsProvider, {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
-import ServiceResultsProvider from "../service/ServiceResultsProvider";
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator, Styles, CSSProperties} from 'react-jss'
-import {default as TKStyleProvider, TKUITheme} from "../jss/TKStyleProvider";
+import {TKUITheme} from "../jss/TKUITheme";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
-import TKUIConfigProvider from "../config/TKUIConfigProvider";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {IProps as ITKUITripRowProps} from "../trip/TKUITripRow";
+import TKUIProvider from "../config/TKUIProvider";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -88,20 +85,20 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     //     )
     // };
 
-    // const theme: TKUITheme = {
-    //     colorPrimary: 'brown'
-    // };
 
     const config: TKUIConfig = {
+        theme: {
+            colorPrimary: 'brown'
+        },
         TKUITripRow: {
-        //     render: (props: ITKUITripRowProps) =>
-        //         <div className={props.className}
-        //              onClick={props.onClick}
-        //              onFocus={props.onFocus}
-        //              onKeyDown={props.onKeyDown}
-        //         >
-        //             {props.value.segments[0].getAction()}
-        //         </div>
+            // render: (props: ITKUITripRowProps) =>
+            //     <div className={props.className}
+            //          onClick={props.onClick}
+            //          onFocus={props.onFocus}
+            //          onKeyDown={props.onKeyDown}
+            //     >
+            //         {props.value.segments[0].getAction()}
+            //     </div>,
             styles: (theme: TKUITheme) => {
                 return ({
                     main: (defaultStyle: CSSProperties<ITKUITripRowProps>) => ({
@@ -128,31 +125,11 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     // const testTrips = Util.deserialize(testTripsJson, RoutingResults).groups;
     const testTrips = undefined;
 
-    import("../trip-planner/TKUITripPlanner").then((module) => {
-        const generateClassName = (rule: any, sheet: any) => {
-            return sheet.options.classNamePrefix + rule.key;
-        };
-        ReactDOM.render(
-            <TKUIConfigProvider config={config}>
-                <OptionsProvider>
-                    <OptionsContext.Consumer>
-                        {(optionsContext: IOptionsContext) => (
-                            <RoutingResultsProvider initQuery={routingQuery} options={optionsContext.value}
-                                // testTrips={testTrips}
-                            >
-                                <ServiceResultsProvider>
-                                    {/*<TKStyleProvider theme={theme}>*/}
-                                    <TKStyleProvider>
-                                        <TKUITripPlanner/>
-                                    </TKStyleProvider>
-                                </ServiceResultsProvider>
-                            </RoutingResultsProvider>
-                        )}
-                    </OptionsContext.Consumer>
-                </OptionsProvider>
-            </TKUIConfigProvider>,
-            containerElement);
-    });
+    ReactDOM.render(
+        <TKUIProvider config={config} initQuery={routingQuery}>
+            <TKUITripPlanner/>
+        </TKUIProvider>,
+        containerElement);
     DeviceUtil.initCss();
 }
 

@@ -2,7 +2,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {ITKUIWCSegmentInfoProps, ITKUIWCSegmentInfoStyle} from "./TKUIWCSegmentInfo";
 import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
-import {tKUIColors} from "../jss/TKStyleProvider";
+import {tKUIColors} from "../jss/TKUITheme";
 
 export const tKUIFriendlinessColors = {
     safe: '#1ec862',

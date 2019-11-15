@@ -3,7 +3,7 @@ import injectSheet, {JssProvider, createGenerateClassName, withTheme} from "reac
 import { Subtract } from "utility-types";
 import { ClassNameMap, Styles, StyleCreator, WithSheet, CSSProperties } from "react-jss";
 import * as CSS from 'csstype';
-import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKStyleProvider";
+import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKUITheme";
 import Util from "../util/Util";
 
 export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;

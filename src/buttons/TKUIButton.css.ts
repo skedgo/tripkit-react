@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {ITKUIButtonProps, ITKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";

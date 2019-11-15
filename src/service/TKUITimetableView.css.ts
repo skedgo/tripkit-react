@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {ITKUITimetableViewStyle} from "./TKUITimetableView";
 import {resetStyles} from "../css/ResetStyle.css";
-import {tKUIColors} from "../jss/TKStyleProvider";
+import {tKUIColors} from "../jss/TKUITheme";
 
 // TODO: apply this
 // .device-phone .ServiceDepartureTable-filterInput {

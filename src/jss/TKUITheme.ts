@@ -1,4 +1,3 @@
-import * as React from "react";
 import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
 import * as CSS from 'csstype';
 
@@ -39,25 +38,3 @@ export const generateClassNameFactory = (prefix: string) =>
     };
 
 export const generateClassNameSeed = createGenerateClassName();
-
-export interface ITKStyleProviderProps {
-    theme?: TKUITheme
-}
-
-class TKStyleProvider extends React.Component<ITKStyleProviderProps, {}> {
-
-    public render(): React.ReactNode {
-        return (
-            <JssProvider generateClassName={generateClassNameSeed}>
-                <ThemeProvider theme={this.props.theme || tKUIDeaultTheme}>
-                    <>
-                        {this.props.children}
-                    </>
-                </ThemeProvider>
-            </JssProvider>
-        );
-    }
-
-}
-
-export default TKStyleProvider;
