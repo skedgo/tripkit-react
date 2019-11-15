@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {ITKUICardProps, ITKUICardStyle} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =

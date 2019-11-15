@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {IStyleRelevantProps, ITKUITripSergmentStepsStyle} from "./TripSegmentSteps";
 import genStyles from "../css/GenStyle.css";
 

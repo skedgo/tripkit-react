@@ -1,8 +1,8 @@
 import genStyles from "../css/GenStyle.css";
 import {ITKUIResultsStyle} from "./TKUIResultsView";
 import Constants from "../util/Constants";
-import {tKUIColors} from "../jss/TKStyleProvider";
-import {TKUICustomStyles, TKUIStyles} from "../jss/StyleHelper";
+import {tKUIColors} from "../jss/TKUITheme";
+import {TKUIStyles} from "../jss/StyleHelper";
 import {IProps} from "./TKUIResultsView";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<ITKUIResultsStyle, IProps> = {

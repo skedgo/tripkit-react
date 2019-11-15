@@ -2,7 +2,7 @@ import genStyles from "../css/GenStyle.css";
 import {ITKUIServiceDepartureRowStyle} from "./TKUIServiceDepartureRow";
 import ITKUIServiceDepartureRowProps from "./ITKUIServiceDepartureRowProps";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
-import {tKUIColors, TKUITheme} from "../jss/TKStyleProvider";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 
 

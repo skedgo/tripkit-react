@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../../jss/TKStyleProvider";
+import {tKUIColors, TKUITheme} from "../../jss/TKUITheme";
 import genStyles from "../../css/GenStyle.css";
 import {ITKUIWheelchairInfoProps, ITKUIWheelchairInfoStyle} from "./TKUIWheelchairInfo";
 
