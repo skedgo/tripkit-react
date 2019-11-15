@@ -20,8 +20,6 @@ const searchStr = window.location.search;
 // Put query string manipulation in Util class
 const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
 
-// TKUIServiceDepartureRowConfig.instance.randomizeClassNames = false;
-
 export function renderTripPlanner(containerId: string = "tripgo-sample-root", tripgoKey: string = "") {
     let routingQuery: RoutingQuery | undefined;
     if (queryMap && queryMap.flat) {
@@ -91,14 +89,14 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             colorPrimary: 'brown'
         },
         TKUITripRow: {
-            render: (props: TKUITripRowProps) =>
-                <div className={props.className}
-                     onClick={props.onClick}
-                     onFocus={props.onFocus}
-                     onKeyDown={props.onKeyDown}
-                >
-                    {props.value.segments[0].getAction()}
-                </div>,
+            // render: (props: TKUITripRowProps) =>
+            //     <div className={props.className}
+            //          onClick={props.onClick}
+            //          onFocus={props.onFocus}
+            //          onKeyDown={props.onKeyDown}
+            //     >
+            //         {props.value.segments[0].getAction()}
+            //     </div>,
             styles: (theme: TKUITheme) => {
                 return ({
                     main: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({

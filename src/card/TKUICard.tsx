@@ -6,24 +6,21 @@ import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
 import {Subtract} from "utility-types";
-import {TKUIStyles, withStyleProp} from "../jss/StyleHelper";
+import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUICardProps {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title: string;
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
     asCard?: boolean;
-    styles?: any;
+    children: any;
 }
 
-// interface IProps extends ITKUICardProps, WithSheet<keyof ITKUICardStyle, object, IProps> {}
-interface IProps extends ITKUICardProps {
-    classes: ClassNameMap<keyof ITKUICardStyle>
-}
-
-export interface ITKUICardStyle {
+interface IStyle {
     modal: CSS.Properties & CSSProperties<IProps>;
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
@@ -37,11 +34,16 @@ export interface ITKUICardStyle {
     iconClear: CSS.Properties & CSSProperties<IProps>;
 }
 
-class TKUICardConfig {
-    public styles: TKUIStyles<ITKUICardStyle, ITKUICardProps> = tKUICardDefaultStyle;
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
-    public static instance = new TKUICardConfig();
-}
+export type TKUICardProps = IProps;
+export type TKUICardStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUICard {...props}/>,
+    styles: tKUICardDefaultStyle,
+    classNamePrefix: "TKUICard"
+};
 
 class TKUICard extends React.Component<IProps, {}> {
 
@@ -98,10 +100,6 @@ class TKUICard extends React.Component<IProps, {}> {
     }
 }
 
-const TKUICardWithStyleProp = withStyleProp(TKUICard);
-
-export default (props: ITKUICardProps & {children: any}) => {
-    const stylesToPass = props.styles || TKUICardConfig.instance.styles;
-    return <TKUICardWithStyleProp {...props} styles={stylesToPass} classNamePrefix={"TKUICard"}/>
-};
-export {TKUICardConfig}
+export default connect(
+    (config: TKUIConfig) => config.TKUICard, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

@@ -14,10 +14,6 @@ import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
-// TODO: Good strategy to import this way (the entire module), and then access things inside like:
-// TKUIResults.config, TKUIResults.View, TKUIResults.Connect, TKUIResults.Props, etc.
-// Evaluate better, but can be good to make internal and external use more simple / intuitive / easy.
-import * as TKUIResults from "../trip/TKUIResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";

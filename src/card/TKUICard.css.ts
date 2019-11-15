@@ -1,10 +1,10 @@
 import genStyles from "../css/GenStyle.css";
-import {ITKUICardProps, ITKUICardStyle} from "./TKUICard";
+import {TKUICardStyle, TKUICardProps} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
-export const tKUICardDefaultStyle: TKUIStyles<ITKUICardStyle, ITKUICardProps> =
+export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
 
         modalContainer: {
