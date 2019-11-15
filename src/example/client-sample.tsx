@@ -15,6 +15,7 @@ import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUITripRowProps} from "../trip/TKUITripRow";
 import TKUIProvider from "../config/TKUIProvider";
+import Trip from "../model/trip/Trip";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -116,6 +117,31 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                         color: 'blue',
                     }
                 })}
+        },
+        TKUITripOverviewView: {
+            styles: (theme: TKUITheme) => ({
+                main: {
+
+                }
+            }),
+            // configProps: {
+            //     actions: (trip: Trip) => [
+            //         {
+            //             render: () => <div>Action</div>,
+            //             handler: () => {return false}
+            //         }
+            //     ]
+            // },
+            configProps: (defaultProps) => ({
+                actions: (trip: Trip) =>
+                    defaultProps.actions!(trip).concat(
+                        [
+                            {
+                                render: () => <div>Action</div>,
+                                handler: () => {return false}
+                            }
+                        ])
+            })
         }
     };
 

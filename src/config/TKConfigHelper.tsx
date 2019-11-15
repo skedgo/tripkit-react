@@ -3,11 +3,12 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import {TKUIConfig, ITKUIComponentConfig, ITKUIComponentDefaultConfig} from "./TKUIConfig";
+import {TKUIConfig, ITKUIComponentDefaultConfig, ConfigRefiner} from "./TKUIConfig";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
 import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
 import {useContext} from "react";
+import Util from "../util/Util";
 
 function dependencyInjector<P>(configToRenderMapper: (config: TKUIConfig) => ((props: P) => JSX.Element) | undefined,
                                defaultRender: (props: P) => JSX.Element): (props: P) => JSX.Element {
@@ -66,7 +67,7 @@ export function connect<
     IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS>,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,
     STYLE
-    >(confToCompMapper: (config: TKUIConfig) => Partial<ITKUIComponentConfig<IMPL_PROPS, STYLE>> | undefined,
+    >(confToCompMapper: (config: TKUIConfig) => Partial<ConfigRefiner<IMPL_PROPS, STYLE>> | undefined,
       defaultConfig: ITKUIComponentDefaultConfig<IMPL_PROPS, STYLE>,
       PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>>) {
     // Renderer injector
@@ -83,7 +84,14 @@ export function connect<
                         const componentConfig = confToCompMapper(config);
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
                             componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
+                        // TODO: maybe move configProps merge logic into withStyleInjection to make it just once, on construction.
+                        const configProps = componentConfig &&
+                            (Util.isFunction(componentConfig.configProps) ?
+                                (componentConfig.configProps as ((defaultConfigProps: Partial<IMPL_PROPS>) => Partial<IMPL_PROPS>))(defaultConfig.configProps!) :
+                                componentConfig.configProps);
                         return <WithStyleInjector {...implProps}
+                                                  {...defaultConfig.configProps}
+                                                  {...configProps}
                                                   defaultStyles={defaultConfig.styles}
                                                   configStyles={componentConfig && componentConfig.styles}
                                                   randomizeClassNames={randomizeClassNamesToPass}

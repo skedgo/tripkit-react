@@ -3,9 +3,9 @@ import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {CSSProperties} from "react";
 import TKUICard from "../card/TKUICard";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
-import {ITKUISegmentOverviewProps, default as TKUISegmentOverview} from "./TKUISegmentOverview";
+import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
 import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";
 import {Observable} from 'rxjs';
@@ -17,79 +17,79 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
 import {ReactComponent as IconShare} from "../images/ic-share.svg";
 import {Visibility} from "../model/trip/SegmentTemplate";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUITripOverviewViewProps extends TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     onRequestClose?: () => void;
 }
 
-interface IProps extends ITKUITripOverviewViewProps {
-    classes: ClassNameMap<keyof ITKUITripOverviewViewStyle>
+export interface IStyle {
+    main: CSSProps<IProps>;
 }
 
-export interface ITKUITripOverviewViewStyle {
-    main: CSSProps<ITKUITripOverviewViewProps>;
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
+    actions?: (trip: Trip) => TKUIAction[];
 }
 
-export class TKUITripOverviewViewConfig implements TKUIWithStyle<ITKUITripOverviewViewStyle, ITKUITripOverviewViewProps> {
-    public styles = tKUITripOverviewViewDefaultStyle;
-    public randomizeClassNames?: boolean;
-    public renderSegmentDetail: <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => JSX.Element
-        = <P extends ITKUISegmentOverviewProps & {key: number}>(props: P) => <TKUISegmentOverview {...props}/>;
+export type TKUITripOverviewViewProps = IProps;
+export type TKUITripOverviewViewStyle = IStyle;
 
-    public actions: (trip: Trip) => TKUIAction[] = (trip: Trip) => [
-        {
-            render: () => <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
-            handler: () => {return false}
-        },
-        new TKUIFavouriteTripAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)),
-        {
-            render: () => <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>,
-            handler: () => {return false}
-        }
-    ];
-
-    public static instance = new TKUITripOverviewViewConfig();
-}
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITripOverviewView {...props}/>,
+    styles: tKUITripOverviewViewDefaultStyle,
+    classNamePrefix: "TKUITripOverviewView",
+    configProps: {
+        actions: (trip: Trip) => [
+            {
+                render: () => <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
+                handler: () => {return false}
+            },
+            new TKUIFavouriteTripAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)),
+            {
+                render: () => <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>,
+                handler: () => {return false}
+            }
+        ]
+    }
+};
 
 class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segments = this.props.value.getSegments(Visibility.IN_DETAILS)
             .filter((segment: Segment) => !segment.isStationay());
-        const renderSegmentDetail = TKUITripOverviewViewConfig.instance.renderSegmentDetail;
         const trip = this.props.value;
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;
         const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? "Arrives " + arrivalTime : "Departs " + departureTime);
+        const subHeader = this.props.actions ? () => <TKUIActionsView actions={this.props.actions!(trip)}/> : undefined;
         const classes = this.props.classes;
         return (
             <TKUICard
                 title={title}
                 subtitle={subtitle}
-                renderSubHeader={() => <TKUIActionsView actions={TKUITripOverviewViewConfig.instance.actions(trip)}/>}
+                renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
                 asCard={false}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>
-                        renderSegmentDetail({value: segment, key: index})
+                        <TKUISegmentOverview
+                            value={segment}
+                            key={index}
+                        />
                     )}
-                    {renderSegmentDetail({value: this.props.value.arrivalSegment, key: segments.length})}
+
+                    <TKUISegmentOverview
+                        value={this.props.value.arrivalSegment}
+                        key={segments.length}
+                    />
                 </div>
             </TKUICard>
         )
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripOverviewView");
-    return (props: ITKUITripOverviewViewProps) => {
-        const stylesToPass = props.styles || TKUITripOverviewViewConfig.instance.styles;
-        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-            TKUITripOverviewViewConfig.instance.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-};
-
-export default Connect(TKUITripOverviewView);
+export default connect((config: TKUIConfig) => config.TKUITripOverviewView, config, mapperFromFunction((clientProps: IClientProps) => clientProps))
