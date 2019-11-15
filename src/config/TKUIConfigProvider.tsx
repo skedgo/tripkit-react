@@ -1,13 +1,13 @@
 import * as React from "react";
-import ITKUIConfig, {tKUIDefaultConfig} from "./TKUIConfig";
+import {TKUIConfig} from "./TKUIConfig";
 
-export const TKUIConfigContext = React.createContext<ITKUIConfig>({} as ITKUIConfig);
+export const TKUIConfigContext = React.createContext<TKUIConfig>({} as TKUIConfig);
 
-class TKUIConfigProvider extends React.Component<{config?: Partial<ITKUIConfig>},{}> {
+class TKUIConfigProvider extends React.Component<{config?: TKUIConfig},{}> {
 
     public render(): React.ReactNode {
         return (
-            <TKUIConfigContext.Provider value={{...tKUIDefaultConfig, ...this.props.config}}>
+            <TKUIConfigContext.Provider value={{...this.props.config}}>
                 {this.props.children}
             </TKUIConfigContext.Provider>
         );

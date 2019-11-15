@@ -63,6 +63,10 @@ export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyl
     // - Remove class TKUIWithStyle? Probably it doesn't make sense anymore to pass style or randomizeClassNames directly to components,
     // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
     // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
+    // - Maybe give it a try to make use of contexts more efficient? or maybe leave for later and continue with next item.
+    // - Start propagating new arquitecture to all components.
+    // - Use icons provided by DuyCT.
+    // - TKUITransportSettings
 
     // [ ] Start with architecture change.
     // - mostrar stops en mapa

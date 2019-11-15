@@ -23,6 +23,8 @@ export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProperties<Props>) 
 
 export type TKUICustomCSSProperties<Props> = CSSProperties<Props> | CSSPropertiesCreator<Props>;
 
+export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>
+
 export interface TKUIWithStyle<ST, CP> {
     styles?: TKUIStyles<ST, CP>,
     randomizeClassNames?: boolean
@@ -129,7 +131,5 @@ function emptyValues<T>(sample: T): T {
     }
     return emptyValues as T;
 }
-
-export type CSSProps<T> = CSS.Properties | CSSProperties<T>
 
 export {withStyleProp, emptyValues};
