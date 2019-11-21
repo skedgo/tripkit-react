@@ -38,6 +38,8 @@ export interface ITKUITripSergmentStepsStyle {
     linePanelLast: CSSProps<IStyleRelevantProps>;
     circle: CSSProps<IStyleRelevantProps>;
     circleFirstLast: CSSProps<IStyleRelevantProps>;
+    iconPanel: CSSProps<IStyleRelevantProps>;
+    iconAngleDown: CSSProps<IStyleRelevantProps>;
 }
 
 export class ITKUITripSergmentStepsConfig implements TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
@@ -73,21 +75,21 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
             <div>
                 {this.props.toggleLabel ?
                     <div className="gl-flex">
-                        <div className="TripSegmentDetail-iconPanel"/>
-                        <div className={classNames(classes.linePanel, "TripSegmentDetail-linePanel gl-flex gl-center")}>
-                            <div className="TripSegmentDetail-line"
+                        <div className={classes.iconPanel}/>
+                        <div className={classNames(classes.linePanel)}>
+                            <div className={classes.line}
                                  style={{
                                      borderColor: this.props.borderColor,
                                      borderLeftStyle: borderLeftStyle
                                  }}/>
                         </div>
-                        <button className="TripSegmentSteps-stopBtn gl-link"
+                        <button className="gl-link"
                                 onClick={() => this.setState({open: !this.state.open})}
                                 aria-expanded={this.state.open}
                                 aria-controls={this.id}
                         >
                             {this.props.toggleLabel(this.state.open)}
-                            <IconAngleDown className={"TripSegmentDetail-iconAngleDown" + (this.state.open ? " gl-rotate180" : "")}
+                            <IconAngleDown className={classes.iconAngleDown + (this.state.open ? " gl-rotate180" : "")}
                                            focusable="false"
                             />
                         </button>

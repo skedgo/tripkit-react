@@ -1,46 +1,61 @@
 import * as React from "react";
-import ITKUIServiceDepartureRowProps from "./ITKUIServiceDepartureRowProps";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import "./TKUIServiceDepartureRowDelete.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import OptionsData from "../data/OptionsData";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-interface IProps extends ITKUIServiceDepartureRowProps {
-    classes: ClassNameMap<keyof ITKUIServiceDepartureRowStyle>
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    value: ServiceDeparture;
+    detailed?: boolean;
+    onClick?: () => void;
+    renderRight?: () => JSX.Element;
 }
 
-export interface ITKUIServiceDepartureRowStyle {
-    main: CSSProps<ITKUIServiceDepartureRowProps>;
-    clickable: CSSProps<ITKUIServiceDepartureRowProps>;
-    leftPanel: CSSProps<ITKUIServiceDepartureRowProps>;
-    header: CSSProps<ITKUIServiceDepartureRowProps>;
-    timeAndOccupancy: CSSProps<ITKUIServiceDepartureRowProps>;
-    serviceNumber: CSSProps<ITKUIServiceDepartureRowProps>;
-    transIcon: CSSProps<ITKUIServiceDepartureRowProps>;
-    time: CSSProps<ITKUIServiceDepartureRowProps>;
-    delayed: CSSProps<ITKUIServiceDepartureRowProps>;
-    onTime: CSSProps<ITKUIServiceDepartureRowProps>;
-    separatorDot: CSSProps<ITKUIServiceDepartureRowProps>;
-    timeToDepart: CSSProps<ITKUIServiceDepartureRowProps>;
-    timeToDepartCancelled: CSSProps<ITKUIServiceDepartureRowProps>;
-    timeToDepartPast: CSSProps<ITKUIServiceDepartureRowProps>;
-    serviceDescription: CSSProps<ITKUIServiceDepartureRowProps>;
-    occupancy: CSSProps<ITKUIServiceDepartureRowProps>;
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+interface IStyle {
+    main: CSSProps<IProps>;
+    clickable: CSSProps<IProps>;
+    leftPanel: CSSProps<IProps>;
+    header: CSSProps<IProps>;
+    timeAndOccupancy: CSSProps<IProps>;
+    serviceNumber: CSSProps<IProps>;
+    transIcon: CSSProps<IProps>;
+    time: CSSProps<IProps>;
+    delayed: CSSProps<IProps>;
+    onTime: CSSProps<IProps>;
+    separatorDot: CSSProps<IProps>;
+    timeToDepart: CSSProps<IProps>;
+    timeToDepartCancelled: CSSProps<IProps>;
+    timeToDepartPast: CSSProps<IProps>;
+    serviceDescription: CSSProps<IProps>;
+    occupancy: CSSProps<IProps>;
 }
 
-export class TKUIServiceDepartureRowConfig implements TKUIWithStyle<ITKUIServiceDepartureRowStyle, ITKUIServiceDepartureRowProps> {
+export type TKUIServiceDepartureRowProps = IProps;
+export type TKUIServiceDepartureRowStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIServiceDepartureRow {...props}/>,
+    styles: tKUIServiceDepartureRowDefaultStyle,
+    classNamePrefix: "TKUIServiceDepartureRow",
+    randomizeClassNames: true // This needs to be true since multiple instances are rendered,
+                              // each with a different service color.
+};
+
+export class TKUIServiceDepartureRowConfig implements TKUIWithStyle<IStyle, IProps> {
     public styles = tKUIServiceDepartureRowDefaultStyle;
-    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
-                                              // JssProvider, but in this case is true since multiple instances are
-                                              // rendered, each with a different service color.
+    public randomizeClassNames?: boolean = true;
 
     public static instance = new TKUIServiceDepartureRowConfig();
 }
@@ -149,14 +164,6 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIServiceDepartureRow");
-    return (props: ITKUIServiceDepartureRowProps) => {
-        const stylesToPass = props.styles || TKUIServiceDepartureRowConfig.instance.styles;
-        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-            TKUIServiceDepartureRowConfig.instance.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-};
-
-export default Connect(TKUIServiceDepartureRow);
+export default connect(
+    (config: TKUIConfig) => config.TKUIServiceDepartureRow, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

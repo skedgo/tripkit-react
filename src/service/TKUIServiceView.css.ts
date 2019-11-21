@@ -1,9 +1,9 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUIServiceViewProps, ITKUIServiceViewStyle} from "./TKUIServiceView";
+import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
-export const tKUIServiceViewDefaultStyle: TKUIStyles<ITKUIServiceViewStyle, ITKUIServiceViewProps> =
+export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIServiceViewProps> =
     (theme: TKUITheme) => ({
         main: {
             height: '100%',

@@ -66,5 +66,14 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
         },
         circleFirstLast: {
             backgroundColor: tKUIColors.white
+        },
+        iconPanel: {
+            margin: '10px 0',
+            ...genStyles.noShrink
+        },
+        iconAngleDown: {
+            height: '10px',
+            width: '10px',
+            marginLeft: '10px'
         }
     });

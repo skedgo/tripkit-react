@@ -1,35 +1,44 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIWCSegmentInfoDefaultStyle} from "./TKUIWCSegmentInfo.css";
 import TransportUtil from "./TransportUtil";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUIWCSegmentInfoProps extends TKUIWithStyle<ITKUIWCSegmentInfoStyle, ITKUIWCSegmentInfoProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
 }
 
-interface IProps extends ITKUIWCSegmentInfoProps {
-    classes: ClassNameMap<keyof ITKUIWCSegmentInfoStyle>
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export interface IStyle {
+    main: CSSProps<IProps>;
+    references: CSSProps<IProps>;
+    safeRef: CSSProps<IProps>;
+    unsafeRef: CSSProps<IProps>;
+    dismountRef: CSSProps<IProps>;
+    unknownRef: CSSProps<IProps>;
+    bar: CSSProps<IProps>;
+    safeBar: CSSProps<IProps>;
+    unsafeBar: CSSProps<IProps>;
+    dismountBar: CSSProps<IProps>;
+    mtsLabels: CSSProps<IProps>;
+    safeMtsLabel: CSSProps<IProps>;
+    unsafeMtsLabel: CSSProps<IProps>;
+    dismountMtsLabel: CSSProps<IProps>;
+    unknownMtsLabel: CSSProps<IProps>;
 }
 
-export interface ITKUIWCSegmentInfoStyle {
-    main: CSSProps<ITKUIWCSegmentInfoProps>;
-    references: CSSProps<ITKUIWCSegmentInfoProps>;
-    safeRef: CSSProps<ITKUIWCSegmentInfoProps>;
-    unsafeRef: CSSProps<ITKUIWCSegmentInfoProps>;
-    dismountRef: CSSProps<ITKUIWCSegmentInfoProps>;
-    unknownRef: CSSProps<ITKUIWCSegmentInfoProps>;
-    bar: CSSProps<ITKUIWCSegmentInfoProps>;
-    safeBar: CSSProps<ITKUIWCSegmentInfoProps>;
-    unsafeBar: CSSProps<ITKUIWCSegmentInfoProps>;
-    dismountBar: CSSProps<ITKUIWCSegmentInfoProps>;
-    mtsLabels: CSSProps<ITKUIWCSegmentInfoProps>;
-    safeMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
-    unsafeMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
-    dismountMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
-    unknownMtsLabel: CSSProps<ITKUIWCSegmentInfoProps>;
-}
+export type TKUIWCSegmentInfoProps = IProps;
+export type TKUIWCSegmentInfoStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIWCSegmentInfo {...props}/>,
+    styles: tKUIWCSegmentInfoDefaultStyle,
+    classNamePrefix: "TKUITripRow",
+};
 
 class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
 
@@ -101,13 +110,6 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
 
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIWCSegmentInfo");
-    return (props: ITKUIWCSegmentInfoProps) => {
-        const stylesToPass = props.styles || tKUIWCSegmentInfoDefaultStyle;
-        const randomizeClassNamesToPass = props.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-};
-
-export default Connect(TKUIWCSegmentInfo);
+export default connect(
+    (config: TKUIConfig) => config.TKUIWCSegmentInfo, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

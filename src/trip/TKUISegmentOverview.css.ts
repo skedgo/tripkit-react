@@ -1,13 +1,11 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
-import {
-    ITKUISegmentOverviewProps,
-    ITKUISegmentOverviewStyle} from "./TKUISegmentOverview";
+import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "./TKUISegmentOverview";
 import genStyles from "../css/GenStyle.css";
 import TransportUtil from "./TransportUtil";
 import Segment from "../model/trip/Segment";
 
-export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> =
+export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyle, TKUISegmentOverviewProps> =
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
@@ -50,7 +48,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
             ...genStyles.flex
         },
         preLine: {
-            borderLeft: (props: ITKUISegmentOverviewProps) => {
+            borderLeft: (props: TKUISegmentOverviewProps) => {
                 let prevSegment = props.value.prevSegment();
                 if (prevSegment && prevSegment.isStationay()) { // Skip stationary segment.
                     prevSegment = prevSegment.prevSegment();
@@ -60,12 +58,12 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
             ...genStyles.grow
         },
         line: {
-            borderLeft: (props: ITKUISegmentOverviewProps) =>
+            borderLeft: (props: TKUISegmentOverviewProps) =>
                 '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
             ...genStyles.grow
         },
         posLine: {
-            borderLeft: (props: ITKUISegmentOverviewProps) =>
+            borderLeft: (props: TKUISegmentOverviewProps) =>
                 !props.value.arrival ? '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!) : 'none',
             ...genStyles.grow
         },
@@ -75,7 +73,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
         circle: {
             width: '16px',
             height: '16px',
-            border: (props: ITKUISegmentOverviewProps) => {
+            border: (props: TKUISegmentOverviewProps) => {
                 const segment = props.value;
                 const prevSegment = segment.prevSegment();
                 const colourSegment = !segment.isWalking() && !segment.isStationay() ? segment : prevSegment;
@@ -89,7 +87,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
             height: '24px',
         },
         icon: {
-            background: (props: ITKUISegmentOverviewProps) => {
+            background: (props: TKUISegmentOverviewProps) => {
                 const modeInfo = props.value.modeInfo!;
                 const iconOnDark = isIconOnDark(props.value);
                 let transportColor = TransportUtil.getTransportColor(modeInfo);
@@ -98,8 +96,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<ITKUISegmentOverviewSty
                 }
                 return iconOnDark ? transportColor : 'none';
             },
-            padding: (props: ITKUISegmentOverviewProps) => isIconOnDark(props.value) ? '3px' : '0',
-            opacity: (props: ITKUISegmentOverviewProps) => {
+            padding: (props: TKUISegmentOverviewProps) => isIconOnDark(props.value) ? '3px' : '0',
+            opacity: (props: TKUISegmentOverviewProps) => {
                 const modeInfo = props.value.modeInfo!;
                 return isIconOnDark(props.value) || modeInfo.remoteIcon ? '1' : '.6';
             },
