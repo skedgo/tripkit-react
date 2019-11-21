@@ -1,10 +1,10 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUIRoutingQueryInputProps, ITKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
+import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
-export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> =
+export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
     (theme: TKUITheme) => ({
         main: {
             backgroundColor: 'white',

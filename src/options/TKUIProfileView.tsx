@@ -2,7 +2,7 @@ import * as React from "react";
 import Options from "../model/Options";
 import Util from "../util/Util";
 import {ReactComponent as IconClose} from '../images/ic-cross.svg';
-import "./OptionsView.css";
+import "./TKUIProfileView.css";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
 import ModeIdentifier from "../model/region/ModeIdentifier";
@@ -40,7 +40,7 @@ enum JourneyPref {
     LEAST_WALKING = "Least walking"
 }
 
-class OptionsView extends React.Component<IProps, IState> {
+class TKUIProfileView extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
@@ -440,9 +440,9 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
     );
 };
 
-export const TKUIOptionsView = (props: ITKUIOptionsViewProps) =>
+const TKUIOptionsView = (props: ITKUIOptionsViewProps) =>
     <Connector>
-        {(cProps: IConnectionProps) => <OptionsView {...props} {...cProps}/>}
+        {(cProps: IConnectionProps) => <TKUIProfileView {...props} {...cProps}/>}
     </Connector>;
 
-export default OptionsView;
+export default TKUIOptionsView;

@@ -20,7 +20,7 @@ import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
@@ -28,8 +28,11 @@ import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import "../trip/TripAltBtn.css";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {Subtract} from "utility-types";
 
-export interface ITKUIRoutingQueryInputProps extends TKUIWithStyle<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowOptions?: () => void;
     isTripPlanner?: boolean;
     collapsable?: boolean;
@@ -44,11 +47,9 @@ interface IConsumedProps {
     focusLatLng?: LatLng;
 }
 
-interface IProps extends IConsumedProps, ITKUIRoutingQueryInputProps {
-    classes: ClassNameMap<keyof ITKUIRoutingQueryInputStyle>;
-}
+interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
-export interface ITKUIRoutingQueryInputStyle {
+interface IStyle {
     main: CSSProps<IProps>;
     header: CSSProps<IProps>;
     title: CSSProps<IProps>;
@@ -68,12 +69,14 @@ export interface ITKUIRoutingQueryInputStyle {
     transportsBtn: CSSProps<IProps>;
 }
 
-export class ITKUIRoutingQueryInputConfig implements TKUIWithStyle<ITKUIRoutingQueryInputStyle, ITKUIRoutingQueryInputProps> {
-    public styles = tKUIRoutingQueryInputDefaultStyle;
-    public randomizeClassNames?: boolean;
+export type TKUIRoutingQueryInputProps = IProps;
+export type TKUIRoutingQueryInputStyle = IStyle;
 
-    public static instance = new ITKUIRoutingQueryInputConfig();
-}
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIRoutingQueryInput {...props}/>,
+    styles: tKUIRoutingQueryInputDefaultStyle,
+    classNamePrefix: "TKUIRoutingQueryInput"
+};
 
 interface IState {
     timePanelOpen: boolean;
@@ -296,14 +299,14 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode}> = props => {
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = props => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
                 const region = routingContext.region;
                 const bounds = region ? region.bounds : undefined;
                 const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
-                const consumerProps: Partial<IProps> = {
+                const consumerProps: IConsumedProps = {
                     value: routingContext.query,
                     onChange: routingContext.onQueryChange,
                     onPreChange: routingContext.onPreChange,
@@ -317,22 +320,11 @@ const Consumer: React.SFC<{children: (props: Partial<IProps>) => React.ReactNode
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIRoutingQueryInput");
-    return (addProps: ITKUIRoutingQueryInputProps) => {
-        const stylesToPass = addProps.styles || ITKUIRoutingQueryInputConfig.instance.styles;
-        const randomizeClassNamesToPass = addProps.randomizeClassNames !== undefined ? addProps.randomizeClassNames :
-            ITKUIRoutingQueryInputConfig.instance.randomizeClassNames;
-        return (
-            <Consumer>
-                {(props: any) => {
-                    return <RawComponentStyled {...addProps} {...props}
-                                                  styles={stylesToPass}
-                                                  randomizeClassNames={randomizeClassNamesToPass}/>
-                }}
-            </Consumer>
-        );
-    }
-}
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default Connect(TKUIRoutingQueryInput);
+export default connect((config: TKUIConfig) => config.TKUITKUIRoutingQueryInput, config, Mapper);

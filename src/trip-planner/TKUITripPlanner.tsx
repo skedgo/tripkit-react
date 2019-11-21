@@ -4,7 +4,6 @@ import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
-import {TKUIOptionsView} from "../options/OptionsView";
 import Util from "../util/Util";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
@@ -19,7 +18,7 @@ import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput from "query/TKUIRoutingQueryInput";
@@ -28,30 +27,35 @@ import Trip from "../model/trip/Trip";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
+import StopsData from "../data/StopsData";
+import TKUIProfileView from "../options/TKUIProfileView";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {Subtract} from "utility-types";
 
-export interface ITKUITripPlannerProps extends TKUIWithStyle<ITKUITripPlannerStyle, IProps> {}
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext {}
+
+export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+export interface IStyle {
+    queryPanel: CSSProps<IProps>;
+}
+
+export type TKUITKUITripPlannerProps = IProps;
+export type TKUITKUITripPlannerStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITripPlanner {...props}/>,
+    styles: tKUITripPlannerDefaultStyle,
+    classNamePrefix: "TKUITripPlanner"
+};
 
 interface IState {
     mapView: boolean;
     showOptions: boolean;
     showTripDetail?: boolean;
-}
-
-export interface IProps extends ITKUITripPlannerProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUITripPlannerStyle>
-}
-
-export interface ITKUITripPlannerStyle {
-    queryPanel: CSSProps<IProps>;
-}
-
-export class TKUITripPlannerConfig implements TKUIWithStyle<ITKUITripPlannerStyle, IProps> {
-    public styles = tKUITripPlannerDefaultStyle;
-    public randomizeClassNames?: boolean;
-
-    public static instance = new TKUITripPlannerConfig();
 }
 
     // TODO:
@@ -134,7 +138,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 appElement={this.ref}
                 onRequestClose={this.onOptionsRequestedClose}
             >
-                <TKUIOptionsView
+                <TKUIProfileView
                     onClose={this.onOptionsRequestedClose}
                     className={"app-style"}
                 />
@@ -234,25 +238,26 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripPlanner");
-    return (props: ITKUITripPlannerProps) => (
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+    return (
         <RoutingResultsContext.Consumer>
             {(routingResultsContext: IRoutingResultsContext) =>
                 <ServiceResultsContext.Consumer>
-                    {(serviceContext: IServiceResultsContext) => {
-                        const stylesToPass = props.styles || TKUITripPlannerConfig.instance.styles;
-                        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-                            TKUITripPlannerConfig.instance.randomizeClassNames;
-                        return <RawComponentStyled {...routingResultsContext}
-                                                   {...serviceContext}
-                                                   styles={stylesToPass}
-                                                   randomizeClassNames={randomizeClassNamesToPass}/>;
-                    }}
+                    {(serviceContext: IServiceResultsContext) => (
+                        props.children!({...routingResultsContext, ...serviceContext})
+                    )}
                 </ServiceResultsContext.Consumer>
             }
         </RoutingResultsContext.Consumer>
-    )
+    );
 };
 
-export default Connect(TKUITripPlanner);
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
+
+export default connect(
+    (config: TKUIConfig) => config.TKUITripPlanner, config, Mapper);

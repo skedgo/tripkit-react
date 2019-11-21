@@ -13,9 +13,13 @@ import {TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle} from "../trip/TKUIWCSegm
 import {TKUITimetableViewProps, TKUITimetableViewStyle} from "../service/TKUITimetableView";
 import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "../service/TKUIServiceDepartureRow";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "../service/TKUIServiceView";
+import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "../query/TKUIRoutingQueryInput";
+import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "../trip-planner/TKUITripPlanner";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
+    TKUITripPlanner: ConfigRefiner<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    TKUITKUIRoutingQueryInput: ConfigRefiner<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUICard: ConfigRefiner<TKUICardProps, TKUICardStyle>;
     TKUITripRow: ConfigRefiner<TKUITripRowProps, TKUITripRowStyle>;
     TKUIRoutingResultsView: ConfigRefiner<TKUIResultsViewProps, TKUIResultsViewStyle>;
