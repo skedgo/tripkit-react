@@ -1,12 +1,11 @@
 import genStyles from "../css/GenStyle.css";
-import {ITKUIServiceDepartureRowStyle} from "./TKUIServiceDepartureRow";
-import ITKUIServiceDepartureRowProps from "./ITKUIServiceDepartureRowProps";
+import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "./TKUIServiceDepartureRow";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 
 
-export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartureRowStyle, ITKUIServiceDepartureRowProps> =
+export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
@@ -32,7 +31,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<ITKUIServiceDepartu
             color: 'white',
             borderRadius: '4px',
             padding: '2px 4px',
-            backgroundColor: (props: ITKUIServiceDepartureRowProps) =>
+            backgroundColor: (props: TKUIServiceDepartureRowProps) =>
                 props.value.serviceColor ? props.value.serviceColor.toHex() : 'lightgray',
             ...genStyles.fontSM
         },

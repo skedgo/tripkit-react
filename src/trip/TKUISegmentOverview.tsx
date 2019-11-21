@@ -2,54 +2,54 @@ import * as React from "react";
 import Segment from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
-import "./TripSegmentDetailDelete.css"
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
 import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import OptionsData from "../data/OptionsData";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUISegmentOverviewProps extends TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
 }
 
-interface IProps extends ITKUISegmentOverviewProps {
-    classes: ClassNameMap<keyof ITKUISegmentOverviewStyle>
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+interface IStyle {
+    main: CSSProps<IProps>;
+    header: CSSProps<IProps>;
+    title: CSSProps<IProps>;
+    subtitle: CSSProps<IProps>;
+    time: CSSProps<IProps>;
+    track: CSSProps<IProps>;
+    body: CSSProps<IProps>;
+    preLine: CSSProps<IProps>;
+    posLine: CSSProps<IProps>;
+    line: CSSProps<IProps>;
+    noLine: CSSProps<IProps>;
+    circle: CSSProps<IProps>;
+    iconPin: CSSProps<IProps>;
+    icon: CSSProps<IProps>;
+    description: CSSProps<IProps>;
+    action: CSSProps<IProps>;
+    notes: CSSProps<IProps>;
+    occupancy: CSSProps<IProps>;
 }
 
-export interface ITKUISegmentOverviewStyle {
-    main: CSSProps<ITKUISegmentOverviewProps>;
-    header: CSSProps<ITKUISegmentOverviewProps>;
-    title: CSSProps<ITKUISegmentOverviewProps>;
-    subtitle: CSSProps<ITKUISegmentOverviewProps>;
-    time: CSSProps<ITKUISegmentOverviewProps>;
-    track: CSSProps<ITKUISegmentOverviewProps>;
-    body: CSSProps<ITKUISegmentOverviewProps>;
-    preLine: CSSProps<ITKUISegmentOverviewProps>;
-    posLine: CSSProps<ITKUISegmentOverviewProps>;
-    line: CSSProps<ITKUISegmentOverviewProps>;
-    noLine: CSSProps<ITKUISegmentOverviewProps>;
-    circle: CSSProps<ITKUISegmentOverviewProps>;
-    iconPin: CSSProps<ITKUISegmentOverviewProps>;
-    icon: CSSProps<ITKUISegmentOverviewProps>;
-    description: CSSProps<ITKUISegmentOverviewProps>;
-    action: CSSProps<ITKUISegmentOverviewProps>;
-    notes: CSSProps<ITKUISegmentOverviewProps>;
-    occupancy: CSSProps<ITKUISegmentOverviewProps>;
-}
+export type TKUISegmentOverviewProps = IProps;
+export type TKUISegmentOverviewStyle = IStyle;
 
-export class TKUISegmentOverviewConfig implements TKUIWithStyle<ITKUISegmentOverviewStyle, ITKUISegmentOverviewProps> {
-    public styles = tKUISegmentOverviewDefaultStyle;
-    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
-                                              // JssProvider, but in this case is true since multiple instances are
-                                              // rendered, each with a different service color.
-
-    public static instance = new TKUISegmentOverviewConfig();
-}
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUISegmentOverview {...props}/>,
+    styles: tKUISegmentOverviewDefaultStyle,
+    classNamePrefix: "TKUISegmentOverview",
+    randomizeClassNames: true
+};
 
 class TKUISegmentOverview extends React.Component<IProps, {}> {
 
@@ -142,14 +142,5 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUISegmentOverview");
-    return (props: ITKUISegmentOverviewProps) => {
-        const stylesToPass = props.styles || TKUISegmentOverviewConfig.instance.styles;
-        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-            TKUISegmentOverviewConfig.instance.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-};
-
-export default Connect(TKUISegmentOverview);
+export default connect((config: TKUIConfig) => config.TKUISegmentOverview, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

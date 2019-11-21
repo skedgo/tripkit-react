@@ -8,6 +8,11 @@ import {
     TKUITripOverviewViewStyle
 } from "../trip/TKUITripOverviewView";
 import {Subtract} from "utility-types";
+import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "../trip/TKUISegmentOverview";
+import {TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle} from "../trip/TKUIWCSegmentInfo";
+import {TKUITimetableViewProps, TKUITimetableViewStyle} from "../service/TKUITimetableView";
+import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "../service/TKUIServiceDepartureRow";
+import {TKUIServiceViewProps, TKUIServiceViewStyle} from "../service/TKUIServiceView";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -15,6 +20,11 @@ interface ITKUIConfigRequired {
     TKUITripRow: ConfigRefiner<TKUITripRowProps, TKUITripRowStyle>;
     TKUIRoutingResultsView: ConfigRefiner<TKUIResultsViewProps, TKUIResultsViewStyle>;
     TKUITripOverviewView: ConfigRefiner<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
+    TKUISegmentOverview: ConfigRefiner<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
+    TKUIWCSegmentInfo: ConfigRefiner<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;
+    TKUITimetableView: ConfigRefiner<TKUITimetableViewProps, TKUITimetableViewStyle>;
+    TKUIServiceDepartureRow: ConfigRefiner<TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle>;
+    TKUIServiceView: ConfigRefiner<TKUIServiceViewProps, TKUIServiceViewStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

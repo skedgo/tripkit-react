@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUIWCSegmentInfoProps, ITKUIWCSegmentInfoStyle} from "./TKUIWCSegmentInfo";
+import {TKUIWCSegmentInfoStyle, TKUIWCSegmentInfoProps} from "./TKUIWCSegmentInfo";
 import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
 import {tKUIColors} from "../jss/TKUITheme";
@@ -11,7 +11,7 @@ export const tKUIFriendlinessColors = {
     unknown: '#d8d8d8'
 };
 
-export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<ITKUIWCSegmentInfoStyle, ITKUIWCSegmentInfoProps> = {
+export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<TKUIWCSegmentInfoStyle, TKUIWCSegmentInfoProps> = {
     main: {
         marginBottom: '10px'
     },
@@ -23,7 +23,7 @@ export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<ITKUIWCSegmentInfoStyle, 
             ...genStyles.alignCenter,
             ...genStyles.fontS,
             color: tKUIColors.black1
-        } as CSSProperties<ITKUIWCSegmentInfoProps>
+        } as CSSProperties<TKUIWCSegmentInfoProps>
     },
     safeRef: {
         width: '15px',

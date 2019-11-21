@@ -4,7 +4,6 @@ import {
     ServiceResultsContext
 } from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import ITKUIServiceDepartureRowProps from "./ITKUIServiceDepartureRowProps";
 import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ReactComponent as IconClock} from "../images/ic-clock.svg";
 import {ChangeEvent} from "react";
@@ -17,22 +16,22 @@ import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
 import {ReactComponent as IconFavorite} from '../images/ic-star-filled.svg';
 import genStyles from "../css/general.module.css";
 import classNames from "classnames";
-import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
-import {CSSProps, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {ClassNameMap} from "react-jss";
 import DateTimePickerFace from "../time/DateTimePickerFace";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {Subtract} from "utility-types";
+import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 
-interface ITKUITimetableViewProps {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
-    styles?: ITKUITimetableViewStyle;
 }
 
-export interface IProps extends IServiceResultsContext, ITKUITimetableViewProps {
-    classes: ClassNameMap<keyof ITKUITimetableViewStyle>
-}
+export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {}
 
-export interface ITKUITimetableViewStyle {
+interface IStyle {
     main: CSSProps<IProps>;
     listPanel: CSSProps<IProps>;
     containerPanel: CSSProps<IProps>;
@@ -48,13 +47,14 @@ export interface ITKUITimetableViewStyle {
     dapartureRow: CSSProps<IProps>;
 }
 
-class TKUITimetableViewConfig {
-    public styles: ITKUITimetableViewStyle = tKUITimetableDefaultStyle;
-    public renderDeparture: <P extends ITKUIServiceDepartureRowProps>(departureProps: P) => JSX.Element
-        = <P extends ITKUIServiceDepartureRowProps>(props: P) => <TKUIServiceDepartureRow {...props}/>;
+export type TKUITimetableViewProps = IProps;
+export type TKUITimetableViewStyle = IStyle;
 
-    public static instance = new TKUITimetableViewConfig();
-}
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITimetableView {...props}/>,
+    styles: tKUITimetableDefaultStyle,
+    classNamePrefix: "TKUITimetableView"
+};
 
 class TKUITimetableView extends React.Component<IProps, {}> {
 
@@ -163,16 +163,17 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                              scrollRef={this.scrollRef}
                                     />)
                                 }
-                                elems.push(<div className={classes.dapartureRow} key={i}>
-                                    {TKUITimetableViewConfig.instance.renderDeparture({
-                                        value: departure,
-                                        onClick: () => {
-                                            if (this.props.onServiceSelection) {
-                                                this.props.onServiceSelection(departure)
-                                            }
-                                        }
-                                    })}
-                                </div>);
+                                elems.push(
+                                    <div className={classes.dapartureRow} key={i}>
+                                        <TKUIServiceDepartureRow
+                                            value={departure}
+                                            onClick={() => {
+                                                if (this.props.onServiceSelection) {
+                                                    this.props.onServiceSelection(departure)
+                                                }}}
+                                        />
+                                    </div>
+                                );
                                 return elems;
                             }, [])}
                         </div>
@@ -208,15 +209,11 @@ const Consumer: React.SFC<{children: (props: IServiceResultsContext) => React.Re
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITimetableView");
-    return (props: ITKUITimetableViewProps) =>
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
         <Consumer>
-            {(cProps: IServiceResultsContext) => {
-                const stylesToPass = props.styles || TKUITimetableViewConfig.instance.styles;
-                return <RawComponentStyled {...props} {...cProps} styles={stylesToPass}/>;
-            }}
+            {(consumedProps: IServiceResultsContext) =>
+                children!({...inputProps, ...consumedProps})}
         </Consumer>;
-};
 
-export default Connect(TKUITimetableView);
+export default connect((config: TKUIConfig) => config.TKUITimetableView, config, Mapper);

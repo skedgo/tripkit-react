@@ -1,14 +1,16 @@
 import genStyles from "../css/GenStyle.css";
-import {ITKUITimetableViewStyle} from "./TKUITimetableView";
+import {TKUITimetableViewProps, TKUITimetableViewStyle} from "./TKUITimetableView";
 import {resetStyles} from "../css/ResetStyle.css";
 import {tKUIColors} from "../jss/TKUITheme";
+import {TKUIStyles} from "../jss/StyleHelper";
+import {CSSProperties} from "react-jss";
 
 // TODO: apply this
 // .device-phone .ServiceDepartureTable-filterInput {
 //   font-size: 16px;
 // }
 
-export const tKUITimetableDefaultStyle: ITKUITimetableViewStyle = {
+export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUITimetableViewProps> = {
     main: {
         height: '100%',
         ...genStyles.flex,
@@ -31,7 +33,7 @@ export const tKUITimetableDefaultStyle: ITKUITimetableViewStyle = {
         ...genStyles.grow,
         '&>*': {
             ...genStyles.noShrink
-        }
+        } as CSSProperties<TKUITimetableViewProps>
     },
     subHeader: {
         ...genStyles.flex,
@@ -55,7 +57,7 @@ export const tKUITimetableDefaultStyle: ITKUITimetableViewStyle = {
         marginTop: '16px',
         '&>*': {
             ...genStyles.grow
-        },
+        } as CSSProperties<TKUITimetableViewProps>,
         '&>*:first-child': {
             marginRight: '8px'
         }
@@ -108,7 +110,7 @@ export const tKUITimetableDefaultStyle: ITKUITimetableViewStyle = {
             height: '24px',
             color: tKUIColors.black1,
             ...genStyles.svgPathFillCurrColor
-        }
+        } as CSSProperties<TKUITimetableViewProps>
     },
     dapartureRow: {
         padding: '20px 16px',

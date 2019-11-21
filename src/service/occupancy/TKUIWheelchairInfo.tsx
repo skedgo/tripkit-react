@@ -6,7 +6,6 @@ import {OccupancyStatus} from "../../model/service/VehicleComponent";
 import {ReactComponent as IconWCAccessible} from '../../images/service/ic_wheelchair_accessible.svg';
 import {ReactComponent as IconWCInaccessible} from '../../images/service/ic_wheelchair_inaccessible.svg';
 import {ReactComponent as IconWCUnknown} from '../../images/service/ic_wheelchair_unknown.svg';
-import {ITKUIServiceViewProps} from "../TKUIServiceView";
 
 export interface ITKUIWheelchairInfoProps {
     accessible?: boolean;
@@ -19,7 +18,7 @@ interface IProps extends ITKUIWheelchairInfoProps {
 
 export interface ITKUIWheelchairInfoStyle {
     main: CSSProps<ITKUIWheelchairInfoProps>;
-    icon: CSSProps<ITKUIServiceViewProps>;
+    icon: CSSProps<ITKUIWheelchairInfoProps>;
 }
 
 class TKUIWheelchairInfo extends React.Component<IProps, {}> {

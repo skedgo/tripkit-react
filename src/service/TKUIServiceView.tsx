@@ -1,6 +1,5 @@
 import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import ITKUIServiceDepartureRowProps from "./ITKUIServiceDepartureRowProps";
 import DateTimeUtil from "../util/DateTimeUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {TKUIStopSteps} from "../trip/TripSegmentSteps";
@@ -8,7 +7,7 @@ import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
 import TKUICard from "../card/TKUICard";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
@@ -18,32 +17,24 @@ import OptionsData from "../data/OptionsData";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {Subtract} from "utility-types";
 
-export interface ITKUIServiceViewProps extends TKUIWithStyle<ITKUIServiceViewStyle, ITKUIServiceViewProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
 }
 
-export interface ITKUIServiceViewStyle {
-    main: CSSProps<ITKUIServiceViewProps>;
-    serviceOverview: CSSProps<ITKUIServiceViewProps>;
-    pastStop: CSSProps<ITKUIServiceViewProps>;
-    currStop: CSSProps<ITKUIServiceViewProps>;
-    currStopMarker: CSSProps<ITKUIServiceViewProps>;
-    realtimePanel: CSSProps<ITKUIServiceViewProps>;
-    iconAngleDown: CSSProps<ITKUIServiceViewProps>;
-    realtimeInfo: CSSProps<ITKUIServiceViewProps>;
-    realtimeInfoDetailed: CSSProps<ITKUIServiceViewProps>;
-}
-
-export class TKUIServiceViewConfig implements TKUIWithStyle<ITKUIServiceViewStyle, ITKUIServiceViewProps>{
-    public styles = tKUIServiceViewDefaultStyle;
-    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
-                                              // JssProvider, but in this case is true since multiple instances are
-                                              // rendered, each with a different service color.
-    renderDeparture: <P extends ITKUIServiceDepartureRowProps>(departureProps: P) => JSX.Element
-        = <P extends ITKUIServiceDepartureRowProps>(props: P) => <TKUIServiceDepartureRow {...props}/>;
-
-    public static instance = new TKUIServiceViewConfig();
+interface IStyle {
+    main: CSSProps<IProps>;
+    serviceOverview: CSSProps<IProps>;
+    pastStop: CSSProps<IProps>;
+    currStop: CSSProps<IProps>;
+    currStopMarker: CSSProps<IProps>;
+    realtimePanel: CSSProps<IProps>;
+    iconAngleDown: CSSProps<IProps>;
+    realtimeInfo: CSSProps<IProps>;
+    realtimeInfoDetailed: CSSProps<IProps>;
 }
 
 interface IConnectionProps {
@@ -52,9 +43,18 @@ interface IConnectionProps {
     eventBus?: EventEmitter;
 }
 
-interface IProps extends ITKUIServiceViewProps, IConnectionProps {
-    classes: ClassNameMap<keyof ITKUIServiceViewStyle>
-}
+interface IProps extends IClientProps, IConnectionProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUIServiceViewProps = IProps;
+export type TKUIServiceViewStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIServiceView {...props}/>,
+    styles: tKUIServiceViewDefaultStyle,
+    classNamePrefix: "TKUIServiceView",
+    randomizeClassNames: true // This needs to be true since multiple instances are rendered,
+                              // each with a different service color.
+};
 
 interface IState {
     realtimeOpen: boolean;
@@ -115,10 +115,10 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 onRequestClose={this.props.onRequestClose}
                 renderSubHeader={() =>
                     <div className={this.props.classes.serviceOverview}>
-                        {TKUIServiceViewConfig.instance.renderDeparture({
-                            value: this.props.departure,
-                            detailed: true
-                        })}
+                        <TKUIServiceDepartureRow
+                            value={this.props.departure}
+                            detailed={true}
+                        />
                         {realtimePanel}
                     </div>
                 }
@@ -162,7 +162,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 }
 
-const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
     return (
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (
@@ -177,19 +177,12 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIServiceView");
-    return (props: ITKUIServiceViewProps) =>
-        <Connector>
-            {(cProps: IConnectionProps) => {
-                const stylesToPass = props.styles || TKUIServiceViewConfig.instance.styles;
-                const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-                    TKUIServiceViewConfig.instance.randomizeClassNames;
-                return <RawComponentStyled {...props} {...cProps}
-                                           styles={stylesToPass}
-                                           randomizeClassNames={randomizeClassNamesToPass}/>;
-            }}
-        </Connector>;
-};
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConnectionProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default Connect(TKUIServiceView);
+export default connect(
+    (config: TKUIConfig) => config.TKUIServiceView, config, Mapper);
