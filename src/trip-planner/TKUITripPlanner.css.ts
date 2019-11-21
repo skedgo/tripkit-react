@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {IProps, ITKUITripPlannerStyle} from "./TKUITripPlanner";
+import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "./TKUITripPlanner";
 
-export const tKUITripPlannerDefaultStyle: TKUIStyles<ITKUITripPlannerStyle, IProps> = {
+export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> = {
     queryPanel: {
         position: 'absolute',
         width: '450px',
