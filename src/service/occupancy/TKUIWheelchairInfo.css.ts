@@ -10,14 +10,16 @@ export const tKUIWheelchairInfoDefaultStyle: TKUIStyles<ITKUIWheelchairInfoStyle
             ...genStyles.fontS,
             ...genStyles.flex,
             ...genStyles.alignCenter,
-            '& svg': {
-                margin: '0 15px 0 10px'
-            }
         },
         icon: {
-            color: tKUIColors.black1,
-            width: '16px',
+            color: (props: ITKUIWheelchairInfoProps) => props.accessible === false ? theme.colorWarning : tKUIColors.black1,
+            width: (props: ITKUIWheelchairInfoProps) => !props.brief ? '25px' : '16px',
             height: '16px',
             ...genStyles.svgFillCurrColor
+        },
+        text: {
+            ...genStyles.fontS,
+            color: tKUIColors.black1,
+            marginLeft: '5px'
         }
     });

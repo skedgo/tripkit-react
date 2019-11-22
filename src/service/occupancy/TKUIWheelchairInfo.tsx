@@ -2,7 +2,6 @@ import * as React from "react";
 import {ClassNameMap} from "react-jss";
 import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
 import {tKUIWheelchairInfoDefaultStyle} from "./TKUIWheelchairInfo.css";
-import {OccupancyStatus} from "../../model/service/VehicleComponent";
 import {ReactComponent as IconWCAccessible} from '../../images/service/ic_wheelchair_accessible.svg';
 import {ReactComponent as IconWCInaccessible} from '../../images/service/ic_wheelchair_inaccessible.svg';
 import {ReactComponent as IconWCUnknown} from '../../images/service/ic_wheelchair_unknown.svg';
@@ -19,35 +18,24 @@ interface IProps extends ITKUIWheelchairInfoProps {
 export interface ITKUIWheelchairInfoStyle {
     main: CSSProps<ITKUIWheelchairInfoProps>;
     icon: CSSProps<ITKUIWheelchairInfoProps>;
+    text: CSSProps<ITKUIWheelchairInfoProps>;
 }
 
 class TKUIWheelchairInfo extends React.Component<IProps, {}> {
 
-    private static toSlots(status: OccupancyStatus): number  {
-        switch (status) {
-            case OccupancyStatus.EMPTY:
-                return 0;
-            case OccupancyStatus.MANY_SEATS_AVAILABLE:
-            case OccupancyStatus.FEW_SEATS_AVAILABLE:
-                return 1;
-            case OccupancyStatus.STANDING_ROOM_ONLY:
-                return 2;
-            case OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY:
-                return 3;
-            default:
-                return 4;
+    private getIcon(accessible?: boolean) {
+        switch (accessible) {
+            case true: return IconWCAccessible;
+            case false: return IconWCInaccessible;
+            default: return IconWCUnknown;
         }
     }
 
-    private static getText(status: OccupancyStatus): string {
-        switch (status) {
-            case OccupancyStatus.EMPTY: return "Empty";
-            case OccupancyStatus.MANY_SEATS_AVAILABLE: return "Many seats available";
-            case OccupancyStatus.FEW_SEATS_AVAILABLE: return "Few seats available";
-            case OccupancyStatus.STANDING_ROOM_ONLY: return "Standing room only";
-            case OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY: return "Limited standing room only";
-            case OccupancyStatus.FULL: return "Full";
-            default: return "Not accepting passengers";
+    private getText(accessible?: boolean): string {
+        switch (accessible) {
+            case true: return "Wheelchair accessible";
+            case false: return "Wheelchair inaccessible";
+            default: return "Wheelchair accessibility unknown";
         }
     }
 
@@ -55,13 +43,14 @@ class TKUIWheelchairInfo extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const brief = this.props.brief;
         const accessible = this.props.accessible;
-        const WCIcon = accessible === undefined ? IconWCUnknown : accessible ? IconWCAccessible : IconWCInaccessible;
-        const wCText = accessible === undefined ? "Wheelchair accessibility unknown" :
-            accessible ? "Wheelchair accessible" : "Wheelchair inaccessible";
+        const WCIcon = this.getIcon(accessible);
         return (
             <div className={classes.main}>
                 <WCIcon className={classes.icon}/>
-                {!brief ? wCText : undefined}
+                {!brief ?
+                    <div className={classes.text}>
+                        {this.getText(accessible)}
+                    </div> : undefined}
             </div>
         );
     }

@@ -86,9 +86,9 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
 
 
     const config: TKUIConfig = {
-        theme: {
-            colorPrimary: 'brown'
-        },
+        // theme: {
+            // colorPrimary: 'brown'
+        // },
         TKUITripRow: {
             // render: (props: TKUITripRowProps) =>
             //     <div className={props.className}
@@ -98,32 +98,32 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             //     >
             //         {props.value.segments[0].getAction()}
             //     </div>,
-            styles: (theme: TKUITheme) => {
-                return ({
-                    main: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
-                        ...defaultStyle,
-                        background: 'red'
-                    }),
-                    badge: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
-                        ...defaultStyle,
-                        color: 'yellow',
-                        '& svg': {
-                            width: '24px',
-                            height: '24px',
-                            marginRight: '10px',
-                        }
-                    }),
-                    info: {
-                        color: 'blue',
-                    }
-                })}
+            // styles: (theme: TKUITheme) => {
+            //     return ({
+            //         main: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
+            //             ...defaultStyle,
+            //             background: 'red'
+            //         }),
+            //         badge: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
+            //             ...defaultStyle,
+            //             color: 'yellow',
+            //             '& svg': {
+            //                 width: '24px',
+            //                 height: '24px',
+            //                 marginRight: '10px',
+            //             }
+            //         }),
+            //         info: {
+            //             color: 'blue',
+            //         }
+            //     })}
         },
         TKUITripOverviewView: {
-            styles: (theme: TKUITheme) => ({
-                main: {
-
-                }
-            }),
+            // styles: (theme: TKUITheme) => ({
+            //     main: {
+            //
+            //     }
+            // }),
             // configProps: {
             //     actions: (trip: Trip) => [
             //         {
@@ -132,16 +132,16 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             //         }
             //     ]
             // },
-            configProps: (defaultProps) => ({
-                actions: (trip: Trip) =>
-                    defaultProps.actions!(trip).concat(
-                        [
-                            {
-                                render: () => <div>Action</div>,
-                                handler: () => {return false}
-                            }
-                        ])
-            })
+            // configProps: (defaultProps) => ({
+            //     actions: (trip: Trip) =>
+            //         defaultProps.actions!(trip).concat(
+            //             [
+            //                 {
+            //                     render: () => <div>Action</div>,
+            //                     handler: () => {return false}
+            //                 }
+            //             ])
+            // })
         }
     };
 

@@ -72,5 +72,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         occupancy: {
 
+        },
+        trainOccupancy: {
+            marginTop: '5px'
         }
     });

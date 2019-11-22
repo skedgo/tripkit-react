@@ -1,0 +1,2750 @@
+// Set local storage FETCH_CACHE key to the following json, and open Central Station on 23/11/2019 9:00AM.
+// Automate this: make a test function that loads this json and sets FETCH_CACHE on local storage, and also
+// enable fetch caché flag (instead of basing on evironment being beta).
+[
+  [
+    "https://bigbang.skedgo.com/satapp-beta/departures.json{\"method\":\"POST\",\"headers\":{\"X-TripGo-Version\":\"w3.2018.12.20\",\"X-TripGo-Key\":\"790892d5eae024712cfd8616496d7317\",\"referer\":\"https://tripgo.com\",\"Accept\":\"application/json\",\"Content-Type\":\"application/json\"},\"body\":\"{\\\"region\\\":\\\"AU_NSW_Sydney\\\",\\\"embarkationStops\\\":[\\\"200060\\\"],\\\"timeStamp\\\":1574460000}\"}",
+    {
+      "embarkationStops": [
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "86-D.1197.103.128.A.8.57766122",
+              "startTime": 1574457180,
+              "wheelchairAccessible": true,
+              "realtimeVehicle": {
+                "id": "string",
+                "lastUpdate": 0,
+                "location": {"lat": 0, "lng": 0},
+                "components": [
+                  [
+                    {
+                      "occupancy": "EMPTY",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    },
+                    {
+                      "occupancy": "FEW_SEATS_AVAILABLE",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    },
+                    {
+                      "occupancy": "FULL",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    },
+                    {
+                      "occupancy": "MANY_SEATS_AVAILABLE",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    }
+                  ],
+                  [
+                    {
+                      "occupancy": "STANDING_ROOM_ONLY",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    },
+                    {
+                      "occupancy": "CRUSHED_STANDING_ROOM_ONLY",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    },
+                    {
+                      "occupancy": "NOT_ACCEPTING_PASSENGERS",
+                      "wifi": true,
+                      "airConditioned": true,
+                      "wheelchairAccessible": true,
+                      "wheelchairSeats": 0,
+                      "model": "string"
+                    }
+                  ]
+                ],
+                "occupancy": "EMPTY",
+                "wifi": true
+              }
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Macdonaldtown Station; Newtown Station; Stanmore Station; Petersham Station; Lewisham Station; Summer Hill Station; Ashfield Station; Croydon Station; Burwood Station; Strathfield Station; Homebush Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Homebush",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "92-D.1197.103.128.A.8.57766694",
+              "startTime": 1574457420,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "83-C.1197.103.128.A.8.57765892",
+              "startTime": 1574458080,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Macdonaldtown Station; Newtown Station; Stanmore Station; Petersham Station; Lewisham Station; Summer Hill Station; Ashfield Station; Croydon Station; Burwood Station; Strathfield Station; Homebush Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Homebush",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "6--D.1197.103.128.B.8.57763720",
+              "startTime": 1574458320,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "94-D.1197.103.128.A.8.57766885",
+              "startTime": 1574458980,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000339",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Strathfield Station; Lidcombe Station; Parramatta Station; Westmead Station; Wentworthville Station; Pendle Hill Station; Toongabbie Station; Seven Hills Station; Blacktown Station; Marayong Station; Quakers Hill Station; Schofields Station; Riverstone Station; Vineyard Station; Mulgrave Station; Windsor Station; Clarendon Station; East Richmond Station; Richmond Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Richmond",
+              "serviceName": "T1 Western Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "137B.1197.103.128.A.8.57759428",
+              "startTime": 1574456761,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Strathfield Station; Lidcombe Station; Auburn Station; Clyde Station; Granville Station; Harris Park Station; Parramatta Station; Westmead Station; Seven Hills Station; Blacktown Station; Doonside Station; Rooty Hill Station; Mount Druitt Station; St Marys Station; Werrington Station; Kingswood Station; Penrith Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Penrith",
+              "serviceName": "T1 Western Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "145D.1197.103.128.A.8.57760041",
+              "startTime": 1574457061,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Burwood Station; Strathfield Station; North Strathfield Station; Concord West Station; Rhodes Station; Meadowbank Station; West Ryde Station; Denistone Station; Eastwood Station; Epping Station; Cheltenham Station; Beecroft Station; Pennant Hills Station; Thornleigh Station; Normanhurst Station; Hornsby Station; Hornsby Station",
+              "serviceColor": {
+                "blue": 47,
+                "green": 31,
+                "red": 209
+              },
+              "serviceDirection": "Hornsby, then Central, Berowra",
+              "serviceName": "T9 Northern Line",
+              "serviceNumber": "T9",
+              "serviceTripID": "102D.1197.103.130.T.8.57757825",
+              "startTime": 1574457481,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Strathfield Station; Lidcombe Station; Auburn Station; Clyde Station; Granville Station; Harris Park Station; Parramatta Station; Westmead Station; Seven Hills Station; Blacktown Station; Doonside Station; Rooty Hill Station; Mount Druitt Station; St Marys Station; Werrington Station; Kingswood Station; Penrith Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Penrith",
+              "serviceName": "T1 Western Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "146D.1197.103.128.A.8.57760097",
+              "startTime": 1574457961,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Burwood Station; Strathfield Station; North Strathfield Station; Concord West Station; Rhodes Station; Meadowbank Station; West Ryde Station; Denistone Station; Eastwood Station; Epping Station; Cheltenham Station; Beecroft Station; Pennant Hills Station; Thornleigh Station; Normanhurst Station; Hornsby Station; Hornsby Station",
+              "serviceColor": {
+                "blue": 47,
+                "green": 31,
+                "red": 209
+              },
+              "serviceDirection": "Hornsby, then Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby",
+              "serviceName": "T9 Northern Line",
+              "serviceNumber": "T9",
+              "serviceTripID": "126D.1197.103.128.A.8.57758684",
+              "startTime": 1574458381,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Strathfield Station; Lidcombe Station; Parramatta Station; Westmead Station; Wentworthville Station; Pendle Hill Station; Toongabbie Station; Seven Hills Station; Blacktown Station; Marayong Station; Quakers Hill Station; Schofields Station; Riverstone Station; Vineyard Station; Mulgrave Station; Windsor Station; Clarendon Station; East Richmond Station; Richmond Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Richmond",
+              "serviceName": "T1 Western Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "138B.1197.103.128.A.8.57759471",
+              "startTime": 1574458561,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Strathfield Station; Lidcombe Station; Auburn Station; Clyde Station; Granville Station; Harris Park Station; Parramatta Station; Westmead Station; Seven Hills Station; Blacktown Station; Doonside Station; Rooty Hill Station; Mount Druitt Station; St Marys Station; Werrington Station; Kingswood Station; Penrith Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Penrith",
+              "serviceName": "T1 Western Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "121F.1197.103.128.A.8.57758371",
+              "startTime": 1574458861,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000338",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "NSW Trains",
+              "operatorID": "NSWTrains",
+              "searchString": "Strathfield Station; Parramatta Station; Blacktown Station; Penrith Station; Emu Plains Station; Lapstone Station; Glenbrook Station; Blaxland Station; Warrimoo Station; Valley Heights Station; Springwood Station; Faulconbridge Station; Linden Station; Woodford Station; Hazelbrook Station; Lawson Station; Bullaburra Station; Wentworth Falls Station; Leura Station; Katoomba Station; Medlow Bath Station; Blackheath Station; Mount Victoria Station; Bell Station; Zig Zag Station; Lithgow Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Lithgow",
+              "serviceName": "Blue Mountains Line",
+              "serviceNumber": "BMT",
+              "serviceTripID": "W531.1197.103.128.V.4.57769932",
+              "startTime": 1574457841,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000326",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "18-B.1197.103.128.B.8.57761361",
+              "startTime": 1574456821,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Redfern Station; Erskineville Station; St Peters Station; Sydenham Station; Marrickville Station; Dulwich Hill Station; Hurlstone Park Station; Canterbury Station; Campsie Station; Belmore Station; Lakemba Station; Wiley Park Station; Punchbowl Station; Bankstown Station; Yagoona Station; Birrong Station; Regents Park Station",
+              "serviceColor": {
+                "blue": 33,
+                "green": 112,
+                "red": 243
+              },
+              "serviceDirection": "Regents Park, then Lidcombe",
+              "serviceName": "T3 Bankstown Line",
+              "serviceNumber": "T3",
+              "serviceTripID": "14-F.1197.103.130.B.8.57759637",
+              "startTime": 1574457121,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Revesby Station; Panania Station; East Hills Station; Holsworthy Station; Glenfield Station; Macquarie Fields Station; Ingleburn Station; Minto Station; Leumeah Station; Campbelltown Station; Macarthur Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "98-H.1197.103.128.A.8.57767219",
+              "startTime": 1574457481,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "9--F.1197.103.128.B.8.57766435",
+              "startTime": 1574457721,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Redfern Station; Erskineville Station; St Peters Station; Sydenham Station; Marrickville Station; Dulwich Hill Station; Hurlstone Park Station; Canterbury Station; Campsie Station; Belmore Station; Lakemba Station; Wiley Park Station; Punchbowl Station; Bankstown Station; Yagoona Station; Birrong Station; Sefton Station; Chester Hill Station; Leightonfield Station; Villawood Station; Carramar Station; Cabramatta Station; Warwick Farm Station; Liverpool Station",
+              "serviceColor": {
+                "blue": 33,
+                "green": 112,
+                "red": 243
+              },
+              "serviceDirection": "Liverpool",
+              "serviceName": "T3 Bankstown Line",
+              "serviceNumber": "T3",
+              "serviceTripID": "2--G.1197.103.130.B.8.57761481",
+              "startTime": 1574458021,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Revesby Station; Panania Station; East Hills Station; Holsworthy Station; Glenfield Station; Macquarie Fields Station; Ingleburn Station; Minto Station; Leumeah Station; Campbelltown Station; Macarthur Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "12-F.1197.103.128.B.8.57758255",
+              "startTime": 1574458381,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "21-D.1197.103.128.B.8.57761728",
+              "startTime": 1574458621,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Circular Quay Station; St James Station; Museum Station; Central Station; Redfern Station; Erskineville Station; St Peters Station; Sydenham Station; Marrickville Station; Dulwich Hill Station; Hurlstone Park Station; Canterbury Station; Campsie Station; Belmore Station; Lakemba Station; Wiley Park Station; Punchbowl Station; Bankstown Station; Yagoona Station; Birrong Station; Regents Park Station",
+              "serviceColor": {
+                "blue": 33,
+                "green": 112,
+                "red": 243
+              },
+              "serviceDirection": "Regents Park, then Lidcombe",
+              "serviceName": "T3 Bankstown Line",
+              "serviceNumber": "T3",
+              "serviceTripID": "85-H.1197.103.130.A.8.57766058",
+              "startTime": 1574458921,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000337",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station; Waverton Station; Wollstonecraft Station; St Leonards Station; Artarmon Station; Chatswood Station; Roseville Station; Lindfield Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Lindfield",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "136D.1197.103.128.A.8.57759373",
+              "startTime": 1574456881,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station; Waverton Station; Wollstonecraft Station; St Leonards Station; Artarmon Station; Chatswood Station; Roseville Station; Lindfield Station; Killara Station; Gordon Station; Pymble Station; Turramurra Station; Warrawee Station; Wahroonga Station; Waitara Station; Hornsby Station; Asquith Station; Mount Colah Station; Mount Kuringgai Station; Berowra Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Berowra",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "132F.1197.103.130.A.8.57759153",
+              "startTime": 1574457301,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station; Waverton Station; Wollstonecraft Station; St Leonards Station; Artarmon Station; Chatswood Station; Roseville Station; Lindfield Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Lindfield",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "123D.1197.103.128.A.8.57758507",
+              "startTime": 1574457781,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "North Sydney",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "152C.1197.103.128.A.8.57760566",
+              "startTime": 1574458021,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station; Waverton Station; Wollstonecraft Station; St Leonards Station; Artarmon Station; Chatswood Station; Roseville Station; Lindfield Station; Killara Station; Gordon Station; Pymble Station; Turramurra Station; Warrawee Station; Wahroonga Station; Waitara Station; Hornsby Station; Hornsby Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Hornsby, then Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby, Central, Hornsby",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "127D.1197.103.128.A.8.57758750",
+              "startTime": 1574458201,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Wynyard Station; Milsons Point Station; North Sydney Station; Waverton Station; Wollstonecraft Station; St Leonards Station; Artarmon Station; Chatswood Station; Roseville Station; Lindfield Station",
+              "serviceColor": {
+                "blue": 28,
+                "green": 157,
+                "red": 249
+              },
+              "serviceDirection": "Lindfield",
+              "serviceName": "T1 North Shore Line",
+              "serviceNumber": "T1",
+              "serviceTripID": "125D.1197.103.128.A.8.57758632",
+              "startTime": 1574458681,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000336",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "NSW Trains",
+              "operatorID": "NSWTrains",
+              "searchString": "Strathfield Station; Epping Station; Hornsby Station; Woy Woy Station; Gosford Station; Tuggerah Station; Wyong Station; Warnervale Station; Wyee Station; Morisset Station; Dora Creek Station; Awaba Station; Fassifern Station; Booragul Station; Teralba Station; Cockle Creek Station; Cardiff Station; Kotara Station; Adamstown Station; Broadmeadow Station; Hamilton Station; Newcastle Interchange Station",
+              "serviceColor": {
+                "blue": 47,
+                "green": 31,
+                "red": 209
+              },
+              "serviceDirection": "Newcastle Interchange",
+              "serviceName": "Central Coast & Newcastle Line",
+              "serviceNumber": "CCN",
+              "serviceTripID": "288B.1197.103.130.H.8.57762311",
+              "startTime": 1574457481,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000329",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Erskineville Station; St Peters Station; Sydenham Station; Marrickville Station; Dulwich Hill Station; Hurlstone Park Station; Canterbury Station; Campsie Station; Belmore Station; Lakemba Station; Wiley Park Station; Punchbowl Station; Bankstown Station; Yagoona Station; Birrong Station; Sefton Station; Chester Hill Station; Leightonfield Station; Villawood Station; Carramar Station; Cabramatta Station; Warwick Farm Station; Liverpool Station",
+              "serviceColor": {
+                "blue": 33,
+                "green": 112,
+                "red": 243
+              },
+              "serviceDirection": "Liverpool",
+              "serviceName": "T3 Bankstown Line",
+              "serviceNumber": "T3",
+              "serviceTripID": "1--G.1197.103.130.B.8.57757666",
+              "startTime": 1574457300,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Erskineville Station; St Peters Station; Sydenham Station; Marrickville Station; Dulwich Hill Station; Hurlstone Park Station; Canterbury Station; Campsie Station; Belmore Station; Lakemba Station; Wiley Park Station; Punchbowl Station; Bankstown Station; Yagoona Station; Birrong Station; Regents Park Station",
+              "serviceColor": {
+                "blue": 33,
+                "green": 112,
+                "red": 243
+              },
+              "serviceDirection": "Regents Park, then Lidcombe",
+              "serviceName": "T3 Bankstown Line",
+              "serviceNumber": "T3",
+              "serviceTripID": "14-F.1197.103.130.B.8.57759637",
+              "startTime": 1574458200,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000342",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "83-C.1197.103.128.A.8.57765892",
+              "startTime": 1574457001,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Macdonaldtown Station; Newtown Station; Stanmore Station; Petersham Station; Lewisham Station; Summer Hill Station; Ashfield Station; Croydon Station; Burwood Station; Strathfield Station; Homebush Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Homebush",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "6--D.1197.103.128.B.8.57763720",
+              "startTime": 1574457241,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "94-D.1197.103.128.A.8.57766885",
+              "startTime": 1574457913,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Macdonaldtown Station; Newtown Station; Stanmore Station; Petersham Station; Lewisham Station; Summer Hill Station; Ashfield Station; Croydon Station; Burwood Station; Strathfield Station; Homebush Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Homebush",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "15-D.1197.103.128.B.8.57760370",
+              "startTime": 1574458141,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Ashfield Station; Burwood Station; Strathfield Station; Flemington Station; Lidcombe Station; Auburn Station; Granville Station; Merrylands Station; Guildford Station; Yennora Station; Fairfield Station; Canley Vale Station; Cabramatta Station; Warwick Farm Station; Liverpool Station; Casula Station; Glenfield Station; Edmondson Park Station; Leppington Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Leppington",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "87-F.1197.103.128.A.8.57766197",
+              "startTime": 1574458801,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Museum Station; St James Station; Circular Quay Station; Wynyard Station; Town Hall Station; Central Station; Redfern Station; Macdonaldtown Station; Newtown Station; Stanmore Station; Petersham Station; Lewisham Station; Summer Hill Station; Ashfield Station; Croydon Station; Burwood Station; Strathfield Station; Homebush Station",
+              "serviceColor": {
+                "blue": 205,
+                "green": 152,
+                "red": 0
+              },
+              "serviceDirection": "Homebush",
+              "serviceName": "T2 Inner West & Leppington Line",
+              "serviceNumber": "T2",
+              "serviceTripID": "82-E.1197.103.128.A.8.57765809",
+              "startTime": 1574459041,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000341",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Sydenham Station; Tempe Station; Wolli Creek Station; Arncliffe Station; Banksia Station; Rockdale Station; Kogarah Station; Carlton Station; Allawah Station; Hurstville Station; Penshurst Station; Mortdale Station; Oatley Station; Como Station; Jannali Station; Sutherland Station; Loftus Station; Engadine Station; Heathcote Station; Waterfall Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Waterfall",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "608C.1197.103.130.T.8.57764273",
+              "startTime": 1574456826,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Sydenham Station; Wolli Creek Station; Rockdale Station; Kogarah Station; Hurstville Station; Penshurst Station; Mortdale Station; Jannali Station; Sutherland Station; Kirrawee Station; Gymea Station; Miranda Station; Caringbah Station; Woolooware Station; Cronulla Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Cronulla",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "609D.1197.103.130.T.8.57764328",
+              "startTime": 1574457726,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "NSW Trains",
+              "operatorID": "NSWTrains",
+              "searchString": "Redfern Station; Wolli Creek Station; Hurstville Station; Sutherland Station; Waterfall Station; Helensburgh Station; Otford Station; Stanwell Park Station; Coalcliff Station; Scarborough Station; Wombarra Station; Coledale Station; Austinmer Station; Thirroul Station; North Wollongong Station; Wollongong Station; Coniston Station; Unanderra Station; Kembla Grange Station; Dapto Station; Albion Park Station; Oak Flats Station; Shellharbour Junction Station; Minnamurra Station; Bombo Station; Kiama Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Kiama",
+              "serviceName": "South Coast Line",
+              "serviceNumber": "SCO",
+              "serviceTripID": "429B.1197.103.128.H.4.57762549",
+              "startTime": 1574458146,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Redfern Station; Sydenham Station; Tempe Station; Wolli Creek Station; Arncliffe Station; Banksia Station; Rockdale Station; Kogarah Station; Carlton Station; Allawah Station; Hurstville Station; Penshurst Station; Mortdale Station; Oatley Station; Como Station; Jannali Station; Sutherland Station; Loftus Station; Engadine Station; Heathcote Station; Waterfall Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Waterfall",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "600D.1197.103.130.T.8.57763843",
+              "startTime": 1574458626,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000345",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Martin Place Station; Kings Cross Station; Edgecliff Station; Bondi Junction Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Bondi Junction",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "611C.1197.103.130.T.8.57764463",
+              "startTime": 1574457180,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "NSW Trains",
+              "operatorID": "NSWTrains",
+              "searchString": "Town Hall Station; Martin Place Station; Kings Cross Station; Edgecliff Station; Bondi Junction Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Bondi Junction",
+              "serviceName": "South Coast Line",
+              "serviceNumber": "SCO",
+              "serviceTripID": "420C.1197.103.128.H.4.57762919",
+              "startTime": 1574457492,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Martin Place Station; Kings Cross Station; Edgecliff Station; Bondi Junction Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Bondi Junction",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "610E.1197.103.128.T.8.57764416",
+              "startTime": 1574457780,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Martin Place Station; Kings Cross Station; Edgecliff Station; Bondi Junction Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Bondi Junction",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "605D.1197.103.130.T.8.57764096",
+              "startTime": 1574458380,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Town Hall Station; Martin Place Station; Kings Cross Station; Edgecliff Station; Bondi Junction Station",
+              "serviceColor": {
+                "blue": 163,
+                "green": 90,
+                "red": 0
+              },
+              "serviceDirection": "Bondi Junction",
+              "serviceName": "T4 Eastern Suburbs & Illawarra Line",
+              "serviceNumber": "T4",
+              "serviceTripID": "612C.1197.103.130.T.8.57764516",
+              "startTime": 1574458980,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000344",
+          "wheelchairAccessible": true
+        },
+        {
+          "services": [
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "8--F.1197.103.128.B.8.57765606",
+              "startTime": 1574457000,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Revesby Station; Panania Station; East Hills Station; Holsworthy Station; Glenfield Station; Macquarie Fields Station; Ingleburn Station; Minto Station; Leumeah Station; Campbelltown Station; Macarthur Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "10-F.1197.103.128.B.8.57757707",
+              "startTime": 1574457660,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "18-B.1197.103.128.B.8.57761361",
+              "startTime": 1574457900,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Revesby Station; Panania Station; East Hills Station; Holsworthy Station; Glenfield Station; Macquarie Fields Station; Ingleburn Station; Minto Station; Leumeah Station; Campbelltown Station; Macarthur Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Macarthur",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "98-H.1197.103.128.A.8.57767219",
+              "startTime": 1574458560,
+              "wheelchairAccessible": true
+            },
+            {
+              "bicycleAccessible": true,
+              "mode": "train",
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "operator": "Sydney Trains",
+              "operatorID": "SydneyTrains",
+              "searchString": "Green Square Station; Mascot Station; Domestic Station; International Station; Wolli Creek Station; Turrella Station; Bardwell Park Station; Bexley North Station; Kingsgrove Station; Beverly Hills Station; Narwee Station; Riverwood Station; Padstow Station; Revesby Station",
+              "serviceColor": {
+                "blue": 76,
+                "green": 149,
+                "red": 0
+              },
+              "serviceDirection": "Revesby",
+              "serviceName": "T8 Airport & South Line",
+              "serviceNumber": "T8",
+              "serviceTripID": "9--F.1197.103.128.B.8.57766435",
+              "startTime": 1574458800,
+              "wheelchairAccessible": true
+            }
+          ],
+          "stopCode": "2000343",
+          "wheelchairAccessible": true
+        }
+      ],
+      "parentInfo": {
+        "address": "Central Station",
+        "children": [
+          {
+            "address": "Central Station Platform 5",
+            "class": "StopLocation",
+            "code": "2000325",
+            "id": "pt_pub|AU_NSW_Sydney|2000325",
+            "lat": -33.88337,
+            "lng": 151.20589,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 5",
+            "popularity": 840,
+            "services": "BMT, WST, NRC, SCO, CCN",
+            "shortName": "Platform 5",
+            "stopCode": "2000325",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 7",
+            "class": "StopLocation",
+            "code": "2000327",
+            "id": "pt_pub|AU_NSW_Sydney|2000327",
+            "lat": -33.88344,
+            "lng": 151.20606,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 7",
+            "popularity": 1290,
+            "services": "T9, BMT",
+            "shortName": "Platform 7",
+            "stopCode": "2000327",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 22",
+            "class": "StopLocation",
+            "code": "2000342",
+            "id": "pt_pub|AU_NSW_Sydney|2000342",
+            "lat": -33.88433,
+            "lng": 151.20722,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 22",
+            "popularity": 6755,
+            "services": "T3, T2, T8",
+            "shortName": "Platform 22",
+            "stopCode": "2000342",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 8",
+            "class": "StopLocation",
+            "code": "2000328",
+            "id": "pt_pub|AU_NSW_Sydney|2000328",
+            "lat": -33.88352,
+            "lng": 151.20618,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 8",
+            "popularity": 1890,
+            "services": "T9, CCN, BMT, SCO",
+            "shortName": "Platform 8",
+            "stopCode": "2000328",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 12",
+            "class": "StopLocation",
+            "code": "2000332",
+            "id": "pt_pub|AU_NSW_Sydney|2000332",
+            "lat": -33.88372,
+            "lng": 151.20653,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 12",
+            "popularity": 480,
+            "services": "T9, CCN",
+            "shortName": "Platform 12",
+            "stopCode": "2000332",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 24",
+            "class": "StopLocation",
+            "code": "2000344",
+            "id": "pt_pub|AU_NSW_Sydney|2000344",
+            "lat": -33.88448,
+            "lng": 151.20744,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 24",
+            "popularity": 12710,
+            "services": "T4, SCO",
+            "shortName": "Platform 24",
+            "stopCode": "2000344",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 25",
+            "class": "StopLocation",
+            "code": "2000345",
+            "id": "pt_pub|AU_NSW_Sydney|2000345",
+            "lat": -33.88452,
+            "lng": 151.20749,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 25",
+            "popularity": 12695,
+            "services": "T4, SCO",
+            "shortName": "Platform 25",
+            "stopCode": "2000345",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 17",
+            "class": "StopLocation",
+            "code": "2000337",
+            "id": "pt_pub|AU_NSW_Sydney|2000337",
+            "lat": -33.88412,
+            "lng": 151.20683,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 17",
+            "popularity": 18345,
+            "services": "T2, T8, T3",
+            "shortName": "Platform 17",
+            "stopCode": "2000337",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 11",
+            "class": "StopLocation",
+            "code": "2000331",
+            "id": "pt_pub|AU_NSW_Sydney|2000331",
+            "lat": -33.88365,
+            "lng": 151.20643,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 11",
+            "popularity": 1285,
+            "services": "SCO, T2, CCN, T9",
+            "shortName": "Platform 11",
+            "stopCode": "2000331",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 10",
+            "class": "StopLocation",
+            "code": "2000330",
+            "id": "pt_pub|AU_NSW_Sydney|2000330",
+            "lat": -33.88362,
+            "lng": 151.20637,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 10",
+            "popularity": 295,
+            "services": "T1, BMT, CCN",
+            "shortName": "Platform 10",
+            "stopCode": "2000330",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 21",
+            "class": "StopLocation",
+            "code": "2000341",
+            "id": "pt_pub|AU_NSW_Sydney|2000341",
+            "lat": -33.8843,
+            "lng": 151.20712,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 21",
+            "popularity": 9260,
+            "services": "T2, T3",
+            "shortName": "Platform 21",
+            "stopCode": "2000341",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 19",
+            "class": "StopLocation",
+            "code": "2000339",
+            "id": "pt_pub|AU_NSW_Sydney|2000339",
+            "lat": -33.88421,
+            "lng": 151.20698,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 19",
+            "popularity": 14760,
+            "services": "T2, T3",
+            "shortName": "Platform 19",
+            "stopCode": "2000339",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 16",
+            "class": "StopLocation",
+            "code": "2000336",
+            "id": "pt_pub|AU_NSW_Sydney|2000336",
+            "lat": -33.88407,
+            "lng": 151.20677,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 16",
+            "popularity": 18275,
+            "services": "T1, T9, T8, CCN",
+            "shortName": "Platform 16",
+            "stopCode": "2000336",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 3",
+            "class": "StopLocation",
+            "code": "2000323",
+            "id": "pt_pub|AU_NSW_Sydney|2000323",
+            "lat": -33.88277,
+            "lng": 151.20606,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 3",
+            "popularity": 160,
+            "services": "NRW, BMT, STH",
+            "shortName": "Platform 3",
+            "stopCode": "2000323",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 18",
+            "class": "StopLocation",
+            "code": "2000338",
+            "id": "pt_pub|AU_NSW_Sydney|2000338",
+            "lat": -33.88418,
+            "lng": 151.20691,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 18",
+            "popularity": 18280,
+            "services": "T9, T1, T2",
+            "shortName": "Platform 18",
+            "stopCode": "2000338",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 2",
+            "class": "StopLocation",
+            "code": "2000322",
+            "id": "pt_pub|AU_NSW_Sydney|2000322",
+            "lat": -33.88275,
+            "lng": 151.20601,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 2",
+            "popularity": 245,
+            "services": "CCN, STH, WST, SHL, BMT",
+            "shortName": "Platform 2",
+            "stopCode": "2000322",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 9",
+            "class": "StopLocation",
+            "code": "2000329",
+            "id": "pt_pub|AU_NSW_Sydney|2000329",
+            "lat": -33.88355,
+            "lng": 151.20624,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 9",
+            "popularity": 2330,
+            "services": "T1, CCN, SCO, BMT",
+            "shortName": "Platform 9",
+            "stopCode": "2000329",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 23",
+            "class": "StopLocation",
+            "code": "2000343",
+            "id": "pt_pub|AU_NSW_Sydney|2000343",
+            "lat": -33.88437,
+            "lng": 151.20727,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 23",
+            "popularity": 10910,
+            "services": "T2, T8, T3",
+            "shortName": "Platform 23",
+            "stopCode": "2000343",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 6",
+            "class": "StopLocation",
+            "code": "2000326",
+            "id": "pt_pub|AU_NSW_Sydney|2000326",
+            "lat": -33.88341,
+            "lng": 151.20601,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 6",
+            "popularity": 1445,
+            "services": "BMT, SHL, STH, CCN",
+            "shortName": "Platform 6",
+            "stopCode": "2000326",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 20",
+            "class": "StopLocation",
+            "code": "2000340",
+            "id": "pt_pub|AU_NSW_Sydney|2000340",
+            "lat": -33.88425,
+            "lng": 151.20706,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 20",
+            "popularity": 5850,
+            "services": "T3, T2",
+            "shortName": "Platform 20",
+            "stopCode": "2000340",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 4",
+            "class": "StopLocation",
+            "code": "2000324",
+            "id": "pt_pub|AU_NSW_Sydney|2000324",
+            "lat": -33.88335,
+            "lng": 151.20583,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 4",
+            "popularity": 825,
+            "services": "BMT, SCO, WST, NRW, NRC,...",
+            "shortName": "Platform 4",
+            "stopCode": "2000324",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          },
+          {
+            "address": "Central Station Platform 1",
+            "class": "StopLocation",
+            "code": "2000321",
+            "id": "pt_pub|AU_NSW_Sydney|2000321",
+            "lat": -33.8827,
+            "lng": 151.20586,
+            "modeInfo": {
+              "alt": "train",
+              "identifier": "pt_pub_train",
+              "localIcon": "train"
+            },
+            "name": "Central Station Platform 1",
+            "popularity": 255,
+            "services": "NRC, SCO, BMT, SHL, STH",
+            "shortName": "Platform 1",
+            "stopCode": "2000321",
+            "stopType": "train",
+            "timezone": "Australia/Sydney",
+            "wheelchairAccessible": true
+          }
+        ],
+        "class": "StopLocation",
+        "code": "200060",
+        "id": "pt_pub|AU_NSW_Sydney|200060",
+        "lat": -33.8836,
+        "lng": 151.2067,
+        "modeInfo": {
+          "alt": "train",
+          "identifier": "pt_pub_train",
+          "localIcon": "train"
+        },
+        "name": "Central Station",
+        "popularity": 139180,
+        "services": "",
+        "stopCode": "200060",
+        "stopType": "train",
+        "timezone": "Australia/Sydney"
+      },
+      "parentStops": [
+        {
+          "address": "Central Station",
+          "children": [
+            {
+              "address": "Central Station Platform 5",
+              "class": "StopLocation",
+              "code": "2000325",
+              "id": "pt_pub|AU_NSW_Sydney|2000325",
+              "lat": -33.88337,
+              "lng": 151.20589,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 5",
+              "popularity": 840,
+              "services": "BMT, WST, NRC, SCO, CCN",
+              "shortName": "Platform 5",
+              "stopCode": "2000325",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 7",
+              "class": "StopLocation",
+              "code": "2000327",
+              "id": "pt_pub|AU_NSW_Sydney|2000327",
+              "lat": -33.88344,
+              "lng": 151.20606,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 7",
+              "popularity": 1290,
+              "services": "T9, BMT",
+              "shortName": "Platform 7",
+              "stopCode": "2000327",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 22",
+              "class": "StopLocation",
+              "code": "2000342",
+              "id": "pt_pub|AU_NSW_Sydney|2000342",
+              "lat": -33.88433,
+              "lng": 151.20722,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 22",
+              "popularity": 6755,
+              "services": "T3, T2, T8",
+              "shortName": "Platform 22",
+              "stopCode": "2000342",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 8",
+              "class": "StopLocation",
+              "code": "2000328",
+              "id": "pt_pub|AU_NSW_Sydney|2000328",
+              "lat": -33.88352,
+              "lng": 151.20618,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 8",
+              "popularity": 1890,
+              "services": "T9, CCN, BMT, SCO",
+              "shortName": "Platform 8",
+              "stopCode": "2000328",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 12",
+              "class": "StopLocation",
+              "code": "2000332",
+              "id": "pt_pub|AU_NSW_Sydney|2000332",
+              "lat": -33.88372,
+              "lng": 151.20653,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 12",
+              "popularity": 480,
+              "services": "T9, CCN",
+              "shortName": "Platform 12",
+              "stopCode": "2000332",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 24",
+              "class": "StopLocation",
+              "code": "2000344",
+              "id": "pt_pub|AU_NSW_Sydney|2000344",
+              "lat": -33.88448,
+              "lng": 151.20744,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 24",
+              "popularity": 12710,
+              "services": "T4, SCO",
+              "shortName": "Platform 24",
+              "stopCode": "2000344",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 25",
+              "class": "StopLocation",
+              "code": "2000345",
+              "id": "pt_pub|AU_NSW_Sydney|2000345",
+              "lat": -33.88452,
+              "lng": 151.20749,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 25",
+              "popularity": 12695,
+              "services": "T4, SCO",
+              "shortName": "Platform 25",
+              "stopCode": "2000345",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 17",
+              "class": "StopLocation",
+              "code": "2000337",
+              "id": "pt_pub|AU_NSW_Sydney|2000337",
+              "lat": -33.88412,
+              "lng": 151.20683,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 17",
+              "popularity": 18345,
+              "services": "T2, T8, T3",
+              "shortName": "Platform 17",
+              "stopCode": "2000337",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 11",
+              "class": "StopLocation",
+              "code": "2000331",
+              "id": "pt_pub|AU_NSW_Sydney|2000331",
+              "lat": -33.88365,
+              "lng": 151.20643,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 11",
+              "popularity": 1285,
+              "services": "SCO, T2, CCN, T9",
+              "shortName": "Platform 11",
+              "stopCode": "2000331",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 10",
+              "class": "StopLocation",
+              "code": "2000330",
+              "id": "pt_pub|AU_NSW_Sydney|2000330",
+              "lat": -33.88362,
+              "lng": 151.20637,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 10",
+              "popularity": 295,
+              "services": "T1, BMT, CCN",
+              "shortName": "Platform 10",
+              "stopCode": "2000330",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 21",
+              "class": "StopLocation",
+              "code": "2000341",
+              "id": "pt_pub|AU_NSW_Sydney|2000341",
+              "lat": -33.8843,
+              "lng": 151.20712,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 21",
+              "popularity": 9260,
+              "services": "T2, T3",
+              "shortName": "Platform 21",
+              "stopCode": "2000341",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 19",
+              "class": "StopLocation",
+              "code": "2000339",
+              "id": "pt_pub|AU_NSW_Sydney|2000339",
+              "lat": -33.88421,
+              "lng": 151.20698,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 19",
+              "popularity": 14760,
+              "services": "T2, T3",
+              "shortName": "Platform 19",
+              "stopCode": "2000339",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 16",
+              "class": "StopLocation",
+              "code": "2000336",
+              "id": "pt_pub|AU_NSW_Sydney|2000336",
+              "lat": -33.88407,
+              "lng": 151.20677,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 16",
+              "popularity": 18275,
+              "services": "T1, T9, T8, CCN",
+              "shortName": "Platform 16",
+              "stopCode": "2000336",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 3",
+              "class": "StopLocation",
+              "code": "2000323",
+              "id": "pt_pub|AU_NSW_Sydney|2000323",
+              "lat": -33.88277,
+              "lng": 151.20606,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 3",
+              "popularity": 160,
+              "services": "NRW, BMT, STH",
+              "shortName": "Platform 3",
+              "stopCode": "2000323",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 18",
+              "class": "StopLocation",
+              "code": "2000338",
+              "id": "pt_pub|AU_NSW_Sydney|2000338",
+              "lat": -33.88418,
+              "lng": 151.20691,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 18",
+              "popularity": 18280,
+              "services": "T9, T1, T2",
+              "shortName": "Platform 18",
+              "stopCode": "2000338",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 2",
+              "class": "StopLocation",
+              "code": "2000322",
+              "id": "pt_pub|AU_NSW_Sydney|2000322",
+              "lat": -33.88275,
+              "lng": 151.20601,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 2",
+              "popularity": 245,
+              "services": "CCN, STH, WST, SHL, BMT",
+              "shortName": "Platform 2",
+              "stopCode": "2000322",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 9",
+              "class": "StopLocation",
+              "code": "2000329",
+              "id": "pt_pub|AU_NSW_Sydney|2000329",
+              "lat": -33.88355,
+              "lng": 151.20624,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 9",
+              "popularity": 2330,
+              "services": "T1, CCN, SCO, BMT",
+              "shortName": "Platform 9",
+              "stopCode": "2000329",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 23",
+              "class": "StopLocation",
+              "code": "2000343",
+              "id": "pt_pub|AU_NSW_Sydney|2000343",
+              "lat": -33.88437,
+              "lng": 151.20727,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 23",
+              "popularity": 10910,
+              "services": "T2, T8, T3",
+              "shortName": "Platform 23",
+              "stopCode": "2000343",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 6",
+              "class": "StopLocation",
+              "code": "2000326",
+              "id": "pt_pub|AU_NSW_Sydney|2000326",
+              "lat": -33.88341,
+              "lng": 151.20601,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 6",
+              "popularity": 1445,
+              "services": "BMT, SHL, STH, CCN",
+              "shortName": "Platform 6",
+              "stopCode": "2000326",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 20",
+              "class": "StopLocation",
+              "code": "2000340",
+              "id": "pt_pub|AU_NSW_Sydney|2000340",
+              "lat": -33.88425,
+              "lng": 151.20706,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 20",
+              "popularity": 5850,
+              "services": "T3, T2",
+              "shortName": "Platform 20",
+              "stopCode": "2000340",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 4",
+              "class": "StopLocation",
+              "code": "2000324",
+              "id": "pt_pub|AU_NSW_Sydney|2000324",
+              "lat": -33.88335,
+              "lng": 151.20583,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 4",
+              "popularity": 825,
+              "services": "BMT, SCO, WST, NRW, NRC,...",
+              "shortName": "Platform 4",
+              "stopCode": "2000324",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 1",
+              "class": "StopLocation",
+              "code": "2000321",
+              "id": "pt_pub|AU_NSW_Sydney|2000321",
+              "lat": -33.8827,
+              "lng": 151.20586,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 1",
+              "popularity": 255,
+              "services": "NRC, SCO, BMT, SHL, STH",
+              "shortName": "Platform 1",
+              "stopCode": "2000321",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            }
+          ],
+          "class": "StopLocation",
+          "code": "200060",
+          "id": "pt_pub|AU_NSW_Sydney|200060",
+          "lat": -33.8836,
+          "lng": 151.2067,
+          "modeInfo": {
+            "alt": "train",
+            "identifier": "pt_pub_train",
+            "localIcon": "train"
+          },
+          "name": "Central Station",
+          "popularity": 139180,
+          "services": "",
+          "stopCode": "200060",
+          "stopType": "train",
+          "timezone": "Australia/Sydney"
+        }
+      ],
+      "stops": [
+        {
+          "address": "Central Station",
+          "children": [
+            {
+              "address": "Central Station Platform 5",
+              "class": "StopLocation",
+              "code": "2000325",
+              "id": "pt_pub|AU_NSW_Sydney|2000325",
+              "lat": -33.88337,
+              "lng": 151.20589,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 5",
+              "popularity": 840,
+              "services": "BMT, WST, NRC, SCO, CCN",
+              "shortName": "Platform 5",
+              "stopCode": "2000325",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 7",
+              "class": "StopLocation",
+              "code": "2000327",
+              "id": "pt_pub|AU_NSW_Sydney|2000327",
+              "lat": -33.88344,
+              "lng": 151.20606,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 7",
+              "popularity": 1290,
+              "services": "T9, BMT",
+              "shortName": "Platform 7",
+              "stopCode": "2000327",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 22",
+              "class": "StopLocation",
+              "code": "2000342",
+              "id": "pt_pub|AU_NSW_Sydney|2000342",
+              "lat": -33.88433,
+              "lng": 151.20722,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 22",
+              "popularity": 6755,
+              "services": "T3, T2, T8",
+              "shortName": "Platform 22",
+              "stopCode": "2000342",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 8",
+              "class": "StopLocation",
+              "code": "2000328",
+              "id": "pt_pub|AU_NSW_Sydney|2000328",
+              "lat": -33.88352,
+              "lng": 151.20618,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 8",
+              "popularity": 1890,
+              "services": "T9, CCN, BMT, SCO",
+              "shortName": "Platform 8",
+              "stopCode": "2000328",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 12",
+              "class": "StopLocation",
+              "code": "2000332",
+              "id": "pt_pub|AU_NSW_Sydney|2000332",
+              "lat": -33.88372,
+              "lng": 151.20653,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 12",
+              "popularity": 480,
+              "services": "T9, CCN",
+              "shortName": "Platform 12",
+              "stopCode": "2000332",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 24",
+              "class": "StopLocation",
+              "code": "2000344",
+              "id": "pt_pub|AU_NSW_Sydney|2000344",
+              "lat": -33.88448,
+              "lng": 151.20744,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 24",
+              "popularity": 12710,
+              "services": "T4, SCO",
+              "shortName": "Platform 24",
+              "stopCode": "2000344",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 25",
+              "class": "StopLocation",
+              "code": "2000345",
+              "id": "pt_pub|AU_NSW_Sydney|2000345",
+              "lat": -33.88452,
+              "lng": 151.20749,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 25",
+              "popularity": 12695,
+              "services": "T4, SCO",
+              "shortName": "Platform 25",
+              "stopCode": "2000345",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 17",
+              "class": "StopLocation",
+              "code": "2000337",
+              "id": "pt_pub|AU_NSW_Sydney|2000337",
+              "lat": -33.88412,
+              "lng": 151.20683,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 17",
+              "popularity": 18345,
+              "services": "T2, T8, T3",
+              "shortName": "Platform 17",
+              "stopCode": "2000337",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 11",
+              "class": "StopLocation",
+              "code": "2000331",
+              "id": "pt_pub|AU_NSW_Sydney|2000331",
+              "lat": -33.88365,
+              "lng": 151.20643,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 11",
+              "popularity": 1285,
+              "services": "SCO, T2, CCN, T9",
+              "shortName": "Platform 11",
+              "stopCode": "2000331",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 10",
+              "class": "StopLocation",
+              "code": "2000330",
+              "id": "pt_pub|AU_NSW_Sydney|2000330",
+              "lat": -33.88362,
+              "lng": 151.20637,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 10",
+              "popularity": 295,
+              "services": "T1, BMT, CCN",
+              "shortName": "Platform 10",
+              "stopCode": "2000330",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 21",
+              "class": "StopLocation",
+              "code": "2000341",
+              "id": "pt_pub|AU_NSW_Sydney|2000341",
+              "lat": -33.8843,
+              "lng": 151.20712,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 21",
+              "popularity": 9260,
+              "services": "T2, T3",
+              "shortName": "Platform 21",
+              "stopCode": "2000341",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 19",
+              "class": "StopLocation",
+              "code": "2000339",
+              "id": "pt_pub|AU_NSW_Sydney|2000339",
+              "lat": -33.88421,
+              "lng": 151.20698,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 19",
+              "popularity": 14760,
+              "services": "T2, T3",
+              "shortName": "Platform 19",
+              "stopCode": "2000339",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 16",
+              "class": "StopLocation",
+              "code": "2000336",
+              "id": "pt_pub|AU_NSW_Sydney|2000336",
+              "lat": -33.88407,
+              "lng": 151.20677,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 16",
+              "popularity": 18275,
+              "services": "T1, T9, T8, CCN",
+              "shortName": "Platform 16",
+              "stopCode": "2000336",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 3",
+              "class": "StopLocation",
+              "code": "2000323",
+              "id": "pt_pub|AU_NSW_Sydney|2000323",
+              "lat": -33.88277,
+              "lng": 151.20606,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 3",
+              "popularity": 160,
+              "services": "NRW, BMT, STH",
+              "shortName": "Platform 3",
+              "stopCode": "2000323",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 18",
+              "class": "StopLocation",
+              "code": "2000338",
+              "id": "pt_pub|AU_NSW_Sydney|2000338",
+              "lat": -33.88418,
+              "lng": 151.20691,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 18",
+              "popularity": 18280,
+              "services": "T9, T1, T2",
+              "shortName": "Platform 18",
+              "stopCode": "2000338",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 2",
+              "class": "StopLocation",
+              "code": "2000322",
+              "id": "pt_pub|AU_NSW_Sydney|2000322",
+              "lat": -33.88275,
+              "lng": 151.20601,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 2",
+              "popularity": 245,
+              "services": "CCN, STH, WST, SHL, BMT",
+              "shortName": "Platform 2",
+              "stopCode": "2000322",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 9",
+              "class": "StopLocation",
+              "code": "2000329",
+              "id": "pt_pub|AU_NSW_Sydney|2000329",
+              "lat": -33.88355,
+              "lng": 151.20624,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 9",
+              "popularity": 2330,
+              "services": "T1, CCN, SCO, BMT",
+              "shortName": "Platform 9",
+              "stopCode": "2000329",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 23",
+              "class": "StopLocation",
+              "code": "2000343",
+              "id": "pt_pub|AU_NSW_Sydney|2000343",
+              "lat": -33.88437,
+              "lng": 151.20727,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 23",
+              "popularity": 10910,
+              "services": "T2, T8, T3",
+              "shortName": "Platform 23",
+              "stopCode": "2000343",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 6",
+              "class": "StopLocation",
+              "code": "2000326",
+              "id": "pt_pub|AU_NSW_Sydney|2000326",
+              "lat": -33.88341,
+              "lng": 151.20601,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 6",
+              "popularity": 1445,
+              "services": "BMT, SHL, STH, CCN",
+              "shortName": "Platform 6",
+              "stopCode": "2000326",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 20",
+              "class": "StopLocation",
+              "code": "2000340",
+              "id": "pt_pub|AU_NSW_Sydney|2000340",
+              "lat": -33.88425,
+              "lng": 151.20706,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 20",
+              "popularity": 5850,
+              "services": "T3, T2",
+              "shortName": "Platform 20",
+              "stopCode": "2000340",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 4",
+              "class": "StopLocation",
+              "code": "2000324",
+              "id": "pt_pub|AU_NSW_Sydney|2000324",
+              "lat": -33.88335,
+              "lng": 151.20583,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 4",
+              "popularity": 825,
+              "services": "BMT, SCO, WST, NRW, NRC,...",
+              "shortName": "Platform 4",
+              "stopCode": "2000324",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            },
+            {
+              "address": "Central Station Platform 1",
+              "class": "StopLocation",
+              "code": "2000321",
+              "id": "pt_pub|AU_NSW_Sydney|2000321",
+              "lat": -33.8827,
+              "lng": 151.20586,
+              "modeInfo": {
+                "alt": "train",
+                "identifier": "pt_pub_train",
+                "localIcon": "train"
+              },
+              "name": "Central Station Platform 1",
+              "popularity": 255,
+              "services": "NRC, SCO, BMT, SHL, STH",
+              "shortName": "Platform 1",
+              "stopCode": "2000321",
+              "stopType": "train",
+              "timezone": "Australia/Sydney",
+              "wheelchairAccessible": true
+            }
+          ],
+          "class": "StopLocation",
+          "code": "200060",
+          "id": "pt_pub|AU_NSW_Sydney|200060",
+          "lat": -33.8836,
+          "lng": 151.2067,
+          "modeInfo": {
+            "alt": "train",
+            "identifier": "pt_pub_train",
+            "localIcon": "train"
+          },
+          "name": "Central Station",
+          "popularity": 139180,
+          "services": "",
+          "stopCode": "200060",
+          "stopType": "train",
+          "timezone": "Australia/Sydney"
+        }
+      ]
+    }
+  ]
+]

@@ -14,8 +14,9 @@ export const tKUIOccupancyInfoDefaultStyle: TKUIStyles<ITKUIOccupancyInfoStyle, 
             ...genStyles.alignCenter
         },
         passengerSlot: {
-            height: '20px',
+            height: '16px',
             width: 'auto',
+            marginRight: '2px',
             opacity: .2
         },
         passenger: {

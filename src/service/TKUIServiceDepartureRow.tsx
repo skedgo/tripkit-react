@@ -13,6 +13,7 @@ import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -40,6 +41,7 @@ interface IStyle {
     timeToDepartPast: CSSProps<IProps>;
     serviceDescription: CSSProps<IProps>;
     occupancy: CSSProps<IProps>;
+    trainOccupancy: CSSProps<IProps>;
 }
 
 export type TKUIServiceDepartureRowProps = IProps;
@@ -128,12 +130,18 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
             departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
             departure.realtimeVehicle.components[0][0].occupancy;
+        const hasTrainOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components
+            && departure.modeInfo.alt.includes("train");
         const classes = this.props.classes;
         const detailed = this.props.detailed;
         const briefOccupancy = !detailed && hasBusOccupancy ?
             <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!} brief={true}/> : undefined;
         const briefWheelchair = !detailed && OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
             <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
+        const trainOccupancy = !detailed && hasTrainOccupancy ?
+            <div className={classes.trainOccupancy}>
+                <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>
+            </div> : undefined;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
                  onClick={this.props.onClick}>
@@ -151,6 +159,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                         {briefOccupancy}
                     </div>
                     <div className={classNames(classes.serviceDescription, "ServiceDepartureRow-serviceDescription gl-overflow-ellipsis")}>{serviceDescrText}</div>
+                    {trainOccupancy}
                 </div>
                 {this.props.renderRight ? this.props.renderRight() :
                     <div
