@@ -8,7 +8,12 @@ import {EventEmitter} from "fbemitter";
 import {ClassNameMap} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tTKUITripRowDefaultStyle} from "./TKUITripRow.css";
-import {ReactComponent as IconBadge} from '../images/badges/ic-badge.svg';
+import {ReactComponent as IconBadgeCheapest} from '../images/badges/ic-badge-money.svg';
+import {ReactComponent as IconBadgeEasiest} from '../images/badges/ic-badge-like.svg';
+import {ReactComponent as IconBadgeFastest} from '../images/badges/ic-badge-lightning.svg';
+import {ReactComponent as IconBadgeGreenest} from '../images/badges/ic-badge-leaf.svg';
+import {ReactComponent as IconBadgeHealthiest} from '../images/badges/ic-badge-like.svg';
+import {ReactComponent as IconBadgeRecommended} from '../images/badges/ic-badge-check.svg';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
 import classNames from "classnames";
@@ -55,11 +60,19 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripRow {...props}/>,
     styles: tTKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",
-    randomizeClassNames: false
+    randomizeClassNames: true // This needs to be true since multiple instances are rendered,
+                              // each with a different badge color.
 };
 
 function badgeIcon(badge: Badges): JSX.Element {
-    return <IconBadge/>;
+    switch (badge) {
+        case Badges.CHEAPEST: return <IconBadgeCheapest/>;
+        case Badges.EASIEST: return <IconBadgeEasiest/>;
+        case Badges.FASTEST: return <IconBadgeFastest/>;
+        case Badges.GREENEST: return <IconBadgeGreenest/>;
+        case Badges.HEALTHIEST: return <IconBadgeHealthiest/>;
+        default: return <IconBadgeRecommended/>;
+    }
 }
 
 export function badgeColor(badge: Badges): string {
