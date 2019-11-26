@@ -64,9 +64,7 @@ interface IState {
     // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
     // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
     // - Maybe give it a try to make use of contexts more efficient? or maybe leave for later and continue with next item.
-    // - Start propagating new arquitecture to all components.
-    // - Use icons provided by DuyCT.
-    // - TKUITransportSettings
+    // - Finish propagating new arquitecture to all components.
 
     // [ ] Start with architecture change.
     // - mostrar stops en mapa
@@ -75,8 +73,6 @@ interface IState {
     // - Mode by mode instructions
     // Improve scheme to import, from class / element to entire module (see TODO on imports above)
     // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
-    // - Maybe group different providers in unique composite provider. Analyze. Make all the changes grounded on expected
-    // use cases.
     // - Configuration points: provide all tripkit-iOS customization points. Then add more.
     //     - Component-level customization en https://docs.google.com/document/d/1-TefPUgLV7RoK1qkr_j1XGSS9XSCUv0w9bMLk6__fUQ/edit#heading=h.s7sw7zyaie11
     // -------------------------------------------------------------------------------------------------------------
@@ -112,18 +108,18 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onOptionsRequestedClose = this.onOptionsRequestedClose.bind(this);
 
         // For development:
-        // RegionsData.instance.requireRegions().then(()=> {
+        RegionsData.instance.requireRegions().then(()=> {
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
+            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060")
-            //     .then((stop: StopLocation) => {
-            //             this.props.onStopChange(stop);
-            //         }
-            //     )
-        // });
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060") // Central Station
+                .then((stop: StopLocation) => {
+                        this.props.onStopChange(stop);
+                    }
+                )
+        });
     }
 
     private onShowOptions() {

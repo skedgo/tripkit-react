@@ -1,36 +1,53 @@
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import Options from "../model/Options";
 import LocalStorageItemArray from "./LocalStorageItemArray";
 import Util from "../util/Util";
 import Location from "../model/Location";
+import Favourite from "../model/favourite/Favourite";
+import FavouriteStop from "../model/favourite/FavouriteStop";
 
-class FavouritesData extends LocalStorageItemArray<FavouriteTrip> {
+class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     private static _instance: FavouritesData;
     private static _recInstance: FavouritesData;
 
     public static get instance(): FavouritesData {
         if (!this._instance) {
-            this._instance = new FavouritesData(FavouriteTrip,"FAVOURITES");
+            this._instance = new FavouritesData(Favourite, "FAVOURITES");
         }
         return this._instance;
     }
 
     static get recInstance(): FavouritesData {
         if (!this._recInstance) {
-            this._recInstance = new FavouritesData(FavouriteTrip, "RECENT");
+            this._recInstance = new FavouritesData(Favourite, "RECENT");
         }
         return this._recInstance;
     }
 
-    public add(elem: FavouriteTrip): void {
-        if (elem.from.isCurrLoc()) {
-            elem = Util.iAssign(elem, {from: Location.createCurrLoc()})
-        }
-        if (elem.to.isCurrLoc()) {
-            elem = Util.iAssign(elem, {to: Location.createCurrLoc()})
+    protected deserialize(itemJson: any): Favourite[] {
+        return (itemJson as any[]).map((item: any) =>
+            item.type === "FavouriteStop" ?
+                Util.jsonConvert().deserialize(item, FavouriteStop) :
+                Util.jsonConvert().deserialize(item, FavouriteTrip)
+        )
+    }
+
+    public add(elem: Favourite): void {
+        if (elem instanceof FavouriteTrip) {
+            const favouriteTrip = (elem as FavouriteTrip);
+            if (favouriteTrip.from.isCurrLoc()) {
+                elem = Util.iAssign(favouriteTrip, {from: Location.createCurrLoc()})
+            }
+            if (favouriteTrip.to.isCurrLoc()) {
+                elem = Util.iAssign(favouriteTrip, {to: Location.createCurrLoc()})
+            }
         }
         super.add(elem);
+    }
+
+    public getTrips(): FavouriteTrip[] {
+        return this.get().filter((favourite: Favourite) => favourite instanceof FavouriteTrip) as FavouriteTrip[];
     }
 
     // private static getTestFavourites(): FavouriteTrip[] {

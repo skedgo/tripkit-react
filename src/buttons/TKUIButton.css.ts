@@ -31,7 +31,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             backgroundColor: theme.colorPrimary,
             color: 'white',
             '&:hover': {
-                backgroundColor: '#7bd99d'
+                backgroundColor: theme.colorPrimaryOpacity(.5)
             },
             '&:active': {
                 backgroundColor: '#079541'

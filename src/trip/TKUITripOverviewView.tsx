@@ -9,8 +9,8 @@ import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
 import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";
 import {Observable} from 'rxjs';
-import TKUIFavouriteTripAction from "./TKUIFavouriteTripAction";
-import FavouriteTrip from "../model/FavouriteTrip";
+import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIAction from "../action/TKUIAction";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
@@ -46,7 +46,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                 render: () => <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
                 handler: () => {return false}
             },
-            new TKUIFavouriteTripAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)),
+            new TKUIFavouriteAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from), true),
             {
                 render: () => <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>,
                 handler: () => {return false}

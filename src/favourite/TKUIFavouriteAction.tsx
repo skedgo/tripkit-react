@@ -5,25 +5,30 @@ import {Observable} from "rxjs";
 import OptionsData from "../data/OptionsData";
 import FavouritesData from "../data/FavouritesData";
 import Options from "../model/Options";
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIAction from "../action/TKUIAction";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import Favourite from "../model/favourite/Favourite";
 
-class TKUIFavouriteTripAction implements TKUIAction {
+class TKUIFavouriteAction implements TKUIAction {
     public handler: () => boolean;
     public actionUpdate: Observable<void>;
 
-    private favourite: FavouriteTrip;
+    private favourite: Favourite;
     private actionUpdateObserver?: any;
+    private vertical: boolean;
 
-    constructor(favourite: FavouriteTrip) {
+    constructor(favourite: Favourite, vertical: boolean = false) {
         this.favourite = favourite;
+        this.vertical = vertical;
         this.handler = () => {
             if (this.exists()) {
                 FavouritesData.instance.remove(this.favourite);
             } else {
-                this.favourite.options = Object.assign(new Options(),
-                    FavouritesData.getFavOptionsPart(OptionsData.instance.get()));
+                if (this.favourite instanceof FavouriteTrip) {
+                    this.favourite.options = Object.assign(new Options(),
+                        FavouritesData.getFavOptionsPart(OptionsData.instance.get()));
+                }
                 FavouritesData.instance.add(this.favourite);
             }
             return true;
@@ -44,7 +49,7 @@ class TKUIFavouriteTripAction implements TKUIAction {
 
     get render(): () => JSX.Element {
         return () => <TKUIButton
-            type={TKUIButtonType.SECONDARY_VERTICAL}
+            type={this.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
             icon={this.renderIcon()}
             text={this.title}
             style={{minWidth: '90px'}}
@@ -56,4 +61,4 @@ class TKUIFavouriteTripAction implements TKUIAction {
     }
 }
 
-export default TKUIFavouriteTripAction;
+export default TKUIFavouriteAction;
