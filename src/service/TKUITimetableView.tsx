@@ -24,12 +24,19 @@ import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
+import TKUIAction from "../action/TKUIAction";
+import StopLocation from "../model/StopLocation";
+import FavouriteStop from "../model/favourite/FavouriteStop";
+import TKUIActionsView from "../action/TKUIActionsView";
+import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
 }
 
-export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {}
+export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
+    actions?: (stop: StopLocation) => TKUIAction[];
+}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -53,7 +60,12 @@ export type TKUITimetableViewStyle = IStyle;
 const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITimetableView {...props}/>,
     styles: tKUITimetableDefaultStyle,
-    classNamePrefix: "TKUITimetableView"
+    classNamePrefix: "TKUITimetableView",
+    configProps: {
+        actions: (stop: StopLocation) => [
+            new TKUIFavouriteAction(FavouriteStop.create(stop))
+        ]
+    }
 };
 
 class TKUITimetableView extends React.Component<IProps, {}> {
@@ -87,6 +99,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
+        const actions = (stop && this.props.actions) ? <TKUIActionsView actions={this.props.actions!(stop)}/> : undefined;
         const serviceListSamples = this.props.departures
             .reduce((elems: ServiceDeparture[], departure: ServiceDeparture, i: number) => {
                 if (!elems.find((elem: ServiceDeparture) => departure.serviceNumber === elem.serviceNumber)) {
@@ -110,6 +123,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     </div>
                             })}
                         </div>
+                        {actions}
                         <div className={classNames(classes.buttonsPanel, genStyles.flex, genStyles.spaceBetween)}>
                             <TKUIButton
                                 text={"Direction"}

@@ -1,6 +1,6 @@
 import * as React from "react";
 import './FavouriteList.css';
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouriteRow from "./FavouriteRow";
 import FavouritesData from "../data/FavouritesData";
 import {ReactComponent as IconAddFav} from "../images/ic-star-outline.svg";
@@ -10,6 +10,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import RoutingQuery from "../model/RoutingQuery";
 import Util from "../util/Util";
 import OptionsData from "../data/OptionsData";
+import Favourite from "../model/favourite/Favourite";
 
 
 interface ITKUIFavouriteListProps {
@@ -144,9 +145,9 @@ class FavouriteList extends React.Component<IProps, IState> {
     }
 
     public componentDidMount(): void {
-        this.setState({values: this.data.get()});
-        this.favChangeSubscr = this.data.addChangeListener((favourites: FavouriteTrip[]) => this.setState({
-                values: favourites
+        this.setState({values: this.data.getTrips()});
+        this.favChangeSubscr = this.data.addChangeListener((favourites: Favourite[]) => this.setState({
+                values: favourites.filter((favourite: Favourite) => favourite instanceof FavouriteTrip) as FavouriteTrip[]
             })
         );
     }

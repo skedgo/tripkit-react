@@ -16,6 +16,9 @@ import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUITripRowProps} from "../trip/TKUITripRow";
 import TKUIProvider from "../config/TKUIProvider";
 import Trip from "../model/trip/Trip";
+import Segment from "../model/trip/Segment";
+import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
+import {ReactComponent as IconLike} from "../images/badges/ic-badge-like.svg";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -37,123 +40,63 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     const containerElement = document.getElementById(containerId) as HTMLElement;
     containerElement.className = "app-style";
 
-    // const tkUICardDefStyle = tKUICardDefaultStyle as StyleCreator<keyof ITKUICardStyle, TKUITheme, ITKUICardProps>;
-    // TKUICardConfig.instance.styles = (theme: TKUITheme) => ({
-    //     main: {
-    //         color: theme.colorPrimary
-    //     },
-    //     header: {
-    //         ...tkUICardDefStyle(theme).header,
-    //         backgroundColor: 'lightgreen'
-    //     }
-    // });
-    // TKUICardConfig.instance.styles = emptyValues(tKUICardDefaultStyle);
-
-    // TKUIResultsViewConfig.instance.renderTrip = <P extends ITripRowProps>(props: P) => {
-    //     return (
-    //         <div className={props.className}
-    //              onClick={props.onClick}
-    //              onFocus={props.onFocus}
-    //              onKeyDown={props.onKeyDown}
-    //         >
-    //             {props.value.segments[0].getAction()}
-    //         </div>
-    //     )
-    // };
-    // TKUIResultsViewConfig.instance.styles = Util.iAssign(tKUIResultsDefaultStyle,
-    //     {
-    //         main: {
-    //             ...tKUIResultsDefaultStyle.main,
-    //             backgroundColor: 'lightblue'
-    //         },
-    //     });
-    // TKUITripDetailConfig.instance.renderSegmentDetail = <P extends SegmentDetailProps & {key: number}>(props: P) => {
-    //     return (
-    //         <TripSegmentDetail {...props}
-    //                        renderDescr={<Q extends SegmentDescriptionProps>(props1: Q) =>
-    //                            <SegmentDescription {...props1}/>}
-    //                        renderIcon={(iconProps: {value: Segment}) =>
-    //                            <div style={{color: "orange"}}>
-    //                                {iconProps.value.modeIdentifier}
-    //                            </div>}
-    //                        renderTitle={(iconProps: {value: Segment}) =>
-    //                            <div style={{color: "blue"}}>
-    //                                {iconProps.value.getAction()}
-    //                            </div>}
-    //         />
-    //     )
-    // };
-
 
     const config: TKUIConfig = {
-        // theme: {
-            // colorPrimary: 'brown'
-        // },
+        theme: {
+            colorPrimary: 'rgba(2, 66, 172)',
+            colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
+        },
+        TKUIRoutingResultsView: {
+            styles: (theme: TKUITheme) => ({
+                main: (defaultStyle) => ({
+                    ...defaultStyle,
+                    background: '#f4f7fe'
+                }),
+                row: {
+                    margin: '15px',
+                    '&:hover': {
+                        backgroundColor: 'lightgray'
+                    }
+                }
+            })
+        },
         TKUITripRow: {
-            // render: (props: TKUITripRowProps) =>
-            //     <div className={props.className}
-            //          onClick={props.onClick}
-            //          onFocus={props.onFocus}
-            //          onKeyDown={props.onKeyDown}
-            //     >
-            //         {props.value.segments[0].getAction()}
-            //     </div>,
-            // styles: (theme: TKUITheme) => {
-            //     return ({
-            //         main: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
-            //             ...defaultStyle,
-            //             background: 'red'
-            //         }),
-            //         badge: (defaultStyle: CSSProperties<TKUITripRowProps>) => ({
-            //             ...defaultStyle,
-            //             color: 'yellow',
-            //             '& svg': {
-            //                 width: '24px',
-            //                 height: '24px',
-            //                 marginRight: '10px',
-            //             }
-            //         }),
-            //         info: {
-            //             color: 'blue',
-            //         }
-            //     })}
+            render: (props: TKUITripRowProps) =>
+                <div className={props.className}
+                     onClick={props.onClick}
+                     onFocus={props.onFocus}
+                     onKeyDown={props.onKeyDown}
+                     onDoubleClick={props.onDetailClick}
+                >
+                    {props.value.segments.map((segment: Segment, i: number) => segment.getAction() + " ")}
+                </div>
         },
         TKUITripOverviewView: {
-            // styles: (theme: TKUITheme) => ({
-            //     main: {
-            //
-            //     }
-            // }),
-            // configProps: {
-            //     actions: (trip: Trip) => [
-            //         {
-            //             render: () => <div>Action</div>,
-            //             handler: () => {return false}
-            //         }
-            //     ]
-            // },
-            // configProps: (defaultProps) => ({
-            //     actions: (trip: Trip) =>
-            //         defaultProps.actions!(trip).concat(
-            //             [
-            //                 {
-            //                     render: () => <div>Action</div>,
-            //                     handler: () => {return false}
-            //                 }
-            //             ])
-            // })
+            configProps: (defaultProps) => ({
+                actions: (trip: Trip) =>
+                    defaultProps.actions!(trip).concat(
+                        [
+                            {
+                                render: () =>
+                                    <TKUIButton
+                                        text={"Like"}
+                                        icon={<IconLike/>}
+                                        type={TKUIButtonType.PRIMARY_VERTICAL}
+                                        style={{minWidth: '90px'}}
+                                    />,
+                                handler: () => {return false}
+                            }
+                        ])
+            })
         }
     };
-
-    const testTripsJson = require("../test/tripsWithRTVehicle.json");
-    // const testTrips = Util.deserialize(testTripsJson, RoutingResults).groups;
-    const testTrips = undefined;
 
     ReactDOM.render(
         <TKUIProvider config={config} initQuery={routingQuery}>
             <TKUITripPlanner/>
         </TKUIProvider>,
         containerElement);
+
     DeviceUtil.initCss();
 }
 

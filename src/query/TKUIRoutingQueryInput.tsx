@@ -18,7 +18,7 @@ import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";

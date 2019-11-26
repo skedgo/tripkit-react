@@ -26,7 +26,7 @@ export interface FavouriteRowProps extends FavouriteRowPropsImported {}
 export {default as FavouriteRow} from "./favourite/FavouriteRow";
 export {default as FavouriteList} from "./favourite/FavouriteList";
 export {default as FavouriteBtn} from "./favourite/FavouriteBtn";
-export {default as FavouriteTrip} from "./model/FavouriteTrip";
+export {default as FavouriteTrip} from "./model/favourite/FavouriteTrip";
 export {default as TKUIResultsView} from "./trip/TKUIResultsView";
 // export {default as TKUITripRow} from "./trip/TKUITripRow";
 // export {default as ITripRowProps, TRIP_ALT_PICKED_EVENT} from "./trip/ITripRowProps";

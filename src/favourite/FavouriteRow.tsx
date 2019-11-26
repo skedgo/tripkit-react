@@ -1,7 +1,7 @@
 import * as React from "react";
 import {ReactElement} from "react";
 import './FavouriteRow.css';
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {ReactComponent as IconAngleRight} from "../images/ic-angle-right.svg";
 import FavouriteBtn from "./FavouriteBtn";
 import LocationUtil from "../util/LocationUtil";

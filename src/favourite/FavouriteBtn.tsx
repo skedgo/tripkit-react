@@ -3,7 +3,7 @@ import "./FavouriteBtn.css"
 import FavouritesData from "../data/FavouritesData";
 import {ReactComponent as IconAdd} from "../images/ic-star-outline.svg";
 import {ReactComponent as IconRemove} from "../images/ic-star-filled.svg";
-import FavouriteTrip from "../model/FavouriteTrip";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
