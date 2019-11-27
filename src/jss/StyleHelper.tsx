@@ -71,8 +71,6 @@ export function withStyleInjection<
                                 [className]: customJssStyle
                             }
                         }, {}) : {};
-                console.log("overrideStyles: ");
-                console.log(overrideStyles);
                 return {...defaultStyles, ...overrideStyles};
             };
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);

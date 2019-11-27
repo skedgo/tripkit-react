@@ -114,7 +114,6 @@ class Util {
     }
 
     public static isFunction(functionToCheck: any) {
-        console.log(functionToCheck && {}.toString.call(functionToCheck));
         return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
     }
 

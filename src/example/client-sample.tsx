@@ -42,53 +42,48 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
 
 
     const config: TKUIConfig = {
-        theme: {
-            colorPrimary: 'rgba(2, 66, 172)',
-            colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
-        },
-        TKUIRoutingResultsView: {
-            styles: (theme: TKUITheme) => ({
-                main: (defaultStyle) => ({
-                    ...defaultStyle,
-                    background: '#f4f7fe'
-                }),
-                row: {
-                    margin: '15px',
-                    '&:hover': {
-                        backgroundColor: 'lightgray'
-                    }
-                }
-            })
-        },
-        TKUITripRow: {
-            render: (props: TKUITripRowProps) =>
-                <div className={props.className}
-                     onClick={props.onClick}
-                     onFocus={props.onFocus}
-                     onKeyDown={props.onKeyDown}
-                     onDoubleClick={props.onDetailClick}
-                >
-                    {props.value.segments.map((segment: Segment, i: number) => segment.getAction() + " ")}
-                </div>
-        },
-        TKUITripOverviewView: {
-            configProps: (defaultProps) => ({
-                actions: (trip: Trip) =>
-                    defaultProps.actions!(trip).concat(
-                        [
-                            {
-                                render: () =>
-                                    <TKUIButton
-                                        text={"Like"}
-                                        icon={<IconLike/>}
-                                        type={TKUIButtonType.PRIMARY_VERTICAL}
-                                        style={{minWidth: '90px'}}
-                                    />,
-                                handler: () => {return false}
-                            }
-                        ])
-            })
-        }
+        // theme: {
+        //     colorPrimary: 'rgba(2, 66, 172)',
+        //     colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
+        // },
+        // TKUIRoutingResultsView: {
+        //     styles: (theme: TKUITheme) => ({
+        //         main: (defaultStyle) => ({
+        //             ...defaultStyle,
+        //             background: '#f4f7fe'
+        //         }),
+        //         row: {
+        //             margin: '15px',
+        //             '&:hover': {
+        //                 backgroundColor: 'lightgray'
+        //             }
+        //         }
+        //     })
+        // },
+        // TKUITripRow: {
+        //     render: (props: TKUITripRowProps) =>
+        //         <div className={props.className}
+        //              onClick={props.onClick}
+        //              onFocus={props.onFocus}
+        //              onKeyDown={props.onKeyDown}
+        //              onDoubleClick={props.onDetailClick}
+        //         >
+        //             {props.value.segments.map((segment: Segment, i: number) => segment.getAction() + " ")}
+        //         </div>
+        // },
+        // TKUITripOverviewView: {
+        //     configProps: (defaultProps) => ({
+        //         actions: (trip: Trip) =>
+        //             defaultProps.actions!(trip).concat([
+        //                 <TKUIButton
+        //                     text={"Like"}
+        //                     icon={<IconLike/>}
+        //                     type={TKUIButtonType.PRIMARY_VERTICAL}
+        //                     style={{minWidth: '90px'}}
+        //                 />
+        //             ])
+        //     })
+        // }
     };
 
     ReactDOM.render(

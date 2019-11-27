@@ -62,6 +62,7 @@ class TKUIButton extends React.Component<IProps, {}> {
             vertical ?
                 <div className={classes.verticalPanel}
                      style={this.props.style}
+                     onClick={this.props.onClick}
                 >
                     <button className={classNames(classes.main,
                         secondary ? classes.secondary : classes.primary)}
@@ -77,6 +78,7 @@ class TKUIButton extends React.Component<IProps, {}> {
                 <button className={classNames(classes.main,
                     secondary ? classes.secondary : classes.primary)}
                         style={this.props.style}
+                        onClick={this.props.onClick}
                 >
                     {this.props.icon &&
                     <div className={classes.iconContainer}>

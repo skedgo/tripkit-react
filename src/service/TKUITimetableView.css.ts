@@ -53,13 +53,14 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         marginLeft: '4px',
         ...genStyles.fontSM
     },
-    buttonsPanel: {
-        marginTop: '16px',
+    actionsPanel: {
+        marginTop: '15px',
+        ...genStyles.flex,
         '&>*': {
             ...genStyles.grow
         } as CSSProperties<TKUITimetableViewProps>,
         '&>*:first-child': {
-            marginRight: '8px'
+            marginRight: '10px'
         }
     },
     secondaryBar: {

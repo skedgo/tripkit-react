@@ -108,18 +108,18 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onOptionsRequestedClose = this.onOptionsRequestedClose.bind(this);
 
         // For development:
-        RegionsData.instance.requireRegions().then(()=> {
+        // RegionsData.instance.requireRegions().then(()=> {
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
-            StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
+            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
             // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
             // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060") // Central Station
-                .then((stop: StopLocation) => {
-                        this.props.onStopChange(stop);
-                    }
-                )
-        });
+            //     .then((stop: StopLocation) => {
+            //             this.props.onStopChange(stop);
+            //         }
+            //     )
+        // });
     }
 
     private onShowOptions() {
