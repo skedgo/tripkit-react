@@ -11,7 +11,6 @@ import TripUtil from "./TripUtil";
 import {Observable} from 'rxjs';
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import TKUIAction from "../action/TKUIAction";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
@@ -27,10 +26,11 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    actionsPanel: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
-    actions?: (trip: Trip) => TKUIAction[];
+    actions?: (trip: Trip) => JSX.Element[];
 }
 
 export type TKUITripOverviewViewProps = IProps;
@@ -42,15 +42,12 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripOverviewView",
     configProps: {
         actions: (trip: Trip) => [
-            {
-                render: () => <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
-                handler: () => {return false}
-            },
-            new TKUIFavouriteAction(FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from), true),
-            {
-                render: () => <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>,
-                handler: () => {return false}
-            }
+            <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
+            <TKUIFavouriteAction
+                favourite={FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)}
+                vertical={true}
+            />,
+            <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>
         ]
     }
 };
@@ -64,8 +61,9 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;
         const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? "Arrives " + arrivalTime : "Departs " + departureTime);
-        const subHeader = this.props.actions ? () => <TKUIActionsView actions={this.props.actions!(trip)}/> : undefined;
         const classes = this.props.classes;
+        const subHeader = this.props.actions ?
+            () => <TKUIActionsView actions={this.props.actions!(trip)} className={classes.actionsPanel}/> : undefined;
         return (
             <TKUICard
                 title={title}

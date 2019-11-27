@@ -11,11 +11,6 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";
 import TKUICard from "../card/TKUICard";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
-import {ReactComponent as IconFavorite} from '../images/ic-star-filled.svg';
-import genStyles from "../css/general.module.css";
-import classNames from "classnames";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {ClassNameMap} from "react-jss";
@@ -24,18 +19,18 @@ import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
-import TKUIAction from "../action/TKUIAction";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
+import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
 }
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
-    actions?: (stop: StopLocation) => TKUIAction[];
+    actions?: (stop: StopLocation) => JSX.Element[];
 }
 
 interface IStyle {
@@ -45,7 +40,7 @@ interface IStyle {
     subHeader: CSSProps<IProps>;
     serviceList: CSSProps<IProps>;
     serviceNumber: CSSProps<IProps>;
-    buttonsPanel: CSSProps<IProps>;
+    actionsPanel: CSSProps<IProps>;
     secondaryBar: CSSProps<IProps>;
     filterPanel: CSSProps<IProps>;
     glassIcon: CSSProps<IProps>;
@@ -63,7 +58,8 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView",
     configProps: {
         actions: (stop: StopLocation) => [
-            new TKUIFavouriteAction(FavouriteStop.create(stop))
+            <TKUIRouteToLocationAction location={stop}/>,
+            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)}/>
         ]
     }
 };
@@ -99,7 +95,12 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
-        const actions = (stop && this.props.actions) ? <TKUIActionsView actions={this.props.actions!(stop)}/> : undefined;
+        const classes = this.props.classes;
+        const actions = (stop && this.props.actions) ?
+            <TKUIActionsView
+                actions={this.props.actions!(stop)}
+                className={classes.actionsPanel}
+            /> : undefined;
         const serviceListSamples = this.props.departures
             .reduce((elems: ServiceDeparture[], departure: ServiceDeparture, i: number) => {
                 if (!elems.find((elem: ServiceDeparture) => departure.serviceNumber === elem.serviceNumber)) {
@@ -107,7 +108,6 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 }
                 return elems;
             }, []);
-        const classes = this.props.classes;
         return (
             <TKUICard
                 title={this.props.title}
@@ -124,17 +124,6 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             })}
                         </div>
                         {actions}
-                        <div className={classNames(classes.buttonsPanel, genStyles.flex, genStyles.spaceBetween)}>
-                            <TKUIButton
-                                text={"Direction"}
-                                icon={<IconDirections/>}
-                            />
-                            <TKUIButton
-                                text={"Favorite"}
-                                icon={<IconFavorite/>}
-                                type={TKUIButtonType.SECONDARY}
-                            />
-                        </div>
                     </div>
                 }
                 onRequestClose={this.props.onRequestClose}
