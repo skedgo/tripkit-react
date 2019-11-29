@@ -1,5 +1,6 @@
 import React from "react";
 import Drawer from 'react-drag-drawer';
+import Modal from 'react-modal';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import genStyles from "../css/general.module.css";
 import classNames from "classnames";
@@ -11,20 +12,26 @@ import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
+export enum CardPresentation {
+    MODAL,
+    SLIDE_UP,
+    NONE
+}
+
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    title: string;
+    title?: string;
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
-    asCard?: boolean;
-    children: any;
+    presentation?: CardPresentation;
+    open?: boolean;
+    children?: any;
 }
 
 interface IStyle {
     modal: CSS.Properties & CSSProperties<IProps>;
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
-    mainAsCard: CSS.Properties & CSSProperties<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
     headerLeft: CSS.Properties & CSSProperties<IProps>;
@@ -39,6 +46,8 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 export type TKUICardProps = IProps;
 export type TKUICardStyle = IStyle;
 
+export type TKUICardClientProps = IClientProps;
+
 const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUICard {...props}/>,
     styles: tKUICardDefaultStyle,
@@ -48,7 +57,8 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
 class TKUICard extends React.Component<IProps, {}> {
 
     public static defaultProps: Partial<IProps> = {
-        asCard: true
+        presentation: CardPresentation.NONE,
+        open: true
     };
 
     constructor(props: IProps) {
@@ -57,8 +67,9 @@ class TKUICard extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const presentation = this.props.presentation;
         const body =
-            <div className={classNames(classes.main, this.props.asCard && classes.mainAsCard, "app-style")}>
+            <div className={classNames(classes.main, "app-style")}>
                 <div className={classes.header}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
                         <div className={classes.headerLeft}>
@@ -84,18 +95,37 @@ class TKUICard extends React.Component<IProps, {}> {
                     {this.props.children}
                 </div>
             </div>;
-        const asCard = this.props.asCard;
         return (
-            asCard ?
-            <Drawer
-                open={true}
-                modalElementClass={classes.modal}
-                containerElementClass={classes.modalContainer}
-                allowClose={false}
-                dontApplyListeners={true}
-            >
-                {body}
-            </Drawer> : body
+            presentation === CardPresentation.SLIDE_UP ?
+                <Drawer
+                    open={this.props.open}
+                    modalElementClass={classes.modal}
+                    containerElementClass={classes.modalContainer}
+                    allowClose={false}
+                    dontApplyListeners={true}
+                >
+                    {body}
+                </Drawer>
+                :
+                presentation === CardPresentation.MODAL ?
+                    <Modal
+                        isOpen={this.props.open!}
+                        style={{
+                            content: {
+                                background: 'none',
+                                border: 'none',
+                                padding: '5px',
+                                // maxWidth: '600px',
+                                transform: 'translate(-55%, 0)',
+                                left: '55%',
+                                minWidth: '500px'
+                            }
+                        }}
+                        shouldCloseOnEsc={true}
+                        onRequestClose={this.props.onRequestClose}
+                    >
+                        {body}
+                    </Modal> : body
         );
     }
 }

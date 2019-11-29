@@ -374,18 +374,6 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   font-size: 13px;
 }
 
-.ReactModal__Content {
-  position: absolute;
-  top: 50%!important;
-  left: 50%!important;
-  transform: translate(-50%, -50%);
-  width: 800px;
-  height: 800px;
-  min-height: 400px;
-  max-height: 100%;
-  padding: 0!important;
-}
-
 .app-style .QueryInput-calendar button.react-datepicker__navigation {
   top: 14px;
   border: .40rem solid transparent;

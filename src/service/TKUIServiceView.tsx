@@ -6,7 +6,7 @@ import {TKUIStopSteps} from "../trip/TripSegmentSteps";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
@@ -122,6 +122,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                         {realtimePanel}
                     </div>
                 }
+                presentation={CardPresentation.SLIDE_UP}
             >
                 <div className={classes.main}>
 

@@ -27,11 +27,11 @@ import Trip from "../model/trip/Trip";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
-import StopsData from "../data/StopsData";
 import TKUIProfileView from "../options/TKUIProfileView";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
+import TKShareHelper from "../share/TKShareHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -90,7 +90,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.state = {
             mapView: false,
             showOptions: false,
-            showTripDetail: false
+            showTripDetail: TKShareHelper.isSharedTripLink()
         };
         const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
         this.props.onViewportChange(initViewport);
@@ -139,7 +139,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     className={"app-style"}
                 />
             </Modal> : null;
-
         const departuresView = this.props.stop && !this.props.trips ?
             <TKUITimetableView
                 onRequestClose={() => {

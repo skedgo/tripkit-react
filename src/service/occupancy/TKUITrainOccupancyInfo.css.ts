@@ -6,7 +6,8 @@ import genStyles from "../../css/GenStyle.css";
 export const tKUITrainOccupancyInfoDefaultStyle: TKUIStyles<TKUITrainOccupancyInfoStyle, TKUITrainOccupancyInfoProps> =
     (theme: TKUITheme) => ({
         icon: {
-            ...genStyles.svgFillCurrColor
+            ...genStyles.svgFillCurrColor,
+            marginRight: '1px'
         },
         empty: {
             color: theme.colorSuccess

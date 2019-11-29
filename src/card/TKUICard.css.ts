@@ -1,5 +1,5 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUICardStyle, TKUICardProps} from "./TKUICard";
+import {TKUICardStyle, TKUICardProps, CardPresentation} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
@@ -29,14 +29,13 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             height: '100%',
             backgroundColor: 'white',
             fontFamily: theme.fontFamily,
+            boxShadow: (props: TKUICardProps) =>
+                (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.MODAL) ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' : 'none',
+            borderRadius: (props: TKUICardProps) => props.presentation === CardPresentation.MODAL ? '12px' :
+                props.presentation === CardPresentation.SLIDE_UP ? '12px 12px 0 0' : '0',
             ...genStyles.flex,
             ...genStyles.column
-        },
-
-        mainAsCard: {
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)',
-            borderTopLeftRadius: '12px',
-            borderTopRightRadius: '12px',
         },
 
         header: {

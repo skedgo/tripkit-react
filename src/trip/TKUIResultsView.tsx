@@ -4,7 +4,7 @@ import {tKUIResultsDefaultStyle} from "./TKUIResultsView.css";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripGroup from "../model/trip/TripGroup";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {ClassNameMap, CSSProperties, StyleCreator, Styles} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
@@ -124,6 +124,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         return (
             <TKUICard
                 title={"Routing results"}
+                presentation={CardPresentation.SLIDE_UP}
             >
                 <div className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>

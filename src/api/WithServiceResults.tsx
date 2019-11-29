@@ -15,6 +15,8 @@ import {IServiceResultsContext as IServiceResConsumerProps} from "../service/Ser
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
 import {EventEmitter} from "fbemitter";
+import TKShareHelper from "../share/TKShareHelper";
+import StopsData from "../data/StopsData";
 
 interface IWithServiceResultsProps {
     // TODO: Move to state, as startStop
@@ -70,6 +72,41 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 displayLimit: 0,
                 initTimeChanged: false
             };
+
+            if (TKShareHelper.isSharedStopLink()) {
+                const shareLinkPath = document.location.pathname;
+                const shareLinkSplit = shareLinkPath.split("/");
+                const region = shareLinkSplit[2];
+                const stopCode = shareLinkSplit[3];
+                StopsData.instance.getStopFromCode(region, stopCode)
+                    .then((stop: StopLocation) =>
+                        RegionsData.instance.requireRegions().then(() => this.onStopChange(stop)));
+            }
+
+            if (TKShareHelper.isSharedServiceLink()) {
+                const shareLinkPath = document.location.pathname;
+                const shareLinkSplit = shareLinkPath.split("/");
+                const region = shareLinkSplit[2];
+                const stopCode = shareLinkSplit[3];
+                const serviceCode = shareLinkSplit[4];
+                const initTime = DateTimeUtil.momentTZTime(parseInt(shareLinkSplit[5]) * 1000);
+                StopsData.instance.getStopFromCode(region, stopCode)
+                    .then((stop: StopLocation) =>
+                        RegionsData.instance.requireRegions().then(() => {
+                                this.setState({
+                                    startStop: stop,
+                                    initTime: initTime,
+                                    departures: [],
+                                    departuresFiltered: [],
+                                    displayLimit: 0,
+                                    initTimeChanged: true
+                                }, () => {
+                                    this.requestUntilServiceFound(serviceCode);
+                                });
+                            }
+                        ));
+            }
+
             this.rTSchedule = setInterval(() => {
                 // TODO:
                 // fireValueChangeEvent(); //to update 'time to depart' labels
@@ -357,6 +394,29 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     this.setState((state: IWithServiceResultsState) => {
                         this.updateDepartures(this.state.departures);
                     });
+            });
+        }
+
+        private requestUntilServiceFound(serviceTripId: string, limit: number = 3) {
+            if (limit <= 0) {
+                return;
+            }
+            this.requestDepartures().then((results: ServiceDeparture[]) => {
+                this.setState((prev: IWithServiceResultsState) => {
+                    this.updateDepartures(prev.departures.concat(results), () => {
+                        // This causes timetable to be populated with departures. Maybe just call at the end of the recursion,
+                        // and avoid displaying the timetable in the meantime.
+                        this.setState((prev: IWithServiceResultsState) => ({
+                            displayLimit: prev.departures.length
+                        }));
+                        const targetService = results.find((result: ServiceDeparture) => result.serviceTripID === serviceTripId);
+                        if (targetService) {
+                            this.onServiceSelection(targetService);
+                        } else {
+                            this.requestUntilServiceFound(serviceTripId, limit - 1);
+                        }
+                    });
+                });
             });
         }
 
