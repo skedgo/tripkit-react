@@ -2,7 +2,7 @@ import * as React from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {CSSProperties} from "react";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
@@ -18,6 +18,10 @@ import {ReactComponent as IconShare} from "../images/ic-share.svg";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import TKUIShareView from "../share/TKUIShareView";
+import TKUIControlsCard from "../card/TKUIControlsCard";
+import TripGoApi from "../api/TripGoApi";
+import NetworkUtil from "../util/NetworkUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -47,8 +51,40 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                 favourite={FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)}
                 vertical={true}
             />,
-            <TKUIButton text={"Share arrival"} icon={<IconShare/>} type={TKUIButtonType.SECONDARY_VERTICAL}/>
-        ]
+            <TKUIControlsCard>
+                {(setProps: (props: TKUICardClientProps) => void) => {
+                    return <TKUIButton text={"Share arrival"} icon={<IconShare/>}
+                                       type={TKUIButtonType.SECONDARY_VERTICAL}
+                                       onClick={() => {
+                                           setProps({
+                                               title: "Share trip",
+                                               presentation: CardPresentation.MODAL,
+                                               children:
+                                                   <TKUIShareView
+                                                       customMsg={""}
+                                                   />,
+                                               open: true,
+                                               onRequestClose: () => {
+                                                   setProps({
+                                                       open: false
+                                                   })
+                                               }
+                                           });
+                                           TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET)
+                                               .then((json: any) => {
+                                                   setProps({
+                                                       children:
+                                                           <TKUIShareView
+                                                               link={json.url}
+                                                               customMsg={""}
+                                                           />
+                                                   });
+                                               });
+                                       }}
+                    />;
+                }}
+            </TKUIControlsCard>
+        ]// call it setContent, or 2 functions: setContent, and setOpen
     }
 };
 
@@ -70,7 +106,6 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 subtitle={subtitle}
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
-                asCard={false}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>

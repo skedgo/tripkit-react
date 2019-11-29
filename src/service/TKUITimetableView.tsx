@@ -10,7 +10,7 @@ import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {ClassNameMap} from "react-jss";
@@ -24,6 +24,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
+import TKShareHelper from "../share/TKShareHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -70,7 +71,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
-        if (props.onRequestMore) {
+        // If shared link then this is triggered from WithServicesResults.tsx constructor
+        if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
+            && props.onRequestMore) {
             props.onRequestMore();
         }
         this.onScroll = this.onScroll.bind(this);
@@ -126,6 +129,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                         {actions}
                     </div>
                 }
+                presentation={CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>

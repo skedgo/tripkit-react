@@ -16,6 +16,8 @@ import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
 import Features from "../env/Features";
 import Util from "../util/Util";
+import DateTimeUtil from "../util/DateTimeUtil";
+import TKShareHelper from "../share/TKShareHelper";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -58,6 +60,31 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waiting: false,
                 viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
             };
+
+            if (TKShareHelper.isSharedTripLink()) {
+                const shareLinkPath = document.location.pathname;
+                TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
+                    .then((routingResultsJson: any) => {
+                        const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
+                        const firstTrip = routingResults.groups[0].trips[0];
+                        const from = firstTrip.segments[0].from;
+                        const to = firstTrip.segments[firstTrip.segments.length - 1].to;
+                        const query = RoutingQuery.create(from, to,
+                            firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
+                            firstTrip.queryTime ? DateTimeUtil.momentTZTime(firstTrip.queryTime * 1000) : undefined);
+                        routingResults.setQuery(query);
+                        const trips = routingResults.groups;
+                        const sortedTrips = this.sortTrips(trips, this.state.sort);
+                        this.setState({
+                            query: query,
+                            trips: sortedTrips,
+                            selected: sortedTrips[0]
+                        }, () => {
+                            window.history.replaceState({}, "", "/");
+                        });
+                    });
+            }
+
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onChange = this.onChange.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
