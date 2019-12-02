@@ -97,6 +97,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
                 lineHeight: 'normal'
             }
         },
+        transportsBtn: {
+            ...resetStyles.button,
+            padding: '10px'
+        },
         timePrefFace: {
             cursor: 'pointer',
             '&:after': {
@@ -113,8 +117,34 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             /* z-index: 1; */
             position: 'relative'
         },
-        transportsBtn: {
-            ...resetStyles.button,
-            padding: '10px'
+        selectContainer: {
+            minWidth: '92px',
+            ...genStyles.fontS
+            // ...genStyles.grow
+        },
+        selectControl: {
+            border: 'none',
+            background: 'none',
+            // backgroundImage: 'url('+ Constants.absUrl("/images/ic-sort.svg") + ')!important',
+            // backgroundRepeat: 'no-repeat!important',
+            // backgroundPosition: '10px 50%!important',
+            // backgroundSize: '18px',
+            // paddingLeft: '35px',
+            cursor: 'pointer',
+            // backgroundColor: '#00000000'
+        },
+        selectMenu: {
+            marginTop: '3px'
+        },
+        selectOption: {
+            color: tKUIColors.black1,
+            cursor: 'pointer'
+        },
+        selectOptionFocused: {
+            backgroundColor: theme.colorPrimaryOpacity(.2)
+        },
+        selectOptionSelected: {
+            color: 'white',
+            backgroundColor: theme.colorPrimaryOpacity(.5)
         }
     });

@@ -15,6 +15,7 @@ export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIB
     icon?: JSX.Element;
     style?: CSS.Properties;
     onClick?: (e: any) => void;
+    className?: string;
 }
 
 interface IProps extends ITKUIButtonProps {
@@ -60,7 +61,7 @@ class TKUIButton extends React.Component<IProps, {}> {
         }
         return (
             vertical ?
-                <div className={classes.verticalPanel}
+                <div className={classNames(classes.verticalPanel, this.props.className)}
                      style={this.props.style}
                      onClick={this.props.onClick}
                 >
@@ -76,7 +77,7 @@ class TKUIButton extends React.Component<IProps, {}> {
                 </div>
                 :
                 <button className={classNames(classes.main,
-                    secondary ? classes.secondary : classes.primary)}
+                    secondary ? classes.secondary : classes.primary, this.props.className)}
                         style={this.props.style}
                         onClick={this.props.onClick}
                 >

@@ -7,6 +7,7 @@ import {ReactComponent as IconLink} from "../images/share/ic-copy-link.svg";
 import copy from "copy-to-clipboard";
 import Tooltip from "rc-tooltip";
 import classNames from "classnames";
+import QRCode from "qrcode.react";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     link?: string;
@@ -71,10 +72,8 @@ class TKUIShareView extends React.Component<IProps, IState> {
                     </div>
                     <div className={classes.qrCode}>
                         {this.props.link &&
-                        <img
-                            src={"https://api.qrserver.com/v1/create-qr-code/?format=svg&data=" + this.props.link}
-                            className={classes.qrCodeImg}
-                        />}
+                            <QRCode value={this.props.link}/>
+                        }
                     </div>
                     <div className={classes.qrLabel}>
                         Just scan the QR code with your phone or tablet camera

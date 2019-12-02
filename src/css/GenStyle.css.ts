@@ -7,6 +7,7 @@ interface ITKUIGenStyle {
     center: CSS.Properties;
     spaceBetween: CSS.Properties;
     spaceAround: CSS.Properties;
+    justifyStart: CSS.Properties;
     justifyEnd: CSS.Properties;
     alignCenter: CSS.Properties;
     alignStart: CSS.Properties;
@@ -60,6 +61,11 @@ const genStyles: ITKUIGenStyle = {
     spaceAround: {
         justifyContent: 'space-around',
         WebkitJustifyContent: 'space-around'
+    },
+
+    justifyStart: {
+        justifyContent: 'flex-start',
+        WebkitJustifyContent: 'flex-start'
     },
 
     justifyEnd: {

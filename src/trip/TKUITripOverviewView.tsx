@@ -22,6 +22,8 @@ import TKUIShareView from "../share/TKUIShareView";
 import TKUIControlsCard from "../card/TKUIControlsCard";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
+import TKShareHelper from "../share/TKShareHelper";
+import genStyles from "../css/GenStyle.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -35,6 +37,7 @@ export interface IStyle {
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
     actions?: (trip: Trip) => JSX.Element[];
+    segmentActions?: (segment: Segment) => JSX.Element[];
 }
 
 export type TKUITripOverviewViewProps = IProps;
@@ -53,7 +56,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
             />,
             <TKUIControlsCard>
                 {(setProps: (props: TKUICardClientProps) => void) => {
-                    return <TKUIButton text={"Share arrival"} icon={<IconShare/>}
+                    return <TKUIButton text={"Share trip"} icon={<IconShare/>}
                                        type={TKUIButtonType.SECONDARY_VERTICAL}
                                        onClick={() => {
                                            setProps({
@@ -84,7 +87,37 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                     />;
                 }}
             </TKUIControlsCard>
-        ]// call it setContent, or 2 functions: setContent, and setOpen
+        ],
+        segmentActions: (segment: Segment) => segment.arrival ? [
+            <TKUIControlsCard>
+                {(setProps: (props: TKUICardClientProps) => void) => {
+                    return <TKUIButton text={"Share arrival"}
+                                       type={TKUIButtonType.PRIMARY_LINK}
+                                       style={{
+                                           paddingLeft: 0,
+                                           ...genStyles.justifyStart
+                                       }}
+                                       onClick={() => {
+                                           setProps({
+                                               title: "Share arrival",
+                                               presentation: CardPresentation.MODAL,
+                                               children:
+                                                   <TKUIShareView
+                                                       link={TKShareHelper.getShareSegmentArrival(segment)}
+                                                       customMsg={""}
+                                                   />,
+                                               open: true,
+                                               onRequestClose: () => {
+                                                   setProps({
+                                                       open: false
+                                                   })
+                                               }
+                                           });
+                                       }}
+                    />;
+                }}
+            </TKUIControlsCard>
+        ] : []
     }
 };
 
@@ -112,12 +145,14 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                         <TKUISegmentOverview
                             value={segment}
                             key={index}
+                            actions={this.props.segmentActions && this.props.segmentActions(segment)}
                         />
                     )}
 
                     <TKUISegmentOverview
                         value={this.props.value.arrivalSegment}
                         key={segments.length}
+                        actions={this.props.segmentActions && this.props.segmentActions(this.props.value.arrivalSegment)}
                     />
                 </div>
             </TKUICard>

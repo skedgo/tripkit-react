@@ -302,11 +302,14 @@ class LocationBox extends Component<IProps, IState> {
         }
     }
 
-    public componentWillReceiveProps(nextProps: any) {
-        // Don't have to do this check first, but it can help prevent an unneeded render
-        if (nextProps.value !== this.state.locationValue) {
-            this.setValue(nextProps.value);
+    public componentDidUpdate() {
+        if (this.props.value !== this.state.locationValue) {
+            this.setValue(this.props.value);
         }
+    }
+
+    public componentDidMount() {
+        this.setValue(this.props.value);
     }
 
     public setFocus() {

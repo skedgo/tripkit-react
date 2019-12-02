@@ -32,6 +32,7 @@ import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
+import StopsData from "../data/StopsData";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -60,6 +61,9 @@ interface IState {
 
     // TODO:
     // SEGUIR ACÁ
+    // - TimeZone handling considering region change. Idea (think again): always handle moments in UTC, and convert to region timezone
+    // just when need to display. E.g. See value passed to <DateTimePicker/> in TKUIRoutingQueryInput. So every use of defaultTimezone
+    // in DateTimeUtil should be changed to use UTC.
     // - Remove class TKUIWithStyle? Probably it doesn't make sense anymore to pass style or randomizeClassNames directly to components,
     // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
     // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
