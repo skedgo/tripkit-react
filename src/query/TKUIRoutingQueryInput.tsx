@@ -6,6 +6,7 @@ import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import {ReactComponent as IconSwap} from '../images/ic-swap.svg';
+import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
@@ -21,7 +22,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
+import {ClassNameMap, Styles} from "react-jss";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import classNames from "classnames";
@@ -31,7 +32,8 @@ import "../trip/TripAltBtn.css";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
-
+import Region from "model/region/Region";
+import Select from 'react-select';
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowOptions?: () => void;
     isTripPlanner?: boolean;
@@ -45,6 +47,7 @@ interface IConsumedProps {
     onPreChange?: (from: boolean, location?: Location) => void;
     bounds?: BBox;
     focusLatLng?: LatLng;
+    region?: Region;
 }
 
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -67,6 +70,12 @@ interface IStyle {
     timePrefFace: CSSProps<IProps>;
     timePref: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
+    selectContainer: CSSProps<IProps>;
+    selectControl: CSSProps<IProps>;
+    selectMenu: CSSProps<IProps>;
+    selectOption: CSSProps<IProps>;
+    selectOptionFocused: CSSProps<IProps>;
+    selectOptionSelected: CSSProps<IProps>;
 }
 
 export type TKUIRoutingQueryInputProps = IProps;
@@ -155,6 +164,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
+    private timePrefString(timePref: TimePreference) {
+        switch (timePref) {
+            case TimePreference.NOW: return "Leave now";
+            case TimePreference.LEAVE: return "Leave";
+            default: return "Arrive";
+        }
+    }
+
+    private getTimePrefOptions(): any[] {
+        return (Object.values(TimePreference))
+            .map((value) => {
+                return { value: value, label: this.timePrefString(value)};
+            });
+    }
+
     public render(): React.ReactNode {
         const routingQuery = this.props.value;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
@@ -167,6 +191,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             "To " + routingQuery.to.address :
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
+        const timePrefOptions = this.getTimePrefOptions();
+        const injectedStyles = this.props.injectedStyles;
+        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
         return (
             <div className={classes.main}>
                 <div className={classes.header}>
@@ -258,17 +285,26 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                               onClick={this.onSwapClicked}/>
                 </div>
                 <div className={classes.footer + " QueryInput-timeBtnPanel gl-flex gl-align-center gl-space-between"}>
-                    <div className={classes.timePrefFace}>
-                        <select className={classes.timePref}
-                                onChange={(e) => this.onPrefChange(e.target.value as TimePreference)}>
-                            <option value={TimePreference.NOW}>Leave now</option>
-                            <option value={TimePreference.LEAVE}>Leave</option>
-                            <option value={TimePreference.ARRIVE}>Arrive</option>
-                        </select>
-                    </div>
+                    {/*TODO: SEGUIR ACÁ style select dropdown */}
+                    <Select
+                        options={timePrefOptions}
+                        value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                        onChange={(option) => this.onPrefChange(option.value)}
+                        styles={{
+                            container: styles => ({...styles, ...injectedStyles.selectContainer}),
+                            control: styles => ({...styles, ...injectedStyles.selectControl}),
+                            menu: styles => ({...styles, ...injectedStyles.selectMenu}),
+                            option: (styles: any, state: any) => ({
+                                ...styles, ...injectedStyles.selectOption,
+                                ...(state.isFocused && injectedStyles.selectOptionFocused),
+                                ...(state.isSelected && injectedStyles.selectOptionSelected)})
+                        }}
+                        components={{ IndicatorsContainer: SelectDownArrow }}
+                        // menuIsOpen={true}
+                    />
                     {routingQuery.timePref !== TimePreference.NOW &&
-                        <DateTimePicker
-                            value={routingQuery.time}
+                        <DateTimePicker     // Switch rotingQuery.time to region timezone.
+                            value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
                             onChange={(date: Moment) => {
                                 this.updateQuery({time: date});
                                 // if (DeviceUtil.isDesktop && this.goBtnRef) {    // give focus to go button after selecting time.
@@ -311,7 +347,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     onChange: routingContext.onQueryChange,
                     onPreChange: routingContext.onPreChange,
                     bounds: bounds,
-                    focusLatLng: focusLatLng
+                    focusLatLng: focusLatLng,
+                    region: routingContext.region
 
                 };
                 return props.children!(consumerProps);

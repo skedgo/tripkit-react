@@ -18,6 +18,8 @@ import Features from "../env/Features";
 import Util from "../util/Util";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKShareHelper from "../share/TKShareHelper";
+import * as queryString from "query-string";
+import MultiGeocoder from "../geocode/MultiGeocoder";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -60,30 +62,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waiting: false,
                 viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
             };
-
-            if (TKShareHelper.isSharedTripLink()) {
-                const shareLinkPath = document.location.pathname;
-                TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
-                    .then((routingResultsJson: any) => {
-                        const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
-                        const firstTrip = routingResults.groups[0].trips[0];
-                        const from = firstTrip.segments[0].from;
-                        const to = firstTrip.segments[firstTrip.segments.length - 1].to;
-                        const query = RoutingQuery.create(from, to,
-                            firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
-                            firstTrip.queryTime ? DateTimeUtil.momentTZTime(firstTrip.queryTime * 1000) : undefined);
-                        routingResults.setQuery(query);
-                        const trips = routingResults.groups;
-                        const sortedTrips = this.sortTrips(trips, this.state.sort);
-                        this.setState({
-                            query: query,
-                            trips: sortedTrips,
-                            selected: sortedTrips[0]
-                        }, () => {
-                            window.history.replaceState({}, "", "/");
-                        });
-                    });
-            }
 
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onChange = this.onChange.bind(this);
@@ -297,6 +275,51 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             const urlQuery: RoutingQuery | undefined = this.props.urlQuery;
             if (urlQuery) {
                 this.onQueryChange(urlQuery);
+            }
+
+            if (TKShareHelper.isSharedTripLink()) {
+                const shareLinkPath = decodeURIComponent(document.location.pathname);
+                TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
+                    .then((routingResultsJson: any) => {
+                        const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
+                        const firstTrip = routingResults.groups[0].trips[0];
+                        const from = firstTrip.segments[0].from;
+                        const to = firstTrip.segments[firstTrip.segments.length - 1].to;
+                        const query = RoutingQuery.create(from, to,
+                            firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
+                            firstTrip.queryTime ? DateTimeUtil.momentTZTime(firstTrip.queryTime * 1000) : undefined);
+                        routingResults.setQuery(query);
+                        const trips = routingResults.groups;
+                        const sortedTrips = this.sortTrips(trips, this.state.sort);
+                        this.setState({
+                            query: query,
+                            trips: sortedTrips,
+                            selected: sortedTrips[0]
+                        }, () => {
+                            window.history.replaceState({}, "", "/");
+                        });
+                    });
+            }
+
+            if (TKShareHelper.isSharedArrivalLink()) {
+                const shareLinkS = document.location.search;
+                const queryMap = queryString.parse(shareLinkS.startsWith("?") ? shareLinkS.substr(1) : shareLinkS);
+                if (queryMap.lat && queryMap.lng && queryMap.at) {
+                    const arrivalLoc = Location.create(LatLng.createLatLng(parseFloat(queryMap.lat), parseFloat(queryMap.lng)), "", "", "");
+                    const geocodingData = new MultiGeocoder();
+                    geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
+                        if (location !== null) {
+                            const routingQuery = RoutingQuery.create(null,
+                                location,
+                                TimePreference.ARRIVE, DateTimeUtil.momentTZTime(parseInt(queryMap.at) * 1000));
+                            this.onViewportChange({
+                                center: arrivalLoc,
+                                zoom: 13
+                            });
+                            this.onQueryChange(routingQuery);
+                        }
+                    });
+                }
             }
         }
 

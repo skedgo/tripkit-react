@@ -10,7 +10,7 @@ import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
+import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {ClassNameMap} from "react-jss";
@@ -25,6 +25,10 @@ import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 import TKShareHelper from "../share/TKShareHelper";
+import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
+import TKUIControlsCard from "../card/TKUIControlsCard";
+import TKUIShareView from "../share/TKUIShareView";
+import {ReactComponent as IconShare} from "../images/ic-share.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -59,8 +63,32 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView",
     configProps: {
         actions: (stop: StopLocation) => [
-            <TKUIRouteToLocationAction location={stop}/>,
-            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)}/>
+            <TKUIRouteToLocationAction location={stop} vertical={true}/>,
+            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true}/>,
+            <TKUIControlsCard>
+                {(setProps: (props: TKUICardClientProps) => void) => {
+                    return <TKUIButton text={"Share timetable"} icon={<IconShare/>}
+                                       type={TKUIButtonType.SECONDARY_VERTICAL}
+                                       onClick={() => {
+                                           setProps({
+                                               title: "Share timetable",
+                                               presentation: CardPresentation.MODAL,
+                                               children:
+                                                   <TKUIShareView
+                                                       link={TKShareHelper.getShareTimetable(stop)}
+                                                       customMsg={""}
+                                                   />,
+                                               open: true,
+                                               onRequestClose: () => {
+                                                   setProps({
+                                                       open: false
+                                                   })
+                                               }
+                                           });
+                                       }}
+                    />;
+                }}
+            </TKUIControlsCard>
         ]
     }
 };

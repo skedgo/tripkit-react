@@ -31,7 +31,7 @@ export interface TKUIWithStyle<ST, CP> {
 }
 
 export interface TKUIWithClasses<STYLE, PROPS> {
-    injectedStyles: TKUIStyles<STYLE, PROPS>,
+    injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
 }
 

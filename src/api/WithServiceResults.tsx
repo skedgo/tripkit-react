@@ -74,7 +74,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             };
 
             if (TKShareHelper.isSharedStopLink()) {
-                const shareLinkPath = document.location.pathname;
+                const shareLinkPath = decodeURIComponent(document.location.pathname);
                 const shareLinkSplit = shareLinkPath.split("/");
                 const region = shareLinkSplit[2];
                 const stopCode = shareLinkSplit[3];
@@ -84,7 +84,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             }
 
             if (TKShareHelper.isSharedServiceLink()) {
-                const shareLinkPath = document.location.pathname;
+                const shareLinkPath = decodeURIComponent(document.location.pathname);
                 const shareLinkSplit = shareLinkPath.split("/");
                 const region = shareLinkSplit[2];
                 const stopCode = shareLinkSplit[3];

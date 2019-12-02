@@ -16,6 +16,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
+    actions?: JSX.Element[];
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -104,6 +105,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                         {from}
                         {prevWaitingSegment &&
                         <span className={classes.subtitle}>{prevWaitingSegment.getAction()}</span>}
+                        {this.props.actions}
                     </div>
                     <div className={classes.time}>
                         <span>{prevWaitingSegmentTime}</span>

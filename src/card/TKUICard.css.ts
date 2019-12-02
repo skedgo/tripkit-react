@@ -45,7 +45,8 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         body: {
-            ...genStyles.scrollableY
+            ...genStyles.scrollableY,
+            ...genStyles.grow
         },
 
         headerLeft: {

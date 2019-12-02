@@ -27,8 +27,8 @@ class DateTimeUtil {
         return format ? moment.tz(timeS, format, DateTimeUtil.defaultTZ) : moment.tz(timeS, DateTimeUtil.defaultTZ);
     }
 
-    public static momentTZTime(time: number) {
-        return moment.tz(time, DateTimeUtil.defaultTZ);
+    public static momentTZTime(time: number, timezone: string = DateTimeUtil.defaultTZ) {
+        return moment.tz(time, timezone);
     }
 
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {

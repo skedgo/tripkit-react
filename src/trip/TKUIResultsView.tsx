@@ -43,7 +43,9 @@ export interface IStyle {
     sortBar: CSSProps<IProps>;
     sortSelectContainer: CSSProps<IProps>;
     sortSelectControl: CSSProps<IProps>;
-    sortSelectSingleValue: CSSProps<IProps>;
+    sortSelectOption: CSSProps<IProps>;
+    sortSelectOptionFocused: CSSProps<IProps>;
+    sortSelectOptionSelected: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -120,7 +122,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const sortOptions = this.getSortOptions();
-        const injectedStyles = (this.props.injectedStyles as Styles<keyof IStyle, IProps>);
+        const injectedStyles = this.props.injectedStyles;
         return (
             <TKUICard
                 title={"Routing results"}
@@ -137,8 +139,12 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                                 container: styles => ({...styles, ...injectedStyles.sortSelectContainer}),
                                 control: styles => ({...styles, ...injectedStyles.sortSelectControl}),
                                 indicatorsContainer: styles => ({...styles, display: 'none'}),
-                                singleValue: styles => ({...styles, ...injectedStyles.sortSelectSingleValue})
+                                option: (styles: any, state: any) => ({
+                                    ...styles, ...injectedStyles.sortSelectOption,
+                                    ...(state.isFocused && injectedStyles.sortSelectOptionFocused),
+                                    ...(state.isSelected && injectedStyles.sortSelectOptionSelected)})
                             }}
+                            // menuIsOpen={true}
                         />
                         <div>
 
