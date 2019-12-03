@@ -101,17 +101,7 @@ class LocationBox extends Component<IProps, IState> {
         const setStateCallback = () => {
             if (locationValue && !locationValue.isResolved() &&
                 (!locationValue.isCurrLoc() || (this.props.resolveCurr && !highlighted))) {
-                this.setState({waiting: true});
-                this.geocodingData.resolveLocation(locationValue, (resolvedLocation: Location) => {
-                    if (locationValue === this.state.locationValue) {
-                        this.setValue(resolvedLocation, false, true, () => {
-                            this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
-                            this.setState({
-                                waiting: false
-                            })
-                        });
-                    }
-                });
+                this.resolve();
             } else if (fireEvents) {
                 this.fireLocationChange(highlighted);
             }
@@ -131,6 +121,26 @@ class LocationBox extends Component<IProps, IState> {
                 highlightedValue: locationValue,
                 items: this.state.items
             }, setStateCallback);
+        }
+    }
+
+    private resolve() {
+        const locationValue = this.state.locationValue;
+        if (locationValue && !locationValue.isResolved() &&
+            (!locationValue.isCurrLoc() || this.props.resolveCurr)) {
+            this.setState({waiting: true});
+            console.log("Resolve curr loc");
+            this.geocodingData.resolveLocation(locationValue, (resolvedLocation: Location) => {
+                if (locationValue === this.state.locationValue) {
+                    this.setValue(resolvedLocation, false, true, () => {
+                        this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
+                        this.setState({
+                            waiting: false
+                        });
+                        console.log("Resolved: " + JSON.stringify(resolvedLocation));
+                    });
+                }
+            });
         }
     }
 
@@ -310,6 +320,10 @@ class LocationBox extends Component<IProps, IState> {
     public componentDidUpdate(prevProps: IProps) {
         if (this.props.value !== prevProps.value && this.props.value !== this.state.locationValue) {
             this.setValue(this.props.value);
+        }
+        if (this.props.resolveCurr && !prevProps.resolveCurr
+            && this.props.value && this.props.value.isCurrLoc() && !this.props.value.isResolved()) {
+            this.resolve();
         }
     }
 
