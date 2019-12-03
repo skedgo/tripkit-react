@@ -17,10 +17,12 @@ import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "../query/T
 import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "../trip-planner/TKUITripPlanner";
 import {TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle} from "../service/occupancy/TKUITrainOccupancyInfo";
 import {TKUIShareViewProps, TKUIShareViewStyle} from "../share/TKUIShareView";
+import {TKUISearchBarProps, TKUISearchBarStyle} from "../query/TKUISearchBar";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
     TKUITripPlanner: ConfigRefiner<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    TKUISearchBar: ConfigRefiner<TKUISearchBarProps, TKUISearchBarStyle>;
     TKUITKUIRoutingQueryInput: ConfigRefiner<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUICard: ConfigRefiner<TKUICardProps, TKUICardStyle>;
     TKUITripRow: ConfigRefiner<TKUITripRowProps, TKUITripRowStyle>;

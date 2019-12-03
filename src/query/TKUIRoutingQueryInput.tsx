@@ -34,11 +34,13 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import Region from "model/region/Region";
 import Select from 'react-select';
+
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowOptions?: () => void;
     isTripPlanner?: boolean;
     collapsable?: boolean;
     geocoderOptions?: MultiGeocoderOptions;
+    onClearClicked?: () => void;
 }
 
 interface IConsumedProps {
@@ -203,7 +205,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                     <button
                         className={classes.btnClear}
                         aria-hidden={true}
-                        onClick={() => this.setQuery(new RoutingQuery())}
+                        onClick={this.props.onClearClicked}
+                        // onClick={() => this.setQuery(new RoutingQuery())}
+                        // onClick={() => this.props.onDirectionsView(false)}
                     >
                         <IconRemove aria-hidden={true}
                                     className={classes.iconClear}
@@ -348,8 +352,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     onPreChange: routingContext.onPreChange,
                     bounds: bounds,
                     focusLatLng: focusLatLng,
-                    region: routingContext.region
-
+                    region: routingContext.region,
                 };
                 return props.children!(consumerProps);
             }}

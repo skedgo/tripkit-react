@@ -33,6 +33,8 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
 import StopsData from "../data/StopsData";
+import TKUISearchBar from "../query/TKUISearchBar";
+import Location from "../model/Location";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -132,6 +134,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const searchBar = !this.props.directionsView &&
+            <TKUISearchBar
+                onDirectionsClicked={() => {
+                    this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
+                    this.props.onDirectionsView(true);
+                }}
+            />;
+        const queryInput = this.props.directionsView &&
+            <TKUIRoutingQueryInput
+                isTripPlanner={true}
+                onShowOptions={this.onShowOptions}
+                collapsable={true}
+                onClearClicked={() => {
+                    this.props.onQueryChange(Util.iAssign(this.props.query, {from: null}));
+                    this.props.onDirectionsView(false);
+                }}
+            />;
         const optionsDialog = this.state.showOptions ?
             <Modal
                 isOpen={this.state.showOptions}
@@ -155,7 +174,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
             /> : null;
 
-        const routingResultsView = this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
+        const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
                 className="gl-no-shrink"
                 onDetailsClicked={() => {
@@ -195,11 +214,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                  ref={el => this.ref = el}
             >
                 <div className={classes.queryPanel}>
-                    <TKUIRoutingQueryInput
-                        isTripPlanner={true}
-                        onShowOptions={this.onShowOptions}
-                        collapsable={true}
-                    />
+                    {searchBar}
+                    {queryInput}
                 </div>
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                     <TKUIMapView

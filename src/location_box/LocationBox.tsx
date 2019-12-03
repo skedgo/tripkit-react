@@ -12,6 +12,7 @@ import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
 import {resetStyles} from "../css/ResetStyle.css";
 import City from "../model/location/City";
+import * as CSS from 'csstype';
 
 interface IProps {
     geocodingData: MultiGeocoder,
@@ -24,6 +25,8 @@ interface IProps {
     inputAriaLabel?: string;
     inputId?: string;
     sideDropdown?: boolean;
+    iconEmpty?: JSX.Element;
+    style?: CSS.Properties;
 }
 
 interface IState {
@@ -88,6 +91,9 @@ class LocationBox extends Component<IProps, IState> {
      * @param {boolean} fireEvents - If should fire events.
      */
     public setValue(locationValue: Location | null, highlighted: boolean = false, fireEvents: boolean = false, callback?: () => void) {
+        if (locationValue === this.state.locationValue) {
+            return
+        }
         let inputText = this.state.inputText;
         if (!highlighted) {   // Set location address as input text
             inputText = locationValue ? LocationBox.itemText(locationValue) : '';
@@ -98,12 +104,11 @@ class LocationBox extends Component<IProps, IState> {
                 this.setState({waiting: true});
                 this.geocodingData.resolveLocation(locationValue, (resolvedLocation: Location) => {
                     if (locationValue === this.state.locationValue) {
-                        this.setState({
-                            locationValue: resolvedLocation,
-                            waiting: false
-                        }, () => {
+                        this.setValue(resolvedLocation, false, true, () => {
                             this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
-                            this.fireLocationChange(highlighted);
+                            this.setState({
+                                waiting: false
+                            })
                         });
                     }
                 });
@@ -224,7 +229,7 @@ class LocationBox extends Component<IProps, IState> {
                                 tabIndex={-1}>
                             <IconRemove aria-hidden={true} className="LocationBox-iconClear" focusable="false"/>
                         </button> :
-                        "")
+                        this.props.iconEmpty || "")
                 }
             </div>
         );
@@ -302,8 +307,8 @@ class LocationBox extends Component<IProps, IState> {
         }
     }
 
-    public componentDidUpdate() {
-        if (this.props.value !== this.state.locationValue) {
+    public componentDidUpdate(prevProps: IProps) {
+        if (this.props.value !== prevProps.value && this.props.value !== this.state.locationValue) {
             this.setValue(this.props.value);
         }
     }
@@ -362,7 +367,8 @@ class LocationBox extends Component<IProps, IState> {
                         }
                     }
                     wrapperStyle = {{
-                        position: "relative"
+                        position: "relative",
+                        ...this.props.style
                     }}
                     autoHighlight={false}
                     ref={el => this.inputRef = el}

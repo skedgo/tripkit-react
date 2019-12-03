@@ -31,6 +31,8 @@ interface ITKUIGenStyle {
     fontS: CSSProps<{}>;
     fontSM: CSSProps<{}>;
 
+    fontMImp: CSSProps<{}>;
+
     textGray: CSSProps<{}>;
 
     borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
@@ -167,6 +169,11 @@ const genStyles: ITKUIGenStyle = {
     fontM: {
         fontSize: '16px',
         lineHeight: '24px'
+    },
+
+    fontMImp: {
+        fontSize: '16px!important',
+        lineHeight: '24px!important'
     },
 
     fontS: {

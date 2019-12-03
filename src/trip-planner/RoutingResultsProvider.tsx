@@ -20,6 +20,8 @@ export interface IRoutingResultsContext {
     region?: Region;
     viewport?: {center?: LatLng, zoom?: number};    // Maybe define viewport as required.
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => void;
+    directionsView: boolean;
+    onDirectionsView: (directionsView: boolean) => void;
 
     trips?: Trip[];
     waiting: boolean;
@@ -36,6 +38,8 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onQueryChange: (query: RoutingQuery) => {},
     viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
+    directionsView: false,
+    onDirectionsView: (directionsView: boolean) => {},
     waiting: true,
     onChange: (select?: Trip) => {},
     sort: TripSort.OVERALL,

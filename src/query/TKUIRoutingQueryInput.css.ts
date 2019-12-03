@@ -120,18 +120,11 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         selectContainer: {
             minWidth: '92px',
             ...genStyles.fontS
-            // ...genStyles.grow
         },
         selectControl: {
             border: 'none',
             background: 'none',
-            // backgroundImage: 'url('+ Constants.absUrl("/images/ic-sort.svg") + ')!important',
-            // backgroundRepeat: 'no-repeat!important',
-            // backgroundPosition: '10px 50%!important',
-            // backgroundSize: '18px',
-            // paddingLeft: '35px',
             cursor: 'pointer',
-            // backgroundColor: '#00000000'
         },
         selectMenu: {
             marginTop: '3px'

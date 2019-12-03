@@ -33,6 +33,7 @@ interface IWithRoutingResultsState {
     preTo?: Location;
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
+    directionsView: boolean;
     trips?: Trip[];
     selected?: Trip;
     sort: TripSort;
@@ -60,13 +61,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 query: RoutingQuery.create(),
                 sort: TripSort.OVERALL,
                 waiting: false,
-                viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13}
+                viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
+                directionsView: false
             };
 
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onChange = this.onChange.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
+            this.onDirectionsView = this.onDirectionsView.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
         }
@@ -131,6 +134,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
             this.setState({viewport: viewport},
                 () => this.refreshRegion());
+        }
+
+        public onDirectionsView(directionsView: boolean) {
+            this.setState({directionsView: directionsView});
         }
 
         public refreshRegion() {
@@ -259,6 +266,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 region={this.state.region}
                 viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}
+                directionsView={this.state.directionsView}
+                onDirectionsView={this.onDirectionsView}
                 trips={this.state.trips}
                 waiting={this.state.waiting}
                 selected={this.state.selected}

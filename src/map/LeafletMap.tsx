@@ -59,6 +59,7 @@ interface IConnectionProps {
     viewport?: {center?: LatLng, zoom?: number};
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
     onStopChange: (stop?: StopLocation) => void;
+    directionsView?: boolean;
 }
 
 interface IProps extends ITKUIMapViewProps, IConnectionProps {}
@@ -384,58 +385,66 @@ function getGeocodingData() {
     return geocodingData;
 }
 
-const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
-    return (
-        <RoutingResultsContext.Consumer>
-            {(routingContext: IRoutingResultsContext) =>
-                <ServiceResultsContext.Consumer>
-                    {(serviceContext: IServiceResultsContext) =>
-                        <OptionsContext.Consumer>
-                            {(optionsContext: IOptionsContext) => {
-                                const from = routingContext.preFrom ? routingContext.preFrom :
-                                    (routingContext.query.from ? routingContext.query.from : undefined);
-                                const to = routingContext.preTo ? routingContext.preTo :
-                                    (routingContext.query.to ? routingContext.query.to : undefined);
-                                const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
-                                    routingContext.onQueryChange(Util.iAssign(routingContext.query, {
-                                        [isFrom ? "from" : "to"]:
-                                            latLng instanceof StopLocation ? latLng as StopLocation :
-                                                Location.create(latLng, "Location", "", "")
-                                    }));
-                                    getGeocodingData().reverseGeocode(latLng, loc => {
-                                        if (loc !== null) {
-                                            routingContext.onQueryChange(Util.iAssign(routingContext.query, {[isFrom ? "from" : "to"]: loc}));
-                                        }
-                                    })
-                                };
-                                const consumerProps: IConnectionProps = {
-                                    from: from,
-                                    to: to,
-                                    trip: routingContext.selected,
-                                    onDragEnd: onMapLocChanged,
-                                    onClick: (clickLatLng: LatLng) => {
-                                        if (!from || !to) {
-                                            onMapLocChanged(!from, clickLatLng);
-                                            GATracker.instance.send("query input", "pick location", "drop pin");
-                                        }
-                                    },
-                                    service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
-                                        serviceContext.selectedService : undefined,
-                                    viewport: routingContext.viewport,
-                                    onViewportChange: routingContext.onViewportChange,
-                                    onStopChange: serviceContext.onStopChange
-                                };
-                                return (
-                                    props.children!(consumerProps)
-                                );
-                            }}
-                        </OptionsContext.Consumer>
-                    }
-                </ServiceResultsContext.Consumer>
-            }
-        </RoutingResultsContext.Consumer>
-    );
-};
+const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> =
+    (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
+        return (
+            <RoutingResultsContext.Consumer>
+                {(routingContext: IRoutingResultsContext) =>
+                    <ServiceResultsContext.Consumer>
+                        {(serviceContext: IServiceResultsContext) =>
+                            <OptionsContext.Consumer>
+                                {(optionsContext: IOptionsContext) => {
+                                    const from = routingContext.preFrom ? routingContext.preFrom :
+                                        (routingContext.query.from ? routingContext.query.from : undefined);
+                                    const to = routingContext.preTo ? routingContext.preTo :
+                                        (routingContext.query.to ? routingContext.query.to : undefined);
+                                    const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
+                                        routingContext.onQueryChange(Util.iAssign(routingContext.query, {
+                                            [isFrom ? "from" : "to"]:
+                                                latLng instanceof StopLocation ? latLng as StopLocation :
+                                                    Location.create(latLng, "Location", "", "")
+                                        }));
+                                        getGeocodingData().reverseGeocode(latLng, loc => {
+                                            if (loc !== null) {
+                                                routingContext.onQueryChange(Util.iAssign(routingContext.query, {[isFrom ? "from" : "to"]: loc}));
+                                            }
+                                        })
+                                    };
+                                    const consumerProps: IConnectionProps = {
+                                        from: routingContext.directionsView ? from : undefined,
+                                        to: to,
+                                        trip: routingContext.selected,
+                                        onDragEnd: onMapLocChanged,
+                                        onClick: (clickLatLng: LatLng) => {
+                                            if (routingContext.directionsView) {
+                                                if (!from || !to) {
+                                                    onMapLocChanged(!from, clickLatLng);
+                                                    GATracker.instance.send("query input", "pick location", "drop pin");
+                                                }
+                                            } else {
+                                                if (!to) {
+                                                    onMapLocChanged(false, clickLatLng);
+                                                }
+                                            }
+                                        },
+                                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                                            serviceContext.selectedService : undefined,
+                                        viewport: routingContext.viewport,
+                                        onViewportChange: routingContext.onViewportChange,
+                                        onStopChange: serviceContext.onStopChange,
+                                        directionsView: routingContext.directionsView
+                                    };
+                                    return (
+                                        props.children!(consumerProps)
+                                    );
+                                }}
+                            </OptionsContext.Consumer>
+                        }
+                    </ServiceResultsContext.Consumer>
+                }
+            </RoutingResultsContext.Consumer>
+        );
+    };
 
 export const TKUIMapView = (props: ITKUIMapViewProps & {refAdHoc: (ref: any) => void}) =>
     <Connector>
