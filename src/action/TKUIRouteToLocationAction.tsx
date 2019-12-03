@@ -27,9 +27,10 @@ class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
                         onClick={() => {
                             context.onQueryChange(Util.iAssign(context.query,
                                 {
-                                    // from: context.query.from ||
+                                    from: Location.createCurrLoc(),
                                     to: this.props.location
                                 }));
+                            context.onDirectionsView(true);
                         }}
                     />}
             </RoutingResultsContext.Consumer>

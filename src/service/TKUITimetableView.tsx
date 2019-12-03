@@ -32,6 +32,7 @@ import {ReactComponent as IconShare} from "../images/ic-share.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
+    onDirectionsClicked?: () => void;
 }
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
