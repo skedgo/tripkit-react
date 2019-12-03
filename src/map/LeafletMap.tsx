@@ -286,7 +286,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                             bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
                             enabledMapLayers={enabledMapLayers}
                             zoom={this.leafletElement.getZoom()}
-                            onLocAction={(locType: MapLocationType, loc: Location) => {
+                            onClick={(locType: MapLocationType, loc: Location) => {
                                 if (locType === MapLocationType.STOP) {
                                     this.props.onStopChange(loc as StopLocation);
                                 }
@@ -406,7 +406,12 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                         }));
                                         getGeocodingData().reverseGeocode(latLng, loc => {
                                             if (loc !== null) {
-                                                routingContext.onQueryChange(Util.iAssign(routingContext.query, {[isFrom ? "from" : "to"]: loc}));
+                                                // Need to use onQueryUpdate instead of onQueryChange since
+                                                // routingContext.query can be outdated at the time this callback is
+                                                // executed. OnQueryUpdate always use the correct query (the one on
+                                                // WithRoutingResults state, the source of truth).
+                                                routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc});
+                                                // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
                                             }
                                         })
                                     };
@@ -431,7 +436,10 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                             serviceContext.selectedService : undefined,
                                         viewport: routingContext.viewport,
                                         onViewportChange: routingContext.onViewportChange,
-                                        onStopChange: serviceContext.onStopChange,
+                                        onStopChange: (stop?: StopLocation) => {
+                                            routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
+                                            serviceContext.onStopChange(stop);
+                                        },
                                         directionsView: routingContext.directionsView
                                     };
                                     return (

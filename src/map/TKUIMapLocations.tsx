@@ -23,6 +23,7 @@ interface IProps {
     bounds: BBox,
     prefetchFactor?: number,
     enabledMapLayers: MapLocationType[],
+    onClick?: (type: MapLocationType, loc: Location) => void;
     onLocAction?: (type: MapLocationType, loc: Location) => void;
 }
 
@@ -50,6 +51,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     }
 
     private getLocMarker(mapLocType: MapLocationType, loc: Location): React.ReactNode {
+        const clickHandler = () => this.props.onClick && this.props.onClick(mapLocType, loc);
         const actionHandler = mapLocType === MapLocationType.STOP ?
             () => this.props.onLocAction && this.props.onLocAction(mapLocType, loc) : undefined;
         const popup = <Popup
@@ -73,6 +75,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
+                    onclick={clickHandler}
                 >
                     {popup}
                 </Marker>;
@@ -86,6 +89,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
+                    onclick={clickHandler}
                 >
                     {popup}
                 </Marker>;
@@ -99,6 +103,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
+                    onclick={clickHandler}
                 >
                     {popup}
                 </Marker>;
@@ -113,7 +118,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                 return <Marker
                     position={loc}
                     icon={icon}
-                    // onclick={() => this.props.onClick && this.props.onClick(loc)}
+                    onclick={clickHandler}
                     key={key}
                 >
                     {popup}

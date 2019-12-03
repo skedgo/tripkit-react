@@ -66,6 +66,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             };
 
             this.onQueryChange = this.onQueryChange.bind(this);
+            this.onQueryUpdate = this.onQueryUpdate.bind(this);
             this.onChange = this.onChange.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
@@ -116,6 +117,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                 }
             });
+        }
+
+        public onQueryUpdate(update: Partial<RoutingQuery>) {
+            this.onQueryChange(Util.iAssign(this.state.query, update));
         }
 
         public onChange(select?: Trip): void {
@@ -254,6 +259,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 {...props}
                 query={this.state.query}
                 onQueryChange={this.onQueryChange}
+                onQueryUpdate={this.onQueryUpdate}
                 preFrom={this.state.preFrom}
                 preTo={this.state.preTo}
                 onPreChange={(from: boolean, location?: Location) => {
@@ -347,6 +353,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public sameApiQueries(q1: RoutingQuery, opts1: Options, q2: RoutingQuery, opts2: Options): boolean {
+            // To avoid considering 2 queries as different because timepref is NOW and RoutingQuery.time is
+            // computed on call, using DateTimeUtil.getNow(), so with bad luck will fall on different seconds.
+            // if (q1.timePref === TimePreference.NOW && q2.timePref === TimePreference.NOW) {
+            //     const fixedNow = DateTimeUtil.getNow();
+            //     q1 = Util.iAssign(q1, {timePref: TimePreference.LEAVE, time: fixedNow});
+            //     q2 = Util.iAssign(q2, {timePref: TimePreference.LEAVE, time: fixedNow});
+            // }
             let modeSetsQ1;
             let modeSetsQ2;
             if (RegionsData.instance.hasRegions()) {

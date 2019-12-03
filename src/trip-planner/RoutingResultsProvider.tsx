@@ -14,6 +14,7 @@ export interface IRoutingResultsContext {
     // Just pass the query to TKRoutingResultsProvider, not the onQueryChange.
     query: RoutingQuery;
     onQueryChange: (query: RoutingQuery) => void;
+    onQueryUpdate: (update: Partial<RoutingQuery>) => void;
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -36,6 +37,7 @@ export interface IRoutingResultsContext {
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
     query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
+    onQueryUpdate: (update: Partial<RoutingQuery>) => {},
     viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     directionsView: false,
