@@ -33,6 +33,7 @@ export interface TKUIWithStyle<ST, CP> {
 export interface TKUIWithClasses<STYLE, PROPS> {
     injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
+    refreshStyles: () => void;
 }
 
 export function withStyleInjection<
@@ -73,15 +74,26 @@ export function withStyleInjection<
                         }, {}) : {};
                 return {...defaultStyles, ...overrideStyles};
             };
+            this.onRefreshStyles = this.onRefreshStyles.bind(this);
+            this.onRefreshStyles();
+        }
+
+        private onRefreshStyles(forceUpdate: boolean = false) {
+            const props = this.props;
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);
             this.generateClassName = generateClassNameFactory(classPrefix ? classPrefix : props.classNamePrefix!);
             this.WithTheme = withTheme(({theme, ...props}) =>
                 <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
                     generateClassNameSeed : this.generateClassName}>
-                    <this.StyledComponent {...props} injectedStyles={this.stylesToInject(theme as TKUITheme)}/>
-                    {/*<this.StyledComponent {...props} />*/}
+                    <this.StyledComponent {...props}
+                                          injectedStyles={this.stylesToInject(theme as TKUITheme)}
+                                          refreshStyles={() => this.onRefreshStyles(true)}
+                    />
                 </JssProvider>
             );
+            if (forceUpdate) {
+                this.forceUpdate();
+            }
         }
 
         public render(): React.ReactNode {

@@ -1,11 +1,13 @@
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
+import {LocationConverter} from "./location/LocationConverter";
 
 @JsonObject
 class Location extends LatLng {
+    // Use this property for serialization / deserialization to proper class. See LocationConverter.
     @JsonProperty('class', String, true)
-    private _class: string = '';
+    public class: string = 'Location';
     @JsonProperty('address', String, true)
     private _address: string = '';
     @JsonProperty('name', String, true)
@@ -46,14 +48,6 @@ class Location extends LatLng {
 
     public getKey(): string {
         return String(this.lat) + this.lng;
-    }
-
-    get class(): string {
-        return this._class;
-    }
-
-    set class(value: string) {
-        this._class = value;
     }
 
     get address(): string {
@@ -119,6 +113,11 @@ class Location extends LatLng {
             address: this.address,
             name: this.name
         };
+    }
+
+    equals(other: any): boolean {
+        return other &&
+            JSON.stringify(Util.iAssign(this, {source: undefined})) === JSON.stringify(Util.iAssign(other, {source: undefined}));
     }
 }
 

@@ -145,7 +145,7 @@ class FavouriteList extends React.Component<IProps, IState> {
     }
 
     public componentDidMount(): void {
-        this.setState({values: this.data.getTrips()});
+        this.setState({values: this.data.getFavouriteTrips()});
         this.favChangeSubscr = this.data.addChangeListener((favourites: Favourite[]) => this.setState({
                 values: favourites.filter((favourite: Favourite) => favourite instanceof FavouriteTrip) as FavouriteTrip[]
             })

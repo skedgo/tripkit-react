@@ -3,17 +3,19 @@ import {JsonObject, JsonProperty} from "json2typescript";
 
 @JsonObject
 class City extends Location {
-    @JsonProperty('title', String)
-    private _title: string = '';
-    @JsonProperty('timezone', String)
-    private _timezone: string = '';
 
-    get name(): string {
-        return this._title;
+    constructor() {
+        super();
+        this.class = "CityLocation";
     }
 
-    get timezone(): string {
-        return this._timezone;
+    @JsonProperty('title', String)
+    public title: string = '';
+    @JsonProperty('timezone', String)
+    public timezone: string = '';
+
+    get name(): string {
+        return this.title;
     }
 }
 

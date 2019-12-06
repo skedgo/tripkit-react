@@ -15,6 +15,10 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import {ReactComponent as IconMenu} from '../images/ic-menu.svg';
 import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
+import FavouritesData from "../data/FavouritesData";
+import StopLocation from "../model/StopLocation";
+import FavouriteStop from "../model/favourite/FavouriteStop";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
@@ -37,6 +41,8 @@ interface IStyle {
     sideBarBtn: CSSProps<IProps>;
     sideBarIcon: CSSProps<IProps>;
     locationBox: CSSProps<IProps>;
+    locationBoxInput: CSSProps<IProps>;
+    resultsMenu: CSSProps<IProps>;
     glassIcon: CSSProps<IProps>;
     divider: CSSProps<IProps>;
     directionsBtn: CSSProps<IProps>;
@@ -90,6 +96,8 @@ class TKUISearchBar extends React.Component<IProps, {}> {
                     }}
                     iconEmpty={<IconGlass className={classes.glassIcon}/>}
                     style={this.props.injectedStyles.locationBox}
+                    inputStyle={this.props.injectedStyles.locationBoxInput}
+                    menuStyle={this.props.injectedStyles.resultsMenu}
                 />
                 <div className={classes.divider}/>
                 <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}>
@@ -110,8 +118,13 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                 const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
                 const consumerProps: IConsumedProps = {
                     value: routingContext.query.to,
-                    onChange: (value: Location | null) =>
-                        routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: value})),
+                    onChange: (value: Location | null) => {
+                        routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: value}));
+                        if (value !== null && !value.isCurrLoc()) {
+                            FavouritesData.recInstance.add(value instanceof StopLocation ?
+                                FavouriteStop.create(value) : FavouriteLocation.create(value));
+                        }
+                    },
                     onPreChange: routingContext.onPreChange &&
                     ((location?: Location) => routingContext.onPreChange!(true, location)),
                     bounds: bounds,

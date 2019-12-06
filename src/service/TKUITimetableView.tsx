@@ -33,6 +33,7 @@ import {ReactComponent as IconShare} from "../images/ic-share.svg";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     onDirectionsClicked?: () => void;
+    top?: number;
 }
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
@@ -160,6 +161,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 }
                 presentation={CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
+                top={this.props.top}
             >
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>

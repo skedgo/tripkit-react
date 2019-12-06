@@ -399,7 +399,7 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                     const to = routingContext.preTo ? routingContext.preTo :
                                         (routingContext.query.to ? routingContext.query.to : undefined);
                                     const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
-                                        routingContext.onQueryChange(Util.iAssign(routingContext.query, {
+                                        routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
                                             [isFrom ? "from" : "to"]:
                                                 latLng instanceof StopLocation ? latLng as StopLocation :
                                                     Location.create(latLng, "Location", "", "")

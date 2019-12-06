@@ -1,10 +1,13 @@
 import React, {Component} from "react";
 import Location from "../model/Location";
 import './ResultItem.css';
-import {ReactComponent as IconCurrLoc} from '../images/ic-curr-loc.svg';
+import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
+import {ReactComponent as IconCurrLoc} from '../images/location/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
 import SkedgoGeocoder from "../geocode/SkedgoGeocoder";
+import classNames from "classnames";
+import genStylesCss from "../css/general.module.css";
 
 interface IProps {
     location: Location;
@@ -12,6 +15,7 @@ interface IProps {
     ariaSelected?: boolean;
     onClick?: () => void;
     id?: string;
+    renderIcon?: (location: Location) => JSX.Element;
 }
 
 class ResultItem extends Component<IProps, {}> {
@@ -53,18 +57,17 @@ class ResultItem extends Component<IProps, {}> {
         }
         return (
             <div style={{background: this.props.highlighted ? '#efeded' : 'white'}}
-                 className={"gl-flex gl-space-between ResultItem" + (this.props.location.isCurrLoc() ? " currLoc" : "")}
+                 className={"gl-flex gl-space-between ResultItem"}
                  onClick={this.props.onClick}
                  role="option"
                  id={this.props.id}
                  aria-selected={this.props.ariaSelected}
             >
+                <div className={classNames("ResultItem-icon", genStylesCss.svgPathFillCurrColor)}>
+                    {this.props.renderIcon ? this.props.renderIcon(this.props.location) :
+                    this.props.location.isCurrLoc() ? <IconCurrLoc aria-hidden={true} focusable="false"/> : <IconPin/>}
+                </div>
                 {addressComponent}
-                {this.props.location.isCurrLoc() ? <IconCurrLoc aria-hidden={true} focusable="false"/> : ""}
-                {this.props.location.icon ?
-                    <img src={this.props.location.icon}
-                         className="ResultItem-icon"
-                    /> : ""}
             </div>
         );
     }
