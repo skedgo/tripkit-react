@@ -1,7 +1,7 @@
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
-import {LocationConverter} from "./location/LocationConverter";
+import CurrentLocationGeocoder from "../geocode/CurrentLocationGeocoder";
 
 @JsonObject
 class Location extends LatLng {
@@ -32,7 +32,7 @@ class Location extends LatLng {
     private static readonly currLocText = "My location";
 
     public static createCurrLoc() {
-        return this.create(new LatLng(), this.currLocText, "", "");
+        return this.create(new LatLng(), this.currLocText, "", "", CurrentLocationGeocoder.SOURCE_ID);
     }
 
     /**

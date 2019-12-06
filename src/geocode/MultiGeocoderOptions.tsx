@@ -68,7 +68,6 @@ class MultiGeocoderOptions {
         favouritesGeocoder.getOptions().resultsLimit = 5;
         favouritesGeocoder.getOptions().renderIcon = () => <IconFavourite/>;
         const favLocations = favToLocations(FavouritesData.instance.get(), false);
-        // TODO: override equals on FavouriteStop to ignore source on compare.
         favouritesGeocoder.setValues(favLocations);
         FavouritesData.instance.addChangeListener((update: Favourite[]) =>
             recentGeocoder.setValues(favToLocations(update, false)));
@@ -77,9 +76,16 @@ class MultiGeocoderOptions {
         const compare = (l1: Location, l2: Location, query: string) => {
 
             if (query === "") {
-                if (l1.source === recentGeocoder.sourceId) {
+                // Put current location at the top
+                if (l1.source === currLocGeocoder.getSourceId()) {
                     return -1;
-                } else if (l2.source === recentGeocoder.sourceId) {
+                } else if (l2.source === currLocGeocoder.getSourceId()) {
+                    return 1;
+                }
+                // Then recents
+                if (l1.source === recentGeocoder.getSourceId()) {
+                    return -1;
+                } else if (l2.source === recentGeocoder.getSourceId()) {
                     return 1;
                 }
             }
@@ -123,17 +129,15 @@ class MultiGeocoderOptions {
             }
             return false;
         };
-        return new MultiGeocoderOptions(showCurrLoc, geocoders, compare, analogResults);
+        return new MultiGeocoderOptions(geocoders, compare, analogResults);
     }
 
-    public showCurrLoc: boolean = false;
     public geocoders: IGeocoder[] = [];
     public compare: (l1: Location, l2: Location, query: string) => number;
     public analogResults: (r1: Location, r2: Location) => boolean;
 
 
-    constructor(showCurrLoc: boolean, geocoders: IGeocoder[], compare: (l1: Location, l2: Location, query: string) => number, analogResults: (r1: Location, r2: Location) => boolean) {
-        this.showCurrLoc = showCurrLoc;
+    constructor(geocoders: IGeocoder[], compare: (l1: Location, l2: Location, query: string) => number, analogResults: (r1: Location, r2: Location) => boolean) {
         this.geocoders = geocoders;
         this.compare = compare;
         this.analogResults = analogResults;
