@@ -334,7 +334,7 @@
     /* So hidden map height is 100vh - 227px (screen - query size), the same as the height when displayed, and so
      * 'already fits' checks, when map is hidden, are ok. TODO: maybe get query height and set it by code to avoid
      * different cases */
-    padding-top: 227px;
+    /*padding-top: 227px;*/
     height: 100vh;  /* preserve map size */
   }
 

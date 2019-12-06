@@ -27,6 +27,8 @@ interface IProps {
     sideDropdown?: boolean;
     iconEmpty?: JSX.Element;
     style?: CSS.Properties;
+    menuStyle?: CSS.Properties;
+    inputStyle?: CSS.Properties;
 }
 
 interface IState {
@@ -228,7 +230,7 @@ class LocationBox extends Component<IProps, IState> {
     private renderInput(props: any) {
         return (
             <div className="LocationBox">
-                <input type="text" {...props}/>
+                <input type="text" {...props} style={this.props.inputStyle}/>
                 {   this.state.waiting ?
                     <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :
                     (this.state.inputText ?
@@ -285,6 +287,7 @@ class LocationBox extends Component<IProps, IState> {
                         left: "0",
                         width: "100%",
                         // visibility: this.state.ddopen() ? "visible" : "hidden"
+                        ...this.props.menuStyle
                     }
                 }
                 children={items}
@@ -299,14 +302,17 @@ class LocationBox extends Component<IProps, IState> {
         if (isHighlighted) {
             this.highlightedItem = item.label;
         }
+        const location = this.itemToLocationMap.get(item.label)!;
+        const geocoder = this.geocodingData.options.getGeocoderById(location.source!);
         return (
             <ResultItem
                 id={"item-" + this.state.items.indexOf(item)}
                 key={this.state.items.indexOf(item)}
-                location={this.itemToLocationMap.get(item.label)!}
+                location={location}
                 highlighted={isHighlighted}
                 ariaSelected={isHighlighted}
-                onClick={() => this.setValue(this.itemToLocationMap.get(item.label)!, false, true)}
+                onClick={() => this.setValue(location, false, true)}
+                renderIcon={geocoder && geocoder.getOptions().renderIcon}
             />
         );
     }

@@ -156,8 +156,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
 
     public shouldComponentUpdate(nextProps: IProps): boolean {
         return nextProps.zoom !== this.props.zoom
-            || (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
-            !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree)));
+            || (this.props.zoom >= this.ZOOM_PARENT_LOCATIONS && (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
+            !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))));
     }
 
     public componentWillUnmount() {

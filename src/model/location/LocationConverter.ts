@@ -3,6 +3,7 @@ import Location from "../Location";
 import {JsonConverter, JsonCustomConvert, JsonConvert} from "json2typescript";
 import Util from "../../util/Util";
 import ModeInfo from "../trip/ModeInfo";
+import City from "./City";
 
 @JsonConverter
 export class LocationConverter implements JsonCustomConvert<Location> {
@@ -20,9 +21,11 @@ export class LocationConverter implements JsonCustomConvert<Location> {
             if (locationJson.modeInfo && Util.isEmpty(locationJson.modeInfo)) {
                 locationJson.modeInfo = jsonConvert.serialize(new ModeInfo());
             }
-            location = jsonConvert.deserialize(locationJson, StopLocation) as Location;
+            location = jsonConvert.deserialize(locationJson, StopLocation);
+        } else if (locationJson.class === "CityLocation") {
+            location = jsonConvert.deserialize(locationJson, City);
         } else {
-            location = jsonConvert.deserialize(locationJson, Location) as Location;
+            location = jsonConvert.deserialize(locationJson, Location);
         }
         return location;
     }

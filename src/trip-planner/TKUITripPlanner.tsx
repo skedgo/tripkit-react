@@ -35,6 +35,7 @@ import TKShareHelper from "../share/TKShareHelper";
 import StopsData from "../data/StopsData";
 import TKUISearchBar from "../query/TKUISearchBar";
 import Location from "../model/Location";
+import RoutingQuery from "../model/RoutingQuery";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -147,7 +148,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowOptions={this.onShowOptions}
                 collapsable={true}
                 onClearClicked={() => {
-                    this.props.onQueryChange(Util.iAssign(this.props.query, {from: null}));
+                    this.props.onQueryChange(RoutingQuery.create());
                     this.props.onDirectionsView(false);
                 }}
             />;
@@ -167,6 +168,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => {
                     this.props.onStopChange(undefined);
                 }}
+                top={this.props.directionsView ? 190 : 65}
             /> : null;
 
         const serviceDetailView = this.props.selectedService ?

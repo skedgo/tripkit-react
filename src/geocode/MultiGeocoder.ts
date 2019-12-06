@@ -6,40 +6,45 @@ import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
 import MultiGeocoderOptions from "./MultiGeocoderOptions";
 import Util from "../util/Util";
+import PeliasGeocoder from "./PeliasGeocoder";
 
 class MultiGeocoder {
 
-    private options: MultiGeocoderOptions;
+    private _options: MultiGeocoderOptions;
 
     constructor(options: MultiGeocoderOptions = MultiGeocoderOptions.default()) {
-        this.options = options;
+        this._options = options;
+    }
+
+    get options(): MultiGeocoderOptions {
+        return this._options;
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (query: string, results: Location[]) => void): void {
-        if (!query) {
-            callback(query, this.options.showCurrLoc ? [Location.createCurrLoc()] : []);
-            return;
-        }
         const geocoderResults = new Map<IGeocoder, Location[]>();
-        for (const geocoder of this.options.geocoders) {
+        for (const geocoder of this._options.geocoders) {
             geocoder.geocode(query, autocomplete, bounds, focus, (results: Location[]) => {
                 geocoderResults.set(geocoder, results);
-                for (const geocoder1 of this.options.geocoders) {
+                for (const geocoder1 of this._options.geocoders) {
                     if (geocoder1.getOptions().blockAutocompleteResults && geocoderResults.get(geocoder1) === undefined) {
                         return;
                     }
                 }
-                callback(query, this.merge(query, geocoderResults));
+                const mergedResults = this.merge(query, geocoderResults);
+                if (!query && this.options.showCurrLoc) {
+                    mergedResults.unshift(Location.createCurrLoc());
+                }
+                callback(query, mergedResults.slice(0, 5));
             })
         }
     }
 
     public resolveLocation(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void) {
-        this.options.geocoders[0].resolve(unresolvedLocation, callback);
+        this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID)!.resolve(unresolvedLocation, callback);
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
-        this.options.geocoders[0].reverseGeocode(coord, callback);
+        this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID)!.reverseGeocode(coord, callback);
     }
 
     private merge(query: string, results: Map<IGeocoder, Location[]>): Location[] {
@@ -62,7 +67,7 @@ class MultiGeocoder {
         for (const result of mergedResults) {
             let relevant = true;
             for (const depuratedResult of depuratedResults) {
-                if (this.options.analogResults(result, depuratedResult)) {
+                if (this._options.analogResults(result, depuratedResult)) {
                     relevant = false;
                     if (Environment.isDev()) {
                         Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".");
@@ -74,7 +79,7 @@ class MultiGeocoder {
                 depuratedResults.push(result);
             }
         }
-        return depuratedResults.slice(0, 5);
+        return depuratedResults;
     }
 
     private mergeSorted(query: string, originalSuggestionListsFromSources: Location[][]): Location[] {
@@ -89,7 +94,7 @@ class MultiGeocoder {
         Util.log("------------------------ \n");
         for (let firsts = MultiGeocoder.getFirsts(suggestionListsFromSources) ; firsts.length !== 0 ; firsts = MultiGeocoder.getFirsts(suggestionListsFromSources)) {
             firsts.sort((l1: Location, l2: Location) => {
-                return this.options.compare(l1, l2, query);
+                return this._options.compare(l1, l2, query);
             });
             jointSuggestions.push(firsts[0]);
             Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address));

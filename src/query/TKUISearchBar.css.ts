@@ -43,6 +43,14 @@ export const tKUISearchBarDefaultStyle: TKUIStyles<TKUISearchBarStyle, TKUISearc
             ...genStyles.grow,
             marginLeft: '16px'
         },
+        locationBoxInput: {
+            height: '36px'
+        },
+        resultsMenu: {
+            top: '42px',
+            left: '-15px',
+            width: '353px'
+        },
         glassIcon: {
             margin: '8px',
             height: '20px',

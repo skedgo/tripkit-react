@@ -5,8 +5,6 @@ import Favourite from "./Favourite";
 @JsonObject
 class FavouriteStop extends Favourite {
 
-    @JsonProperty('type')
-    public type = "FavouriteStop";
     @JsonProperty('stop', StopLocation)
     public stop: StopLocation = new StopLocation();
 

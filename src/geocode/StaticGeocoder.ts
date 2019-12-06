@@ -7,17 +7,20 @@ import LocationUtil from "../util/LocationUtil";
 
 class StaticGeocoder implements IGeocoder {
 
-    public static readonly SRC_ID = "STATIC";
-
     private options: GeocoderOptions;
     private values: Location[] = [];
 
-    constructor() {
+    public sourceId = "";
+    emptyMatchAll: boolean;
+
+    constructor(sourceId: string, emptyMatchAll: boolean = false) {
+        this.sourceId = sourceId;
+        this.emptyMatchAll = emptyMatchAll;
         this.options = new GeocoderOptions();
     }
 
     public getSourceId(): string {
-        return StaticGeocoder.SRC_ID;
+        return this.sourceId;
     }
 
     public setValues(values: Location[]) {
@@ -30,6 +33,14 @@ class StaticGeocoder implements IGeocoder {
 
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
+        if (!query) {
+            if (this.emptyMatchAll) {
+                callback(this.values.slice(0, this.options.resultsLimit));
+            } else {
+                callback([]);
+            }
+            return;
+        }
         const results = this.values.filter((value: Location) => {
             let valueS = (value.name ? value.name.toLowerCase() : "");
             valueS += (value.address ? (valueS ? " " : "") + value.address.toLowerCase() : "");
@@ -38,7 +49,7 @@ class StaticGeocoder implements IGeocoder {
             //     || (value.address && value.address.toLowerCase().includes(query.toLowerCase()));
         });
         results.sort((r1: Location, r2: Location) => this.getSort(query, r2, r1));
-        callback(results.slice(0,5));
+        callback(results.slice(0, this.options.resultsLimit));
     }
 
     protected getSort(query: string, r2: Location, r1: Location) {

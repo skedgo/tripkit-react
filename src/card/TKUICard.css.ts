@@ -9,7 +9,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
 
         modalContainer: {
             zIndex: '1000!important',
-            top: '190px!important',
+            top: (props: TKUICardProps) => (props.top ? props.top : 190) + 'px!important',
             left: '5px!important',
             padding: '5px 5px 0 5px',
             right: 'auto!important',

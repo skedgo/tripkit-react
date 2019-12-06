@@ -5,6 +5,7 @@ import Util from "../util/Util";
 import Location from "../model/Location";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 class FavouritesData extends LocalStorageItemArray<Favourite> {
 
@@ -27,8 +28,8 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     protected deserialize(itemJson: any): Favourite[] {
         return (itemJson as any[]).map((item: any) =>
-            item.type === "FavouriteStop" ?
-                Util.jsonConvert().deserialize(item, FavouriteStop) :
+            item.stop ? Util.jsonConvert().deserialize(item, FavouriteStop) :
+                item.location ? Util.jsonConvert().deserialize(item, FavouriteLocation) :
                 Util.jsonConvert().deserialize(item, FavouriteTrip)
         )
     }
@@ -46,8 +47,14 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
         super.add(elem);
     }
 
-    public getTrips(): FavouriteTrip[] {
+    public getFavouriteTrips(): FavouriteTrip[] {
         return this.get().filter((favourite: Favourite) => favourite instanceof FavouriteTrip) as FavouriteTrip[];
+    }
+
+    public getLocations(): Location[] {
+        return this.get().filter((favourite: Favourite) => !(favourite instanceof FavouriteTrip))
+            .map((favouriteLoc: Favourite) => favouriteLoc instanceof FavouriteStop ? favouriteLoc.stop :
+                (favouriteLoc as FavouriteLocation).location);
     }
 
     // private static getTestFavourites(): FavouriteTrip[] {

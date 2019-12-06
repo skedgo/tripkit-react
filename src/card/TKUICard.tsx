@@ -25,6 +25,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     presentation?: CardPresentation;
     open?: boolean;
+    top?: number;
     children?: any;
 }
 
@@ -128,6 +129,13 @@ class TKUICard extends React.Component<IProps, {}> {
                     </Modal> : body
         );
     }
+
+    public componentDidUpdate(prevProps: Readonly<IProps>): void {
+        if (this.props.top !== prevProps.top) {
+            this.props.refreshStyles();
+        }
+    }
+
 }
 
 export default connect(

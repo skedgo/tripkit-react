@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>ic-location-24px</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Assets" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g transform="translate(-61.000000, -301.000000)" id="Location">
+            <g transform="translate(61.000000, 301.000000)">
+                <path d="M3.80460321,11.1451878 C2.80794835,11.6172874 2.89585777,12.0995396 3.99739166,12.2219322 L10.5033012,12.944811 C10.7776204,12.975291 11.0247192,13.222473 11.0551888,13.4966987 L11.7780676,20.0026089 C11.9006375,21.1057381 12.3867188,21.1835946 12.8548121,20.1953976 L20.1451883,4.8046033 C20.6172879,3.80794842 20.1835941,3.38671874 19.1953971,3.85481203 L3.80460321,11.1451878 Z"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -36,6 +36,11 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
+        if (!query) {
+            callback([]);
+            return;
+        }
+
         const center = focus ? focus : (bounds ? bounds.getCenter() : null);
         if (center !== null) {
             const cachedResults = this.cache.getResults(query, autocomplete, center);
@@ -71,11 +76,6 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
-        if (unresolvedLocation.isCurrLoc()) {
-            GeolocationData.instance.requestCurrentLocation().then((latLng: LatLng) => {
-                callback(Util.iAssign(unresolvedLocation, latLng));
-            })
-        }
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
