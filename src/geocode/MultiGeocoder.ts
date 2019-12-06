@@ -31,16 +31,13 @@ class MultiGeocoder {
                     }
                 }
                 const mergedResults = this.merge(query, geocoderResults);
-                if (!query && this.options.showCurrLoc) {
-                    mergedResults.unshift(Location.createCurrLoc());
-                }
                 callback(query, mergedResults.slice(0, 5));
             })
         }
     }
 
     public resolveLocation(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void) {
-        this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID)!.resolve(unresolvedLocation, callback);
+        unresolvedLocation.source && this._options.getGeocoderById(unresolvedLocation.source)!.resolve(unresolvedLocation, callback);
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
