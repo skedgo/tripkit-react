@@ -39,6 +39,7 @@ interface IState {
     focus: boolean,
     ddopen: () => boolean;
     waiting: boolean;
+    waitingResolveFor?: Location;
 }
 
 class LocationBox extends Component<IProps, IState> {
@@ -93,17 +94,17 @@ class LocationBox extends Component<IProps, IState> {
      * @param {boolean} fireEvents - If should fire events.
      */
     public setValue(locationValue: Location | null, highlighted: boolean = false, fireEvents: boolean = false, callback?: () => void) {
-        if (locationValue === this.state.locationValue) {
-            return
+        if (!highlighted && locationValue === this.state.locationValue && locationValue !== null) {
+            return; // If locationValue === null may still need to clear input text
         }
         let inputText = this.state.inputText;
         if (!highlighted) {   // Set location address as input text
             inputText = locationValue ? LocationBox.itemText(locationValue) : '';
         }
         const setStateCallback = () => {
-            if (locationValue && !locationValue.isResolved() &&
+            if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
                 (!locationValue.isCurrLoc() || (this.props.resolveCurr && !highlighted))) {
-                this.resolve();
+                this.resolve(locationValue);
             } else if (fireEvents) {
                 this.fireLocationChange(highlighted);
             }
@@ -126,20 +127,20 @@ class LocationBox extends Component<IProps, IState> {
         }
     }
 
-    private resolve() {
-        const locationValue = this.state.locationValue;
-        if (locationValue && !locationValue.isResolved() &&
+    private resolve(locationValue: Location) {
+        if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
             (!locationValue.isCurrLoc() || this.props.resolveCurr)) {
-            this.setState({waiting: true});
-            console.log("Resolve curr loc");
+            this.setState({waitingResolveFor: locationValue});
             this.geocodingData.resolveLocation(locationValue, (resolvedLocation: Location) => {
-                if (locationValue === this.state.locationValue) {
-                    this.setValue(resolvedLocation, false, true, () => {
+                if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
+                    this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
                         this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
-                        this.setState({
-                            waiting: false
-                        });
                         console.log("Resolved: " + JSON.stringify(resolvedLocation));
+                    });
+                }
+                if (this.state.waitingResolveFor === locationValue) {
+                    this.setState({
+                        waitingResolveFor: undefined
                     });
                 }
             });
@@ -231,7 +232,7 @@ class LocationBox extends Component<IProps, IState> {
         return (
             <div className="LocationBox">
                 <input type="text" {...props} style={this.props.inputStyle}/>
-                {   this.state.waiting ?
+                {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :
                     (this.state.inputText ?
                         <button onClick={this.onClearClicked}
@@ -329,7 +330,7 @@ class LocationBox extends Component<IProps, IState> {
         }
         if (this.props.resolveCurr && !prevProps.resolveCurr
             && this.props.value && this.props.value.isCurrLoc() && !this.props.value.isResolved()) {
-            this.resolve();
+            this.resolve(this.props.value);
         }
     }
 

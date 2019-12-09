@@ -30,6 +30,7 @@ class TKUIControlsCard extends React.Component<IProps, IState> {
                 this.state.props.children &&
                 <TKUICard
                     {...this.state.props}
+                    key={2}
                 />
             ]
         );

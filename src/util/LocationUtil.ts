@@ -11,9 +11,9 @@ class LocationUtil {
         return address.includes(",") ? address.substr(0, address.indexOf(",")) : address;
     }
 
-    public static getSecondaryText(loc: Location): string | null {
+    public static getSecondaryText(loc: Location): string | undefined {
         const address = loc.address;
-        return address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : null;
+        return address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : undefined;
     }
 
     public static equal<T extends LatLng>(loc1: T | null, loc2: T | null) {

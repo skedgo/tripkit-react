@@ -18,6 +18,7 @@ import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "../trip-planne
 import {TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle} from "../service/occupancy/TKUITrainOccupancyInfo";
 import {TKUIShareViewProps, TKUIShareViewStyle} from "../share/TKUIShareView";
 import {TKUISearchBarProps, TKUISearchBarStyle} from "../query/TKUISearchBar";
+import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../location/TKUILocationDetailView";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -35,6 +36,7 @@ interface ITKUIConfigRequired {
     TKUIServiceView: ConfigRefiner<TKUIServiceViewProps, TKUIServiceViewStyle>;
     TKUITrainOccupancyInfo: ConfigRefiner<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: ConfigRefiner<TKUIShareViewProps, TKUIShareViewStyle>;
+    TKUILocationDetailView: ConfigRefiner<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

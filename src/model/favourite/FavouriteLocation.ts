@@ -15,6 +15,10 @@ class FavouriteLocation extends Favourite {
         return instance;
     }
 
+    equals(other: any): boolean {
+        return other && this.location.equals(other.location);
+    }
+
 }
 
 export default FavouriteLocation;

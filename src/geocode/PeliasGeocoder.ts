@@ -76,6 +76,17 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
+        const url = this.geocodeServer +  "/place?api_key=" + this.apiKey + "&ids=" + unresolvedLocation.id;
+        fetch(url, {
+            method: NetworkUtil.MethodType.GET
+        }).then(NetworkUtil.jsonCallback).then((json: any) => {
+            // TODO: implement properly
+            unresolvedLocation.hasDetail = true;
+            callback(unresolvedLocation);
+        }).catch(() => {
+            unresolvedLocation.hasDetail = true;
+            callback(unresolvedLocation)
+        });
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
@@ -99,7 +110,7 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     private static locationFromAutocompleteResult(result: Feature): Location {
-        const id = result.properties !== null ? result.properties.id : "";
+        const id = result.properties !== null ? result.properties.gid : "";
         const point = result.geometry as Point;
         const latLng = LatLng.createLatLng(point.coordinates[1], point.coordinates[0]);
         const address = result.properties !== null ?
@@ -108,6 +119,8 @@ class PeliasGeocoder implements IGeocoder {
         const name = '';
         const location = Location.create(latLng, address, id, name, this.SOURCE_ID);
         location.suggestion = result;
+        // TODO: enable to make LocaitonBox resolve the location to get details.
+        // location.hasDetail = false;
         return location;
     }
 

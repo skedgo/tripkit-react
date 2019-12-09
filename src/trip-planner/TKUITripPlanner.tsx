@@ -32,10 +32,10 @@ import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
-import StopsData from "../data/StopsData";
 import TKUISearchBar from "../query/TKUISearchBar";
 import Location from "../model/Location";
 import RoutingQuery from "../model/RoutingQuery";
+import TKUILocationDetailView from "../location/TKUILocationDetailView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -63,7 +63,6 @@ interface IState {
 }
 
     // TODO:
-    // SEGUIR ACÁ
     // - TimeZone handling considering region change. Idea (think again): always handle moments in UTC, and convert to region timezone
     // just when need to display. E.g. See value passed to <DateTimePicker/> in TKUIRoutingQueryInput. So every use of defaultTimezone
     // in DateTimeUtil should be changed to use UTC.
@@ -149,6 +148,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
+                    this.props.onStopChange(undefined);
                     this.props.onDirectionsView(false);
                 }}
             />;
@@ -163,6 +163,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     className={"app-style"}
                 />
             </Modal> : null;
+        const toLocation = this.props.query.to;
+        const locationDetailView = !this.props.directionsView && toLocation && toLocation.isResolved() &&
+            !toLocation.isDroppedPin() && !this.props.stop &&
+            <TKUILocationDetailView
+                location={toLocation}
+                top={65}
+            />;
         const departuresView = this.props.stop && !this.props.trips ?
             <TKUITimetableView
                 onRequestClose={() => {
@@ -174,6 +181,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const serviceDetailView = this.props.selectedService ?
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
+                top={this.props.directionsView ? 190 : 65}
             /> : null;
 
         const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
@@ -235,6 +243,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     </TKUIMapView>
                 </div>
                 <TKUIFeedbackBtn/>
+                {locationDetailView}
                 {routingResultsView}
                 {tripDetailView}
                 {optionsDialog}

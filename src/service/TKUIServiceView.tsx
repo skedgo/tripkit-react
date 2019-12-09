@@ -20,9 +20,13 @@ import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
+import TKShareHelper from "../share/TKShareHelper";
+import TKUIShareAction from "../action/TKUIShareAction";
+import TKUIActionsView from "../action/TKUIActionsView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
+    top?: number;
 }
 
 interface IStyle {
@@ -35,6 +39,7 @@ interface IStyle {
     iconAngleDown: CSSProps<IProps>;
     realtimeInfo: CSSProps<IProps>;
     realtimeInfoDetailed: CSSProps<IProps>;
+    actionsPanel: CSSProps<IProps>;
 }
 
 interface IConnectionProps {
@@ -43,7 +48,9 @@ interface IConnectionProps {
     eventBus?: EventEmitter;
 }
 
-interface IProps extends IClientProps, IConnectionProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConnectionProps, TKUIWithClasses<IStyle, IProps> {
+    actions?: (service: ServiceDeparture) => JSX.Element[];
+}
 
 export type TKUIServiceViewProps = IProps;
 export type TKUIServiceViewStyle = IStyle;
@@ -52,8 +59,19 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIServiceView {...props}/>,
     styles: tKUIServiceViewDefaultStyle,
     classNamePrefix: "TKUIServiceView",
-    randomizeClassNames: true // This needs to be true since multiple instances are rendered,
-                              // each with a different service color.
+    randomizeClassNames: true,  // This needs to be true since multiple instances are rendered,
+                                // each with a different service color.
+    configProps: {
+        actions: (service: ServiceDeparture) => [
+            <TKUIShareAction
+                title={"Share service"}
+                presentation={CardPresentation.MODAL}
+                message={""}
+                link={TKShareHelper.getShareService(service)}
+                vertical={true}
+            />
+        ]
+    }
 };
 
 interface IState {
@@ -95,6 +113,11 @@ class TKUIServiceView extends React.Component<IProps, IState> {
             departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
             departure.realtimeVehicle.components[0][0].occupancy;
         const classes = this.props.classes;
+        const actions = this.props.actions ?
+            <TKUIActionsView
+                actions={this.props.actions!(departure)}
+                className={classes.actionsPanel}
+            /> : undefined;
         const realtimePanel = hasWheelchair || hasBusOccupancy ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
@@ -120,9 +143,11 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             detailed={true}
                         />
                         {realtimePanel}
+                        {actions}
                     </div>
                 }
                 presentation={CardPresentation.SLIDE_UP}
+                top={this.props.top}
             >
                 <div className={classes.main}>
 

@@ -56,5 +56,10 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             '& > *:not(:first-child)': {
                 marginTop: '10px'
             },
+        },
+        actionsPanel: {
+            marginTop: '15px',
+            ...genStyles.flex,
+            ...genStyles.spaceAround
         }
     });

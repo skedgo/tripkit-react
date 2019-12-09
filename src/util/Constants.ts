@@ -22,7 +22,7 @@ class Constants {
 
     public static initialize() {
         const currentScript = Constants.getCurrentScript();
-        const embedjsSrc = currentScript ? currentScript.src : "https://act.tripgo.com/static/js";
+        const embedjsSrc = currentScript ? currentScript.src : "https://trikpit.tripgo.com/static/js";
 
         Constants.DEPLOY_URL = embedjsSrc.indexOf("/embed.js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/embed.js")) :
             embedjsSrc.slice(0, embedjsSrc.indexOf("/static/js"));

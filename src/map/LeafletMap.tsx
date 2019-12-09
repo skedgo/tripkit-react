@@ -287,6 +287,11 @@ class LeafletMap extends React.Component<IProps, IState> {
                             enabledMapLayers={enabledMapLayers}
                             zoom={this.leafletElement.getZoom()}
                             onClick={(locType: MapLocationType, loc: Location) => {
+                                if (locType === MapLocationType.STOP && this.props.onClick) {
+                                    this.props.onClick(loc as StopLocation);
+                                }
+                            }}
+                            onLocAction={(locType: MapLocationType, loc: Location) => {
                                 if (locType === MapLocationType.STOP) {
                                     this.props.onStopChange(loc as StopLocation);
                                 }
@@ -399,21 +404,23 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                     const to = routingContext.preTo ? routingContext.preTo :
                                         (routingContext.query.to ? routingContext.query.to : undefined);
                                     const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
+                                        const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
+                                            Location.createDroppedPin(latLng);
                                         routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                            [isFrom ? "from" : "to"]:
-                                                latLng instanceof StopLocation ? latLng as StopLocation :
-                                                    Location.create(latLng, "Location", "", "")
+                                            [isFrom ? "from" : "to"]: mapLocation
                                         }));
-                                        getGeocodingData().reverseGeocode(latLng, loc => {
-                                            if (loc !== null) {
-                                                // Need to use onQueryUpdate instead of onQueryChange since
-                                                // routingContext.query can be outdated at the time this callback is
-                                                // executed. OnQueryUpdate always use the correct query (the one on
-                                                // WithRoutingResults state, the source of truth).
-                                                routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc});
-                                                // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
-                                            }
-                                        })
+                                        if (mapLocation.isDroppedPin()) {
+                                            getGeocodingData().reverseGeocode(latLng, loc => {
+                                                if (loc !== null) {
+                                                    // Need to use onQueryUpdate instead of onQueryChange since
+                                                    // routingContext.query can be outdated at the time this callback is
+                                                    // executed. OnQueryUpdate always use the correct query (the one on
+                                                    // WithRoutingResults state, the source of truth).
+                                                    routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
+                                                    // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
+                                                }
+                                            })
+                                        }
                                     };
                                     const consumerProps: IConnectionProps = {
                                         from: routingContext.directionsView ? from : undefined,
@@ -427,7 +434,7 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                                     GATracker.instance.send("query input", "pick location", "drop pin");
                                                 }
                                             } else {
-                                                if (!to) {
+                                                if (clickLatLng instanceof StopLocation || !to) {
                                                     onMapLocChanged(false, clickLatLng);
                                                 }
                                             }
@@ -437,7 +444,7 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                         viewport: routingContext.viewport,
                                         onViewportChange: routingContext.onViewportChange,
                                         onStopChange: (stop?: StopLocation) => {
-                                            routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
+                                            // routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
                                             serviceContext.onStopChange(stop);
                                         },
                                         directionsView: routingContext.directionsView
