@@ -126,7 +126,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                         }
                     },
                     onPreChange: routingContext.onPreChange &&
-                    ((location?: Location) => routingContext.onPreChange!(true, location)),
+                    ((location?: Location) => routingContext.onPreChange!(false, location)),
                     bounds: bounds,
                     focusLatLng: focusLatLng
                 };

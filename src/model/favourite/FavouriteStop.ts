@@ -14,6 +14,10 @@ class FavouriteStop extends Favourite {
         return instance;
     }
 
+    equals(other: any): boolean {
+        return other && this.stop.equals(other.stop);
+    }
+
 }
 
 export default FavouriteStop;

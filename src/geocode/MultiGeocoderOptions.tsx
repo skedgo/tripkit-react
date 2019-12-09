@@ -45,8 +45,6 @@ class MultiGeocoderOptions {
         recentGeocoder.getOptions().resultsLimit = 3;
         recentGeocoder.getOptions().renderIcon =
             (location: Location) => {
-                console.log("render item: ");
-                console.log(location);
                 return FavouritesData.instance.getLocations()
                     .find((loc: Location) => location.equals(loc)) ? <IconFavourite/> : <IconClock/>;
             };
@@ -70,24 +68,25 @@ class MultiGeocoderOptions {
         const favLocations = favToLocations(FavouritesData.instance.get(), false);
         favouritesGeocoder.setValues(favLocations);
         FavouritesData.instance.addChangeListener((update: Favourite[]) =>
-            recentGeocoder.setValues(favToLocations(update, false)));
+            favouritesGeocoder.setValues(favToLocations(update, false)));
 
         const geocoders: IGeocoder[] = (showCurrLoc ? [currLocGeocoder] : [] as IGeocoder[]).concat([recentGeocoder, favouritesGeocoder, peliasGeocoder, skedgoGeocoder, citiesGeocoder]);
         const compare = (l1: Location, l2: Location, query: string) => {
 
-            if (query === "") {
+            if (!query) {
                 // Put current location at the top
                 if (l1.source === currLocGeocoder.getSourceId()) {
                     return -1;
                 } else if (l2.source === currLocGeocoder.getSourceId()) {
                     return 1;
                 }
-                // Then recents
-                if (l1.source === recentGeocoder.getSourceId()) {
-                    return -1;
-                } else if (l2.source === recentGeocoder.getSourceId()) {
-                    return 1;
-                }
+            }
+
+            // Then recents
+            if (l1.source === recentGeocoder.getSourceId()) {
+                return -1;
+            } else if (l2.source === recentGeocoder.getSourceId()) {
+                return 1;
             }
 
             if (l1.source === SkedgoGeocoder.SOURCE_ID && l1 instanceof StopLocation && query === (l1 as StopLocation).code) {

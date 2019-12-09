@@ -15,17 +15,16 @@ class Location extends LatLng {
     @JsonProperty('id', String, true)
     private _id: string = '';
     @JsonProperty('source', String, true)
-    private _source: string | undefined = undefined;
-    private _icon: string | undefined;
-    private _suggestion?: any;
+    public source: string | undefined = undefined;
+    public suggestion?: any;
+    public hasDetail?: boolean;
 
-    public static create(latlng: LatLng, address: string, id: string, name: string, source?: string, icon?: string) {
+    public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
         instance._address = address;
         instance._name = name;
         instance._id = id;
-        instance._source = source;
-        instance._icon = icon;
+        instance.source = source;
         return instance;
     }
 
@@ -33,6 +32,12 @@ class Location extends LatLng {
 
     public static createCurrLoc() {
         return this.create(new LatLng(), this.currLocText, "", "", CurrentLocationGeocoder.SOURCE_ID);
+    }
+
+    private static readonly droppedPinText = "Location";
+
+    public static createDroppedPin(latLng: LatLng) {
+        return this.create(latLng, this.droppedPinText, "", "")
     }
 
     /**
@@ -74,36 +79,16 @@ class Location extends LatLng {
         this._id = value;
     }
 
-    get source(): string | undefined {
-        return this._source;
-    }
-
-    set source(value: string | undefined) {
-        this._source = value;
-    }
-
-    get icon(): string | undefined {
-        return this._icon;
-    }
-
-    set icon(value: string | undefined) {
-        this._icon = value;
-    }
-
-    get suggestion(): any {
-        return this._suggestion;
-    }
-
-    set suggestion(value: any) {
-        this._suggestion = value;
-    }
-
     public getDisplayString(): string {
         return this.name ? this.name : (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address);
     }
 
     public isCurrLoc(): boolean {
         return this.address === Location.currLocText;
+    }
+
+    public isDroppedPin(): boolean {
+        return this.address === Location.droppedPinText;
     }
 
     public toJson(): object {
@@ -117,7 +102,9 @@ class Location extends LatLng {
 
     equals(other: any): boolean {
         return other &&
-            JSON.stringify(Util.iAssign(this, {source: undefined})) === JSON.stringify(Util.iAssign(other, {source: undefined}));
+            JSON.stringify(
+                Util.iAssign(this, {source: undefined, suggestion: undefined, hasDetail: undefined})) ===
+            JSON.stringify(Util.iAssign(other, {source: undefined, suggestion: undefined, hasDetail: undefined}));
     }
 }
 
