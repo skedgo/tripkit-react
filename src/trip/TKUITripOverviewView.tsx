@@ -14,7 +14,6 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
-import {ReactComponent as IconShare} from "../images/ic-share.svg";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
@@ -25,6 +24,7 @@ import NetworkUtil from "../util/NetworkUtil";
 import TKShareHelper from "../share/TKShareHelper";
 import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -51,10 +51,14 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     configProps: {
         actions: (trip: Trip) => [
             <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
-            <TKUIFavouriteAction
-                favourite={FavouriteTrip.create(trip.segments[0]!.from, trip.segments[trip.segments.length - 1]!.from)}
-                vertical={true}
-            />,
+            <RoutingResultsContext.Consumer>
+                {(routingResultsContext: IRoutingResultsContext) =>
+                    routingResultsContext.query.from && routingResultsContext.query.to &&
+                    <TKUIFavouriteAction
+                        favourite={FavouriteTrip.create(routingResultsContext.query.from, routingResultsContext.query.to)}
+                        vertical={true}
+                    />}
+            </RoutingResultsContext.Consumer>,
             <TKUIShareAction
                 title={"Share trip"}
                 message={""}

@@ -34,8 +34,14 @@ import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUISearchBar from "../query/TKUISearchBar";
 import Location from "../model/Location";
-import RoutingQuery from "../model/RoutingQuery";
+import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import TKUILocationDetailView from "../location/TKUILocationDetailView";
+import TKUIFavouritesView from "../favourite/TKUIFavouritesView";
+import Favourite from "../model/favourite/Favourite";
+import FavouriteStop from "../model/favourite/FavouriteStop";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
+import FavouritesData from "../data/FavouritesData";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -58,6 +64,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
 
 interface IState {
     mapView: boolean;
+    showFavourites: boolean;
     showOptions: boolean;
     showTripDetail?: boolean;
 }
@@ -95,6 +102,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
             mapView: false,
+            showFavourites: true,
             showOptions: false,
             showTripDetail: TKShareHelper.isSharedTripLink()
         };
@@ -111,6 +119,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         WaiAriaUtil.addTabbingDetection();
 
         this.onShowOptions = this.onShowOptions.bind(this);
+        this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
         this.onOptionsRequestedClose = this.onOptionsRequestedClose.bind(this);
 
         // For development:
@@ -131,6 +140,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private onShowOptions() {
         GATracker.instance.send('query input', 'click', 'options button');
         RegionsData.instance.requireRegions().then(() => this.setState({showOptions: true}));
+    }
+
+    private onFavouriteClicked(favourite: Favourite) {
+        if (favourite instanceof FavouriteStop) {
+            this.props.onStopChange(favourite.stop);
+        } else if (favourite instanceof FavouriteLocation) {
+            this.props.onQueryUpdate({from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW});
+            this.props.onDirectionsView(true);
+        } else if (favourite instanceof FavouriteTrip) {
+            this.props.onQueryUpdate({from: favourite.from, to: favourite.to, timePref: TimePreference.NOW});
+            this.props.onDirectionsView(true);
+        }
+        FavouritesData.recInstance.add(favourite);
     }
 
     public render(): React.ReactNode {
@@ -168,6 +190,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             !toLocation.isDroppedPin() && !this.props.stop &&
             <TKUILocationDetailView
                 location={toLocation}
+                top={65}
+            />;
+        const favouritesView = this.state.showFavourites && !this.props.directionsView && !locationDetailView &&
+            <TKUIFavouritesView
+                onFavouriteClicked={this.onFavouriteClicked}
+                onRequestClose={() => {this.setState({showFavourites: false})}}
                 top={65}
             />;
         const departuresView = this.props.stop && !this.props.trips ?
@@ -244,6 +272,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 </div>
                 <TKUIFeedbackBtn/>
                 {locationDetailView}
+                {favouritesView}
                 {routingResultsView}
                 {tripDetailView}
                 {optionsDialog}

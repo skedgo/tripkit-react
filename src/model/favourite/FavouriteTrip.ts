@@ -16,6 +16,10 @@ class FavouriteTrip extends Favourite {
     @JsonProperty('options', Options, true)
     private _options: Options | undefined = undefined;
 
+    public static createForLocation(to: Location): FavouriteTrip {
+        return this.create(Location.createCurrLoc(), to);
+    }
+
     public static create(from: Location, to: Location): FavouriteTrip {
         const instance = new FavouriteTrip();
         instance._from = from;

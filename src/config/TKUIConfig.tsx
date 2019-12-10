@@ -19,11 +19,16 @@ import {TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle} from "../servi
 import {TKUIShareViewProps, TKUIShareViewStyle} from "../share/TKUIShareView";
 import {TKUISearchBarProps, TKUISearchBarStyle} from "../query/TKUISearchBar";
 import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../location/TKUILocationDetailView";
+import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKUIFavouritesView";
+import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
+    // TODO: rename ConfigRefiner to ConfigOverride?
     TKUITripPlanner: ConfigRefiner<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUISearchBar: ConfigRefiner<TKUISearchBarProps, TKUISearchBarStyle>;
+    TKUIFavouritesView: ConfigRefiner<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
+    TKUIFavouriteRow: ConfigRefiner<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
     TKUITKUIRoutingQueryInput: ConfigRefiner<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUICard: ConfigRefiner<TKUICardProps, TKUICardStyle>;
     TKUITripRow: ConfigRefiner<TKUITripRowProps, TKUITripRowStyle>;

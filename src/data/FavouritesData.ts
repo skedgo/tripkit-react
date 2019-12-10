@@ -52,9 +52,9 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
     }
 
     public getLocations(): Location[] {
-        return this.get().filter((favourite: Favourite) => !(favourite instanceof FavouriteTrip))
+        return this.get()
             .map((favouriteLoc: Favourite) => favouriteLoc instanceof FavouriteStop ? favouriteLoc.stop :
-                (favouriteLoc as FavouriteLocation).location);
+                (favouriteLoc as FavouriteTrip).to);
     }
 
     // private static getTestFavourites(): FavouriteTrip[] {

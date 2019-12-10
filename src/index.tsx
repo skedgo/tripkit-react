@@ -1,6 +1,5 @@
 import './css/global.css';
 import iconFeedback from "./images/ic-feedback.svg";
-import {IProps as FavouriteRowPropsImported} from "./favourite/FavouriteRow";
 export {default as RegionsData} from "./data/RegionsData";
 export {default as TripGoApi} from "./api/TripGoApi";
 export {default as TKUIRoutingQueryInput} from "./query/TKUIRoutingQueryInput";
@@ -22,9 +21,6 @@ export {default as LeafletMap} from "./map/LeafletMap";
 // export {IProps as FavouriteRowProps} from "./favourite/FavouriteRow";
 // Next is a possible workaround for prev export not working. See if it's necessary,
 // or if it's enough with the export on FavouriteRow.tsx.
-export interface FavouriteRowProps extends FavouriteRowPropsImported {}
-export {default as FavouriteRow} from "./favourite/FavouriteRow";
-export {default as FavouriteList} from "./favourite/FavouriteList";
 export {default as FavouriteBtn} from "./favourite/FavouriteBtn";
 export {default as FavouriteTrip} from "./model/favourite/FavouriteTrip";
 export {default as TKUIResultsView} from "./trip/TKUIResultsView";
