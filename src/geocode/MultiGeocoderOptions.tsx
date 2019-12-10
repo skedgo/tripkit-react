@@ -40,6 +40,13 @@ class MultiGeocoderOptions {
                 .map((city: City) => Util.iAssign(city, {source: citiesSourceId})));
         });
 
+        const favToLocations = (favourites: Favourite[], recent: boolean) => favourites
+            .map((favourite: Favourite) => Util.iAssign(
+                favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
+                { // To avoid mutating original location.
+                    source: recent ? recentSourceId : favouritesSourceId
+                }));
+
         const recentSourceId = "RECENT";
         const recentGeocoder = new StaticGeocoder(recentSourceId, true);
         recentGeocoder.getOptions().resultsLimit = 3;
@@ -48,19 +55,13 @@ class MultiGeocoderOptions {
                 return FavouritesData.instance.getLocations()
                     .find((loc: Location) => location.equals(loc)) ? <IconFavourite/> : <IconClock/>;
             };
-        const favouritesSourceId = "FAVOURITES";
-        const favToLocations = (favourites: Favourite[], recent: boolean) => favourites
-            .map((favourite: Favourite) => Util.iAssign(
-                favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
-                { // To avoid mutating original location.
-                    source: recent ? recentSourceId : favouritesSourceId
-                }));
-
         const recLocations = favToLocations(FavouritesData.recInstance.get(), true);
         recentGeocoder.setValues(recLocations);
         FavouritesData.recInstance.addChangeListener((update: Favourite[]) =>
             recentGeocoder.setValues(favToLocations(update, true)));
 
+
+        const favouritesSourceId = "FAVOURITES";
         const favouritesGeocoder = new StaticGeocoder(favouritesSourceId, true);
         favouritesGeocoder.getOptions().resultsLimit = 5;
         favouritesGeocoder.getOptions().renderIcon = () => <IconFavourite/>;

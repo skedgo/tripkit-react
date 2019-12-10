@@ -7,7 +7,7 @@ import LatLng from "../model/LatLng";
 import {renderToStaticMarkup} from "react-dom/server";
 import StreetsPolyline from "./StreetsPolyline";
 import ShapesPolyline from "./ShapesPolyline";
-import {IMapSegmentRenderer} from "./LeafletMap";
+import {IMapSegmentRenderer} from "./TKUIMapView";
 
 interface IProps {
     segment: Segment;

@@ -8,7 +8,6 @@ import Util from "../util/Util";
 import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
-import LeafletMap, {TKUIMapView} from "../map/LeafletMap";
 import {TileLayer} from "react-leaflet";
 import GeolocationData from "../geocode/GeolocationData";
 import TKUITimetableView from "../service/TKUITimetableView";
@@ -42,6 +41,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
+import TKUIMapView from "../map/TKUIMapView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -95,14 +95,13 @@ interface IState {
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private ref: any;
-    private mapRef?: LeafletMap;
 
     constructor(props: IProps) {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
             mapView: false,
-            showFavourites: true,
+            showFavourites: false,
             showOptions: false,
             showTripDetail: TKShareHelper.isSharedTripLink()
         };
@@ -258,9 +257,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                     <TKUIMapView
                         hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                        refAdHoc={(ref: any) => {
-                            return this.mapRef = ref;
-                        }}
                         padding={{left: 500}}
                     >
                         <TileLayer

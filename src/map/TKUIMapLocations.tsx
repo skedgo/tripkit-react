@@ -17,6 +17,7 @@ import OptionsData from "../data/OptionsData";
 import Options from "../model/Options";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
+import "./TKUIMapLocations.css";
 
 interface IProps {
     zoom: number,
