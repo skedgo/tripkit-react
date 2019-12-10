@@ -37,6 +37,8 @@ import StopLocation from "../model/StopLocation";
 import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
 import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
+import FavouritesData from "../data/FavouritesData";
+import FavouriteStop from "../model/favourite/FavouriteStop";
 
 interface ITKUIMapViewProps {
     hideLocations?: boolean;
@@ -294,6 +296,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                             onLocAction={(locType: MapLocationType, loc: Location) => {
                                 if (locType === MapLocationType.STOP) {
                                     this.props.onStopChange(loc as StopLocation);
+                                    FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
                                 }
                             }}
                         />

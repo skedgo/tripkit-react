@@ -17,6 +17,7 @@ import StopLocation from "../model/StopLocation";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -55,7 +56,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                 }
             </ServiceResultsContext.Consumer> : undefined,
             <TKUIRouteToLocationAction location={location} vertical={true} key={2}/>,
-            <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteLocation.create(location)} vertical={true}/>,
+            <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)} vertical={true}/>,
             <TKUIShareAction
                 title={"Share location"}
                 link={TKShareHelper.getShareLocation(location)}

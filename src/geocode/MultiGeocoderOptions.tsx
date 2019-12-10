@@ -49,13 +49,12 @@ class MultiGeocoderOptions {
                     .find((loc: Location) => location.equals(loc)) ? <IconFavourite/> : <IconClock/>;
             };
         const favouritesSourceId = "FAVOURITES";
-        const favToLocations = (favourites: Favourite[], recent: boolean) =>
-            favourites.filter((favourite: Favourite) => !(favourite instanceof FavouriteTrip))
-                .map((favourite: Favourite) => Util.iAssign(
-                    favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteLocation).location,
-                    { // To avoid mutating original location.
-                        source: recent ? recentSourceId : favouritesSourceId
-                    }));
+        const favToLocations = (favourites: Favourite[], recent: boolean) => favourites
+            .map((favourite: Favourite) => Util.iAssign(
+                favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
+                { // To avoid mutating original location.
+                    source: recent ? recentSourceId : favouritesSourceId
+                }));
 
         const recLocations = favToLocations(FavouritesData.recInstance.get(), true);
         recentGeocoder.setValues(recLocations);

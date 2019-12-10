@@ -18,7 +18,7 @@ import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
 import FavouritesData from "../data/FavouritesData";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
-import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
@@ -122,7 +122,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                         routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: value}));
                         if (value !== null && !value.isCurrLoc()) {
                             FavouritesData.recInstance.add(value instanceof StopLocation ?
-                                FavouriteStop.create(value) : FavouriteLocation.create(value));
+                                FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
                         }
                     },
                     onPreChange: routingContext.onPreChange &&
