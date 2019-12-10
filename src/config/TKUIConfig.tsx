@@ -21,6 +21,7 @@ import {TKUISearchBarProps, TKUISearchBarStyle} from "../query/TKUISearchBar";
 import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../location/TKUILocationDetailView";
 import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKUIFavouritesView";
 import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
+import {TKUIMapViewProps, TKUIMapViewStyle} from "../map/TKUIMapView";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -42,6 +43,7 @@ interface ITKUIConfigRequired {
     TKUITrainOccupancyInfo: ConfigRefiner<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: ConfigRefiner<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: ConfigRefiner<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
+    TKUIMapView: ConfigRefiner<TKUIMapViewProps, TKUIMapViewStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

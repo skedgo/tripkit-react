@@ -5,8 +5,8 @@ import {default as ShapesPolyline} from "./ShapesPolyline";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {renderToStaticMarkup} from "react-dom/server";
 import L from "leaflet";
-import {IMapSegmentRenderer} from "./LeafletMap";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import {IMapSegmentRenderer} from "./TKUIMapView";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;

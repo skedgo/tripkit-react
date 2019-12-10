@@ -1,11 +1,10 @@
 import * as React from "react";
-import "./LeafletMap.css";
 import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps} from "react-leaflet";
+import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import Constants from "../util/Constants";
-import L, {FitBoundsOptions} from "leaflet";
 import BBox from "../model/BBox";
 import LeafletUtil from "../util/LeafletUtil";
 import Trip from "../model/trip/Trip";
@@ -39,8 +38,14 @@ import TKUIMapLocations from "./TKUIMapLocations";
 import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 import FavouritesData from "../data/FavouritesData";
 import FavouriteStop from "../model/favourite/FavouriteStop";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {Subtract} from "utility-types";
+import classNames from "classnames";
 
-interface ITKUIMapViewProps {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideLocations?: boolean;
     bounds?: BBox;
     padding?: {top?: number, right?: number, bottom?: number, left?: number}
@@ -51,7 +56,18 @@ interface ITKUIMapViewProps {
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
 }
 
-interface IConnectionProps {
+export interface IStyle {
+    main: CSSProps<IProps>;
+    menuPopup: CSSProps<IProps>;
+    menuPopupContent: CSSProps<IProps>;
+    menuPopupItem: CSSProps<IProps>;
+    menuPopupBelow: CSSProps<IProps>;
+    menuPopupAbove: CSSProps<IProps>;
+    menuPopupLeft: CSSProps<IProps>;
+    menuPopupRight: CSSProps<IProps>;
+}
+
+interface IConsumedProps {
     from?: Location;
     to?: Location;
     trip?: Trip;
@@ -62,12 +78,25 @@ interface IConnectionProps {
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
     onStopChange: (stop?: StopLocation) => void;
     directionsView?: boolean;
+    onDirectionsFrom: (latLng: LatLng) => void;
+    onDirectionsTo: (latLng: LatLng) => void;
+    onWhatsHere: (latLng: LatLng) => void;
 }
 
-interface IProps extends ITKUIMapViewProps, IConnectionProps {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUIMapViewProps = IProps;
+export type TKUIMapViewStyle = IStyle;
+
+const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIMapView {...props}/>,
+    styles: tKUIMapViewDefaultStyle,
+    classNamePrefix: "TKUIMapView"
+};
 
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
+    menuPopupPosition?: L.LeafletMouseEvent;
 }
 
 export interface IMapSegmentRenderer {
@@ -78,8 +107,7 @@ export interface IMapSegmentRenderer {
     renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element;
 }
 
-// class ReactMap<P extends MapProps & IProps> extends React.Component<P, {}> {
-class LeafletMap extends React.Component<IProps, IState> {
+class TKUIMapView extends React.Component<IProps, IState> {
 
     private leafletElement?: L.Map;
 
@@ -88,7 +116,7 @@ class LeafletMap extends React.Component<IProps, IState> {
     constructor(props: Readonly<IProps>) {
         super(props);
         this.state = {
-            mapLayers: new Map<MapLocationType, Location[]>(),
+            mapLayers: new Map<MapLocationType, Location[]>()
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
     }
@@ -214,8 +242,56 @@ class LeafletMap extends React.Component<IProps, IState> {
             tripSegments = this.props.trip.getSegments(Visibility.ON_MAP).concat([this.props.trip.arrivalSegment]);
         }
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
+        const classes = this.props.classes;
+        const popupHeight = 130; // Hardcoded for now
+        const popupWidth = 88; // Hardcoded for now
+        const menuPopupAbove = this.leafletElement && this.state.menuPopupPosition
+            && this.state.menuPopupPosition.originalEvent.clientY + popupHeight > this.leafletElement.getContainer().clientHeight;
+        const menuPopupLeft = this.leafletElement && this.state.menuPopupPosition
+            && this.state.menuPopupPosition.originalEvent.clientX + popupWidth > this.leafletElement.getContainer().clientWidth;
+        const popupLatLng = this.state.menuPopupPosition && this.state.menuPopupPosition.latlng;
+        const menuPopup = this.state.menuPopupPosition &&
+            <Popup
+                position={this.state.menuPopupPosition.latlng}
+                offset={[0, 0]}
+                closeButton={false}
+                className={classNames(classes.menuPopup,
+                    menuPopupAbove ? classes.menuPopupAbove : classes.menuPopupBelow,
+                    menuPopupLeft ? classes.menuPopupLeft : classes.menuPopupRight)}
+                // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
+                autoPan={false}
+                onClose={() => this.setState({menuPopupPosition: undefined})}
+            >
+                <div className={classes.menuPopupContent}>
+                    <div className={classes.menuPopupItem}
+                         onClick={() => {
+                             this.props.onDirectionsFrom(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.setState({menuPopupPosition: undefined});
+                         }}
+                    >
+                        Directions from here
+                    </div>
+                    <div className={classes.menuPopupItem}
+                         onClick={() => {
+                             this.props.onDirectionsTo(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.setState({menuPopupPosition: undefined});
+                         }}
+                    >
+                        Directions to here
+                    </div>
+                    {!this.props.directionsView &&
+                    <div className={classes.menuPopupItem}
+                         onClick={() => {
+                             this.props.onWhatsHere(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.setState({menuPopupPosition: undefined});
+                         }}
+                    >
+                        What's here?
+                    </div>}
+                </div>
+            </Popup>;
         return (
-            <div className={"gl-flex gl-grow"}>
+            <div className={classes.main}>
                 <RLMap
                     className="map-canvas avoidVerticalScroll gl-flex gl-grow"
                     viewport={this.props.viewport}
@@ -248,6 +324,11 @@ class LeafletMap extends React.Component<IProps, IState> {
                     }}
                     zoomControl={false}
                     attributionControl={this.props.attributionControl !== false}
+                    oncontextmenu={(e: L.LeafletMouseEvent) => {
+                        console.log(e);
+                        console.log(this.leafletElement && this.leafletElement.getContainer().clientHeight)
+                        this.setState({menuPopupPosition: e});
+                    }}
                 >
                     <ZoomControl position={"topright"}/>
                     {this.props.from && this.props.from.isResolved() &&
@@ -314,6 +395,7 @@ class LeafletMap extends React.Component<IProps, IState> {
                         renderer={serviceRenderer(this.props.service)}
                     />
                     }
+                    {menuPopup}
                     {this.props.children}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
@@ -393,8 +475,8 @@ function getGeocodingData() {
     return geocodingData;
 }
 
-const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> =
-    (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
+    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
         return (
             <RoutingResultsContext.Consumer>
                 {(routingContext: IRoutingResultsContext) =>
@@ -425,7 +507,7 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                             })
                                         }
                                     };
-                                    const consumerProps: IConnectionProps = {
+                                    const consumerProps: IConsumedProps = {
                                         from: routingContext.directionsView ? from : undefined,
                                         to: to,
                                         trip: routingContext.selected,
@@ -450,7 +532,18 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
                                             // routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
                                             serviceContext.onStopChange(stop);
                                         },
-                                        directionsView: routingContext.directionsView
+                                        directionsView: routingContext.directionsView,
+                                        onDirectionsFrom: (latLng: LatLng) => {
+                                            onMapLocChanged(true, latLng);
+                                            routingContext.onDirectionsView(true);
+                                        },
+                                        onDirectionsTo: (latLng: LatLng) => {
+                                            onMapLocChanged(false, latLng);
+                                            routingContext.onDirectionsView(true);
+                                        },
+                                        onWhatsHere: (latLng: LatLng) => {
+                                            onMapLocChanged(false, latLng);
+                                        }
                                     };
                                     return (
                                         props.children!(consumerProps)
@@ -464,10 +557,11 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
         );
     };
 
-export const TKUIMapView = (props: ITKUIMapViewProps & {refAdHoc: (ref: any) => void}) =>
-    <Connector>
-        {(cProps: IConnectionProps) => <LeafletMap {...props} {...cProps}
-                                                   ref={(ref: any) => props.refAdHoc(ref)}/>}
-    </Connector>;
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default LeafletMap;
+export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);

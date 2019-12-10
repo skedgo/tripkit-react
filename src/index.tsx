@@ -17,7 +17,6 @@ export {default as StopLocation} from "./model/StopLocation";
 export {default as ServiceStopLocation} from "./model/ServiceStopLocation";
 export {default as RoutingQuery, TimePreference} from "./model/RoutingQuery";
 export {default as withRoutingResults} from "./api/WithRoutingResults";
-export {default as LeafletMap} from "./map/LeafletMap";
 // export {IProps as FavouriteRowProps} from "./favourite/FavouriteRow";
 // Next is a possible workaround for prev export not working. See if it's necessary,
 // or if it's enough with the export on FavouriteRow.tsx.
