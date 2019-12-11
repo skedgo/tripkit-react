@@ -55,7 +55,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                     />
                 }
             </ServiceResultsContext.Consumer> : undefined,
-            <TKUIRouteToLocationAction location={location} vertical={true} key={2}/>,
+            <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
             <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)} vertical={true}/>,
             <TKUIShareAction
                 title={"Share location"}

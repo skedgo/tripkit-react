@@ -26,6 +26,7 @@ import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
+import {TKUIButtonType} from "../buttons/TKUIButton";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -62,7 +63,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView",
     configProps: {
         actions: (stop: StopLocation) => [
-            <TKUIRouteToLocationAction location={stop} vertical={true}/>,
+            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL}/>,
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true}/>,
             <TKUIShareAction
                 title={"Share timetable"}

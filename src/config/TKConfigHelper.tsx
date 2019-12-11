@@ -89,6 +89,9 @@ export function connect<
                             (Util.isFunction(componentConfig.configProps) ?
                                 (componentConfig.configProps as ((defaultConfigProps: Partial<IMPL_PROPS>) => Partial<IMPL_PROPS>))(defaultConfig.configProps!) :
                                 componentConfig.configProps);
+                        // TODO: maybe shold pass defaultConfig.configProps, then implProps (so props directly passed to
+                        // component override default config props, and finally configProps (so props passed through
+                        // config override everything)
                         return <WithStyleInjector {...implProps}
                                                   {...defaultConfig.configProps}
                                                   {...configProps}

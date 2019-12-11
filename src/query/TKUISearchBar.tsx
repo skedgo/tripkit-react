@@ -74,7 +74,7 @@ class TKUISearchBar extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 <button className={classes.sideBarBtn}>
-                    <IconMenu className={classes.sideBarIcon}/>
+                    <IconMenu className={classes.sideBarIcon} onClick={this.props.onShowSideBar}/>
                 </button>
                 <LocationBox
                     geocodingData={this.geocodingData}
