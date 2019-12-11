@@ -42,6 +42,7 @@ import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import TKUIMapView from "../map/TKUIMapView";
+import TKUISidebar from "../sidebar/TKUISidebar";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -64,6 +65,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
 
 interface IState {
     mapView: boolean;
+    showSidebar: boolean;
     showFavourites: boolean;
     showOptions: boolean;
     showTripDetail?: boolean;
@@ -100,6 +102,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
+            showSidebar: true,
             mapView: false,
             showFavourites: false,
             showOptions: false,
@@ -161,6 +164,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
                     this.props.onDirectionsView(true);
                 }}
+                onShowSideBar={() => this.setState({showSidebar: true})}
+            />;
+        const sideBar =
+            <TKUISidebar
+                open={this.state.showSidebar && !this.props.directionsView}
+                onRequestClose={() => this.setState({showSidebar: false})}
+                onShowFavourites={() => this.setState({showFavourites: true})}
             />;
         const queryInput = this.props.directionsView &&
             <TKUIRoutingQueryInput
@@ -267,6 +277,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     </TKUIMapView>
                 </div>
                 <TKUIFeedbackBtn/>
+                {sideBar}
                 {locationDetailView}
                 {favouritesView}
                 {routingResultsView}

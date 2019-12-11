@@ -7,10 +7,11 @@ import Util from "../util/Util";
 import * as CSS from 'csstype';
 
 interface IProps {
-    location: Location;
+    location?: Location;
     text?: string;
-    vertical?: boolean;
+    buttonType?: TKUIButtonType;
     style?: CSS.Properties;
+    onClick?: () => void;
 }
 
 class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
@@ -20,17 +21,19 @@ class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
             <RoutingResultsContext.Consumer>
                 {(context: IRoutingResultsContext) =>
                     <TKUIButton
-                        type={this.props.vertical ? TKUIButtonType.PRIMARY_VERTICAL : TKUIButtonType.PRIMARY}
+                        type={this.props.buttonType ? this.props.buttonType : TKUIButtonType.PRIMARY}
                         icon={<IconDirections/>}
                         text={this.props.text ? this.props.text : "Direction"}
                         style={{minWidth: '90px', ...this.props.style}}
                         onClick={() => {
+                            this.props.location &&
                             context.onQueryChange(Util.iAssign(context.query,
                                 {
                                     from: Location.createCurrLoc(),
                                     to: this.props.location
                                 }));
                             context.onDirectionsView(true);
+                            this.props.onClick && this.props.onClick();
                         }}
                     />}
             </RoutingResultsContext.Consumer>

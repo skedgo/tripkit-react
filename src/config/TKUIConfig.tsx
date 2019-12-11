@@ -22,6 +22,7 @@ import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../locat
 import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKUIFavouritesView";
 import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
 import {TKUIMapViewProps, TKUIMapViewStyle} from "../map/TKUIMapView";
+import {TKUISidebarProps, TKUISidebarStyle} from "../sidebar/TKUISidebar";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -44,6 +45,7 @@ interface ITKUIConfigRequired {
     TKUIShareView: ConfigRefiner<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: ConfigRefiner<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUIMapView: ConfigRefiner<TKUIMapViewProps, TKUIMapViewStyle>;
+    TKUISidebar: ConfigRefiner<TKUISidebarProps, TKUISidebarStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>
@@ -54,6 +56,14 @@ export interface ITKUIComponentDefaultConfig<P, S> {
     randomizeClassNames?: boolean;
     classNamePrefix: string;
     configProps?: Partial<P>;
+    // TODO: rename configProps to just props. Make TKUICustomPartialProps receive not just defaultConfigProps,
+    // but props: IProps (the properties passed to the component, overriden with the defaultConfigProps).
+    // Or make it receive: {...defaultConfigProps(implProps), ...implProps}, which is of type<P>, not partial<P>.
+    // This way default and refiner config can be based on IProps (e.g. to receive more context). But still injectedStyles
+    // won't be available. Keep thinking.
+    // Also implProps override defaultConfigProps, which are overriden by refiner props.
+    // The more simple, but less powerful, change is to rename to props, and make WithStyleInjector receive
+    // {...defaultConfig.configProps} {...implProps} {...configProps}
 }
 
 export type ConfigRefiner<P, S> =
