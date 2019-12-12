@@ -19,6 +19,9 @@ import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconLike} from "../images/badges/ic-badge-like.svg";
+import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "../trip/TKUITripOverviewView";
+import {TKUIWithClasses} from "../jss/StyleHelper";
+import {Subtract} from 'utility-types';
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -71,19 +74,21 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
         //             {props.value.segments.map((segment: Segment, i: number) => segment.getAction() + " ")}
         //         </div>
         // },
-        // TKUITripOverviewView: {
-        //     configProps: (defaultProps) => ({
-        //         actions: (trip: Trip) =>
-        //             defaultProps.actions!(trip).concat([
-        //                 <TKUIButton
-        //                     text={"Like"}
-        //                     icon={<IconLike/>}
-        //                     type={TKUIButtonType.PRIMARY_VERTICAL}
-        //                     style={{minWidth: '90px'}}
-        //                 />
-        //             ])
-        //     })
-        // }
+        TKUITripOverviewView: {
+            configProps: (defaultProps) => ({
+            // configProps: (defaultProps: Partial<TKUITripOverviewViewProps>) => ({
+            // configProps: (defaultProps: Subtract<TKUITripOverviewViewProps, TKUIWithClasses<TKUITripOverviewViewStyle, TKUITripOverviewViewProps>>) => ({
+                actions: (trip: Trip) =>
+                    defaultProps.actions!(trip).concat([
+                        <TKUIButton
+                            text={"Like"}
+                            icon={<IconLike/>}
+                            type={TKUIButtonType.PRIMARY_VERTICAL}
+                            style={{minWidth: '90px'}}
+                        />
+                    ])
+            })
+        }
     };
 
     ReactDOM.render(

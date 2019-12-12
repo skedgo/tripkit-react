@@ -1,5 +1,5 @@
 import {TKUITripRowStyle, TKUITripRowProps} from "../trip/TKUITripRow";
-import {TKUICustomStyles, TKUIStyles} from "../jss/StyleHelper";
+import {TKUICustomStyles, TKUIStyles, TKUIWithClasses} from "../jss/StyleHelper";
 import {TKUIResultsViewProps, TKUIResultsViewStyle} from "../trip/TKUIResultsView";
 import {TKUITheme} from "../jss/TKUITheme";
 import {TKUICardProps, TKUICardStyle} from "../card/TKUICard";
@@ -50,13 +50,14 @@ interface ITKUIConfigRequired {
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>
 
-export interface ITKUIComponentDefaultConfig<P, S> {
+export interface ITKUIComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
     render: (props: P) => JSX.Element;
     styles: TKUIStyles<S, P>;
     randomizeClassNames?: boolean;
     classNamePrefix: string;
-    configProps?: Partial<P>;
-    // TODO: rename configProps to just props. Make TKUICustomPartialProps receive not just defaultConfigProps,
+    // configProps?: Partial<P>;
+    configProps?: TKUICustomPartialProps<P, S>;
+    // TODO: rename configProps to just props, or injectProps?. Make TKUICustomPartialProps receive not just defaultConfigProps,
     // but props: IProps (the properties passed to the component, overriden with the defaultConfigProps).
     // Or make it receive: {...defaultConfigProps(implProps), ...implProps}, which is of type<P>, not partial<P>.
     // This way default and refiner config can be based on IProps (e.g. to receive more context). But still injectedStyles
@@ -66,9 +67,13 @@ export interface ITKUIComponentDefaultConfig<P, S> {
     // {...defaultConfig.configProps} {...implProps} {...configProps}
 }
 
-export type ConfigRefiner<P, S> =
-    Partial<Subtract<ITKUIComponentDefaultConfig<P, S>,
-        {styles: TKUIStyles<S, P>, configProps?: Partial<P>}>
-        & {styles: TKUICustomStyles<S, P>, configProps?: TKUICustomPartialProps<P>}>;
+// export type ConfigRefiner<P, S> =
+//     Partial<Subtract<ITKUIComponentDefaultConfig<P, S>,
+//         {styles: TKUIStyles<S, P>, configProps?: Partial<P>}>
+//         & {styles: TKUICustomStyles<S, P>, configProps?: TKUICustomPartialProps<P>}>;
 
-type TKUICustomPartialProps<P> = Partial<P> | ((defaultConfigProps: Partial<P>) => Partial<P>);
+export type ConfigRefiner<P extends TKUIWithClasses<S, P>, S> =
+    Partial<Subtract<ITKUIComponentDefaultConfig<P, S>,
+            {styles: TKUIStyles<S, P>}> & {styles: TKUICustomStyles<S, P>}>;
+
+type TKUICustomPartialProps<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((defaultConfigProps: Subtract<P, TKUIWithClasses<S, P>>) => Partial<P>);

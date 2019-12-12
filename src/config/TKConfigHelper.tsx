@@ -81,19 +81,21 @@ export function connect<
             {(implProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => {
                 return <TKUIConfigContext.Consumer>
                     {(config: TKUIConfig) => {
+                        const defaultConfigProps = Util.isFunction(defaultConfig.configProps) ?
+                            (defaultConfig.configProps as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))(implProps) : defaultConfig.configProps;
                         const componentConfig = confToCompMapper(config);
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
                             componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
                         // TODO: maybe move configProps merge logic into withStyleInjection to make it just once, on construction.
                         const configProps = componentConfig &&
                             (Util.isFunction(componentConfig.configProps) ?
-                                (componentConfig.configProps as ((defaultConfigProps: Partial<IMPL_PROPS>) => Partial<IMPL_PROPS>))(defaultConfig.configProps!) :
+                                (componentConfig.configProps as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({...implProps, ...defaultConfigProps}) :
                                 componentConfig.configProps);
                         // TODO: maybe shold pass defaultConfig.configProps, then implProps (so props directly passed to
                         // component override default config props, and finally configProps (so props passed through
                         // config override everything)
                         return <WithStyleInjector {...implProps}
-                                                  {...defaultConfig.configProps}
+                                                  {...defaultConfigProps}
                                                   {...configProps}
                                                   defaultStyles={defaultConfig.styles}
                                                   configStyles={componentConfig && componentConfig.styles}

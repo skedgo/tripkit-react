@@ -13,6 +13,7 @@ import {tKUIColors} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIDirectionsAction from "../action/TKUIRouteToLocationAction";
 import {TKUIButtonType} from "../buttons/TKUIButton";
+import {Subtract} from "utility-types";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -44,16 +45,20 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISidebar {...props}/>,
     styles: tKUISidebarDefaultStyle,
     classNamePrefix: "TKUISidebar",
-    configProps: {
+    configProps: (props: Subtract<IProps, TKUIWithClasses<IStyle, IProps>>) => ({
+    // configProps: (props: IProps) => ({
         logo: () => <TripgoLogo style={{height: '24px', width: '120px'}}/>,
         menuItems: (onRequestClose: () => void) => [
             <TKUIDirectionsAction
                 text={"Get Direction"}
                 buttonType={TKUIButtonType.SECONDARY}
                 key={1}
-                onClick={onRequestClose}
+                onClick={() => {
+                    console.log(props);
+                    props.onRequestClose();
+                }}
                 style={{border: 'none'}}
-            />,
+            />
         ],
         nativeAppLinks: () => {
             const storeBtnStyle = {
@@ -74,7 +79,7 @@ const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
                     <PlayStoreLogo style={{marginRight: '10px'}}/> Google Play
                 </button>
             ]}
-    }
+    })
 };
 
 class TKUISidebar extends React.Component<IProps, {}> {
