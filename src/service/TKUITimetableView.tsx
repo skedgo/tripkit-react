@@ -15,7 +15,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {ClassNameMap} from "react-jss";
 import DateTimePickerFace from "../time/DateTimePickerFace";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
@@ -57,11 +57,11 @@ interface IStyle {
 export type TKUITimetableViewProps = IProps;
 export type TKUITimetableViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITimetableView {...props}/>,
     styles: tKUITimetableDefaultStyle,
     classNamePrefix: "TKUITimetableView",
-    configProps: {
+    props: {
         actions: (stop: StopLocation) => [
             <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL}/>,
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true}/>,

@@ -39,7 +39,7 @@ import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 import FavouritesData from "../data/FavouritesData";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
@@ -88,7 +88,7 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props}/>,
     styles: tKUIMapViewDefaultStyle,
     classNamePrefix: "TKUIMapView"

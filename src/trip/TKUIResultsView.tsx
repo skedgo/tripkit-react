@@ -15,7 +15,7 @@ import Select, { components } from 'react-select';
 import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
-import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
+import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -53,7 +53,7 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 export type TKUIResultsViewProps = IProps;
 export type TKUIResultsViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",

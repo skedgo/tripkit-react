@@ -27,7 +27,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
 import TKUIProfileView from "../options/TKUIProfileView";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
@@ -57,7 +57,7 @@ export interface IStyle {
 export type TKUITKUITripPlannerProps = IProps;
 export type TKUITKUITripPlannerStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripPlanner {...props}/>,
     styles: tKUITripPlannerDefaultStyle,
     classNamePrefix: "TKUITripPlanner"

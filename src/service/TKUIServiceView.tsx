@@ -17,7 +17,7 @@ import OptionsData from "../data/OptionsData";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
@@ -55,13 +55,13 @@ interface IProps extends IClientProps, IConnectionProps, TKUIWithClasses<IStyle,
 export type TKUIServiceViewProps = IProps;
 export type TKUIServiceViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIServiceView {...props}/>,
     styles: tKUIServiceViewDefaultStyle,
     classNamePrefix: "TKUIServiceView",
     randomizeClassNames: true,  // This needs to be true since multiple instances are rendered,
                                 // each with a different service color.
-    configProps: {
+    props: {
         actions: (service: ServiceDeparture) => [
             <TKUIShareAction
                 title={"Share service"}

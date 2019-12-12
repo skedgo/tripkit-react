@@ -2,7 +2,7 @@ import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../jss/StyleHelper";
 import VehicleComponent, {OccupancyStatus} from "../../model/service/VehicleComponent";
 import {connect, mapperFromFunction} from "../../config/TKConfigHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../../config/TKUIConfig";
 import {tKUITrainOccupancyInfoDefaultStyle} from "./TKUITrainOccupancyInfo.css";
 import {ReactComponent as IconHead} from '../../images/occupancy/ic-train-head.svg';
 import {ReactComponent as IconCarriage} from '../../images/occupancy/ic-train-carriage.svg';
@@ -29,7 +29,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 export type TKUITrainOccupancyInfoProps = IProps;
 export type TKUITrainOccupancyInfoStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITrainOccupancyInfo {...props}/>,
     styles: tKUITrainOccupancyInfoDefaultStyle,
     classNamePrefix: "TKUITrainOccupancyInfo",

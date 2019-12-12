@@ -1,7 +1,7 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import Favourite from "../model/favourite/Favourite";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIFavouriteRowDefaultStyle} from "./TKUIFavouriteRow.css";
 import {ReactComponent as IconFavLoc} from "../images/favourite/ic-favourite-location.svg";
@@ -32,7 +32,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 export type TKUIFavouriteRowProps = IProps;
 export type TKUIFavouriteRowStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIFavouriteRow {...props}/>,
     styles: tKUIFavouriteRowDefaultStyle,
     classNamePrefix: "TKUIFavouriteRow"

@@ -11,7 +11,7 @@ import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import OptionsData from "../data/OptionsData";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -45,7 +45,7 @@ interface IStyle {
 export type TKUISegmentOverviewProps = IProps;
 export type TKUISegmentOverviewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISegmentOverview {...props}/>,
     styles: tKUISegmentOverviewDefaultStyle,
     classNamePrefix: "TKUISegmentOverview",

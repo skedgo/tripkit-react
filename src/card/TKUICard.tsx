@@ -9,7 +9,7 @@ import * as CSS from 'csstype';
 import {Subtract} from "utility-types";
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 export enum CardPresentation {
@@ -49,7 +49,7 @@ export type TKUICardStyle = IStyle;
 
 export type TKUICardClientProps = IClientProps;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUICard {...props}/>,
     styles: tKUICardDefaultStyle,
     classNamePrefix: "TKUICard"

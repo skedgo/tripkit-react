@@ -17,7 +17,7 @@ import {ReactComponent as IconBadgeRecommended} from '../images/badges/ic-badge-
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {Badges} from "./TKMetricClassifier";
 import classNames from "classnames";
-import {TKUIConfig, ITKUIComponentDefaultConfig} from "../config/TKUIConfig";
+import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
@@ -56,7 +56,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 export type TKUITripRowProps = IProps;
 export type TKUITripRowStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripRow {...props}/>,
     styles: tTKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",

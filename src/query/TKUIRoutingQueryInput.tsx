@@ -29,7 +29,7 @@ import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import "../trip/TripAltBtn.css";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import Region from "model/region/Region";
@@ -83,7 +83,7 @@ interface IStyle {
 export type TKUIRoutingQueryInputProps = IProps;
 export type TKUIRoutingQueryInputStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIRoutingQueryInput {...props}/>,
     styles: tKUIRoutingQueryInputDefaultStyle,
     classNamePrefix: "TKUIRoutingQueryInput"
