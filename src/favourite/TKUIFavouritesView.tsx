@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIFavouritesViewDefaultStyle} from "./TKUIFavouritesView.css";
 import Favourite from "../model/favourite/Favourite";
 import {CardPresentation, default as TKUICard} from "../card/TKUICard";
@@ -35,7 +35,7 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 export type TKUIFavouritesViewProps = IProps;
 export type TKUIFavouritesViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIFavouritesView {...props}/>,
     styles: tKUIFavouritesViewDefaultStyle,
     classNamePrefix: "TKUIFavouritesView"

@@ -4,7 +4,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUIWCSegmentInfoDefaultStyle} from "./TKUIWCSegmentInfo.css";
 import TransportUtil from "./TransportUtil";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -34,7 +34,7 @@ export interface IStyle {
 export type TKUIWCSegmentInfoProps = IProps;
 export type TKUIWCSegmentInfoStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIWCSegmentInfo {...props}/>,
     styles: tKUIWCSegmentInfoDefaultStyle,
     classNamePrefix: "TKUITripRow",

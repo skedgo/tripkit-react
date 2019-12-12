@@ -15,7 +15,7 @@ import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
 import {Visibility} from "../model/trip/SegmentTemplate";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUIShareView from "../share/TKUIShareView";
 import TKUIControlsCard from "../card/TKUIControlsCard";
@@ -44,11 +44,11 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
 export type TKUITripOverviewViewProps = IProps;
 export type TKUITripOverviewViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripOverviewView {...props}/>,
     styles: tKUITripOverviewViewDefaultStyle,
     classNamePrefix: "TKUITripOverviewView",
-    configProps: {
+    props: {
         actions: (trip: Trip) => [
             <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
             <RoutingResultsContext.Consumer>

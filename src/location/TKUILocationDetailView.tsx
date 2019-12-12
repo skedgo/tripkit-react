@@ -1,7 +1,7 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import Location from "../model/Location";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUILocationDetailViewDefaultStyle} from "./TKUILocationDetailView.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
@@ -36,11 +36,11 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
 export type TKUILocationDetailViewProps = IProps;
 export type TKUILocationDetailViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUILocationDetailView {...props}/>,
     styles: tKUILocationDetailViewDefaultStyle,
     classNamePrefix: "TKUILocationDetailView",
-    configProps: {
+    props: {
         actions: (location: Location) => [
             location instanceof StopLocation ?
             <ServiceResultsContext.Consumer key={1}>

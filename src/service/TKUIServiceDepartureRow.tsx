@@ -11,7 +11,7 @@ import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css
 import classNames from "classnames";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 
@@ -47,7 +47,7 @@ interface IStyle {
 export type TKUIServiceDepartureRowProps = IProps;
 export type TKUIServiceDepartureRowStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIServiceDepartureRow {...props}/>,
     styles: tKUIServiceDepartureRowDefaultStyle,
     classNamePrefix: "TKUIServiceDepartureRow",

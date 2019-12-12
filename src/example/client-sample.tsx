@@ -74,21 +74,19 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
         //             {props.value.segments.map((segment: Segment, i: number) => segment.getAction() + " ")}
         //         </div>
         // },
-        TKUITripOverviewView: {
-            configProps: (defaultProps) => ({
-            // configProps: (defaultProps: Partial<TKUITripOverviewViewProps>) => ({
-            // configProps: (defaultProps: Subtract<TKUITripOverviewViewProps, TKUIWithClasses<TKUITripOverviewViewStyle, TKUITripOverviewViewProps>>) => ({
-                actions: (trip: Trip) =>
-                    defaultProps.actions!(trip).concat([
-                        <TKUIButton
-                            text={"Like"}
-                            icon={<IconLike/>}
-                            type={TKUIButtonType.PRIMARY_VERTICAL}
-                            style={{minWidth: '90px'}}
-                        />
-                    ])
-            })
-        }
+        // TKUITripOverviewView: {
+        //     props: (props: TKUITripOverviewViewProps) => ({
+        //         actions: (trip: Trip) =>
+        //             props.actions!(trip).concat([
+        //                 <TKUIButton
+        //                     text={"Like"}
+        //                     icon={<IconLike/>}
+        //                     type={TKUIButtonType.PRIMARY_VERTICAL}
+        //                     style={{minWidth: '90px'}}
+        //                 />
+        //             ])
+        //     })
+        // }
     };
 
     ReactDOM.render(

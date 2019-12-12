@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIShareViewDefaultStyle} from "./TKUIShareView.css";
 import {ReactComponent as IconLink} from "../images/share/ic-copy-link.svg";
@@ -32,7 +32,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 export type TKUIShareViewProps = IProps;
 export type TKUIShareViewStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIShareView {...props}/>,
     styles: tKUIShareViewDefaultStyle,
     classNamePrefix: "TKUIShareView",

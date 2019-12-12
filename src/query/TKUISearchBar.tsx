@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUISearchBarDefaultStyle} from "./TKUISearchBar.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
@@ -52,7 +52,7 @@ interface IStyle {
 export type TKUISearchBarProps = IProps;
 export type TKUISearchBarStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISearchBar {...props}/>,
     styles: tKUISearchBarDefaultStyle,
     classNamePrefix: "TKUISearchBar"

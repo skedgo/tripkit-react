@@ -26,54 +26,39 @@ import {TKUISidebarProps, TKUISidebarStyle} from "../sidebar/TKUISidebar";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
-    // TODO: rename ConfigRefiner to ConfigOverride?
-    TKUITripPlanner: ConfigRefiner<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
-    TKUISearchBar: ConfigRefiner<TKUISearchBarProps, TKUISearchBarStyle>;
-    TKUIFavouritesView: ConfigRefiner<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
-    TKUIFavouriteRow: ConfigRefiner<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
-    TKUITKUIRoutingQueryInput: ConfigRefiner<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
-    TKUICard: ConfigRefiner<TKUICardProps, TKUICardStyle>;
-    TKUITripRow: ConfigRefiner<TKUITripRowProps, TKUITripRowStyle>;
-    TKUIRoutingResultsView: ConfigRefiner<TKUIResultsViewProps, TKUIResultsViewStyle>;
-    TKUITripOverviewView: ConfigRefiner<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
-    TKUISegmentOverview: ConfigRefiner<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
-    TKUIWCSegmentInfo: ConfigRefiner<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;
-    TKUITimetableView: ConfigRefiner<TKUITimetableViewProps, TKUITimetableViewStyle>;
-    TKUIServiceDepartureRow: ConfigRefiner<TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle>;
-    TKUIServiceView: ConfigRefiner<TKUIServiceViewProps, TKUIServiceViewStyle>;
-    TKUITrainOccupancyInfo: ConfigRefiner<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
-    TKUIShareView: ConfigRefiner<TKUIShareViewProps, TKUIShareViewStyle>;
-    TKUILocationDetailView: ConfigRefiner<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
-    TKUIMapView: ConfigRefiner<TKUIMapViewProps, TKUIMapViewStyle>;
-    TKUISidebar: ConfigRefiner<TKUISidebarProps, TKUISidebarStyle>;
+    TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    TKUISearchBar: TKComponentConfig<TKUISearchBarProps, TKUISearchBarStyle>;
+    TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
+    TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
+    TKUITKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
+    TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
+    TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
+    TKUIRoutingResultsView: TKComponentConfig<TKUIResultsViewProps, TKUIResultsViewStyle>;
+    TKUITripOverviewView: TKComponentConfig<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
+    TKUISegmentOverview: TKComponentConfig<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
+    TKUIWCSegmentInfo: TKComponentConfig<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;
+    TKUITimetableView: TKComponentConfig<TKUITimetableViewProps, TKUITimetableViewStyle>;
+    TKUIServiceDepartureRow: TKComponentConfig<TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle>;
+    TKUIServiceView: TKComponentConfig<TKUIServiceViewProps, TKUIServiceViewStyle>;
+    TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
+    TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
+    TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
+    TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
+    TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>
 
-export interface ITKUIComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
+export interface TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
     render: (props: P) => JSX.Element;
     styles: TKUIStyles<S, P>;
     randomizeClassNames?: boolean;
     classNamePrefix: string;
-    // configProps?: Partial<P>;
-    configProps?: TKUICustomPartialProps<P, S>;
-    // TODO: rename configProps to just props, or injectProps?. Make TKUICustomPartialProps receive not just defaultConfigProps,
-    // but props: IProps (the properties passed to the component, overriden with the defaultConfigProps).
-    // Or make it receive: {...defaultConfigProps(implProps), ...implProps}, which is of type<P>, not partial<P>.
-    // This way default and refiner config can be based on IProps (e.g. to receive more context). But still injectedStyles
-    // won't be available. Keep thinking.
-    // Also implProps override defaultConfigProps, which are overriden by refiner props.
-    // The more simple, but less powerful, change is to rename to props, and make WithStyleInjector receive
-    // {...defaultConfig.configProps} {...implProps} {...configProps}
+    props?: TKUIPropsOverride<P, S>;
 }
 
-// export type ConfigRefiner<P, S> =
-//     Partial<Subtract<ITKUIComponentDefaultConfig<P, S>,
-//         {styles: TKUIStyles<S, P>, configProps?: Partial<P>}>
-//         & {styles: TKUICustomStyles<S, P>, configProps?: TKUICustomPartialProps<P>}>;
-
-export type ConfigRefiner<P extends TKUIWithClasses<S, P>, S> =
-    Partial<Subtract<ITKUIComponentDefaultConfig<P, S>,
+export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
+    Partial<Subtract<TKComponentDefaultConfig<P, S>,
             {styles: TKUIStyles<S, P>}> & {styles: TKUICustomStyles<S, P>}>;
 
-type TKUICustomPartialProps<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((defaultConfigProps: Subtract<P, TKUIWithClasses<S, P>>) => Partial<P>);
+type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);

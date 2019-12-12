@@ -1,6 +1,6 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ITKUIComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUISidebarDefaultStyle} from "./TKUISidebar.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Drawer from 'react-drag-drawer';
@@ -34,29 +34,25 @@ export interface IStyle {
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
     logo?: () => JSX.Element;
-    menuItems?: (onRequestClose: () => void) => JSX.Element[];
+    menuItems?: () => JSX.Element[];
     nativeAppLinks?: () => JSX.Element[];
 }
 
 export type TKUISidebarProps = IProps;
 export type TKUISidebarStyle = IStyle;
 
-const config: ITKUIComponentDefaultConfig<IProps, IStyle> = {
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISidebar {...props}/>,
     styles: tKUISidebarDefaultStyle,
     classNamePrefix: "TKUISidebar",
-    configProps: (props: Subtract<IProps, TKUIWithClasses<IStyle, IProps>>) => ({
-    // configProps: (props: IProps) => ({
+    props: (props: IProps) => ({
         logo: () => <TripgoLogo style={{height: '24px', width: '120px'}}/>,
-        menuItems: (onRequestClose: () => void) => [
+        menuItems: () => [
             <TKUIDirectionsAction
                 text={"Get Direction"}
                 buttonType={TKUIButtonType.SECONDARY}
                 key={1}
-                onClick={() => {
-                    console.log(props);
-                    props.onRequestClose();
-                }}
+                onClick={props.onRequestClose}
                 style={{border: 'none'}}
             />
         ],
@@ -106,7 +102,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                     </div>
                     <div className={classes.body}>
                         <div className={classes.menuItems}>
-                            {this.props.menuItems && this.props.menuItems(this.props.onRequestClose)}
+                            {this.props.menuItems && this.props.menuItems()}
                         </div>
                         {this.props.nativeAppLinks &&
                             <div className={classes.nativeAppLinksPanel}>
