@@ -1,7 +1,7 @@
 import * as React from "react";
-import injectSheet, {JssProvider, createGenerateClassName, withTheme} from "react-jss";
+import injectSheet, {JssProvider, withTheme} from "react-jss";
 import { Subtract } from "utility-types";
-import { ClassNameMap, Styles, StyleCreator, WithSheet, CSSProperties } from "react-jss";
+import { ClassNameMap, Styles, StyleCreator, CSSProperties } from "react-jss";
 import * as CSS from 'csstype';
 import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKUITheme";
 import Util from "../util/Util";
@@ -97,7 +97,6 @@ export function withStyleInjection<
         }
 
         public render(): React.ReactNode {
-            const props = this.props;
             return <this.WithTheme {...this.props}/>;
         }
     }

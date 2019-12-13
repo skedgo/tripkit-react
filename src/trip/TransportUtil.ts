@@ -12,10 +12,10 @@ class TransportUtil {
             return this.getTransportIconLocal("school-bus", isRealtime, false);
         }
         if (onDark && modeInfo.remoteDarkIcon) {
-            return TripGoApi.getServer() + "/modeicons/" + "icon-mode-" + modeInfo.remoteDarkIcon + ".svg";
+            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteDarkIcon + ".svg";
         }
         if (modeInfo.remoteIcon) {
-            return TripGoApi.getServer() + "/modeicons/" + "icon-mode-" + modeInfo.remoteIcon + ".svg";
+            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteIcon + ".svg";
         }
         return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
     }
@@ -23,7 +23,7 @@ class TransportUtil {
     public static getTransportIconModeId(modeIdentifier: ModeIdentifier, isRealtime = false, onDark = false): string {
         if (modeIdentifier.icon !== null
             && !modeIdentifier.identifier.startsWith(ModeIdentifier.SCHOOLBUS_ID)) { // TODO: Hardcoded for TC
-            return TripGoApi.getServer() + "/modeicons/" + "icon-mode-" + modeIdentifier.icon + ".svg";
+            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeIdentifier.icon + ".svg";
         }
         return this.getTransportIconLocal(this.modeIdToIconS(modeIdentifier.identifier), isRealtime, onDark);
     }

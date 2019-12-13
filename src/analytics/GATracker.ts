@@ -19,7 +19,7 @@ class GATracker {
                 (window as any).ga('send', 'event', category, action, label);
             }
         }
-        Util.log("GA Track event -" + " category: " + category + ", action: " + action + ", label: " + label + ".");
+        Util.log("GA Track event - category: " + category + ", action: " + action + ", label: " + label + ".");
     }
 
 }

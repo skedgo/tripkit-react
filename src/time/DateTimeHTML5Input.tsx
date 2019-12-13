@@ -13,10 +13,6 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
 
     private inputRef: any;
 
-    constructor(props: IProps) {
-        super(props);
-    }
-
     /**
      * Programmatically open the datepicker.
      * Both focus and click is needed to trigger show of native widget in Chrome for Android.

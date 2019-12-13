@@ -23,6 +23,8 @@ import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKU
 import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
 import {TKUIMapViewProps, TKUIMapViewStyle} from "../map/TKUIMapView";
 import {TKUISidebarProps, TKUISidebarStyle} from "../sidebar/TKUISidebar";
+import {TKUIProfileViewProps, TKUIProfileViewStyle} from "../options/TKUIProfileView";
+import {TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle} from "../options/TKUIUserPriorities";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -45,6 +47,8 @@ interface ITKUIConfigRequired {
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
+    TKUIProfileView: TKComponentConfig<TKUIProfileViewProps, TKUIProfileViewStyle>;
+    TKUIUserPriorities: TKComponentConfig<TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

@@ -3,10 +3,10 @@ import withRoutingResults, {TripSort} from "../api/WithRoutingResults";
 import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
-import Options from "../model/Options";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 export interface IRoutingResultsContext {
     // TODO: Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
@@ -50,7 +50,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onAlternativeChange: (group: TripGroup, alt: Trip) => {}
 });
 
-class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: Options, testTrips?: Trip[]}, {}> {
+class RoutingResultsProvider extends React.Component<{initQuery?: RoutingQuery, options: TKUserProfile, testTrips?: Trip[]}, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
         props = {...props,
             // trips: this.props.testTrips

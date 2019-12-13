@@ -10,7 +10,6 @@ import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
-import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKShareHelper from "../share/TKShareHelper";
 import StopLocation from "../model/StopLocation";

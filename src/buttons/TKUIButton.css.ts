@@ -65,7 +65,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '0' : '15px',
             '& svg': {
                 ...genStyles.svgFillCurrColor
-            }
+            },
+            ...genStyles.flex,
+            ...genStyles.center,
+            ...genStyles.alignCenter
         },
 
         verticalPanel: {

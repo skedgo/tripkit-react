@@ -14,10 +14,10 @@ import StopIcon from "./StopIcon";
 import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
 import OptionsData from "../data/OptionsData";
-import Options from "../model/Options";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
 import "./TKUIMapLocations.css";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {
     zoom: number,
@@ -43,7 +43,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     constructor(props: Readonly<IProps>) {
         super(props);
         this.locListenerSubscription = LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
-        this.optionsListenerSubscription = OptionsData.instance.addChangeListener((update: Options, prev: Options) => {
+        this.optionsListenerSubscription = OptionsData.instance.addChangeListener((update: TKUserProfile, prev: TKUserProfile) => {
             // TODO: receive Options through prop so don't need to force update.
             if (update.mapLayers !== prev.mapLayers) {
                 this.forceUpdate()

@@ -18,10 +18,8 @@ import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsPro
 import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput from "query/TKUIRoutingQueryInput";
-import { Carousel } from 'react-responsive-carousel';
 import Trip from "../model/trip/Trip";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
@@ -66,12 +64,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     mapView: boolean;
     showSidebar: boolean;
+    showSettings: boolean;
     showFavourites: boolean;
-    showOptions: boolean;
     showTripDetail?: boolean;
 }
 
     // TODO:
+    // - Maybe define a WithCard HOC that wraps a component inside a Card, and adds properties open, onRequestClose, and
+    // and any other property of card that want to expose to outside. OnRequestClose is passed to the card, but also to
+    // the consumer / wrapped component, so it can control close (e.g. needed by TKUIProfileView apply btn).
+    // Maybe also open? WithCard can be used to wrap connect: export default WithCard(connect(...)). Analyze where to
+    // call it.
     // - TimeZone handling considering region change. Idea (think again): always handle moments in UTC, and convert to region timezone
     // just when need to display. E.g. See value passed to <DateTimePicker/> in TKUIRoutingQueryInput. So every use of defaultTimezone
     // in DateTimeUtil should be changed to use UTC.
@@ -102,10 +105,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
         this.state = {
-            showSidebar: true,
+            showSidebar: false,
+            showSettings: false,
             mapView: false,
             showFavourites: false,
-            showOptions: false,
             showTripDetail: TKShareHelper.isSharedTripLink()
         };
         const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
@@ -120,9 +123,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         WaiAriaUtil.addTabbingDetection();
 
-        this.onShowOptions = this.onShowOptions.bind(this);
+        Modal.setAppElement(this.ref);
+
+        this.onShowSettings = this.onShowSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
-        this.onOptionsRequestedClose = this.onOptionsRequestedClose.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -139,9 +143,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // });
     }
 
-    private onShowOptions() {
+    private onShowSettings() {
         GATracker.instance.send('query input', 'click', 'options button');
-        RegionsData.instance.requireRegions().then(() => this.setState({showOptions: true}));
+        RegionsData.instance.requireRegions().then(() => this.setState({showSettings: true}));
     }
 
     private onFavouriteClicked(favourite: Favourite) {
@@ -164,18 +168,29 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
                     this.props.onDirectionsView(true);
                 }}
-                onShowSideBar={() => this.setState({showSidebar: true})}
+                onShowSideBar={() => {
+                    console.log("show sidebar");
+                    return this.setState({showSidebar: true});
+                }}
             />;
         const sideBar =
             <TKUISidebar
                 open={this.state.showSidebar && !this.props.directionsView}
-                onRequestClose={() => this.setState({showSidebar: false})}
+                onRequestClose={() => {
+                    console.log("hide sidebar");
+                    return this.setState({showSidebar: false});
+                }}
+                onShowSettings={this.onShowSettings}
                 onShowFavourites={() => this.setState({showFavourites: true})}
+            />;
+        const settings = this.state.showSettings &&
+            <TKUIProfileView
+                onClose={() => this.setState({showSettings: false})}
             />;
         const queryInput = this.props.directionsView &&
             <TKUIRoutingQueryInput
                 isTripPlanner={true}
-                onShowOptions={this.onShowOptions}
+                onShowOptions={this.onShowSettings}
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
@@ -183,17 +198,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onDirectionsView(false);
                 }}
             />;
-        const optionsDialog = this.state.showOptions ?
-            <Modal
-                isOpen={this.state.showOptions}
-                appElement={this.ref}
-                onRequestClose={this.onOptionsRequestedClose}
-            >
-                <TKUIProfileView
-                    onClose={this.onOptionsRequestedClose}
-                    className={"app-style"}
-                />
-            </Modal> : null;
         const toLocation = this.props.query.to;
         const locationDetailView = !this.props.directionsView && toLocation && toLocation.isResolved() &&
             !toLocation.isDroppedPin() && !this.props.stop &&
@@ -278,19 +282,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 </div>
                 <TKUIFeedbackBtn/>
                 {sideBar}
+                {settings}
                 {locationDetailView}
                 {favouritesView}
                 {routingResultsView}
                 {tripDetailView}
-                {optionsDialog}
                 {departuresView}
                 {serviceDetailView}
             </div>
         );
-    }
-
-    private onOptionsRequestedClose() {
-        this.setState({showOptions: false});
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {

@@ -1,11 +1,11 @@
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import Options from "../model/Options";
 import LocalStorageItemArray from "./LocalStorageItemArray";
 import Util from "../util/Util";
 import Location from "../model/Location";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 class FavouritesData extends LocalStorageItemArray<Favourite> {
 
@@ -70,7 +70,7 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
     //     ];
     // }
 
-    public static getFavOptionsPart(options: Options): any {
+    public static getFavOptionsPart(options: TKUserProfile): any {
         const favPart: any = Object.assign({}, options);
         delete favPart._mapLayers;
         return favPart;

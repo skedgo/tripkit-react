@@ -1,34 +1,56 @@
 import * as React from "react";
-import Options from "../model/Options";
 import Util from "../util/Util";
-import {ReactComponent as IconClose} from '../images/ic-cross.svg';
-import "./TKUIProfileView.css";
+import "./TKUIProfileViewDelete.css";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import TransportUtil from "../trip/TransportUtil";
 import Checkbox from "../buttons/Checkbox";
 import Color from "../model/trip/Color";
-import RadioBtn from "../buttons/RadioBtn";
 import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import TKUICard, {CardPresentation} from "card/TKUICard";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {tKUIProfileViewDefaultStyle} from "./TKUIProfileView.css";
+import {Subtract} from "utility-types";
+import TKUIUserPriorities from "./TKUIUserPriorities";
+import TKUserProfile from "../model/options/TKUserProfile";
+import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
+import TKUIButton from "buttons/TKUIButton";
 
-interface IConnectionProps extends IOptionsContext {
+
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    onClose?: () => void;
+}
+
+interface IConsumedProps extends IOptionsContext {
     region?: Region;
 }
 
-interface ITKUIOptionsViewProps {
-    onClose?: () => void;
-    className?: string;
+export interface IStyle {
+    main: CSSProps<IProps>;
+    section: CSSProps<IProps>;
+    sectionTitle: CSSProps<IProps>;
 }
 
-interface IProps extends IConnectionProps, ITKUIOptionsViewProps {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUIProfileViewProps = IProps;
+export type TKUIProfileViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIProfileView {...props}/>,
+    styles: tKUIProfileViewDefaultStyle,
+    classNamePrefix: "TKUIProfileView"
+};
 
 interface IState {
-    update: Options;
+    update: TKUserProfile;
     schools?: string[];
     schoolModeId?: ModeIdentifier;
     pickSchoolError: boolean;
@@ -52,7 +74,6 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             this.setState({ schoolModeId: modeId }));
         this.onModeCheckboxChange = this.onModeCheckboxChange.bind(this);
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
-        this.onPrefCheckedChange = this.onPrefCheckedChange.bind(this);
     }
 
     private onModeCheckboxChange(mode: string, checked: boolean) {
@@ -80,29 +101,6 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         if ((mode === "pt_pub_bus") && !checked) {
             this.onModeCheckboxChange(ModeIdentifier.SCHOOLBUS_ID, false);
         }
-    }
-
-    private onPrefCheckedChange(pref: JourneyPref, checked: boolean) {
-        if (!checked) {
-            return;
-        }
-        this.setState(prevState => {
-            const prefsUpdate = Util.iAssign(prevState.update.weightingPrefs, {});
-            switch (pref) {
-                case JourneyPref.FASTEST:
-                    prefsUpdate.time = 2;
-                    prefsUpdate.hassle = 1;
-                    break;
-                case JourneyPref.FEWEST_CHANGES:
-                    prefsUpdate.time = 1;
-                    prefsUpdate.hassle = 2;
-                    break;
-                case JourneyPref.LEAST_WALKING:
-                    prefsUpdate.time = 2;
-                    prefsUpdate.hassle = 0;
-            }
-            return { update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate}) }
-        });
     }
 
     private isChecked(pref: JourneyPref): boolean {
@@ -192,241 +190,168 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const schoolModeId = this.state.schoolModeId;
-        const modesSectionFilter = (modeId: ModeIdentifier) => {
-            const id = modeId.identifier;
-            return !id.startsWith(ModeIdentifier.SCHOOLBUS_ID) && !id.startsWith(ModeIdentifier.UBER_ID) &&
-                    !id.startsWith(ModeIdentifier.CAR_RENTAL_SW_ID) && !id.startsWith(ModeIdentifier.TAXI_ID)};
-        const thirdPartySectionFilter = (modeId: ModeIdentifier) => {
-            const id = modeId.identifier;
-            return id.startsWith(ModeIdentifier.UBER_ID) || id.startsWith(ModeIdentifier.CAR_RENTAL_SW_ID) ||
-                id.startsWith(ModeIdentifier.TAXI_ID)};
+        const classes = this.props.classes;
         return (
-            <div className={"OptionsView gl-flex gl-column" + (this.props.className ? " " + this.props.className : "")}>
-                <div className="gl-flex gl-align-center gl-space-between OptionsView-header">
-                    <div className="h3-text">Journey Options</div>
-                    <button onClick={() => this.close(false)} aria-label="Close">
-                        <IconClose className="gl-pointer" focusable="false"/>
-                    </button>
-                </div>
-                <div className="OptionsView-scrollPanel gl-scrollable-y">
-                    <div className="h4-text OptionsView-separation OptionsView-sectionTitle"
-                         tabIndex={0}>Journey Preferences</div>
-                    <div className="OptionsView-journey-prefs gl-flex gl-space-around" role="radiogroup">
-                        <div className="gl-flex gl-align-center">
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip" id={"jp-fa-info"}>
-                                        The journey that will take the least amount of time.
-                                    </div>
-                                }
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
-                                <div className="gl-flex gl-align-center">
-                                    <RadioBtn name={"journey-prefs"}
-                                              id={"jp-fa"}
-                                              checked={this.isChecked(JourneyPref.FASTEST)}
-                                              onChange={(checked: boolean) => this.onPrefCheckedChange(JourneyPref.FASTEST, checked)}
-                                              ariaLabelledby={"label-jp-fa"}
-                                    />
-                                    <label htmlFor="jp-fa" id={"label-jp-fa"}>
-                                        {JourneyPref.FASTEST}
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
-                                </div>
-                            </Tooltip>
-                        </div>
-                        <div className="gl-flex gl-align-center">
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip">
-                                        The journey with the fewest connections.
-                                    </div>
-                                }
-                                // align={{offset: [10, 0]}}
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
-                                <div className="gl-flex gl-align-center">
-                                    <RadioBtn name={"journey-prefs"}
-                                              id="jp-fc"
-                                              checked={this.isChecked(JourneyPref.FEWEST_CHANGES)}
-                                              onChange={(checked: boolean) => this.onPrefCheckedChange(JourneyPref.FEWEST_CHANGES, checked)}
-                                              ariaLabelledby={"label-jp-fc"}
-                                    />
-                                    <label htmlFor="jp-fc" id={"label-jp-fc"}>
-                                        {JourneyPref.FEWEST_CHANGES}
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
-                                </div>
-                            </Tooltip>
-                        </div>
-                        <div className="gl-flex gl-align-center">
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip">
-                                        The journey with the least amount of walking.
-                                    </div>
-                                }
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
-                                <div className="gl-flex gl-align-center">
-                                    <RadioBtn name={"journey-prefs"}
-                                              id="jp-lw"
-                                              checked={this.isChecked(JourneyPref.LEAST_WALKING)}
-                                              onChange={(checked: boolean) => this.onPrefCheckedChange(JourneyPref.LEAST_WALKING, checked)}
-                                              ariaLabelledby={"label-jp-lw"}
-                                    />
-                                    <label htmlFor="jp-lw" id={"label-jp-lw"}>
-                                        {JourneyPref.LEAST_WALKING}
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
-                                </div>
-                            </Tooltip>
-                        </div>
-                    </div>
-                    <div className="h4-text OptionsView-separation OptionsView-sectionTitle"
-                         tabIndex={0}>Special Services</div>
-                    <div className="OptionsView-special-services gl-flex gl-space-around">
-                        <div className="gl-flex gl-align-center">
-                            <img src={Constants.absUrl("/images/modeicons/ic-wheelchair.svg")}
-                                 className="gl-charSpace OptionsView-icon OptionsView-onDark gl-no-shrink"
-                                 style={{
-                                     border: "1px solid grey"
-                                 }}
-                                 aria-hidden={true}
+            <TKUICard
+                title={"Profile"}
+                presentation={CardPresentation.MODAL}
+                onRequestClose={() => this.close(false)}
+            >
+                <div className={"OptionsView gl-flex gl-column"}>
+                    <div className="OptionsView-scrollPanel gl-scrollable-y">
+                        <div className={classes.section}>
+                            <div className={classes.sectionTitle}>
+                                My Priorities
+                            </div>
+                            <TKUIUserPriorities
+                                value={this.state.update.weightingPrefs}
+                                onChange={(prefsUpdate: TKWeightingPreferences) =>
+                                    this.setState((prevState: IState) =>
+                                        ({update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate})}))}
                             />
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip">
-                                        Choosing this option will only display services with wheelchair accessibility.
-                                    </div>
-                                }
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
-                                <div className="gl-flex gl-align-center">
-                                    <Checkbox id="ss-wa"
-                                              checked={this.state.update.wheelchair}
-                                              onChange={(checked: boolean) => this.onWheelchairChange(checked)}
-                                              ariaLabelledby={"labe-ss-wa"}/>
-                                    <label htmlFor="ss-wa" id={"labe-ss-wa"}>
-                                        Wheelchair Accessible
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
-                                </div>
-                            </Tooltip>
                         </div>
-                        <div className="gl-flex gl-align-center OptionsView-leftMargin">
-                            <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")} className="gl-charSpace gl-no-shrink" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip">
-                                        Choosing this option will only display services with bike racks.
-                                    </div>
-                                }
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
+                        <div className={classes.section}>
+                            <div className={classes.sectionTitle} tabIndex={0}>
+                                Special Services
+                            </div>
+                            <div className="OptionsView-special-services gl-flex gl-space-around">
                                 <div className="gl-flex gl-align-center">
-                                    <Checkbox id="ss-br"
-                                              checked={this.state.update.bikeRacks}
-                                              onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
-                                              ariaLabelledby={"label-ss-br"}/>
-                                    <label htmlFor="ss-br" id={"label-ss-br"}>
-                                        Bike Racks
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-wheelchair.svg")}
+                                         className="gl-charSpace OptionsView-icon OptionsView-onDark gl-no-shrink"
+                                         style={{
+                                             border: "1px solid grey"
+                                         }}
+                                         aria-hidden={true}
+                                    />
+                                    <Tooltip
+                                        placement="top"
+                                        overlay={
+                                            <div className="OptionsView-tooltip">
+                                                Choosing this option will only display services with wheelchair accessibility.
+                                            </div>
+                                        }
+                                        align={{offset: [0, -10]}}
+                                        overlayClassName="app-style OptionsView-tooltip"
+                                        mouseEnterDelay={.5}
+                                    >
+                                        <div className="gl-flex gl-align-center">
+                                            <Checkbox id="ss-wa"
+                                                      checked={this.state.update.wheelchair}
+                                                      onChange={(checked: boolean) => this.onWheelchairChange(checked)}
+                                                      ariaLabelledby={"labe-ss-wa"}/>
+                                            <label htmlFor="ss-wa" id={"labe-ss-wa"}>
+                                                Wheelchair Accessible
+                                            </label>
+                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
+                                                 className="OptionsView-infoIcon"/>
+                                        </div>
+                                    </Tooltip>
                                 </div>
-                            </Tooltip>
+                                <div className="gl-flex gl-align-center OptionsView-leftMargin">
+                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")} className="gl-charSpace gl-no-shrink" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                                    <Tooltip
+                                        placement="top"
+                                        overlay={
+                                            <div className="OptionsView-tooltip">
+                                                Choosing this option will only display services with bike racks.
+                                            </div>
+                                        }
+                                        align={{offset: [0, -10]}}
+                                        overlayClassName="app-style OptionsView-tooltip"
+                                        mouseEnterDelay={.5}
+                                    >
+                                        <div className="gl-flex gl-align-center">
+                                            <Checkbox id="ss-br"
+                                                      checked={this.state.update.bikeRacks}
+                                                      onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
+                                                      ariaLabelledby={"label-ss-br"}/>
+                                            <label htmlFor="ss-br" id={"label-ss-br"}>
+                                                Bike Racks
+                                            </label>
+                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
+                                                 className="OptionsView-infoIcon"/>
+                                        </div>
+                                    </Tooltip>
+                                </div>
+                                { this.state.schools && schoolModeId ?
+                                    <div className="OptionsView-schoolBusPanel gl-flex gl-align-center OptionsView-leftMargin gl-no-shrink">
+                                        <img src={TransportUtil.getTransportIconModeId(schoolModeId, false, false)}
+                                             className={"OptionsView-icon gl-no-shrink"}
+                                             style={{
+                                                 border: "1px solid " + TransportUtil.getTransportColorByIconS(TransportUtil.modeIdToIconS(schoolModeId.identifier)),
+                                             }}
+                                             aria-hidden="true"
+                                        />
+                                    </div> : null
+                                }
+                            </div>
                         </div>
-                        { this.state.schools && schoolModeId ?
-                            <div className="OptionsView-schoolBusPanel gl-flex gl-align-center OptionsView-leftMargin gl-no-shrink">
-                                <img src={TransportUtil.getTransportIconModeId(schoolModeId, false, false)}
-                                     className={"OptionsView-icon gl-no-shrink"}
-                                     style={{
-                                         border: "1px solid " + TransportUtil.getTransportColorByIconS(TransportUtil.modeIdToIconS(schoolModeId.identifier)),
-                                     }}
-                                     aria-hidden="true"
-                                />
-                            </div> : null
-                        }
+                        <div className={classes.section}>
+                            <div className={classes.sectionTitle} tabIndex={0}>
+                                Map Options
+                            </div>
+                            <div className="OptionsView-map-options gl-flex gl-space-around">
+                                <div className="gl-flex gl-align-center">
+                                    <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                                    <Checkbox id="mo-mw"
+                                              checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}
+                                              onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}
+                                              ariaLabelledby={"label-mo-mw"}/>
+                                    <label htmlFor="mo-mw" id={"label-mo-mw"}>
+                                        MyWay retailers
+                                    </label>
+                                </div>
+                                <div className="gl-flex gl-align-center">
+                                    <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")} className="gl-charSpace" style={{width: "36px", height: "36px"}} aria-hidden="true"/>
+                                    <Checkbox id="mo-pr"
+                                              checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}
+                                              onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}
+                                              ariaLabelledby={"label-mo-pr"}/>
+                                    <label htmlFor="mo-pr" id={"label-mo-pr"}>
+                                        Park & Ride
+                                    </label>
+                                </div>
+                                <div className="gl-flex gl-align-center">
+                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                                    <Tooltip
+                                        placement="top"
+                                        overlay={
+                                            <div className="OptionsView-tooltip">
+                                                This option displays bike share locations. Check current
+                                                availability <a href="https://airbike.network/#download" target="_blank"
+                                                                className="gl-link">here</a>.
+                                            </div>
+                                        }
+                                        align={{offset: [0, -10]}}
+                                        overlayClassName="app-style OptionsView-tooltip"
+                                        mouseEnterDelay={.5}
+                                    >
+                                        <div className="gl-flex gl-align-center">
+                                            <Checkbox id="mo-bs" checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
+                                                      onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}
+                                                      ariaLabelledby={"label-mo-bs"}/>
+                                            <label htmlFor="mo-bs" id={"label-mo-bs"}>
+                                                Bike Share
+                                            </label>
+                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
+                                                 className="OptionsView-infoIcon"/>
+                                        </div>
+                                    </Tooltip>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="h4-text OptionsView-separation OptionsView-sectionTitle"
-                         tabIndex={0}>Map Options</div>
-                    <div className="OptionsView-map-options gl-flex gl-space-around">
-                        <div className="gl-flex gl-align-center">
-                            <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
-                            <Checkbox id="mo-mw"
-                                      checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}
-                                      onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}
-                                      ariaLabelledby={"label-mo-mw"}/>
-                            <label htmlFor="mo-mw" id={"label-mo-mw"}>
-                                MyWay retailers
-                            </label>
-                        </div>
-                        <div className="gl-flex gl-align-center">
-                            <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")} className="gl-charSpace" style={{width: "36px", height: "36px"}} aria-hidden="true"/>
-                            <Checkbox id="mo-pr"
-                                      checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}
-                                      onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}
-                                      ariaLabelledby={"label-mo-pr"}/>
-                            <label htmlFor="mo-pr" id={"label-mo-pr"}>
-                                Park & Ride
-                            </label>
-                        </div>
-                        <div className="gl-flex gl-align-center">
-                            <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
-                            <Tooltip
-                                placement="top"
-                                overlay={
-                                    <div className="OptionsView-tooltip">
-                                        This option displays bike share locations. Check current
-                                        availability <a href="https://airbike.network/#download" target="_blank"
-                                                        className="gl-link">here</a>.
-                                    </div>
-                                }
-                                align={{offset: [0, -10]}}
-                                overlayClassName="app-style OptionsView-tooltip"
-                                mouseEnterDelay={.5}
-                            >
-                                <div className="gl-flex gl-align-center">
-                                    <Checkbox id="mo-bs" checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
-                                              onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}
-                                              ariaLabelledby={"label-mo-bs"}/>
-                                    <label htmlFor="mo-bs" id={"label-mo-bs"}>
-                                        Bike Share
-                                    </label>
-                                    <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                         className="OptionsView-infoIcon"/>
-                                </div>
-                            </Tooltip>
-                        </div>
-                    </div>
+                    <TKUIButton
+                        text={"Apply"}
+                        onClick={() => this.close(true)}
+                    />
                 </div>
-                <button className="gl-button gl-no-shrink" onClick={() => this.close(true)}>Apply</button>
-            </div>
+            </TKUICard>
         );
     }
 }
 
-const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>
@@ -440,9 +365,11 @@ const Connector: React.SFC<{children: (props: IConnectionProps) => React.ReactNo
     );
 };
 
-const TKUIOptionsView = (props: ITKUIOptionsViewProps) =>
-    <Connector>
-        {(cProps: IConnectionProps) => <TKUIProfileView {...props} {...cProps}/>}
-    </Connector>;
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default TKUIOptionsView;
+export default connect((config: TKUIConfig) => config.TKUIProfileView, config, Mapper);

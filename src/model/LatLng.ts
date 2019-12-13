@@ -15,13 +15,6 @@ class LatLng {
         return instance;
     }
 
-    /**
-     * Empty constructor, necessary for Util.clone
-     */
-    constructor() {
-        // Avoid empty error
-    }
-
     get lat(): number {
         return this._lat ? this._lat : 0;
     }

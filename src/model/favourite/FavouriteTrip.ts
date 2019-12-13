@@ -1,8 +1,8 @@
 import Location from "../Location";
 import {JsonObject, JsonProperty} from "json2typescript";
-import Options from "../Options";
 import {LocationConverter} from "../location/LocationConverter";
 import Favourite from "./Favourite";
+import TKUserProfile from "../options/TKUserProfile";
 
 @JsonObject
 class FavouriteTrip extends Favourite {
@@ -13,8 +13,8 @@ class FavouriteTrip extends Favourite {
     private _from: Location = new Location();   // need to specify default value in order for json2typescript to work
     @JsonProperty('to', LocationConverter)
     private _to: Location = new Location();     // need to specify default value in order for json2typescript to work
-    @JsonProperty('options', Options, true)
-    private _options: Options | undefined = undefined;
+    @JsonProperty('options', TKUserProfile, true)
+    private _options: TKUserProfile | undefined = undefined;
 
     public static createForLocation(to: Location): FavouriteTrip {
         return this.create(Location.createCurrLoc(), to);
@@ -43,11 +43,11 @@ class FavouriteTrip extends Favourite {
         this._to = value;
     }
 
-    get options(): Options | undefined {
+    get options(): TKUserProfile | undefined {
         return this._options;
     }
 
-    set options(value: Options | undefined) {
+    set options(value: TKUserProfile | undefined) {
         this._options = value;
     }
 

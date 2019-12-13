@@ -101,22 +101,6 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             ...resetStyles.button,
             padding: '10px'
         },
-        timePrefFace: {
-            cursor: 'pointer',
-            '&:after': {
-                content: '\"\\25be\"',
-                marginLeft: '-15px'
-            }
-        },
-        timePref: {
-            ...resetStyles.select,
-            padding: '10px 0',
-            marginRight: '5px',
-            cursor: 'pointer',
-            paddingRight: '15px',
-            /* z-index: 1; */
-            position: 'relative'
-        },
         selectContainer: {
             minWidth: '92px',
             ...genStyles.fontS

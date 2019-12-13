@@ -12,13 +12,15 @@ import genStyles from "../css/GenStyle.css";
 import {tKUIColors} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIDirectionsAction from "../action/TKUIRouteToLocationAction";
-import {TKUIButtonType} from "../buttons/TKUIButton";
-import {Subtract} from "utility-types";
+import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
+import {ReactComponent as IconFavourite} from "../images/ic-favorite-outline.svg";
+import {ReactComponent as IconSettings} from "../images/ic-settings-gear.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
     onRequestClose: () => void;
-    onShowFavourites: () => void;
+    onShowFavourites?: () => void;
+    onShowSettings?: () => void;
 }
 
 export interface IStyle {
@@ -51,9 +53,31 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             <TKUIDirectionsAction
                 text={"Get Direction"}
                 buttonType={TKUIButtonType.SECONDARY}
-                key={1}
                 onClick={props.onRequestClose}
                 style={{border: 'none'}}
+                key={1}
+            />,
+            <TKUIButton
+                text={"Favourites"}
+                icon={<IconFavourite/>}
+                type={TKUIButtonType.SECONDARY}
+                style={{border: 'none'}}
+                onClick={() => {
+                    props.onShowFavourites && props.onShowFavourites();
+                    props.onRequestClose();
+                }}
+                key={2}
+            />,
+            <TKUIButton
+                text={"Settings"}
+                icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
+                type={TKUIButtonType.SECONDARY}
+                style={{border: 'none'}}
+                onClick={() => {
+                    props.onShowSettings && props.onShowSettings();
+                    props.onRequestClose();
+                }}
+                key={3}
             />
         ],
         nativeAppLinks: () => {
@@ -68,10 +92,10 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 marginTop: '15px'
             };
             return [
-                <button style={storeBtnStyle}>
+                <button style={storeBtnStyle} key={1}>
                     <AppleStoreLogo style={{marginRight: '10px'}}/> App Store
                 </button>,
-                <button style={storeBtnStyle}>
+                <button style={storeBtnStyle} key={2}>
                     <PlayStoreLogo style={{marginRight: '10px'}}/> Google Play
                 </button>
             ]}

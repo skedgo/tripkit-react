@@ -107,9 +107,8 @@ class Util {
 
     public static log(obj: any, level: Environment = Env.DEVELOPMENT) {
         if (Environment.isDev()
-            || Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION)
-            || Environment.isProd() && level === Env.PRODUCTION) {
-            console.log(obj);
+            || (Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION))
+            || (Environment.isProd() && level === Env.PRODUCTION)) {
         }
     }
 

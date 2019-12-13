@@ -119,6 +119,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             mapLayers: new Map<MapLocationType, Location[]>()
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
+        NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
     private onMoveEnd() {
@@ -404,11 +405,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
             </div>
         )
     }
-
-    public componentWillMount(): void {
-        NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
-    }
-
 
     public componentDidMount(): void {
         this.leafletElement!.on("dblclick", event1 => {

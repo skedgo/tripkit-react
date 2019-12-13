@@ -20,13 +20,6 @@ class ModeIdentifier {
     public static readonly TRAM_ID = "pt_pub_tram";
     public static readonly WALK_ID = "wa_wal";
 
-    /**
-     * Empty constructor, necessary for Util.clone
-     */
-    constructor() {
-        // Avoid empty error
-    }
-
     get title(): string {
         return this._title;
     }
