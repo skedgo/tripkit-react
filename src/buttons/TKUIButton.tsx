@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
+import {ClassNameMap} from 'react-jss';
 import {CSSProps, TKUIStyles, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {tKUIButtonDefaultStyle} from "./TKUIButton.css";

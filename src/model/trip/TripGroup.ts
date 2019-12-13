@@ -14,10 +14,6 @@ class TripGroup extends Trip {
 
     private selected?: number;
 
-    constructor() {
-        super()
-    }
-
     get trips(): Trip[] {
         return this._trips;
     }

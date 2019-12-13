@@ -1,20 +1,20 @@
 import * as React from "react";
-import Options from "../model/Options";
 import OptionsData from "../data/OptionsData";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 export interface IOptionsContext {
-    value: Options,
-    onChange: (value: Options) => void
+    value: TKUserProfile,
+    onChange: (value: TKUserProfile) => void
 }
 
 export const OptionsContext = React.createContext<IOptionsContext>({
-    value: new Options(),
-    onChange: (value: Options) => {
+    value: new TKUserProfile(),
+    onChange: (value: TKUserProfile) => {
         // Not empty
     }
 });
 
-class OptionsProvider extends React.Component<{}, {value: Options}> {
+class OptionsProvider extends React.Component<{}, {value: TKUserProfile}> {
 
     constructor(props: {}) {
         super(props);
@@ -23,11 +23,11 @@ class OptionsProvider extends React.Component<{}, {value: Options}> {
         };
         // In case options are changed directly through OptionsData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
-        OptionsData.instance.addChangeListener((update: Options) => this.setState({value: update}));
+        OptionsData.instance.addChangeListener((update: TKUserProfile) => this.setState({value: update}));
         this.onChange = this.onChange.bind(this);
     }
 
-    private onChange(value: Options): void {
+    private onChange(value: TKUserProfile): void {
         OptionsData.instance.save(value);
         this.setState({
             value: value

@@ -36,7 +36,6 @@ export {default as TripGroup} from "./model/trip/TripGroup";
 export {default as ServiceShape} from "./model/trip/ServiceShape";
 export {default as Street} from "./model/trip/Street";
 // export {TKUIProfileView as OptionsView} from "./options/OptionsView";
-export {default as Options} from "./model/Options";
 export {default as OptionsData} from "./data/OptionsData";
 export {default as FavouritesData} from "./data/FavouritesData";
 export {default as Region} from "./model/region/Region";

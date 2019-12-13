@@ -5,18 +5,14 @@ import {ReactComponent as IconAdd} from "../images/ic-star-outline.svg";
 import {ReactComponent as IconRemove} from "../images/ic-star-filled.svg";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import OptionsData from "../data/OptionsData";
-import Options from "../model/Options";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {
     favourite?: FavouriteTrip;
 }
 
 class FavouriteBtn extends React.Component<IProps, {}> {
-
-    constructor(props: IProps) {
-        super(props);
-    }
 
     public render(): React.ReactNode {
         const exists = this.props.favourite && FavouritesData.instance.has(this.props.favourite);
@@ -32,7 +28,7 @@ class FavouriteBtn extends React.Component<IProps, {}> {
                             if (exists) {
                                 FavouritesData.instance.remove(this.props.favourite);
                             } else {
-                                this.props.favourite.options = Object.assign(new Options(),
+                                this.props.favourite.options = Object.assign(new TKUserProfile(),
                                     FavouritesData.getFavOptionsPart(OptionsData.instance.get()));
                                 FavouritesData.instance.add(this.props.favourite);
                             }

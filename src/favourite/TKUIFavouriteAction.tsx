@@ -4,11 +4,11 @@ import {ReactComponent as IconRemove} from "../images/ic-favorite.svg";
 import {Observable} from "rxjs";
 import OptionsData from "../data/OptionsData";
 import FavouritesData from "../data/FavouritesData";
-import Options from "../model/Options";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import Favourite from "../model/favourite/Favourite";
 import * as CSS from 'csstype';
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {
     favourite: Favourite;
@@ -38,7 +38,7 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
             FavouritesData.instance.remove(favourite);
         } else {
             if (favourite instanceof FavouriteTrip) {
-                favourite.options = Object.assign(new Options(),
+                favourite.options = Object.assign(new TKUserProfile(),
                     FavouritesData.getFavOptionsPart(OptionsData.instance.get()));
             }
             FavouritesData.instance.add(favourite);

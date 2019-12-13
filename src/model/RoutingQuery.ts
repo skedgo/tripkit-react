@@ -1,7 +1,7 @@
 import Location from "./Location";
 import {Moment} from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
-import Options from "./Options";
+import TKUserProfile from "./options/TKUserProfile";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -91,7 +91,7 @@ class RoutingQuery {
             "&time=" + Math.floor(this.time.valueOf() / 1000);
     }
 
-    public getQueryUrl(modeSet: string[], options: Options): string {
+    public getQueryUrl(modeSet: string[], options: TKUserProfile): string {
         if (this.from === null || this.to === null) {
             return "";
         }

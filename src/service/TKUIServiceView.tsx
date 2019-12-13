@@ -8,7 +8,6 @@ import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
 import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
@@ -163,7 +162,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             rightLabel={(step: ServiceStopLocation) => step.name}
                             stepMarker={(step: ServiceStopLocation) =>
                                 step.departure === departure.startTime ?
-                                    <img src={transIcon} className={classes.currStopMarker}/> : undefined
+                                    <img src={transIcon} className={classes.currStopMarker} alt=""/> : undefined
                             }
                             stepClassName={(step: ServiceStopLocation) =>
                                 (step.departure && step.departure < departure.startTime ? classes.pastStop :

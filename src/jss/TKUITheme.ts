@@ -1,4 +1,4 @@
-import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator} from 'react-jss'
+import {createGenerateClassName} from 'react-jss'
 import * as CSS from 'csstype';
 
 export interface TKUITheme {

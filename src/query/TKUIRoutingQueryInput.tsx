@@ -14,7 +14,6 @@ import Util from "../util/Util";
 import 'rc-tooltip/assets/bootstrap_white.css';
 import DateTimePicker from "../time/DateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
-import {ReactElement} from "react";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
@@ -22,7 +21,6 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap, Styles} from "react-jss";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import classNames from "classnames";
@@ -69,8 +67,6 @@ interface IStyle {
     divider: CSSProps<IProps>;
     swap: CSSProps<IProps>;
     footer: CSSProps<IProps>;
-    timePrefFace: CSSProps<IProps>;
-    timePref: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
     selectContainer: CSSProps<IProps>;
     selectControl: CSSProps<IProps>;
@@ -289,7 +285,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                               onClick={this.onSwapClicked}/>
                 </div>
                 <div className={classes.footer + " QueryInput-timeBtnPanel gl-flex gl-align-center gl-space-between"}>
-                    {/*TODO: SEGUIR ACÁ style select dropdown */}
                     <Select
                         options={timePrefOptions}
                         value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}

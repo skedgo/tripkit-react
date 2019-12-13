@@ -19,13 +19,6 @@ class BBox {
         return BBox.createBBox(LatLng.createLatLng(lfne.lat, lfne.lng), LatLng.createLatLng(lfsw.lat, lfsw.lng));
     }
 
-    /**
-     * Empty constructor, necessary for Util.clone
-     */
-    constructor() {
-        // Avoid empty error
-    }
-
     get ne(): LatLng {
         return this._ne;
     }

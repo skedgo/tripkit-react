@@ -8,14 +8,21 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
     (theme: TKUITheme) => ({
         modalContainer: {
             zIndex: '1001!important',
-            width: '300px',
             background: 'none!important',
-            fontFamily: theme.fontFamily
+            fontFamily: theme.fontFamily,
+            // The +5px is due to shadow being on modal.
+            width: '305px',
+            paddingRight: '5px',
+            ...genStyles.flex,
+            justifyContent: 'flex-start!important',
+            WebkitJustifyContent: 'flex-start!important'
         },
         modal: {
             backgroundColor: 'white',
             height: '100%',
             width: '100%',
+            // Shadow needs to be here since modalContainer hides a little while after modal.
+            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             ...genStyles.flex
         },
         main: {
@@ -27,6 +34,7 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             ...genStyles.flex,
             ...genStyles.spaceBetween,
             ...genStyles.alignCenter,
+            ...genStyles.noShrink,
             height: '90px',
             padding: '0 20px',
             borderBottom: '1px solid ' + tKUIColors.black4
@@ -46,7 +54,12 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
         menuItems: {
             ...genStyles.flex,
             ...genStyles.column,
-            ...genStyles.grow
+            ...genStyles.grow,
+            ...genStyles.alignStart,
+            padding: '20px 0',
+            '&>*': {
+                marginBottom: '10px'
+            }
         },
         nativeAppLinksPanel: {
             background: '#154c7b',

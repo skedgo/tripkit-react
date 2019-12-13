@@ -16,7 +16,6 @@ import {ReactComponent as IconCity} from '../images/location/ic-city.svg';
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import City from "../model/location/City";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import CurrentLocationGeocoder from "./CurrentLocationGeocoder";
 
 class MultiGeocoderOptions {
@@ -121,7 +120,7 @@ class MultiGeocoderOptions {
             const relevance = Math.max(LocationUtil.relevance(r1.address, r2.address) , LocationUtil.relevance(r2.address, r1.address));
             const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
             if (r1.source !== r2.source) {
-                Util.log(r1.address + " (" + r1.source + ")" + " | " + r2.address + " (" + r2.source + ")" + " dist: " + distanceInMetres + " relevance: " + relevance);
+                Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance);
             }
             if (r1.source !== r2.source && relevance > .7 && (LocationUtil.distanceInMetres(r1, r2) < 100)) {
                 return true;

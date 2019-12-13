@@ -1,12 +1,12 @@
 import {JsonObject, JsonProperty} from "json2typescript";
-import WeightingPreferences from "./WeightingPreferences";
-import {MapLocationType, MapLocationTypeConverter} from "./location/MapLocationType";
-import ModeIdentifier from "./region/ModeIdentifier";
-import Features from "../env/Features";
-import TKTransportOptions from "./options/TKTransportOptions";
+import {MapLocationType, MapLocationTypeConverter} from "../location/MapLocationType";
+import ModeIdentifier from "../region/ModeIdentifier";
+import Features from "../../env/Features";
+import TKTransportOptions from "./TKTransportOptions";
+import TKWeightingPreferences from "./TKWeightingPreferences";
 
 @JsonObject
-class Options {
+class TKUserProfile {
 
     // Modes disabled by default, can be changed by user, recorded in local storage.
     private static readonly defaultDisabled = [ModeIdentifier.SCHOOLBUS_ID, ModeIdentifier.TAXI_ID, ModeIdentifier.UBER_ID, ModeIdentifier.CAR_RENTAL_SW_ID];
@@ -15,10 +15,10 @@ class Options {
         return [ModeIdentifier.SCHOOLBUS_ID].concat(Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
     };
 
-    @JsonProperty('weightingPrefs', WeightingPreferences, true)
-    private _weightingPrefs: WeightingPreferences = WeightingPreferences.create(1, 1, 2);
+    @JsonProperty('weightingPrefs', TKWeightingPreferences, true)
+    public weightingPrefs: TKWeightingPreferences = TKWeightingPreferences.create();
     @JsonProperty('modesDisabled', [String], true)
-    private _modesDisabled: string[] = Options.defaultDisabled;
+    private _modesDisabled: string[] = TKUserProfile.defaultDisabled;
     @JsonProperty('transportOptions', TKTransportOptions, true)
     public transportOptions: TKTransportOptions = new TKTransportOptions();
     @JsonProperty('wheelchair', Boolean, true)
@@ -26,27 +26,12 @@ class Options {
     @JsonProperty('mapLayers', MapLocationTypeConverter, true)
     private _mapLayers: MapLocationType[] = [];
 
-    /**
-     * Empty constructor, necessary for Util.clone
-     */
-    constructor() {
-        // Avoid empty error
-    }
-
-    get weightingPrefs(): WeightingPreferences {
-        return this._weightingPrefs;
-    }
-
-    set weightingPrefs(value: WeightingPreferences) {
-        this._weightingPrefs = value;
-    }
-
     get modesDisabled(): string[] {
-        return this._modesDisabled.concat(Options.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));
+        return this._modesDisabled.concat(TKUserProfile.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));
     }
 
     set modesDisabled(value: string[]) {
-        this._modesDisabled = value.filter((mode: string) => Options.overrideDisabled.indexOf(mode) === -1);
+        this._modesDisabled = value.filter((mode: string) => TKUserProfile.overrideDisabled.indexOf(mode) === -1);
     }
 
     get wheelchair(): boolean {
@@ -73,4 +58,4 @@ class Options {
     }
 }
 
-export default Options;
+export default TKUserProfile;

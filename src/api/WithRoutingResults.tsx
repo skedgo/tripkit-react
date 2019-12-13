@@ -10,7 +10,6 @@ import NetworkUtil from "../util/NetworkUtil";
 import Environment, {Env} from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
 import {JsonConvert} from "json2typescript";
-import Options from "../model/Options";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
@@ -20,11 +19,12 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKShareHelper from "../share/TKShareHelper";
 import * as queryString from "query-string";
 import MultiGeocoder from "../geocode/MultiGeocoder";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
-    options: Options;
-    computeModeSets?: (query: RoutingQuery, options: Options) => string[][];
+    options: TKUserProfile;
+    computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
 }
 
 interface IWithRoutingResultsState {
@@ -352,7 +352,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
         }
 
-        public sameApiQueries(q1: RoutingQuery, opts1: Options, q2: RoutingQuery, opts2: Options): boolean {
+        public sameApiQueries(q1: RoutingQuery, opts1: TKUserProfile, q2: RoutingQuery, opts2: TKUserProfile): boolean {
             // To avoid considering 2 queries as different because timepref is NOW and RoutingQuery.time is
             // computed on call, using DateTimeUtil.getNow(), so with bad luck will fall on different seconds.
             // if (q1.timePref === TimePreference.NOW && q2.timePref === TimePreference.NOW) {
@@ -388,7 +388,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             });
         }
 
-        public computeModeSets(query: RoutingQuery, options: Options): string[][] {
+        public computeModeSets(query: RoutingQuery, options: TKUserProfile): string[][] {
             const referenceLatLng = query.from && query.from.isResolved() ? query.from : (query.to && query.to.isResolved() ? query.to : undefined);
             if (!referenceLatLng) {
                 return [];
