@@ -17,7 +17,7 @@ import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "../query/T
 import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "../trip-planner/TKUITripPlanner";
 import {TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle} from "../service/occupancy/TKUITrainOccupancyInfo";
 import {TKUIShareViewProps, TKUIShareViewStyle} from "../share/TKUIShareView";
-import {TKUISearchBarProps, TKUISearchBarStyle} from "../query/TKUISearchBar";
+import {TKUILocationSearchProps, TKUILocationSearchStyle} from "../query/TKUILocationSearch";
 import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../location/TKUILocationDetailView";
 import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKUIFavouritesView";
 import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
@@ -29,7 +29,7 @@ import {TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle} from "../options/TKUIU
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
-    TKUISearchBar: TKComponentConfig<TKUISearchBarProps, TKUISearchBarStyle>;
+    TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
     TKUITKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;

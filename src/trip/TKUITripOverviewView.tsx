@@ -92,6 +92,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                                                }
                                            });
                                        }}
+                                       key={"shareArrivalBtn"}
                     />;
                 }}
             </TKUIControlsCard>

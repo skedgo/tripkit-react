@@ -55,9 +55,10 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
     }
 
     public render(): React.ReactNode {
+        const {thumbIcon, label, leftLabel, rightLabel, ...sliderProps} = this.props;
         return (
             <div style={genStyles.fontS}>
-                <this.WithStyle {...this.props}/>
+                <this.WithStyle {...sliderProps}/>
                 <div style={{...genStyles.flex, ...genStyles.spaceBetween, color: 'black'}}>
                     <span style={{minWidth: '100px'}}>{this.props.leftLabel}</span>
                     <span>{this.props.label}</span>

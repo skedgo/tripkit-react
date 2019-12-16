@@ -29,7 +29,7 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
-import TKUISearchBar from "../query/TKUISearchBar";
+import TKUILocationSearch from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import TKUILocationDetailView from "../location/TKUILocationDetailView";
@@ -70,6 +70,7 @@ interface IState {
 }
 
     // TODO:
+    // Naming convention: analyze when to suffix with 'View', maybe never? In iOS they use 'Card' suffix.
     // - Maybe define a WithCard HOC that wraps a component inside a Card, and adds properties open, onRequestClose, and
     // and any other property of card that want to expose to outside. OnRequestClose is passed to the card, but also to
     // the consumer / wrapped component, so it can control close (e.g. needed by TKUIProfileView apply btn).
@@ -163,7 +164,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const searchBar = !this.props.directionsView &&
-            <TKUISearchBar
+            <TKUILocationSearch
                 onDirectionsClicked={() => {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
                     this.props.onDirectionsView(true);

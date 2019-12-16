@@ -133,16 +133,19 @@ class TKUITripRow extends React.Component<IProps, {}> {
                  }}
             >
                 {this.props.badge &&
-                <div className={classes.badge}>
+                <div className={classes.badge}
+                     key={"badge"}
+                >
                     {badgeIcon(this.props.badge)}
                     {this.props.badge}
                 </div>
                 }
-                {visibleAlternatives.map((altTrip: Trip) =>
+                {visibleAlternatives.map((altTrip: Trip, i: number) =>
                     <div className={classNames(classes.alternative,
                         nOfAlts > 1 && altTrip === selectedAlt && classes.selectedAlternative)}
                          onClick={() => this.props.onAlternativeClick &&
                          this.props.onAlternativeClick(trip as TripGroup, altTrip)}
+                         key={i}
                     >
                         <TKUITripTime value={altTrip} brief={this.props.brief}/>
                         <div className={classes.trackAndAction}>
@@ -158,7 +161,9 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         </div>
                     </div>
                 )}
-                <div className={classes.footer}>
+                <div className={classes.footer}
+                     key={"footer"}
+                >
                     <div className={classes.info}>
                         {info}
                     </div>

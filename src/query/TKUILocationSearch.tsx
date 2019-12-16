@@ -1,7 +1,7 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUISearchBarDefaultStyle} from "./TKUISearchBar.css";
+import {tKUILocationSearchDefaultStyle} from "./TKUILocationSearch.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import Location from "../model/Location";
@@ -49,16 +49,16 @@ interface IStyle {
     directionsIcon: CSSProps<IProps>;
 }
 
-export type TKUISearchBarProps = IProps;
-export type TKUISearchBarStyle = IStyle;
+export type TKUILocationSearchProps = IProps;
+export type TKUILocationSearchStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUISearchBar {...props}/>,
-    styles: tKUISearchBarDefaultStyle,
-    classNamePrefix: "TKUISearchBar"
+    render: props => <TKUILocationSearch {...props}/>,
+    styles: tKUILocationSearchDefaultStyle,
+    classNamePrefix: "TKUILocationSearch"
 };
 
-class TKUISearchBar extends React.Component<IProps, {}> {
+class TKUILocationSearch extends React.Component<IProps, {}> {
 
     private geocodingData: MultiGeocoder;
 
@@ -143,4 +143,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;
 
-export default connect((config: TKUIConfig) => config.TKUISearchBar, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUILocationSearch, config, Mapper);
