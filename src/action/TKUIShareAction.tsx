@@ -51,6 +51,7 @@ class TKUIShareAction extends React.Component<IProps, {}> {
                                                })
                                            );
                                        }}
+                                       key={"shareActionBtn"}
                     />;
                 }}
             </TKUIControlsCard>

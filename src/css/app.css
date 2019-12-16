@@ -469,13 +469,13 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   border-color: #0242ac;
 }
 
-@media (max-width: 800px) {
+/*@media (max-width: 800px) {*/
 
-  .ReactModal__Content {
-    max-width: 100% !important;
-    width: 100% !important;
-    max-height: 100% !important;
-    height: 100% !important;
-  }
+  /*.ReactModal__Content {*/
+    /*max-width: 100% !important;*/
+    /*width: 100% !important;*/
+    /*max-height: 100% !important;*/
+    /*height: 100% !important;*/
+  /*}*/
 
-}
+/*}*/

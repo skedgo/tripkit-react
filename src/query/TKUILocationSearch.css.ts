@@ -1,10 +1,10 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUISearchBarProps, TKUISearchBarStyle} from "./TKUISearchBar";
+import {TKUILocationSearchProps, TKUILocationSearchStyle} from "./TKUILocationSearch";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
-export const tKUISearchBarDefaultStyle: TKUIStyles<TKUISearchBarStyle, TKUISearchBarProps> =
+export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle, TKUILocationSearchProps> =
     (theme: TKUITheme) => ({
         main: {
             backgroundColor: 'white',

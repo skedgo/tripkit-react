@@ -97,7 +97,7 @@ class RoutingQuery {
         }
         let modeParams = "";
         for (const mode of modeSet) {
-            modeParams += "&modes[]=" + mode;
+            modeParams += "&modes=" + mode;
         }
         // TODO: Model avoided modes
         // if (modeSet.indexOf("pt_pub") !== -1) {
