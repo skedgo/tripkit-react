@@ -28,6 +28,7 @@ import TKUIShareAction from "../action/TKUIShareAction";
 import {TKUIButtonType} from "../buttons/TKUIButton";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    open?: boolean;
     onRequestClose?: () => void;
     onDirectionsClicked?: () => void;
     top?: number;
@@ -125,6 +126,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             <TKUICard
                 title={this.props.title}
                 subtitle={subtitle}
+                open={this.props.open}
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
                         <div className={classes.serviceList}>
