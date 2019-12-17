@@ -25,27 +25,48 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         }
     },
     contElementClass: {
-        zIndex: '1000!important'
+        zIndex: '1000!important',
+        // left: '-100%!important',
+        // right: '100%!important',
+        // left: '-50%!important',
+        // right: '50%!important',
+        left: '0!important',
+        right: '0!important',
+        overflowX: 'visible',
+        top: '60px!important'
+        // top: '0!important'
     },
     modalElementClass: {
-        position: 'absolute',
-        top: '70px',
-        // top: '270px',
+        top: '0',
+        // top: '30px',
         // top: '90%',
         backgroundColor: 'white',
         width: '100%',
         maxWidth: '700px',
-        minHeight: 'calc(100% - 70px)',
+        // minHeight: 'calc(100% - 30px)',
+        // minHeight: '567px',
+        // minHeight: '607px',
+        // height: '607px',
+        // height: '547px',
+        // height: '500px',
+        height: '100%',
+        minHeight: '450px',
         borderTopLeftRadius: '4px',
         borderTopRightRadius: '4px',
-        textAlign: 'center'
+        textAlign: 'center',
+        position: 'absolute',
+        // left: '50%',
+        // right: '-50%',
+        // position: 'fixed',
+        left: '0',
+        right: '0'
     },
     modalMiddle: {
-        top: '50%',
+        top: '50%!important',
         // minHeight: '50%'
     },
     modalMinimized: {
-        top: '90%',
+        top: '90%!important',
         // minHeight: '10%'
     }
 };
