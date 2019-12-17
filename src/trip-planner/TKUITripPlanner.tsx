@@ -44,8 +44,6 @@ import TKUISidebar from "../sidebar/TKUISidebar";
 import MediaQuery, { useMediaQuery } from 'react-responsive';
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import Drawer from 'react-drag-drawer';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -56,12 +54,6 @@ export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IS
 export interface IStyle {
     main: CSSProps<IProps>;
     queryPanel: CSSProps<IProps>;
-    contElementClass: CSSProps<IProps>;
-    modalElementClass: CSSProps<IProps>;
-    modalMinimized: CSSProps<IProps>;
-    modalMiddle: CSSProps<IProps>;
-    contElemTouching: CSSProps<IProps>;
-    modalElementTouching: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -79,8 +71,6 @@ interface IState {
     showSettings: boolean;
     showFavourites: boolean;
     showTripDetail?: boolean;
-    showTestCard?: boolean;
-    touching: boolean;
 }
 
     // TODO:
@@ -124,11 +114,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private ref: any;
 
-    private testCardRef: any;
-    private testCardContRef: any;
-    private scrolling: any;
-    // private touching: boolean = false;
-
     constructor(props: IProps) {
         super(props);
         const userIpLocation = Util.global.userIpLocation;
@@ -137,9 +122,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSettings: false,
             mapView: false,
             showFavourites: false,
-            showTripDetail: TKShareHelper.isSharedTripLink(),
-            showTestCard: true,
-            touching: false
+            showTripDetail: TKShareHelper.isSharedTripLink()
         };
         const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
         this.props.onViewportChange(initViewport);
@@ -326,133 +309,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {tripDetailView}
                 {departuresView}
                 {serviceDetailView}
-                {/*{<TKUICard*/}
-                    {/*open={this.state.showTestCard}*/}
-                    {/*onRequestClose={() => this.setState({showTestCard: false})}*/}
-                    {/*presentation={CardPresentation.SLIDE_UP}*/}
-                    {/*top={200}*/}
-                    {/*title={"Test card"}*/}
-                {/*>*/}
-                    {/*<div style={{height: '400px', width: '100%', background: 'red'}}>*/}
-                    {/*</div>*/}
-                {/*</TKUICard>}*/}
-                <Drawer
-                    // open={this.state.showTestCard}
-                    open={true}
-                    onRequestClose={() => {
-                        console.log("onRequestClose");
-                        return this.setState({showTestCard: false});
-                    }}
-                    // containerElementClass={classes.contElementClass}
-                    // modalElementClass={classNames(classes.modalElementClass,
-                    //     (this.state.showTestCard === false ? classes.modalMinimized :
-                    //         (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
-                    containerElementClass={classNames(classes.contElementClass,
-                        (this.state.showTestCard === false ? classes.modalMinimized :
-                            (this.state.showTestCard === undefined ? classes.modalMiddle : "")),
-                            this.state.touching && this.state.showTestCard !== true ? classes.contElemTouching : undefined
-                        )}
-                    modalElementClass={classNames(classes.modalElementClass,
-                        this.state.touching && this.state.showTestCard !== true ? classes.modalElementTouching : undefined)}
-                    allowClose={false}
-                    inViewportChage={() => console.log("vp change")}
-                    parentElement={document.body}
-                    getContainerRef={(ref: any) => {
-                        this.testCardContRef = ref;
-                        this.testCardContRef &&
-                        this.testCardContRef.addEventListener("scroll", () => {
-                            window.clearTimeout(this.scrolling);
-                            if (this.state.showTestCard === true) {
-                                this.testCardContRef.scrollTop = 0;
-                            }
-                            if (!this.state.touching) {
-                                // if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
-                                //     this.setState({showTestCard: true});
-                                //     this.testCardContRef.scrollTop = 0;
-                                // } else
-                                    if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                                    this.setState({showTestCard: undefined});
-                                    this.testCardContRef.scrollTop = 0;
-                                } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                                    this.setState({showTestCard: true});
-                                    this.testCardContRef.scrollTop = 0;
-                                }
-                                return;
-                            }
-                            this.scrolling = setTimeout(() => {
-                                console.log("Scroll ended");
-                                console.log(this.testCardContRef.scrollTop);
-                                if (!this.state.touching) {
-                                    if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
-                                        this.setState({showTestCard: true});
-                                        this.testCardContRef.scrollTop = 0;
-                                    } else if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                                        this.setState({showTestCard: undefined});
-                                        this.testCardContRef.scrollTop = 0;
-                                    } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                                        this.setState({showTestCard: true});
-                                        this.testCardContRef.scrollTop = 0;
-                                    }
-                                }
-                            }, 70);
-
-                        })
-                    }}
-                    getModalRef={(ref: any) => {
-                        this.testCardRef = ref;
-                        this.testCardRef.addEventListener("touchstart", () => this.setState({touching: true}));
-                        this.testCardRef.addEventListener("touchend",
-                            () => {
-                                this.setState({touching: false});
-                                console.log("touchEnd");
-                                console.log(getTranslate3d(this.testCardRef));
-                                console.log(this.testCardContRef);
-                                console.log(this.testCardContRef.scrollTop);
-                                // if (getTranslate3d(this.testCardRef)[1] > 300) {
-                                //     this.setState({showTestCard: false})
-                                // } else if (getTranslate3d(this.testCardRef)[1] > 100) {
-                                //     this.setState({showTestCard: undefined});
-                                // }
-
-
-                                if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 300) {
-                                    this.setState({showTestCard: false});
-                                } else
-
-                                if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 100) {
-                                    this.setState({showTestCard: undefined})
-                                } else if (this.state.showTestCard === undefined && getTranslate3d(this.testCardRef)[1] > 100) {
-                                    this.setState({showTestCard: false});
-                                }
-
-                                // else if (getTranslate3d(this.testCardRef)[1] === 0) {
-                                //     this.setState({showTestCard: true});
-                                // }
-
-                                // else if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                                //     this.setState({showTestCard: undefined});
-                                // } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                                //     this.setState({showTestCard: true});
-                                // }
-                            })
-                    }}
-                    onDrag={() => this.testCardRef && console.log(this.testCardRef.style.transform)}
-                >
-                    <div style={
-                        {
-                            // height: '100%',
-                            height: '30px',
-                            width: '100%',
-                            background: 'red'
-                        }
-                    }>
-                        <button
-                            // onClick={() => this.setState({showTestCard: true})}
-                        >
-                            Up!
-                        </button>
-                    </div>
-                </Drawer>
+                {/*<TKUISlideUp>*/}
+                    {/*<div style={{*/}
+                        {/*background: 'lightblue',*/}
+                        {/*...genStyles.grow*/}
+                    {/*}}/>*/}
+                {/*</TKUISlideUp>*/}
             </div>
         );
     }

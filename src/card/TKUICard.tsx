@@ -11,6 +11,7 @@ import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import TKUISlideUp from "./TKUISlideUp";
 
 export enum CardPresentation {
     MODAL,
@@ -98,16 +99,9 @@ class TKUICard extends React.Component<IProps, {}> {
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
-                <Drawer
-                    open={this.props.open}
-                    onRequestClose={this.props.onRequestClose}
-                    modalElementClass={classes.modal}
-                    containerElementClass={classes.modalContainer}
-                    // allowClose={false}
-                    // dontApplyListeners={true}
-                >
+                <TKUISlideUp>
                     {body}
-                </Drawer>
+                </TKUISlideUp>
                 :
                 presentation === CardPresentation.MODAL ?
                     <Modal
