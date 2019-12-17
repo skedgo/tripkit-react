@@ -339,11 +339,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         console.log("onRequestClose");
                         return this.setState({showTestCard: false});
                     }}
-                    containerElementClass={classes.contElementClass}
-                    modalElementClass={classNames(classes.modalElementClass,
+                    // containerElementClass={classes.contElementClass}
+                    // modalElementClass={classNames(classes.modalElementClass,
+                    //     (this.state.showTestCard === false ? classes.modalMinimized :
+                    //         (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
+                    containerElementClass={classNames(classes.contElementClass,
                         (this.state.showTestCard === false ? classes.modalMinimized :
                             (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
-                    // notifyWillClose={(willIClose: any) => console.log({ willIClose })}
+                    modalElementClass={classNames(classes.modalElementClass)}
                     allowClose={false}
                     inViewportChage={() => console.log("vp change")}
                     parentElement={document.body}
@@ -400,11 +403,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 // } else if (getTranslate3d(this.testCardRef)[1] > 100) {
                                 //     this.setState({showTestCard: undefined});
                                 // }
+                                if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 300) {
+                                    this.setState({showTestCard: false});
+                                } else
+
                                 if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 100) {
                                     this.setState({showTestCard: undefined})
                                 } else if (this.state.showTestCard === undefined && getTranslate3d(this.testCardRef)[1] > 100) {
                                     this.setState({showTestCard: false});
                                 }
+
+                                // else if (getTranslate3d(this.testCardRef)[1] === 0) {
+                                //     this.setState({showTestCard: true});
+                                // }
+
                                 // else if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
                                 //     this.setState({showTestCard: undefined});
                                 // } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
@@ -416,12 +428,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 >
                     <div style={
                         {
-                            height: '100%',
+                            // height: '100%',
+                            height: '30px',
                             width: '100%',
                             background: 'red'
                         }
                     }>
-                        <button onClick={() => this.setState({showTestCard: true})}>
+                        <button
+                            // onClick={() => this.setState({showTestCard: true})}
+                        >
                             Up!
                         </button>
                     </div>
