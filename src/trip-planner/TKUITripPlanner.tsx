@@ -60,6 +60,8 @@ export interface IStyle {
     modalElementClass: CSSProps<IProps>;
     modalMinimized: CSSProps<IProps>;
     modalMiddle: CSSProps<IProps>;
+    contElemTouching: CSSProps<IProps>;
+    modalElementTouching: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -78,6 +80,7 @@ interface IState {
     showFavourites: boolean;
     showTripDetail?: boolean;
     showTestCard?: boolean;
+    touching: boolean;
 }
 
     // TODO:
@@ -124,7 +127,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private testCardRef: any;
     private testCardContRef: any;
     private scrolling: any;
-    private touching: boolean = false;
+    // private touching: boolean = false;
 
     constructor(props: IProps) {
         super(props);
@@ -135,7 +138,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             mapView: false,
             showFavourites: false,
             showTripDetail: TKShareHelper.isSharedTripLink(),
-            showTestCard: true
+            showTestCard: true,
+            touching: false
         };
         const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
         this.props.onViewportChange(initViewport);
@@ -332,7 +336,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     {/*<div style={{height: '400px', width: '100%', background: 'red'}}>*/}
                     {/*</div>*/}
                 {/*</TKUICard>}*/}
-                {<Drawer
+                <Drawer
                     // open={this.state.showTestCard}
                     open={true}
                     onRequestClose={() => {
@@ -345,8 +349,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     //         (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
                     containerElementClass={classNames(classes.contElementClass,
                         (this.state.showTestCard === false ? classes.modalMinimized :
-                            (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
-                    modalElementClass={classNames(classes.modalElementClass)}
+                            (this.state.showTestCard === undefined ? classes.modalMiddle : "")),
+                            this.state.touching && this.state.showTestCard !== true ? classes.contElemTouching : undefined
+                        )}
+                    modalElementClass={classNames(classes.modalElementClass,
+                        this.state.touching && this.state.showTestCard !== true ? classes.modalElementTouching : undefined)}
                     allowClose={false}
                     inViewportChage={() => console.log("vp change")}
                     parentElement={document.body}
@@ -355,7 +362,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.testCardContRef &&
                         this.testCardContRef.addEventListener("scroll", () => {
                             window.clearTimeout(this.scrolling);
-                            if (!this.touching) {
+                            if (this.state.showTestCard === true) {
+                                this.testCardContRef.scrollTop = 0;
+                            }
+                            if (!this.state.touching) {
                                 // if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
                                 //     this.setState({showTestCard: true});
                                 //     this.testCardContRef.scrollTop = 0;
@@ -372,7 +382,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             this.scrolling = setTimeout(() => {
                                 console.log("Scroll ended");
                                 console.log(this.testCardContRef.scrollTop);
-                                if (!this.touching) {
+                                if (!this.state.touching) {
                                     if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
                                         this.setState({showTestCard: true});
                                         this.testCardContRef.scrollTop = 0;
@@ -390,10 +400,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     }}
                     getModalRef={(ref: any) => {
                         this.testCardRef = ref;
-                        this.testCardRef.addEventListener("touchstart", () => this.touching = true)
+                        this.testCardRef.addEventListener("touchstart", () => this.setState({touching: true}));
                         this.testCardRef.addEventListener("touchend",
                             () => {
-                                this.touching = false;
+                                this.setState({touching: false});
                                 console.log("touchEnd");
                                 console.log(getTranslate3d(this.testCardRef));
                                 console.log(this.testCardContRef);
@@ -403,6 +413,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 // } else if (getTranslate3d(this.testCardRef)[1] > 100) {
                                 //     this.setState({showTestCard: undefined});
                                 // }
+
+
                                 if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 300) {
                                     this.setState({showTestCard: false});
                                 } else
@@ -440,7 +452,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             Up!
                         </button>
                     </div>
-                </Drawer>}
+                </Drawer>
             </div>
         );
     }

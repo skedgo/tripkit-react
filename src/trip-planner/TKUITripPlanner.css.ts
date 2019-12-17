@@ -33,8 +33,8 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         left: '0!important',
         right: '0!important',
         overflowX: 'visible',
-        top: '60px!important'
-        // top: '0!important'
+        top: '60px!important',
+        // top: '0!important',
     },
     modalElementClass: {
         top: '0',
@@ -49,8 +49,12 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         // height: '607px',
         // height: '547px',
         // height: '500px',
+
         height: '100%',
-        minHeight: '450px',
+        // height: '550px',
+
+        minHeight: '550px',
+
         borderTopLeftRadius: '4px',
         borderTopRightRadius: '4px',
         textAlign: 'center',
@@ -59,7 +63,13 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         // right: '-50%',
         // position: 'fixed',
         left: '0',
-        right: '0'
+        right: '0',
+    },
+    contElemTouching: {
+        marginTop: '-150px'
+    },
+    modalElementTouching: {
+        marginTop: '150px'
     },
     modalMiddle: {
         top: '50%!important',

@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/util/TKUIResponsiveUtil.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/app.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUITimetableView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUITimetableView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip-planner/TripPlannerDelete.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TripPlannerDelete.css" afterDir="false" />
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
       <change beforePath="$PROJECT_DIR$/src/api/TripGoApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/TripGoApi.tsx" afterDir="false" />
@@ -48,8 +40,8 @@
       <file leaf-file-name="TKUITripPlanner.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="384" lean-forward="true" selection-start-line="384" selection-end-line="384" />
+            <state relative-caret-position="167">
+              <caret line="385" column="112" selection-start-line="385" selection-start-column="112" selection-end-line="385" selection-end-column="112" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -60,8 +52,8 @@
       <file leaf-file-name="TKUITripPlanner.css.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="48" column="25" lean-forward="true" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
+            <state relative-caret-position="82">
+              <caret line="71" column="22" selection-start-line="71" selection-start-column="22" selection-end-line="71" selection-end-column="22" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -105,9 +97,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Map opt</find>
-      <find>Modal</find>
-      <find>optionsDialog</find>
       <find>showOptions</find>
       <find>showSetting</find>
       <find>options</find>
@@ -131,10 +120,13 @@
       <find>mainViewPan</find>
       <find>html</find>
       <find>services</find>
-      <find>showTestCard</find>
       <find>Draw</find>
       <find>testCard</find>
       <find>testCardContRef</find>
+      <find>showTestCard</find>
+      <find>button</find>
+      <find>contElementClass</find>
+      <find>touching</find>
     </findStrings>
     <replaceStrings>
       <replace>this.onQueryChange</replace>
@@ -474,27 +466,6 @@
       <workItem from="1574954048084" duration="37333000" />
       <workItem from="1575141674820" duration="161928000" />
     </task>
-    <task id="LOCAL-00092" summary="Show stop markers(1).">
-      <created>1571960073552</created>
-      <option name="number" value="00092" />
-      <option name="presentableId" value="LOCAL-00092" />
-      <option name="project" value="LOCAL" />
-      <updated>1571960073552</updated>
-    </task>
-    <task id="LOCAL-00093" summary="Show stop markers(1).">
-      <created>1572042070919</created>
-      <option name="number" value="00093" />
-      <option name="presentableId" value="LOCAL-00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1572042070919</updated>
-    </task>
-    <task id="LOCAL-00094" summary="Extract viewport from LeafletMap state to RoutingResultsProvider. Fix to issue with glitch with map panning repeatedly.">
-      <created>1572046443224</created>
-      <option name="number" value="00094" />
-      <option name="presentableId" value="LOCAL-00094" />
-      <option name="project" value="LOCAL" />
-      <updated>1572046443224</updated>
-    </task>
     <task id="LOCAL-00095" summary="Hide map stops when showing trips or service.">
       <created>1572046920086</created>
       <option name="number" value="00095" />
@@ -817,17 +788,39 @@
       <option name="project" value="LOCAL" />
       <updated>1576537442157</updated>
     </task>
-    <option name="localTasksCounter" value="141" />
+    <task id="LOCAL-00141" summary="Tripkit web sdk:&#10;- draggable card!">
+      <created>1576589159545</created>
+      <option name="number" value="00141" />
+      <option name="presentableId" value="LOCAL-00141" />
+      <option name="project" value="LOCAL" />
+      <updated>1576589159545</updated>
+    </task>
+    <task id="LOCAL-00142" summary="Tripkit web sdk:&#10;- draggable card, free background.">
+      <created>1576598858115</created>
+      <option name="number" value="00142" />
+      <option name="presentableId" value="LOCAL-00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1576598858115</updated>
+    </task>
+    <task id="LOCAL-00143" summary="Tripkit web sdk:&#10;- draggable card, free background (2).">
+      <created>1576601330065</created>
+      <option name="number" value="00143" />
+      <option name="presentableId" value="LOCAL-00143" />
+      <option name="project" value="LOCAL" />
+      <updated>1576601330066</updated>
+    </task>
+    <option name="localTasksCounter" value="144" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1552293000" />
+    <option name="totallyTimeSpent" value="1560996000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1440" height="821" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5007153" side_tool="true" weight="0.8780142" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.50143063" side_tool="true" weight="0.46932954" />
       <window_info anchor="right" id="Maven Projects" order="10" weight="0.3297568" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info id="Capture Tool" order="7" />
@@ -844,7 +837,7 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49928468" visible="true" weight="0.3580599" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4985694" weight="0.46932954" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49928468" weight="0.45363766" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21888413" />
@@ -936,8 +929,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="deepCustomization 10: code cleaning, name conventions." />
-    <MESSAGE value="deepCustomization 11 - propagation of architectural change: TKUICard" />
     <MESSAGE value="deepCustomization 12 - propagation of architectural change: service and trip components." />
     <MESSAGE value="deepCustomization 12 - propagation of architectural change: TKUITripPlanner, TKUIRoutingQueryInput" />
     <MESSAGE value="Tripkit web sdk:&#10;- update icons&#10;- train occupancy" />
@@ -961,7 +952,9 @@
     <MESSAGE value="Tripkit web sdk:&#10;- TKUIProfileView" />
     <MESSAGE value="Tripkit web sdk:&#10;- code cleanup, rename to TKUILocationSearch" />
     <MESSAGE value="Tripkit web sdk:&#10;- draggable card!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk:&#10;- draggable card!" />
+    <MESSAGE value="Tripkit web sdk:&#10;- draggable card, free background." />
+    <MESSAGE value="Tripkit web sdk:&#10;- draggable card, free background (2)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk:&#10;- draggable card, free background (2)." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1381,8 +1374,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="48" column="25" lean-forward="true" selection-start-line="48" selection-start-column="25" selection-end-line="48" selection-end-column="25" />
+        <state relative-caret-position="82">
+          <caret line="71" column="22" selection-start-line="71" selection-start-column="22" selection-end-line="71" selection-end-column="22" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>
@@ -1391,8 +1384,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="384" lean-forward="true" selection-start-line="384" selection-end-line="384" />
+        <state relative-caret-position="167">
+          <caret line="385" column="112" selection-start-line="385" selection-start-column="112" selection-end-line="385" selection-end-column="112" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
