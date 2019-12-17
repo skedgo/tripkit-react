@@ -3,6 +3,7 @@ import {TKUICardStyle, TKUICardProps, CardPresentation} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
+import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 
 export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
@@ -10,15 +11,22 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         modalContainer: {
             zIndex: '1000!important',
             top: (props: TKUICardProps) => (props.top ? props.top : 190) + 'px!important',
-            left: '5px!important',
-            padding: '5px 5px 0 5px',
             right: 'auto!important',
-            width: '450px',
             alignItems: 'unset!important',
             background: 'none!important',
             // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
             // so need to explicitly set overflowY to hidden to override overflowY value.
-            overflowY: 'hidden!important'
+            overflowY: 'hidden!important',
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                width: '450px',
+                left: '5px!important',
+                padding: '5px 5px 0 5px'
+            },
+            ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
+                width: '100%',
+                left: '0px!important',
+                padding: '5px 0 0 0'
+            }
         },
 
         modal: {

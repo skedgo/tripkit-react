@@ -296,74 +296,73 @@
 
 @media (max-width: 800px) {
 
-  .mainViewPanel {
-    min-height: 236px;  /* Not sure if still need this: So map has a min height from init and does not break when drawing on it from start */
-  }
+  /*.mainViewPanel {*/
+    /*min-height: 236px;  !* Not sure if still need this: So map has a min height from init and does not break when drawing on it from start *!*/
+  /*}*/
 
-  .mainViewPanel.TripPlanner-mapView {
-    height: 100vh;
-  }
+  /*.mainViewPanel.TripPlanner-mapView {*/
+    /*height: 100vh;*/
+  /*}*/
 
-  .TripPlanner-queryPanel {
-    width: 100%;
-  }
+  /*.TripPlanner-queryPanel {*/
+    /*width: 100%;*/
+  /*}*/
 
-  .TripPlanner-subQueryPanel {
-    width: 100%;
-    z-index: 1;
+  /*.TripPlanner-subQueryPanel {*/
+    /*width: 100%;*/
+    /*z-index: 1;*/
 
-    margin-top: 0!important;
-  }
+    /*margin-top: 0!important;*/
+  /*}*/
 
-  .TripPlanner-queryPanel {
-    position: relative;
-  }
+  /*.TripPlanner-queryPanel {*/
+    /*position: relative;*/
+  /*}*/
 
-  .sg-container {
-    width: 100%;
-  }
+  /*.sg-container {*/
+    /*width: 100%;*/
+  /*}*/
 
-  .TripPlanner-noMapView .sg-container {
-    position: absolute;
-    height: 0;   /* hide map container, but preserve map size */
-    overflow: hidden;
-    z-index: 0;  /* redundant, to show it behind TripPlanner-subQueryPanel */
-  }
+  /*.TripPlanner-noMapView .sg-container {*/
+    /*position: absolute;*/
+    /*height: 0;   !* hide map container, but preserve map size *!*/
+    /*overflow: hidden;*/
+    /*z-index: 0;  !* redundant, to show it behind TripPlanner-subQueryPanel *!*/
+  /*}*/
 
-  .TripPlanner-noMapView .TripPlanner-mapMain {
+  /*.TripPlanner-noMapView .TripPlanner-mapMain {*/
     /* So hidden map height is 100vh - 227px (screen - query size), the same as the height when displayed, and so
      * 'already fits' checks, when map is hidden, are ok. TODO: maybe get query height and set it by code to avoid
      * different cases */
     /*padding-top: 227px;*/
-    height: 100vh;  /* preserve map size */
-  }
+    /*height: 100vh;  !* preserve map size *!*/
+  /*}*/
 
-  .TripPlanner-mapView .TripPlanner-subQueryPanel {
-    display: none;
-  }
+  /*.TripPlanner-mapView .TripPlanner-subQueryPanel {*/
+    /*display: none;*/
+  /*}*/
 
-  .TripPlanner-mapView .sg-container {
-    position: relative;
-    /*z-index: 10;*/
-  }
+  /*.TripPlanner-mapView .sg-container {*/
+    /*position: relative;*/
+  /*}*/
 
-  .TripPlanner-favsBtnPanel {
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
+  /*.TripPlanner-favsBtnPanel {*/
+    /*-webkit-flex-wrap: wrap;*/
+    /*flex-wrap: wrap;*/
+  /*}*/
 
-  .TripPlanner-linksPanel {
-    display: -webkit-flex;
-    display: flex;
-    flex-grow: 1;
-    -webkit-flex-grow: 1;
-    justify-content: space-around;
-    -webkit-justify-content: space-around;
-  }
+  /*.TripPlanner-linksPanel {*/
+    /*display: -webkit-flex;*/
+    /*display: flex;*/
+    /*flex-grow: 1;*/
+    /*-webkit-flex-grow: 1;*/
+    /*justify-content: space-around;*/
+    /*-webkit-justify-content: space-around;*/
+  /*}*/
 
-  .TripPlanner-noTripsView .TripPlanner-linksPanel {
-    display: none;
-  }
+  /*.TripPlanner-noTripsView .TripPlanner-linksPanel {*/
+    /*display: none;*/
+  /*}*/
 
 }
 

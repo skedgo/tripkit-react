@@ -100,10 +100,11 @@ class TKUICard extends React.Component<IProps, {}> {
             presentation === CardPresentation.SLIDE_UP ?
                 <Drawer
                     open={this.props.open}
+                    onRequestClose={this.props.onRequestClose}
                     modalElementClass={classes.modal}
                     containerElementClass={classes.modalContainer}
-                    allowClose={false}
-                    dontApplyListeners={true}
+                    // allowClose={false}
+                    // dontApplyListeners={true}
                 >
                     {body}
                 </Drawer>
