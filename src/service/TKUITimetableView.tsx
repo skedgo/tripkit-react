@@ -26,6 +26,7 @@ import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {TKUIButtonType} from "../buttons/TKUIButton";
+import TKUIScrollForCard from "../card/TKUIScrollForCard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -169,9 +170,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                         />
                     </div>
                     <div className={classes.listPanel}>
-                        <div className={classes.containerPanel}
+                        <TKUIScrollForCard className={classes.containerPanel}
                              onScroll={this.onScroll}
-                             ref={(scrollRef: any) => this.scrollRef = scrollRef}
+                             scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
                         >
                             {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
                                 const showDayLabel = i === 0 ||
@@ -196,7 +197,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                 );
                                 return elems;
                             }, [])}
-                        </div>
+                        </TKUIScrollForCard>
                     </div>
                 </div>
             </TKUICard>

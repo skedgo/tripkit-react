@@ -123,6 +123,12 @@ class DeviceUtil {
     public static isIOS = DeviceUtil.os === OS.IOS;
     public static isAndroid = DeviceUtil.os === OS.ANDROID;
 
+    public static isTouch() {
+        return ( 'ontouchstart' in window ) ||
+            ( navigator.maxTouchPoints > 0 ) ||
+            ( navigator.msMaxTouchPoints > 0 );
+    }
+
     public static initCss() {
         document.getElementsByTagName("body")[0].classList.add("device-" + DeviceUtil.device.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("os-" + DeviceUtil.os.toLowerCase());
