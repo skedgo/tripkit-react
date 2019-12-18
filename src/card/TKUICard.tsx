@@ -7,11 +7,12 @@ import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
 import {Subtract} from "utility-types";
-import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUISlideUp from "./TKUISlideUp";
+import DeviceUtil from "../util/DeviceUtil";
 
 export enum CardPresentation {
     MODAL,
@@ -34,6 +35,7 @@ interface IStyle {
     modal: CSS.Properties & CSSProperties<IProps>;
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
+    innerMain: CSSProps<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
     headerLeft: CSS.Properties & CSSProperties<IProps>;
@@ -63,15 +65,12 @@ class TKUICard extends React.Component<IProps, {}> {
         open: true
     };
 
-    constructor(props: IProps) {
-        super(props);
-    }
-
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const body =
-            <div className={classNames(classes.main, "app-style")}>
+            <div className={classNames(this.props.presentation === CardPresentation.SLIDE_UP ?
+                classes.innerMain : classes.main, "app-style")}>
                 <div className={classes.header}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
                         <div className={classes.headerLeft}>
@@ -99,7 +98,11 @@ class TKUICard extends React.Component<IProps, {}> {
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
-                <TKUISlideUp>
+                <TKUISlideUp
+                    containerClass={classes.modalContainer}
+                    modalClass={classes.modal}
+                    mainClass={classes.main}
+                >
                     {body}
                 </TKUISlideUp>
                 :

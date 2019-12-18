@@ -4,10 +4,11 @@ import injectSheet, {ClassNameMap} from "react-jss";
 import classNames from "classnames";
 import genStyles from "../css/GenStyle.css";
 import {tKUIColors} from "../jss/TKUITheme";
+import DeviceUtil from "../util/DeviceUtil";
 
 
 const styles = {
-    contElementClass: {
+    containerElement: {
         zIndex: '1000!important',
         left: '0!important',
         right: '0!important',
@@ -15,9 +16,8 @@ const styles = {
         top: '60px!important',
         background: 'none!important'
     },
-    modalElementClass: {
+    modalElement: {
         top: '0',
-        backgroundColor: 'white',
         width: '100%',
         maxWidth: '700px',
         height: '100%',
@@ -47,7 +47,7 @@ const styles = {
         height: '100%',
     },
     handle: {
-        height: '30px',
+        height: '15px',
         ...genStyles.flex,
         ...genStyles.center,
     },
@@ -68,6 +68,9 @@ const styles = {
 };
 
 interface IProps {
+    containerClass?: string;
+    modalClass?: string;
+    mainClass?: string;
     classes: ClassNameMap<any>;
 }
 
@@ -78,7 +81,7 @@ interface IState {
 
 class TKUISlideUp extends React.Component<IProps, IState> {
 
-    private testCardRef: any;
+    private dragHandleRef: any;
     private testCardContRef: any;
     private scrolling: any;
 
@@ -88,28 +91,47 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             showTestCard: true,
             touching: false
         };
+        this.onDragHandleRef = this.onDragHandleRef.bind(this);
+        this.onTouchStart = this.onTouchStart.bind(this);
+        this.onTouchEnd = this.onTouchEnd.bind(this);
+    }
+
+    private onTouchStart(e: any) {
+        this.setState({touching: true});
+    }
+
+    private onTouchEnd() {
+        this.setState({touching: false});
+        if (this.state.showTestCard === true && getTranslate3d(this.dragHandleRef)[1] > 300) {
+            this.setState({showTestCard: false});
+        } else if (this.state.showTestCard === true && getTranslate3d(this.dragHandleRef)[1] > 100) {
+            this.setState({showTestCard: undefined})
+        } else if (this.state.showTestCard === undefined && getTranslate3d(this.dragHandleRef)[1] > 100) {
+            this.setState({showTestCard: false});
+        }
+    }
+
+    private onDragHandleRef(ref: any) {
+        this.dragHandleRef = ref;
+        this.dragHandleRef.addEventListener("touchstart", this.onTouchStart);
+        this.dragHandleRef.addEventListener("touchend", this.onTouchEnd);
     }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
         return (
             <Drawer
-                // open={this.state.showTestCard}
                 open={true}
                 onRequestClose={() => {
                     console.log("onRequestClose");
                     return this.setState({showTestCard: false});
                 }}
-                // containerElementClass={classes.contElementClass}
-                // modalElementClass={classNames(classes.modalElementClass,
-                //     (this.state.showTestCard === false ? classes.modalMinimized :
-                //         (this.state.showTestCard === undefined ? classes.modalMiddle : "")))}
-                containerElementClass={classNames(classes.contElementClass,
+                containerElementClass={classNames(classes.containerElement, this.props.containerClass,
                     (this.state.showTestCard === false ? classes.modalMinimized :
                         (this.state.showTestCard === undefined ? classes.modalMiddle : "")),
                     this.state.touching && this.state.showTestCard !== true ? classes.contElemTouching : undefined
                 )}
-                modalElementClass={classNames(classes.modalElementClass,
+                modalElementClass={classNames(classes.modalElement, this.props.modalClass,
                     this.state.touching && this.state.showTestCard !== true ? classes.modalElementTouching : undefined)}
                 allowClose={false}
                 inViewportChage={() => console.log("vp change")}
@@ -123,10 +145,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                             this.testCardContRef.scrollTop = 0;
                         }
                         if (!this.state.touching) {
-                            // if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
-                            //     this.setState({showTestCard: true});
-                            //     this.testCardContRef.scrollTop = 0;
-                            // } else
                             if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
                                 this.setState({showTestCard: undefined});
                                 this.testCardContRef.scrollTop = 0;
@@ -137,7 +155,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                             return;
                         }
                         this.scrolling = setTimeout(() => {
-                            console.log("Scroll ended");
                             console.log(this.testCardContRef.scrollTop);
                             if (!this.state.touching) {
                                 if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
@@ -156,54 +173,22 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     })
                 }}
                 getModalRef={(ref: any) => {
-                    this.testCardRef = ref;
-                    this.testCardRef.addEventListener("touchstart", () => this.setState({touching: true}));
-                    this.testCardRef.addEventListener("touchend",
-                        () => {
-                            this.setState({touching: false});
-                            console.log("touchEnd");
-                            console.log(getTranslate3d(this.testCardRef));
-                            console.log(this.testCardContRef);
-                            console.log(this.testCardContRef.scrollTop);
-                            // if (getTranslate3d(this.testCardRef)[1] > 300) {
-                            //     this.setState({showTestCard: false})
-                            // } else if (getTranslate3d(this.testCardRef)[1] > 100) {
-                            //     this.setState({showTestCard: undefined});
-                            // }
-
-
-                            if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 300) {
-                                this.setState({showTestCard: false});
-                            } else
-
-                            if (this.state.showTestCard === true && getTranslate3d(this.testCardRef)[1] > 100) {
-                                this.setState({showTestCard: undefined})
-                            } else if (this.state.showTestCard === undefined && getTranslate3d(this.testCardRef)[1] > 100) {
-                                this.setState({showTestCard: false});
-                            }
-
-                            // else if (getTranslate3d(this.testCardRef)[1] === 0) {
-                            //     this.setState({showTestCard: true});
-                            // }
-
-                            // else if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                            //     this.setState({showTestCard: undefined});
-                            // } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                            //     this.setState({showTestCard: true});
-                            // }
-                        })
+                    if (ref) {
+                        this.onDragHandleRef(ref);
+                    }
                 }}
-                onDrag={() => this.testCardRef && console.log(this.testCardRef.style.transform)}
+                // dontApplyListeners={true}
             >
                 <div
-                    className={classes.main}
+                    className={classNames(classes.main, this.props.mainClass)}
                 >
+                    {DeviceUtil.isTouch() &&
                     <div
                         className={classes.handle}
                         // onClick={() => this.setState({showTestCard: true})}
                     >
                         <div className={classes.handleLine}/>
-                    </div>
+                    </div>}
                     <div className={classes.container}>
                         {this.props.children}
                     </div>

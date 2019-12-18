@@ -4,19 +4,19 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
 
         modalContainer: {
-            zIndex: '1000!important',
-            top: (props: TKUICardProps) => (props.top ? props.top : 190) + 'px!important',
-            right: 'auto!important',
+            // zIndex: '1000!important',
+            // top: (props: TKUICardProps) => (props.top ? props.top : 190) + 'px!important',
+            // right: 'auto!important',
             alignItems: 'unset!important',
-            background: 'none!important',
             // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
             // so need to explicitly set overflowY to hidden to override overflowY value.
-            overflowY: 'hidden!important',
+            // overflowY: 'hidden!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
                 width: '450px',
                 left: '5px!important',
@@ -30,7 +30,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         modal: {
-            width: '100%'
+            // width: '100%'
         },
 
         main: {
@@ -46,8 +46,15 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             ...genStyles.column
         },
 
+        innerMain: {
+            height: '100%',
+            width: '100%',
+            ...genStyles.flex,
+            ...genStyles.column
+        },
+
         header: {
-            padding: '12px 16px',
+            padding: DeviceUtil.isTouch() ? '0 16px' : '12px 16px',
             color: 'black',
             borderBottom: '1px solid ' + tKUIColors.black4
         },
@@ -60,7 +67,8 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         headerLeft: {
             ...genStyles.flex,
             ...genStyles.column,
-            ...genStyles.grow
+            ...genStyles.grow,
+            ...genStyles.alignStart
         },
 
         title: {

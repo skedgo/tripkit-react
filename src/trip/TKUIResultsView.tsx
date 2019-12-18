@@ -17,6 +17,7 @@ import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
 import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
+import TKUIScrollForCard from "../card/TKUIScrollForCard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -128,7 +129,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 title={"Routing results"}
                 presentation={CardPresentation.SLIDE_UP}
             >
-                <div className={classNames(this.props.className, classes.main)}>
+                <TKUIScrollForCard className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>
                         <Select
                             options={sortOptions}
@@ -171,7 +172,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     )}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
-                </div>
+                </TKUIScrollForCard>
             </TKUICard>
         );
     }
