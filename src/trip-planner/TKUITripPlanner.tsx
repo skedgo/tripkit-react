@@ -41,9 +41,10 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import TKUIMapView from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
-import MediaQuery, { useMediaQuery } from 'react-responsive';
+import MediaQuery from 'react-responsive';
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
+import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -71,6 +72,7 @@ interface IState {
     showSettings: boolean;
     showFavourites: boolean;
     showTripDetail?: boolean;
+    cardPosition?: TKUISlideUpPosition;
 }
 
     // TODO:
@@ -175,7 +177,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const searchBar = !this.props.directionsView &&
+        const searchBar =
+            // this.state.cardPosition !== TKUISlideUpPosition.UP &&
+            !this.props.directionsView &&
             <TKUILocationSearch
                 onDirectionsClicked={() => {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
@@ -216,7 +220,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             !toLocation.isDroppedPin() && !this.props.stop &&
             <TKUILocationDetailView
                 location={toLocation}
-                top={65}
+                slideUpOptions={{
+                    initPosition: TKUISlideUpPosition.DOWN,
+                    onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position})
+                }}
+                // top={65}
             />;
         const favouritesView = this.state.showFavourites && !this.props.directionsView && !locationDetailView &&
             <TKUIFavouritesView
@@ -245,6 +253,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 className="gl-no-shrink"
                 onDetailsClicked={() => {
                     this.setState({showTripDetail: true});
+                }}
+                onShowOptions={this.onShowSettings}
+                slideUpOptions={{
+                    initPosition: TKUISlideUpPosition.MIDDLE,
+                    // onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position})
                 }}
                 // styles={Util.iAssign(tKUIResultsDefaultStyle, {
                 //     main: {
@@ -280,7 +293,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                  (this.props.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected"))}
                  ref={el => this.ref = el}
             >
-                <div className={classes.queryPanel}>
+                <div className={classNames(classes.queryPanel, "sg-animate-fade",
+                this.state.cardPosition === TKUISlideUpPosition.UP && !this.props.directionsView ? "out" : "in")}>
                     {searchBar}
                     {queryInput}
                 </div>

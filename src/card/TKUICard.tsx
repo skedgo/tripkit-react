@@ -1,5 +1,4 @@
 import React from "react";
-import Drawer from 'react-drag-drawer';
 import Modal from 'react-modal';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import genStyles from "../css/general.module.css";
@@ -11,8 +10,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import TKUISlideUp from "./TKUISlideUp";
-import DeviceUtil from "../util/DeviceUtil";
+import TKUISlideUp, {TKUISlideUpOptions} from "./TKUISlideUp";
 
 export enum CardPresentation {
     MODAL,
@@ -26,8 +24,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
     presentation?: CardPresentation;
+    slideUpOptions?: TKUISlideUpOptions;
     open?: boolean;
-    top?: number;
     children?: any;
 }
 
@@ -99,6 +97,7 @@ class TKUICard extends React.Component<IProps, {}> {
         return (
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
+                    {...this.props.slideUpOptions}
                     containerClass={classes.modalContainer}
                     modalClass={classes.modal}
                     mainClass={classes.main}
@@ -129,9 +128,10 @@ class TKUICard extends React.Component<IProps, {}> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
-        if (this.props.top !== prevProps.top) {
-            this.props.refreshStyles();
-        }
+        // TODO: make modalUp.top dynamic.
+        // if (this.props.top !== prevProps.top) {
+        //     this.props.refreshStyles();
+        // }
     }
 
 }

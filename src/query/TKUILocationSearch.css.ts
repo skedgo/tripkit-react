@@ -47,9 +47,11 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             height: '36px'
         },
         resultsMenu: {
-            top: '42px',
-            left: '-15px',
-            width: '353px'
+            top: '43px',
+            left: '-61px',
+            position: 'absolute',
+            minWidth: '211px',
+            ...genStyles.borderRadius(12),
         },
         glassIcon: {
             margin: '8px',

@@ -44,6 +44,7 @@ import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import classNames from "classnames";
+import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideLocations?: boolean;
@@ -67,7 +68,7 @@ export interface IStyle {
     menuPopupRight: CSSProps<IProps>;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     from?: Location;
     to?: Location;
     trip?: Trip;
@@ -323,7 +324,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             this.leafletElement = ref.leafletElement;
                         }
                     }}
-                    zoomControl={false}
+                    zoomControl={this.props.landscape}
                     attributionControl={this.props.attributionControl !== false}
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
                         console.log(e);
@@ -331,7 +332,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         this.setState({menuPopupPosition: e});
                     }}
                 >
-                    <ZoomControl position={"topright"}/>
+                    {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.props.from && this.props.from.isResolved() &&
                     <Marker position={this.props.from!}
                             icon={L.icon({
@@ -474,82 +475,87 @@ function getGeocodingData() {
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
     (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
         return (
-            <RoutingResultsContext.Consumer>
-                {(routingContext: IRoutingResultsContext) =>
-                    <ServiceResultsContext.Consumer>
-                        {(serviceContext: IServiceResultsContext) =>
-                            <OptionsContext.Consumer>
-                                {(optionsContext: IOptionsContext) => {
-                                    const from = routingContext.preFrom ? routingContext.preFrom :
-                                        (routingContext.query.from ? routingContext.query.from : undefined);
-                                    const to = routingContext.preTo ? routingContext.preTo :
-                                        (routingContext.query.to ? routingContext.query.to : undefined);
-                                    const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
-                                        const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
-                                            Location.createDroppedPin(latLng);
-                                        routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                            [isFrom ? "from" : "to"]: mapLocation
-                                        }));
-                                        if (mapLocation.isDroppedPin()) {
-                                            getGeocodingData().reverseGeocode(latLng, loc => {
-                                                if (loc !== null) {
-                                                    // Need to use onQueryUpdate instead of onQueryChange since
-                                                    // routingContext.query can be outdated at the time this callback is
-                                                    // executed. OnQueryUpdate always use the correct query (the one on
-                                                    // WithRoutingResults state, the source of truth).
-                                                    routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
-                                                    // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    <RoutingResultsContext.Consumer>
+                        {(routingContext: IRoutingResultsContext) =>
+                            <ServiceResultsContext.Consumer>
+                                {(serviceContext: IServiceResultsContext) =>
+                                    <OptionsContext.Consumer>
+                                        {(optionsContext: IOptionsContext) => {
+                                            const from = routingContext.preFrom ? routingContext.preFrom :
+                                                (routingContext.query.from ? routingContext.query.from : undefined);
+                                            const to = routingContext.preTo ? routingContext.preTo :
+                                                (routingContext.query.to ? routingContext.query.to : undefined);
+                                            const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
+                                                const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
+                                                    Location.createDroppedPin(latLng);
+                                                routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                    [isFrom ? "from" : "to"]: mapLocation
+                                                }));
+                                                if (mapLocation.isDroppedPin()) {
+                                                    getGeocodingData().reverseGeocode(latLng, loc => {
+                                                        if (loc !== null) {
+                                                            // Need to use onQueryUpdate instead of onQueryChange since
+                                                            // routingContext.query can be outdated at the time this callback is
+                                                            // executed. OnQueryUpdate always use the correct query (the one on
+                                                            // WithRoutingResults state, the source of truth).
+                                                            routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
+                                                            // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
+                                                        }
+                                                    })
                                                 }
-                                            })
-                                        }
-                                    };
-                                    const consumerProps: IConsumedProps = {
-                                        from: routingContext.directionsView ? from : undefined,
-                                        to: to,
-                                        trip: routingContext.selected,
-                                        onDragEnd: onMapLocChanged,
-                                        onClick: (clickLatLng: LatLng) => {
-                                            if (routingContext.directionsView) {
-                                                if (!from || !to) {
-                                                    onMapLocChanged(!from, clickLatLng);
-                                                    GATracker.instance.send("query input", "pick location", "drop pin");
-                                                }
-                                            } else {
-                                                if (clickLatLng instanceof StopLocation || !to) {
-                                                    onMapLocChanged(false, clickLatLng);
-                                                }
-                                            }
-                                        },
-                                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
-                                            serviceContext.selectedService : undefined,
-                                        viewport: routingContext.viewport,
-                                        onViewportChange: routingContext.onViewportChange,
-                                        onStopChange: (stop?: StopLocation) => {
-                                            // routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
-                                            serviceContext.onStopChange(stop);
-                                        },
-                                        directionsView: routingContext.directionsView,
-                                        onDirectionsFrom: (latLng: LatLng) => {
-                                            onMapLocChanged(true, latLng);
-                                            routingContext.onDirectionsView(true);
-                                        },
-                                        onDirectionsTo: (latLng: LatLng) => {
-                                            onMapLocChanged(false, latLng);
-                                            routingContext.onDirectionsView(true);
-                                        },
-                                        onWhatsHere: (latLng: LatLng) => {
-                                            onMapLocChanged(false, latLng);
-                                        }
-                                    };
-                                    return (
-                                        props.children!(consumerProps)
-                                    );
-                                }}
-                            </OptionsContext.Consumer>
+                                            };
+                                            const consumerProps: IConsumedProps = {
+                                                from: routingContext.directionsView ? from : undefined,
+                                                to: to,
+                                                trip: routingContext.selected,
+                                                onDragEnd: onMapLocChanged,
+                                                onClick: (clickLatLng: LatLng) => {
+                                                    if (routingContext.directionsView) {
+                                                        if (!from || !to) {
+                                                            onMapLocChanged(!from, clickLatLng);
+                                                            GATracker.instance.send("query input", "pick location", "drop pin");
+                                                        }
+                                                    } else {
+                                                        if (clickLatLng instanceof StopLocation || !to) {
+                                                            onMapLocChanged(false, clickLatLng);
+                                                        }
+                                                    }
+                                                },
+                                                service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                                                    serviceContext.selectedService : undefined,
+                                                viewport: routingContext.viewport,
+                                                onViewportChange: routingContext.onViewportChange,
+                                                onStopChange: (stop?: StopLocation) => {
+                                                    // routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
+                                                    serviceContext.onStopChange(stop);
+                                                },
+                                                directionsView: routingContext.directionsView,
+                                                onDirectionsFrom: (latLng: LatLng) => {
+                                                    onMapLocChanged(true, latLng);
+                                                    routingContext.onDirectionsView(true);
+                                                },
+                                                onDirectionsTo: (latLng: LatLng) => {
+                                                    onMapLocChanged(false, latLng);
+                                                    routingContext.onDirectionsView(true);
+                                                },
+                                                onWhatsHere: (latLng: LatLng) => {
+                                                    onMapLocChanged(false, latLng);
+                                                },
+                                                ...viewportProps
+                                            };
+                                            return (
+                                                props.children!(consumerProps)
+                                            );
+                                        }}
+                                    </OptionsContext.Consumer>
+                                }
+                            </ServiceResultsContext.Consumer>
                         }
-                    </ServiceResultsContext.Consumer>
+                    </RoutingResultsContext.Consumer>
                 }
-            </RoutingResultsContext.Consumer>
+            </TKUIViewportUtil>
         );
     };
 

@@ -18,14 +18,27 @@ import {Subtract} from "utility-types";
 import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import TKUIScrollForCard from "../card/TKUIScrollForCard";
+import DateTimeUtil from "../util/DateTimeUtil";
+import DateTimePicker from "../time/DateTimePicker";
+import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
+import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
+import Tooltip from "rc-tooltip";
+import GATracker from "../analytics/GATracker";
+import {Moment} from "moment-timezone";
+import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
+import Region from "../model/region/Region";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
     onDetailsClicked?: () => void;
     className?: string;
+    onShowOptions?: () => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     values: Trip[]; // SOT of trips is outside, so assume trips come sorted and picking sorting criteria is handled outside.
     value?: Trip;
     onChange?: (value: Trip) => void;
@@ -34,6 +47,8 @@ interface IConsumedProps {
     query: RoutingQuery;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
+    onQueryUpdate: (update: Partial<RoutingQuery>) => void;
+    region?: Region;
 }
 
 export interface IStyle {
@@ -47,6 +62,15 @@ export interface IStyle {
     sortSelectOption: CSSProps<IProps>;
     sortSelectOptionFocused: CSSProps<IProps>;
     sortSelectOptionSelected: CSSProps<IProps>;
+
+    transportsBtn: CSSProps<IProps>;
+    footer: CSSProps<IProps>;
+    selectContainer: CSSProps<IProps>;
+    selectControl: CSSProps<IProps>;
+    selectMenu: CSSProps<IProps>;
+    selectOption: CSSProps<IProps>;
+    selectOptionFocused: CSSProps<IProps>;
+    selectOptionSelected: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -70,6 +94,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
     private rowRefs: any[] = [];
     private justFocused: boolean = false;
+    private dateTimePickerRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -120,14 +145,93 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         return (i + (prev ? -1 : 1) + this.props.values.length) % this.props.values.length;
     }
 
+    private onPrefChange(timePref: TimePreference) {
+        GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
+        if (timePref === TimePreference.NOW) {
+            this.updateQuery({
+                timePref: timePref,
+                time: DateTimeUtil.getNow()
+            });
+        } else {
+            this.updateQuery({
+                timePref: timePref
+            })
+        }
+    }
+
+    private updateQuery(update: Partial<RoutingQuery>) {
+        this.props.onQueryUpdate(update);
+    }
+
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const sortOptions = this.getSortOptions();
         const injectedStyles = this.props.injectedStyles;
+        const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions();
+        const routingQuery = this.props.query;
+        const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
+        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
+        const renderSubHeader = this.props.portrait ? () => {
+            return (
+                <div className={classes.footer + " gl-flex gl-align-center gl-space-between"}>
+                    <Select
+                        options={timePrefOptions}
+                        value={timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
+                        onChange={(option) => this.onPrefChange(option.value)}
+                        styles={{
+                            container: styles => ({...styles, ...injectedStyles.selectContainer}),
+                            control: styles => ({...styles, ...injectedStyles.selectControl}),
+                            menu: styles => ({...styles, ...injectedStyles.selectMenu}),
+                            option: (styles: any, state: any) => ({
+                                ...styles, ...injectedStyles.selectOption,
+                                ...(state.isFocused && injectedStyles.selectOptionFocused),
+                                ...(state.isSelected && injectedStyles.selectOptionSelected)})
+                        }}
+                        components={{ IndicatorsContainer: SelectDownArrow }}
+                        // menuIsOpen={true}
+                    />
+                    {routingQuery.timePref !== TimePreference.NOW &&
+                    <DateTimePicker     // Switch rotingQuery.time to region timezone.
+                        value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
+                        onChange={(date: Moment) => {
+                            this.updateQuery({time: date});
+                            // if (DeviceUtil.isDesktop && this.goBtnRef) {    // give focus to go button after selecting time.
+                            //     setTimeout(() => this.goBtnRef.focus(), 50);
+                            // }
+                        }}
+                        timeFormat={DateTimeUtil.TIME_FORMAT}
+                        dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                        disabled={datePickerDisabled}
+                        ref={(el: any) => this.dateTimePickerRef = el}
+                    />
+                    }
+                    {this.props.onShowOptions &&
+                    <Tooltip placement="right"
+                             overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
+                             overlayClassName="app-style TripRow-altTooltip"
+                             mouseEnterDelay={.5}
+                             trigger={["click"]}
+                    >
+                        <button className={classes.transportsBtn}>
+                            Transport options
+                        </button>
+                    </Tooltip>
+                    }
+                </div>
+            )
+        } : undefined;
+        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+        if (!slideUpOptions.modalUp) {
+            Object.assign(slideUpOptions, {
+                modalDown: {top: 78, unit: '%'},
+            });
+        }
         return (
             <TKUICard
-                title={"Routing results"}
+                title={this.props.landscape ? "Routing results" : undefined}
                 presentation={CardPresentation.SLIDE_UP}
+                renderSubHeader={renderSubHeader}
+                slideUpOptions={slideUpOptions}
             >
                 <TKUIScrollForCard className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>
@@ -223,24 +327,31 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
     (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
         return (
-            <RoutingResultsContext.Consumer>
-                {(routingContext: IRoutingResultsContext) => {
-                    const consumerProps: IConsumedProps = {
-                        values: routingContext.trips || [],
-                        waiting: routingContext.waiting,
-                        value: routingContext.selected,
-                        onChange: (trip: Trip) => {
-                            routingContext.onChange(trip);
-                            routingContext.onReqRealtimeFor(trip);
-                        },
-                        onAlternativeChange: routingContext.onAlternativeChange,
-                        query: routingContext.query,
-                        sort: routingContext.sort,
-                        onSortChange: routingContext.onSortChange
-                    };
-                    return props.children!(consumerProps);
-                }}
-            </RoutingResultsContext.Consumer>
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    <RoutingResultsContext.Consumer>
+                        {(routingContext: IRoutingResultsContext) => {
+                            const consumerProps: IConsumedProps = {
+                                values: routingContext.trips || [],
+                                waiting: routingContext.waiting,
+                                value: routingContext.selected,
+                                onChange: (trip: Trip) => {
+                                    routingContext.onChange(trip);
+                                    routingContext.onReqRealtimeFor(trip);
+                                },
+                                onAlternativeChange: routingContext.onAlternativeChange,
+                                query: routingContext.query,
+                                sort: routingContext.sort,
+                                onSortChange: routingContext.onSortChange,
+                                onQueryUpdate: routingContext.onQueryUpdate,
+                                region: routingContext.region,
+                                ...viewportProps
+                            };
+                            return props.children!(consumerProps);
+                        }}
+                    </RoutingResultsContext.Consumer>
+                }
+            </TKUIViewportUtil>
         );
     };
 

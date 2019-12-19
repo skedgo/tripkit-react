@@ -35,6 +35,14 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             height: '100%',
             ...genStyles.svgFillCurrColor
         },
+        btnBack: {
+            ...resetStyles.button,
+            padding: '0',
+            margin: '10px',
+            height: '24px',
+            width: '24px',
+            cursor: 'pointer'
+        },
         fromToPanel: {
             marginBottom: '20px',
             ...genStyles.flex,
