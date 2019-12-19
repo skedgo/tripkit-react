@@ -146,7 +146,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     </div>
                 }
                 presentation={CardPresentation.SLIDE_UP}
-                top={this.props.top}
+                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
             >
                 <div className={classes.main}>
 

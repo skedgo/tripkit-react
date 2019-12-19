@@ -17,10 +17,11 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
-    top?: number;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 export interface IStyle {
@@ -75,14 +76,20 @@ class TKUILocationDetailView extends React.Component<IProps, {}> {
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;
         const subHeader = this.props.actions ?
-            () => <TKUIActionsView actions={this.props.actions!(location)} className={classes.actionsPanel}/> : undefined;
+            () => <TKUIActionsView actions={this.props.actions!(location)} className={classes.actionsPanel}/> : undefined
+        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+        if (!slideUpOptions.modalUp) {
+            Object.assign(slideUpOptions, {
+                modalDown: {top: 78, unit: '%'},
+            });
+        }
         return (
             <TKUICard
                 title={title}
                 subtitle={subtitle}
                 renderSubHeader={subHeader}
                 presentation={CardPresentation.SLIDE_UP}
-                top={this.props.top}
+                slideUpOptions={slideUpOptions}
                 // onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>

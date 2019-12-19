@@ -23,6 +23,7 @@ import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
@@ -32,6 +33,7 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import Region from "model/region/Region";
 import Select from 'react-select';
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowOptions?: () => void;
@@ -41,7 +43,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClearClicked?: () => void;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     value: RoutingQuery;
     onChange?: (routingQuery: RoutingQuery) => void;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -58,6 +60,7 @@ interface IStyle {
     title: CSSProps<IProps>;
     btnClear: CSSProps<IProps>;
     iconClear: CSSProps<IProps>;
+    btnBack: CSSProps<IProps>;
     fromToPanel: CSSProps<IProps>;
     fromToInputsPanel: CSSProps<IProps>;
     locSelector: CSSProps<IProps>;
@@ -162,7 +165,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    private timePrefString(timePref: TimePreference) {
+    private static timePrefString(timePref: TimePreference) {
         switch (timePref) {
             case TimePreference.NOW: return "Leave now";
             case TimePreference.LEAVE: return "Leave";
@@ -170,7 +173,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    private getTimePrefOptions(): any[] {
+    public static getTimePrefOptions(): any[] {
         return (Object.values(TimePreference))
             .map((value) => {
                 return { value: value, label: this.timePrefString(value)};
@@ -189,11 +192,12 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             "To " + routingQuery.to.address :
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
-        const timePrefOptions = this.getTimePrefOptions();
+        const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions();
         const injectedStyles = this.props.injectedStyles;
         const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
         return (
             <div className={classes.main}>
+                {this.props.landscape &&
                 <div className={classes.header}>
                     <div className={classes.title}>
                         Route
@@ -202,22 +206,25 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         className={classes.btnClear}
                         aria-hidden={true}
                         onClick={this.props.onClearClicked}
-                        // onClick={() => this.setQuery(new RoutingQuery())}
-                        // onClick={() => this.props.onDirectionsView(false)}
                     >
                         <IconRemove aria-hidden={true}
                                     className={classes.iconClear}
                                     focusable="false"/>
                     </button>
                 </div>
+                }
                 <div className={classes.fromToPanel}>
-                    <div className={classes.locSelector}>
-                        <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)}/>
-                        <div className={classes.dotIcon}/>
-                        <div className={classes.dotIcon}/>
-                        <div className={classes.dotIcon}/>
-                        <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)}/>
-                    </div>
+                    {this.props.portrait ?
+                        <button className={classes.btnBack} onClick={this.props.onClearClicked}>
+                            <IconArrowBack/>
+                        </button> :
+                        <div className={classes.locSelector}>
+                            <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)}/>
+                            <div className={classes.dotIcon}/>
+                            <div className={classes.dotIcon}/>
+                            <div className={classes.dotIcon}/>
+                            <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)}/>
+                        </div>}
                     <div className={classes.fromToInputsPanel}>
                         <LocationBox
                             geocodingData={this.geocodingData}
@@ -284,24 +291,27 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                               focusable="false"
                               onClick={this.onSwapClicked}/>
                 </div>
-                <div className={classes.footer + " QueryInput-timeBtnPanel gl-flex gl-align-center gl-space-between"}>
-                    <Select
-                        options={timePrefOptions}
-                        value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
-                        onChange={(option) => this.onPrefChange(option.value)}
-                        styles={{
-                            container: styles => ({...styles, ...injectedStyles.selectContainer}),
-                            control: styles => ({...styles, ...injectedStyles.selectControl}),
-                            menu: styles => ({...styles, ...injectedStyles.selectMenu}),
-                            option: (styles: any, state: any) => ({
-                                ...styles, ...injectedStyles.selectOption,
-                                ...(state.isFocused && injectedStyles.selectOptionFocused),
-                                ...(state.isSelected && injectedStyles.selectOptionSelected)})
-                        }}
-                        components={{ IndicatorsContainer: SelectDownArrow }}
-                        // menuIsOpen={true}
-                    />
-                    {routingQuery.timePref !== TimePreference.NOW &&
+                {this.props.landscape &&
+                    <div
+                        className={classes.footer + " QueryInput-timeBtnPanel gl-flex gl-align-center gl-space-between"}>
+                        <Select
+                            options={timePrefOptions}
+                            value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                            onChange={(option) => this.onPrefChange(option.value)}
+                            styles={{
+                                container: styles => ({...styles, ...injectedStyles.selectContainer}),
+                                control: styles => ({...styles, ...injectedStyles.selectControl}),
+                                menu: styles => ({...styles, ...injectedStyles.selectMenu}),
+                                option: (styles: any, state: any) => ({
+                                    ...styles, ...injectedStyles.selectOption,
+                                    ...(state.isFocused && injectedStyles.selectOptionFocused),
+                                    ...(state.isSelected && injectedStyles.selectOptionSelected)
+                                })
+                            }}
+                            components={{IndicatorsContainer: SelectDownArrow}}
+                            // menuIsOpen={true}
+                        />
+                        {routingQuery.timePref !== TimePreference.NOW &&
                         <DateTimePicker     // Switch rotingQuery.time to region timezone.
                             value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
                             onChange={(date: Moment) => {
@@ -315,20 +325,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             disabled={datePickerDisabled}
                             ref={(el: any) => this.dateTimePickerRef = el}
                         />
-                    }
-                    {this.props.onShowOptions &&
-                    <Tooltip placement="right"
-                             overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
-                             overlayClassName="app-style TripRow-altTooltip"
-                             mouseEnterDelay={.5}
-                             trigger={["click"]}
-                    >
-                        <button className={classes.transportsBtn}>
-                            Transport options
-                        </button>
-                    </Tooltip>
-                    }
-                </div>
+                        }
+                        {this.props.onShowOptions &&
+                        <Tooltip placement="right"
+                                 overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
+                                 overlayClassName="app-style TripRow-altTooltip"
+                                 mouseEnterDelay={.5}
+                                 trigger={["click"]}
+                        >
+                            <button className={classes.transportsBtn}>
+                                Transport options
+                            </button>
+                        </Tooltip>
+                        }
+                    </div>
+                }
             </div>
         );
     }
@@ -336,22 +347,27 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = props => {
     return (
-        <RoutingResultsContext.Consumer>
-            {(routingContext: IRoutingResultsContext) => {
-                const region = routingContext.region;
-                const bounds = region ? region.bounds : undefined;
-                const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
-                const consumerProps: IConsumedProps = {
-                    value: routingContext.query,
-                    onChange: routingContext.onQueryChange,
-                    onPreChange: routingContext.onPreChange,
-                    bounds: bounds,
-                    focusLatLng: focusLatLng,
-                    region: routingContext.region,
-                };
-                return props.children!(consumerProps);
-            }}
-        </RoutingResultsContext.Consumer>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <RoutingResultsContext.Consumer>
+                    {(routingContext: IRoutingResultsContext) => {
+                        const region = routingContext.region;
+                        const bounds = region ? region.bounds : undefined;
+                        const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
+                        const consumerProps: IConsumedProps = {
+                            value: routingContext.query,
+                            onChange: routingContext.onQueryChange,
+                            onPreChange: routingContext.onPreChange,
+                            bounds: bounds,
+                            focusLatLng: focusLatLng,
+                            region: routingContext.region,
+                            ...viewportProps
+                        };
+                        return props.children!(consumerProps);
+                    }}
+                </RoutingResultsContext.Consumer>
+            }
+        </TKUIViewportUtil>
     );
 };
 
@@ -363,3 +379,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUITKUIRoutingQueryInput, config, Mapper);
+export {TKUIRoutingQueryInput as TKUIRoutingQueryInputClass}

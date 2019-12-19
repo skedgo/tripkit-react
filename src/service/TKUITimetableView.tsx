@@ -144,7 +144,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 }
                 presentation={CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
-                top={this.props.top}
+                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
             >
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>

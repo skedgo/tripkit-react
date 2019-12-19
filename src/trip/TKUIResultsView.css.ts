@@ -3,6 +3,7 @@ import {TKUIResultsViewProps, TKUIResultsViewStyle} from "./TKUIResultsView";
 import Constants from "../util/Constants";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResultsViewProps> =
     (theme: TKUITheme) => ({
@@ -68,6 +69,51 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
         },
 
         sortSelectOptionSelected: {
+            color: 'white',
+            backgroundColor: theme.colorPrimaryOpacity(.5)
+        },
+
+
+        footer: {
+            '& input': {
+                border: 'none',
+                background: 'initial',
+                WebkitAppearance: 'none',
+                MozAppearance: 'none',
+                MsAppearance: 'none',
+                OAppearance: 'none',
+                WebkitBoxShadow: 'none!important',
+                MozBoxShadow: 'none!important',
+                boxShadow: 'none!important',
+                margin: 'initial',
+                height: 'initial',
+                lineHeight: 'normal'
+            }
+        },
+        transportsBtn: {
+            ...resetStyles.button,
+            padding: '10px'
+        },
+        selectContainer: {
+            minWidth: '92px',
+            ...genStyles.fontS
+        },
+        selectControl: {
+            border: 'none',
+            background: 'none',
+            cursor: 'pointer',
+        },
+        selectMenu: {
+            marginTop: '3px'
+        },
+        selectOption: {
+            color: tKUIColors.black1,
+            cursor: 'pointer'
+        },
+        selectOptionFocused: {
+            backgroundColor: theme.colorPrimaryOpacity(.2)
+        },
+        selectOptionSelected: {
             color: 'white',
             backgroundColor: theme.colorPrimaryOpacity(.5)
         }

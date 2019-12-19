@@ -76,7 +76,7 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
                         />
                     </div>}
                 onRequestClose={this.props.onRequestClose}
-                top={this.props.top}
+                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
             >
                 <div className={classes.main}>
                     {this.props.filter!(this.props.favouriteList, this.props.recentList)

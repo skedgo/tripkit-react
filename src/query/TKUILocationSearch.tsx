@@ -19,6 +19,7 @@ import FavouritesData from "../data/FavouritesData";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
@@ -26,7 +27,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onDirectionsClicked?: () => void;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     value: Location | null;
     onChange?: (value: Location | null) => void;
     onPreChange?: (location?: Location) => void;
@@ -72,38 +73,47 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const placeholder = "Where do you want to go?";
         return (
-            <div className={classes.main}>
-                <button className={classes.sideBarBtn}>
-                    <IconMenu className={classes.sideBarIcon} onClick={this.props.onShowSideBar}/>
-                </button>
-                <LocationBox
-                    geocodingData={this.geocodingData}
-                    bounds={this.props.bounds}
-                    focus={this.props.focusLatLng}
-                    value={this.props.value}
-                    placeholder={placeholder}
-                    onChange={(value: Location | null, highlighted: boolean) => {
-                        if (!highlighted) {
-                            this.props.onChange && this.props.onChange(value);
-                            if (this.props.onPreChange) {
-                                this.props.onPreChange(undefined);
-                            }
-                        } else {
-                            if (this.props.onPreChange) {
-                                this.props.onPreChange(value ? value : undefined);
-                            }
-                        }
-                    }}
-                    iconEmpty={<IconGlass className={classes.glassIcon}/>}
-                    style={this.props.injectedStyles.locationBox}
-                    inputStyle={this.props.injectedStyles.locationBoxInput}
-                    menuStyle={this.props.injectedStyles.resultsMenu}
-                />
-                <div className={classes.divider}/>
-                <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}>
-                    <IconDirections className={classes.directionsIcon}/>
-                </button>
-            </div>
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    <div className={classes.main}>
+                        <button className={classes.sideBarBtn}>
+                            <IconMenu className={classes.sideBarIcon} onClick={this.props.onShowSideBar}/>
+                        </button>
+                        <LocationBox
+                            geocodingData={this.geocodingData}
+                            bounds={this.props.bounds}
+                            focus={this.props.focusLatLng}
+                            value={this.props.value}
+                            placeholder={placeholder}
+                            onChange={(value: Location | null, highlighted: boolean) => {
+                                if (!highlighted) {
+                                    this.props.onChange && this.props.onChange(value);
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(undefined);
+                                    }
+                                } else {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(value ? value : undefined);
+                                    }
+                                }
+                            }}
+                            iconEmpty={<IconGlass className={classes.glassIcon}/>}
+                            style={this.props.injectedStyles.locationBox}
+                            inputStyle={this.props.injectedStyles.locationBoxInput}
+                            menuStyle={{
+                                ...this.props.injectedStyles.resultsMenu,
+                                width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
+                            }}
+                        />
+                        {viewportProps.landscape &&
+                        <div className={classes.divider}/>}
+                        {viewportProps.landscape &&
+                        <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}>
+                            <IconDirections className={classes.directionsIcon}/>
+                        </button>}
+                    </div>
+                }
+            </TKUIViewportUtil>
         );
     }
 
@@ -111,28 +121,33 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = props => {
     return (
-        <RoutingResultsContext.Consumer>
-            {(routingContext: IRoutingResultsContext) => {
-                const region = routingContext.region;
-                const bounds = region ? region.bounds : undefined;
-                const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
-                const consumerProps: IConsumedProps = {
-                    value: routingContext.query.to,
-                    onChange: (value: Location | null) => {
-                        routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: value}));
-                        if (value !== null && !value.isCurrLoc()) {
-                            FavouritesData.recInstance.add(value instanceof StopLocation ?
-                                FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
-                        }
-                    },
-                    onPreChange: routingContext.onPreChange &&
-                    ((location?: Location) => routingContext.onPreChange!(false, location)),
-                    bounds: bounds,
-                    focusLatLng: focusLatLng
-                };
-                return props.children!(consumerProps);
-            }}
-        </RoutingResultsContext.Consumer>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <RoutingResultsContext.Consumer>
+                    {(routingContext: IRoutingResultsContext) => {
+                        const region = routingContext.region;
+                        const bounds = region ? region.bounds : undefined;
+                        const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
+                        const consumerProps: IConsumedProps = {
+                            value: routingContext.query.to,
+                            onChange: (value: Location | null) => {
+                                routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: value}));
+                                if (value !== null && !value.isCurrLoc()) {
+                                    FavouritesData.recInstance.add(value instanceof StopLocation ?
+                                        FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
+                                }
+                            },
+                            onPreChange: routingContext.onPreChange &&
+                            ((location?: Location) => routingContext.onPreChange!(false, location)),
+                            bounds: bounds,
+                            focusLatLng: focusLatLng,
+                            ...viewportProps
+                        };
+                        return props.children!(consumerProps);
+                    }}
+                </RoutingResultsContext.Consumer>
+            }
+        </TKUIViewportUtil>
     );
 };
 

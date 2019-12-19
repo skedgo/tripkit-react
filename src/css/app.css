@@ -483,3 +483,77 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   /*}*/
 
 /*}*/
+
+
+/**********************************************************************************************************************
+*                                               Animations
+***********************************************************************************************************************/
+
+/* Fade in / out using transitions to avoid animation on component added / re-added to DOM */
+
+.sg-animate-fade {
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -ms-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  transition: opacity .5s;
+}
+
+.sg-animate-fade.in {
+  opacity: 1;
+  height: initial;
+}
+
+.sg-animate-fade.out {
+  opacity: 0;
+  -webkit-animation:delayHide .5s;
+  animation:delayHide .5s;
+  animation-fill-mode: forwards;
+  -webkit-animation-fill-mode: forwards;
+  /* Used delay animation since following height transition doesn't work (duration 0 and delay .5s) */
+  /* height: 0;*/
+  /*transition: height 0s linear .5s, opacity .5s linear;*/
+  overflow-y: hidden; /* To ensure content becomes hidden by setting height to 0.
+                                Need to set here for Safari, for Chrome it's enough to set it on delayHide 'to' block */
+}
+
+@-webkit-keyframes delayHide {
+  from {
+    height: initial;
+    /*left: 0;           /!* Since cannot delay display (to set it to none on 'to', use left to put widget out of screen*!/*/
+  }
+  99.99% {
+    height: initial; /* Safari */
+    /*left: 0;*/
+  }
+  to {
+    height: 0;
+    /*left: 100%;*/
+    min-height: 0;      /* Just in case min-height was set to something different to 0 */
+    overflow-y: hidden; /* To ensure content becomes hidden by setting height to 0 */
+  }
+}
+
+@keyframes delayHide {
+  from {
+    height: initial;
+    /*left: 0;*/
+  }
+  99.99% {
+    height: initial; /* Safari */
+    /*left: 0;*/
+  }
+  to {
+    height: 0;
+    /*left: 100%;*/
+    min-height: 0;      /* Just in case min-height was set to something different to 0 */
+    overflow-y: hidden; /* To ensure content becomes hidden by setting height to 0 */
+  }
+}
+
+.sg-animate-fade-out {
+  -webkit-animation:opac 0.8s;
+  animation:opac 0.8s;
+  -webkit-animation-fill-mode: both; /* Safari 4.0 - 8.0 */
+  animation-fill-mode: both;  /* To properly work when alternatively adding & removing fade-in and fade-out styles */
+}

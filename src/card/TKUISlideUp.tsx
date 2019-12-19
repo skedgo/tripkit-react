@@ -9,11 +9,10 @@ import DeviceUtil from "../util/DeviceUtil";
 
 const styles = {
     containerElement: {
-        zIndex: '1000!important',
+        zIndex: '1002!important',
         left: '0!important',
         right: '0!important',
         overflowX: 'visible',
-        top: '60px!important',
         background: 'none!important'
     },
     modalElement: {
@@ -35,11 +34,14 @@ const styles = {
     modalElementTouching: {
         marginTop: '150px'
     },
-    modalMiddle: {
-        top: '50%!important'
+    modalUp: {
+        top: (props: IProps) => props.modalUp!.top + props.modalUp!.unit + '!important'
     },
-    modalMinimized: {
-        top: '90%!important'
+    modalMiddle: {
+        top: (props: IProps) => props.modalMiddle!.top + props.modalMiddle!.unit + '!important'
+    },
+    modalDown: {
+        top: (props: IProps) => props.modalDown!.top + props.modalDown!.unit + '!important'
     },
     main: {
         ...genStyles.flex,
@@ -67,7 +69,19 @@ const styles = {
     }
 };
 
-interface IProps {
+export enum TKUISlideUpPosition {
+    UP, MIDDLE, DOWN
+}
+
+export interface TKUISlideUpOptions {
+    initPosition?: TKUISlideUpPosition;
+    modalUp?: {top: number, unit: string};
+    modalMiddle?: {top: number, unit: string};
+    modalDown?: {top: number, unit: string};
+    onPositionChange?: (position: TKUISlideUpPosition) => void;
+}
+
+interface IProps extends TKUISlideUpOptions {
     containerClass?: string;
     modalClass?: string;
     mainClass?: string;
@@ -75,11 +89,18 @@ interface IProps {
 }
 
 interface IState {
-    showTestCard?: boolean;
+    position: TKUISlideUpPosition;
     touching: boolean;
 }
 
 class TKUISlideUp extends React.Component<IProps, IState> {
+
+    public static defaultProps: Partial<IProps> = {
+        initPosition: TKUISlideUpPosition.UP,
+        modalUp: {top: 5, unit: 'px'},
+        modalMiddle: {top: 50, unit: '%'},
+        modalDown: {top: 90, unit: '%'},
+    };
 
     private dragHandleRef: any;
     private testCardContRef: any;
@@ -88,7 +109,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            showTestCard: true,
+            position: props.initPosition!,
             touching: false
         };
         this.onDragHandleRef = this.onDragHandleRef.bind(this);
@@ -102,13 +123,18 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 
     private onTouchEnd() {
         this.setState({touching: false});
-        if (this.state.showTestCard === true && getTranslate3d(this.dragHandleRef)[1] > 300) {
-            this.setState({showTestCard: false});
-        } else if (this.state.showTestCard === true && getTranslate3d(this.dragHandleRef)[1] > 100) {
-            this.setState({showTestCard: undefined})
-        } else if (this.state.showTestCard === undefined && getTranslate3d(this.dragHandleRef)[1] > 100) {
-            this.setState({showTestCard: false});
+        if (this.state.position === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 300) {
+            this.onPositionChange(TKUISlideUpPosition.DOWN);
+        } else if (this.state.position === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 100) {
+            this.onPositionChange(TKUISlideUpPosition.MIDDLE);
+        } else if (this.state.position === TKUISlideUpPosition.MIDDLE && getTranslate3d(this.dragHandleRef)[1] > 100) {
+            this.onPositionChange(TKUISlideUpPosition.DOWN);
         }
+    }
+
+    private onPositionChange(position: TKUISlideUpPosition) {
+        this.setState({position: position});
+        this.props.onPositionChange && this.props.onPositionChange(position);
     }
 
     private onDragHandleRef(ref: any) {
@@ -116,23 +142,26 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         this.dragHandleRef.addEventListener("touchstart", this.onTouchStart);
         this.dragHandleRef.addEventListener("touchend", this.onTouchEnd);
     }
+    
+    private positionToClass(position: TKUISlideUpPosition, classes: ClassNameMap<any>): string {
+        switch (position) {
+            case TKUISlideUpPosition.UP: return classes.modalUp;
+            case TKUISlideUpPosition.MIDDLE: return classes.modalMiddle;
+            default: return classes.modalDown;
+        }
+    }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
         return (
             <Drawer
                 open={true}
-                onRequestClose={() => {
-                    console.log("onRequestClose");
-                    return this.setState({showTestCard: false});
-                }}
                 containerElementClass={classNames(classes.containerElement, this.props.containerClass,
-                    (this.state.showTestCard === false ? classes.modalMinimized :
-                        (this.state.showTestCard === undefined ? classes.modalMiddle : "")),
-                    this.state.touching && this.state.showTestCard !== true ? classes.contElemTouching : undefined
+                    this.positionToClass(this.state.position, classes),
+                    this.state.touching && this.state.position !== TKUISlideUpPosition.UP ? classes.contElemTouching : undefined
                 )}
                 modalElementClass={classNames(classes.modalElement, this.props.modalClass,
-                    this.state.touching && this.state.showTestCard !== true ? classes.modalElementTouching : undefined)}
+                    this.state.touching && this.state.position !== TKUISlideUpPosition.UP ? classes.modalElementTouching : undefined)}
                 allowClose={false}
                 inViewportChage={() => console.log("vp change")}
                 parentElement={document.body}
@@ -141,30 +170,29 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     this.testCardContRef &&
                     this.testCardContRef.addEventListener("scroll", () => {
                         window.clearTimeout(this.scrolling);
-                        if (this.state.showTestCard === true) {
+                        if (this.state.position === TKUISlideUpPosition.UP) {
                             this.testCardContRef.scrollTop = 0;
                         }
                         if (!this.state.touching) {
-                            if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                                this.setState({showTestCard: undefined});
+                            if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
+                                this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                 this.testCardContRef.scrollTop = 0;
-                            } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                                this.setState({showTestCard: true});
+                            } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
+                                this.onPositionChange(TKUISlideUpPosition.UP);
                                 this.testCardContRef.scrollTop = 0;
                             }
                             return;
                         }
                         this.scrolling = setTimeout(() => {
-                            console.log(this.testCardContRef.scrollTop);
                             if (!this.state.touching) {
-                                if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 250) {
-                                    this.setState({showTestCard: true});
+                                if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 250) {
+                                    this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
-                                } else if (this.state.showTestCard === false && this.testCardContRef.scrollTop > 0) {
-                                    this.setState({showTestCard: undefined});
+                                } else if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
+                                    this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                     this.testCardContRef.scrollTop = 0;
-                                } else if (this.state.showTestCard === undefined && this.testCardContRef.scrollTop > 0) {
-                                    this.setState({showTestCard: true});
+                                } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
+                                    this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
                                 }
                             }
