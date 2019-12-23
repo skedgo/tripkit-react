@@ -4,11 +4,7 @@ import {resetStyles} from "../css/ResetStyle.css";
 import {tKUIColors} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {CSSProperties} from "react-jss";
-
-// TODO: apply this
-// .device-phone .ServiceDepartureTable-filterInput {
-//   font-size: 16px;
-// }
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUITimetableViewProps> = {
     main: {
@@ -95,7 +91,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         background: 'none!important',
         color: tKUIColors.black1,
         height: '30px',
-        ...genStyles.fontS,
+        ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
         ...genStyles.grow,
         '&::placeholder': {
             color: tKUIColors.black2

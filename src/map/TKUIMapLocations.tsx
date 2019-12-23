@@ -16,7 +16,6 @@ import LocationsResult from "../model/location/LocationsResult";
 import OptionsData from "../data/OptionsData";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
-import "./TKUIMapLocations.css";
 import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {

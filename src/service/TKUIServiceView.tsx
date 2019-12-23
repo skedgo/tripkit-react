@@ -22,10 +22,11 @@ import {Subtract} from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
-    top?: number;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IStyle {
@@ -131,6 +132,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     style={this.state.realtimeOpen ? {...genStyles.rotate180} : undefined}
                 />
             </div> : undefined;
+        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
                 title={this.props.title}
@@ -146,7 +148,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     </div>
                 }
                 presentation={CardPresentation.SLIDE_UP}
-                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
+                slideUpOptions={slideUpOptions}
             >
                 <div className={classes.main}>
 

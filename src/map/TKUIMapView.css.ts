@@ -7,8 +7,15 @@ import {tKUIColors} from "../jss/TKUITheme";
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> = {
     main: {
         ...genStyles.flex,
-        ...genStyles.grow
-    },
+        ...genStyles.grow,
+        '& .leaflet-popup-content': {
+            margin: '0'
+        },
+        '& .leaflet-popup-content-wrapper': {
+            padding: '0',
+            ...genStyles.borderRadius(12)
+        }
+    } as CSSProperties<TKUIMapViewProps>,
     menuPopup: {
         // left: '0!important',
         '& .leaflet-popup-content': {

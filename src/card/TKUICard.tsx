@@ -11,10 +11,13 @@ import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUISlideUp, {TKUISlideUpOptions} from "./TKUISlideUp";
+import DeviceUtil from "../util/DeviceUtil";
+import TKUIScrollForCard from "./TKUIScrollForCard";
 
 export enum CardPresentation {
     MODAL,
     SLIDE_UP,
+    SLIDE_UP_STYLE,
     NONE
 }
 
@@ -41,6 +44,8 @@ interface IStyle {
     subtitle: CSS.Properties & CSSProperties<IProps>;
     btnClear: CSS.Properties & CSSProperties<IProps>;
     iconClear: CSS.Properties & CSSProperties<IProps>;
+    handle: CSS.Properties & CSSProperties<IProps>;
+    handleLine: CSS.Properties & CSSProperties<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -67,8 +72,15 @@ class TKUICard extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const body =
-            <div className={classNames(this.props.presentation === CardPresentation.SLIDE_UP ?
-                classes.innerMain : classes.main, "app-style")}>
+            <div className={classNames(classes.main, "app-style")}>
+                {(this.props.presentation === CardPresentation.SLIDE_UP || this.props.presentation === CardPresentation.SLIDE_UP_STYLE)
+                && DeviceUtil.isTouch() &&
+                <div
+                    className={classes.handle}
+                    // onClick={() => this.setState({showTestCard: true})}
+                >
+                    <div className={classes.handleLine}/>
+                </div>}
                 <div className={classes.header}>
                     <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
                         <div className={classes.headerLeft}>
@@ -90,9 +102,9 @@ class TKUICard extends React.Component<IProps, {}> {
                     </div>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <div className={classes.body}>
+                <TKUIScrollForCard className={classes.body}>
                     {this.props.children}
-                </div>
+                </TKUIScrollForCard>
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
@@ -100,7 +112,6 @@ class TKUICard extends React.Component<IProps, {}> {
                     {...this.props.slideUpOptions}
                     containerClass={classes.modalContainer}
                     modalClass={classes.modal}
-                    mainClass={classes.main}
                 >
                     {body}
                 </TKUISlideUp>

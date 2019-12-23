@@ -27,12 +27,13 @@ import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {TKUIButtonType} from "../buttons/TKUIButton";
 import TKUIScrollForCard from "../card/TKUIScrollForCard";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
     onRequestClose?: () => void;
     onDirectionsClicked?: () => void;
-    top?: number;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
@@ -123,6 +124,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 }
                 return elems;
             }, []);
+        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
                 title={this.props.title}
@@ -144,7 +146,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 }
                 presentation={CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
-                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
+                slideUpOptions={slideUpOptions}
             >
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>

@@ -118,6 +118,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 subtitle={subtitle}
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
+                presentation={CardPresentation.SLIDE_UP_STYLE}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>

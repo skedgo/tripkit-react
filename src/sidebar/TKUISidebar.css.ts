@@ -7,7 +7,7 @@ import {resetStyles} from "../css/ResetStyle.css";
 export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarProps> =
     (theme: TKUITheme) => ({
         modalContainer: {
-            zIndex: '1001!important',
+            zIndex: '1005!important',
             background: 'none!important',
             fontFamily: theme.fontFamily,
             // The +5px is due to shadow being on modal.

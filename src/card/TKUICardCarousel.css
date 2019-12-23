@@ -1,12 +1,40 @@
 .TKUICardCarousel-modalContainer {
-    z-index: 1000 !important;
-    top: 195px !important;
-    right: auto !important;
-    left: 0 !important;
-    width: 470px;
     align-items: unset !important;
-    background: none !important;
-    overflow: hidden;
+}
+
+/* TODO: parameterize max-width and min-width with TKUIResponsiveUtil.getPortraitWidth() */
+@media (max-width: 800px) {
+    .TKUICardCarousel-modalContainer {
+        width: 100%;
+        left: 0!important;
+        padding: 5px 0 0 0;
+    }
+
+    .TKUICardCarousel-modal .slider.animated .slide,
+    .carousel .slide {
+        padding: 15px 0 0;
+    }
+
+    .TKUICardCarousel-modal .carousel .control-dots {
+        top: -4px;
+    }
+}
+
+@media (min-width: 801px) {
+    .TKUICardCarousel-modalContainer {
+        width: 450px;
+        left: 5px!important;
+        padding: 5px 5px 0 5px;
+    }
+
+    .TKUICardCarousel-modal .slider.animated .slide,
+    .carousel .slide {
+        padding: 35px 0 0;
+    }
+
+    .TKUICardCarousel-modal .carousel .control-dots {
+        top: 5px;
+    }
 }
 
 .TKUICardCarousel-modal,
@@ -18,13 +46,13 @@
 .TKUICardCarousel-middle > *,
 .TKUICardCarousel-modal .carousel-slider,
 .TKUICardCarousel-modal .slider-wrapper,
-.TKUICardCarousel-modal .slider.animated {
+.TKUICardCarousel-modal .slider {
     height: 100%;
 }
 
-.TKUICardCarousel-modal .slider.animated .slide {
+.TKUICardCarousel-modal .slider.animated .slide,
+.carousel .slide {
     height: 100%;
-    padding: 35px 10px 0;
     background: none;
 }
 
@@ -60,7 +88,6 @@
 }
 
 .TKUICardCarousel-modal .carousel .control-dots {
-    top: 5px;
     position: absolute;
     text-align: center;
     width: 70%;
@@ -88,11 +115,4 @@
 
 .TKUICardCarousel-pageWrapper {
     height: 100%;
-    width: 450px;
-    border-top-right-radius: 12px;
-    border-top-left-radius: 12px;
-    overflow: hidden;
-    -webkit-box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
-    -moz-box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
-    box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08);
 }

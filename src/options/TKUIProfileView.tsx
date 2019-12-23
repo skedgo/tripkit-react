@@ -22,13 +22,14 @@ import TKUIUserPriorities from "./TKUIUserPriorities";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
 import TKUIButton from "buttons/TKUIButton";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClose?: () => void;
 }
 
-interface IConsumedProps extends IOptionsContext {
+interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
     region?: Region;
 }
 
@@ -194,7 +195,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         return (
             <TKUICard
                 title={"Profile"}
-                presentation={CardPresentation.MODAL}
+                presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={() => this.close(false)}
             >
                 <div className={"OptionsView gl-flex gl-column"}>
@@ -353,15 +354,19 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingContext: IRoutingResultsContext) =>
-                        props.children!({...optionsContext, region: routingContext.region})
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <OptionsContext.Consumer>
+                    {(optionsContext: IOptionsContext) =>
+                        <RoutingResultsContext.Consumer>
+                            {(routingContext: IRoutingResultsContext) =>
+                                props.children!({...optionsContext, region: routingContext.region, ...viewportProps})
+                            }
+                        </RoutingResultsContext.Consumer>
                     }
-                </RoutingResultsContext.Consumer>
+                </OptionsContext.Consumer>
             }
-        </OptionsContext.Consumer>
+        </TKUIViewportUtil>
     );
 };
 

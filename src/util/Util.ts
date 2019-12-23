@@ -64,7 +64,7 @@ class Util {
         return array;
     }
 
-    public static addAllNoRep<T>(array: T[], elems: T[], equal: (e1: T | null, e2: T | null) => boolean): T[] {
+    public static addAllNoRep<T>(array: T[], elems: T[], equal: (e1?: T | null, e2?: T | null) => boolean): T[] {
         for (const elem of elems) {
             this.addNoRep(array, elem, equal);
         }

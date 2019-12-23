@@ -324,11 +324,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             this.leafletElement = ref.leafletElement;
                         }
                     }}
-                    zoomControl={this.props.landscape}
+                    zoomControl={false}
                     attributionControl={this.props.attributionControl !== false}
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
-                        console.log(e);
-                        console.log(this.leafletElement && this.leafletElement.getContainer().clientHeight)
                         this.setState({menuPopupPosition: e});
                     }}
                 >

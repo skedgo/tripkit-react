@@ -23,16 +23,21 @@ const styles = {
         minHeight: '550px',
         borderTopLeftRadius: '4px',
         borderTopRightRadius: '4px',
-        textAlign: 'center',
         position: 'absolute',
         left: '0',
         right: '0'
     },
     contElemTouching: {
-        marginTop: '-150px'
+        // marginTop: '-550px'
+        // marginTop: '-350px'
+        marginTop: '-250px'
+        // marginTop: '-150px'
     },
     modalElementTouching: {
-        marginTop: '150px'
+        // marginTop: '550px'
+        // marginTop: '350px'
+        marginTop: '250px'
+        // marginTop: '150px'
     },
     modalUp: {
         top: (props: IProps) => props.modalUp!.top + props.modalUp!.unit + '!important'
@@ -42,30 +47,6 @@ const styles = {
     },
     modalDown: {
         top: (props: IProps) => props.modalDown!.top + props.modalDown!.unit + '!important'
-    },
-    main: {
-        ...genStyles.flex,
-        ...genStyles.column,
-        height: '100%',
-    },
-    handle: {
-        height: '15px',
-        ...genStyles.flex,
-        ...genStyles.center,
-    },
-    handleLine: {
-        width: '50px',
-        height: '4px',
-        ...genStyles.borderRadius(2),
-        backgroundColor: tKUIColors.black2,
-        marginTop: '6px'
-    },
-    container: {
-        ...genStyles.grow,
-        ...genStyles.flex,
-
-        height: '100%',
-        overflowX: 'hidden'
     }
 };
 
@@ -84,7 +65,6 @@ export interface TKUISlideUpOptions {
 interface IProps extends TKUISlideUpOptions {
     containerClass?: string;
     modalClass?: string;
-    mainClass?: string;
     classes: ClassNameMap<any>;
 }
 
@@ -207,20 +187,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                 }}
                 // dontApplyListeners={true}
             >
-                <div
-                    className={classNames(classes.main, this.props.mainClass)}
-                >
-                    {DeviceUtil.isTouch() &&
-                    <div
-                        className={classes.handle}
-                        // onClick={() => this.setState({showTestCard: true})}
-                    >
-                        <div className={classes.handleLine}/>
-                    </div>}
-                    <div className={classes.container}>
-                        {this.props.children}
-                    </div>
-                </div>
+                {this.props.children}
             </Drawer>
         );
     }

@@ -41,14 +41,13 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import TKUIMapView from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
-import MediaQuery from 'react-responsive';
-import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext {}
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -76,6 +75,9 @@ interface IState {
 }
 
     // TODO:
+    // Set map padding according to visible area (card position + query panel)
+    // See why timetable view does not get scroll to bottom event, not getting more departures.
+    // When device is phone (or iphone + safari?) make fonts on all inputs to be > 16px to avoid safari zooming in.
     // Naming convention: analyze when to suffix with 'View', maybe never? In iOS they use 'Card' suffix.
     // - Maybe define a WithCard HOC that wraps a component inside a Card, and adds properties open, onRequestClose, and
     // and any other property of card that want to expose to outside. OnRequestClose is passed to the card, but also to
@@ -205,6 +207,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onClose={() => this.setState({showSettings: false})}
             />;
         const queryInput = this.props.directionsView &&
+            !(this.props.portrait && this.state.showTripDetail && this.props.selected) &&
             <TKUIRoutingQueryInput
                 isTripPlanner={true}
                 onShowOptions={this.onShowSettings}
@@ -221,33 +224,42 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUILocationDetailView
                 location={toLocation}
                 slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.DOWN,
-                    onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position})
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                    onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
                 }}
-                // top={65}
-            />;
-        const favouritesView = this.state.showFavourites && !this.props.directionsView && !locationDetailView &&
-            <TKUIFavouritesView
-                onFavouriteClicked={this.onFavouriteClicked}
-                onRequestClose={() => {this.setState({showFavourites: false})}}
-                top={65}
             />;
         const departuresView =
-            this.props.stop && !this.props.trips ?
+            this.props.stop && !this.props.trips && !this.props.selectedService ?
             <TKUITimetableView
                 open={this.props.stop && !this.props.trips}
                 onRequestClose={() => {
                     this.props.onStopChange(undefined);
                 }}
-                top={this.props.directionsView ? 190 : 65}
+                slideUpOptions={{
+                    initPosition: TKUISlideUpPosition.UP,
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                }}
             /> : null;
 
         const serviceDetailView = this.props.selectedService ?
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
-                top={this.props.directionsView ? 190 : 65}
+                slideUpOptions={{
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                }}
             /> : null;
-
+        const favouritesView = this.state.showFavourites && !this.props.directionsView
+            && !locationDetailView && !departuresView && !serviceDetailView &&
+            <TKUIFavouritesView
+                onFavouriteClicked={this.onFavouriteClicked}
+                onRequestClose={() => {this.setState({showFavourites: false})}}
+                slideUpOptions={{
+                    initPosition: TKUISlideUpPosition.UP,
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                }}
+            />;
         const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
                 className="gl-no-shrink"
@@ -256,8 +268,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
                 onShowOptions={this.onShowSettings}
                 slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.MIDDLE,
-                    // onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position})
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined
                 }}
                 // styles={Util.iAssign(tKUIResultsDefaultStyle, {
                 //     main: {
@@ -272,7 +284,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             const sortedTrips = this.props.trips || [];
             const selected = sortedTrips.indexOf(this.props.selected);
             tripDetailView =
-                <TKUICardCarousel selected={selected} onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}>
+                <TKUICardCarousel
+                    selected={selected}
+                    onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}
+                    slideUpOptions={{
+                        initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                        modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined
+                    }}
+                >
                     {sortedTrips.map((trip: Trip, i: number) =>
                         <TKUITripOverviewView
                             value={trip}
@@ -293,26 +312,25 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                  (this.props.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected"))}
                  ref={el => this.ref = el}
             >
-                <div className={classNames(classes.queryPanel, "sg-animate-fade",
-                this.state.cardPosition === TKUISlideUpPosition.UP && !this.props.directionsView ? "out" : "in")}>
+                <div className={classNames(classes.queryPanel
+                    // , "sg-animate-fade",
+                    // this.state.cardPosition === TKUISlideUpPosition.UP && !this.props.directionsView ? "out" : "in"
+                )}
+                >
                     {searchBar}
                     {queryInput}
                 </div>
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
-                    <MediaQuery maxWidth={TKUIResponsiveUtil.getPortraitWidth()}>
-                        {(matches: boolean) =>
-                            <TKUIMapView
-                                hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                padding={matches ? undefined : {left: 500}}
-                            >
-                                <TileLayer
-                                    attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                    // url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
-                                    url="https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
-                                />
-                            </TKUIMapView>
-                        }
-                    </MediaQuery>
+                    <TKUIMapView
+                        hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                        padding={this.props.landscape ? {left: 500} : undefined }
+                    >
+                        <TileLayer
+                            attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                            // url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
+                            url="https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
+                        />
+                    </TKUIMapView>
                 </div>
                 <TKUIFeedbackBtn/>
                 {sideBar}
@@ -342,15 +360,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
-        <RoutingResultsContext.Consumer>
-            {(routingResultsContext: IRoutingResultsContext) =>
-                <ServiceResultsContext.Consumer>
-                    {(serviceContext: IServiceResultsContext) => (
-                        props.children!({...routingResultsContext, ...serviceContext})
-                    )}
-                </ServiceResultsContext.Consumer>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <RoutingResultsContext.Consumer>
+                    {(routingResultsContext: IRoutingResultsContext) =>
+                        <ServiceResultsContext.Consumer>
+                            {(serviceContext: IServiceResultsContext) => (
+                                props.children!({...routingResultsContext, ...serviceContext, ...viewportProps})
+                            )}
+                        </ServiceResultsContext.Consumer>
+                    }
+                </RoutingResultsContext.Consumer>
             }
-        </RoutingResultsContext.Consumer>
+        </TKUIViewportUtil>
     );
 };
 

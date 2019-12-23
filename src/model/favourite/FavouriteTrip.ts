@@ -56,7 +56,7 @@ class FavouriteTrip extends Favourite {
     }
 
     public equals(other: any): boolean {
-        if (other === undefined || other === null || other.constructor.name !== this.constructor.name) {
+        if (other === undefined || other === null || !(other instanceof FavouriteTrip)) {
             return false;
         }
         return this.getKey() === other.getKey();

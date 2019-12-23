@@ -38,12 +38,15 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             backgroundColor: 'white',
             fontFamily: theme.fontFamily,
             boxShadow: (props: TKUICardProps) =>
-                (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.MODAL) ?
+                (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.SLIDE_UP_STYLE
+                    || props.presentation === CardPresentation.MODAL) ?
                 '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' : 'none',
             borderRadius: (props: TKUICardProps) => props.presentation === CardPresentation.MODAL ? '12px' :
-                props.presentation === CardPresentation.SLIDE_UP ? '12px 12px 0 0' : '0',
+                props.presentation === CardPresentation.SLIDE_UP
+                || props.presentation === CardPresentation.SLIDE_UP_STYLE ? '12px 12px 0 0' : '0',
             ...genStyles.flex,
-            ...genStyles.column
+            ...genStyles.column,
+            margin: '0 5px'
         },
 
         innerMain: {
@@ -60,7 +63,6 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         body: {
-            ...genStyles.scrollableY,
             ...genStyles.grow
         },
 
@@ -94,6 +96,20 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             width: '100%',
             height: '100%',
             ...genStyles.svgFillCurrColor
-        }
+        },
+
+        handle: {
+            height: '15px',
+            ...genStyles.flex,
+            ...genStyles.center,
+        },
+
+        handleLine: {
+            width: '50px',
+            height: '4px',
+            ...genStyles.borderRadius(2),
+            backgroundColor: tKUIColors.black2,
+            marginTop: '6px'
+        },
 
     });

@@ -1,43 +1,49 @@
 import React from "react";
-import Drawer from 'react-drag-drawer';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./TKUICardCarousel.css";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
+import TKUISlideUp, {TKUISlideUpOptions} from "./TKUISlideUp";
 
 interface IProps {
     selected?: number;
     onChange?: (selected: number) => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 class TKUICardCarousel extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         return (
-            <Drawer
-                open={true}
-                modalElementClass={"TKUICardCarousel-modal"}
-                containerElementClass={"TKUICardCarousel-modalContainer"}
-                allowClose={false}
-                dontApplyListeners={true}
-            >
-                <div className={"TKUICardCarousel-middle"}>
-                    <Carousel
-                        showStatus={false}
-                        showThumbs={false}
-                        transitionTime={500}
-                        selectedItem={this.props.selected}
-                        onChange={this.props.onChange}
-                        // width={'470px'}
-                        // emulateTouch={true}
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    <TKUISlideUp
+                        {...this.props.slideUpOptions}
+                        containerClass={"TKUICardCarousel-modalContainer"}
+                        modalClass={"TKUICardCarousel-modal"}
                     >
-                        {React.Children.map(this.props.children, (child: any, i: number) =>
-                            <div className={"TKUICardCarousel-pageWrapper"} key={i}>
-                                {child}
-                            </div>
-                        )}
-                    </Carousel>
-                </div>
-            </Drawer>
+                        <div className={"TKUICardCarousel-middle"}>
+                            <Carousel
+                                showStatus={false}
+                                showThumbs={false}
+                                showArrows={!DeviceUtil.isTouch()}
+                                // showIndicators={!DeviceUtil.isTouch()}
+                                transitionTime={500}
+                                selectedItem={this.props.selected}
+                                onChange={this.props.onChange}
+                                // emulateTouch={true}
+                            >
+                                {React.Children.map(this.props.children, (child: any, i: number) =>
+                                    <div className={"TKUICardCarousel-pageWrapper"} key={i}>
+                                        {child}
+                                    </div>
+                                )}
+                            </Carousel>
+                        </div>
+                    </TKUISlideUp>
+                }
+            </TKUIViewportUtil>
         );
     }
 
