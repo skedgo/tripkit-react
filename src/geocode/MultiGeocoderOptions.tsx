@@ -39,12 +39,18 @@ class MultiGeocoderOptions {
                 .map((city: City) => Util.iAssign(city, {source: citiesSourceId})));
         });
 
-        const favToLocations = (favourites: Favourite[], recent: boolean) => favourites
-            .map((favourite: Favourite) => Util.iAssign(
-                favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
-                { // To avoid mutating original location.
-                    source: recent ? recentSourceId : favouritesSourceId
-                }));
+        const favToLocations = (favourites: Favourite[], recent: boolean) => {
+            const locations = favourites
+                .map((favourite: Favourite) => Util.iAssign(
+                    favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
+                    { // To avoid mutating original location.
+                        source: recent ? recentSourceId : favouritesSourceId
+                    }));
+            return Util.addAllNoRep(([] as Location[]), locations,
+                (e1?: Location | null, e2?: Location | null) =>
+                    e1 === undefined ? e2 === undefined :
+                        e1 === null ? e2 === null : e1.equals(e2));
+        };
 
         const recentSourceId = "RECENT";
         const recentGeocoder = new StaticGeocoder(recentSourceId, true);

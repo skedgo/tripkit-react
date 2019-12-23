@@ -54,14 +54,22 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 text={"Get Direction"}
                 buttonType={TKUIButtonType.SECONDARY}
                 onClick={props.onRequestClose}
-                style={{border: 'none'}}
+                style={{
+                    border: 'none',
+                    width: '100%',
+                    ...genStyles.justifyStart
+                }}
                 key={1}
             />,
             <TKUIButton
                 text={"Favourites"}
                 icon={<IconFavourite/>}
                 type={TKUIButtonType.SECONDARY}
-                style={{border: 'none'}}
+                style={{
+                    border: 'none',
+                    width: '100%',
+                    ...genStyles.justifyStart
+                }}
                 onClick={() => {
                     props.onShowFavourites && props.onShowFavourites();
                     props.onRequestClose();
@@ -72,7 +80,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 text={"Settings"}
                 icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
                 type={TKUIButtonType.SECONDARY}
-                style={{border: 'none'}}
+                style={{
+                    border: 'none',
+                    width: '100%',
+                    ...genStyles.justifyStart
+                }}
                 onClick={() => {
                     props.onShowSettings && props.onShowSettings();
                     props.onRequestClose();

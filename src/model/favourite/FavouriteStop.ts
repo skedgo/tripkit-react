@@ -1,6 +1,7 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import StopLocation from "../StopLocation";
 import Favourite from "./Favourite";
+import FavouriteTrip from "./FavouriteTrip";
 
 @JsonObject
 class FavouriteStop extends Favourite {
@@ -15,7 +16,10 @@ class FavouriteStop extends Favourite {
     }
 
     equals(other: any): boolean {
-        return other && this.stop.equals(other.stop);
+        if (other === undefined || other === null || !(other instanceof FavouriteStop)) {
+            return false;
+        }
+        return this.stop.equals(other.stop);
     }
 
 }

@@ -9,13 +9,14 @@ import {Subtract} from "utility-types";
 import {IFavouritesContext, TKFavouritesContext} from "./TKFavouritesProvider";
 import TKUIFavouriteRow from "./TKUIFavouriteRow";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
     filter?: (favouriteList: Favourite[], recentList: Favourite[]) => Favourite[];
     onFavouriteClicked?: (item: Favourite) => void;
     onRequestClose?: () => void;
-    top?: number;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps {
@@ -56,13 +57,17 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
     public static defaultProps: Partial<IProps> = {
         title: "Favourites",
         filter: (favouriteList: Favourite[], recentList: Favourite[]) => {
+            // Sort favourites based on recent list:
+            // - filter (in) those recent that are also favourites.
             const sortedFavs = recentList.filter((recent: Favourite) => favouriteList.find((fav: Favourite) => fav.equals(recent)));
+            // - append the remaining favourites
             return sortedFavs.concat(favouriteList.filter((fav: Favourite) => !sortedFavs.find((sfav: Favourite) => sfav.equals(fav))));
         }
     };
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
                 title={this.props.title}
@@ -76,7 +81,7 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
                         />
                     </div>}
                 onRequestClose={this.props.onRequestClose}
-                slideUpOptions={this.props.top ? {modalUp: {top: this.props.top, unit: 'px'}} : undefined}
+                slideUpOptions={slideUpOptions}
             >
                 <div className={classes.main}>
                     {this.props.filter!(this.props.favouriteList, this.props.recentList)
