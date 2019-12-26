@@ -1,5 +1,13 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 
+export enum WeightingPreference {
+    money = "money",
+    time = "time",
+    carbon = "carbon",
+    hassle = "hassle",
+    exercise = "exercise"
+}
+
 @JsonObject
 class TKWeightingPreferences {
     @JsonProperty("money", Number)
@@ -25,6 +33,23 @@ class TKWeightingPreferences {
     public toUrlParam(): string {
         return "(" + this.money.toFixed(2) + "," + this.carbon.toFixed(2) + "," +
             this.time.toFixed(2) + "," + this.hassle.toFixed(2) + ")";
+    }
+
+    public static slidePrefTo(prefs: TKWeightingPreferences, pref: WeightingPreference, value: number) {
+        console.log(Object.keys(WeightingPreference));
+        const result = new TKWeightingPreferences();
+        const total = 5;
+        const oldRemainder = total - prefs[pref];
+        const newRemainder = total - value;
+        for (const prefName of Object.keys(WeightingPreference)) {
+            if (prefName === pref) {
+                result[prefName] = value;
+            } else {
+                result[prefName] = Math.min((prefs[prefName] * newRemainder) / oldRemainder, 2);
+            }
+        }
+        console.log(result);
+        return result;
     }
 }
 

@@ -3,8 +3,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIUserPrioritiesDefaultStyle} from "./TKUIUserPriorities.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
-import Util from "../util/Util";
+import TKWeightingPreferences, {WeightingPreference} from "../model/options/TKWeightingPreferences";
 import TKUISlider from "./TKUISlider";
 import iconMoney from "../images/badges/ic-badge-money.svg";
 import iconCarbon from "../images/badges/ic-badge-leaf.svg";
@@ -39,12 +38,13 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 <TKUISlider
-                    // Use defaultValue + onChangeCommited, which is more efficient than value + onChange.
+                    // TODO: consider using defaultValue + onChangeCommited, which is more efficient than value + onChange.
                     // Warning: with defaultValue + onChangeCommited slider won't update if priorities modified from
                     // outside.
-                    defaultValue={priorities.money * 100}
-                    onChangeCommitted={(event: any, value: any) =>
-                        this.props.onChange(Util.iAssign(priorities, {money: value / 100}))}
+                    value={priorities.money * 100}
+                    onChange={(event: any, value: any) => {
+                        this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value/100));
+                    }}
                     thumbIcon={iconMoney}
                     label={"Money"}
                     leftLabel={"I don't care"}
@@ -55,9 +55,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     // valueLabelFormat={(value: number) => "Money"}
                 />
                 <TKUISlider
-                    defaultValue={priorities.time * 100}
-                    onChangeCommitted={(event: any, value: any) =>
-                        this.props.onChange(Util.iAssign(priorities, {time: value / 100}))}
+                    value={priorities.time * 100}
+                    onChange={(event: any, value: any) =>
+                        this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value/100))}
                     thumbIcon={iconTime}
                     label={"Time"}
                     leftLabel={"I don't care"}
@@ -66,9 +66,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     max={200}
                 />
                 <TKUISlider
-                    defaultValue={priorities.carbon * 100}
-                    onChangeCommitted={(event: any, value: any) =>
-                        this.props.onChange(Util.iAssign(priorities, {carbon: value / 100}))}
+                    value={priorities.carbon * 100}
+                    onChange={(event: any, value: any) =>
+                        this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value/100))}
                     thumbIcon={iconCarbon}
                     label={"Carbon"}
                     leftLabel={"I don't care"}
@@ -77,9 +77,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     max={200}
                 />
                 <TKUISlider
-                    defaultValue={priorities.hassle * 100}
-                    onChangeCommitted={(event: any, value: any) =>
-                        this.props.onChange(Util.iAssign(priorities, {hassle: value / 100}))}
+                    value={priorities.hassle * 100}
+                    onChange={(event: any, value: any) =>
+                        this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value/100))}
                     thumbIcon={iconHassle}
                     label={"Convenience"}
                     leftLabel={"I don't care"}
