@@ -28,6 +28,7 @@ const searchStr = window.location.search;
 const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
 
 export function renderTripPlanner(containerId: string = "tripgo-sample-root", tripgoKey: string = "") {
+    TripGoApi.apiKey = tripgoKey;
     let routingQuery: RoutingQuery | undefined;
     if (queryMap && queryMap.flat) {
         routingQuery = RoutingQuery.create(
@@ -39,7 +40,6 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000)
         )
     }
-    TripGoApi.apiKey = tripgoKey;
     const containerElement = document.getElementById(containerId) as HTMLElement;
     containerElement.className = "app-style";
 

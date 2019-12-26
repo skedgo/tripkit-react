@@ -75,7 +75,11 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             height: '16px',
             border: (props: TKUISegmentOverviewProps) => {
                 const segment = props.value;
-                const prevSegment = segment.prevSegment();
+                let prevSegment = segment.prevSegment();
+                // This is since stationary segments are skipped on TKUITripOverviewView (since are merged with current segment)
+                if (prevSegment && prevSegment.isStationay()) {
+                    prevSegment = prevSegment.prevSegment();
+                }
                 const colourSegment = !segment.isWalking() && !segment.isStationay() ? segment : prevSegment;
                 return colourSegment ? '4px solid ' + TransportUtil.getTransportColor(colourSegment.modeInfo!) : 'none';
             },

@@ -22,11 +22,13 @@ class TKUIControlsCard extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         return (
             [
-                this.props.children((props: TKUICardClientProps) => {
-                    this.setState((prev: IState) => ({
-                        props: Util.iAssign(prev.props, props)
-                    }))
-                }),
+                <div key={1}>
+                    {this.props.children((props: TKUICardClientProps) => {
+                        this.setState((prev: IState) => ({
+                            props: Util.iAssign(prev.props, props)
+                        }))
+                    })}
+                </div>,
                 this.state.props.children &&
                 <TKUICard
                     {...this.state.props}
