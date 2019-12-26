@@ -9,7 +9,7 @@ class DateTimeUtil {
     public static readonly DATE_TIME_FORMAT = DateTimeUtil.DATE_FORMAT + ", " + DateTimeUtil.TIME_FORMAT;
     public static readonly HTML5_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
-    public static defaultTZ = "Australia/ACT";
+    public static defaultTZ = "Etc/UTC";
 
     public static getNow() {
         return moment.tz(this.defaultTZ);
@@ -19,15 +19,15 @@ class DateTimeUtil {
         return moment(timeS, format);
     }
 
-    public static momentTZ(timeS: string, timezone: string, format?: string): Moment {
+    public static momentFromStringTZ(timeS: string, timezone: string, format?: string): Moment {
         return format ? moment.tz(timeS, format, timezone) : moment.tz(timeS, timezone);
     }
 
-    public static momentDefaultTZ(timeS: string, format?: string) {
+    public static momentFromStringDefaultTZ(timeS: string, format?: string): Moment {
         return format ? moment.tz(timeS, format, DateTimeUtil.defaultTZ) : moment.tz(timeS, DateTimeUtil.defaultTZ);
     }
 
-    public static momentTZTime(time: number, timezone: string = DateTimeUtil.defaultTZ) {
+    public static momentFromTimeTZ(time: number, timezone: string = DateTimeUtil.defaultTZ): Moment {
         return moment.tz(time, timezone);
     }
 

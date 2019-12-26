@@ -5,7 +5,7 @@ import moment from "moment-timezone";
 import "./TKUIServiceDepartureRowDelete.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import OptionsData from "../data/OptionsData";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
@@ -82,7 +82,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                 statusClassname = classes.onTime;
             } else {
                 const diffS = DateTimeUtil.durationToBriefString(Math.abs(realtimeDiffInMinutes));
-                // const origStartS = DateTimeUtil.momentTZTime(departure.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+                // const origStartS = DateTimeUtil.momentFromTimeTZ(departure.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
                 if (realtimeDiffInMinutes < 0) {
                     status = "Early";
                     modifier = diffS + " early";
@@ -94,9 +94,9 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             }
         }
         let serviceTime;
-        const departureTime = DateTimeUtil.momentTZTime(departure.actualStartTime * 1000);
+        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, departure.startStop!.timezone);
         if (departure.actualEndTime) {
-            const endTime = DateTimeUtil.momentTZTime(departure.actualEndTime * 1000);
+            const endTime = DateTimeUtil.momentFromTimeTZ(departure.actualEndTime * 1000, departure.startStop!.timezone);
             serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP) + " - " + endTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
         } else {
             serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
@@ -118,7 +118,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const departure = this.props.value;
-        const departureTime = DateTimeUtil.momentTZTime(departure.actualStartTime * 1000);
+        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, departure.startStop!.timezone);
         const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
         const origin = departure.startStop && departure.startStop.shortName && departure.startStop.shortName.trim() ? departure.startStop.shortName : undefined;
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;

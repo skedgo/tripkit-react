@@ -1,10 +1,12 @@
-import Location from "./Location";
 import {JsonObject, JsonProperty} from "json2typescript";
+import LatLng from "./LatLng";
 
 @JsonObject
-class ServiceStopLocation extends Location {
+class ServiceStopLocation extends LatLng {
     @JsonProperty('code', String)
     private _code: string = '';
+    @JsonProperty('name', String, true)
+    public name: string = '';
     @JsonProperty('shortName', String, true)
     private _shortName: string | null = null;
     @JsonProperty('bearing', Number, true)

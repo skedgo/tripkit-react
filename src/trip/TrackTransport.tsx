@@ -17,7 +17,7 @@ class TrackTransport extends React.Component<IProps, {}> {
         let infoSubtitle: string;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
-            infoSubtitle = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+            infoSubtitle = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         } else if (segment.trip.isSingleSegment() && (segment.isBicycle() || segment.isWheelchair())) {
             // TODO getDurationWithContinuation
             const duration = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);

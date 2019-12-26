@@ -112,6 +112,7 @@ class TKUICard extends React.Component<IProps, {}> {
                     {...this.props.slideUpOptions}
                     containerClass={classes.modalContainer}
                     modalClass={classes.modal}
+                    open={this.props.open}
                 >
                     {body}
                 </TKUISlideUp>

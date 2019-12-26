@@ -36,7 +36,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
             Location.create(LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)),
                 queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc),
             queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
-            queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentTZTime(queryMap.time * 1000)
+            queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000)
         )
     }
     TripGoApi.apiKey = tripgoKey;

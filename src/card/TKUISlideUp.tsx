@@ -66,6 +66,7 @@ interface IProps extends TKUISlideUpOptions {
     containerClass?: string;
     modalClass?: string;
     classes: ClassNameMap<any>;
+    open?: boolean;
 }
 
 interface IState {
@@ -80,6 +81,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         modalUp: {top: 5, unit: 'px'},
         modalMiddle: {top: 50, unit: '%'},
         modalDown: {top: 90, unit: '%'},
+        open: true
     };
 
     private dragHandleRef: any;
@@ -135,7 +137,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         return (
             <Drawer
-                open={true}
+                open={this.props.open}
                 containerElementClass={classNames(classes.containerElement, this.props.containerClass,
                     this.positionToClass(this.state.position, classes),
                     this.state.touching && this.state.position !== TKUISlideUpPosition.UP ? classes.contElemTouching : undefined
