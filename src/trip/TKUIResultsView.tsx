@@ -258,6 +258,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     {this.props.values && this.props.values.map((trip: Trip, index: number) =>
                         <TKUITripRow
                             value={trip}
+                            selected={trip === this.props.value}
                             className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
                             onClick={() => this.props.onChange && this.props.onChange(trip)}
                             onFocus={() => this.props.onChange && this.props.onChange(trip)}

@@ -62,7 +62,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 sort: TripSort.OVERALL,
                 waiting: false,
                 viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
-                directionsView: false
+                directionsView: props.urlQuery !== undefined
             };
 
             this.onQueryChange = this.onQueryChange.bind(this);
@@ -293,7 +293,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
 
             if (TKShareHelper.isSharedTripLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname);
+                const shareLinkPath = decodeURIComponent(document.location.pathname)
+                    .replace("tripgo.com", "tripkit.tripgo.com");
                 TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
                     .then((routingResultsJson: any) => {
                         const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
@@ -309,9 +310,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         this.setState({
                             query: query,
                             trips: sortedTrips,
-                            selected: sortedTrips[0]
+                            selected: sortedTrips[0],
+                            directionsView: true
                         }, () => {
-                            window.history.replaceState({}, "", "/");
+                            TKShareHelper.resetToHome();
                         });
                     });
             }
@@ -319,19 +321,24 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (TKShareHelper.isSharedArrivalLink()) {
                 const shareLinkS = document.location.search;
                 const queryMap = queryString.parse(shareLinkS.startsWith("?") ? shareLinkS.substr(1) : shareLinkS);
-                if (queryMap.lat && queryMap.lng && queryMap.at) {
+                if (queryMap.lat && queryMap.lng) {
                     const arrivalLoc = Location.create(LatLng.createLatLng(parseFloat(queryMap.lat), parseFloat(queryMap.lng)), "", "", "");
                     const geocodingData = new MultiGeocoder();
                     geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
                         if (location !== null) {
-                            const routingQuery = RoutingQuery.create(null,
-                                location,
-                                TimePreference.ARRIVE, DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000));
+                            const routingQuery = queryMap.at ? RoutingQuery.create(null,
+                                location, TimePreference.ARRIVE,
+                                DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
+                                RoutingQuery.create(null, location);
                             this.onViewportChange({
                                 center: arrivalLoc,
                                 zoom: 13
                             });
                             this.onQueryChange(routingQuery);
+                            if (queryMap.at) {
+                                this.setState({directionsView: true})
+                            }
+                            TKShareHelper.resetToHome();
                         }
                     });
                 }

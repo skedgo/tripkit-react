@@ -50,8 +50,13 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripOverviewView",
     props: {
         actions: (trip: Trip) => [
-            <TKUIButton text={"Go"} icon={<IconDirections/>} type={TKUIButtonType.PRIMARY_VERTICAL} style={{minWidth: '90px'}}/>,
-            <RoutingResultsContext.Consumer>
+            <TKUIButton text={"Go"}
+                        icon={<IconDirections/>}
+                        type={TKUIButtonType.PRIMARY_VERTICAL}
+                        style={{minWidth: '90px'}}
+                        key={"actionGo"}
+            />,
+            <RoutingResultsContext.Consumer key={"actionFavourite"}>
                 {(routingResultsContext: IRoutingResultsContext) =>
                     routingResultsContext.query.from && routingResultsContext.query.to &&
                     <TKUIFavouriteAction
@@ -64,10 +69,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 message={""}
                 link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
                 vertical={true}
+                key={"actionShare"}
             />
         ],
         segmentActions: (segment: Segment) => segment.arrival ? [
-            <TKUIControlsCard>
+            <TKUIControlsCard key={"actionShareArrival"}>
                 {(setProps: (props: TKUICardClientProps) => void) => {
                     return <TKUIButton text={"Share arrival"}
                                        type={TKUIButtonType.PRIMARY_LINK}
@@ -128,7 +134,6 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                             actions={this.props.segmentActions && this.props.segmentActions(segment)}
                         />
                     )}
-
                     <TKUISegmentOverview
                         value={this.props.value.arrivalSegment}
                         key={segments.length}

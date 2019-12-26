@@ -19,7 +19,7 @@ class Trip {
     @JsonProperty("currencySymbol", String, true)
     private _currencySymbol: string | null = null;
     @JsonProperty("moneyCost", Number, true)
-    private _moneyCost: number | null = 0;
+    private _moneyCost: number | null = null;
     @JsonProperty("moneyUSDCost", Number, true)
     private _moneyUSDCost: number | null = 0;
     @JsonProperty("carbonCost", Number, true)

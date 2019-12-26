@@ -80,7 +80,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 const stopCode = shareLinkSplit[3];
                 StopsData.instance.getStopFromCode(region, stopCode)
                     .then((stop: StopLocation) =>
-                        RegionsData.instance.requireRegions().then(() => this.onStopChange(stop)));
+                        RegionsData.instance.requireRegions().then(() => {
+                            this.onStopChange(stop);
+                            TKShareHelper.resetToHome();
+                        }));
             }
 
             if (TKShareHelper.isSharedServiceLink()) {
@@ -93,6 +96,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 StopsData.instance.getStopFromCode(region, stopCode)
                     .then((stop: StopLocation) =>
                         RegionsData.instance.requireRegions().then(() => {
+                                TKShareHelper.resetToHome();
                                 this.setState({
                                     startStop: stop,
                                     initTime: initTime,

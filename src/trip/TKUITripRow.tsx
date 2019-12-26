@@ -23,6 +23,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
+    selected?: boolean;
     className?: string;
     brief?: boolean;
     onClick?: () => void;
@@ -142,7 +143,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 }
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>
                     <div className={classNames(classes.alternative,
-                        nOfAlts > 1 && altTrip === selectedAlt && classes.selectedAlternative)}
+                        nOfAlts > 1 && this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
                          onClick={() => this.props.onAlternativeClick &&
                          this.props.onAlternativeClick(trip as TripGroup, altTrip)}
                          key={i}

@@ -55,6 +55,10 @@ class TKShareHelper {
         + "/" + encodeURIComponent(service.serviceTripID) + "/" + service.startTime;
     }
 
+    public static resetToHome() {
+        window.history.replaceState({}, "", "/");
+    }
+
 }
 
 export default TKShareHelper;
