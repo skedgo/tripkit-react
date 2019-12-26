@@ -50,7 +50,7 @@ class DateTimePicker extends React.Component<IProps, {}> {
         const onChange = this.props.onChange ? this.props.onChange :
             () => { // Avoid empty block warning
             };
-        const valueWithTimezone = DateTimeUtil.momentDefaultTZ(value.format(this.props.dateFormat), this.props.dateFormat);
+        const valueWithTimezone = DateTimeUtil.momentFromStringDefaultTZ(value.format(this.props.dateFormat), this.props.dateFormat);
         onChange(valueWithTimezone);
     }
 
@@ -80,7 +80,7 @@ class DateTimePicker extends React.Component<IProps, {}> {
                 onChangeRaw={(date) => {
                     this.changedRaw = true;
                     setTimeout(() => this.changedRaw = false, 100); // To avoid it to keep true if onChange is not called
-                    const moment = DateTimeUtil.momentDefaultTZ(date.target.value, this.props.dateFormat);
+                    const moment = DateTimeUtil.momentFromStringDefaultTZ(date.target.value, this.props.dateFormat);
                     if (moment.isValid()) {
                         this.onValueChange(moment);
                     }

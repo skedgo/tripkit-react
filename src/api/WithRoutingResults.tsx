@@ -302,7 +302,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         const to = firstTrip.segments[firstTrip.segments.length - 1].to;
                         const query = RoutingQuery.create(from, to,
                             firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
-                            firstTrip.queryTime ? DateTimeUtil.momentTZTime(firstTrip.queryTime * 1000) : undefined);
+                            firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
                         routingResults.setQuery(query);
                         const trips = routingResults.groups;
                         const sortedTrips = this.sortTrips(trips, this.state.sort);
@@ -326,7 +326,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (location !== null) {
                             const routingQuery = RoutingQuery.create(null,
                                 location,
-                                TimePreference.ARRIVE, DateTimeUtil.momentTZTime(parseInt(queryMap.at) * 1000));
+                                TimePreference.ARRIVE, DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000));
                             this.onViewportChange({
                                 center: arrivalLoc,
                                 zoom: 13

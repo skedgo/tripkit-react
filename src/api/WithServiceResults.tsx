@@ -57,7 +57,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             const now = DateTimeUtil.getNow();
             let initialTime;
             if (props.segment) {
-                initialTime = DateTimeUtil.momentTZTime(props.segment.startTime * 1000).add(-30, 'm');
+                initialTime = DateTimeUtil.momentFromTimeTZ(props.segment.startTime * 1000).add(-30, 'm');
                 if (initialTime.isBefore(now)) {
                     initialTime = now;
                 }
@@ -89,7 +89,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 const region = shareLinkSplit[2];
                 const stopCode = shareLinkSplit[3];
                 const serviceCode = shareLinkSplit[4];
-                const initTime = DateTimeUtil.momentTZTime(parseInt(shareLinkSplit[5]) * 1000);
+                const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
                 StopsData.instance.getStopFromCode(region, stopCode)
                     .then((stop: StopLocation) =>
                         RegionsData.instance.requireRegions().then(() => {

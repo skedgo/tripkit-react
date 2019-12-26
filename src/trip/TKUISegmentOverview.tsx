@@ -59,8 +59,10 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         const prevSegment = segment.prevSegment();
         const prevWaitingSegment = prevSegment && prevSegment.isStationay() ? prevSegment : undefined;
         const prevWaitingSegmentTime = prevWaitingSegment ?
-            DateTimeUtil.momentTZTime(prevWaitingSegment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : undefined;
-        const startTime = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+            DateTimeUtil.momentFromTimeTZ(prevWaitingSegment.startTime * 1000, segment.from.timezone)
+                .format(DateTimeUtil.TIME_FORMAT_TRIP) : undefined;
+        const startTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
+            .format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
         const transportColor = TransportUtil.getTransportColor(modeInfo);
         const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "") + segment.from.address;

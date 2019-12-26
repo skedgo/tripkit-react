@@ -69,7 +69,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true}/>,
             <TKUIShareAction
                 title={"Share timetable"}
-                presentation={CardPresentation.MODAL}
                 message={""}
                 link={TKShareHelper.getShareTimetable(stop)}
                 vertical={true}
@@ -108,6 +107,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const stop = this.props.stop;
+        if (!stop) {
+            return null;
+        }
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
@@ -178,10 +180,10 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                         >
                             {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
                                 const showDayLabel = i === 0 ||
-                                    DateTimeUtil.momentTZTime(this.props.departures[i - 1].actualStartTime * 1000).format("ddd D") !==
-                                    DateTimeUtil.momentTZTime(departure.actualStartTime * 1000).format("ddd D");
+                                    DateTimeUtil.momentFromTimeTZ(this.props.departures[i - 1].actualStartTime * 1000, stop.timezone).format("ddd D") !==
+                                    DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone).format("ddd D");
                                 if (showDayLabel) {
-                                    elems.push(<DaySeparator date={DateTimeUtil.momentTZTime(departure.actualStartTime * 1000)}
+                                    elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone)}
                                                              key={"day-" + i}
                                                              scrollRef={this.scrollRef}
                                     />)

@@ -65,7 +65,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
         actions: (service: ServiceDeparture) => [
             <TKUIShareAction
                 title={"Share service"}
-                presentation={CardPresentation.MODAL}
                 message={""}
                 link={TKShareHelper.getShareService(service)}
                 vertical={true}
@@ -158,8 +157,8 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             steps={stops}
                             // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
                             leftLabel = {(step: ServiceStopLocation) => step.departure ?
-                                DateTimeUtil.momentTZTime(step.departure * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-                                step.arrival ? DateTimeUtil.momentTZTime(step.arrival * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
+                                DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
+                                step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
                             }
                             rightLabel={(step: ServiceStopLocation) => step.name}
                             stepMarker={(step: ServiceStopLocation) =>

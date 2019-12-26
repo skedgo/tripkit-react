@@ -24,7 +24,10 @@ class SegmentPopup extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const segment = this.props.segment;
-        const title = segment.arrival ? "Arrive to " + segment.to.getDisplayString() + " at " + DateTimeUtil.momentTZTime(segment.endTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP) : segment.getAction();
+        const title = segment.arrival ?
+            "Arrive to " + segment.to.getDisplayString() + " at " +
+            DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
+            segment.getAction();
         const subtitle = !segment.arrival ?
             (segment.isFirst() ? "To " + segment.to.getDisplayString() : "From " + segment.from.getDisplayString()) : undefined;
         return (

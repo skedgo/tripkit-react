@@ -2,6 +2,7 @@ import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
 import CurrentLocationGeocoder from "../geocode/CurrentLocationGeocoder";
+import RegionsData from "../data/RegionsData";
 
 @JsonObject
 class Location extends LatLng {
@@ -18,6 +19,8 @@ class Location extends LatLng {
     public source: string | undefined = undefined;
     public suggestion?: any;
     public hasDetail?: boolean;
+    @JsonProperty('timezone', String)
+    public timezone: string = "";
 
     public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
@@ -25,6 +28,10 @@ class Location extends LatLng {
         instance._name = name;
         instance._id = id;
         instance.source = source;
+        // TODO: timezone is required when coming from tripgo api endpoints. Ensure it's also properly set
+        // when created client-side. Now it may be "".
+        const region = RegionsData.instance.getRegion(latlng);
+        instance.timezone = region ? region.timezone : "";
         return instance;
     }
 

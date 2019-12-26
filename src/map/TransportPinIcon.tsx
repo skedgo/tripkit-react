@@ -26,7 +26,7 @@ class TransportPinIcon extends React.Component<IProps, {}> {
         const onDark = segment.arrival || (!modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined);
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, onDark);
-        const timeS = DateTimeUtil.momentTZTime(segment.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return <TransportPinIcon icon={transIcon} label={timeS} rotation = {rotation}/>
     }
 
@@ -38,7 +38,7 @@ class TransportPinIcon extends React.Component<IProps, {}> {
         const rotation = startStop && startStop.bearing;
         const onDark = !modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined;
         const transIcon = TransportUtil.getTransportIcon(modeInfo, false, onDark);
-        const timeS = DateTimeUtil.momentTZTime(serviceDeparture.actualStartTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return <TransportPinIcon icon={transIcon} label={timeS} rotation = {rotation}/>
     }
 
