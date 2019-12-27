@@ -32,8 +32,6 @@ class MapService extends React.Component<IProps, {}> {
                     {(serviceContext: IServiceResultsContext) =>
                         <ShapesPolyline key={"map-polyline" + serviceDeparture.serviceTripID}
                                         id={"map-polyline" + serviceDeparture.serviceTripID}
-                                        color={serviceDeparture.serviceColor ? serviceDeparture.serviceColor.toHex() : "black"}
-                                        modeInfo={serviceDeparture.modeInfo}
                                         shapes={service.shapes!}
                                         polylineOptions={this.props.renderer.polylineOptions}
                                         renderServiceStop={this.props.renderer.renderServiceStop}

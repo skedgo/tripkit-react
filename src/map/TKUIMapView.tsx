@@ -222,7 +222,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             };
         const serviceRenderer = this.props.serviceRenderer ? this.props.serviceRenderer :
             (service: ServiceDeparture) => {
-                let color = TransportUtil.getTransportColor(service.modeInfo);
+                let color = TransportUtil.getServiceDepartureColor(service);
                 if (!color) {
                     color = "black";
                 }

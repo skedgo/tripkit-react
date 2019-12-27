@@ -6,11 +6,8 @@ import {renderToStaticMarkup} from "react-dom/server";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import {STOP_CLICKED_EVENT} from "../service/TKUIServiceView";
-import ModeInfo from "../model/trip/ModeInfo";
 
 interface IProps {
-    color: string;
-    modeInfo?: ModeInfo;
     shapes: ServiceShape[];
     polylineOptions: PolylineProps | PolylineProps[];
     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;

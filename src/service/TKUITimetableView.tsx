@@ -28,6 +28,7 @@ import TKUIShareAction from "../action/TKUIShareAction";
 import {TKUIButtonType} from "../buttons/TKUIButton";
 import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import TransportUtil from "../trip/TransportUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -65,13 +66,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView",
     props: {
         actions: (stop: StopLocation) => [
-            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL}/>,
-            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true}/>,
+            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
+            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
             <TKUIShareAction
                 title={"Share timetable"}
                 message={""}
                 link={TKShareHelper.getShareTimetable(stop)}
                 vertical={true}
+                key={"actionShare"}
             />
         ]
     }
@@ -135,10 +137,12 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
                         <div className={classes.serviceList}>
-                            {serviceListSamples.map((service: ServiceDeparture) => {
+                            {serviceListSamples.map((service: ServiceDeparture, i: number) => {
                                 return service.serviceNumber &&
                                     <div className={classes.serviceNumber}
-                                         style={{backgroundColor: service.serviceColor ? service.serviceColor.toHex() : 'lightgray'}}>
+                                         style={{backgroundColor: TransportUtil.getServiceDepartureColor(service)}}
+                                         key={i}
+                                    >
                                         {service.serviceNumber}
                                     </div>
                             })}
@@ -149,6 +153,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 presentation={CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
                 slideUpOptions={slideUpOptions}
+                // Timetable should not scroll at body, but at panel below filter, on body content. Next is just required
+                // for Safari so div below filter can actually get a height and scroll happens there.
+                bodyStyle={{height: '100%'}}
             >
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>

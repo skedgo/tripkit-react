@@ -65,6 +65,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         borderBottom: '1px solid ' + tKUIColors.black4,
         ...genStyles.flex,
         ...genStyles.alignCenter,
+        ...genStyles.noShrink,
         '@global .react-datepicker__triangle': {
             left: 'initial',
             right: '22px'

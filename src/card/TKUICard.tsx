@@ -30,6 +30,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     slideUpOptions?: TKUISlideUpOptions;
     open?: boolean;
     children?: any;
+    bodyStyle?: CSS.Properties;
 }
 
 interface IStyle {
@@ -102,7 +103,7 @@ class TKUICard extends React.Component<IProps, {}> {
                     </div>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <TKUIScrollForCard className={classes.body}>
+                <TKUIScrollForCard className={classes.body} style={this.props.bodyStyle}>
                     {this.props.children}
                 </TKUIScrollForCard>
             </div>;

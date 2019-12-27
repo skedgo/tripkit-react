@@ -46,8 +46,6 @@ class MapTripSegment extends React.Component<IProps, {}> {
             segment.shapes ?
                 <ShapesPolyline key={"map-polyline" + segment.trip.getKey()}
                                 id={"map-polyline" + segment.trip.getKey()}
-                                color={segment.getColor()}
-                                modeInfo={segment.modeInfo}
                                 shapes={segment.shapes}
                                 polylineOptions={this.props.renderer.polylineOptions}
                                 renderServiceStop={this.props.renderer.renderServiceStop}
