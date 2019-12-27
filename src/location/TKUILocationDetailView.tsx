@@ -76,13 +76,14 @@ class TKUILocationDetailView extends React.Component<IProps, {}> {
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;
         const subHeader = this.props.actions ?
-            () => <TKUIActionsView actions={this.props.actions!(location)} className={classes.actionsPanel}/> : undefined
+            () => <TKUIActionsView actions={this.props.actions!(location)} className={classes.actionsPanel}/> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        if (!slideUpOptions.modalUp) {
-            Object.assign(slideUpOptions, {
-                modalDown: {top: 78, unit: '%'},
-            });
-        }
+        // TODO: ideally it's better to define this here, instead on TKUITripPlanner, but calc doesn't work.
+        // if (!slideUpOptions.modalDown) {
+        //     Object.assign(slideUpOptions, {
+        //         modalDown: {top: 'calc(100% - 165px)', unit: ''},
+        //     });
+        // }
         return (
             <TKUICard
                 title={title}

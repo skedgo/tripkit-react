@@ -46,10 +46,12 @@ import {Subtract} from "utility-types";
 import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 
+export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
+
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideLocations?: boolean;
     bounds?: BBox;
-    padding?: {top?: number, right?: number, bottom?: number, left?: number}
+    padding?: TKUIMapPadding
     children: any;
     // TODO: Put the following props inside config?
     attributionControl?: boolean;
@@ -172,7 +174,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     private checkFitLocation(oldLoc?: Location | null, loc?: Location | null): boolean {
-        return !!(oldLoc !== loc && loc && loc.isResolved());
+        return !!(oldLoc !== loc && loc && loc.isResolved()) && JSON.stringify(Util.transerialize(loc, LatLng)) !== JSON.stringify(avoidFitLatLng);
     }
 
     private fitMap(from: Location | null, to: Location | null) {
@@ -189,7 +191,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         if (fitSet.length === 1) {
-            this.onViewportChange(Util.iAssign(this.props.viewport || {}, {center: fitSet[0]}));
+            const fitPoint = this.props.padding && this.props.padding.left ?
+                MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
+                this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
+                LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
+            this.onViewportChange(Util.iAssign(this.props.viewport || {}, {center: fitPoint}));
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));
@@ -292,12 +298,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     </div>}
                 </div>
             </Popup>;
+        const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
+        const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
         return (
             <div className={classes.main}>
                 <RLMap
                     className="map-canvas avoidVerticalScroll gl-flex gl-grow"
                     viewport={this.props.viewport}
-                    boundsOptions={{padding: [20, 20]}}
+                    // TODO: check I don't need to pass boundsOptios to fitBounds anymore
+                    boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
                     onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
                         this.onViewportChange({
@@ -419,6 +428,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // TODO: avoid switching from undefined to null, use one or the other.
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
         }
+        // TODO: check if need to reset avoidFitLatLng, maybe with a timer after a second.
+        // avoidFitLatLng = undefined;
         // TODO: check that this is used to fit the map when comming from query input widget.
         // TODO: check is the change done to fit favourites will cause other undesired fits.
         // if (!prevProps.from && !prevProps.to &&
@@ -427,9 +438,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.fitBounds(BBox.createBBoxArray([this.props.from, this.props.to]));
         }
         const trip = this.props.trip;
-        if (trip !== prevProps.trip && trip) {
+        const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
+        if ((trip !== prevProps.trip || paddingChanged) && trip) {
             const fitBounds = MapUtil.getTripBounds(trip);
-            if (!this.alreadyFits(fitBounds)) {
+            // TODO: analize better when to force fit bounds.
+            if (!this.alreadyFits(fitBounds) || paddingChanged) {
                 this.fitBounds(fitBounds);
             }
         }
@@ -437,7 +450,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (service !== prevProps.service) {
             if (service && service.serviceDetail && service.serviceDetail.shapes) {
                 const fitBounds = MapUtil.getShapesBounds(service.serviceDetail.shapes);
-                if (!this.alreadyFits(fitBounds)) {
+                if (!this.alreadyFits(fitBounds) || paddingChanged) {
                     this.fitBounds(fitBounds);
                 }
             }
@@ -453,7 +466,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public alreadyFits(bounds: BBox): boolean {
-        return this.leafletElement ? this.leafletElement.getBounds().contains(LeafletUtil.fromBBox(bounds)) : false;
+        const padding = Object.assign({top: 0, right: 0, bottom: 0, left: 0}, this.props.padding);
+        return this.leafletElement ?
+            MapUtil.alreadyFits(LeafletUtil.toBBox(this.leafletElement.getBounds()), padding, bounds,
+                this.leafletElement.getContainer().offsetWidth, this.leafletElement.getContainer().offsetHeight)
+            : false;
     }
 
     public onResize() {
@@ -469,6 +486,8 @@ function getGeocodingData() {
     }
     return geocodingData;
 }
+
+let avoidFitLatLng: LatLng | undefined;
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
     (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
@@ -512,6 +531,11 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                 onClick: (clickLatLng: LatLng) => {
                                                     if (routingContext.directionsView) {
                                                         if (!from || !to) {
+                                                            if (!from && !to) {
+                                                                // Avoid fit bounds when setting first location on
+                                                                // directions view.
+                                                                avoidFitLatLng = clickLatLng
+                                                            }
                                                             onMapLocChanged(!from, clickLatLng);
                                                             GATracker.instance.send("query input", "pick location", "drop pin");
                                                         }
