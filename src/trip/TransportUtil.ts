@@ -4,6 +4,7 @@ import ModeIdentifier from "../model/region/ModeIdentifier";
 import Constants from "../util/Constants";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
+import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class TransportUtil {
 
@@ -40,6 +41,11 @@ class TransportUtil {
         }
         return this.getTransportColorByIconS(modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID) ?
             "school-bus" : modeInfo.localIcon); // TODO: hardcoded for TC
+    }
+
+    public static getServiceDepartureColor(departure: ServiceDeparture): string {
+        return departure.serviceColor ? departure.serviceColor.toRGB() :
+            (this.getTransportColor(departure.modeInfo) || "black");
     }
 
     public static getTransportColorByIconS(iconS: string): string | null {

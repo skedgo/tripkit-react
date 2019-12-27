@@ -293,8 +293,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
 
             if (TKShareHelper.isSharedTripLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname)
-                    .replace("tripgo.com", "tripkit.tripgo.com");
+                const shareLinkPath = decodeURIComponent(document.location.pathname);
                 TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
                     .then((routingResultsJson: any) => {
                         const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);

@@ -3,6 +3,7 @@ import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "./TKUI
 import {DynamicCSSRule, CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
+import TransportUtil from "../trip/TransportUtil";
 
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
@@ -32,7 +33,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             borderRadius: '4px',
             padding: '2px 4px',
             backgroundColor: (props: TKUIServiceDepartureRowProps) =>
-                props.value.serviceColor ? props.value.serviceColor.toHex() : 'lightgray',
+                TransportUtil.getServiceDepartureColor(props.value),
             ...genStyles.fontSM
         },
         time: {

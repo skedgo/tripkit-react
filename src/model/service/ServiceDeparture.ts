@@ -29,7 +29,7 @@ class ServiceDeparture {
     public startTime: number = -1;
     @JsonProperty("endTime", Number, true)
     public endTime: number | undefined = undefined;
-    @JsonProperty("modeInfo")
+    @JsonProperty("modeInfo", ModeInfo)
     public modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty("realTimeStatus", String, true)   // "IS_REAL_TIME" "CAPABLE" "INCAPABLE" "CANCELLED"
     public realTimeStatus: string | undefined = undefined;

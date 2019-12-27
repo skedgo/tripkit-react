@@ -168,7 +168,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             stepClassName={(step: ServiceStopLocation) =>
                                 (step.departure && step.departure < departure.startTime ? classes.pastStop :
                                     step.departure === departure.startTime ? classes.currStop : undefined)}
-                            borderColor={departure.serviceColor ? departure.serviceColor.toHex() : "black"}
+                            borderColor={TransportUtil.getServiceDepartureColor(departure)}
                             onStepClicked={(step: ServiceStopLocation) =>
                                 this.props.eventBus && this.props.eventBus.emit(STOP_CLICKED_EVENT, step)}
                         />
