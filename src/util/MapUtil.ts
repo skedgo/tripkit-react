@@ -3,6 +3,7 @@ import Trip from "../model/trip/Trip";
 import LeafletUtil from "./LeafletUtil";
 import ServiceShape from "../model/trip/ServiceShape";
 import LatLng from "../model/LatLng";
+import {TKUIMapPadding} from "../map/TKUIMapView";
 
 class MapUtil {
 
@@ -59,7 +60,66 @@ class MapUtil {
 
     public static toDegrees(radians: number) {
         return radians * 180 / Math.PI;
-    };
+    }
+
+    public static movePointInPixels(latlng: LatLng, offsetX: number, offsetY: number, width: number, height: number, bounds: BBox): LatLng {
+        const westLong = bounds.sw.lng;
+        const eastLong = bounds.ne.lng;
+        const northLat = bounds.ne.lat;
+        const southLat = bounds.sw.lat;
+        const diffLong = eastLong >= westLong ? eastLong - westLong : eastLong - westLong + 360;
+        const diffLat = northLat >= southLat ? northLat - southLat : northLat - southLat + 180;
+        const pixelsPerLongDegree = width / diffLong;
+        const pixelsPerLatDegree = height / diffLat;
+        const newCenterLong = latlng.lng + (offsetX / pixelsPerLongDegree);
+        const newCenterLat = latlng.lat + (offsetY / pixelsPerLatDegree);
+        return LatLng.createLatLng(newCenterLat, newCenterLong);
+    }
+
+    public static expandBoundsByPercent(bounds: BBox, left: number, right: number, top: number, bottom: number): BBox {
+        const westLong = bounds.sw.lng;
+        const eastLong = bounds.ne.lng;
+        const northLat = bounds.ne.lat;
+        const southLat = bounds.sw.lat;
+        const angle = (eastLong - westLong) >= 0 ? 1 : -1;
+        let diffLong = eastLong - westLong;
+        if (angle < 0)
+            diffLong += 360;
+        const diffLat = southLat - northLat;
+        const newWestLong = westLong - (diffLong * left)/100;
+        const newEastLong = eastLong + (diffLong * right)/100;
+        const newNorthLat = northLat - (diffLat * top)/100;
+        const newSouthLat = southLat + (diffLat * bottom)/100;
+        return BBox.createBBox(LatLng.createLatLng(newNorthLat, newEastLong), LatLng.createLatLng(newSouthLat, newWestLong));
+    }
+
+    public static alreadyFits(currentBounds: BBox, padding: TKUIMapPadding, bounds: BBox, mapWidth: number, mapHeight: number): boolean {
+        Object.assign({left: 0, right: 0, bottom: 0, top: 0}, padding);
+        const leftMargin = padding.left!;
+        const rightMargin = padding.right!;
+        const topMargin = padding.top!;
+        const bottomMargin = padding.bottom!;
+
+        const currVisibleBoundsHeight = mapHeight;
+        const currVisibleBoundsWidth = mapWidth;
+        const leftReductionPCT = leftMargin === 0 ? 0 : leftMargin / Math.max(currVisibleBoundsWidth, 30) * 100;
+        const rightReductionPCT = rightMargin === 0 ? 0 : rightMargin / Math.max(currVisibleBoundsWidth, 30) * 100;
+        const topReductionPCT = topMargin === 0 ? 0 : topMargin / Math.max(currVisibleBoundsHeight, 30) * 100;
+        const bottomReductionPCT = bottomMargin == 0 ? 0 : (bottomMargin) / Math.max(currVisibleBoundsHeight, 30) * 100;
+        const reducedBounds = this.expandBoundsByPercent(currentBounds, -leftReductionPCT, -rightReductionPCT, -topReductionPCT, -bottomReductionPCT);
+        // const alreadyFits = GWTLatLngBounds.createFromHasLatLngBounds(currentBounds).resize(.8).toLatLngBounds().contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest()) &&
+        //     reducedBounds.contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest());
+        const reducedLatLngBounds = LeafletUtil.fromBBox(reducedBounds);
+        console.log(JSON.stringify(padding));
+        console.log("curr: " + JSON.stringify(currentBounds));
+        console.log("reduced: " + JSON.stringify(reducedBounds));
+        console.log("new bounds: " + JSON.stringify(bounds));
+        const alreadyFits =
+            // LeafletUtil.fromBBox(currentBounds).contains(LeafletUtil.fromLatLng(bounds.ne)) &&
+            reducedLatLngBounds.contains(LeafletUtil.fromLatLng(bounds.sw)) &&
+            reducedLatLngBounds.contains(LeafletUtil.fromLatLng(bounds.ne));
+        return alreadyFits
+    }
 
 }
 

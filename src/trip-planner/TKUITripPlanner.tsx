@@ -39,7 +39,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import TKUIMapView from "../map/TKUIMapView";
+import TKUIMapView, {TKUIMapPadding} from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
@@ -181,7 +181,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const searchBar =
             // this.state.cardPosition !== TKUISlideUpPosition.UP &&
-            !this.props.directionsView &&
+            !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
             <TKUILocationSearch
                 onDirectionsClicked={() => {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
@@ -226,7 +226,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
             />;
         const departuresView =
@@ -238,7 +239,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
             /> : null;
 
@@ -269,14 +271,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowOptions={this.onShowSettings}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined
+                    modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined,
+                    modalMiddle: this.props.portrait ? {top: 55, unit: '%'} : undefined
                 }}
-                // styles={Util.iAssign(tKUIResultsDefaultStyle, {
-                //     main: {
-                //         ...tKUIResultsDefaultStyle.main,
-                //         backgroundColor: 'lightcoral'
-                //     }
-                // })}
             /> : null;
 
         let tripDetailView;
@@ -303,6 +300,24 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 </TKUICardCarousel>;
         }
         const classes = this.props.classes;
+        const mapPadding: TKUIMapPadding = {};
+        if(this.props.landscape) {
+            mapPadding.left = 500;
+        } else {
+            if (this.props.directionsView && this.props.trips) {
+                mapPadding.bottom = this.ref ? this.ref.offsetHeight * .50 : 20;
+            }
+            if (queryInput) {
+                mapPadding.top = 100;
+            } else {
+                mapPadding.top = 50;
+            }
+            if (serviceDetailView) {
+                mapPadding.bottom = this.ref ? this.ref.offsetHeight * .55 : 20;
+            }
+        }
+        // this.props.landscape ? {left: 500} :
+        //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
         return (
             <div id="mv-main-panel"
                  className={classNames(classes.main,
@@ -323,7 +338,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
                     <TKUIMapView
                         hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                        padding={this.props.landscape ? {left: 500} : undefined }
+                        padding={mapPadding}
                     >
                         <TileLayer
                             attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
