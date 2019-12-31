@@ -44,9 +44,8 @@ import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 import MapLocationPopup from "./MapLocationPopup";
 import TKUIMapLocationIcon, {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "./TKUIMapLocationIcon";
-import {TKUITheme} from "../jss/TKUITheme";
-import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
 import {withTheme} from "react-jss";
+import TKUIProvider from "../config/TKUIProvider";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -88,9 +87,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     onWhatsHere: (latLng: LatLng) => void;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-    tKUIMapLocationIconStyles?: (theme: TKUITheme) => (props: TKUIMapLocationIconProps) => TKUIMapLocationIconStyle;
-}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -99,9 +96,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props}/>,
     styles: tKUIMapViewDefaultStyle,
     classNamePrefix: "TKUIMapView",
-    props: {
-        tKUIMapLocationIconStyles: tKUIMapLocationIconDefaultStyle
-    }
 };
 
 interface IState {
@@ -351,12 +345,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.from!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIMapLocationIcon location={this.props.from!}
-                                                         from={true}
-                                                         styles={this.props.tKUIMapLocationIconStyles ?
-                                                             this.props.tKUIMapLocationIconStyles(this.props.theme as TKUITheme) :
-                                                             tKUIMapLocationIconDefaultStyle(this.props.theme as TKUITheme)}
-                                    />
+                                    <TKUIProvider>
+                                        <TKUIMapLocationIcon location={this.props.from!} from={true}/>
+                                    </TKUIProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
@@ -378,11 +369,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIMapLocationIcon location={this.props.to!}
-                                                         styles={this.props.tKUIMapLocationIconStyles ?
-                                                             this.props.tKUIMapLocationIconStyles(this.props.theme as TKUITheme) :
-                                                             tKUIMapLocationIconDefaultStyle(this.props.theme as TKUITheme)}
-                                    />
+                                    <TKUIProvider>
+                                        <TKUIMapLocationIcon location={this.props.to!}/>
+                                    </TKUIProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
