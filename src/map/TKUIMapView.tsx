@@ -4,7 +4,6 @@ import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
-import Constants from "../util/Constants";
 import BBox from "../model/BBox";
 import LeafletUtil from "../util/LeafletUtil";
 import Trip from "../model/trip/Trip";
@@ -36,8 +35,6 @@ import StopLocation from "../model/StopLocation";
 import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
 import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
-import FavouritesData from "../data/FavouritesData";
-import FavouriteStop from "../model/favourite/FavouriteStop";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
@@ -45,6 +42,11 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
+import MapLocationPopup from "./MapLocationPopup";
+import TKUIMapLocationIcon, {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "./TKUIMapLocationIcon";
+import {TKUITheme} from "../jss/TKUITheme";
+import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
+import {withTheme} from "react-jss";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -57,6 +59,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
+    onLocAction?: (locType: MapLocationType, loc: Location) => void;
 }
 
 export interface IStyle {
@@ -79,14 +82,15 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     onDragEnd?: (from: boolean, latLng: LatLng) => void;
     viewport?: {center?: LatLng, zoom?: number};
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
-    onStopChange: (stop?: StopLocation) => void;
     directionsView?: boolean;
     onDirectionsFrom: (latLng: LatLng) => void;
     onDirectionsTo: (latLng: LatLng) => void;
     onWhatsHere: (latLng: LatLng) => void;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+    tKUIMapLocationIconStyles?: (theme: TKUITheme) => (props: TKUIMapLocationIconProps) => TKUIMapLocationIconStyle;
+}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -94,7 +98,10 @@ export type TKUIMapViewStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props}/>,
     styles: tKUIMapViewDefaultStyle,
-    classNamePrefix: "TKUIMapView"
+    classNamePrefix: "TKUIMapView",
+    props: {
+        tKUIMapLocationIconStyles: tKUIMapLocationIconDefaultStyle
+    }
 };
 
 interface IState {
@@ -342,11 +349,18 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.props.from && this.props.from.isResolved() &&
                     <Marker position={this.props.from!}
-                            icon={L.icon({
-                                iconUrl: Constants.absUrl("/images/map/ic-map-pin-from.svg"),
-                                iconSize: [35, 35],
-                                iconAnchor: [17, 35],
-                                className: "LeafletMap-pinFrom"
+                            icon={L.divIcon({
+                                html: renderToStaticMarkup(
+                                    <TKUIMapLocationIcon location={this.props.from!}
+                                                         from={true}
+                                                         styles={this.props.tKUIMapLocationIconStyles ?
+                                                             this.props.tKUIMapLocationIconStyles(this.props.theme as TKUITheme) :
+                                                             tKUIMapLocationIconDefaultStyle(this.props.theme as TKUITheme)}
+                                    />
+                                ),
+                                iconSize: [26, 39],
+                                iconAnchor: [13, 39],
+                                className: "LeafletMap-pinTo"
                             })}
                             draggable={true}
                             riseOnHover={true}
@@ -355,13 +369,23 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     const latLng = event.target.getLatLng();
                                     this.props.onDragEnd(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                                 }
-                            }}/>}
+                            }}
+                            onpopupclose={() => console.log("close")}
+                    >
+                        {this.getLocationPopup(this.props.from!)}
+                    </Marker>}
                     {this.props.to && this.props.to.isResolved() &&
                     <Marker position={this.props.to!}
-                            icon={L.icon({
-                                iconUrl: Constants.absUrl("/images/map/ic-map-pin.svg"),
-                                iconSize: [35, 35],
-                                iconAnchor: [17, 35],
+                            icon={L.divIcon({
+                                html: renderToStaticMarkup(
+                                    <TKUIMapLocationIcon location={this.props.to!}
+                                                         styles={this.props.tKUIMapLocationIconStyles ?
+                                                             this.props.tKUIMapLocationIconStyles(this.props.theme as TKUITheme) :
+                                                             tKUIMapLocationIconDefaultStyle(this.props.theme as TKUITheme)}
+                                    />
+                                ),
+                                iconSize: [26, 39],
+                                iconAnchor: [13, 39],
                                 className: "LeafletMap-pinTo"
                             })}
                             draggable={true}
@@ -372,7 +396,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     this.props.onDragEnd(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                                 }
                             }}
-                    />}
+                    >
+                        {this.getLocationPopup(this.props.to!)}
+                    </Marker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
                             bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
@@ -383,12 +409,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     this.props.onClick(loc as StopLocation);
                                 }
                             }}
-                            onLocAction={(locType: MapLocationType, loc: Location) => {
-                                if (locType === MapLocationType.STOP) {
-                                    this.props.onStopChange(loc as StopLocation);
-                                    FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                }
-                            }}
+                            onLocAction={this.props.onLocAction}
+                            omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
                         />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
@@ -414,6 +436,21 @@ class TKUIMapView extends React.Component<IProps, IState> {
         )
     }
 
+    private getLocationPopup(location: Location) {
+        return <Popup
+            offset={[0, -30]}
+            closeButton={false}
+            className="LeafletMap-mapLocPopup"
+            // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
+            autoPan={false}
+        >
+            <MapLocationPopup value={location}
+                              onAction={location.class === "StopLocation" ?
+                                  () => this.props.onLocAction
+                                      && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>
+        </Popup>;
+    }
+
     public componentDidMount(): void {
         this.leafletElement!.on("dblclick", event1 => {
             this.wasDoubleClick = true;
@@ -431,7 +468,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // TODO: check if need to reset avoidFitLatLng, maybe with a timer after a second.
         // avoidFitLatLng = undefined;
         // TODO: check that this is used to fit the map when comming from query input widget.
-        // TODO: check is the change done to fit favourites will cause other undesired fits.
+        // TODO: check if the change done to fit favourites will cause other undesired fits.
         // if (!prevProps.from && !prevProps.to &&
         if (this.props.from !== prevProps.from && this.props.to !== prevProps.to &&
             this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
@@ -530,17 +567,21 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                 onDragEnd: onMapLocChanged,
                                                 onClick: (clickLatLng: LatLng) => {
                                                     if (routingContext.directionsView) {
-                                                        if (!from || !to) {
+                                                        if (!from || !to || clickLatLng instanceof StopLocation) {
                                                             if (!from && !to) {
                                                                 // Avoid fit bounds when setting first location on
                                                                 // directions view.
                                                                 avoidFitLatLng = clickLatLng
                                                             }
+                                                            // Do nothing if the location is already the from or to.
+                                                            if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
+                                                                return;
+                                                            }
                                                             onMapLocChanged(!from, clickLatLng);
                                                             GATracker.instance.send("query input", "pick location", "drop pin");
                                                         }
                                                     } else {
-                                                        if (clickLatLng instanceof StopLocation || !to) {
+                                                        if (!to || clickLatLng instanceof StopLocation) {
                                                             onMapLocChanged(false, clickLatLng);
                                                         }
                                                     }
@@ -549,10 +590,6 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                     serviceContext.selectedService : undefined,
                                                 viewport: routingContext.viewport,
                                                 onViewportChange: routingContext.onViewportChange,
-                                                onStopChange: (stop?: StopLocation) => {
-                                                    // routingContext.onQueryChange(Util.iAssign(routingContext.query, {to: stop || null}));
-                                                    serviceContext.onStopChange(stop);
-                                                },
                                                 directionsView: routingContext.directionsView,
                                                 onDirectionsFrom: (latLng: LatLng) => {
                                                     onMapLocChanged(true, latLng);

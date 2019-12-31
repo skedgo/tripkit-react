@@ -34,6 +34,7 @@ export interface TKUIWithClasses<STYLE, PROPS> {
     injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
     refreshStyles: () => void;
+    theme: TKUITheme;   // TODO: this property has just 1 use case by now, in TKUIMapView.
 }
 
 export function withStyleInjection<
@@ -88,6 +89,7 @@ export function withStyleInjection<
                     <this.StyledComponent {...props}
                                           injectedStyles={this.stylesToInject(theme as TKUITheme)}
                                           refreshStyles={() => this.onRefreshStyles(true)}
+                                          theme={theme}
                     />
                 </JssProvider>
             );

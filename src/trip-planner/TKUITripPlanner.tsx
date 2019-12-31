@@ -44,6 +44,7 @@ import TKUISidebar from "../sidebar/TKUISidebar";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
+import {MapLocationType} from "../model/location/MapLocationType";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -71,6 +72,7 @@ interface IState {
     showSettings: boolean;
     showFavourites: boolean;
     showTripDetail?: boolean;
+    showTimetable: boolean;
     cardPosition?: TKUISlideUpPosition;
 }
 
@@ -126,7 +128,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSettings: false,
             mapView: false,
             showFavourites: false,
-            showTripDetail: TKShareHelper.isSharedTripLink()
+            showTripDetail: TKShareHelper.isSharedTripLink(),
+            showTimetable: false
         };
         const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
         this.props.onViewportChange(initViewport);
@@ -168,6 +171,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
             this.props.onStopChange(favourite.stop);
+            this.setState({showTimetable: true});
         } else if (favourite instanceof FavouriteLocation) {
             this.props.onQueryUpdate({from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW});
             this.props.onDirectionsView(true);
@@ -176,6 +180,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.props.onDirectionsView(true);
         }
         FavouritesData.recInstance.add(favourite);
+    }
+
+    private static isLocationDetailView(props: IProps): boolean {
+        const toLocation = props.query.to;
+        return !props.directionsView && !!toLocation && toLocation.isResolved() &&
+            !toLocation.isDroppedPin() && toLocation.class !== "StopLocation";
     }
 
     public render(): React.ReactNode {
@@ -215,14 +225,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
                     this.props.onStopChange(undefined);
+                    this.setState({showTimetable: false});
                     this.props.onDirectionsView(false);
                 }}
             />;
         const toLocation = this.props.query.to;
-        const locationDetailView = !this.props.directionsView && toLocation && toLocation.isResolved() &&
-            !toLocation.isDroppedPin() && !this.props.stop &&
+        const locationDetailView = TKUITripPlanner.isLocationDetailView(this.props) &&
             <TKUILocationDetailView
-                location={toLocation}
+                location={toLocation!}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
@@ -230,16 +240,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
             />;
-        const departuresView =
-            this.props.stop && !this.props.trips && !this.props.selectedService ?
+        const departuresView = this.state.showTimetable ?
             <TKUITimetableView
                 open={this.props.stop && !this.props.trips}
                 onRequestClose={() => {
-                    this.props.onStopChange(undefined);
+                    this.setState({showTimetable: false});
                 }}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
                     modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
             /> : null;
@@ -252,8 +261,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
                 }}
             /> : null;
-        const favouritesView = this.state.showFavourites && !this.props.directionsView
-            && !locationDetailView && !departuresView && !serviceDetailView &&
+        const favouritesView = this.state.showFavourites && !this.props.directionsView &&
             <TKUIFavouritesView
                 onFavouriteClicked={this.onFavouriteClicked}
                 onRequestClose={() => {this.setState({showFavourites: false})}}
@@ -339,6 +347,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     <TKUIMapView
                         hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                         padding={mapPadding}
+                        onLocAction={(locType: MapLocationType, loc: Location) => {
+                            if (locType === MapLocationType.STOP) {
+                                this.props.onStopChange(loc as StopLocation);
+                                this.setState({showTimetable: true});
+                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                            }
+                        }}
                     >
                         <TileLayer
                             attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
@@ -366,9 +381,28 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         );
     }
 
-    public componentDidUpdate(prevProps: Readonly<IProps>): void {
-        if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from.class === "StopLocation") {
+    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
+        if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from.class === "StopLocation"
+            && !this.props.directionsView) {
             this.props.onStopChange(this.props.query.from as StopLocation);
+            this.setState({showTimetable: true});
+        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && this.props.query.to.class === "StopLocation"
+            && !this.props.directionsView) {
+            this.props.onStopChange(this.props.query.to as StopLocation);
+            this.setState({showTimetable: true});
+        } else if (this.state.showTimetable
+            && (!this.props.query.from || this.props.query.from.class !== "StopLocation")
+            && (!this.props.query.to || this.props.query.to.class !== "StopLocation")) {
+            this.setState({showTimetable: false});
+        }
+        if (prevProps.trips === undefined && this.props.trips !== undefined) {
+            this.setState({showTimetable: false});
+        }
+        if (!prevState.showTimetable && this.state.showTimetable // Start displaying timetable
+            || (this.state.showTimetable && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
+            || !TKUITripPlanner.isLocationDetailView(prevProps) && TKUITripPlanner.isLocationDetailView(this.props) // Start displaying location details
+        ) {
+            this.setState({showFavourites: false});
         }
     }
 }

@@ -254,7 +254,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 this.setState((prev: IWithServiceResultsState) => {
                     this.updateDepartures(prev.departures.concat(results), () => this.coverDisplayLimit());
                 });
-            });
+            })
+                .catch((reason) => {
+                    console.log(reason);
+                });
         }
 
         public updateDepartures(departures: ServiceDeparture[], callback?: () => void) {
@@ -421,7 +424,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         }
                     });
                 });
-            });
+            })
+                .catch((reason) => {
+                    console.log(reason);
+                });
         }
 
         public componentWillUnmount() {

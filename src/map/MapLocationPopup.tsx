@@ -5,6 +5,7 @@ import "./MapLocationPopup.css";
 import {resetStyles} from "../css/ResetStyle.css";
 import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
 import genStyles from "../css/GenStyle.css";
+import LocationUtil from "../util/LocationUtil";
 
 interface IProps {
     value: Location;
@@ -31,7 +32,7 @@ class MapLocationPopup extends React.Component<IProps, {}> {
                     <IconTimes/>
                 </button>}
                 <div>
-                    {this.props.value.name}
+                    {this.props.value.name || LocationUtil.getMainText(this.props.value)}
                 </div>
                 { link ?
                     <a href={link} target="_blank" className="gl-link">

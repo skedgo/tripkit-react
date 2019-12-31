@@ -104,11 +104,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         return (
             <div className={classNames(classes.time, statusClassname)}>
                 {status &&
-                [<span>{status}</span>,
-                <span className={classes.separatorDot}>⋅</span>]}
+                [<span key={"status"}>{status}</span>,
+                <span className={classes.separatorDot} key={"statusSeparator"}>⋅</span>]}
                 {modifier &&
-                [<span>{modifier}</span>,
-                <span className={classes.separatorDot}>⋅</span>]}
+                [<span key={"modifier"}>{modifier}</span>,
+                <span className={classes.separatorDot} key={"modifierSeparator"}>⋅</span>]}
                 <span>
                     {serviceTime}
                 </span>

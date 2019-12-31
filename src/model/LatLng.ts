@@ -32,7 +32,7 @@ class LatLng {
     }
 
     public getKey(): string {
-        return String(this.lat + this.lng);
+        return String(this.lat) + this.lng;
     }
 
     /**
