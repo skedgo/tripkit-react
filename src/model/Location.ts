@@ -58,10 +58,6 @@ class Location extends LatLng {
         return !this.isNull();
     }
 
-    public getKey(): string {
-        return String(this.lat) + this.lng;
-    }
-
     get address(): string {
         return this._address;
     }

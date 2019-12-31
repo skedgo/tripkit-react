@@ -17,6 +17,7 @@ import OptionsData from "../data/OptionsData";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
 import TKUserProfile from "../model/options/TKUserProfile";
+import LocationUtil from "../util/LocationUtil";
 
 interface IProps {
     zoom: number,
@@ -25,6 +26,7 @@ interface IProps {
     enabledMapLayers: MapLocationType[],
     onClick?: (type: MapLocationType, loc: Location) => void;
     onLocAction?: (type: MapLocationType, loc: Location) => void;
+    omit?: Location[];
 }
 
 class TKUIMapLocations extends React.Component<IProps, {}> {
@@ -54,15 +56,6 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         const clickHandler = () => this.props.onClick && this.props.onClick(mapLocType, loc);
         const actionHandler = mapLocType === MapLocationType.STOP ?
             () => this.props.onLocAction && this.props.onLocAction(mapLocType, loc) : undefined;
-        const popup = <Popup
-            offset={[0, 0]}
-            closeButton={false}
-            className="LeafletMap-mapLocPopup"
-            // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
-            autoPan={false}
-        >
-            <MapLocationPopup value={loc} onAction={actionHandler}/>
-        </Popup>;
         const key = loc.getKey();
         switch (mapLocType) {
             case MapLocationType.BIKE_POD:
@@ -76,9 +69,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
                     onclick={clickHandler}
-                >
-                    {popup}
-                </Marker>;
+                />;
             case MapLocationType.MY_WAY_FACILITY:
                 return <Marker
                     position={loc}
@@ -90,9 +81,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
                     onclick={clickHandler}
-                >
-                    {popup}
-                </Marker>;
+                />;
             case MapLocationType.PARK_AND_RIDE_FACILITY:
                 return <Marker
                     position={loc}
@@ -104,9 +93,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
                     key={key}
                     onclick={clickHandler}
-                >
-                    {popup}
-                </Marker>;
+                />;
             case MapLocationType.STOP:
                 const transIconHTML = renderToStaticMarkup(<StopIcon stop={loc as StopLocation} />);
                 const icon = L.divIcon({
@@ -120,9 +107,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     icon={icon}
                     onclick={clickHandler}
                     key={key}
-                >
-                    {popup}
-                </Marker>;
+                />;
             default:
                 return <Marker position={loc} key={key}/>;
         }
@@ -133,6 +118,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         const region = RegionsData.instance.getRegion(this.props.bounds.getCenter());
         let locMarkers: React.ReactNode[] = [];
         const enabledMapLayers = this.props.enabledMapLayers;
+        const omit = this.props.omit || [];
         if (region && enabledMapLayers.length > 0) {
             const bounds = MapUtil.expand(this.props.bounds, .5);
             const zoom = this.props.zoom;
@@ -140,14 +126,14 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                 const level1Result = LocationsData.instance.getRequestLocations(region.name, 1);
                 for (const locType of enabledMapLayers) {
                     locMarkers.push(...level1Result.getByType(locType)
-                        .map((loc: Location) => this.getLocMarker(locType, loc)));
+                        .map((loc: Location) => !omit.find((omitLoc) => LocationUtil.equal(omitLoc, loc)) && this.getLocMarker(locType, loc)));
                 }
             }
             if (zoom >= this.ZOOM_ALL_LOCATIONS) {
                 const level2Result = LocationsData.instance.getRequestLocations(region.name, 2, bounds);
                 for (const locType of enabledMapLayers) {
                     locMarkers.push(...level2Result.getByType(locType)
-                        .map((loc: Location) => this.getLocMarker(locType, loc)));
+                        .map((loc: Location) => !omit.includes(loc) && this.getLocMarker(locType, loc)));
                 }
             }
         }
@@ -157,7 +143,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     public shouldComponentUpdate(nextProps: IProps): boolean {
         return nextProps.zoom !== this.props.zoom
             || (this.props.zoom >= this.ZOOM_PARENT_LOCATIONS && (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
-            !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))));
+            !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))))
+            || JSON.stringify(nextProps.omit) !== JSON.stringify(this.props.omit);
     }
 
     public componentWillUnmount() {

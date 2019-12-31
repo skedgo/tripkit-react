@@ -83,7 +83,7 @@ class LocationBox extends Component<IProps, IState> {
         this.setValue = this.setValue.bind(this);
     }
 
-    private static itemText(location: Location): string {
+    public static itemText(location: Location): string {
         return location instanceof City ? location.name : location.address;
     }
 
@@ -113,11 +113,14 @@ class LocationBox extends Component<IProps, IState> {
             }
         };
         if (!highlighted) {
-            this.setState({
+            this.setState((prevState: IState) => ({
                 inputText: inputText,
                 locationValue: locationValue,
-                items: []
-            }, setStateCallback);
+                items: [],
+                // Stop waiting spinner if changed location we are waiting for.
+                waitingResolveFor: prevState.locationValue && !prevState.locationValue.equals(locationValue)
+                && prevState.waitingResolveFor === prevState.locationValue ? undefined : prevState.waitingResolveFor
+            }), setStateCallback);
         } else {
             this.setState({
                 inputText: inputText,
@@ -377,7 +380,14 @@ class LocationBox extends Component<IProps, IState> {
                         {
                             placeholder: this.props.placeholder,
                             onKeyDown: this.onKeyDown,
-                            onFocus: () => {this.refreshResults(this.state.inputText);},
+                            onFocus: () => { // Remove current location on focus.
+                                if (this.state.locationValue && this.state.locationValue.isCurrLoc()) {
+                                 this.setValue(null, false, true,
+                                     () => this.refreshResults(this.state.inputText))
+                                } else {
+                                    this.refreshResults(this.state.inputText);
+                                }
+                            },
                             "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.label).indexOf(this.highlightedItem) : undefined,
                             "aria-label": this.props.inputAriaLabel,
                             id: this.props.inputId,
