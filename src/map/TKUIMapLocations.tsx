@@ -6,7 +6,6 @@ import {MapLocationType, mapLocationTypeToGALabel} from "../model/location/MapLo
 import GATracker from "../analytics/GATracker";
 import StopLocation from "../model/StopLocation";
 import Constants from "../util/Constants";
-import MapLocationPopup from "./MapLocationPopup";
 import {Marker, Popup} from "react-leaflet";
 import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";

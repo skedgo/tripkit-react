@@ -14,7 +14,7 @@ export class LocationConverter implements JsonCustomConvert<Location> {
     public deserialize(locationJson: any): Location {
         const jsonConvert = new JsonConvert();
         let location: Location;
-        if (locationJson.class === "StopLocation") {
+        if (locationJson.class === "StopLocation" || locationJson.class === "ParentStopLocation") {
             // Needs to set modeInfo since it incorrectly comes with value {}, which causes a parsing error.
             // Tried setting to undefined, and put modeInfo as optional in StopLocation but json2typescript gave an
             // exception of missing modeInfo when compiled.

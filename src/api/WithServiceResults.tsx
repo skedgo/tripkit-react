@@ -73,44 +73,6 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 initTimeChanged: false
             };
 
-            if (TKShareHelper.isSharedStopLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname);
-                const shareLinkSplit = shareLinkPath.split("/");
-                const region = shareLinkSplit[2];
-                const stopCode = shareLinkSplit[3];
-                StopsData.instance.getStopFromCode(region, stopCode)
-                    .then((stop: StopLocation) =>
-                        RegionsData.instance.requireRegions().then(() => {
-                            this.onStopChange(stop);
-                            TKShareHelper.resetToHome();
-                        }));
-            }
-
-            if (TKShareHelper.isSharedServiceLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname);
-                const shareLinkSplit = shareLinkPath.split("/");
-                const region = shareLinkSplit[2];
-                const stopCode = shareLinkSplit[3];
-                const serviceCode = shareLinkSplit[4];
-                const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
-                StopsData.instance.getStopFromCode(region, stopCode)
-                    .then((stop: StopLocation) =>
-                        RegionsData.instance.requireRegions().then(() => {
-                                TKShareHelper.resetToHome();
-                                this.setState({
-                                    startStop: stop,
-                                    initTime: initTime,
-                                    departures: [],
-                                    departuresFiltered: [],
-                                    displayLimit: 0,
-                                    initTimeChanged: true
-                                }, () => {
-                                    this.requestUntilServiceFound(serviceCode);
-                                });
-                            }
-                        ));
-            }
-
             this.rTSchedule = setInterval(() => {
                 // TODO:
                 // fireValueChangeEvent(); //to update 'time to depart' labels
@@ -428,6 +390,33 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 .catch((reason) => {
                     console.log(reason);
                 });
+        }
+
+        public componentDidMount() {
+            if (TKShareHelper.isSharedServiceLink()) {
+                const shareLinkPath = decodeURIComponent(document.location.pathname);
+                const shareLinkSplit = shareLinkPath.split("/");
+                const region = shareLinkSplit[2];
+                const stopCode = shareLinkSplit[3];
+                const serviceCode = shareLinkSplit[4];
+                const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
+                StopsData.instance.getStopFromCode(region, stopCode)
+                    .then((stop: StopLocation) =>
+                        RegionsData.instance.requireRegions().then(() => {
+                                TKShareHelper.resetToHome();
+                                this.setState({
+                                    startStop: stop,
+                                    initTime: initTime,
+                                    departures: [],
+                                    departuresFiltered: [],
+                                    displayLimit: 0,
+                                    initTimeChanged: true
+                                }, () => {
+                                    this.requestUntilServiceFound(serviceCode);
+                                });
+                            }
+                        ));
+            }
         }
 
         public componentWillUnmount() {

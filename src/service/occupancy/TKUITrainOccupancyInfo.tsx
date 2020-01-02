@@ -55,11 +55,15 @@ class TKUITrainOccupancyInfo extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         return (
             <div>
-                {this.props.components.map((connComponents: VehicleComponent[]) =>
+                {this.props.components.map((connComponents: VehicleComponent[], cci: number) =>
                     connComponents.map((component: VehicleComponent, i: number) =>
                         i < connComponents.length - 1 ?
-                            <IconCarriage className={classNames(this.getClass(component.occupancy, classes), classes.icon)}/> :
-                            <IconHead className={classNames(this.getClass(component.occupancy, classes), classes.icon)}/>
+                            <IconCarriage className={classNames(this.getClass(component.occupancy, classes), classes.icon)}
+                                          key={cci + "-" + i}
+                            /> :
+                            <IconHead className={classNames(this.getClass(component.occupancy, classes), classes.icon)}
+                                      key={cci + "-" + i}
+                            />
                     )
                 )}
             </div>

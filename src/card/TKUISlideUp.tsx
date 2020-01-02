@@ -18,7 +18,6 @@ const styles = {
     modalElement: {
         top: '0',
         width: '100%',
-        maxWidth: '700px',
         height: '100%',
         minHeight: '550px',
         borderTopLeftRadius: '4px',

@@ -45,6 +45,7 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {MapLocationType} from "../model/location/MapLocationType";
+import StopsData from "../data/StopsData";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -136,7 +137,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (!userIpLocation) {
             GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
                 RegionsData.instance.getCloserRegionP(userLocation).then((region: Region) => {
-                    this.props.onViewportChange({center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()});
+                    if (this.props.query.isEmpty()) {
+                        // To avoid moving to current loction if a location is already set (e.g. shared arrival link).
+                        this.props.onViewportChange({center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()});
+                    }
                 })
             });
         }
@@ -185,7 +189,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private static isLocationDetailView(props: IProps): boolean {
         const toLocation = props.query.to;
         return !props.directionsView && !!toLocation && toLocation.isResolved() &&
-            !toLocation.isDroppedPin() && toLocation.class !== "StopLocation";
+            !toLocation.isDroppedPin() && !(toLocation instanceof StopLocation);
     }
 
     public render(): React.ReactNode {
@@ -381,18 +385,35 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         );
     }
 
+    public componentDidMount() {
+        if (TKShareHelper.isSharedStopLink()) {
+            const shareLinkPath = decodeURIComponent(document.location.pathname);
+            const shareLinkSplit = shareLinkPath.split("/");
+            const region = shareLinkSplit[2];
+            const stopCode = shareLinkSplit[3];
+            StopsData.instance.getStopFromCode(region, stopCode)
+                .then((stop: StopLocation) =>
+                    RegionsData.instance.requireRegions().then(() => {
+                        this.props.onQueryUpdate({to: stop});
+                        this.props.onStopChange(stop);
+                        // this.setState({showTimetable: true});
+                        TKShareHelper.resetToHome();
+                    }));
+        }
+    }
+
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
-        if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from.class === "StopLocation"
+        if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from instanceof StopLocation
             && !this.props.directionsView) {
             this.props.onStopChange(this.props.query.from as StopLocation);
             this.setState({showTimetable: true});
-        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && this.props.query.to.class === "StopLocation"
+        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && this.props.query.to instanceof StopLocation
             && !this.props.directionsView) {
             this.props.onStopChange(this.props.query.to as StopLocation);
             this.setState({showTimetable: true});
         } else if (this.state.showTimetable
-            && (!this.props.query.from || this.props.query.from.class !== "StopLocation")
-            && (!this.props.query.to || this.props.query.to.class !== "StopLocation")) {
+            && (!this.props.query.from || !(this.props.query.from instanceof StopLocation))
+            && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))) {
             this.setState({showTimetable: false});
         }
         if (prevProps.trips === undefined && this.props.trips !== undefined) {
