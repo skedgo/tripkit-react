@@ -30,6 +30,11 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                     height: '26px',
                     width: '26px',
                     padding: '4px'
+                },
+                clickAndHold: {
+                    '& img': {
+                        display: 'none'
+                    }
                 }
             })
 };

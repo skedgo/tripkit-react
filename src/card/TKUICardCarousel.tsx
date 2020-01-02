@@ -12,7 +12,19 @@ interface IProps {
     slideUpOptions?: TKUISlideUpOptions;
 }
 
-class TKUICardCarousel extends React.Component<IProps, {}> {
+interface IState {
+    freezeCarousel: boolean
+}
+
+class TKUICardCarousel extends React.Component<IProps, IState> {
+
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            freezeCarousel: false
+        };
+    }
 
     public render(): React.ReactNode {
         return (
@@ -22,6 +34,12 @@ class TKUICardCarousel extends React.Component<IProps, {}> {
                         {...this.props.slideUpOptions}
                         containerClass={"TKUICardCarousel-modalContainer"}
                         modalClass={"TKUICardCarousel-modal"}
+                        onDrag={() => {
+                            this.setState({freezeCarousel: true});
+                        }}
+                        onDragEnd={() => {
+                            this.setState({freezeCarousel: false});
+                        }}
                     >
                         <div className={"TKUICardCarousel-middle"}>
                             <Carousel
@@ -33,6 +51,7 @@ class TKUICardCarousel extends React.Component<IProps, {}> {
                                 selectedItem={this.props.selected}
                                 onChange={this.props.onChange}
                                 // emulateTouch={true}
+                                swipeable={!this.state.freezeCarousel}
                             >
                                 {React.Children.map(this.props.children, (child: any, i: number) =>
                                     <div className={"TKUICardCarousel-pageWrapper"} key={i}>

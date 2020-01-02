@@ -70,4 +70,3 @@ class TransportPinIcon extends React.Component<IProps, {}> {
 }
 
 export default TransportPinIcon;
-// export {IProps};

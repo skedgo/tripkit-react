@@ -67,6 +67,8 @@ interface IProps extends TKUISlideUpOptions {
     modalClass?: string;
     classes: ClassNameMap<any>;
     open?: boolean;
+    onDrag?: () => void;
+    onDragEnd?: () => void;
 }
 
 interface IState {
@@ -87,6 +89,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     private dragHandleRef: any;
     private testCardContRef: any;
     private scrolling: any;
+    private dragging: boolean = false;
 
     constructor(props: IProps) {
         super(props);
@@ -112,6 +115,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         } else if (this.state.position === TKUISlideUpPosition.MIDDLE && getTranslate3d(this.dragHandleRef)[1] > 100) {
             this.onPositionChange(TKUISlideUpPosition.DOWN);
         }
+        this.setDragging(false);
     }
 
     private onPositionChange(position: TKUISlideUpPosition) {
@@ -130,6 +134,17 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             case TKUISlideUpPosition.UP: return classes.modalUp;
             case TKUISlideUpPosition.MIDDLE: return classes.modalMiddle;
             default: return classes.modalDown;
+        }
+    }
+
+    private setDragging(dragging: boolean) {
+        if (this.dragging != dragging) {
+            this.dragging = dragging;
+            if (dragging) {
+                this.props.onDrag && this.props.onDrag();
+            } else {
+                this.props.onDragEnd && this.props.onDragEnd();
+            }
         }
     }
 
@@ -152,6 +167,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     this.testCardContRef &&
                     this.testCardContRef.addEventListener("scroll", () => {
                         window.clearTimeout(this.scrolling);
+                        // console.log("scroll: " + this.testCardContRef.scrollTop);
                         if (this.state.position === TKUISlideUpPosition.UP) {
                             this.testCardContRef.scrollTop = 0;
                         }
@@ -159,9 +175,11 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                             if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
                                 this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                 this.testCardContRef.scrollTop = 0;
+                                this.setDragging(false);
                             } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
                                 this.onPositionChange(TKUISlideUpPosition.UP);
                                 this.testCardContRef.scrollTop = 0;
+                                this.setDragging(false);
                             }
                             return;
                         }
@@ -170,22 +188,32 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                                 if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 250) {
                                     this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
+                                    this.setDragging(false);
                                 } else if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
                                     this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                     this.testCardContRef.scrollTop = 0;
+                                    this.setDragging(false);
                                 } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
                                     this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
+                                    this.setDragging(false);
                                 }
                             }
                         }, 70);
 
+                        if (this.testCardContRef.scrollTop > 50) {
+                            this.setDragging(true);
+                        }
                     })
                 }}
                 getModalRef={(ref: any) => {
                     if (ref) {
                         this.onDragHandleRef(ref);
                     }
+                }}
+                onDrag={() => {
+                    // console.log(getTranslate3d(this.dragHandleRef));
+                    getTranslate3d(this.dragHandleRef)[1] > 50 && this.setDragging(true);
                 }}
                 // dontApplyListeners={true}
             >
