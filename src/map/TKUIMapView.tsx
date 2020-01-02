@@ -434,7 +434,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             autoPan={false}
         >
             <MapLocationPopup value={location}
-                              onAction={location.class === "StopLocation" ?
+                              onAction={location instanceof StopLocation ?
                                   () => this.props.onLocAction
                                       && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>
         </Popup>;
