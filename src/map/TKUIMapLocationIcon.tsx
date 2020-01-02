@@ -21,6 +21,7 @@ export interface IStyle {
     main: CSSProps<IProps>;
     iconPin: CSSProps<IProps>;
     icon: CSSProps<IProps>;
+    clickAndHold: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -35,6 +36,33 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 class TKUIMapLocationIcon extends React.Component<IProps, {}> {
+
+    private static idCount: number = 0;
+    private id: string = "tripkit-map-pin" + TKUIMapLocationIcon.idCount++;
+    private mouseDown = false;
+
+    constructor(props: IProps) {
+        super(props);
+        setTimeout(() => {
+            const elem = document.getElementById(this.id);
+            const classes = this.props.classes;
+            if (elem) {
+                elem.addEventListener("mousedown", () => {
+                    this.mouseDown = true;
+                    setTimeout(() => {
+                        if (this.mouseDown) {
+                            elem.classList.add(classes.clickAndHold);
+                        }
+                    }, 300);
+                });
+                elem.addEventListener("mouseup", () => {
+                    this.mouseDown = false;
+                    elem.classList.remove(classes.clickAndHold);
+                });
+            }
+        }, 500);
+    }
+
     public render(): React.ReactNode {
         const location = this.props.location;
         let iconSrc: string | undefined;
@@ -44,7 +72,8 @@ class TKUIMapLocationIcon extends React.Component<IProps, {}> {
         }
         const classes = this.props.classes;
         const icon = iconSrc && <img src={iconSrc} className={classes.icon}/>;
-        return <div className={classes.main}>
+        return <div className={classes.main}
+                    id={this.id}>
             <IconPin className={classes.iconPin}/>
             {icon}
         </div>;
