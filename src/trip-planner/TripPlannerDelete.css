@@ -1,3 +1,5 @@
+/** { -webkit-touch-callout: none; }*/
+
 .TripPlanner-queryPanel {
   position: absolute;
   width: 450px;
