@@ -17,7 +17,6 @@ class StopLocation extends Location {
     @JsonProperty('shortName', String, true)    // In api docs it's named "shortName"
     private _shortName: string | undefined = undefined;
 
-
     get code(): string {
         return this._code;
     }

@@ -339,6 +339,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
                         this.setState({menuPopupPosition: e});
                     }}
+                    tap={true} // It should make a long tap to trigger oncontextmenu on iOS, but it doesn't work.
+                               // Workaround: https://github.com/Leaflet/Leaflet/issues/6865
+                               // Working example: https://www.mappite.org/tap/testTap2.html
+                               // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
                 >
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.props.from && this.props.from.isResolved() &&
