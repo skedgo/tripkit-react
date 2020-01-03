@@ -1,7 +1,6 @@
 import * as React from "react";
 import {ReactComponent as IconAdd} from "../images/ic-favorite-outline.svg";
 import {ReactComponent as IconRemove} from "../images/ic-favorite.svg";
-import {Observable} from "rxjs";
 import OptionsData from "../data/OptionsData";
 import FavouritesData from "../data/FavouritesData";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";

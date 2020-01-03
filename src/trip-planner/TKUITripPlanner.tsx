@@ -5,11 +5,9 @@ import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
-import Region from "../model/region/Region";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
 import {TileLayer} from "react-leaflet";
-import GeolocationData from "../geocode/GeolocationData";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
@@ -123,7 +121,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        const userIpLocation = Util.global.userIpLocation;
         this.state = {
             showSidebar: false,
             showSettings: false,
@@ -132,18 +129,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTripDetail: TKShareHelper.isSharedTripLink(),
             showTimetable: false
         };
-        const initViewport = {center: userIpLocation ? LatLng.createLatLng(userIpLocation[0], userIpLocation[1]) : LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13};
-        this.props.onViewportChange(initViewport);
-        if (!userIpLocation) {
-            GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
-                RegionsData.instance.getCloserRegionP(userLocation).then((region: Region) => {
-                    if (this.props.query.isEmpty()) {
-                        // To avoid moving to current loction if a location is already set (e.g. shared arrival link).
-                        this.props.onViewportChange({center: region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()});
-                    }
-                })
-            });
-        }
+
+        Util.global.tKUserLocationPromise.then((userLocation: [number, number]) => {
+            const initViewport = {center: LatLng.createLatLng(userLocation[0], userLocation[1]), zoom: 13};
+            this.props.onViewportChange(initViewport);
+        });
 
         WaiAriaUtil.addTabbingDetection();
 
@@ -314,7 +304,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const mapPadding: TKUIMapPadding = {};
         if(this.props.landscape) {
-            mapPadding.left = 500;
+            mapPadding.left = this.props.query.isEmpty() && !favouritesView ? 0 : 500;
         } else {
             if (this.props.directionsView && this.props.trips) {
                 mapPadding.bottom = this.ref ? this.ref.offsetHeight * .50 : 20;

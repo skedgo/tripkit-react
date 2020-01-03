@@ -8,7 +8,6 @@ import {ClassNameMap} from "react-jss";
 import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
 import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";
-import {Observable} from 'rxjs';
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";

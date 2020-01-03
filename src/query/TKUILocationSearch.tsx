@@ -66,7 +66,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
-        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions);
+        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
     }
 
     public render(): React.ReactNode {

@@ -20,6 +20,7 @@ import TKShareHelper from "../share/TKShareHelper";
 import * as queryString from "query-string";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import TKUserProfile from "../model/options/TKUserProfile";
+import MapUtil from "../util/MapUtil";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -61,7 +62,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 query: RoutingQuery.create(),
                 sort: TripSort.OVERALL,
                 waiting: false,
-                viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
+                viewport: {center: MapUtil.worldCoords, zoom: 2},
                 directionsView: props.urlQuery !== undefined
             };
 

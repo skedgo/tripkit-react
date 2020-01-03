@@ -85,11 +85,12 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
             >
                 <div className={classes.main}>
                     {this.props.filter!(this.props.favouriteList, this.props.recentList)
-                        .map((item: Favourite) =>
+                        .map((item: Favourite, i: number) =>
                             <TKUIFavouriteRow
                                 value={item}
                                 onClick={() => this.props.onFavouriteClicked && this.props.onFavouriteClicked(item)}
                                 onRemove={this.state.editing ? () => this.props.onRemoveFavourite(item) : undefined}
+                                key={i}
                             />)}
                 </div>
             </TKUICard>

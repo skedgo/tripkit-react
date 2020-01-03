@@ -38,14 +38,18 @@ import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
+import "./TKUIMapViewCss.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 import MapLocationPopup from "./MapLocationPopup";
-import TKUIMapLocationIcon, {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "./TKUIMapLocationIcon";
+import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
 import {withTheme} from "react-jss";
 import TKUIProvider from "../config/TKUIProvider";
+import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
+import GeolocationData from "../geocode/GeolocationData";
+import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -70,6 +74,9 @@ export interface IStyle {
     menuPopupAbove: CSSProps<IProps>;
     menuPopupLeft: CSSProps<IProps>;
     menuPopupRight: CSSProps<IProps>;
+    currentLocMarker: CSSProps<IProps>;
+    currentLocBtn: CSSProps<IProps>;
+    resolvingCurrLoc: CSSProps<IProps>;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -101,6 +108,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
     menuPopupPosition?: L.LeafletMouseEvent;
+    userLocation?: LatLng;
 }
 
 export interface IMapSegmentRenderer {
@@ -123,6 +131,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             mapLayers: new Map<MapLocationType, Location[]>()
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
+        this.onCurrentLocClicked = this.onCurrentLocClicked.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
@@ -207,6 +216,30 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.props.onViewportChange(viewport);
         }
     }
+
+    private userLocationSubscription?: any;
+
+    private onCurrentLocClicked() {
+        this.state.userLocation && this.fitMap(Location.create(this.state.userLocation, "", "", ""), null);
+        if (this.userLocationSubscription) {
+            return;
+        }
+        this.userLocationSubscription = GeolocationData.instance.getCurrentLocObservable()
+            .subscribe((currLoc: LatLng | undefined) =>
+                this.setState((prev: IState) => {
+                    !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
+                    return {userLocation: currLoc}
+                }));
+    }
+
+    private hideCurrentLocation() {
+        GeolocationData.instance.stopCurrentLocObservable();
+        this.userLocationSubscription && this.userLocationSubscription.unsubscribe();
+        this.userLocationSubscription = undefined;
+        this.setState({userLocation: undefined});
+    }
+
+    private currentLocation = Location.createCurrLoc();
 
     public render(): React.ReactNode {
         const segmentRenderer = this.props.segmentRenderer ? this.props.segmentRenderer :
@@ -345,7 +378,24 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
                 >
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
+                    {this.state.userLocation &&
+                    <Marker position={this.state.userLocation}
+                            icon={L.divIcon({
+                                html: renderToStaticMarkup(
+                                    <TKUIProvider>
+                                        <TKUIMyLocationMapIcon/>
+                                    </TKUIProvider>
+                                ),
+                                iconSize: [20, 20],
+                                iconAnchor: [10, 10],
+                                className: classes.currentLocMarker
+                            })}
+                            riseOnHover={true}
+                    >
+                        {this.getLocationPopup(this.currentLocation)}
+                    </Marker>}
                     {this.props.from && this.props.from.isResolved() &&
+                    !(this.props.from.isCurrLoc() && this.state.userLocation) &&
                     <Marker position={this.props.from!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
@@ -425,13 +475,18 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => this.onResize()}
                 />
+                <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
+                        onClick={this.onCurrentLocClicked}
+                >
+                    <IconCurrentLocation/>
+                </button>
             </div>
         )
     }
 
     private getLocationPopup(location: Location) {
         return <Popup
-            offset={[0, -30]}
+            offset={location.isCurrLoc() ? [0, 0] : [0, -30]}
             closeButton={false}
             className="LeafletMap-mapLocPopup"
             // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
@@ -467,6 +522,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
             this.fitBounds(BBox.createBBoxArray([this.props.from, this.props.to]));
         }
+
+        // If computing trips from user location then show it on map.
+        if ((!prevProps.from || !prevProps.to) && this.props.from && this.props.to && this.props.from.isCurrLoc()
+            && !this.userLocationSubscription) {
+            this.onCurrentLocClicked();
+        }
+
         const trip = this.props.trip;
         const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
         if ((trip !== prevProps.trip || paddingChanged) && trip) {

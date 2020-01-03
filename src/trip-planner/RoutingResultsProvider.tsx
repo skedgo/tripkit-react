@@ -7,6 +7,7 @@ import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
 import TKUserProfile from "../model/options/TKUserProfile";
+import MapUtil from "../util/MapUtil";
 
 export interface IRoutingResultsContext {
     // TODO: Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
@@ -38,7 +39,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
     onQueryUpdate: (update: Partial<RoutingQuery>) => {},
-    viewport: {center: LatLng.createLatLng(-33.8674899,151.2048442), zoom: 13},
+    viewport: {center: MapUtil.worldCoords, zoom: 2},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     directionsView: false,
     onDirectionsView: (directionsView: boolean) => {},

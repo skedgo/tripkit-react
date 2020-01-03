@@ -7,6 +7,9 @@ import {TKUIMapPadding} from "../map/TKUIMapView";
 
 class MapUtil {
 
+    public static sydneyCoords = LatLng.createLatLng(-33.8674899,151.2048442);
+    public static worldCoords = LatLng.createLatLng(0,0);
+
     public static cellsForBounds(bounds: BBox, cellsPerDegree: number): string[] {
         const result: string[] = [];
         const minCellLat = this.degreeToCellCoordinate(bounds.sw.lat, cellsPerDegree);

@@ -96,11 +96,11 @@ interface IState {
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
-    private geocodingData: MultiGeocoder;
+    private geocodingDataFrom: MultiGeocoder;
+    private geocodingDataTo: MultiGeocoder;
     private dateTimePickerRef: any;
     private fromLocRef: any;
     private toLocRef: any;
-    // private goBtnRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -109,7 +109,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             fromTooltip: false,
             toTooltip: false
         };
-        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions);
+        this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
+        this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }
@@ -227,7 +228,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </div>}
                     <div className={classes.fromToInputsPanel}>
                         <LocationBox
-                            geocodingData={this.geocodingData}
+                            geocodingData={this.geocodingDataFrom}
                             bounds={this.props.bounds}
                             focus={this.props.focusLatLng}
                             value={routingQuery.from}
@@ -257,7 +258,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         />
                         <div className={classes.divider}/>
                         <LocationBox
-                            geocodingData={this.geocodingData}
+                            geocodingData={this.geocodingDataTo}
                             bounds={this.props.bounds}
                             focus={this.props.focusLatLng}
                             value={routingQuery.to}
