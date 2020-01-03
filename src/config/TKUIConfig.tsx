@@ -26,6 +26,7 @@ import {TKUISidebarProps, TKUISidebarStyle} from "../sidebar/TKUISidebar";
 import {TKUIProfileViewProps, TKUIProfileViewStyle} from "../options/TKUIProfileView";
 import {TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle} from "../options/TKUIUserPriorities";
 import {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "../map/TKUIMapLocationIcon";
+import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKUIMyLocationMapIcon";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -51,6 +52,7 @@ interface ITKUIConfigRequired {
     TKUIProfileView: TKComponentConfig<TKUIProfileViewProps, TKUIProfileViewStyle>;
     TKUIUserPriorities: TKComponentConfig<TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
+    TKUIMyLocationMapIcon: TKComponentConfig<TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

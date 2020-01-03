@@ -22,9 +22,12 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
     static get recInstance(): FavouritesData {
         if (!this._recInstance) {
             this._recInstance = new FavouritesData(Favourite, "RECENT");
+            this._recInstance.limit = 20;
         }
         return this._recInstance;
     }
+
+    private limit?: number;
 
     protected deserialize(itemJson: any): Favourite[] {
         return (itemJson as any[]).map((item: any) =>
@@ -32,6 +35,10 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
                 item.location ? Util.jsonConvert().deserialize(item, FavouriteLocation) :
                 Util.jsonConvert().deserialize(item, FavouriteTrip)
         )
+    }
+
+    public save(update: FavouriteTrip[]) {
+        super.save(this.limit ? update.slice(0, this.limit) : update);
     }
 
     public add(elem: Favourite): void {

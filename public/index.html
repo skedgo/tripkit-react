@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
@@ -32,47 +32,92 @@
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Source+Sans+Pro" rel="stylesheet">
 
     <style>
-      html, body, #tripgo-sample-root {
-        margin: 0;
-        padding: 0;
-        overflow-x: hidden;
-        width: 100%;
-        display: -webkit-flex;
-        display: flex;
-      }
-
-      @media (min-width: 801px) {
-        #tripgo-sample-root {
-          height: 100vh;
+        html, body, #tripgo-sample-root {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            width: 100%;
+            display: -webkit-flex;
+            display: flex;
         }
-      }
+
+        @media (min-width: 801px) {
+            #tripgo-sample-root {
+                height: 100vh;
+            }
+        }
     </style>
     <script>
-        var userIpLocation;
-        function requestIPLocation() {
-            fetch("https://ipapi.co/json/").then(function(response){ return response.json() })
+        var tKUserLocationPromise;
+
+        function tKRequestIPLocation() {
+            return fetch("https://ipapi.co/json/")
+                .then(function(response){ return response.json() })
                 .then(function(responseJson) {
-                    console.log(JSON.stringify(responseJson));
-                    userIpLocation = [responseJson.latitude, responseJson.longitude];
+                    return [responseJson.latitude, responseJson.longitude];
                 });
         }
-        requestIPLocation();
+
+        function tKRequestCurrentLocationHTML5() {
+            return new Promise(function (resolve, reject) {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (result) { resolve([result.coords.latitude, result.coords.longitude]) },
+                        function (error) { reject(error) });
+                }});
+        }
+
+        function tKCheckGeolocationPermission() {
+            return new Promise(function (resolve, reject) {
+                navigator.permissions ?
+                    // Permission API is supported
+                    navigator.permissions.query({
+                        name: 'geolocation'
+                    }).then(function (permission) {
+                        // is geolocation granted?
+                        resolve(permission.state === "granted")
+                    }) :
+                    // Permission API is not supported
+                    reject(new Error("Permission API is not supported"))
+            })
+        }
+
+        function tKRequestCurrentLocation(dontAskUser) {
+            if (dontAskUser) {
+                return tKCheckGeolocationPermission()
+                    .then(function (granted) {
+                        // Permission API is supported
+                        return granted ? tKRequestCurrentLocationHTML5() : tKRequestIPLocation();
+                    })
+                    .catch(function () {
+                        // Permission API is not supported
+                        return this.tKRequestIPLocation();
+                    });
+                // return this.requestCurrentLocationGMaps();
+            }
+            return this.tKRequestCurrentLocationHTML5()
+                .catch(function () {
+                    return this.tKRequestIPLocation();
+                });
+        }
+
+        tKUserLocationPromise = tKRequestCurrentLocation(true);
     </script>
-  </head>
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="tripgo-sample-root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+</head>
+<body>
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<div id="tripgo-sample-root"></div>
+<!--
+  This HTML file is a template.
+  If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+  You can add webfonts, meta tags, or analytics to this file.
+  The build step will place the bundled scripts into the <body> tag.
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+  To begin the development, run `npm start` or `yarn start`.
+  To create a production bundle, use `npm run build` or `yarn build`.
+-->
+</body>
 </html>
