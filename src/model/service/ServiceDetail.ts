@@ -2,12 +2,15 @@ import {JsonObject, JsonProperty} from "json2typescript";
 import ServiceShape from "../trip/ServiceShape";
 import RealTimeVehicle from "./RealTimeVehicle";
 import RealTimeAlert from "./RealTimeAlert";
+import ModeInfo from "../trip/ModeInfo";
 
 @JsonObject
 class ServiceDetail {
 
     @JsonProperty("shapes", [ServiceShape], true)
     public readonly shapes: ServiceShape[] | undefined = undefined;
+    @JsonProperty('modeInfo', ModeInfo, true)
+    public modeInfo?: ModeInfo = undefined;
     @JsonProperty("realTimeStatus", String, true)   // "IS_REAL_TIME" "CAPABLE" "INCAPABLE" "CANCELLED"
     public readonly realTimeStatus: string | undefined = undefined;
     @JsonProperty("realtimeVehicle", RealTimeVehicle, true)

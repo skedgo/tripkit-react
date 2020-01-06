@@ -14,6 +14,7 @@ export interface IServiceResultsContext {
     onInitTimeChange?: (initTime: Moment) => void;
     onFilterChange?: (filter: string) => void;
     onRequestMore?: () => void;
+    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => void;
 
     departures: ServiceDeparture[];
     waiting: boolean;
@@ -30,7 +31,8 @@ export const ServiceResultsContext = React.createContext<IServiceResultsContext>
     waiting: true,
     title: "",
     onServiceSelection: (departure?: ServiceDeparture) => {},
-    servicesEventBus: new EventEmitter()
+    servicesEventBus: new EventEmitter(),
+    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => {}
 });
 
 class ServiceResultsProvider extends React.Component<{}, {}> {

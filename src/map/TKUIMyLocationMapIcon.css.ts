@@ -24,7 +24,7 @@ export const tKUIMyLocationMarkerDefaultStyle: TKUIStyles<TKUIMyLocationMapIconS
             background: theme.colorPrimary,
             boxSizing: 'border-box',
             border: '3px solid #FFF',
-            zIndex: '1000',
+            zIndex: '1001',
             animation: 'beat 2400ms ease-out infinite',
             ...genStyles.borderRadius(50, '%')
         },

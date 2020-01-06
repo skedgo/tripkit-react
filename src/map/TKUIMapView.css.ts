@@ -83,5 +83,11 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
                 animation: 'colorchange 2s infinite',
                 WebkitAnimation: 'colorchange 2s infinite'
             }
+        },
+        vehicle: {
+            ...{display: '-webkit-flex!important'},
+            display: 'flex!important',
+            ...genStyles.alignCenter,
+            zIndex: '1000!important'
         }
     });

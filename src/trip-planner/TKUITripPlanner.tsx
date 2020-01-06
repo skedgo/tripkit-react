@@ -44,6 +44,7 @@ import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {MapLocationType} from "../model/location/MapLocationType";
 import StopsData from "../data/StopsData";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -164,7 +165,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
-            this.props.onStopChange(favourite.stop);
+            this.props.onQueryUpdate({to: favourite.stop});
             this.setState({showTimetable: true});
         } else if (favourite instanceof FavouriteLocation) {
             this.props.onQueryUpdate({from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW});
@@ -304,7 +305,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const mapPadding: TKUIMapPadding = {};
         if(this.props.landscape) {
-            mapPadding.left = this.props.query.isEmpty() && !favouritesView ? 0 : 500;
+            mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView ? 0 : 500;
         } else {
             if (this.props.directionsView && this.props.trips) {
                 mapPadding.bottom = this.ref ? this.ref.offsetHeight * .50 : 20;
@@ -390,6 +391,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         TKShareHelper.resetToHome();
                     }));
         }
+
+        if (TKShareHelper.isSharedServiceLink()) {
+            const shareLinkPath = decodeURIComponent(document.location.pathname);
+            const shareLinkSplit = shareLinkPath.split("/");
+            const region = shareLinkSplit[2];
+            const stopCode = shareLinkSplit[3];
+            const serviceCode = shareLinkSplit[4];
+            const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
+            StopsData.instance.getStopFromCode(region, stopCode)
+                .then((stop: StopLocation) => {
+                    RegionsData.instance.requireRegions().then(() => {
+                        this.props.onQueryUpdate({to: stop});
+                        this.props.onFindAndSelectService(stop, serviceCode, initTime);
+                        TKShareHelper.resetToHome();
+                    })
+                });
+        }
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
@@ -414,6 +432,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             || !TKUITripPlanner.isLocationDetailView(prevProps) && TKUITripPlanner.isLocationDetailView(this.props) // Start displaying location details
         ) {
             this.setState({showFavourites: false});
+        }
+        if (!prevProps.directionsView && this.props.directionsView && this.state.showTimetable) {
+            this.setState({
+                showTimetable: false
+            })
+        }
+
+        if (prevState.showTimetable && !this.state.showTimetable && this.props.selectedService) {
+            this.props.onServiceSelection(undefined);
         }
     }
 }

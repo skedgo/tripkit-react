@@ -27,6 +27,7 @@ import {TKUIProfileViewProps, TKUIProfileViewStyle} from "../options/TKUIProfile
 import {TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle} from "../options/TKUIUserPriorities";
 import {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "../map/TKUIMapLocationIcon";
 import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKUIMyLocationMapIcon";
+import {TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle} from "../map/TKUIRealtimeVehicle";
 
 interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
@@ -53,6 +54,7 @@ interface ITKUIConfigRequired {
     TKUIUserPriorities: TKComponentConfig<TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
     TKUIMyLocationMapIcon: TKComponentConfig<TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle>;
+    TKUIRealtimeVehicle: TKComponentConfig<TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle>;
 }
 
 export type TKUIConfig = Partial<ITKUIConfigRequired>

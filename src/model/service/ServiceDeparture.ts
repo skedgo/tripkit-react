@@ -2,7 +2,7 @@ import {JsonObject, JsonProperty} from "json2typescript";
 import Color from "../trip/Color";
 import ModeInfo from "../trip/ModeInfo";
 import StopLocation from "../StopLocation";
-import Service from "./Service";
+import RTServiceDepartureUpdate from "./RTServiceDepartureUpdate";
 import ServiceDetail from "./ServiceDetail";
 import RealTimeVehicle from "./RealTimeVehicle";
 
@@ -37,8 +37,8 @@ class ServiceDeparture {
     private _realTimeDeparture: number | undefined = undefined;
     @JsonProperty("realTimeArrival", Number, true)
     public _realTimeArrival: number | undefined = undefined;
-    @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
-    public realtimeVehicle: RealTimeVehicle | undefined = undefined;
+    @JsonProperty("_realtimeVehicle", RealTimeVehicle, true)
+    private _realtimeVehicle: RealTimeVehicle | undefined = undefined;
     @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     // @JsonProperty("alerts", [RealTimeAlert], true)
@@ -46,12 +46,12 @@ class ServiceDeparture {
 
     public startStop: StopLocation | undefined;
     public startStopCode: string = "";
-    public service: Service = new Service();
+    public realtimeUpdate: RTServiceDepartureUpdate = new RTServiceDepartureUpdate();
     public serviceDetail: ServiceDetail | undefined;
 
 
     get realTimeDeparture(): number | undefined {
-        return this.service && this.service.startTime ? this.service.startTime : this._realTimeDeparture;
+        return this.realtimeUpdate && this.realtimeUpdate.startTime ? this.realtimeUpdate.startTime : this._realTimeDeparture;
     }
 
     get actualStartTime(): number {
@@ -65,6 +65,12 @@ class ServiceDeparture {
 
     get actualEndTime(): number | undefined {
         return this.realTimeArrival ? this.realTimeArrival : this.endTime;
+    }
+
+    get realtimeVehicle(): RealTimeVehicle | undefined {
+        return this.realtimeUpdate && this.realtimeUpdate.realtimeVehicle ? this.realtimeUpdate.realtimeVehicle :
+            this.serviceDetail && this.serviceDetail.realtimeVehicle ? this.serviceDetail.realtimeVehicle :
+                this._realtimeVehicle;
     }
 }
 

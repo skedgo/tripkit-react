@@ -161,10 +161,12 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                                 step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
                             }
                             rightLabel={(step: ServiceStopLocation) => step.name}
-                            stepMarker={(step: ServiceStopLocation) =>
-                                step.departure === departure.startTime ?
-                                    <img src={transIcon} className={classes.currStopMarker} alt=""/> : undefined
-                            }
+                            // TODO: use to mark vehicle's current position
+                            // stepMarker={(step: ServiceStopLocation) =>
+                            //     step.departure === departure.startTime ?
+                            //         <img src={transIcon} className={classes.currStopMarker} alt=""/>
+                            //         :undefined
+                            // }
                             stepClassName={(step: ServiceStopLocation) =>
                                 (step.departure && step.departure < departure.startTime ? classes.pastStop :
                                     step.departure === departure.startTime ? classes.currStop : undefined)}
@@ -183,7 +185,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         if (!this.scrolledIntoView && this.props.departure.serviceDetail && this.scrollRef) {
             this.scrolledIntoView = true;
             const classes = this.props.classes;
-            this.scrollRef.getElementsByClassName(classes.currStopMarker)[0].scrollIntoView();
+            this.scrollRef.getElementsByClassName(classes.currStop)[0].scrollIntoView();
         }
     }
 }

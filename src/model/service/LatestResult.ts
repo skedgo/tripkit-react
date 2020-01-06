@@ -1,10 +1,10 @@
 import {JsonObject, JsonProperty} from "json2typescript";
-import Service from "./Service";
+import RTServiceDepartureUpdate from "./RTServiceDepartureUpdate";
 
 @JsonObject
 class LatestResult {
-    @JsonProperty("services", [Service])
-    public services: Service[] = [];
+    @JsonProperty("services", [RTServiceDepartureUpdate])
+    public services: RTServiceDepartureUpdate[] = [];
 }
 
 export default LatestResult;
