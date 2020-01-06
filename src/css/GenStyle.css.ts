@@ -36,6 +36,7 @@ interface ITKUIGenStyle {
     textGray: CSSProps<{}>;
 
     borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
+    transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
 }
 
 const genStyles: ITKUIGenStyle = {
@@ -194,6 +195,13 @@ const genStyles: ITKUIGenStyle = {
         borderRadius: radius + unit,
         WebkitBorderRadius: radius + unit,
         MozBorderRadius: radius + unit
+    }),
+
+    transformRotate: (angle: number, unit: string = 'deg') => ({
+        WebkitTransform: 'rotate(' + angle + unit + ')',
+        MsTransform: 'rotate(' + angle + unit + ')',
+        MozTransform: 'rotate(' + angle + unit + ')',
+        transform: 'rotate(' + angle + unit + ')'
     })
 };
 

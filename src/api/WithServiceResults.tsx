@@ -9,14 +9,12 @@ import TripGoApi from "./TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import ServiceDeparturesResult from "../model/service/ServiceDeparturesResult";
 import Features from "../env/Features";
-import Service from "../model/service/Service";
+import RTServiceDepartureUpdate from "../model/service/RTServiceDepartureUpdate";
 import LatestResult from "../model/service/LatestResult";
 import {IServiceResultsContext as IServiceResConsumerProps} from "../service/ServiceResultsProvider";
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
 import {EventEmitter} from "fbemitter";
-import TKShareHelper from "../share/TKShareHelper";
-import StopsData from "../data/StopsData";
 
 interface IWithServiceResultsProps {
     // TODO: Move to state, as startStop
@@ -86,6 +84,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.onInitTimeChange = this.onInitTimeChange.bind(this);
             this.onServiceSelection = this.onServiceSelection.bind(this);
             this.onStopChange = this.onStopChange.bind(this);
+            this.onFindAndSelectService = this.onFindAndSelectService.bind(this);
         }
 
         public requestMoreDepartures() {
@@ -182,6 +181,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              selectedService={this.state.selected}
                              onServiceSelection={this.onServiceSelection}
                              servicesEventBus={this.eventBus}
+                             onFindAndSelectService={this.onFindAndSelectService}
             />;
         }
 
@@ -306,7 +306,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public realtimeUpdate() {
-            if (this.awaitingRealtime) {
+            if (this.awaitingRealtime || !this.state.startStop) {
                 return;
             }
 
@@ -323,7 +323,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             const services = departuresToUpdate.filter((departure: ServiceDeparture) => {
                 return departure.realTimeStatus === "IS_REAL_TIME";
             }).map((departure: ServiceDeparture) => {
-                const service = new Service();
+                const service = new RTServiceDepartureUpdate();
                 service.serviceTripID = departure.serviceTripID;
                 service.startStopCode = departure.startStopCode ? departure.startStopCode : startStopCode;
                 // service.endStopCode = departure.endStopCode
@@ -344,7 +344,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     services: services
                 }).then((result: LatestResult) => {
                     this.awaitingRealtime = false;
-                    const servicesById: Map<string, Service> = new Map<string, Service>();
+                    const servicesById: Map<string, RTServiceDepartureUpdate> = new Map<string, RTServiceDepartureUpdate>();
                     for (const service of result.services) {
                         servicesById.set(service.serviceTripID, service);
                     }
@@ -357,7 +357,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         // correspond to different stops.
                         if (service && (service.startStopCode === undefined || service.startStopCode === departure.startStopCode)) {
                             servicesById.delete(departure.serviceTripID);
-                            departure.service = service;
+                            departure.realtimeUpdate = service;
                         }
                     }
                     this.setState((state: IWithServiceResultsState) => {
@@ -392,31 +392,20 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 });
         }
 
-        public componentDidMount() {
-            if (TKShareHelper.isSharedServiceLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname);
-                const shareLinkSplit = shareLinkPath.split("/");
-                const region = shareLinkSplit[2];
-                const stopCode = shareLinkSplit[3];
-                const serviceCode = shareLinkSplit[4];
-                const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
-                StopsData.instance.getStopFromCode(region, stopCode)
-                    .then((stop: StopLocation) =>
-                        RegionsData.instance.requireRegions().then(() => {
-                                TKShareHelper.resetToHome();
-                                this.setState({
-                                    startStop: stop,
-                                    initTime: initTime,
-                                    departures: [],
-                                    departuresFiltered: [],
-                                    displayLimit: 0,
-                                    initTimeChanged: true
-                                }, () => {
-                                    this.requestUntilServiceFound(serviceCode);
-                                });
-                            }
-                        ));
-            }
+        private onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment) {
+            RegionsData.instance.requireRegions().then(() => {
+                    this.setState({
+                        startStop: stop,
+                        initTime: initTime,
+                        departures: [],
+                        departuresFiltered: [],
+                        displayLimit: 0,
+                        initTimeChanged: true
+                    }, () => {
+                        this.requestUntilServiceFound(serviceCode);
+                    });
+                }
+            );
         }
 
         public componentWillUnmount() {

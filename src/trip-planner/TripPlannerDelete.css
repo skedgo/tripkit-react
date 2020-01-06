@@ -192,6 +192,7 @@
   margin-top: -62px!important; /* bottom anchor on 62px height */
   width: 40px!important;
   height: 62px!important;
+  z-index: 1002!important;
 }
 
 .MapTripSegment-icon-container,

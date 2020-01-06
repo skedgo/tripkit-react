@@ -50,6 +50,10 @@ import TKUIProvider from "../config/TKUIProvider";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";
+import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
+import DateTimeUtil from "../util/DateTimeUtil";
+import RealTimeVehicle from "../model/service/RealTimeVehicle";
+import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -77,6 +81,7 @@ export interface IStyle {
     currentLocMarker: CSSProps<IProps>;
     currentLocBtn: CSSProps<IProps>;
     resolvingCurrLoc: CSSProps<IProps>;
+    vehicle: CSSProps<IProps>;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -205,7 +210,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
                 this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
                 LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
-            this.onViewportChange(Util.iAssign(this.props.viewport || {}, {center: fitPoint}));
+            this.onViewportChange(Util.iAssign(this.props.viewport || {},
+                {center: fitPoint,
+                    zoom: (this.props.viewport && this.props.viewport.zoom && this.props.viewport.zoom >= 10) ?
+                        this.props.viewport.zoom : 13})); // zoom in if zoom < 10.
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));
@@ -334,6 +342,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             </Popup>;
         const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
         const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
+        const service = this.props.service;
         return (
             <div className={classes.main}>
                 <RLMap
@@ -419,7 +428,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     >
                         {this.getLocationPopup(this.props.from!)}
                     </Marker>}
-                    {this.props.to && this.props.to.isResolved() &&
+                    {this.props.to && this.props.to.isResolved() && !service &&
                     <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
@@ -463,12 +472,32 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                                renderer={segmentRenderer(segment)}
                                                key={i}/>;
                     })}
-                    {this.props.service &&
+                    {service &&
                     <MapService
-                        serviceDeparture={this.props.service}
-                        renderer={serviceRenderer(this.props.service)}
-                    />
-                    }
+                        serviceDeparture={service}
+                        renderer={serviceRenderer(service)}
+                    />}
+                    {service && service.realtimeVehicle &&
+                    (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&
+                    <Marker position={service.realtimeVehicle.location}
+                            icon={L.divIcon({
+                                html: renderToStaticMarkup(
+                                    <TKUIProvider>
+                                        <TKUIRealtimeVehicle
+                                            value={service.realtimeVehicle}
+                                            label={service.serviceNumber}
+                                            color={service.serviceColor}
+                                        />
+                                    </TKUIProvider>
+                                ),
+                                iconSize: [40, 40],
+                                iconAnchor: [20, 20],
+                                className: classes.vehicle
+                            })}
+                            riseOnHover={true}
+                    >
+                        {this.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
+                    </Marker>}
                     {menuPopup}
                     {this.props.children}
                 </RLMap>
@@ -482,6 +511,17 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 </button>
             </div>
         )
+    }
+
+    private getPopup(realTimeVehicle: RealTimeVehicle, title: string) {
+        return <Popup
+            offset={[0, 0]}
+            closeButton={false}
+            className="LeafletMap-mapLocPopup"
+            autoPan={false}
+        >
+            <TKUIRealtimeVehiclePopup value={realTimeVehicle} title={title}/>
+        </Popup>;
     }
 
     private getLocationPopup(location: Location) {
@@ -542,7 +582,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (service !== prevProps.service) {
             if (service && service.serviceDetail && service.serviceDetail.shapes) {
                 const fitBounds = MapUtil.getShapesBounds(service.serviceDetail.shapes);
-                if (!this.alreadyFits(fitBounds) || paddingChanged) {
+                if (!this.alreadyFits(fitBounds) || paddingChanged
+                    || (this.leafletElement && this.leafletElement.getZoom() < 10)) {
                     this.fitBounds(fitBounds);
                 }
             }

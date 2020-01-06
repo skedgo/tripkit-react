@@ -3,7 +3,7 @@ import RealTimeVehicle from "./RealTimeVehicle";
 import RealTimeAlert from "./RealTimeAlert";
 
 @JsonObject
-class Service {
+class RTServiceDepartureUpdate {
 
     @JsonProperty("serviceTripID")
     public serviceTripID: string = "";
@@ -26,4 +26,4 @@ class Service {
 
 }
 
-export default Service;
+export default RTServiceDepartureUpdate;
