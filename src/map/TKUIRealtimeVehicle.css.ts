@@ -9,6 +9,29 @@ export const tKUIRealtimeVehicleDefaultStyle: TKUIStyles<TKUIRealtimeVehicleStyl
         position: 'relative',
         ...genStyles.flex
     },
+    vehicleBackground: {
+        ...genStyles.flex,
+        ...genStyles.grow
+    },
+    bodyBackground: {
+        backgroundColor: 'white',
+        ...genStyles.grow
+    },
+    frontBackground: {
+        width: '0',
+        height: '0',
+        display: 'inline-block',
+        borderTop: '9px solid transparent',
+        borderBottom: '9px solid transparent',
+        borderLeft: '9px solid white'
+    },
+    vehicle: {
+        position: 'absolute',
+        ...genStyles.flex,
+        height: '100%',
+        width: '100%',
+        padding: '2px'
+    },
     body: {
         backgroundColor: (props: TKUIRealtimeVehicleProps) => (props.color ? props.color.toHex() : 'black'),
         ...genStyles.grow
@@ -17,9 +40,9 @@ export const tKUIRealtimeVehicleDefaultStyle: TKUIStyles<TKUIRealtimeVehicleStyl
         width: '0',
         height: '0',
         display: 'inline-block',
-        borderTop: '9px solid transparent',
-        borderBottom: '9px solid transparent',
-        borderLeft: (props: TKUIRealtimeVehicleProps) => '9px solid ' + (props.color ? props.color.toHex() : 'black')
+        borderTop: '7px solid transparent',
+        borderBottom: '7px solid transparent',
+        borderLeft: (props: TKUIRealtimeVehicleProps) => '7px solid ' + (props.color ? props.color.toHex() : 'black')
     },
     label: {
         position: 'absolute',

@@ -38,7 +38,7 @@ class TripGoApi {
 
     public static getSatappUrl(endpoint: string): string {
         const server = this.getServer();
-        return server + "/" + endpoint;
+        return server + (endpoint.startsWith("/") ? "" : "/") + endpoint;
     }
 
     public static apiCallUrl(url: string, method: string, body?: any, prod?: boolean): Promise<any> {

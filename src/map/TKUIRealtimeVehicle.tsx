@@ -15,6 +15,10 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    vehicleBackground: CSSProps<IProps>;
+    bodyBackground: CSSProps<IProps>;
+    frontBackground: CSSProps<IProps>;
+    vehicle: CSSProps<IProps>;
     body: CSSProps<IProps>;
     front: CSSProps<IProps>;
     label: CSSProps<IProps>;
@@ -45,8 +49,14 @@ class TKUIRealtimeVehicle extends React.Component<IProps, {}> {
             <div className={classes.main}
                  style={angle ? {...genStyles.transformRotate(-angle)} : undefined}
             >
-                <div className={classes.body}/>
-                <div className={classes.front}/>
+                <div className={classes.vehicleBackground}>
+                    <div className={classes.bodyBackground}/>
+                    <div className={classes.frontBackground}/>
+                </div>
+                <div className={classes.vehicle}>
+                    <div className={classes.body}/>
+                    <div className={classes.front}/>
+                </div>
                 {label &&
                 <div className={classes.label}
                      style={angleNormalized360 && 90 < angleNormalized360 && angleNormalized360 < 270 ?

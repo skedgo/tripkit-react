@@ -7,7 +7,9 @@ import LatLng from "../model/LatLng";
 import {renderToStaticMarkup} from "react-dom/server";
 import StreetsPolyline from "./StreetsPolyline";
 import ShapesPolyline from "./ShapesPolyline";
-import {IMapSegmentRenderer} from "./TKUIMapView";
+import {IMapSegmentRenderer, TKUIMapViewClass} from "./TKUIMapView";
+import TKUIProvider from "../config/TKUIProvider";
+import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 
 interface IProps {
     segment: Segment;
@@ -59,7 +61,30 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                      streets={segment.streets}
                                      polylineOptions={this.props.renderer.polylineOptions}
 
-                    /> : undefined
+                    /> : undefined,
+            segment.realtimeVehicle &&
+            // (DateTimeUtil.getNow().valueOf() / 1000 - segment.realtimeVehicle.lastUpdate) < 120 &&
+            <Marker position={segment.realtimeVehicle.location}
+                    key={"vehicle"}
+                    icon={L.divIcon({
+                        html: renderToStaticMarkup(
+                            <TKUIProvider>
+                                <TKUIRealtimeVehicle
+                                    value={segment.realtimeVehicle}
+                                    label={segment.serviceNumber || undefined}
+                                    color={segment.serviceColor || undefined}
+                                />
+                            </TKUIProvider>
+                        ),
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 20],
+                        className: "MapTripSegment-vehicle"
+                    })}
+                    riseOnHover={true}
+            >
+                {segment.modeInfo && segment.serviceNumber &&
+                TKUIMapViewClass.getPopup(segment.realtimeVehicle, segment.modeInfo.alt + " " + segment.serviceNumber)}
+            </Marker>
         ]);
     }
 }
