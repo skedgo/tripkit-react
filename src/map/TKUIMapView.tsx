@@ -496,7 +496,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             })}
                             riseOnHover={true}
                     >
-                        {this.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
+                        {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
                     </Marker>}
                     {menuPopup}
                     {this.props.children}
@@ -513,7 +513,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         )
     }
 
-    private getPopup(realTimeVehicle: RealTimeVehicle, title: string) {
+    public static getPopup(realTimeVehicle: RealTimeVehicle, title: string) {
         return <Popup
             offset={[0, 0]}
             closeButton={false}
@@ -549,7 +549,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: IProps): void {
-        if (this.checkFitLocation(prevProps.from, this.props.from) || this.checkFitLocation(prevProps.to, this.props.to)) {
+        const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
+        if (this.checkFitLocation(prevProps.from, this.props.from) || this.checkFitLocation(prevProps.to, this.props.to)
+            || paddingChanged) {
             // TODO: avoid switching from undefined to null, use one or the other.
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
         }
@@ -570,7 +572,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
 
         const trip = this.props.trip;
-        const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
         if ((trip !== prevProps.trip || paddingChanged) && trip) {
             const fitBounds = MapUtil.getTripBounds(trip);
             // TODO: analize better when to force fit bounds.
@@ -722,3 +723,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
+export {TKUIMapView as TKUIMapViewClass};

@@ -132,6 +132,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         };
 
         Util.global.tKUserLocationPromise.then((userLocation: [number, number]) => {
+            // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
+            // on shared links.
+            if (!this.props.query.isEmpty()) {
+                return;
+            }
             const initViewport = {center: LatLng.createLatLng(userLocation[0], userLocation[1]), zoom: 13};
             this.props.onViewportChange(initViewport);
         });
@@ -305,7 +310,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const mapPadding: TKUIMapPadding = {};
         if(this.props.landscape) {
-            mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView ? 0 : 500;
+            mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView
+            && !locationDetailView ? 0 : 500;
         } else {
             if (this.props.directionsView && this.props.trips) {
                 mapPadding.bottom = this.ref ? this.ref.offsetHeight * .50 : 20;

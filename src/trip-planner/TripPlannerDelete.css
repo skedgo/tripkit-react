@@ -234,6 +234,14 @@
   bottom: 46px!important;
 }
 
+.MapTripSegment-vehicle {
+  display: -webkit-flex!important;
+  display: flex!important;
+  align-items: center;
+  -webkit-align-items: center;
+  z-index: 1000!important;
+}
+
 @media (max-width: 800px) {
   .TripPlanner-serviceModal {
     width: 100%;
