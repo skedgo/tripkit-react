@@ -29,7 +29,7 @@ import {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "../map/TKUIMap
 import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKUIMyLocationMapIcon";
 import {TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle} from "../map/TKUIRealtimeVehicle";
 
-interface ITKUIConfigRequired {
+export interface ITKUIConfigRequired {
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;

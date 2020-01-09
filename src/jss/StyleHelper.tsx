@@ -46,10 +46,10 @@ export function withStyleInjection<
 
     return class WithStyleProp extends React.Component<P, {}> {
 
-        private StyledComponent: any;
-        private generateClassName: ((rule: any, sheet: any) => string) | undefined;
-        private stylesToInject: StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>;
-        private WithTheme: any;
+        public StyledComponent: any;
+        public generateClassName: ((rule: any, sheet: any) => string) | undefined;
+        public stylesToInject: StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>;
+        public WithTheme: any;
 
         constructor(props: P) {
             super(props);
@@ -78,7 +78,7 @@ export function withStyleInjection<
             this.onRefreshStyles();
         }
 
-        private onRefreshStyles(forceUpdate: boolean = false) {
+        public onRefreshStyles(forceUpdate: boolean = false) {
             const props = this.props;
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);
             this.generateClassName = generateClassNameFactory(classPrefix ? classPrefix : props.classNamePrefix!);
@@ -113,8 +113,8 @@ function withStyleProp<
 
     return class WithStyleProp extends React.Component<P, {}> {
 
-        private StyledComponent: any;
-        private generateClassName: ((rule: any, sheet: any) => string) | undefined;
+        public StyledComponent: any;
+        public generateClassName: ((rule: any, sheet: any) => string) | undefined;
 
         constructor(props: P) {
             super(props);

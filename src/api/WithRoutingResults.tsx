@@ -76,7 +76,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
         }
 
-        private sortTrips(trips: Trip[], sort: TripSort) {
+        public sortTrips(trips: Trip[], sort: TripSort) {
             return trips.slice().sort((t1: Trip, t2: Trip) => {
                 switch (sort) {
                     case TripSort.TIME: {
