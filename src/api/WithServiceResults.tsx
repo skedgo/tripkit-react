@@ -366,7 +366,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             });
         }
 
-        private requestUntilServiceFound(serviceTripId: string, limit: number = 3) {
+        public requestUntilServiceFound(serviceTripId: string, limit: number = 3) {
             if (limit <= 0) {
                 return;
             }
@@ -392,7 +392,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 });
         }
 
-        private onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment) {
+        public onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment) {
             RegionsData.instance.requireRegions().then(() => {
                     this.setState({
                         startStop: stop,

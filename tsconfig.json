@@ -5,11 +5,11 @@
     "module": "esnext",
     "target": "es5",
     "lib": [
+      "es6",
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "allowJs": true,
     "jsx": "react",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
@@ -18,12 +18,13 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "resolveJsonModule": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "allowJs": true,
+    "declaration": true,
     "isolatedModules": true,
-    "suppressImplicitAnyIndexErrors": true
-//    "noUnusedLocals": true
+    "noEmit": true
   },
   "include": [
     "src"

@@ -17,7 +17,7 @@ import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
-import TKUIRoutingQueryInput from "query/TKUIRoutingQueryInput";
+import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
@@ -131,15 +131,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTimetable: false
         };
 
-        Util.global.tKUserLocationPromise.then((userLocation: [number, number]) => {
+        // TODO: re-enable
+        // Util.global.tKUserLocationPromise.then((userLocation: [number, number]) => {
             // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
             // on shared links.
-            if (!this.props.query.isEmpty()) {
-                return;
-            }
-            const initViewport = {center: LatLng.createLatLng(userLocation[0], userLocation[1]), zoom: 13};
-            this.props.onViewportChange(initViewport);
-        });
+            // if (!this.props.query.isEmpty()) {
+            //     return;
+            // }
+            // const initViewport = {center: LatLng.createLatLng(userLocation[0], userLocation[1]), zoom: 13};
+            // this.props.onViewportChange(initViewport);
+        // });
 
         WaiAriaUtil.addTabbingDetection();
 
