@@ -1,25 +1,409 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config-overrides.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKConfigHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKConfigHelper.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/favourite/TKUIFavouriteAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/favourite/TKUIFavouriteAction.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-    </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
       <change beforePath="$PROJECT_DIR$/src/api/TripGoApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/TripGoApi.tsx" afterDir="false" />
+    </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/src/example/tripgo-sample.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/GeolocationUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config-overrides.js" beforeDir="false" afterPath="$PROJECT_DIR$/config-overrides.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/GATracker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/GATracker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/GATracker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/PlannedTripsTracker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/PlannedTripsTracker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/PlannedTripsTracker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/ChoiceSegment.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/ChoiceSegment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/ChoiceSegment.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/PlannedTrip.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/PlannedTrip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/PlannedTrip.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/TripChoice.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/TripChoice.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/analytics/model/TripChoice.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/TripGoApi.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/TripGoApi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/TripGoApi.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/WithRoutingResults.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/WithRoutingResults.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/api/WithRoutingResults.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/css/app.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/css/global.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/FavouritesData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/FavouritesData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/FavouritesData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItem.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItem.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItemArray.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItemArray.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItemArray.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocationsData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocationsData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/LocationsData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/OptionsData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/OptionsData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/OptionsData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/RegionsData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/RegionsData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/RegionsData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/StopsData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/StopsData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/data/StopsData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Environment.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Environment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Environment.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Features.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Features.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/env/Features.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteBtn.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteBtn.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteBtn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteBtn.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteList.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteList.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteList.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteList.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteRow.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteRow.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteRow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteRow.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocoderOptions.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocoderOptions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocoderOptions.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocodingCache.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocodingCache.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocodingCache.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeolocationData.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeolocationData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/GeolocationData.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/IGeocoder.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/IGeocoder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/IGeocoder.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoder.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoder.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoderOptions.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoderOptions.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoderOptions.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/PeliasGeocoder.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/PeliasGeocoder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/PeliasGeocoder.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/SkedgoGeocoder.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/SkedgoGeocoder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/SkedgoGeocoder.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/StaticGeocoder.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/StaticGeocoder.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/geocode/StaticGeocoder.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-angle-down.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-angle-right.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-bars-solid.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-bikeShare.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-calendar.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-clear-circle.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-clock.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-cross.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-curr-loc.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-feedback.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-from-to.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-info.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-loading.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-loading2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-map-marked.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-map-pin-base.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-map-pin-head-pointer.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-map-pin-head.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-map-pin-transparent.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-my-way-ticket.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-np_map.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-pin.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-service-stop.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-star-filled.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-star-outline.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-star-solid.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/ic-swap-arrows.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/icon-from-to.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/jslib/JQuery.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/jslib/JQuery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/jslib/JQuery.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.test.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.test.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/ResultItem.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/ResultItem.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/ResultItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/location_box/ResultItem.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/LeafletMap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/LeafletMap.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/LeafletMap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/LeafletMap.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationPopup.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationPopup.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationPopup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationPopup.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationSet.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationSet.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationSet.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapPolyline.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapPolyline.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapPolyline.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapTripSegment.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapTripSegment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/MapTripSegment.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPinIcon.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPinIcon.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPinIcon.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPinIcon.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPopup.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPopup.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPopup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPopup.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/ServiceStopPopup.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/ServiceStopPopup.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/ServiceStopPopup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/map/ServiceStopPopup.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/BBox.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/BBox.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/BBox.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/FavouriteTrip.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/FavouriteTrip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/FavouriteTrip.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/LatLng.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/LatLng.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/LatLng.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Location.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Location.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Location.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Options.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Options.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/Options.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/RoutingQuery.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/RoutingQuery.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/RoutingQuery.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/ServiceStopLocation.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/ServiceStopLocation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/ServiceStopLocation.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/StopLocation.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/StopLocation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/StopLocation.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/WeightingPreferences.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/WeightingPreferences.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/WeightingPreferences.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodInfo.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodInfo.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodLocation.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodLocation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodLocation.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkInfo.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkInfo.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkLocation.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkLocation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkLocation.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/City.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/City.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/City.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/FacilityLocation.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/FacilityLocation.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/FacilityLocation.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationConverter.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationConverter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationConverter.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationsResult.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationsResult.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationsResult.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/MapLocationType.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/MapLocationType.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/location/MapLocationType.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/ModeIdentifier.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/ModeIdentifier.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/ModeIdentifier.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/Region.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/Region.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/Region.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionResults.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionResults.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionResults.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Color.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Color.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Color.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfo.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfo.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfo.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfoConverter.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfoConverter.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfoConverter.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/RoutingResults.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/RoutingResults.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/RoutingResults.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Segment.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Segment.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Segment.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/SegmentTemplate.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/SegmentTemplate.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/SegmentTemplate.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ServiceShape.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ServiceShape.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/ServiceShape.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Street.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Street.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Street.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Ticket.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Ticket.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Ticket.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Trip.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Trip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/Trip.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/TripGroup.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/TripGroup.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/model/trip/TripGroup.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/OptionsView.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/OptionsView.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/OptionsView.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/OptionsView.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/SchoolPicker.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/SchoolPicker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/SchoolPicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/options/SchoolPicker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/polyfills-ie11.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/query/QueryInput.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/query/QueryInput.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/query/QueryInput.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/query/QueryInput.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/registerServiceWorker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/registerServiceWorker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/registerServiceWorker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimeHTML5Input.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimeHTML5Input.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimeHTML5Input.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimePicker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimePicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/time/DateTimePicker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/ITripPlannerProps.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/ITripPlannerProps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/ITripPlannerProps.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TripPlanner.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TripPlanner.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TripPlanner.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TripPlanner.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/ITripRowProps.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/ITripRowProps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/ITripRowProps.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/SegmentDescription.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/SegmentDescription.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/SegmentDescription.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TrackTransport.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TrackTransport.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TrackTransport.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TrackTransport.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TransportUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TransportUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TransportUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAltBtn.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAltBtn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAltBtn.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAlternativesView.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAlternativesView.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAlternativesView.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripAlternativesView.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripDetail.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripDetail.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripDetail.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripDetail.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRow.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRow.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRow.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRow.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTime.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTime.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTime.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTrack.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTrack.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTrack.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentDetail.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentDetail.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentDetail.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentDetail.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripsView.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripsView.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripsView.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/trip/TripsView.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/tripgo-sample.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/tripgo-sample.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/tripgo-sample.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Constants.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Constants.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Constants.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DateTimeUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DateTimeUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DateTimeUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DeviceUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DeviceUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/DeviceUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/GMapUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/GMapUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/GMapUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LeafletUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LeafletUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LeafletUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LocationUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LocationUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/LocationUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/MapUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/MapUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/MapUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/NetworkUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/NetworkUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/NetworkUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Usersnap.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Usersnap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Usersnap.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Util.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/Util.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/TKUIProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feedback/FeedbackBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/feedback/FeedbackBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geocode/GeolocationData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/GeolocationData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/MapTripSegment.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/MapTripSegment.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/Constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Constants.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,6 +412,11 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -48,81 +437,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="TKUIConfig.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-277">
-              <caret line="74" column="38" selection-start-line="74" selection-start-column="38" selection-end-line="74" selection-end-column="38" />
+            <state relative-caret-position="190">
+              <caret line="63" column="22" selection-start-line="63" selection-start-column="12" selection-end-line="63" selection-end-column="22" />
               <folding>
-                <element signature="n#!!block;n#dependencies#0;n#!!top" />
-                <element signature="n#!!block;n#eslintConfig#0;n#!!top" />
+                <element signature="e#0#71#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tsconfig.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tsconfig.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKConfigHelper.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/config/TKConfigHelper.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="8" column="57" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUITripPlanner.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="53">
-              <caret line="39" column="19" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIResponsiveUtil.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StyleHelper.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/jss/StyleHelper.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="48" column="15" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="15" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client-sample.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/example/client-sample.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1332">
-              <caret line="8" column="41" selection-start-line="8" selection-end-line="8" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="70">
-              <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+            <state relative-caret-position="45">
+              <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
               <folding>
-                <element signature="n#!!doc" expanded="true" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tripgo-sample.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/example/tripgo-sample.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="44" lean-forward="true" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -139,36 +482,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>enum</find>
-      <find>babel-plugin-transform-</find>
-      <find>plugin-transform-typescript</find>
-      <find>babel-plugin-tr</find>
-      <find>preset-typescript</find>
-      <find>babel-preset-react-app</find>
-      <find>babel-plugin-co</find>
-      <find>!function(e){function</find>
-      <find>main</find>
-      <find>hash</find>
-      <find>asset</find>
-      <find>chunks</find>
-      <find>filename</find>
-      <find>plugins</find>
-      <find>),</find>
-      <find>[name].[contenthash:8]</find>
-      <find>module:</find>
+      <find>webpack</find>
+      <find>isEnvDevelopment</find>
+      <find>isEnvProduction</find>
+      <find>appDirectory</find>
       <find>[name]</find>
-      <find>chunk</find>
-      <find>runtimeCh</find>
-      <find>plugins:</find>
-      <find>TKUIPro</find>
+      <find>main</find>
+      <find>feedbac</find>
+      <find>TripPlanner-feedbackBtn</find>
+      <find>console.log</find>
+      <find>apple-store-logo.ffdf0298</find>
+      <find>loader:</find>
+      <find>svg</find>
+      <find>static.ske</find>
+      <find>Constants</find>
+      <find>portrait</find>
+      <find>react</find>
+      <find>&quot;react&quot;</find>
       <find>react-dom</find>
-      <find>./api/Trip</find>
-      <find>TKUITri</find>
-      <find>Tooltip</find>
-      <find>minif</find>
-      <find>externals</find>
-      <find>TKUIProvider</find>
-      <find>TKUIProvi</find>
+      <find>react-responsive</find>
+      <find>global</find>
+      <find>SFC</find>
+      <find>react-res</find>
+      <find>external</find>
+      <find>isEnvDe</find>
+      <find>bundle.js</find>
+      <find>filename</find>
+      <find>confToCompMapper</find>
+      <find>con</find>
+      <find>TKUIConfigContext</find>
+      <find>TKUIConfigContext.Consumer</find>
     </findStrings>
     <replaceStrings>
       <replace>this.onQueryChange</replace>
@@ -194,7 +537,6 @@
     <dirStrings>
       <dir>$PROJECT_DIR$/node_modules/react-leaflet</dir>
       <dir>$PROJECT_DIR$/src/model/service</dir>
-      <dir>$PROJECT_DIR$/public</dir>
       <dir>$PROJECT_DIR$/src/map</dir>
       <dir>$PROJECT_DIR$/src/model</dir>
       <dir>$PROJECT_DIR$/src/analytics</dir>
@@ -202,10 +544,11 @@
       <dir>$PROJECT_DIR$/src/favourite</dir>
       <dir>$PROJECT_DIR$/src/images</dir>
       <dir>$PROJECT_DIR$/src/trip-planner</dir>
-      <dir>$PROJECT_DIR$/dist</dir>
       <dir>$PROJECT_DIR$/node_modules/react-scripts</dir>
-      <dir>$PROJECT_DIR$/src</dir>
+      <dir>$PROJECT_DIR$/dist</dir>
+      <dir>$PROJECT_DIR$/public</dir>
       <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/src</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -226,16 +569,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" />
-        <option value="$PROJECT_DIR$/public/index.html" />
-        <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" />
-        <option value="$PROJECT_DIR$/src/geocode/GeolocationData.ts" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapView.css" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMyLocationMapIcon.css" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapViewCss.css" />
-        <option value="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" />
-        <option value="$PROJECT_DIR$/src/model/service/ServiceDetail.ts" />
-        <option value="$PROJECT_DIR$/src/env/Features.ts" />
         <option value="$PROJECT_DIR$/src/model/service/ServiceDeparture.ts" />
         <option value="$PROJECT_DIR$/src/model/service/RealTimeVehicle.ts" />
         <option value="$PROJECT_DIR$/src/css/GenStyle.css.ts" />
@@ -253,30 +586,40 @@
         <option value="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" />
         <option value="$PROJECT_DIR$/src/api/WithServiceResults.tsx" />
         <option value="$PROJECT_DIR$/src/favourite/TKUIFavouriteAction.tsx" />
-        <option value="$PROJECT_DIR$/src/config/TKUIConfig.tsx" />
-        <option value="$PROJECT_DIR$/src/example/client-sample.tsx" />
         <option value="$PROJECT_DIR$/src/config/TKConfigHelper.tsx" />
         <option value="$PROJECT_DIR$/src/util/TKUIViewportUtil.tsx.ts" />
-        <option value="$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx" />
         <option value="$PROJECT_DIR$/src/util/TKUIViewportUtil.tsx" />
         <option value="$PROJECT_DIR$/src/card/TKUICardCarousel.tsx" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
         <option value="$PROJECT_DIR$/src/options/TKUIProfileView.tsx" />
         <option value="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" />
         <option value="$PROJECT_DIR$/src/action/TKUIShareAction.tsx" />
         <option value="$PROJECT_DIR$/src/query/TKUILocationSearch.tsx" />
         <option value="$PROJECT_DIR$/dist/index.js" />
-        <option value="$PROJECT_DIR$/dist/index.html" />
         <option value="$PROJECT_DIR$/.env" />
         <option value="$PROJECT_DIR$/build/index.html" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" />
-        <option value="$PROJECT_DIR$/config-overrides.js" />
-        <option value="$PROJECT_DIR$/tsconfig.json" />
         <option value="$PROJECT_DIR$/dist/index.d.ts" />
-        <option value="$PROJECT_DIR$/src/index.tsx" />
         <option value="$PROJECT_DIR$/src/jss/StyleHelper.tsx" />
+        <option value="$PROJECT_DIR$/tsconfig.json" />
+        <option value="$PROJECT_DIR$/src/util/GeolocationUtil.ts" />
+        <option value="$PROJECT_DIR$/src/geocode/GeolocationData.ts" />
+        <option value="$PROJECT_DIR$/src/util/Constants.ts" />
+        <option value="$PROJECT_DIR$/src/feedback/FeedbackBtn.tsx" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/node_modules/react-dom/index.js" />
+        <option value="$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx" />
+        <option value="$PROJECT_DIR$/dist/index.html" />
+        <option value="$PROJECT_DIR$/config-overrides.js" />
+        <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
+        <option value="$PROJECT_DIR$/src/config/TKUIConfig.tsx" />
+        <option value="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" />
+        <option value="$PROJECT_DIR$/src/example/client-sample.tsx" />
+        <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
+        <option value="$PROJECT_DIR$/src/map/MapTripSegment.tsx" />
+        <option value="$PROJECT_DIR$/src/config/TKUIProvider.tsx" />
+        <option value="$PROJECT_DIR$/src/example/tripgo-sample.tsx" />
+        <option value="$PROJECT_DIR$/src/index.tsx" />
       </list>
     </option>
   </component>
@@ -303,10 +646,9 @@
     </packageJsonPaths>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="45" />
-    <option name="y" value="106" />
+    <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="822" />
+    <option name="height" value="823" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -325,25 +667,7 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="trip" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="dist" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -515,14 +839,7 @@
       <workItem from="1577458618652" duration="103129000" />
       <workItem from="1578435473876" duration="20514000" />
       <workItem from="1578514934843" duration="21959000" />
-      <workItem from="1578603484588" duration="2292000" />
-    </task>
-    <task id="LOCAL-00112" summary="deepCustomization 8">
-      <created>1573826690236</created>
-      <option name="number" value="00112" />
-      <option name="presentableId" value="LOCAL-00112" />
-      <option name="project" value="LOCAL" />
-      <updated>1573826690236</updated>
+      <workItem from="1578603484588" duration="28828000" />
     </task>
     <task id="LOCAL-00113" summary="deepCustomization 9">
       <created>1573829719910</created>
@@ -860,39 +1177,56 @@
       <option name="project" value="LOCAL" />
       <updated>1578090157097</updated>
     </task>
-    <option name="localTasksCounter" value="161" />
+    <task id="LOCAL-00161" summary="Tripkit web sdk: configure webpack to build as library.">
+      <created>1578606720684</created>
+      <option name="number" value="00161" />
+      <option name="presentableId" value="LOCAL-00161" />
+      <option name="project" value="LOCAL" />
+      <updated>1578606720685</updated>
+    </task>
+    <option name="localTasksCounter" value="162" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1795833000" />
+    <option name="totallyTimeSpent" value="1822369000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="24" width="1440" height="822" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5007153" side_tool="true" weight="0.32239658" />
       <window_info anchor="right" id="Maven Projects" order="10" weight="0.3297568" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info id="Capture Tool" order="7" />
-      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.3219858" />
+      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32193732" />
       <window_info id="Designer" order="2" />
       <window_info anchor="right" id="Database" order="6" weight="0.3297568" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32905984" />
       <window_info anchor="right" id="SvgViewer" order="9" weight="0.3297568" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.4985694" visible="true" weight="0.6994302" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4985694" weight="0.6994302" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4985694" weight="0.5868946" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21888413" />
-      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2638298" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4985694" visible="true" weight="0.4871795" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21888413" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.26353276" />
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -904,6 +1238,42 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" id="Maven" order="11" />
+      <window_info id="Designer" order="2" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
+      <window_info id="Image Layers" order="3" />
+      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32193732" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4985694" weight="0.4871795" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info anchor="right" id="Capture Analysis" order="5" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5007153" side_tool="true" weight="0.32239658" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="right" x="0" y="0" width="310" height="625" id="Documentation" order="0" side_tool="true" weight="0.3297568" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info id="npm" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.4985694" weight="0.6994302" />
+      <window_info anchor="right" id="Maven Projects" order="10" weight="0.3297568" />
+      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.26353276" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21888413" />
+      <window_info anchor="right" id="Database" order="6" weight="0.3297568" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32905984" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="right" id="SvgViewer" order="9" weight="0.3297568" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -955,7 +1325,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk:&#10;- TKUIMapView context menu" />
     <MESSAGE value="Tripkit web sdk:&#10;- TKUISidebar" />
     <MESSAGE value="Tripkit web sdk:&#10;- Pass IProps to configProps" />
     <MESSAGE value="Tripkit web sdk:&#10;- improvement and cleanup of render and props override injection." />
@@ -980,7 +1349,8 @@
     <MESSAGE value="Tripkit web sdk: &#10;- Work on map dropdown menu on mobile." />
     <MESSAGE value="Tripkit web sdk: &#10;- work on current location" />
     <MESSAGE value="Tripkit web sdk: &#10;- work on showing user location on map (user location button)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: &#10;- work on showing user location on map (user location button)." />
+    <MESSAGE value="Tripkit web sdk: configure webpack to build as library." />
+    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: configure webpack to build as library." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -991,7 +1361,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/map/MapTripSegment.tsx</url>
-          <line>41</line>
+          <line>45</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
@@ -999,231 +1369,53 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/node_modules/react-responsive/src/index.js" />
-    <entry file="file://$PROJECT_DIR$/node_modules/@types/react/index.d.ts">
+    <entry file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="34" column="71" selection-start-line="34" selection-start-column="71" selection-end-line="34" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geocode/GeolocationData.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-app-rewired/scripts/build.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx">
+    <entry file="file://$PROJECT_DIR$/tsconfig.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="110" column="11" selection-start-line="110" selection-start-column="11" selection-end-line="110" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="390">
+          <caret line="26" column="12" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/card/TKUICardCarousel.tsx">
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
+        <state relative-caret-position="-25763" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
+    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/config/paths.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="702" column="48" selection-start-line="702" selection-start-column="48" selection-end-line="702" selection-end-column="48" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/options/TKUIProfileView.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="363" column="136" selection-start-line="363" selection-start-column="136" selection-end-line="363" selection-end-column="136" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="170">
+          <caret line="79" column="31" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="365" column="65" selection-start-line="365" selection-start-column="65" selection-end-line="365" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/action/TKUIShareAction.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="35" column="56" selection-start-line="35" selection-start-column="56" selection-end-line="35" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/TKUILocationSearch.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="141" column="65" selection-start-line="141" selection-start-column="65" selection-end-line="141" selection-end-column="65" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/0.dff97372.chunk.js" />
-    <entry file="file://$PROJECT_DIR$/index.d.ts" />
-    <entry file="file://$PROJECT_DIR$/public/manifest.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/embed.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-381" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="10" column="33" selection-start-line="10" selection-start-column="33" selection-end-line="10" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/map/TKUIMapLocationIcon.css.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-41" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/css/4.3a58ad21.chunk.css" />
-    <entry file="file://$PROJECT_DIR$/build/static/js/main.a5d7c208.chunk.js" />
-    <entry file="file://$PROJECT_DIR$/dist/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-636">
-          <caret line="1" column="26" selection-start-line="1" selection-start-column="26" selection-end-line="1" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="162" column="72" selection-start-line="162" selection-start-column="72" selection-end-line="162" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/webpack/package.json">
-      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" column="26" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
+          <caret line="7" column="65" lean-forward="true" selection-start-line="7" selection-end-line="7" selection-end-column="65" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/scripts/build.js">
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/TripPlannerDelete.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="62" column="24" selection-start-line="62" selection-start-column="24" selection-end-line="62" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/scripts/start.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="112" column="13" selection-start-line="112" selection-start-column="6" selection-end-line="112" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/config/paths.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-131">
-          <caret line="79" column="10" selection-start-line="79" selection-start-column="2" selection-end-line="79" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/@types/node/globals.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-555" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="52" column="18" selection-start-line="52" selection-start-column="18" selection-end-line="52" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/static/js/runtime~main.47b358de.js" />
-    <entry file="file://$PROJECT_DIR$/node_modules/customize-cra/dist/index.cjs.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/static/js/0.a64ecbac.chunk.js" />
-    <entry file="file://$PROJECT_DIR$/build/static/js/1.b58d36ac.chunk.js" />
-    <entry file="file://$PROJECT_DIR$/build/static/js/main.0c9d3fdd.js" />
-    <entry file="file://$PROJECT_DIR$/build/asset-manifest.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="26" selection-start-column="26" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-503">
-          <caret column="12" selection-start-column="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package-lock.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="2306" column="18" lean-forward="true" selection-start-line="2306" selection-start-column="18" selection-end-line="2306" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/api/TripGoApi.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-118">
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/rc-tooltip/dist/rc-tooltip.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-76856" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/@types/rc-tooltip/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="209" column="38" lean-forward="true" selection-start-line="209" selection-start-column="29" selection-end-line="209" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/static/js/main.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/config/webpack.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="105" column="32" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
-          <folding>
-            <element signature="e#14149#14333#0" />
-            <element signature="e#18173#18584#0" />
-            <element signature="e#24613#24689#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config-overrides.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="72" column="56" selection-start-line="72" selection-start-column="56" selection-end-line="72" selection-end-column="56" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
+        <state relative-caret-position="224">
+          <caret line="169" column="1" selection-start-line="169" selection-start-column="1" selection-end-line="169" selection-end-column="1" />
         </state>
       </provider>
     </entry>
@@ -1234,73 +1426,316 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/client-sample.tsx">
+    <entry file="file://$PROJECT_DIR$/src/trip/TransportUtil.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1332">
-          <caret line="8" column="41" selection-start-line="8" selection-end-line="8" selection-end-column="41" />
+        <state relative-caret-position="232">
+          <caret line="32" column="30" selection-start-line="32" selection-start-column="30" selection-end-line="32" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+    <entry file="file://$PROJECT_DIR$/dist/static/media/apple-store-logo.ffdf0298.svg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/StopIcon.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+        <state relative-caret-position="225">
+          <caret line="15" column="51" selection-start-line="15" selection-start-column="51" selection-end-line="15" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/Constants.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="33" column="41" selection-start-line="33" selection-start-column="41" selection-end-line="33" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/feedback/FeedbackBtn.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-dom/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="430">
+          <caret line="30" column="30" selection-start-line="30" selection-start-column="30" selection-end-line="30" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/node/globals.d.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="13351" column="24" lean-forward="true" selection-start-line="13341" selection-start-column="5" selection-end-line="13341" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/Util.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="59" selection-start-line="10" selection-start-column="59" selection-end-line="10" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-responsive/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="93">
+          <caret line="129" column="27" selection-start-line="129" selection-start-column="18" selection-end-line="129" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/react/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="101">
+          <caret line="111" column="12" selection-start-line="111" selection-start-column="9" selection-end-line="111" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/card/TKUICardCarousel.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="30" column="24" selection-start-line="30" selection-start-column="24" selection-end-line="30" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/react-responsive/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="53" column="6" selection-start-line="53" selection-start-column="6" selection-end-line="53" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/options/OptionsProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="40" selection-start-line="1" selection-start-column="24" selection-end-line="1" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-61">
+          <caret line="61" column="18" lean-forward="true" selection-start-line="61" selection-start-column="18" selection-end-line="61" selection-end-column="18" />
+          <folding>
+            <element signature="n#!!block;n#eslintConfig#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-830">
+          <caret line="1" column="2" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-scripts/config/webpack.config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="65" column="15" selection-start-line="65" selection-start-column="8" selection-end-line="65" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/qrcode.react/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="509">
+          <caret line="93" column="65" selection-start-line="93" selection-start-column="65" selection-end-line="93" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config-overrides.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="65">
+          <caret line="79" lean-forward="true" selection-start-line="79" selection-end-line="79" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/jss/StyleHelper.tsx">
+    <entry file="file://$PROJECT_DIR$/public/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="48" column="15" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="15" />
+        <state relative-caret-position="25">
+          <caret line="110" column="27" selection-start-line="110" selection-start-column="27" selection-end-line="110" selection-end-column="27" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/src/css/app.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-277">
-          <caret line="74" column="38" selection-start-line="74" selection-start-column="38" selection-end-line="74" selection-end-column="38" />
+        <state relative-caret-position="210">
+          <caret line="14" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/css/global.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="333" column="33" selection-start-line="333" selection-start-column="33" selection-end-line="333" selection-end-column="33" />
           <folding>
-            <element signature="n#!!block;n#dependencies#0;n#!!top" />
-            <element signature="n#!!block;n#eslintConfig#0;n#!!top" />
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tsconfig.json">
+    <entry file="file://$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+        <state>
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/tripgo-sample.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-713" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIRealtimeVehicle.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="911">
+          <caret line="72" column="15" selection-start-line="72" selection-start-column="15" selection-end-line="72" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapLocationIcon.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-37">
+          <caret line="33" column="29" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapLocationIcon.css.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/jss/StyleHelper.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="58">
+          <caret line="27" column="17" selection-start-line="27" selection-start-column="17" selection-end-line="27" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/config/TKConfigHelper.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="8" column="57" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
+        <state relative-caret-position="395">
+          <caret line="34" column="38" lean-forward="true" selection-start-line="33" selection-start-column="12" selection-end-line="34" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/TKUIResponsiveUtil.tsx">
+    <entry file="file://$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
+        <state relative-caret-position="105">
+          <caret line="7" column="56" lean-forward="true" selection-start-line="7" selection-start-column="56" selection-end-line="7" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/TKUIViewportUtil.tsx">
+    <entry file="file://$PROJECT_DIR$/src/example/client-sample.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="10" lean-forward="true" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+        <state relative-caret-position="439">
+          <caret line="116" column="13" lean-forward="true" selection-start-line="116" selection-end-line="116" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+    <entry file="file://$PROJECT_DIR$/src/map/MapTripSegment.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="53">
-          <caret line="39" column="19" selection-start-line="39" selection-start-column="19" selection-end-line="39" selection-end-column="19" />
+        <state relative-caret-position="1102">
+          <caret line="74" column="68" selection-start-line="74" selection-start-column="68" selection-end-line="74" selection-end-column="68" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="631" column="40" lean-forward="true" selection-start-line="630" selection-start-column="12" selection-end-line="631" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKUIProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="11" column="23" lean-forward="true" selection-start-line="11" selection-start-column="23" selection-end-line="11" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/3.chunk.js.map">
+      <provider selected="true" editor-type-id="text-editor" />
+      <provider editor-type-id="sourcemapFileViewerProvider" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="63" column="22" selection-start-line="63" selection-start-column="12" selection-end-line="63" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/tripgo-sample.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="44" lean-forward="true" selection-start-line="2" selection-start-column="44" selection-end-line="2" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

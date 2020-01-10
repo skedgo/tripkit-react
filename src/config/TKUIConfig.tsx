@@ -29,7 +29,11 @@ import {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "../map/TKUIMap
 import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKUIMyLocationMapIcon";
 import {TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle} from "../map/TKUIRealtimeVehicle";
 
-export interface ITKUIConfigRequired {
+interface ITKUIConfigRequired {
+    apiKey: string;
+}
+
+interface ITKUIConfigOptional {
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
@@ -57,7 +61,7 @@ export interface ITKUIConfigRequired {
     TKUIRealtimeVehicle: TKComponentConfig<TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle>;
 }
 
-export type TKUIConfig = Partial<ITKUIConfigRequired>
+export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
 
 export interface TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
     render: (props: P) => JSX.Element;

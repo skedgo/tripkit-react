@@ -36,15 +36,27 @@
 //
 // module.exports = exports;
 
+const path = require('path');
+const fs = require('fs');
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+
 module.exports = {
+    paths: function(paths, env) {
+        // ...add your paths config
+        paths.appBuild = resolveApp('dist');
+        return paths;
+    },
     webpack: function (config, env) {
         if (env === "production") {
             //JS Overrides
-            config.output.filename = 'static/js/[name].js';
-            config.output.chunkFilename = 'static/js/[name].chunk.js';
+            // config.output.filename = 'static/js/[name].js';
+            // config.output.chunkFilename = 'static/js/[name].chunk.js';
+            config.output.filename = 'index.js';
+            config.output.chunkFilename = '[name].chunk.js';
 
             //CSS Overrides
-            config.plugins[4].options.filename = 'static/css/[name].css';
+            config.plugins[4].options.filename = 'index.css';
 
             //Media and Assets Overrides
             // config.module.rules[1].oneOf[0].options.name = 'static/media/[name].[ext]';
@@ -57,6 +69,14 @@ module.exports = {
              * config.module.rules[1].oneOf[3].options.name = 'static/media/[name].[ext]';
              * config.module.rules[1].oneOf[3].options.publicPath = '/public/assets/';
              */
+
+            // console.log(config.externals);
+
+            // config.externals = {
+            //     react: 'react'
+            // };
+
+            // console.log(config.externals);
 
         }
 

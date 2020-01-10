@@ -91,13 +91,13 @@
                     })
                     .catch(function () {
                         // Permission API is not supported
-                        return this.tKRequestIPLocation();
+                        return tKRequestIPLocation();
                     });
-                // return this.requestCurrentLocationGMaps();
+                // return requestCurrentLocationGMaps();
             }
-            return this.tKRequestCurrentLocationHTML5()
+            return tKRequestCurrentLocationHTML5()
                 .catch(function () {
-                    return this.tKRequestIPLocation();
+                    return tKRequestIPLocation();
                 });
         }
 

@@ -1,7 +1,7 @@
 import LatLng from "../model/LatLng";
 import iplocation from "iplocation";
-import Util from "../util/Util";
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import {tKRequestCurrentLocation} from "../util/GeolocationUtil";
 
 class GeolocationData {
 
@@ -85,7 +85,7 @@ class GeolocationData {
     // }
 
     public requestCurrentLocation(dontAskUser?: boolean): Promise<LatLng> {
-        return Util.global.tKRequestCurrentLocation(dontAskUser)
+        return tKRequestCurrentLocation(dontAskUser)
             .then((userLocation: [number, number]) =>
                 LatLng.createLatLng(userLocation[0], userLocation[1])
             );

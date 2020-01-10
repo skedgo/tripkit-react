@@ -45,6 +45,14 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
 
 
     const config: TKUIConfig = {
+        apiKey: '',
+        TKUIMapLocationIcon: {
+            styles: {
+                main: {
+                    background: 'red'
+                }
+            }
+        }
         // theme: {
         //     colorPrimary: 'rgba(2, 66, 172)',
         //     colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'

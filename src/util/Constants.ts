@@ -31,7 +31,10 @@ class Constants {
     }
 
     public static absUrl(path: string): string {
-        return this.DEPLOY_URL + path;
+        // return this.DEPLOY_URL + path;
+        // Using tripkit.tripgo.com as static assets repository.
+        // TODO: avoid this.
+        return "https://tripkit.tripgo.com" + path;
     }
 
 }

@@ -1,7 +1,6 @@
 import * as React from "react";
-import Constants from "../util/Constants";
 import Tooltip from "rc-tooltip";
-import iconFeedback from "../images/ic-feedback.svg";
+import {ReactComponent as IconFeedback} from '../images/ic-feedback.svg';
 import copy from 'copy-to-clipboard';
 import OptionsData from "../data/OptionsData";
 import Util from "../util/Util";
@@ -43,7 +42,7 @@ class FeedbackBtn extends React.Component<IProps, IState> {
                 overlayClassName="TripPlanner-feedbackTooltip"
                 visible={this.state.feedbackTooltip}
             >
-                <img src={Constants.absUrl(iconFeedback)} className="TripPlanner-feedbackBtn"
+                <IconFeedback className="TripPlanner-feedbackBtn"
                      onClick={() => {
                          copy(this.getFeedback());
                          this.setState({feedbackTooltip: true});
