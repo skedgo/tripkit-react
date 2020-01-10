@@ -6,8 +6,19 @@ import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
 import TKUIConfigProvider from "./TKUIConfigProvider";
 import RoutingQuery from "../model/RoutingQuery";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
+import TripGoApi from "../api/TripGoApi";
 
-class TKUIProvider extends React.Component<{config?: TKUIConfig, initQuery?: RoutingQuery},{}> {
+interface IProps {
+    config: TKUIConfig;
+    initQuery?: RoutingQuery;
+}
+
+class TKUIProvider extends React.Component<IProps,{}> {
+
+    constructor(props: IProps) {
+        super(props);
+        TripGoApi.apiKey = props.config.apiKey;
+    }
 
     public render(): React.ReactNode {
         return (
@@ -15,7 +26,7 @@ class TKUIProvider extends React.Component<{config?: TKUIConfig, initQuery?: Rou
                 <OptionsProvider>
                     <OptionsContext.Consumer>
                         {(optionsContext: IOptionsContext) => (
-                            <RoutingResultsProvider initQuery={this.props.initQuery} options={optionsContext.value}
+                            <RoutingResultsProvider initQuery={this.props.initQuery} options={optionsContext && optionsContext.value}
                                 // testTrips={testTrips}
                             >
                                 <ServiceResultsProvider>

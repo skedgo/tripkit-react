@@ -45,6 +45,7 @@ import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {MapLocationType} from "../model/location/MapLocationType";
 import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
+import GeolocationData from "../geocode/GeolocationData";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -131,16 +132,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTimetable: false
         };
 
-        // TODO: re-enable
-        // Util.global.tKUserLocationPromise.then((userLocation: [number, number]) => {
+        GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
             // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
             // on shared links.
-            // if (!this.props.query.isEmpty()) {
-            //     return;
-            // }
-            // const initViewport = {center: LatLng.createLatLng(userLocation[0], userLocation[1]), zoom: 13};
-            // this.props.onViewportChange(initViewport);
-        // });
+            if (!this.props.query.isEmpty()) {
+                return;
+            }
+            const initViewport = {center: userLocation, zoom: 13};
+            this.props.onViewportChange(initViewport);
+        });
 
         WaiAriaUtil.addTabbingDetection();
 
@@ -331,6 +331,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         return (
             <div id="mv-main-panel"
                  className={classNames(classes.main,
+                     "app-style",
                      "mainViewPanel TripPlanner" +
                  (this.props.trips ? " TripPlanner-tripsView" : " TripPlanner-noTripsView") +
                  (this.state.mapView ? " TripPlanner-mapView" : " TripPlanner-noMapView") +
