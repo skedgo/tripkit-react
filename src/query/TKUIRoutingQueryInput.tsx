@@ -1,5 +1,4 @@
 import * as React from "react";
-import "./QueryInputDelete.css";
 import LocationBox from "../location_box/LocationBox";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
@@ -12,7 +11,7 @@ import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import Util from "../util/Util";
 import 'rc-tooltip/assets/bootstrap_white.css';
-import DateTimePicker from "../time/DateTimePicker";
+import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
@@ -98,7 +97,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private geocodingDataFrom: MultiGeocoder;
     private geocodingDataTo: MultiGeocoder;
-    private dateTimePickerRef: any;
     private fromLocRef: any;
     private toLocRef: any;
 
@@ -294,7 +292,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 </div>
                 {this.props.landscape &&
                     <div
-                        className={classes.footer + " QueryInput-timeBtnPanel gl-flex gl-align-center gl-space-between"}>
+                        className={classes.footer}>
                         <Select
                             options={timePrefOptions}
                             value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
@@ -313,7 +311,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             // menuIsOpen={true}
                         />
                         {routingQuery.timePref !== TimePreference.NOW &&
-                        <DateTimePicker     // Switch rotingQuery.time to region timezone.
+                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                             value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
                             onChange={(date: Moment) => {
                                 this.updateQuery({time: date});
@@ -324,7 +322,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             timeFormat={DateTimeUtil.TIME_FORMAT}
                             dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                             disabled={datePickerDisabled}
-                            ref={(el: any) => this.dateTimePickerRef = el}
                         />
                         }
                         {this.props.onShowOptions &&

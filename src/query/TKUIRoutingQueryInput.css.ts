@@ -90,6 +90,9 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,
             padding: '0 5px 0 15px',
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...genStyles.spaceBetween,
             '& input': {
                 border: 'none',
                 background: 'initial',

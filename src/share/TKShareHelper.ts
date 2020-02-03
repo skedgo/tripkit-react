@@ -5,6 +5,10 @@ import Segment from "../model/trip/Segment";
 import Location from "../model/Location";
 import Constants from "../util/Constants";
 import ServiceDeparture from "../model/service/ServiceDeparture";
+import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
+import LatLng from "../model/LatLng";
+import DateTimeUtil from "../util/DateTimeUtil";
+import * as queryString from "query-string";
 
 class TKShareHelper {
 
@@ -26,6 +30,23 @@ class TKShareHelper {
     public static isSharedServiceLink(): boolean {
         const shareLinkPath = document.location.pathname;
         return shareLinkPath.startsWith("/service");
+    }
+
+    public static getSharedQueryURL(): RoutingQuery | undefined {
+        const searchStr = window.location.search;
+        const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
+        let routingQuery: RoutingQuery | undefined;
+        if (queryMap && queryMap.flat) {
+            routingQuery = RoutingQuery.create(
+                Location.create(LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)),
+                    queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc),
+                Location.create(LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)),
+                    queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc),
+                queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
+                queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000)
+            )
+        }
+        return routingQuery;
     }
 
     public static getShareArrival(trip: Trip): string {
