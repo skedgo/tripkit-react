@@ -29,8 +29,9 @@ class Location extends LatLng {
         instance._id = id;
         instance.source = source;
         // TODO: timezone is required when coming from tripgo api endpoints. Ensure it's also properly set
-        // when created client-side. Now it may be "".
-        const region = RegionsData.instance.getRegion(latlng);
+        // when created client-side. Now it may be "". Check if it's initialized to avoid requesting regions
+        // prematurely, before api key was set.
+        const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
         instance.timezone = region ? region.timezone : "";
         return instance;
     }

@@ -4,8 +4,12 @@ import {Moment} from "moment";
 import DatePicker from 'react-datepicker';
 import DateTimeHTML5Input from "./DateTimeHTML5Input";
 import DateTimeUtil from "../util/DateTimeUtil";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {tKUIDateTimePickerDefaultStyle} from "./TKUIDateTimePicker.css";
 
-interface IProps {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Moment;
     onChange?: (value: Moment) => void;
     disabled?: boolean;
@@ -15,7 +19,25 @@ interface IProps {
     onClose?: () => void;
 }
 
-class DateTimePicker extends React.Component<IProps, {}> {
+export interface IStyle {
+    calendarPopper: CSSProps<IProps>;
+    calendar: CSSProps<IProps>;
+}
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
+
+}
+
+export type TKUIDateTimePickerProps = IProps;
+export type TKUIDateTimePickerStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIDateTimePicker {...props}/>,
+    styles: tKUIDateTimePickerDefaultStyle,
+    classNamePrefix: "TKUIDateTimePicker"
+};
+
+class TKUIDateTimePicker extends React.Component<IProps, {}> {
 
     private datePickerRef: any;
     private dateTimeHTML5Ref: any;
@@ -62,6 +84,7 @@ class DateTimePicker extends React.Component<IProps, {}> {
         // react-datepicker is timezone agnostic, and it parses dates in browser local timezone.
         // Switch to browser local timezone while preserving "display" date, so we avoid inconsistencies.
         const displayValue = DateTimeUtil.moment(this.props.value.format(this.props.dateFormat), this.props.dateFormat);
+        const classes = this.props.classes;
         return (DeviceUtil.isDesktop || (DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX)) ?
             <DatePicker
                 selected={displayValue}
@@ -88,7 +111,8 @@ class DateTimePicker extends React.Component<IProps, {}> {
                 showTimeSelect={true}
                 timeFormat={this.props.timeFormat}
                 dateFormat={this.props.dateFormat}
-                calendarClassName="QueryInput-calendar"
+                popperClassName={classes.calendarPopper}
+                calendarClassName={classes.calendar}
                 disabled={this.props.disabled}
                 preventOpenOnFocus={true}   // prevents calendar re-opening after picking time
                 ref={(el: any) => this.datePickerRef = el}
@@ -123,4 +147,5 @@ class DateTimePicker extends React.Component<IProps, {}> {
 
 }
 
-export default DateTimePicker;
+export default connect((config: TKUIConfig) => config.TKUIDateTimePicker, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

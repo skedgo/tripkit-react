@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Moment} from "moment";
 import DateTimeUtil from "../util/DateTimeUtil";
-import DateTimePicker from "./DateTimePicker";
+import TKUIDateTimePicker from "./TKUIDateTimePicker";
 import "./DateTimePickerFace.css";
 import {default as DeviceUtil} from "../util/DeviceUtil";
 import {default as moment} from 'moment-timezone';
@@ -65,7 +65,7 @@ class DateTimePickerFace extends React.Component<IProps, IState> {
             <div className={classNames("DateTimePickerFace", this.state.textInput ? "DateTimePickerFace-textInput" : "DateTimePickerFace-face")}>
                 {this.props.renderFaceButton(this.props.value, this.onFaceClick, this.onFaceClick)}
                 <div className="DateTimePickerFace-hidden">
-                    <DateTimePicker
+                    <TKUIDateTimePicker
                         value={this.props.value}
                         onChange={(value: Moment) => {
                             if (this.props.onChange) {
@@ -79,7 +79,8 @@ class DateTimePickerFace extends React.Component<IProps, IState> {
                         }}
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
-                        ref={(el: any) => this.dateTimePickerRef = el}
+                        // TODO: re-enable next line
+                        // ref={(el: any) => this.dateTimePickerRef = el}
                         onClose={() => {
                             this.setState({textInput: false});
                         }}

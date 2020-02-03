@@ -48,6 +48,10 @@ export class RegionsData {
         return this._instance;
     }
 
+    public static isInitialized(): boolean {
+        return !!this._instance;
+    }
+
     public hasRegions(): boolean {
         return this.regions !== undefined;
     }

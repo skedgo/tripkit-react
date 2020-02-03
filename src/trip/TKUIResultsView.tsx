@@ -18,7 +18,7 @@ import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import DateTimeUtil from "../util/DateTimeUtil";
-import DateTimePicker from "../time/DateTimePicker";
+import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import Tooltip from "rc-tooltip";
@@ -92,8 +92,6 @@ interface IState {
 class TKUIResultsView extends React.Component<IProps, IState> {
 
     private rowRefs: any[] = [];
-    private justFocused: boolean = false;
-    private dateTimePickerRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -190,7 +188,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         // menuIsOpen={true}
                     />
                     {routingQuery.timePref !== TimePreference.NOW &&
-                    <DateTimePicker     // Switch rotingQuery.time to region timezone.
+                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                         value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
                         onChange={(date: Moment) => {
                             this.updateQuery({time: date});
@@ -201,7 +199,6 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                         disabled={datePickerDisabled}
-                        ref={(el: any) => this.dateTimePickerRef = el}
                     />
                     }
                     {this.props.onShowOptions &&

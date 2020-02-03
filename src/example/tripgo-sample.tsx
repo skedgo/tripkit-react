@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {TKUITripPlanner, TKUIProvider, TKUIConfig} from '../index';
+import {TKUITripPlanner, TKUIProvider, TKUIConfig, TKShareHelper} from '../index';
 
 
 const config: TKUIConfig = {
-    apiKey: '790892d5eae024712cfd8616496d7317'
+    apiKey: 'xxx'
 };
 
+const urlQuery = TKShareHelper.getSharedQueryURL();
+
 ReactDOM.render(
-    <TKUIProvider config={config}>
+    <TKUIProvider config={config} initQuery={urlQuery}>
         <TKUITripPlanner/>
     </TKUIProvider>, document.getElementById("tripgo-sample-root"));

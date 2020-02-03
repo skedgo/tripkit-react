@@ -69,25 +69,25 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   box-shadow: 0 0 14px white;
 }
 
-.app-style .App button.QueryInput-continueBtn:focus {
-  outline-color: #d693ff; /* White glow on dark background */
-  -webkit-box-shadow: 0 0 20px #d693ff; /* White glow on dark background */
--moz-box-shadow: 0 0 20px #d693ff;
-  box-shadow: 0 0 20px #d693ff;
-}
+/*.app-style .App button.QueryInput-continueBtn:focus {*/
+  /*outline-color: #d693ff; !* White glow on dark background *!*/
+  /*-webkit-box-shadow: 0 0 20px #d693ff; !* White glow on dark background *!*/
+/*-moz-box-shadow: 0 0 20px #d693ff;*/
+  /*box-shadow: 0 0 20px #d693ff;*/
+/*}*/
 
-.app-style .TripPlanner-queryInput .QueryInput-timePanel input[type=text]:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel textarea:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel select:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel button:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel a:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel svg:focus,
-.app-style .TripPlanner-queryInput .QueryInput-timePanel div:focus {
-  outline-color: #024dff;
-  -webkit-box-shadow: 0 0 14px #024dff; /* Restore blue glow on light background */
-  -moz-box-shadow: 0 0 14px #024dff;
-  box-shadow: 0 0 14px #024dff;
-}
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel input[type=text]:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel textarea:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel select:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel button:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel a:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel svg:focus,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel div:focus {*/
+  /*outline-color: #024dff;*/
+  /*-webkit-box-shadow: 0 0 14px #024dff; !* Restore blue glow on light background *!*/
+  /*-moz-box-shadow: 0 0 14px #024dff;*/
+  /*box-shadow: 0 0 14px #024dff;*/
+/*}*/
 
 .app-style button.QueryInput-timePrefBtn:focus {
   z-index: 1;
@@ -310,33 +310,33 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   text-decoration: underline;
 }
 
-.app-style .QueryInput-timeCalPanel input {
-  border: none;
-  padding: 10px;
-  /* Safari - iOS */
-  background: white;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
-  box-shadow: none;
-  -webkit-appearance: none;
-  -webkit-border-radius:0;
-  border-radius:0;
-  margin: unset;
-  height: unset;
-  line-height: normal;
-}
+/*.app-style .QueryInput-timeCalPanel input {*/
+  /*border: none;*/
+  /*padding: 10px;*/
+  /*!* Safari - iOS *!*/
+  /*background: white;*/
+  /*-webkit-box-shadow: none;*/
+  /*-moz-box-shadow: none;*/
+  /*box-shadow: none;*/
+  /*-webkit-appearance: none;*/
+  /*-webkit-border-radius:0;*/
+  /*border-radius:0;*/
+  /*margin: unset;*/
+  /*height: unset;*/
+  /*line-height: normal;*/
+/*}*/
 
-.app-style .TripPlanner-queryInput .QueryInput-timePanel,
-.app-style .TripPlanner-queryInput .QueryInput-timePrefPanel button {
-  background-color: white;
-  color: black;
-}
+/*.app-style .TripPlanner-queryInput .QueryInput-timePanel,*/
+/*.app-style .TripPlanner-queryInput .QueryInput-timePrefPanel button {*/
+  /*background-color: white;*/
+  /*color: black;*/
+/*}*/
 
-.app-style button.QueryInput-iconCalPanel {
-  background-color: #0242ac;
-  width: 50px;
-  cursor: pointer;
-}
+/*.app-style button.QueryInput-iconCalPanel {*/
+  /*background-color: #0242ac;*/
+  /*width: 50px;*/
+  /*cursor: pointer;*/
+/*}*/
 
 .app-style button.QueryInput-timePrefBtn {
   padding: 10px 0;
@@ -350,9 +350,9 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   border-bottom: 3px solid #273038;
 }
 
-.app-style .QueryInput-timeCalPanel.disabled input {
-  background-color: #eae8e8;
-}
+/*.app-style .QueryInput-timeCalPanel.disabled input {*/
+  /*background-color: #eae8e8;*/
+/*}*/
 
 .app-style button.App-favMoreBtn {
   background: none;
@@ -378,18 +378,18 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   font-size: 13px;
 }
 
-.app-style .QueryInput-calendar button.react-datepicker__navigation {
-  top: 14px;
-  border: .40rem solid transparent;
-}
+/*.app-style .QueryInput-calendar button.react-datepicker__navigation {*/
+  /*top: 14px;*/
+  /*border: .40rem solid transparent;*/
+/*}*/
 
-.app-style .QueryInput-calendar button.react-datepicker__navigation--next {
-  border-left-color: #0242ac;
-}
+/*.app-style .QueryInput-calendar button.react-datepicker__navigation--next {*/
+  /*border-left-color: #0242ac;*/
+/*}*/
 
-.app-style .QueryInput-calendar button.react-datepicker__navigation--previous {
-  border-right-color: #0242ac;
-}
+/*.app-style .QueryInput-calendar button.react-datepicker__navigation--previous {*/
+  /*border-right-color: #0242ac;*/
+/*}*/
 
 .app-style .react-datepicker__time-container {
   width: 80px;
