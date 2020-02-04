@@ -1,10 +1,8 @@
 import * as React from "react";
 import Util from "../util/Util";
-import "./TKUIProfileViewDelete.css";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
 import ModeIdentifier from "../model/region/ModeIdentifier";
-import TransportUtil from "../trip/TransportUtil";
 import Checkbox from "../buttons/Checkbox";
 import Color from "../model/trip/Color";
 import {MapLocationType} from "../model/location/MapLocationType";
@@ -38,7 +36,12 @@ export interface IStyle {
     scrollPanel: CSSProps<IProps>;
     section: CSSProps<IProps>;
     sectionTitle: CSSProps<IProps>;
-    headerSeparation: CSSProps<IProps>;
+    specialServices: CSSProps<IProps>;
+    icon: CSSProps<IProps>;
+    infoIcon: CSSProps<IProps>;
+    tooltip: CSSProps<IProps>;
+    tooltipOverlay: CSSProps<IProps>;
+    checkboxGroup: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -54,7 +57,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 interface IState {
     update: TKUserProfile;
-    schools?: string[];
     schoolModeId?: ModeIdentifier;
     pickSchoolError: boolean;
 }
@@ -217,27 +219,28 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             <div className={classes.sectionTitle} tabIndex={0}>
                                 Special Services
                             </div>
-                            <div className="OptionsView-special-services gl-flex gl-space-around">
-                                <div className="gl-flex gl-align-center">
+                            <div className={classes.specialServices}>
+                                <div>
                                     <img src={Constants.absUrl("/images/modeicons/ic-wheelchair.svg")}
-                                         className="gl-charSpace OptionsView-icon OptionsView-onDark gl-no-shrink"
+                                         className={classes.icon}
                                          style={{
-                                             border: "1px solid grey"
+                                             border: "1px solid grey",
+                                             padding: '3px'
                                          }}
                                          aria-hidden={true}
                                     />
                                     <Tooltip
                                         placement="top"
                                         overlay={
-                                            <div className="OptionsView-tooltip">
+                                            <div className={classes.tooltip}>
                                                 Choosing this option will only display services with wheelchair accessibility.
                                             </div>
                                         }
                                         align={{offset: [0, -10]}}
-                                        overlayClassName="app-style OptionsView-tooltip"
+                                        overlayClassName={classes.tooltipOverlay}
                                         mouseEnterDelay={.5}
                                     >
-                                        <div className="gl-flex gl-align-center">
+                                        <div className={classes.checkboxGroup}>
                                             <Checkbox id="ss-wa"
                                                       checked={this.state.update.wheelchair}
                                                       onChange={(checked: boolean) => this.onWheelchairChange(checked)}
@@ -246,24 +249,26 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                                 Wheelchair Accessible
                                             </label>
                                             <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                                 className="OptionsView-infoIcon"/>
+                                                 className={classes.infoIcon}/>
                                         </div>
                                     </Tooltip>
                                 </div>
-                                <div className="gl-flex gl-align-center OptionsView-leftMargin">
-                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")} className="gl-charSpace gl-no-shrink" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
                                     <Tooltip
                                         placement="top"
                                         overlay={
-                                            <div className="OptionsView-tooltip">
+                                            <div className={classes.tooltip}>
                                                 Choosing this option will only display services with bike racks.
                                             </div>
                                         }
                                         align={{offset: [0, -10]}}
-                                        overlayClassName="app-style OptionsView-tooltip"
+                                        overlayClassName={classes.tooltipOverlay}
                                         mouseEnterDelay={.5}
                                     >
-                                        <div className="gl-flex gl-align-center">
+                                        <div className={classes.checkboxGroup}>
                                             <Checkbox id="ss-br"
                                                       checked={this.state.update.bikeRacks}
                                                       onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
@@ -272,30 +277,21 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                                 Bike Racks
                                             </label>
                                             <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                                 className="OptionsView-infoIcon"/>
+                                                 className={classes.infoIcon}/>
                                         </div>
                                     </Tooltip>
                                 </div>
-                                { this.state.schools && schoolModeId ?
-                                    <div className="OptionsView-schoolBusPanel gl-flex gl-align-center OptionsView-leftMargin gl-no-shrink">
-                                        <img src={TransportUtil.getTransportIconModeId(schoolModeId, false, false)}
-                                             className={"OptionsView-icon gl-no-shrink"}
-                                             style={{
-                                                 border: "1px solid " + TransportUtil.getTransportColorByIconS(TransportUtil.modeIdToIconS(schoolModeId.identifier)),
-                                             }}
-                                             aria-hidden="true"
-                                        />
-                                    </div> : null
-                                }
                             </div>
                         </div>
                         <div className={classes.section}>
                             <div className={classes.sectionTitle} tabIndex={0}>
                                 Map Options
                             </div>
-                            <div className="OptionsView-map-options gl-flex gl-space-around">
-                                <div className="gl-flex gl-align-center">
-                                    <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                            <div className={classes.specialServices}>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
                                     <Checkbox id="mo-mw"
                                               checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}
                                               onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}
@@ -304,8 +300,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         MyWay retailers
                                     </label>
                                 </div>
-                                <div className="gl-flex gl-align-center">
-                                    <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")} className="gl-charSpace" style={{width: "36px", height: "36px"}} aria-hidden="true"/>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
                                     <Checkbox id="mo-pr"
                                               checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}
                                               onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}
@@ -314,22 +312,24 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         Park & Ride
                                     </label>
                                 </div>
-                                <div className="gl-flex gl-align-center">
-                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")} className="gl-charSpace" style={{width: "24px", height: "24px"}} aria-hidden="true"/>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
                                     <Tooltip
                                         placement="top"
                                         overlay={
-                                            <div className="OptionsView-tooltip">
+                                            <div className={classes.tooltip}>
                                                 This option displays bike share locations. Check current
                                                 availability <a href="https://airbike.network/#download" target="_blank"
                                                                 className="gl-link">here</a>.
                                             </div>
                                         }
                                         align={{offset: [0, -10]}}
-                                        overlayClassName="app-style OptionsView-tooltip"
+                                        overlayClassName={classes.tooltipOverlay}
                                         mouseEnterDelay={.5}
                                     >
-                                        <div className="gl-flex gl-align-center">
+                                        <div className={classes.checkboxGroup}>
                                             <Checkbox id="mo-bs" checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
                                                       onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}
                                                       ariaLabelledby={"label-mo-bs"}/>
@@ -337,7 +337,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                                 Bike Share
                                             </label>
                                             <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                                 className="OptionsView-infoIcon"/>
+                                                 className={classes.infoIcon}/>
                                         </div>
                                     </Tooltip>
                                 </div>
