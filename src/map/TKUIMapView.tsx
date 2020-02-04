@@ -15,7 +15,6 @@ import OptionsData from "../data/OptionsData";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
 import {Visibility} from "../model/trip/SegmentTemplate";
-import TransportPinIcon from "./TransportPinIcon";
 import {default as SegmentPopup} from "./SegmentPopup";
 import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
@@ -72,6 +71,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    leaflet: CSSProps<IProps>;
     menuPopup: CSSProps<IProps>;
     menuPopupContent: CSSProps<IProps>;
     menuPopupItem: CSSProps<IProps>;
@@ -83,6 +83,8 @@ export interface IStyle {
     currentLocBtn: CSSProps<IProps>;
     resolvingCurrLoc: CSSProps<IProps>;
     vehicle: CSSProps<IProps>;
+    segmentIconClassName: CSSProps<IProps>;
+    vehicleClassName: CSSProps<IProps>;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -119,7 +121,6 @@ interface IState {
 }
 
 export interface IMapSegmentRenderer {
-    renderPinIcon: () => JSX.Element;
     renderPopup?: () => JSX.Element;
     polylineOptions: PolylineProps | PolylineProps[];
     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;
@@ -256,7 +257,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
             (segment: Segment) => {
                 const color = segment.getColor();
                 return {
-                    renderPinIcon: () => TransportPinIcon.createForSegment(segment),
                     renderPopup: () => <SegmentPopup segment={segment}/>,
                     polylineOptions: segment.shapes ? this.shapesRenderer(segment.shapes, color) :
                         segment.streets ? this.streetsRenderer(segment.streets, segment.isBicycle() || segment.isWheelchair() ? null : color) : [],
@@ -277,7 +277,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     color = "black";
                 }
                 return {
-                    renderPinIcon: () => TransportPinIcon.createForService(service),
                     polylineOptions: service.serviceDetail && service.serviceDetail.shapes ?
                         this.shapesRenderer(service.serviceDetail.shapes, color) : [],
                     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
@@ -348,7 +347,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         return (
             <div className={classes.main}>
                 <RLMap
-                    className="map-canvas avoidVerticalScroll gl-flex gl-grow"
+                    className={classes.leaflet}
                     viewport={this.props.viewport}
                     // TODO: check I don't need to pass boundsOptios to fitBounds anymore
                     boundsOptions={paddingOptions}
@@ -405,7 +404,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     >
                         {this.getLocationPopup(this.currentLocation)}
                     </Marker>}
-                    {this.props.from && this.props.from.isResolved() &&
+                    {!this.props.trip && this.props.from && this.props.from.isResolved() &&
                     !(this.props.from.isCurrLoc() && this.state.userLocation) &&
                     <Marker position={this.props.from!}
                             icon={L.divIcon({
@@ -430,7 +429,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     >
                         {this.getLocationPopup(this.props.from!)}
                     </Marker>}
-                    {this.props.to && this.props.to.isResolved() && !service &&
+                    {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
                     <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
@@ -472,12 +471,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                                ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.onDragEnd ?
                                                    (latLng: LatLng) => this.props.onDragEnd!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                                                renderer={segmentRenderer(segment)}
+                                               segmentIconClassName={classes.segmentIconClassName}
+                                               vehicleClassName={classes.vehicleClassName}
                                                key={i}/>;
                     })}
                     {service &&
                     <MapService
                         serviceDeparture={service}
                         renderer={serviceRenderer(service)}
+                        segmentIconClassName={classes.segmentIconClassName}
                     />}
                     {service && service.realtimeVehicle &&
                     (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&

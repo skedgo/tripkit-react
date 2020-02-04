@@ -557,3 +557,11 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   -webkit-animation-fill-mode: both; /* Safari 4.0 - 8.0 */
   animation-fill-mode: both;  /* To properly work when alternatively adding & removing fade-in and fade-out styles */
 }
+
+.ReactModalPortal {
+  z-index: 1080;
+}
+
+.ReactModal__Overlay {
+  z-index: 1001;
+}

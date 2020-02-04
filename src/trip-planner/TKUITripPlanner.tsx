@@ -1,5 +1,4 @@
 import * as React from "react";
-import './TripPlannerDelete.css'
 import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
@@ -56,6 +55,9 @@ export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IS
 export interface IStyle {
     main: CSSProps<IProps>;
     queryPanel: CSSProps<IProps>;
+    mapMain: CSSProps<IProps>;
+    feedbackBtn: CSSProps<IProps>;
+    feedbackTooltipClassName: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -330,12 +332,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
         return (
             <div id="mv-main-panel"
-                 className={classNames(classes.main,
-                     "app-style",
-                     "mainViewPanel TripPlanner" +
-                 (this.props.trips ? " TripPlanner-tripsView" : " TripPlanner-noTripsView") +
-                 (this.state.mapView ? " TripPlanner-mapView" : " TripPlanner-noMapView") +
-                 (this.props.selected ? " TripPlanner-tripSelected" : " TripPlanner-noTripSelected"))}
+                 className={classNames(classes.main, "app-style")}
                  ref={el => this.ref = el}
             >
                 <div className={classNames(classes.queryPanel
@@ -346,7 +343,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     {searchBar}
                     {queryInput}
                 </div>
-                <div id="map-main" className="TripPlanner-mapMain avoidVerticalScroll gl-flex gl-grow gl-column">
+                <div id="map-main" className={classes.mapMain}>
                     <TKUIMapView
                         hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                         padding={mapPadding}
@@ -365,7 +362,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         />
                     </TKUIMapView>
                 </div>
-                <TKUIFeedbackBtn/>
+                <TKUIFeedbackBtn className={classes.feedbackBtn} tooltipClassName={classes.feedbackTooltipClassName}/>
                 {sideBar}
                 {settings}
                 {locationDetailView}
@@ -374,12 +371,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {tripDetailView}
                 {departuresView}
                 {serviceDetailView}
-                {/*<TKUISlideUp>*/}
-                    {/*<div style={{*/}
-                        {/*background: 'lightblue',*/}
-                        {/*...genStyles.grow*/}
-                    {/*}}/>*/}
-                {/*</TKUISlideUp>*/}
             </div>
         );
     }
@@ -395,7 +386,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     RegionsData.instance.requireRegions().then(() => {
                         this.props.onQueryUpdate({to: stop});
                         this.props.onStopChange(stop);
-                        // this.setState({showTimetable: true});
                         TKShareHelper.resetToHome();
                     }));
         }

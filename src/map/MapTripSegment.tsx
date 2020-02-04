@@ -12,37 +12,46 @@ import TKUIProvider from "../config/TKUIProvider";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {TKUITransportPin} from "./TKUITransportPin";
 
 interface IProps {
     segment: Segment;
     ondragend?: (latLng: LatLng) => void;
     renderer: IMapSegmentRenderer;
+    segmentIconClassName?: string;
+    vehicleClassName?: string;
 }
 
 class MapTripSegment extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.segment;
-        const transIconHTML = renderToStaticMarkup(this.props.renderer.renderPinIcon());
-        const icon = L.divIcon({
-            html: transIconHTML,
-            className: "MapTripSegment-icon-container" + (segment.isFirst(Visibility.IN_SUMMARY)? " firstSegment" : (segment.arrival ? " arriveSegment" : ""))
-        });
         return (
             <TKUIConfigContext.Consumer>
-                {(config: TKUIConfig) =>
-                    [<Marker icon={icon} position={segment.from} key={"pin"}
-                             draggable={this.props.ondragend !== undefined}
-                             riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
-                             ondragend={(event: L.DragEndEvent) => {
-                                 if (this.props.ondragend) {
-                                     const latLng = event.target.getLatLng();
-                                     this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
-                                 }
-                             }}
+                {(config: TKUIConfig) => {
+                    const transIconHTML = renderToStaticMarkup(
+                        <TKUIProvider config={config}>
+                            {TKUITransportPin.createForSegment(this.props.segment)}
+                        </TKUIProvider>
+                    );
+                    const icon = L.divIcon({
+                        html: transIconHTML,
+                        className: this.props.segmentIconClassName,
+                        iconSize: [40, 62],
+                        iconAnchor: [20, 62]
+                    });
+                    return [<Marker icon={icon} position={segment.from} key={"pin"}
+                                    draggable={this.props.ondragend !== undefined}
+                                    riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
+                                    ondragend={(event: L.DragEndEvent) => {
+                                        if (this.props.ondragend) {
+                                            const latLng = event.target.getLatLng();
+                                            this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
+                                        }
+                                    }}
                     >
-                        { this.props.renderer.renderPopup &&
-                        <Popup className={"MapTripSegment-popup"}
+                        {this.props.renderer.renderPopup &&
+                        <Popup offset={[0, -46]}
                                closeButton={false}
                         >
                             {this.props.renderer.renderPopup()}
@@ -82,14 +91,15 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                     ),
                                     iconSize: [40, 40],
                                     iconAnchor: [20, 20],
-                                    className: "MapTripSegment-vehicle"
+                                    className: this.props.vehicleClassName
                                 })}
                                 riseOnHover={true}
                         >
                             {segment.modeInfo && segment.serviceNumber &&
                             TKUIMapViewClass.getPopup(segment.realtimeVehicle, segment.modeInfo.alt + " " + segment.serviceNumber)}
                         </Marker>
-                    ]}
+                    ];
+                }}
             </TKUIConfigContext.Consumer>
         );
     }

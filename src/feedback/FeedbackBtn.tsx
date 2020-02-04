@@ -8,7 +8,14 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 
-interface IProps extends IRoutingResultsContext, IServiceResultsContext {}
+interface IClientProps {
+    className?: string;
+    tooltipClassName?: string;
+}
+
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext {}
+
+interface IProps extends IConsumedProps, IClientProps {}
 
 interface IState {
     feedbackTooltip: boolean;
@@ -39,10 +46,10 @@ class FeedbackBtn extends React.Component<IProps, IState> {
             <Tooltip
                 overlay={"Feedback info copied to clipboard"}
                 placement={"left"}
-                overlayClassName="TripPlanner-feedbackTooltip"
+                overlayClassName={this.props.tooltipClassName}
                 visible={this.state.feedbackTooltip}
             >
-                <IconFeedback className="TripPlanner-feedbackBtn"
+                <IconFeedback className={this.props.className}
                      onClick={() => {
                          copy(this.getFeedback());
                          this.setState({feedbackTooltip: true});
@@ -83,9 +90,9 @@ const Connector: React.SFC<{children: (props: IProps) => React.ReactNode}> = (pr
     );
 };
 
-const TKUIFeedbackBtn = (props: {}) =>
+const TKUIFeedbackBtn = (props: IClientProps) =>
     <Connector>
-        {(cProps: IProps) => <FeedbackBtn {...props} {...cProps}/>}
+        {(cProps: IConsumedProps) => <FeedbackBtn {...props} {...cProps}/>}
     </Connector>;
 
 export default TKUIFeedbackBtn;

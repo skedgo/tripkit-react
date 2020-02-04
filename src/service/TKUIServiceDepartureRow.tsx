@@ -2,7 +2,6 @@ import * as React from "react";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
-import "./TKUIServiceDepartureRowDelete.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import OptionsData from "../data/OptionsData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";

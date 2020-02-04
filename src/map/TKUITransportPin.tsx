@@ -1,5 +1,4 @@
 import * as React from "react";
-import "./TransportPinIcon.css";
 import {ReactComponent as IconPinHead} from "../images/ic-map-pin-head.svg";
 import {ReactComponent as IconPinHeadPointer} from "../images/ic-map-pin-head-pointer.svg";
 import iconPinBase from "../images/ic-map-pin-base.png";
@@ -9,14 +8,43 @@ import Constants from "../util/Constants";
 import TransportUtil from "../trip/TransportUtil";
 import ServiceShape from "../model/trip/ServiceShape";
 import ServiceDeparture from "../model/service/ServiceDeparture";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {tKUITransportPinDefaultStyle} from "./TKUITransportPin.css";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {Visibility} from "../model/trip/SegmentTemplate";
+import classNames from "classnames";
 
-export interface IProps {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     icon: string;
     label: string;
     rotation?: number;
+    firstSegment?: boolean;
+    arriveSegment?: boolean;
 }
 
-class TransportPinIcon extends React.Component<IProps, {}> {
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+interface IStyle {
+    main: CSSProps<IProps>;
+    pin: CSSProps<IProps>;
+    transport: CSSProps<IProps>;
+    timeLabel: CSSProps<IProps>;
+    base: CSSProps<IProps>;
+    firstSegment: CSSProps<IProps>;
+    arriveSegment: CSSProps<IProps>;
+}
+
+export type TKUITransportPinProps = IProps;
+export type TKUITransportPinStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITransportPin {...props}/>,
+    styles: tKUITransportPinDefaultStyle,
+    classNamePrefix: "TKUITransportPin"
+};
+
+class TKUITransportPin extends React.Component<IProps, {}> {
 
     public static createForSegment(segment: Segment) {
         const modeInfo = segment.modeInfo!;
@@ -27,7 +55,13 @@ class TransportPinIcon extends React.Component<IProps, {}> {
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, onDark);
         const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
-        return <TransportPinIcon icon={transIcon} label={timeS} rotation = {rotation}/>
+        return <TKUITransportPinConnected
+            icon={transIcon}
+            label={timeS}
+            rotation={rotation}
+            firstSegment={segment.isFirst(Visibility.IN_SUMMARY)}
+            arriveSegment={segment.arrival}
+        />
     }
 
     public static createForService(serviceDeparture: ServiceDeparture) {
@@ -39,34 +73,40 @@ class TransportPinIcon extends React.Component<IProps, {}> {
         const onDark = !modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined;
         const transIcon = TransportUtil.getTransportIcon(modeInfo, false, onDark);
         const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
-        return <TransportPinIcon icon={transIcon} label={timeS} rotation = {rotation}/>
+        return <TKUITransportPinConnected icon={transIcon} label={timeS} rotation = {rotation}/>
     }
 
     public render(): React.ReactNode {
         const rotation = this.props.rotation;
         const PinHead = rotation ? IconPinHeadPointer : IconPinHead;
+        const classes = this.props.classes;
         return (
-            <div className="gl-flex gl-column gl-align-center">
+            <div className={classNames(classes.main,
+                this.props.firstSegment && classes.firstSegment,
+                this.props.arriveSegment && classes.arriveSegment)}>
                 <div>
-                    <PinHead className={"TransportPinIcon-pin"}
+                    <PinHead className={classes.pin}
                              style={rotation ?
-                             {
-                                 transform: "rotate(" + rotation + "deg)",
-                                 WebkitTransform: "rotate(" + rotation + "deg)",
-                                 ['MsTransform' as any]: "rotate(" + rotation + "deg)",
-                                 ['MozTransform' as any]: "rotate(" + rotation + "deg)"
-                             } : undefined}
+                                 {
+                                     transform: "rotate(" + rotation + "deg)",
+                                     WebkitTransform: "rotate(" + rotation + "deg)",
+                                     ['MsTransform' as any]: "rotate(" + rotation + "deg)",
+                                     ['MozTransform' as any]: "rotate(" + rotation + "deg)"
+                                 } : undefined}
                              focusable="false"
                     />
-                    <img src={this.props.icon} className="TransportPinIcon-transport"/>
-                    <div className="TransportPinIcon-timeLabel">
+                    <img src={this.props.icon} className={classes.transport}/>
+                    <div className={classes.timeLabel}>
                         {this.props.label}
                     </div>
                 </div>
-                <img src={iconPinBase} className="TransportPinIcon-base"/>
+                <img src={iconPinBase} className={classes.base}/>
             </div>
         )
     }
 }
 
-export default TransportPinIcon;
+const TKUITransportPinConnected = connect((config: TKUIConfig) => config.TKUITransportPin, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export {TKUITransportPin}
