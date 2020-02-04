@@ -35,8 +35,10 @@ interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    scrollPanel: CSSProps<IProps>;
     section: CSSProps<IProps>;
     sectionTitle: CSSProps<IProps>;
+    headerSeparation: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -198,8 +200,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={() => this.close(false)}
             >
-                <div className={"OptionsView gl-flex gl-column"}>
-                    <div className="OptionsView-scrollPanel gl-scrollable-y">
+                <div className={classes.main}>
+                    <div className={classes.scrollPanel}>
                         <div className={classes.section}>
                             <div className={classes.sectionTitle}>
                                 My Priorities

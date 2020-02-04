@@ -18,6 +18,16 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
                 ...genStyles.borderRadius(12)
             }
         } as CSSProperties<TKUIMapViewProps>,
+        leaflet: {
+            ...genStyles.flex,
+            ...genStyles.grow,
+            overflowY: 'hidden!important',
+            padding: '0',
+            WebkitUserSelect: 'none', /* Safari 3.1+ */
+            MozUserSelect: 'none', /* Firefox 2+ */
+            MsUserSelect: 'none', /* IE 10+ */
+            userSelect: 'none' /* Standard syntax */
+        },
         menuPopup: {
             '& .leaflet-popup-content': {
                 margin: '0'
@@ -87,6 +97,18 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         vehicle: {
             ...{display: '-webkit-flex!important'},
             display: 'flex!important',
+            ...genStyles.alignCenter,
+            zIndex: '1000!important'
+        },
+        segmentIconClassName: {
+            zIndex: '1002!important',
+            outline: 'none!important',
+            '& div': {
+                outline: 'none!important'
+            }
+        },
+        vehicleClassName: {
+            ...genStyles.flex,
             ...genStyles.alignCenter,
             zIndex: '1000!important'
         }
