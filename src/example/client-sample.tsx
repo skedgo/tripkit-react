@@ -14,7 +14,6 @@ import {TKUITheme} from "../jss/TKUITheme";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUITripRowProps} from "../trip/TKUITripRow";
-import TKUIProvider from "../config/TKUIProvider";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
@@ -22,6 +21,7 @@ import {ReactComponent as IconLike} from "../images/badges/ic-badge-like.svg";
 import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "../trip/TKUITripOverviewView";
 import {TKUIWithClasses} from "../jss/StyleHelper";
 import {Subtract} from 'utility-types';
+import TKStateProvider from "../config/TKStateProvider";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -98,9 +98,9 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     };
 
     ReactDOM.render(
-        <TKUIProvider config={config} initQuery={routingQuery}>
+        <TKStateProvider config={config} initQuery={routingQuery}>
             <TKUITripPlanner/>
-        </TKUIProvider>,
+        </TKStateProvider>,
         containerElement);
 
     DeviceUtil.initCss();

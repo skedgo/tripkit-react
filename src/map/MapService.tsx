@@ -10,7 +10,7 @@ import {IMapSegmentRenderer} from "./TKUIMapView";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
-import TKUIProvider from "../config/TKUIProvider";
+import TKStateProvider from "../config/TKStateProvider";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;
@@ -29,9 +29,9 @@ class MapService extends React.Component<IProps, {}> {
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) => {
                     const transIconHTML = renderToStaticMarkup(
-                        <TKUIProvider config={config}>
+                        <TKStateProvider config={config}>
                             {TKUITransportPin.createForService(this.props.serviceDeparture)}
-                        </TKUIProvider>
+                        </TKStateProvider>
                     );
                     const icon = L.divIcon({
                         html: transIconHTML,

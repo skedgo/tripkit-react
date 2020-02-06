@@ -45,9 +45,19 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         feedbackBtn: {
             position: 'absolute',
             right: '10px',
-            bottom: '80px',
+            bottom: '120px',
             width: '25px',
             height: '25px',
+            opacity: '.5',
+            cursor: 'pointer',
+            zIndex: '1000'
+        },
+        reportBtn: {
+            position: 'absolute',
+            right: '10px',
+            bottom: '80px',
+            width: '30px',
+            height: '30px',
             opacity: '.5',
             cursor: 'pointer',
             zIndex: '1000'

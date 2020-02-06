@@ -32,6 +32,7 @@ import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "../time/TKUIDate
 import {TKUITransportPinProps, TKUITransportPinStyle} from "../map/TKUITransportPin";
 import LatLng from "../model/LatLng";
 import {TKUITooltipProps, TKUITooltipStyle} from "../card/TKUITooltip";
+import {TKState} from "./TKStateConsumer";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -40,6 +41,7 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     theme: Partial<TKUITheme>;
+    onReportProblem: (state: TKState) => void;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;

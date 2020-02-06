@@ -45,6 +45,9 @@ import {MapLocationType} from "../model/location/MapLocationType";
 import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
+import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {ReactComponent as IconReport} from '../images/icon-report.svg';
+import TKStateConsumer, {TKState} from "../config/TKStateConsumer";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -57,6 +60,7 @@ export interface IStyle {
     queryPanel: CSSProps<IProps>;
     mapMain: CSSProps<IProps>;
     feedbackBtn: CSSProps<IProps>;
+    reportBtn: CSSProps<IProps>;
     feedbackTooltipClassName: CSSProps<IProps>;
 }
 
@@ -288,7 +292,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             /> : null;
 
-        let tripDetailView;
+        let tripDetailView: any;
         if (this.state.showTripDetail && this.props.selected) {
             const sortedTrips = this.props.trips || [];
             const selected = sortedTrips.indexOf(this.props.selected);
@@ -332,47 +336,61 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // this.props.landscape ? {left: 500} :
         //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
         return (
-            <div id="mv-main-panel"
-                 className={classNames(classes.main, "app-style")}
-                 ref={el => this.ref = el}
-            >
-                <div className={classNames(classes.queryPanel
-                    // , "sg-animate-fade",
-                    // this.state.cardPosition === TKUISlideUpPosition.UP && !this.props.directionsView ? "out" : "in"
-                )}
-                >
-                    {searchBar}
-                    {queryInput}
-                </div>
-                <div id="map-main" className={classes.mapMain}>
-                    <TKUIMapView
-                        hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                        padding={mapPadding}
-                        onLocAction={(locType: MapLocationType, loc: Location) => {
-                            if (locType === MapLocationType.STOP) {
-                                this.props.onStopChange(loc as StopLocation);
-                                this.setState({showTimetable: true});
-                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                            }
-                        }}
+            <TKUIConfigContext.Consumer>
+                {(config: TKUIConfig) =>
+                    <div id="mv-main-panel"
+                         className={classNames(classes.main, "app-style")}
+                         ref={el => this.ref = el}
                     >
-                        <TileLayer
-                            attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                            // url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
-                            url="https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
-                        />
-                    </TKUIMapView>
-                </div>
-                <TKUIFeedbackBtn className={classes.feedbackBtn} tooltipClassName={classes.feedbackTooltipClassName}/>
-                {sideBar}
-                {settings}
-                {locationDetailView}
-                {favouritesView}
-                {routingResultsView}
-                {tripDetailView}
-                {departuresView}
-                {serviceDetailView}
-            </div>
+                        <div className={classNames(classes.queryPanel
+                            // , "sg-animate-fade",
+                            // this.state.cardPosition === TKUISlideUpPosition.UP && !this.props.directionsView ? "out" : "in"
+                        )}
+                        >
+                            {searchBar}
+                            {queryInput}
+                        </div>
+                        <div id="map-main" className={classes.mapMain}>
+                            <TKUIMapView
+                                hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                padding={mapPadding}
+                                onLocAction={(locType: MapLocationType, loc: Location) => {
+                                    if (locType === MapLocationType.STOP) {
+                                        this.props.onStopChange(loc as StopLocation);
+                                        this.setState({showTimetable: true});
+                                        FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                    }
+                                }}
+                            >
+                                <TileLayer
+                                    attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                                    // url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
+                                    url="https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
+                                />
+                            </TKUIMapView>
+                        </div>
+                        <TKUIFeedbackBtn className={classes.feedbackBtn}
+                                         tooltipClassName={classes.feedbackTooltipClassName}/>
+                        {config.onReportProblem &&
+                        <TKStateConsumer>
+                            {(state: TKState) =>
+                                <IconReport
+                                    className={classes.reportBtn}
+                                    onClick={() => config.onReportProblem!(state)}
+                                />
+                            }
+                        </TKStateConsumer>}
+                        {sideBar}
+                        {settings}
+                        {locationDetailView}
+                        {favouritesView}
+                        {routingResultsView}
+                        {tripDetailView}
+                        {departuresView}
+                        {serviceDetailView}
+                    </div>
+                }
+            </TKUIConfigContext.Consumer>
         );
     }
 
