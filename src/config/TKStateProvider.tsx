@@ -13,7 +13,7 @@ interface IProps {
     initQuery?: RoutingQuery;
 }
 
-class TKUIProvider extends React.Component<IProps,{}> {
+class TKStateProvider extends React.Component<IProps,{}> {
 
     constructor(props: IProps) {
         super(props);
@@ -47,4 +47,4 @@ class TKUIProvider extends React.Component<IProps,{}> {
 
 }
 
-export default TKUIProvider;
+export default TKStateProvider;

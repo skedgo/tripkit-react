@@ -45,7 +45,6 @@ import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUti
 import MapLocationPopup from "./MapLocationPopup";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
 import {withTheme} from "react-jss";
-import TKUIProvider from "../config/TKUIProvider";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";
@@ -54,6 +53,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import TKStateProvider from "../config/TKStateProvider";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -392,9 +392,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.state.userLocation}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIProvider config={this.props.config}>
+                                    <TKStateProvider config={this.props.config}>
                                         <TKUIMyLocationMapIcon/>
-                                    </TKUIProvider>
+                                    </TKStateProvider>
                                 ),
                                 iconSize: [20, 20],
                                 iconAnchor: [10, 10],
@@ -409,9 +409,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.from!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIProvider config={this.props.config}>
+                                    <TKStateProvider config={this.props.config}>
                                         <TKUIMapLocationIcon location={this.props.from!} from={true}/>
-                                    </TKUIProvider>
+                                    </TKStateProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
@@ -433,9 +433,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIProvider config={this.props.config}>
+                                    <TKStateProvider config={this.props.config}>
                                         <TKUIMapLocationIcon location={this.props.to!}/>
-                                    </TKUIProvider>
+                                    </TKStateProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
@@ -486,13 +486,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={service.realtimeVehicle.location}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKUIProvider config={this.props.config}>
+                                    <TKStateProvider config={this.props.config}>
                                         <TKUIRealtimeVehicle
                                             value={service.realtimeVehicle}
                                             label={service.serviceNumber}
                                             color={service.serviceColor}
                                         />
-                                    </TKUIProvider>
+                                    </TKStateProvider>
                                 ),
                                 iconSize: [40, 40],
                                 iconAnchor: [20, 20],
