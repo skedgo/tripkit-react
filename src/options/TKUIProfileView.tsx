@@ -4,7 +4,6 @@ import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import Checkbox from "../buttons/Checkbox";
-import Color from "../model/trip/Color";
 import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
@@ -61,12 +60,6 @@ interface IState {
     pickSchoolError: boolean;
 }
 
-enum JourneyPref {
-    FASTEST = "Fastest",
-    FEWEST_CHANGES = "Fewest changes",
-    LEAST_WALKING = "Least walking"
-}
-
 class TKUIProfileView extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
@@ -77,65 +70,11 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
-        this.onModeCheckboxChange = this.onModeCheckboxChange.bind(this);
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
-    }
-
-    private onModeCheckboxChange(mode: string, checked: boolean) {
-        this.setState(prevState => {
-            const modesDisabledUpdate = Object.assign([], prevState.update.modesDisabled);
-            const imode = modesDisabledUpdate.indexOf(mode);
-            if (checked) {
-                if (imode > -1) {
-                    modesDisabledUpdate.splice(imode, 1);
-                }
-            } else {
-                if (imode === -1) {
-                    modesDisabledUpdate.push(mode);
-                }
-            }
-
-            return {update: Util.iAssign(prevState.update, {modesDisabled: modesDisabledUpdate})}
-        });
-        if ((mode === "wa_wal" || mode === "cy_bic") && checked) {
-            this.onWheelchairChange(false);
-        }
-        if ((mode === ModeIdentifier.SCHOOLBUS_ID) && checked) {
-            this.onModeCheckboxChange("pt_pub_bus", true);
-        }
-        if ((mode === "pt_pub_bus") && !checked) {
-            this.onModeCheckboxChange(ModeIdentifier.SCHOOLBUS_ID, false);
-        }
-    }
-
-    private isChecked(pref: JourneyPref): boolean {
-        const prefs = this.state.update.weightingPrefs;
-        switch (pref) {
-            case JourneyPref.FASTEST:
-                return prefs.time === 2 && prefs.hassle === 1;
-            case JourneyPref.FEWEST_CHANGES:
-                return prefs.time === 1 && prefs.hassle === 2;
-            default:
-                return prefs.time === 2 && prefs.hassle === 0;
-        }
     }
 
     private onWheelchairChange(checked: boolean) {
         this.setState(prevState => ({update: Util.iAssign(prevState.update, {wheelchair: checked})}));
-        if (checked) {
-            this.onModeCheckboxChange("wa_wal", false);
-            this.onModeCheckboxChange("cy_bic", false);
-        }
-    }
-
-    private onBikeRacksChange(checked: boolean) {
-        if (checked) {
-            this.onModeCheckboxChange("pt_pub_bus", true);
-            this.onModeCheckboxChange("cy_bic", true);
-        } else {
-            this.onModeCheckboxChange("cy_bic", false);
-        }
-
     }
 
     private onMapOptionChange(option: MapLocationType, checked: boolean) {
@@ -164,33 +103,6 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 
     private checkValid(): boolean {
         return true;
-    }
-
-    public static skipMode(mode: string): boolean {     // TODO: hardcoded for TC
-        return (
-            mode.startsWith("me_car")
-            // && !mode.startsWith("me_car-r")  // Disabled car share.
-            )
-            || mode.startsWith("me_mot") || mode.startsWith("ps_tnc_ODB") || mode.startsWith("cy_bic-s")
-        // || mode.startsWith(ModeIdentifier.SCHOOLBUS_ID);
-        // || mode.startsWith("ps_tnc_UBER") || mode.startsWith("ps_tax");
-    }
-
-    public static getOptionsModeIds(region: Region): ModeIdentifier[] {
-        const result: ModeIdentifier[] = [];
-        for (const mode of region.modes) {
-            if (mode === "pt_pub") {
-                result.push(Object.assign(new ModeIdentifier(),
-                    {identifier: "pt_pub_bus", title: "Bus", icon: null, color: Object.assign(new Color(), {blue: 168, green: 93, red:1})}));
-                // Disable Tram
-                result.push(Object.assign(new ModeIdentifier(),
-                    {identifier: "pt_pub_tram", title: "Light Rail", icon: null, color: Object.assign(new Color(), {blue: 47, green: 33, red:208})}))
-                continue;
-            }
-            result.push(RegionsData.instance.getModeIdentifier(mode)!)
-        }
-        return result.filter((mode: ModeIdentifier) =>
-            !this.skipMode(mode.identifier));
     }
 
     public render(): React.ReactNode {
@@ -271,7 +183,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         <div className={classes.checkboxGroup}>
                                             <Checkbox id="ss-br"
                                                       checked={this.state.update.bikeRacks}
-                                                      onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
+                                                      // TODO: re-enable
+                                                      // onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
                                                       ariaLabelledby={"label-ss-br"}/>
                                             <label htmlFor="ss-br" id={"label-ss-br"}>
                                                 Bike Racks

@@ -74,7 +74,7 @@ class RoutingQuery {
     }
 
     public getGoUrl(plannerUrl?: string): string {
-        const goURL = (plannerUrl ? plannerUrl : "https://act.tripgo.com/?app=tripPlanner");
+        const goURL = (plannerUrl ? plannerUrl : "https://tripgo.com");
         if (this.from === null || this.to === null) {
             return goURL;
         }

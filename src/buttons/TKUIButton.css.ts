@@ -33,6 +33,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             '&:hover': {
                 backgroundColor: theme.colorPrimaryOpacity(.5)
             },
+            '&:disabled': {
+                backgroundColor: theme.colorPrimaryOpacity(.5),
+                cursor: 'initial'
+            },
             '&:active': {
                 backgroundColor: '#079541'
             },
@@ -44,6 +48,11 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             border: '2px solid ' + tKUIColors.black4,
             '&:hover': {
                 borderColor: tKUIColors.black2,
+            },
+            '&:disabled': {
+                borderColor: tKUIColors.black4,
+                opacity: '.7',
+                cursor: 'initial'
             },
             '&:active': {
                 borderColor: tKUIColors.black4,
