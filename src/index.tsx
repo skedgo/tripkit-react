@@ -20,7 +20,7 @@ export {default as RoutingQuery} from "./model/RoutingQuery";
 export {default as TKUserProfile} from "./model/options/TKUserProfile";
 export {RoutingResultsContext} from "./trip-planner/RoutingResultsProvider";
 export type IRoutingResultsContext = IRoutingResultsContextForExport;
-export {default as TKUI} from "./config/TKUI";
+export {default as TKRoot} from "./config/TKRoot";
 export type TKState = TKUIStateForExport;
 
 
