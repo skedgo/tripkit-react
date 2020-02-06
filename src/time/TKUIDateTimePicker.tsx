@@ -20,6 +20,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 export interface IStyle {
+    datePicker: CSSProps<IProps>;
     calendarPopper: CSSProps<IProps>;
     calendar: CSSProps<IProps>;
 }
@@ -111,6 +112,7 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                 showTimeSelect={true}
                 timeFormat={this.props.timeFormat}
                 dateFormat={this.props.dateFormat}
+                className={classes.datePicker}
                 popperClassName={classes.calendarPopper}
                 calendarClassName={classes.calendar}
                 disabled={this.props.disabled}

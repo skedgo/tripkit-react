@@ -16,7 +16,7 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import genStyles from "../css/GenStyle.css";
 
 export interface ITKUITransportOptionsViewProps extends TKUIWithStyle<ITKUITransportOptionsViewStyle, ITKUITransportOptionsViewProps> {
-    onMoreOptions: () => void;
+    onMoreOptions?: () => void;
 }
 
 interface IConsumedProps {
@@ -96,6 +96,7 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
                         }
                     )}
                 </div>
+                {this.props.onMoreOptions &&
                 <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
                             text={"More options"}
                             style={{
@@ -103,7 +104,7 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
                                 ...genStyles.fontS
                             }}
                             onClick={this.props.onMoreOptions}
-                />
+                />}
             </div>
         )
     }

@@ -6,13 +6,13 @@ import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonProps> =
     (theme: TKUITheme) => ({
-
         main: {
             ...resetStyles.button,
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.center,
             ...genStyles.fontM,
+            fontFamily: theme.fontFamily,
             padding: (props: ITKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' :
                     props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '6px 20px',

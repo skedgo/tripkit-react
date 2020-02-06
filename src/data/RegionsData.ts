@@ -12,7 +12,7 @@ export class RegionsData {
 
     private regionsRequest: Promise<RegionResults>;
     private regions?: Map<string, Region>;
-    private regionList?: Region[];
+    private _regionList?: Region[];
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
     private cachedRegion?: Region;
@@ -28,7 +28,7 @@ export class RegionsData {
             for (const region of regionResults.regions) {
                 this.regions.set(region.name, region);
             }
-            this.regionList = Array.from(this.regions.values());
+            this._regionList = Array.from(this.regions.values());
             const modes: {[index: string]:any} = regionResults.modes;
             for (const modeKey of Object.keys(modes)) {
                 const modeIdentifier = jsonConvert.deserialize(modes[modeKey], ModeIdentifier) as ModeIdentifier;
@@ -57,10 +57,10 @@ export class RegionsData {
     }
 
     public getCities(): City[] | undefined {
-        if (!this.regionList) {
+        if (!this._regionList) {
             return undefined
         }
-        return this.regionList.reduce((accum: City[], region: Region) => {
+        return this._regionList.reduce((accum: City[], region: Region) => {
             return accum.concat(region.cities);
         }, [])
     }
@@ -114,7 +114,7 @@ export class RegionsData {
             return this.cachedRegion;
         }
         let closerRegion;
-        for (const region of this.regionList!) {
+        for (const region of this._regionList!) {
             if (!closerRegion || LocationUtil.distanceInMetres(latLng, region.bounds.getCenter())
                 < LocationUtil.distanceInMetres(latLng, closerRegion.bounds.getCenter())) {
                 closerRegion = region;
@@ -148,6 +148,10 @@ export class RegionsData {
         return this._modes.get(id);
     }
 
+
+    public getRegionList(): Region[] | undefined {
+        return this._regionList;
+    }
 }
 
 export default RegionsData;

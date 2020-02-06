@@ -30,12 +30,15 @@ import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKU
 import {TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle} from "../map/TKUIRealtimeVehicle";
 import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "../time/TKUIDateTimePicker";
 import {TKUITransportPinProps, TKUITransportPinStyle} from "../map/TKUITransportPin";
+import LatLng from "../model/LatLng";
+import {TKUITooltipProps, TKUITooltipStyle} from "../card/TKUITooltip";
 
 interface ITKUIConfigRequired {
     apiKey: string;
 }
 
 interface ITKUIConfigOptional {
+    initViewport: {center?: LatLng, zoom?: number};
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
@@ -63,6 +66,7 @@ interface ITKUIConfigOptional {
     TKUIRealtimeVehicle: TKComponentConfig<TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle>;
     TKUIDateTimePicker: TKComponentConfig<TKUIDateTimePickerProps, TKUIDateTimePickerStyle>;
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
+    TKUITooltip: TKComponentConfig<TKUITooltipProps, TKUITooltipStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

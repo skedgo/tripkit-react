@@ -33,8 +33,11 @@ import {Subtract} from "utility-types";
 import Region from "model/region/Region";
 import Select from 'react-select';
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import TKUITooltip from "../card/TKUITooltip";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    title?: string;
+    showTransportsBtn?: boolean;
     onShowOptions?: () => void;
     isTripPlanner?: boolean;
     collapsable?: boolean;
@@ -198,9 +201,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             <div className={classes.main}>
                 {this.props.landscape &&
                 <div className={classes.header}>
+                    {this.props.title &&
                     <div className={classes.title}>
-                        Route
-                    </div>
+                        {this.props.title}
+                    </div>}
+                    {this.props.onClearClicked &&
                     <button
                         className={classes.btnClear}
                         aria-hidden={true}
@@ -209,11 +214,12 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <IconRemove aria-hidden={true}
                                     className={classes.iconClear}
                                     focusable="false"/>
-                    </button>
+                    </button>}
                 </div>
                 }
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
+                        this.props.onClearClicked &&
                         <button className={classes.btnBack} onClick={this.props.onClearClicked}>
                             <IconArrowBack/>
                         </button> :
@@ -324,18 +330,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             disabled={datePickerDisabled}
                         />
                         }
-                        {this.props.onShowOptions &&
-                        <Tooltip placement="right"
-                                 overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
-                                 overlayClassName="app-style TripRow-altTooltip"
-                                 mouseEnterDelay={.5}
-                                 trigger={["click"]}
+                        {this.props.showTransportsBtn !== false &&
+                        <TKUITooltip
+                            placement="right"
+                            overlay={
+                                <TKUITransportOptionsView
+                                    onMoreOptions={this.props.onShowOptions}
+                                />
+                            }
+                            mouseEnterDelay={.5}
+                            trigger={["click"]}
                         >
                             <button className={classes.transportsBtn}>
                                 Transport options
                             </button>
-                        </Tooltip>
-                        }
+                        </TKUITooltip>}
                     </div>
                 }
             </div>

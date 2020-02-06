@@ -182,9 +182,9 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   font-weight: bold;
 }
 
-.app-style {
-  font-family: ProximaNova, sans-serif;
-}
+/*.app-style {*/
+  /*font-family: ProximaNova, sans-serif;*/
+/*}*/
 
 .app-style h3,
 .app-style .h3-text {

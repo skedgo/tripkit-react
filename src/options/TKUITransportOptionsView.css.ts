@@ -12,6 +12,7 @@ export const tKUITransportOptionsViewDefaultStyle: TKUIStyles<ITKUITransportOpti
             ...genStyles.borderRadius(12),
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             maxWidth: '255px',
+            fontFamily: theme.fontFamily,
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.alignStart
