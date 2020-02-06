@@ -5,6 +5,9 @@ import genStyles from "../css/GenStyle.css";
 
 export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle, TKUIDateTimePickerProps> =
     (theme: TKUITheme) => ({
+        datePicker: {
+            fontFamily: theme.fontFamily
+        },
         calendarPopper: {
             left: '5px!important',
             marginTop: '12px!important',
@@ -43,7 +46,8 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             '& li.react-datepicker__time-list-item': {
                 whiteSpace: 'nowrap',
                 textAlign: 'center',
-                padding: '8px 5px !important'
+                padding: '8px 5px !important',
+                fontSize: '13px'
             },
             '& .react-datepicker__day--selected, .react-datepicker__day--keyboard-selected, .react-datepicker__day--selected:hover, .react-datepicker__day--keyboard-selected:hover': {
                 backgroundColor: theme.colorPrimary,

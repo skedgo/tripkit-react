@@ -24,6 +24,7 @@ import MapUtil from "../util/MapUtil";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
+    initViewport?: {center?: LatLng, zoom?: number};
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
 }
@@ -138,8 +139,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
-            this.setState({viewport: viewport},
-                () => this.refreshRegion());
+            this.setState({viewport: viewport}, () => this.refreshRegion());
         }
 
         public onDirectionsView(directionsView: boolean) {
@@ -150,15 +150,22 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             const query = this.state.query;
             const viewport = this.state.viewport;
             const referenceLatLng = query.from && query.from.isResolved() ? query.from :
-                (query.to && query.to.isResolved() ? query.to : (viewport && viewport.center));
-            if (referenceLatLng) {
-                RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
-                    if (region.polygon === "") {
-                        Util.log("empty region");
-                    }
-                    this.setState({region: region});
-                });
-            }
+                (query.to && query.to.isResolved() ? query.to :
+                    // The viewport center is worldCoords initially, don't use it as reference
+                    (viewport && viewport.center && JSON.stringify(viewport.center) !== JSON.stringify(MapUtil.worldCoords) ?
+                        viewport.center : undefined));
+            RegionsData.instance.requireRegions().then(() => {
+                if (referenceLatLng) {
+                    RegionsData.instance.getCloserRegionP(referenceLatLng).then((region: Region) => {
+                        if (region.polygon === "") {
+                            Util.log("empty region");
+                        }
+                        this.setState({region: region});
+                    });
+                } else if (RegionsData.instance.getRegionList()!.length === 1) { // Singleton region
+                    this.setState({region: RegionsData.instance.getRegionList()![0]});
+                }
+            });
         }
 
         public refreshTrips() {
@@ -292,6 +299,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (urlQuery) {
                 this.onQueryChange(urlQuery);
             }
+            if (this.props.initViewport) {
+                this.onViewportChange(this.props.initViewport);
+            }
+            this.refreshRegion();
 
             if (TKShareHelper.isSharedTripLink()) {
                 const shareLinkPath = decodeURIComponent(document.location.pathname);

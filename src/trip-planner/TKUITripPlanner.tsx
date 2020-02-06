@@ -222,6 +222,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const queryInput = this.props.directionsView &&
             !(this.props.portrait && this.state.showTripDetail && this.props.selected) &&
             <TKUIRoutingQueryInput
+                title={"Route"}
                 isTripPlanner={true}
                 onShowOptions={this.onShowSettings}
                 collapsable={true}

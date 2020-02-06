@@ -57,7 +57,7 @@
 }
 
 .LocationBox input {
-  border: none;
+  border: none!important;
   outline: 0;
   line-height: 30px;
   background: none;
@@ -65,6 +65,12 @@
   flex-grow: 1;
   -webkit-flex-grow: 1;
   margin: 0; /* Safari puts a margin of 2 */
+  /* Style resets */
+  height: initial;
+  padding: initial;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 /* To avoid zoom in on focus on Safari for iOS */

@@ -26,7 +26,10 @@ class TKUIProvider extends React.Component<IProps,{}> {
                 <OptionsProvider>
                     <OptionsContext.Consumer>
                         {(optionsContext: IOptionsContext) => (
-                            <RoutingResultsProvider initQuery={this.props.initQuery} options={optionsContext && optionsContext.value}
+                            <RoutingResultsProvider
+                                initQuery={this.props.initQuery}
+                                initViewport={this.props.config.initViewport}
+                                options={optionsContext && optionsContext.value}
                                 // testTrips={testTrips}
                             >
                                 <ServiceResultsProvider>
