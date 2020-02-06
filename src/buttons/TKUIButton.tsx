@@ -15,6 +15,7 @@ export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIB
     icon?: JSX.Element;
     style?: CSS.Properties;
     onClick?: (e: any) => void;
+    disabled?: boolean;
     className?: string;
 }
 
@@ -54,6 +55,7 @@ class TKUIButton extends React.Component<IProps, {}> {
                 <button className={classNames(classes.main, classes.link)}
                         style={this.props.style}
                         onClick={this.props.onClick}
+                        disabled={this.props.disabled}
                 >
                     {this.props.text}
                 </button>
@@ -80,6 +82,7 @@ class TKUIButton extends React.Component<IProps, {}> {
                     secondary ? classes.secondary : classes.primary, this.props.className)}
                         style={this.props.style}
                         onClick={this.props.onClick}
+                        disabled={this.props.disabled}
                 >
                     {this.props.icon &&
                     <div className={classes.iconContainer}>
