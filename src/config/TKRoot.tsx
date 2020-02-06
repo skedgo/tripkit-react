@@ -14,7 +14,7 @@ interface IProps {
 // TODO: find a better name. It's the state provider, but state can also (optionally) be consumed.
 // Maybe call this one TKStateProvider, and the current TKStateProvider is just an auxiliar?
 // Maybe put a more general name, as WithTripKitState, or TKManager, or TKSDK, or TKRoot?
-class TKUI extends React.Component<IProps,{}> {
+class TKRoot extends React.Component<IProps,{}> {
 
     public render(): React.ReactNode {
         return (
@@ -33,4 +33,4 @@ class TKUI extends React.Component<IProps,{}> {
     }
 }
 
-export default TKUI;
+export default TKRoot;
