@@ -165,35 +165,35 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         </div>
                                     </Tooltip>
                                 </div>
-                                <div>
-                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")}
-                                         className={classes.icon}
-                                         aria-hidden="true"/>
-                                    <Tooltip
-                                        placement="top"
-                                        overlay={
-                                            <div className={classes.tooltip}>
-                                                Choosing this option will only display services with bike racks.
-                                            </div>
-                                        }
-                                        align={{offset: [0, -10]}}
-                                        overlayClassName={classes.tooltipOverlay}
-                                        mouseEnterDelay={.5}
-                                    >
-                                        <div className={classes.checkboxGroup}>
-                                            <Checkbox id="ss-br"
-                                                      checked={this.state.update.bikeRacks}
-                                                      // TODO: re-enable
-                                                      // onChange={(checked: boolean) => this.onBikeRacksChange(checked)}
-                                                      ariaLabelledby={"label-ss-br"}/>
-                                            <label htmlFor="ss-br" id={"label-ss-br"}>
-                                                Bike Racks
-                                            </label>
-                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
-                                                 className={classes.infoIcon}/>
-                                        </div>
-                                    </Tooltip>
-                                </div>
+                                {/*<div>*/}
+                                    {/*<img src={Constants.absUrl("/images/modeicons/ic-bikeRack.svg")}*/}
+                                         {/*className={classes.icon}*/}
+                                         {/*aria-hidden="true"/>*/}
+                                    {/*<Tooltip*/}
+                                        {/*placement="top"*/}
+                                        {/*overlay={*/}
+                                            {/*<div className={classes.tooltip}>*/}
+                                                {/*Choosing this option will only display services with bike racks.*/}
+                                            {/*</div>*/}
+                                        {/*}*/}
+                                        {/*align={{offset: [0, -10]}}*/}
+                                        {/*overlayClassName={classes.tooltipOverlay}*/}
+                                        {/*mouseEnterDelay={.5}*/}
+                                    {/*>*/}
+                                        {/*<div className={classes.checkboxGroup}>*/}
+                                            {/*<Checkbox id="ss-br"*/}
+                                                      {/*checked={this.state.update.bikeRacks}*/}
+                                                      {/*// TODO: re-enable*/}
+                                                      {/*// onChange={(checked: boolean) => this.onBikeRacksChange(checked)}*/}
+                                                      {/*ariaLabelledby={"label-ss-br"}/>*/}
+                                            {/*<label htmlFor="ss-br" id={"label-ss-br"}>*/}
+                                                {/*Bike Racks*/}
+                                            {/*</label>*/}
+                                            {/*<img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}*/}
+                                                 {/*className={classes.infoIcon}/>*/}
+                                        {/*</div>*/}
+                                    {/*</Tooltip>*/}
+                                {/*</div>*/}
                             </div>
                         </div>
                         <div className={classes.section}>

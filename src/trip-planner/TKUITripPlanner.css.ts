@@ -42,19 +42,9 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             ...genStyles.grow,
             ...genStyles.column
         },
-        feedbackBtn: {
-            position: 'absolute',
-            right: '10px',
-            bottom: '120px',
-            width: '25px',
-            height: '25px',
-            opacity: '.5',
-            cursor: 'pointer',
-            zIndex: '1000'
-        },
         reportBtn: {
             position: 'absolute',
-            right: '10px',
+            right: '12px',
             bottom: '80px',
             width: '30px',
             height: '30px',
@@ -62,7 +52,7 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             cursor: 'pointer',
             zIndex: '1000'
         },
-        feedbackTooltipClassName: {
+        reportTooltipClassName: {
             '& .rc-tooltip-inner': {
                 ...genStyles.flex,
                 alignItems: 'center',

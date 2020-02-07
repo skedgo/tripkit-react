@@ -20,7 +20,7 @@ import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
-import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
+import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import Tooltip from "rc-tooltip";
 import GATracker from "../analytics/GATracker";
 import {Moment} from "moment-timezone";
@@ -203,7 +203,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     }
                     {this.props.onShowOptions &&
                     <Tooltip placement="right"
-                             overlay={<TKUITransportOptionsView onMoreOptions={this.props.onShowOptions}/>}
+                             overlay={<TKUITransportSwitchesView onMoreOptions={this.props.onShowOptions}/>}
                              overlayClassName="app-style TripRow-altTooltip"
                              mouseEnterDelay={.5}
                              trigger={["click"]}

@@ -41,7 +41,7 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
         },
         specialServices: {
             ...genStyles.flex,
-            ...genStyles.spaceAround,
+            ...genStyles.justifyStart,
             '& > div': {
                 ...genStyles.flex,
                 ...genStyles.alignCenter

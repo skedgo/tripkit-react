@@ -18,7 +18,7 @@ class TKRoot extends React.Component<IProps,{}> {
 
     public render(): React.ReactNode {
         return (
-            <TKStateProvider config={this.props.config}>
+            <TKStateProvider config={this.props.config} initQuery={this.props.initQuery}>
                 {Util.isFunction(this.props.children) ?
                     <TKStateConsumer>
                         {(state: TKState) =>
