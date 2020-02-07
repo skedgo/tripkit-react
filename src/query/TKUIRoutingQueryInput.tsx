@@ -25,7 +25,7 @@ import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import Tooltip from "rc-tooltip";
-import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
+import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import "../trip/TripAltBtn.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
@@ -334,7 +334,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <TKUITooltip
                             placement="right"
                             overlay={
-                                <TKUITransportOptionsView
+                                <TKUITransportSwitchesView
                                     onMoreOptions={this.props.onShowOptions}
                                 />
                             }

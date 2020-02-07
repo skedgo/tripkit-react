@@ -32,7 +32,9 @@ import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "../time/TKUIDate
 import {TKUITransportPinProps, TKUITransportPinStyle} from "../map/TKUITransportPin";
 import LatLng from "../model/LatLng";
 import {TKUITooltipProps, TKUITooltipStyle} from "../card/TKUITooltip";
-import {TKState} from "./TKStateConsumer";
+import {TKUIReportBtnProps, TKUIReportBtnStyle} from "../feedback/TKUIReportBtn";
+import {TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle} from "../options/TKUITransportOptionsView";
+import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "../options/TKUITransportOptionsRow";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -41,7 +43,6 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     theme: Partial<TKUITheme>;
-    onReportProblem: (state: TKState) => void;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
@@ -69,6 +70,9 @@ interface ITKUIConfigOptional {
     TKUIDateTimePicker: TKComponentConfig<TKUIDateTimePickerProps, TKUIDateTimePickerStyle>;
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
     TKUITooltip: TKComponentConfig<TKUITooltipProps, TKUITooltipStyle>;
+    TKUIReportBtn: TKComponentConfig<TKUIReportBtnProps, TKUIReportBtnStyle>;
+    TKUITransportOptionsView: TKComponentConfig<TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle>;
+    TKUITransportOptionsRow: TKComponentConfig<TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

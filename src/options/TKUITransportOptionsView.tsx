@@ -1,54 +1,60 @@
 import * as React from "react";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptions";
+import Region from "../model/region/Region";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUITransportOptionsViewDefaultStyle} from "./TKUITransportOptionsView.css";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import Util from "../util/Util";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import Region from "../model/region/Region";
-import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptions";
+import {Subtract} from "utility-types";
+import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import RegionsData from "../data/RegionsData";
-import TransportUtil from "../trip/TransportUtil";
-import classNames from "classnames";
-import Tooltip from "rc-tooltip";
-import "../trip/TripAltBtn.css";
-import Util from "../util/Util";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import genStyles from "../css/GenStyle.css";
+import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
 
-export interface ITKUITransportOptionsViewProps extends TKUIWithStyle<ITKUITransportOptionsViewStyle, ITKUITransportOptionsViewProps> {
-    onMoreOptions?: () => void;
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    onClose?: () => void;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     region?: Region;
     value: TKTransportOptions,
     onChange: (value: TKTransportOptions) => void
 }
 
-export interface ITKUITransportOptionsViewStyle {
-    main: CSSProps<ITKUITransportOptionsViewProps>;
-    modeSelector: CSSProps<ITKUITransportOptionsViewProps>;
-    modeIcon: CSSProps<ITKUITransportOptionsViewProps>;
-    modeIconDisabled: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltip: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipContent: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipDisabled: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipRight: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipTitle: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipStateEnabled: CSSProps<ITKUITransportOptionsViewProps>;
-    tooltipStateDisabled: CSSProps<ITKUITransportOptionsViewProps>;
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+interface IStyle {
+    main: CSSProps<IProps>;
 }
 
-interface IProps extends ITKUITransportOptionsViewProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUITransportOptionsViewStyle>;
-}
+export type TKUITransportOptionsViewProps = IProps;
+export type TKUITransportOptionsViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITransportOptionsView {...props}/>,
+    styles: tKUITransportOptionsViewDefaultStyle,
+    classNamePrefix: "TKUITransportOptionsView"
+};
 
 class TKUITransportOptionsView extends React.Component<IProps, {}> {
 
-    private onChange(mode: string) {
+    constructor(props: IProps) {
+        super(props);
+        this.onChange = this.onChange.bind(this);
+    }
+
+    private close() {
+        if (this.props.onClose) {
+            this.props.onClose();
+        }
+    }
+
+    private onChange(mode: string, value: DisplayConf) {
         const transOptions = Util.deepClone(this.props.value);
-        const modeOption = transOptions.getTransportOption(mode);
-        transOptions.setTransportOption(mode, modeOption !== DisplayConf.HIDDEN ? DisplayConf.HIDDEN : DisplayConf.NORMAL);
+        transOptions.setTransportOption(mode, value);
         this.props.onChange(transOptions);
     }
 
@@ -60,91 +66,59 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
         const transOptions = this.props.value;
         const classes = this.props.classes;
         return (
-            <div className={classes.main}>
-                <div className={classes.modeSelector}>
+            <TKUICard
+                title={"Transport"}
+                presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                onRequestClose={() => this.close()}
+            >
+                <div className={classes.main}>
                     {region.modes.map((mode: string, index: number) => {
                             const modeOption = transOptions.getTransportOption(mode);
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                            const tooltip =
-                                <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
-                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
-                                    <div className={classes.tooltipRight}>
-                                        <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
-                                        <div className={modeOption === DisplayConf.HIDDEN ?
-                                            classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
-                                            {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
-                                        </div>
-                                    </div>
-                                </div>;
-                            return (
-                                <Tooltip placement="top"
-                                         overlay={tooltip}
-                                         overlayClassName={classNames("app-style", "TripRow-altTooltip", classes.tooltip)}
-                                         mouseEnterDelay={.5}
-                                         arrowContent={null}
-                                         key={index}
-                                >
-                                    <button
-                                        className={classNames(classes.modeIcon,
-                                            modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                        onClick={() => this.onChange(mode)}
-                                    >
-                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
-                                    </button>
-                                </Tooltip>
-                            );
+                            return <TKUITransportOptionsRow
+                                value={modeOption}
+                                onChange={(value: DisplayConf) => this.onChange(mode, value)}
+                                mode={modeIdentifier}
+                            />
                         }
                     )}
                 </div>
-                {this.props.onMoreOptions &&
-                <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
-                            text={"More options"}
-                            style={{
-                                marginLeft: '10px',
-                                ...genStyles.fontS
-                            }}
-                            onClick={this.props.onMoreOptions}
-                />}
-            </div>
-        )
+            </TKUICard>
+        );
     }
 
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingContext: IRoutingResultsContext) =>
-                        props.children!({
-                            value: optionsContext.value.transportOptions,
-                            onChange: (value: TKTransportOptions) => {
-                                const newValue = Util.iAssign(optionsContext.value, {transportOptions: value});
-                                optionsContext.onChange(newValue);
-                            },
-                            region: routingContext.region
-                        })}
-                </RoutingResultsContext.Consumer>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <OptionsContext.Consumer>
+                    {(optionsContext: IOptionsContext) =>
+                        <RoutingResultsContext.Consumer>
+                            {(routingContext: IRoutingResultsContext) =>
+                                props.children!({
+                                    value: optionsContext.value.transportOptions,
+                                    onChange: (value: TKTransportOptions) => {
+                                        const newValue = Util.iAssign(optionsContext.value, {transportOptions: value});
+                                        optionsContext.onChange(newValue);
+                                    },
+                                    region: routingContext.region,
+                                    ...viewportProps
+                                })}
+                        </RoutingResultsContext.Consumer>
+                    }
+                </OptionsContext.Consumer>
             }
-        </OptionsContext.Consumer>
+        </TKUIViewportUtil>
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITransportOptionsView");
-    return (addProps: ITKUITransportOptionsViewProps) => {
-        const stylesToPass = addProps.styles || tKUITransportOptionsViewDefaultStyle;
-        const randomizeClassNamesToPass = addProps.randomizeClassNames;
-        return (
-            <Consumer>
-                {(props: IConsumedProps) => {
-                    return <RawComponentStyled {...props} {...addProps} styles={stylesToPass}
-                                               randomizeClassNames={randomizeClassNamesToPass}/>
-                }}
-            </Consumer>
-        );
-    };
-};
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default Connect(TKUITransportOptionsView);
+export default connect((config: TKUIConfig) => config.TKUITransportOptionsView, config, Mapper);

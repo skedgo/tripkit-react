@@ -44,8 +44,8 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
         }
     }
 
-    public render(): () => JSX.Element {
-        return () => <TKUIButton
+    public render(): JSX.Element {
+        return <TKUIButton
             type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
             icon={this.renderIcon()}
             text={this.getTitle()}

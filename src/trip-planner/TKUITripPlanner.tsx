@@ -10,7 +10,6 @@ import {TileLayer} from "react-leaflet";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import TKUIFeedbackBtn from "../feedback/FeedbackBtn";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
@@ -46,8 +45,8 @@ import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
 import {TKUIConfigContext} from "config/TKUIConfigProvider";
-import {ReactComponent as IconReport} from '../images/icon-report.svg';
-import TKStateConsumer, {TKState} from "../config/TKStateConsumer";
+import TKUIReportBtn from "../feedback/TKUIReportBtn";
+import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -59,9 +58,8 @@ export interface IStyle {
     main: CSSProps<IProps>;
     queryPanel: CSSProps<IProps>;
     mapMain: CSSProps<IProps>;
-    feedbackBtn: CSSProps<IProps>;
     reportBtn: CSSProps<IProps>;
-    feedbackTooltipClassName: CSSProps<IProps>;
+    reportTooltipClassName: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -150,8 +148,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         WaiAriaUtil.addTabbingDetection();
 
-        Modal.setAppElement(this.ref);
-
         this.onShowSettings = this.onShowSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
 
@@ -205,7 +201,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onDirectionsView(true);
                 }}
                 onShowSideBar={() => {
-                    console.log("show sidebar");
                     return this.setState({showSidebar: true});
                 }}
             />;
@@ -213,7 +208,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUISidebar
                 open={this.state.showSidebar && !this.props.directionsView}
                 onRequestClose={() => {
-                    console.log("hide sidebar");
                     return this.setState({showSidebar: false});
                 }}
                 onShowSettings={this.onShowSettings}
@@ -369,17 +363,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 />
                             </TKUIMapView>
                         </div>
-                        <TKUIFeedbackBtn className={classes.feedbackBtn}
-                                         tooltipClassName={classes.feedbackTooltipClassName}/>
-                        {config.onReportProblem &&
-                        <TKStateConsumer>
-                            {(state: TKState) =>
-                                <IconReport
-                                    className={classes.reportBtn}
-                                    onClick={() => config.onReportProblem!(state)}
-                                />
-                            }
-                        </TKStateConsumer>}
+                        <TKUIReportBtn className={classes.reportBtn}
+                                       tooltipClassName={classes.reportTooltipClassName}/>
                         {sideBar}
                         {settings}
                         {locationDetailView}
@@ -388,6 +373,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {tripDetailView}
                         {departuresView}
                         {serviceDetailView}
+                        {<TKUITransportOptionsView/>}
                     </div>
                 }
             </TKUIConfigContext.Consumer>
@@ -395,6 +381,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
+        Modal.setAppElement(this.ref);
+
         if (TKShareHelper.isSharedStopLink()) {
             const shareLinkPath = decodeURIComponent(document.location.pathname);
             const shareLinkSplit = shareLinkPath.split("/");
