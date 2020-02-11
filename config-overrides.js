@@ -1,41 +1,3 @@
-// const {
-//     disableChunk
-// } = require("customize-cra");
-
-// var customizeCRA = require("customize-cra");
-
-// var exports = customizeCRA.override(
-//     customizeCRA.disableChunk()
-// );
-//
-// exports.webpack = function(config, env) {
-//     if (env === "production") {
-//         //JS Overrides
-//         config.output.filename = 'static/js/[name].js';
-//         config.output.chunkFilename = 'static/js/[name].chunk.js';
-//
-//         //CSS Overrides
-//         config.plugins[8].filename = 'static/css/[name].css';
-//
-//         //Media and Assets Overrides
-//         // config.module.rules[1].oneOf[0].options.name = 'static/media/[name].[ext]';
-//         // config.module.rules[1].oneOf[3].options.name = 'static/media/[name].[ext]';
-//         /**
-//          * If the media/assets public path differs on the server
-//          *
-//          * config.module.rules[1].oneOf[0].options.name = 'static/media/[name].[ext]';
-//          * config.module.rules[1].oneOf[0].options.publicPath = '/public/assets/';
-//          * config.module.rules[1].oneOf[3].options.name = 'static/media/[name].[ext]';
-//          * config.module.rules[1].oneOf[3].options.publicPath = '/public/assets/';
-//          */
-//
-//     }
-//
-//     return config;
-// };
-//
-// module.exports = exports;
-
 const path = require('path');
 const fs = require('fs');
 const appDirectory = fs.realpathSync(process.cwd());
@@ -49,36 +11,33 @@ module.exports = {
     },
     webpack: function (config, env) {
         if (env === "production") {
+
+            // #Modular lib
+            // config.entry = {
+            //     index: path.join(__dirname, "src/index.tsx"),
+            //     query: path.join(__dirname, "src/query/TKUIRoutingQueryInput.tsx")
+            // };
+
             //JS Overrides
-            // config.output.filename = 'static/js/[name].js';
-            // config.output.chunkFilename = 'static/js/[name].chunk.js';
             config.output.filename = 'index.js';
             config.output.chunkFilename = '[name].chunk.js';
+            // #Modular lib
+            // config.output.path = path.join(__dirname, "dist");
+            // config.output.filename = '[name].js';
 
             //CSS Overrides
             config.plugins[4].options.filename = 'index.css';
+            // #Modular lib
+            // config.plugins[4].options.filename = '[name].css';
 
-            //Media and Assets Overrides
-            // config.module.rules[1].oneOf[0].options.name = 'static/media/[name].[ext]';
-            // config.module.rules[1].oneOf[3].options.name = 'static/media/[name].[ext]';
-            /**
-             * If the media/assets public path differs on the server
-             *
-             * config.module.rules[1].oneOf[0].options.name = 'static/media/[name].[ext]';
-             * config.module.rules[1].oneOf[0].options.publicPath = '/public/assets/';
-             * config.module.rules[1].oneOf[3].options.name = 'static/media/[name].[ext]';
-             * config.module.rules[1].oneOf[3].options.publicPath = '/public/assets/';
-             */
-
-            // console.log(config.externals);
 
             // config.externals = {
             //     react: 'react'
             // };
 
-            // console.log(config.externals);
-
         }
+
+        // config.optimization.minimize = false;
 
         config.optimization.splitChunks = {
             cacheGroups: {
@@ -88,12 +47,13 @@ module.exports = {
 
         config.optimization.runtimeChunk = false;
 
-        // config.optimization.minimize = false;
-
         // Build React components library with Webpack 4
         // https://stackoverflow.com/questions/56970495/build-react-components-library-with-webpack-4
         config.output.libraryTarget = "umd";
         config.output.library = "tripkit-react";
+
+        // #Modular lib
+        // config.output.library = ["tripkit-react", "[name]"];
 
         return config;
     }
