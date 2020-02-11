@@ -30,6 +30,7 @@ export {default as TKUIResponsiveUtil} from "./util/TKUIResponsiveUtil";
 export type TKUIReportBtnProps = TKUIReportBtnPropsForExport;
 export type TKUITheme = TKUIThemeForExport;
 export {default as DeviceUtil} from "./util/DeviceUtil";
+export {default as TKUIConstants} from "./util/Constants";
 
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
