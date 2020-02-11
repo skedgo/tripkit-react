@@ -3,7 +3,7 @@ class Constants {
     public static DEPLOY_URL: string;
 
     private static isMe(scriptElem: any){
-        return scriptElem.getAttribute('src') && scriptElem.getAttribute('src').endsWith("/embed.js");
+        return scriptElem.getAttribute('src') && scriptElem.getAttribute('src').includes("/embed.js");
     }
 
     private static getCurrentScript(): any {
