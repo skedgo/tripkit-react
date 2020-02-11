@@ -35,6 +35,8 @@ import {TKUITooltipProps, TKUITooltipStyle} from "../card/TKUITooltip";
 import {TKUIReportBtnProps, TKUIReportBtnStyle} from "../feedback/TKUIReportBtn";
 import {TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle} from "../options/TKUITransportOptionsView";
 import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "../options/TKUITransportOptionsRow";
+import {TKUIButtonProps, TKUIButtonStyle} from "../buttons/TKUIButton";
+import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "../options/TKUITransportSwitchesView";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -47,7 +49,8 @@ interface ITKUIConfigOptional {
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
-    TKUITKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
+    TKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
+    TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
     TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
     TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
     TKUIRoutingResultsView: TKComponentConfig<TKUIResultsViewProps, TKUIResultsViewStyle>;
@@ -71,6 +74,7 @@ interface ITKUIConfigOptional {
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
     TKUITooltip: TKComponentConfig<TKUITooltipProps, TKUITooltipStyle>;
     TKUIReportBtn: TKComponentConfig<TKUIReportBtnProps, TKUIReportBtnStyle>;
+    TKUITransportSwitchesView: TKComponentConfig<TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle>;
     TKUITransportOptionsView: TKComponentConfig<TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle>;
     TKUITransportOptionsRow: TKComponentConfig<TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle>;
 }

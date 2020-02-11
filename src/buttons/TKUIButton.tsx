@@ -1,15 +1,17 @@
 import * as React from "react";
 import {ClassNameMap} from 'react-jss';
-import {CSSProps, TKUIStyles, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {tKUIButtonDefaultStyle} from "./TKUIButton.css";
 import * as CSS from 'csstype';
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
 export enum TKUIButtonType {
     PRIMARY, SECONDARY, PRIMARY_VERTICAL, SECONDARY_VERTICAL, PRIMARY_LINK
 }
 
-export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIButtonProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     type?: TKUIButtonType;
     text?: string;
     icon?: JSX.Element;
@@ -19,11 +21,9 @@ export interface ITKUIButtonProps extends TKUIWithStyle<ITKUIButtonStyle, ITKUIB
     className?: string;
 }
 
-interface IProps extends ITKUIButtonProps {
-    classes: ClassNameMap<keyof ITKUIButtonStyle>
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
-export interface ITKUIButtonStyle {
+interface IStyle {
     main: CSSProps<IProps>;
     primary: CSSProps<IProps>;
     secondary: CSSProps<IProps>;
@@ -32,11 +32,14 @@ export interface ITKUIButtonStyle {
     verticalPanel: CSSProps<IProps>;
 }
 
-export class TKUIButtonConfig {
-    public styles: TKUIStyles<ITKUIButtonStyle, ITKUIButtonProps> = tKUIButtonDefaultStyle;
+export type TKUIButtonProps = IProps;
+export type TKUIButtonStyle = IStyle;
 
-    public static instance = new TKUIButtonConfig();
-}
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIButton {...props}/>,
+    styles: tKUIButtonDefaultStyle,
+    classNamePrefix: "TKUIButton"
+};
 
 class TKUIButton extends React.Component<IProps, {}> {
 
@@ -96,9 +99,5 @@ class TKUIButton extends React.Component<IProps, {}> {
 
 }
 
-const TKUIButtonWithStyleProp = withStyleProp(TKUIButton, "TKUIButton");
-
-export default (props: ITKUIButtonProps) => {
-    const stylesToPass = props.styles || TKUIButtonConfig.instance.styles;
-    return <TKUIButtonWithStyleProp {...props} styles={stylesToPass} classNamePrefix={"TKUIButton"}/>
-};
+export default connect((config: TKUIConfig) => config.TKUIButton, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

@@ -1,21 +1,25 @@
 import * as React from "react";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITransportSwitchesViewDefaultStyle} from "./TKUITransportSwitchesView.css";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import Region from "../model/region/Region";
 import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptions";
 import RegionsData from "../data/RegionsData";
 import TransportUtil from "../trip/TransportUtil";
 import classNames from "classnames";
-import Tooltip from "rc-tooltip";
 import "../trip/TripAltBtn.css";
 import Util from "../util/Util";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import genStyles from "../css/GenStyle.css";
+import TKUITooltip from "../card/TKUITooltip";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import Region from "../model/region/Region";
+import {Subtract} from "utility-types";
+import DeviceUtil from "../util/DeviceUtil";
 
-export interface ITKUITransportSwitchesViewProps extends TKUIWithStyle<ITKUITransportSwitchesViewStyle, ITKUITransportSwitchesViewProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMoreOptions?: () => void;
 }
 
@@ -25,23 +29,31 @@ interface IConsumedProps {
     onChange: (value: TKTransportOptions) => void
 }
 
-export interface ITKUITransportSwitchesViewStyle {
-    main: CSSProps<ITKUITransportSwitchesViewProps>;
-    modeSelector: CSSProps<ITKUITransportSwitchesViewProps>;
-    modeIcon: CSSProps<ITKUITransportSwitchesViewProps>;
-    modeIconDisabled: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltip: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipContent: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipDisabled: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipRight: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipTitle: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipStateEnabled: CSSProps<ITKUITransportSwitchesViewProps>;
-    tooltipStateDisabled: CSSProps<ITKUITransportSwitchesViewProps>;
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+interface IStyle {
+    main: CSSProps<IProps>;
+    modeSelector: CSSProps<IProps>;
+    modeIcon: CSSProps<IProps>;
+    modeIconDisabled: CSSProps<IProps>;
+    tooltip: CSSProps<IProps>;
+    tooltipContent: CSSProps<IProps>;
+    tooltipDisabled: CSSProps<IProps>;
+    tooltipRight: CSSProps<IProps>;
+    tooltipTitle: CSSProps<IProps>;
+    tooltipStateEnabled: CSSProps<IProps>;
+    tooltipStateDisabled: CSSProps<IProps>;
 }
 
-interface IProps extends ITKUITransportSwitchesViewProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUITransportSwitchesViewStyle>;
-}
+export type TKUITransportSwitchesViewProps = IProps;
+export type TKUITransportSwitchesViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITransportSwitchesView {...props}/>,
+    styles: tKUITransportSwitchesViewDefaultStyle,
+    classNamePrefix: "TKUITransportSwitchesView"
+};
 
 class TKUITransportSwitchesView extends React.Component<IProps, {}> {
 
@@ -76,22 +88,24 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                                         </div>
                                     </div>
                                 </div>;
-                            return (
-                                <Tooltip placement="top"
-                                         overlay={tooltip}
-                                         overlayClassName={classNames("app-style", "TripRow-altTooltip", classes.tooltip)}
-                                         mouseEnterDelay={.5}
-                                         arrowContent={null}
-                                         key={index}
-                                >
-                                    <button
-                                        className={classNames(classes.modeIcon,
-                                            modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                        onClick={() => this.onChange(mode)}
+                            const transBtn = <button
+                                className={classNames(classes.modeIcon,
+                                    modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
+                                onClick={() => this.onChange(mode)}
+                            >
+                                <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
+                            </button>;
+                            return ( DeviceUtil.isTouch() ?
+                                    transBtn :
+                                    <TKUITooltip placement="top"
+                                                 overlay={tooltip}
+                                                 overlayClassName={classes.tooltip}
+                                                 mouseEnterDelay={.5}
+                                                 arrowContent={null}
+                                                 key={index}
                                     >
-                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
-                                    </button>
-                                </Tooltip>
+                                        {transBtn}
+                                    </TKUITooltip>
                             );
                         }
                     )}
@@ -131,20 +145,11 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     );
 };
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITransportSwitchesView");
-    return (addProps: ITKUITransportSwitchesViewProps) => {
-        const stylesToPass = addProps.styles || tKUITransportSwitchesViewDefaultStyle;
-        const randomizeClassNamesToPass = addProps.randomizeClassNames;
-        return (
-            <Consumer>
-                {(props: IConsumedProps) => {
-                    return <RawComponentStyled {...props} {...addProps} styles={stylesToPass}
-                                               randomizeClassNames={randomizeClassNamesToPass}/>
-                }}
-            </Consumer>
-        );
-    };
-};
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
 
-export default Connect(TKUITransportSwitchesView);
+export default connect((config: TKUIConfig) => config.TKUITransportSwitchesView, config, Mapper);

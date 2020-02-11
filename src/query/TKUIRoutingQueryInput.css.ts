@@ -3,6 +3,8 @@ import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRout
 import genStyles from "../css/GenStyle.css";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
+import {CSSProperties} from "react-jss";
 
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
     (theme: TKUITheme) => ({
@@ -52,7 +54,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         fromToInputsPanel: {
             ...genStyles.flex,
             ...genStyles.column,
-            ...genStyles.grow
+            ...genStyles.grow,
+            '& input': {
+                ...DeviceUtil.isPhone && { fontSize: '16px!important' }
+            } as CSSProperties<TKUIRoutingQueryInputProps>
         },
         locSelector: {
             padding: '9px 15px',
@@ -65,6 +70,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         locIcon: {
             width: '12px',
             height: '12px',
+            boxSizing: 'border-box',
             border: '2px solid ' + tKUIColors.black1,
             ...genStyles.borderRadius(50, "%")
         },

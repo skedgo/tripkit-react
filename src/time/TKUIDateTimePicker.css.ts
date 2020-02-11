@@ -9,7 +9,6 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             fontFamily: theme.fontFamily
         },
         calendarPopper: {
-            left: '5px!important',
             marginTop: '12px!important',
             '& .react-datepicker__triangle': {
                 borderBottomColor: 'white!important'

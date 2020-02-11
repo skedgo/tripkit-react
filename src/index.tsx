@@ -1,5 +1,6 @@
 import './css/global.css';
 import {TKUIConfig as TKUIConfigForExport} from "./config/TKUIConfig";
+import {TKUITheme as TKUIThemeForExport} from "./jss/TKUITheme";
 import {IRoutingResultsContext as IRoutingResultsContextForExport} from "./trip-planner/RoutingResultsProvider";
 import {TKState as TKUIStateForExport} from "./config/TKStateConsumer";
 import {TKUIReportBtnProps as TKUIReportBtnPropsForExport} from "./feedback/TKUIReportBtn";
@@ -25,11 +26,14 @@ export type IRoutingResultsContext = IRoutingResultsContextForExport;
 export {default as TKRoot} from "./config/TKRoot";
 export type TKState = TKUIStateForExport;
 export {default as TKUtil} from "./util/Util";
+export {default as TKUIResponsiveUtil} from "./util/TKUIResponsiveUtil";
 export type TKUIReportBtnProps = TKUIReportBtnPropsForExport;
+export type TKUITheme = TKUIThemeForExport;
+export {default as DeviceUtil} from "./util/DeviceUtil";
 
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
-    import("./example/tripgo-sample");
-    // import("./example/client-chym-web/client-chym-web");
+    // import("./example/tripgo-sample");
+    import("./example/client-chym-web/client-chym-web");
 }

@@ -24,7 +24,6 @@ import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
-import Tooltip from "rc-tooltip";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import "../trip/TripAltBtn.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
@@ -315,6 +314,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             }}
                             components={{IndicatorsContainer: SelectDownArrow}}
                             // menuIsOpen={true}
+                            isSearchable={false}
                         />
                         {routingQuery.timePref !== TimePreference.NOW &&
                         <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
@@ -385,5 +385,5 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;
 
-export default connect((config: TKUIConfig) => config.TKUITKUIRoutingQueryInput, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUIRoutingQueryInput, config, Mapper);
 export {TKUIRoutingQueryInput as TKUIRoutingQueryInputClass}

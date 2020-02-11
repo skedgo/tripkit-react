@@ -373,7 +373,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {tripDetailView}
                         {departuresView}
                         {serviceDetailView}
-                        {<TKUITransportOptionsView/>}
+                        {/*{<TKUITransportOptionsView/>}*/}
                     </div>
                 }
             </TKUIConfigContext.Consumer>
