@@ -1,10 +1,13 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUITransportSwitchesViewProps, ITKUITransportSwitchesViewStyle} from "./TKUITransportSwitchesView";
+import {
+    TKUITransportSwitchesViewProps,
+    TKUITransportSwitchesViewStyle
+} from "./TKUITransportSwitchesView";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 
-export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<ITKUITransportSwitchesViewStyle, ITKUITransportSwitchesViewProps> =
+export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwitchesViewStyle, TKUITransportSwitchesViewProps> =
     (theme: TKUITheme) => ({
         main: {
             padding: '10px',
@@ -37,6 +40,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<ITKUITransportSwi
             opacity: '.3'
         },
         tooltip: {
+            fontFamily: theme.fontFamily,
             '& .rc-tooltip-arrow': {
                 display: 'none'
             }
@@ -47,7 +51,11 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<ITKUITransportSwi
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             ...genStyles.borderRadius(25),
             ...genStyles.flex,
-            ...genStyles.alignCenter
+            ...genStyles.alignCenter,
+            '& img': {
+                width: '24px',
+                height: '24px'
+            }
         },
         tooltipDisabled: {
             '& img': {

@@ -128,10 +128,6 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                     }
                 }}
                 popperModifiers={{
-                    offset: {
-                        enabled: true,
-                        offset: "-260px, 0"
-                    },
                     preventOverflow: {
                         enabled: true,
                         escapeWithReference: false,

@@ -6,12 +6,15 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Tooltip from "rc-tooltip";
 import {RCTooltip} from "rc-tooltip";
 import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
+import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;
     overlay: React.ReactNode;
     mouseEnterDelay?: number;
     trigger?: string[];
+    arrowContent?: React.ReactNode;
+    overlayClassName?: string;
     children?: any;
 }
 
@@ -36,7 +39,8 @@ class TKUITooltip extends React.Component<IProps, {}> {
         return (
             <Tooltip
                 {...this.props as RCTooltip.Props}
-                overlayClassName={"app-style " + this.props.classes.main}
+                overlayClassName={classNames("app-style", this.props.classes.main, this.props.overlayClassName)}
+                arrowContent={this.props.arrowContent}
             >
                 {this.props.children}
             </Tooltip>

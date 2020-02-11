@@ -1,10 +1,10 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
-import {ITKUIButtonProps, ITKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
+import {TKUIButtonProps, TKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
-export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonProps> =
+export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps> =
     (theme: TKUITheme) => ({
         main: {
             ...resetStyles.button,
@@ -13,17 +13,17 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
             ...genStyles.center,
             ...genStyles.fontM,
             fontFamily: theme.fontFamily,
-            padding: (props: ITKUIButtonProps) =>
+            padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' :
                     props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '6px 20px',
-            borderRadius: '20px',
+            ...genStyles.borderRadius(20),
             '& svg': {
                 width: '100%',
                 height: '100%'
             },
-            height: (props: ITKUIButtonProps) =>
+            height: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
-            width: (props: ITKUIButtonProps) =>
+            width: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial'
         },
 
@@ -70,7 +70,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<ITKUIButtonStyle, ITKUIButtonPro
         iconContainer: {
             width: '24px',
             height: '24px',
-            marginRight: (props: ITKUIButtonProps) =>
+            marginRight: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '0' : '15px',
             '& svg': {
                 ...genStyles.svgFillCurrColor
