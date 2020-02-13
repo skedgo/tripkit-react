@@ -37,7 +37,7 @@ module.exports = {
 
         }
 
-        // config.optimization.minimize = false;
+        config.optimization.minimize = false;
 
         config.optimization.splitChunks = {
             cacheGroups: {

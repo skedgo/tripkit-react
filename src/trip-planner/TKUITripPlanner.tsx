@@ -44,7 +44,7 @@ import {MapLocationType} from "../model/location/MapLocationType";
 import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
-import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import TKUIReportBtn from "../feedback/TKUIReportBtn";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 
