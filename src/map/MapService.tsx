@@ -8,7 +8,7 @@ import L from "leaflet";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {IMapSegmentRenderer} from "./TKUIMapView";
 import {TKUIConfig} from "../config/TKUIConfig";
-import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
 import TKStateProvider from "../config/TKStateProvider";
 

@@ -9,7 +9,7 @@ import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TKUICard, {CardPresentation} from "card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
@@ -18,7 +18,7 @@ import {Subtract} from "utility-types";
 import TKUIUserPriorities from "./TKUIUserPriorities";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
-import TKUIButton from "buttons/TKUIButton";
+import TKUIButton from "../buttons/TKUIButton";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 

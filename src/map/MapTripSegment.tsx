@@ -10,7 +10,7 @@ import ShapesPolyline from "./ShapesPolyline";
 import {IMapSegmentRenderer, TKUIMapViewClass} from "./TKUIMapView";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import {TKUIConfig} from "../config/TKUIConfig";
-import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
 import TKStateProvider from "../config/TKStateProvider";
 

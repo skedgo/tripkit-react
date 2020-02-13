@@ -52,7 +52,7 @@ import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
-import {TKUIConfigContext} from "config/TKUIConfigProvider";
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import TKStateProvider from "../config/TKStateProvider";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
