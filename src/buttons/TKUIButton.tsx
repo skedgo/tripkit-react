@@ -43,7 +43,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUIButton extends React.Component<IProps, {}> {
 
-    public static defaultProps: Partial<IProps> = {
+    static defaultProps: Partial<IProps> = {
         type: TKUIButtonType.PRIMARY
     };
 

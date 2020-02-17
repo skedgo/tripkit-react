@@ -37,13 +37,16 @@ module.exports = {
 
         }
 
-        config.optimization.minimize = false;
-
         config.optimization.splitChunks = {
             cacheGroups: {
                 default: false
             }
         };
+
+        // config.mode = 'development';
+        // config.optimization.minimize = false;
+        // config.optimization.usedExports = true;
+        // config.optimization.concatenateModules = true;
 
         config.optimization.runtimeChunk = false;
 

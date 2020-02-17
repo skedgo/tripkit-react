@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "_module": "dist/src/index.js",
   "_browser": "dist/index.umd.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "dependencies": {
     "@google/maps": "^0.5.5",
     "@mapbox/polyline": "^1.0.0",
@@ -67,6 +68,7 @@
     "rollup-plugin-css-only": "^2.0.0",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-postcss": "^2.0.6",
+    "rollup-plugin-ts-treeshaking": "^1.0.0",
     "rxjs": "^6.5.3",
     "utility-types": "^2.1.0"
   },
@@ -76,8 +78,9 @@
     "build-tsc": "cd src; find ./* \\( ! -name '*.tsx' \\) \\( ! -name '*.ts' \\) -type f | cpio -vdump ../dist; cd ..; tsc --noEmit false --declaration true",
     "dev-r": "npm-run-all --parallel types watch-r",
     "watch-r": "rollup -c -w",
-    "build-r": "rollup -c; tsc --noEmit false --declaration true --emitDeclarationOnly true",
-    "dist": "react-app-rewired build; tsc --noEmit false --declaration true --emitDeclarationOnly true",
+    "build-r": "rollup -c; tsc --noEmit false --declaration true --emitDeclarationOnly true --outDir ./dist/src",
+    "_build-r": "rollup -c; npm run types",
+    "dist": "react-app-rewired build; npm run types",
     "types": "tsc --noEmit false --declaration true --emitDeclarationOnly true",
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject"

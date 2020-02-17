@@ -1,7 +1,6 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {TKUIProfileView} from "../index";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Tooltip from "rc-tooltip";
 import {RCTooltip} from "rc-tooltip";
@@ -30,7 +29,7 @@ export type TKUITooltipStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITooltip {...props}/>,
     styles: tKUITooltipDefaultStyle,
-    classNamePrefix: "TKUIProfileView"
+    classNamePrefix: "TKUITooltip"
 };
 
 class TKUITooltip extends React.Component<IProps, {}> {

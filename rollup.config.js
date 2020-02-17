@@ -92,10 +92,14 @@ export default [
             ),
             json()
         ],
-        output: [
+        preserveModules: true,
+        output:
+            // [
             // { file: pkg.main, format: 'cjs' },
-            { dir: 'dist' },
+            {
+                dir: 'dist'
+            },
             // { file: pkg.module, format: 'es' }
-        ]
+        // ]
     }
 ];
