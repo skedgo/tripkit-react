@@ -21,6 +21,7 @@ import * as queryString from "query-string";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
+import RegionInfo from "../model/region/RegionInfo";
 
 interface IWithRoutingResultsProps {
     urlQuery?: RoutingQuery;
@@ -35,6 +36,7 @@ interface IWithRoutingResultsState {
     preTo?: Location;
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
+    regionInfo?: RegionInfo;
     directionsView: boolean;
     trips?: Trip[];
     selected?: Trip;
@@ -75,6 +77,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onDirectionsView = this.onDirectionsView.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
+            this.refreshRegion = this.refreshRegion.bind(this);
+            this.refreshRegionInfo = this.refreshRegionInfo.bind(this);
         }
 
         public sortTrips(trips: Trip[], sort: TripSort) {
@@ -149,10 +153,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public refreshRegion() {
             const query = this.state.query;
             const viewport = this.state.viewport;
+            // Just trigger region change from viewport change if zoom is greater then 6 (avoids moving on zoom out viewport to pass through multiple regions, and avoids initial world zoom to set region).
             const referenceLatLng = query.from && query.from.isResolved() ? query.from :
                 (query.to && query.to.isResolved() ? query.to :
                     // The viewport center is worldCoords initially, don't use it as reference
-                    (viewport && viewport.center && JSON.stringify(viewport.center) !== JSON.stringify(MapUtil.worldCoords) ?
+                    (viewport && viewport.center
+                    && JSON.stringify(viewport.center) !== JSON.stringify(MapUtil.worldCoords)
+                    && viewport.zoom && viewport.zoom > 6 ? // avoids region change when moving map zoomed out, including on initial world zoom.
                         viewport.center : undefined));
             RegionsData.instance.requireRegions().then(() => {
                 if (referenceLatLng) {
@@ -160,12 +167,26 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (region.polygon === "") {
                             Util.log("empty region");
                         }
-                        this.setState({region: region});
+                        if (this.state.region === region) {
+                            return;
+                        }
+                        this.setState({region: region},
+                            () => this.refreshRegionInfo());
                     });
-                } else if (RegionsData.instance.getRegionList()!.length === 1) { // Singleton region
-                    this.setState({region: RegionsData.instance.getRegionList()![0]});
+                } else if (RegionsData.instance.getRegionList()!.length === 1 // Singleton region
+                    && this.state.region !== RegionsData.instance.getRegionList()![0]) {
+                    this.setState({region: RegionsData.instance.getRegionList()![0]},
+                        () => this.refreshRegionInfo());
                 }
             });
+        }
+
+        public refreshRegionInfo() {
+            if (this.state.region && (!this.state.regionInfo || this.state.region.name !== this.state.regionInfo.code)) {
+                // this.setState({regionInfo: undefined});
+                RegionsData.instance.getRegionInfoP(this.state.region.name)
+                    .then((regionInfo: RegionInfo) => this.setState(() => ({regionInfo: regionInfo})));
+            }
         }
 
         public refreshTrips() {
@@ -278,6 +299,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                 }}
                 region={this.state.region}
+                regionInfo={this.state.regionInfo}
                 viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}
                 directionsView={this.state.directionsView}

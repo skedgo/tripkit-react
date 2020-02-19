@@ -13,6 +13,7 @@ import {CardPresentation, default as TKUICard} from "../card/TKUICard";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import RegionsData from "../data/RegionsData";
 import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
+import RegionInfo from "../model/region/RegionInfo";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClose?: () => void;
@@ -20,6 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     region?: Region;
+    regionInfo?: RegionInfo;
     value: TKTransportOptions,
     onChange: (value: TKTransportOptions) => void
 }
@@ -72,16 +74,16 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
                 onRequestClose={() => this.close()}
             >
                 <div className={classes.main}>
-                    {region.modes.map((mode: string, index: number) => {
+                    {region.modes.map((mode: string, i: number) => {
                             const modeOption = transOptions.getTransportOption(mode);
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                            return <TKUITransportOptionsRow
-                                value={modeOption}
-                                onChange={(value: DisplayConf) => this.onChange(mode, value)}
-                                mode={modeIdentifier}
-                            />
-                        }
-                    )}
+                        return <TKUITransportOptionsRow
+                            mode={modeIdentifier}
+                            value={modeOption}
+                            onChange={(value: DisplayConf) => this.onChange(mode, value)}
+                            key={i}
+                        />
+                    })}
                 </div>
             </TKUICard>
         );
@@ -104,6 +106,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                         optionsContext.onChange(newValue);
                                     },
                                     region: routingContext.region,
+                                    regionInfo: routingContext.regionInfo,
                                     ...viewportProps
                                 })}
                         </RoutingResultsContext.Consumer>

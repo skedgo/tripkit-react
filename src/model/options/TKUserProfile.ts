@@ -1,9 +1,25 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import {MapLocationType, MapLocationTypeConverter} from "../location/MapLocationType";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
 import TKTransportOptions from "./TKTransportOptions";
 import TKWeightingPreferences from "./TKWeightingPreferences";
+
+export enum WalkingSpeed {
+    SLOW,
+    AVERAGE,
+    FAST
+}
+
+@JsonConverter
+export class WalkingSpeedConverter implements JsonCustomConvert<WalkingSpeed> {
+    public serialize(value: WalkingSpeed): any {
+        return value;
+    }
+    public deserialize(obj: any): WalkingSpeed {
+        return obj;
+    }
+}
 
 @JsonObject
 class TKUserProfile {
@@ -23,8 +39,16 @@ class TKUserProfile {
     public transportOptions: TKTransportOptions = new TKTransportOptions();
     @JsonProperty('wheelchair', Boolean, true)
     private _wheelchair: boolean = false;
+    @JsonProperty('transitConcessionPricing', Boolean, true)
+    public transitConcessionPricing: boolean = false;
     @JsonProperty('mapLayers', MapLocationTypeConverter, true)
     private _mapLayers: MapLocationType[] = [];
+    @JsonProperty('minimumTransferTime', Number, true)
+    public minimumTransferTime: number = 0;
+    @JsonProperty('walkingSpeed', WalkingSpeedConverter, true)
+    public walkingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
+    @JsonProperty('cyclingSpeed', WalkingSpeedConverter, true)
+    public cyclingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
 
     get modesDisabled(): string[] {
         return this._modesDisabled.concat(TKUserProfile.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));

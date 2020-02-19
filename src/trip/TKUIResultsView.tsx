@@ -24,10 +24,10 @@ import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import Tooltip from "rc-tooltip";
 import GATracker from "../analytics/GATracker";
 import {Moment} from "moment-timezone";
-import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 import Region from "../model/region/Region";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import TKUISelect from "../buttons/TKUISelect";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -56,20 +56,11 @@ export interface IStyle {
     rowSelected: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
     sortBar: CSSProps<IProps>;
-    sortSelectContainer: CSSProps<IProps>;
+    sortSelect: CSSProps<IProps>;
     sortSelectControl: CSSProps<IProps>;
-    sortSelectOption: CSSProps<IProps>;
-    sortSelectOptionFocused: CSSProps<IProps>;
-    sortSelectOptionSelected: CSSProps<IProps>;
-
     transportsBtn: CSSProps<IProps>;
     footer: CSSProps<IProps>;
-    selectContainer: CSSProps<IProps>;
-    selectControl: CSSProps<IProps>;
-    selectMenu: CSSProps<IProps>;
-    selectOption: CSSProps<IProps>;
-    selectOptionFocused: CSSProps<IProps>;
-    selectOptionSelected: CSSProps<IProps>;
+    timePrefSelect: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -98,19 +89,6 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         this.state = {
             tripToBadge: new Map<Trip, Badges>()
         };
-        // if (this.props.eventBus) {
-            // TODO: chech why this is no longer necessary. If still needed put this logic in a wrapper of
-            // onAlternativeChange passed to TripRow.
-            // this.props.eventBus.addListener(TRIP_ALT_PICKED_EVENT, (orig: TripGroup, update: TripGroup) => {
-            //     setTimeout(() => {
-            //         const updatedTripIndex = this.props.values.indexOf(update);
-            //         if (updatedTripIndex !== -1) {
-            //             this.rowRefs[updatedTripIndex].focus();
-            //         }
-            //     }, 100);
-            //
-            // });
-        // }
         this.onKeyDown = this.onKeyDown.bind(this);
     }
 
@@ -167,35 +145,20 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions();
         const routingQuery = this.props.query;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
-        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
         const renderSubHeader = this.props.portrait ? () => {
             return (
-                <div className={classes.footer + " gl-flex gl-align-center gl-space-between"}>
-                    <Select
+                <div className={classes.footer}>
+                    <TKUISelect
                         options={timePrefOptions}
                         value={timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
-                        styles={{
-                            container: styles => ({...styles, ...injectedStyles.selectContainer}),
-                            control: styles => ({...styles, ...injectedStyles.selectControl}),
-                            menu: styles => ({...styles, ...injectedStyles.selectMenu}),
-                            option: (styles: any, state: any) => ({
-                                ...styles, ...injectedStyles.selectOption,
-                                ...(state.isFocused && injectedStyles.selectOptionFocused),
-                                ...(state.isSelected && injectedStyles.selectOptionSelected)})
-                        }}
-                        components={{ IndicatorsContainer: SelectDownArrow }}
-                        // menuIsOpen={true}
+                        className={classes.timePrefSelect}
+                        menuStyle={{marginTop: '3px'}}
                     />
                     {routingQuery.timePref !== TimePreference.NOW &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                         value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
-                        onChange={(date: Moment) => {
-                            this.updateQuery({time: date});
-                            // if (DeviceUtil.isDesktop && this.goBtnRef) {    // give focus to go button after selecting time.
-                            //     setTimeout(() => this.goBtnRef.focus(), 50);
-                            // }
-                        }}
+                        onChange={(date: Moment) => this.updateQuery({time: date})}
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                         disabled={datePickerDisabled}
@@ -231,21 +194,16 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             >
                 <TKUIScrollForCard className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>
-                        <Select
+                        <TKUISelect
                             options={sortOptions}
                             value={sortOptions.find((option: any) => option.value === this.props.sort)}
                             onChange={(option) => this.props.onSortChange(option.value as TripSort)}
-                            isSearchable={false}
-                            styles={{
-                                container: styles => ({...styles, ...injectedStyles.sortSelectContainer}),
-                                control: styles => ({...styles, ...injectedStyles.sortSelectControl}),
-                                indicatorsContainer: styles => ({...styles, display: 'none'}),
-                                option: (styles: any, state: any) => ({
-                                    ...styles, ...injectedStyles.sortSelectOption,
-                                    ...(state.isFocused && injectedStyles.sortSelectOptionFocused),
-                                    ...(state.isSelected && injectedStyles.sortSelectOptionSelected)})
+                            className={classes.sortSelect}
+                            controlStyle={injectedStyles.sortSelectControl}
+                            menuStyle={{marginTop: '3px'}}
+                            components={{
+                                IndicatorsContainer: (props: any) => null
                             }}
-                            // menuIsOpen={true}
                         />
                         <div>
 

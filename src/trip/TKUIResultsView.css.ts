@@ -13,18 +13,15 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             background: '#f5f6f7',
             minHeight: '100%'
         },
-
         row: {
             marginBottom: '15px',
             '&:hover': {
                 backgroundColor: '#fbfbfb'
             }
         },
-
         rowSelected: {
             backgroundColor: '#f3f3f3!important'
         },
-
         iconLoading: {
             margin: '0 5px',
             width: '20px',
@@ -34,7 +31,6 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.animateSpin,
             ...genStyles.svgFillCurrColor
         },
-
         sortBar: {
             ...genStyles.flex,
             ...genStyles.spaceBetween,
@@ -42,39 +38,22 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.fontS,
             color: tKUIColors.black1
         },
-
-        sortSelectContainer: {
+        sortSelect: {
             minWidth: '200px',
             ...genStyles.grow
         },
-
         sortSelectControl: {
-            border: 'none',
             backgroundImage: 'url('+ Constants.absUrl("/images/ic-sort.svg") + ')!important',
             backgroundRepeat: 'no-repeat!important',
             backgroundPosition: '10px 50%!important',
             backgroundSize: '18px',
             paddingLeft: '35px',
-            cursor: 'pointer',
             backgroundColor: '#00000000'
         },
-
-        sortSelectOption: {
-            color: tKUIColors.black1,
-            cursor: 'pointer'
-        },
-
-        sortSelectOptionFocused: {
-            backgroundColor: theme.colorPrimaryOpacity(.2)
-        },
-
-        sortSelectOptionSelected: {
-            color: 'white',
-            backgroundColor: theme.colorPrimaryOpacity(.5)
-        },
-
-
         footer: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...genStyles.spaceBetween,
             '& input': {
                 border: 'none',
                 background: 'initial',
@@ -94,28 +73,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...resetStyles.button,
             padding: '10px'
         },
-        selectContainer: {
-            minWidth: '92px',
-            ...genStyles.fontS
-        },
-        selectControl: {
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer',
-        },
-        selectMenu: {
-            marginTop: '3px'
-        },
-        selectOption: {
-            color: tKUIColors.black1,
-            cursor: 'pointer'
-        },
-        selectOptionFocused: {
-            backgroundColor: theme.colorPrimaryOpacity(.2)
-        },
-        selectOptionSelected: {
-            color: 'white',
-            backgroundColor: theme.colorPrimaryOpacity(.5)
+        timePrefSelect: {
+            minWidth: '92px'
         }
-
     });

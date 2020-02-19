@@ -30,9 +30,9 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import Region from "model/region/Region";
-import Select from 'react-select';
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
+import TKUISelect from "../buttons/TKUISelect";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -72,6 +72,7 @@ interface IStyle {
     swap: CSSProps<IProps>;
     footer: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
+    timePrefSelect: CSSProps<IProps>;
     selectContainer: CSSProps<IProps>;
     selectControl: CSSProps<IProps>;
     selectMenu: CSSProps<IProps>;
@@ -194,8 +195,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions();
-        const injectedStyles = this.props.injectedStyles;
-        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
         return (
             <div className={classes.main}>
                 {this.props.landscape &&
@@ -298,33 +297,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 {this.props.landscape &&
                     <div
                         className={classes.footer}>
-                        <Select
+                        <TKUISelect
                             options={timePrefOptions}
                             value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
                             onChange={(option) => this.onPrefChange(option.value)}
-                            styles={{
-                                container: styles => ({...styles, ...injectedStyles.selectContainer}),
-                                control: styles => ({...styles, ...injectedStyles.selectControl}),
-                                menu: styles => ({...styles, ...injectedStyles.selectMenu}),
-                                option: (styles: any, state: any) => ({
-                                    ...styles, ...injectedStyles.selectOption,
-                                    ...(state.isFocused && injectedStyles.selectOptionFocused),
-                                    ...(state.isSelected && injectedStyles.selectOptionSelected)
-                                })
-                            }}
-                            components={{IndicatorsContainer: SelectDownArrow}}
-                            // menuIsOpen={true}
-                            isSearchable={false}
+                            className={classes.timePrefSelect}
+                            menuStyle={{marginTop: '3px'}}
                         />
                         {routingQuery.timePref !== TimePreference.NOW &&
                         <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                             value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
-                            onChange={(date: Moment) => {
-                                this.updateQuery({time: date});
-                                // if (DeviceUtil.isDesktop && this.goBtnRef) {    // give focus to go button after selecting time.
-                                //     setTimeout(() => this.goBtnRef.focus(), 50);
-                                // }
-                            }}
+                            onChange={(date: Moment) => this.updateQuery({time: date})}
                             timeFormat={DateTimeUtil.TIME_FORMAT}
                             dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                             disabled={datePickerDisabled}

@@ -71,34 +71,39 @@ export default [
     // `file` and `format` for each target)
     {
         input: 'src/index.tsx',
+        // input: {
+        //     file: 'dist/index.js',
+        // },
+        // context: 'this',
+        // moduleContext: (id)=>'window',
         external: ['react-drag-drawer'],
         plugins: [
-            typescript(), // so Rollup can convert TypeScript to JavaScript
+            typescript(
+                // {
+                // outDir: "./dist",
+                // module: 'CommonJS',
+                // target: "es5"
+            // }
+            ), // so Rollup can convert TypeScript to JavaScript
+            commonjs({
+                extensions: ['.js', '.ts']
+            }),
             // cssOnly({ output: 'index.css' }),
             // modularCss(),
             postcss({
                 autoModules: true
             }),
             url(),
-            svgr(
-                // {
-                // svgoConfig: {
-                //     plugins: {
-                        // removeViewBox: false
-                        // removeTitle: false
-                    // }
-                // }
-            // }
-            ),
+            svgr(),
             json()
         ],
         preserveModules: true,
         output:
             // [
             // { file: pkg.main, format: 'cjs' },
-            {
-                dir: 'dist'
-            },
+            // { dir: '.' },
+            { dir: 'dist' },
+            // { dir: 'dist', format: 'es'},
             // { file: pkg.module, format: 'es' }
         // ]
     }
