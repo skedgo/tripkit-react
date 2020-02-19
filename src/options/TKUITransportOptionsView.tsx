@@ -1,11 +1,9 @@
 import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptions";
 import Region from "../model/region/Region";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUITransportOptionsViewDefaultStyle} from "./TKUITransportOptionsView.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import Util from "../util/Util";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
@@ -14,16 +12,17 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import RegionsData from "../data/RegionsData";
 import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
 import RegionInfo from "../model/region/RegionInfo";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    onClose?: () => void;
+    onRequestClose?: () => void;
+    value: TKUserProfile,
+    onChange: (value: TKUserProfile) => void
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     region?: Region;
     regionInfo?: RegionInfo;
-    value: TKTransportOptions,
-    onChange: (value: TKTransportOptions) => void
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -41,23 +40,33 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITransportOptionsView"
 };
 
-class TKUITransportOptionsView extends React.Component<IProps, {}> {
+interface IState {
+    update: TKUserProfile;
+}
+
+class TKUITransportOptionsView extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
         this.onChange = this.onChange.bind(this);
-    }
-
-    private close() {
-        if (this.props.onClose) {
-            this.props.onClose();
+        this.onRequestClose = this.onRequestClose.bind(this);
+        this.state = {
+            update: this.props.value
         }
     }
 
-    private onChange(mode: string, value: DisplayConf) {
-        const transOptions = Util.deepClone(this.props.value);
-        transOptions.setTransportOption(mode, value);
-        this.props.onChange(transOptions);
+    private onChange(update: TKUserProfile) {
+        this.setState({
+            update: update
+        });
+    }
+
+    private onRequestClose() {
+        if (this.props.onRequestClose) {
+            // Communicate change upwards on close
+            this.state.update !== this.props.value && this.props.onChange(this.state.update);
+            this.props.onRequestClose();
+        }
     }
 
     public render(): React.ReactNode {
@@ -65,22 +74,20 @@ class TKUITransportOptionsView extends React.Component<IProps, {}> {
         if (!region) {
             return null;
         }
-        const transOptions = this.props.value;
         const classes = this.props.classes;
         return (
             <TKUICard
                 title={"Transport"}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
-                onRequestClose={() => this.close()}
+                onRequestClose={this.onRequestClose}
             >
                 <div className={classes.main}>
                     {region.modes.map((mode: string, i: number) => {
-                            const modeOption = transOptions.getTransportOption(mode);
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
                         return <TKUITransportOptionsRow
                             mode={modeIdentifier}
-                            value={modeOption}
-                            onChange={(value: DisplayConf) => this.onChange(mode, value)}
+                            value={this.state.update}
+                            onChange={this.onChange}
                             key={i}
                         />
                     })}
@@ -95,23 +102,14 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     return (
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
-                <OptionsContext.Consumer>
-                    {(optionsContext: IOptionsContext) =>
-                        <RoutingResultsContext.Consumer>
-                            {(routingContext: IRoutingResultsContext) =>
-                                props.children!({
-                                    value: optionsContext.value.transportOptions,
-                                    onChange: (value: TKTransportOptions) => {
-                                        const newValue = Util.iAssign(optionsContext.value, {transportOptions: value});
-                                        optionsContext.onChange(newValue);
-                                    },
-                                    region: routingContext.region,
-                                    regionInfo: routingContext.regionInfo,
-                                    ...viewportProps
-                                })}
-                        </RoutingResultsContext.Consumer>
-                    }
-                </OptionsContext.Consumer>
+                <RoutingResultsContext.Consumer>
+                    {(routingContext: IRoutingResultsContext) =>
+                        props.children!({
+                            region: routingContext.region,
+                            regionInfo: routingContext.regionInfo,
+                            ...viewportProps
+                        })}
+                </RoutingResultsContext.Consumer>
             }
         </TKUIViewportUtil>
     );

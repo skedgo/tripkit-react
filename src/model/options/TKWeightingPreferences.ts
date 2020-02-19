@@ -35,8 +35,7 @@ class TKWeightingPreferences {
             this.time.toFixed(2) + "," + this.hassle.toFixed(2) + ")";
     }
 
-    public static slidePrefTo(prefs: TKWeightingPreferences, pref: WeightingPreference, value: number) {
-        console.log(Object.keys(WeightingPreference));
+    public static slidePrefTo(prefs: TKWeightingPreferences, pref: WeightingPreference, value: number): TKWeightingPreferences {
         const result = new TKWeightingPreferences();
         const total = 5;
         const oldRemainder = total - prefs[pref];
@@ -48,7 +47,6 @@ class TKWeightingPreferences {
                 result[prefName] = Math.min((prefs[prefName] * newRemainder) / oldRemainder, 2);
             }
         }
-        console.log(result);
         return result;
     }
 }

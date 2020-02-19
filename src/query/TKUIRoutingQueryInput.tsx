@@ -37,7 +37,7 @@ import TKUISelect from "../buttons/TKUISelect";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
     showTransportsBtn?: boolean;
-    onShowOptions?: () => void;
+    onShowTransportOptions?: () => void;
     isTripPlanner?: boolean;
     collapsable?: boolean;
     geocoderOptions?: MultiGeocoderOptions;
@@ -318,7 +318,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement="right"
                             overlay={
                                 <TKUITransportSwitchesView
-                                    onMoreOptions={this.props.onShowOptions}
+                                    onMoreOptions={this.props.onShowTransportOptions}
                                 />
                             }
                             mouseEnterDelay={.5}

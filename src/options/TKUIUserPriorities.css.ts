@@ -8,6 +8,7 @@ export const tKUIUserPrioritiesDefaultStyle: TKUIStyles<TKUIUserPrioritiesStyle,
         main: {
             ...genStyles.flex,
             ...genStyles.column,
+            padding: '30px',
             '&>*': {
                 marginBottom: '15px'
             },

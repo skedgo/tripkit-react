@@ -47,10 +47,15 @@ import GeolocationData from "../geocode/GeolocationData";
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import TKUIReportBtn from "../feedback/TKUIReportBtn";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {}
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {
+    userProfile: TKUserProfile;
+    onUserProfileChange: (update: TKUserProfile) => void;
+}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -75,6 +80,7 @@ interface IState {
     mapView: boolean;
     showSidebar: boolean;
     showSettings: boolean;
+    showTransportSettings: boolean;
     showFavourites: boolean;
     showTripDetail?: boolean;
     showTimetable: boolean;
@@ -113,14 +119,6 @@ interface IState {
     // Limpiar codigo luego de todos los cambios que hice
     // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 
-function getTranslate3d(el: any) {
-    let values = el.style.transform.split(/\w+\(|\);?/);
-    if (!values[1] || !values[1].length) {
-        return [];
-    }
-    return values[1].split(/,\s?/g).map((coordS: string) => parseInt(coordS.slice(0, coordS.indexOf("px"))));
-}
-
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private ref: any;
@@ -130,6 +128,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.state = {
             showSidebar: false,
             showSettings: false,
+            showTransportSettings: false,
             mapView: false,
             showFavourites: false,
             showTripDetail: TKShareHelper.isSharedTripLink(),
@@ -149,6 +148,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         WaiAriaUtil.addTabbingDetection();
 
         this.onShowSettings = this.onShowSettings.bind(this);
+        this.onShowTransportSettings = this.onShowTransportSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
 
         // For development:
@@ -169,6 +169,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private onShowSettings() {
         GATracker.instance.send('query input', 'click', 'options button');
         RegionsData.instance.requireRegions().then(() => this.setState({showSettings: true}));
+    }
+
+    private onShowTransportSettings() {
+        this.setState({showTransportSettings: true});
     }
 
     private onFavouriteClicked(favourite: Favourite) {
@@ -215,14 +219,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const settings = this.state.showSettings &&
             <TKUIProfileView
-                onClose={() => this.setState({showSettings: false})}
+                onRequestClose={() => this.setState({showSettings: false})}
+            />;
+        const transportSettings = this.state.showTransportSettings &&
+            <TKUITransportOptionsView
+                value={this.props.userProfile}
+                onChange={this.props.onUserProfileChange}
+                onRequestClose={() => this.setState({showTransportSettings: false})}
             />;
         const queryInput = this.props.directionsView &&
             !(this.props.portrait && this.state.showTripDetail && this.props.selected) &&
             <TKUIRoutingQueryInput
                 title={"Route"}
                 isTripPlanner={true}
-                onShowOptions={this.onShowSettings}
+                onShowTransportOptions={this.onShowTransportSettings}
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
@@ -367,13 +377,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                        tooltipClassName={classes.reportTooltipClassName}/>
                         {sideBar}
                         {settings}
+                        {transportSettings}
                         {locationDetailView}
                         {favouritesView}
                         {routingResultsView}
                         {tripDetailView}
                         {departuresView}
                         {serviceDetailView}
-                        {<TKUITransportOptionsView/>}
                     </div>
                 }
             </TKUIConfigContext.Consumer>
@@ -454,15 +464,25 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     return (
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingResultsContext: IRoutingResultsContext) =>
-                        <ServiceResultsContext.Consumer>
-                            {(serviceContext: IServiceResultsContext) => (
-                                props.children!({...routingResultsContext, ...serviceContext, ...viewportProps})
-                            )}
-                        </ServiceResultsContext.Consumer>
+                <OptionsContext.Consumer>
+                    {(optionsContext: IOptionsContext) =>
+                        <RoutingResultsContext.Consumer>
+                            {(routingResultsContext: IRoutingResultsContext) =>
+                                <ServiceResultsContext.Consumer>
+                                    {(serviceContext: IServiceResultsContext) => (
+                                        props.children!({
+                                            ...routingResultsContext,
+                                            ...serviceContext,
+                                            ...viewportProps,
+                                            userProfile: optionsContext.value,
+                                            onUserProfileChange: optionsContext.onChange
+                                        })
+                                    )}
+                                </ServiceResultsContext.Consumer>
+                            }
+                        </RoutingResultsContext.Consumer>
                     }
-                </RoutingResultsContext.Consumer>
+                </OptionsContext.Consumer>
             }
         </TKUIViewportUtil>
     );
