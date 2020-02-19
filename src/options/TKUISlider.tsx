@@ -5,7 +5,7 @@ import genStyles from "../css/GenStyle.css";
 
 export type TKUISliderProps = SliderProps &
     {
-        thumbIcon: string,
+        thumbIcon?: string,
         label?: string,
         leftLabel?: string,
         rightLabel?: string
@@ -37,20 +37,12 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
                         boxShadow: iOSBoxShadow,
                     },
                 },
-                backgroundImage: 'url("' + Constants.absUrl(this.props.thumbIcon) + '")',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center'
-            },
-            // valueLabel: {
-            //     left: 'calc(-50% + 11px)',
-            //     top: 33,
-            //     '& *': {
-            //         background: 'transparent',
-            //         color: '#000',
-            //     },
-            //     fontFamily: 'inherit',
-            //     ...genStyles.fontS
-            // },
+                ...this.props.thumbIcon && {
+                    backgroundImage: 'url("' + Constants.absUrl(this.props.thumbIcon) + '")',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                }
+            }
         })(Slider);
     }
 

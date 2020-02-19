@@ -37,6 +37,7 @@ import {TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle} from "../o
 import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "../options/TKUITransportOptionsRow";
 import {TKUIButtonProps, TKUIButtonStyle} from "../buttons/TKUIButton";
 import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "../options/TKUITransportSwitchesView";
+import {TKUISelectProps, TKUISelectStyle} from "../buttons/TKUISelect";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -51,6 +52,7 @@ interface ITKUIConfigOptional {
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
     TKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
+    TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;
     TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
     TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
     TKUIRoutingResultsView: TKComponentConfig<TKUIResultsViewProps, TKUIResultsViewStyle>;

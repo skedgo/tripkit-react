@@ -21,6 +21,9 @@ class TKTransportOptions {
     @JsonProperty('transportToOption', TransportOptionMapConverter, true)
     private transportToOption: Map<string, DisplayConf> = new Map<string, DisplayConf>();
 
+    @JsonProperty('avoidTransports', [String], true)
+    private avoidTransports: string[] = [];
+
     public setTransportOption(mode: string, option: DisplayConf) {
         if (option === DisplayConf.NORMAL) {
             this.transportToOption.delete(mode);
@@ -36,6 +39,22 @@ class TKTransportOptions {
 
     public isModeEnabled(mode: string) {
         return this.getTransportOption(mode) !== DisplayConf.HIDDEN;
+    }
+
+    public setPreferredTransport(mode: string, enabled: boolean) {
+        if (enabled) {
+            if (this.avoidTransports.indexOf(mode) !== -1) { // remove from avoided list, if present
+                this.avoidTransports.splice(this.avoidTransports.indexOf(mode), 1);
+            }
+        } else {
+            if (this.avoidTransports.indexOf(mode) === -1) { // add to avoided list, if not present
+                this.avoidTransports.push(mode);
+            }
+        }
+    }
+
+    public isPreferredTransport(mode: string): boolean {
+        return this.avoidTransports.indexOf(mode) === -1;
     }
 
 }

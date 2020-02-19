@@ -119,6 +119,9 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             ...resetStyles.button,
             padding: '10px'
         },
+        timePrefSelect: {
+            minWidth: '92px'
+        },
         selectContainer: {
             minWidth: '92px',
             ...genStyles.fontS
@@ -126,7 +129,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         selectControl: {
             border: 'none',
             background: 'none',
-            cursor: 'pointer',
+            cursor: 'pointer'
         },
         selectMenu: {
             marginTop: '3px'

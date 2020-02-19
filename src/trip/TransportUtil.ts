@@ -158,6 +158,18 @@ class TransportUtil {
         }
         return representativeSegment;
     }
+
+    public static isPT(modeId: string) {
+        return modeId.startsWith("pt");
+    }
+
+    public static isWalk(modeId: string) {
+        return modeId === "wa_wal";
+    }
+
+    public static isCycle(modeId: string) {
+        return modeId.startsWith("cy_bic");
+    }
 }
 
 export default TransportUtil;

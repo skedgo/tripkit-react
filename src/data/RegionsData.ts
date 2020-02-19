@@ -7,6 +7,8 @@ import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import LocationUtil from "../util/LocationUtil";
 import City from "../model/location/City";
+import RegionInfo from "../model/region/RegionInfo";
+import RegionInfoResults from "../model/region/RegionInfoResults";
 
 export class RegionsData {
 
@@ -16,6 +18,8 @@ export class RegionsData {
     private regionsPromise: Promise<Map<string, Region>>;
     private _modes: Map<string, ModeIdentifier> = new Map<string, ModeIdentifier>();
     private cachedRegion?: Region;
+    private regionInfosRequests: Map<string, Promise<RegionInfo>> = new Map<string, Promise<RegionInfo>>();
+    private regionInfos: Map<string, RegionInfo> = new Map<string, RegionInfo>();
 
     constructor() {
         const jsonConvert = new JsonConvert();
@@ -151,6 +155,23 @@ export class RegionsData {
 
     public getRegionList(): Region[] | undefined {
         return this._regionList;
+    }
+
+    public getRegionInfoP(code: string): Promise<RegionInfo> {
+        if (!this.regionInfosRequests.get(code)) {
+            const regionInfoRequest =
+                TripGoApi.apiCallT("regionInfo.json",
+                    NetworkUtil.MethodType.POST,
+                    RegionInfoResults,
+                    { region: code })
+                    .then((regionInfoResult: RegionInfoResults) => {
+                        const regionInfo = regionInfoResult.regions[0];
+                        this.regionInfos.set(code, regionInfo);
+                        return regionInfo;
+                    });
+            this.regionInfosRequests.set(code, regionInfoRequest);
+        }
+        return this.regionInfosRequests.get(code)!;
     }
 }
 

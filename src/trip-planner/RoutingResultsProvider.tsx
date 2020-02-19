@@ -8,11 +8,9 @@ import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
+import RegionInfo from "../model/region/RegionInfo";
 
 export interface IRoutingResultsContext {
-    // TODO: Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
-    // TKRoutingResultsProvider as props (similar to OptionsView). So TKRoutingResultsProvider is a consumer of TKQueryProvider.
-    // Just pass the query to TKRoutingResultsProvider, not the onQueryChange.
     query: RoutingQuery;
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
@@ -20,6 +18,7 @@ export interface IRoutingResultsContext {
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
     region?: Region;
+    regionInfo?: RegionInfo;
     viewport?: {center?: LatLng, zoom?: number};    // Maybe define viewport as required.
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => void;
     directionsView: boolean;
@@ -57,9 +56,7 @@ class RoutingResultsProvider extends React.Component<{
     options: TKUserProfile,
     testTrips?: Trip[]}, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
-        props = {...props,
-            // trips: this.props.testTrips
-        };
+        props = {...props};
         return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
     });
 
