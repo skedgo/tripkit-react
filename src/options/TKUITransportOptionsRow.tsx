@@ -13,9 +13,8 @@ import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import {withTheme} from "react-jss";
-import {tKUIColors, tKUIDeaultTheme, TKUITheme} from "../jss/TKUITheme";
+import {tKUIColors, tKUIDeaultTheme} from "../jss/TKUITheme";
 import ModeInfo from "../model/trip/ModeInfo";
-import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
@@ -26,13 +25,11 @@ import TKUISelect from "../buttons/TKUISelect";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mode: ModeIdentifier;
-    value: DisplayConf;
-    onChange: (value: DisplayConf) => void;
+    value: TKUserProfile;
+    onChange: (value: TKUserProfile) => void;
 }
 
 interface IConsumedProps {
-    userProfile: TKUserProfile;
-    onUserProfileChange: (options: TKUserProfile) => void;
     regionInfo?: RegionInfo;
 }
 
@@ -97,9 +94,9 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const mode = this.props.mode;
         const value = this.props.value;
+        const displayValue = value.transportOptions.getTransportOption(mode.identifier);
         const regionInfo = this.props.regionInfo;
         const transitModes = regionInfo && regionInfo.transitModes;
-        const userProfile = this.props.userProfile;
         const classes = this.props.classes;
         const minimizedOption = false && // Hidden for now
             <div className={classes.checkboxRow}>
@@ -107,10 +104,13 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     Minimised
                 </div>
                 <GreenCheckbox
-                    checked={value === DisplayConf.BRIEF}
+                    checked={displayValue === DisplayConf.BRIEF}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
-                        this.props.onChange(checked ? DisplayConf.BRIEF : DisplayConf.NORMAL);
+                        const update = Util.deepClone(this.props.value);
+                        update.transportOptions.setTransportOption(mode.identifier,
+                            checked ? DisplayConf.BRIEF : DisplayConf.NORMAL);
+                        this.props.onChange(update);
                     }}
                     value="primary"
                     inputProps={{'aria-label': 'primary checkbox'}}
@@ -131,12 +131,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                                 {transMode.alt}
                             </div>
                             <GreenCheckbox
-                                checked={this.props.userProfile.transportOptions.isPreferredTransport(transMode.identifier!)}
+                                checked={value.transportOptions.isPreferredTransport(transMode.identifier!)}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     const checked = event.target.checked;
-                                    const userProfileUpdate = Util.deepClone(userProfile);
-                                    userProfileUpdate.transportOptions.setPreferredTransport(transMode.identifier!, checked);
-                                    this.props.onUserProfileChange(userProfileUpdate);
+                                    const update = Util.deepClone(value);
+                                    update.transportOptions.setPreferredTransport(transMode.identifier!, checked);
+                                    this.props.onChange(update);
                                 }}
                                 onClick={event => event.stopPropagation()}
                                 onFocus={event => event.stopPropagation()}
@@ -154,15 +154,15 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         Min transfer time
                     </div>
                     <div>
-                        {userProfile.minimumTransferTime + " mins"}
+                        {value.minimumTransferTime + " mins"}
                     </div>
                 </div>
                 <TKUISlider
-                    value={userProfile.minimumTransferTime}
+                    value={value.minimumTransferTime}
                     onChange={(event: any, value: any) => {
-                        const userProfileUpdate = Util.deepClone(userProfile);
+                        const userProfileUpdate = Util.deepClone(this.props.value);
                         userProfileUpdate.minimumTransferTime = value;
-                        this.props.onUserProfileChange(userProfileUpdate);
+                        this.props.onChange(userProfileUpdate);
                     }}
                     min={0}
                     max={100}
@@ -174,12 +174,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     Concession pricing
                 </div>
                 <GreenCheckbox
-                    checked={userProfile.transitConcessionPricing}
+                    checked={value.transitConcessionPricing}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
-                        const userProfileUpdate = Util.deepClone(userProfile);
+                        const userProfileUpdate = Util.deepClone(value);
                         userProfileUpdate.transitConcessionPricing = checked;
-                        this.props.onUserProfileChange(userProfileUpdate);
+                        this.props.onChange(userProfileUpdate);
                     }}
                     value="primary"
                     inputProps={{'aria-label': 'primary checkbox'}}
@@ -191,12 +191,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     Wheelchair information
                 </div>
                 <GreenCheckbox
-                    checked={userProfile.wheelchair}
+                    checked={value.wheelchair}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
-                        const userProfileUpdate = Util.deepClone(userProfile);
+                        const userProfileUpdate = Util.deepClone(value);
                         userProfileUpdate.wheelchair = checked;
-                        this.props.onUserProfileChange(userProfileUpdate);
+                        this.props.onChange(userProfileUpdate);
                     }}
                     value="primary"
                     inputProps={{ 'aria-label': 'primary checkbox' }}
@@ -211,12 +211,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             walkSpeedSelect =
                 <TKUISelect
                     options={walkSpeedOptions}
-                    value={walkSpeedOptions.find((option: any) => option.value === userProfile.walkingSpeed)}
+                    value={walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
                     onChange={(option) => {
                         const walkSpeed = option.value;
-                        const userProfileUpdate = Util.deepClone(userProfile);
+                        const userProfileUpdate = Util.deepClone(value);
                         userProfileUpdate.walkingSpeed = walkSpeed;
-                        this.props.onUserProfileChange(userProfileUpdate);
+                        this.props.onChange(userProfileUpdate);
                     }}
                     className={classes.walkSpeedSelect}
                 />
@@ -237,12 +237,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             cycleSpeedSelect =
                 <TKUISelect
                     options={cycleSpeedOptions}
-                    value={cycleSpeedOptions.find((option: any) => option.value === userProfile.cyclingSpeed)}
+                    value={cycleSpeedOptions.find((option: any) => option.value === value.cyclingSpeed)}
                     onChange={(option) => {
                         const cycleSpeed = option.value;
-                        const userProfileUpdate = Util.deepClone(userProfile);
+                        const userProfileUpdate = Util.deepClone(value);
                         userProfileUpdate.cyclingSpeed = cycleSpeed;
-                        this.props.onUserProfileChange(userProfileUpdate);
+                        this.props.onChange(userProfileUpdate);
                     }}
                     className={classes.walkSpeedSelect}
                 />
@@ -260,7 +260,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             <ExpansionPanel
                 expanded={this.state.expanded}
                 onChange={(event: any, expanded: boolean) => {
-                    if (value === DisplayConf.HIDDEN || !hasContent) {
+                    if (displayValue === DisplayConf.HIDDEN || !hasContent) {
                         return;
                     }
                     this.setState({expanded: expanded})
@@ -270,16 +270,19 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 }}
             >
                 <ExpansionPanelSummary
-                    expandIcon={value !== DisplayConf.HIDDEN && hasContent ? <IconAngleDown className={classes.iconExpand}/> : undefined}
+                    expandIcon={displayValue !== DisplayConf.HIDDEN && hasContent ? <IconAngleDown className={classes.iconExpand}/> : undefined}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
                     <div className={classes.main}>
                         <GreenCheckbox
-                            checked={value !== DisplayConf.HIDDEN}
+                            checked={displayValue !== DisplayConf.HIDDEN}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 const checked = event.target.checked;
-                                this.props.onChange(checked ? DisplayConf.NORMAL : DisplayConf.HIDDEN);
+                                const update = Util.deepClone(this.props.value);
+                                update.transportOptions.setTransportOption(mode.identifier,
+                                    checked ? DisplayConf.NORMAL : DisplayConf.HIDDEN);
+                                this.props.onChange(update);
                                 if (!checked && this.state.expanded) {
                                     this.setState({expanded: false})
                                 }
@@ -319,19 +322,13 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingContext: IRoutingResultsContext) => {
-                        const consumedProps: IConsumedProps = {
-                            userProfile: optionsContext.value,
-                            onUserProfileChange: optionsContext.onChange,
-                            regionInfo: routingContext.regionInfo
-                        };
-                        return children!({...inputProps, ...consumedProps})
-                    }}
-                </RoutingResultsContext.Consumer>
-            }
-        </OptionsContext.Consumer>;
+        <RoutingResultsContext.Consumer>
+            {(routingContext: IRoutingResultsContext) => {
+                const consumedProps: IConsumedProps = {
+                    regionInfo: routingContext.regionInfo
+                };
+                return children!({...inputProps, ...consumedProps})
+            }}
+        </RoutingResultsContext.Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUITransportOptionsRow, config, Mapper);

@@ -142,6 +142,9 @@ const genStyles: ITKUIGenStyle = {
         },
         '& circle': {
             fill: 'currentColor'
+        },
+        '& polygon': {
+            fill: 'currentColor'
         }
     },
 

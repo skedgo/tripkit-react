@@ -143,8 +143,7 @@ export class RegionsData {
 
     public getModeIdentifierP(id: string): Promise<ModeIdentifier | undefined> {
         return this.regionsPromise.then(() => {
-            const modeIdentifier = this.getModeIdentifier(id);
-            return modeIdentifier;
+            return this.getModeIdentifier(id);
         });
     }
 

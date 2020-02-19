@@ -1,12 +1,12 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIProfileViewProps, TKUIProfileViewStyle} from "./TKUIProfileView";
 import genStyles from "../css/GenStyle.css";
-import {TKUITheme} from "../jss/TKUITheme";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 
 export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIProfileViewProps> =
     (theme: TKUITheme) => ({
         main: {
-            padding: '30px',
+            padding: '30px 0',
             height: '100%',
             ...genStyles.flex,
             ...genStyles.column,
@@ -37,7 +37,27 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
         },
         sectionTitle: {
             ...genStyles.fontM,
-            marginBottom: '15px'
+            padding: '15px 30px'
+        },
+        sectionBody: {
+            padding: '0 30px',
+            borderTop: '1px solid ' + tKUIColors.black4,
+            borderBottom: '1px solid ' + tKUIColors.black4
+        },
+        optionRow: {
+            ...genStyles.flex,
+            padding: '15px 0',
+            '&:not(:last-child)': {
+                borderBottom: '1px solid ' + tKUIColors.black4
+            }
+        },
+        optionLink: {
+            ...genStyles.spaceBetween,
+            cursor: 'pointer',
+            '& svg': {
+                ...genStyles.svgFillCurrColor,
+                color: theme.colorPrimary
+            }
         },
         specialServices: {
             ...genStyles.flex,
@@ -87,5 +107,10 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
         checkboxGroup: {
             ...genStyles.flex,
             ...genStyles.alignCenter
+        },
+        closeBtn: {
+            width: '200px!important',
+            marginLeft: 'auto',
+            marginRight: 'auto',
         }
     });
