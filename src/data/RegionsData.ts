@@ -172,6 +172,10 @@ export class RegionsData {
         }
         return this.regionInfosRequests.get(code)!;
     }
+
+    public getRegionInfo(code: string): RegionInfo | undefined {
+        return this.regionInfos.get(code);
+    }
 }
 
 export default RegionsData;

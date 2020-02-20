@@ -2,7 +2,7 @@ import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2t
 import {MapLocationType, MapLocationTypeConverter} from "../location/MapLocationType";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
-import TKTransportOptions from "./TKTransportOptions";
+import TKTransportOptions, {DisplayConf} from "./TKTransportOptions";
 import TKWeightingPreferences from "./TKWeightingPreferences";
 
 export enum WalkingSpeed {
@@ -37,8 +37,6 @@ class TKUserProfile {
     private _modesDisabled: string[] = TKUserProfile.defaultDisabled;
     @JsonProperty('transportOptions', TKTransportOptions, true)
     public transportOptions: TKTransportOptions = new TKTransportOptions();
-    @JsonProperty('wheelchair', Boolean, true)
-    private _wheelchair: boolean = false;
     @JsonProperty('transitConcessionPricing', Boolean, true)
     public transitConcessionPricing: boolean = false;
     @JsonProperty('mapLayers', MapLocationTypeConverter, true)
@@ -59,11 +57,14 @@ class TKUserProfile {
     }
 
     get wheelchair(): boolean {
-        return this._wheelchair;
+        return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);
     }
 
     set wheelchair(value: boolean) {
-        this._wheelchair = value;
+        this.transportOptions.setTransportOption(ModeIdentifier.WHEELCHAIR_ID, value ? DisplayConf.NORMAL : DisplayConf.HIDDEN);
+        if (value === false) { // Re-enable walk if wheelchair is disabled through this setter (e.g. from Wheelchi
+            this.transportOptions.setTransportOption(ModeIdentifier.WALK_ID, DisplayConf.NORMAL);
+        }
     }
 
     // TODO: Harcoded STOP layer as enabled.

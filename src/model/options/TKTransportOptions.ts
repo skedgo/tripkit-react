@@ -19,7 +19,7 @@ class TransportOptionMapConverter implements JsonCustomConvert<Map<ModeIdentifie
 class TKTransportOptions {
 
     @JsonProperty('transportToOption', TransportOptionMapConverter, true)
-    private transportToOption: Map<string, DisplayConf> = new Map<string, DisplayConf>();
+    private transportToOption: Map<string, DisplayConf> = new Map<string, DisplayConf>([[ModeIdentifier.WHEELCHAIR_ID, DisplayConf.HIDDEN]]);
 
     @JsonProperty('avoidTransports', [String], true)
     private avoidTransports: string[] = [];
@@ -29,6 +29,13 @@ class TKTransportOptions {
             this.transportToOption.delete(mode);
         } else {
             this.transportToOption.set(mode, option);
+        }
+        // Walk and wheelchair modes mutual exclusively enabled
+        if (mode === ModeIdentifier.WALK_ID && option === DisplayConf.NORMAL && this.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID)) {
+            this.setTransportOption(ModeIdentifier.WHEELCHAIR_ID, DisplayConf.HIDDEN)
+        }
+        if (mode === ModeIdentifier.WHEELCHAIR_ID && option === DisplayConf.NORMAL && this.isModeEnabled(ModeIdentifier.WALK_ID)) {
+            this.setTransportOption(ModeIdentifier.WALK_ID, DisplayConf.HIDDEN)
         }
     }
 

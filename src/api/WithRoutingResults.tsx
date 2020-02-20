@@ -402,6 +402,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             // }
             let modeSetsQ1;
             let modeSetsQ2;
+            const regionQ1 = this.getQueryRegion(q1);
+            const regionQ2 = this.getQueryRegion(q2);
             if (RegionsData.instance.hasRegions()) {
                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
                 modeSetsQ1 = computeModeSetsFc(q1, opts1);
@@ -411,19 +413,24 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 modeSetsQ2 = [[]]; // which happens when checking if same query on TripPlanner.componentDidMount
             }
             const q1Urls = modeSetsQ1.map((modeSet: string[]) => {
-                return q1.getQueryUrl(modeSet, opts1);
+                return q1.getQueryUrl(modeSet, opts1, regionQ1 && RegionsData.instance.getRegionInfo(regionQ1.name));
             });
             const q2Urls = modeSetsQ2.map((modeSet: string[]) => {
-                return q2.getQueryUrl(modeSet, opts2);
+                return q2.getQueryUrl(modeSet, opts2, regionQ2 && RegionsData.instance.getRegionInfo(regionQ2.name));
             });
             return JSON.stringify(q1Urls) === JSON.stringify(q2Urls);
         }
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
-                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
-                    return query.getQueryUrl(modeSet, this.props.options);
+                const queryRegion = this.getQueryRegion(query)!;
+                // Waiting for region info is not necessary if I send all avoid modes, which may include modes that are
+                // not present in the region.
+                return RegionsData.instance.getRegionInfoP(queryRegion.name).then((regionInfo: RegionInfo) => {
+                    const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                    return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
+                        return query.getQueryUrl(modeSet, this.props.options, regionInfo);
+                    });
                 });
             });
         }
@@ -472,6 +479,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
             });
             return routingPromises;
+        }
+
+        public getQueryRegion(query: RoutingQuery): Region | undefined {
+            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
+                (query.to && query.to.isResolved() ? query.to : undefined);
+            return referenceLatLng && RegionsData.instance.getRegion(referenceLatLng);
         }
 
         public getRoutingResultsJSONTest(): any {

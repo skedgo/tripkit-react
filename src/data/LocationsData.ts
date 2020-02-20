@@ -5,6 +5,7 @@ import {JsonConvert} from "json2typescript";
 import {EventEmitter, EventSubscription} from "fbemitter";
 import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
+import ModeIdentifier from "../model/region/ModeIdentifier";
 
 class LocationsData {
 
@@ -53,7 +54,7 @@ class LocationsData {
                 level: level,
                 cellIDs: level === 2 ? requestCells : undefined,
                 cellsPerDegree: level === 2 ? 75 : undefined,
-                modes: ["cy_bic", "cy_bic-s_ACT", "cy_bic-s", "me_car", "pt_pub"]
+                modes: [ModeIdentifier.BICYCLE_ID, "cy_bic-s_ACT", ModeIdentifier.BICYCLE_SHARE_ID, ModeIdentifier.CAR_ID, ModeIdentifier.PUBLIC_TRANSPORT_ID]
             };
 
             TripGoApi.apiCall("locations.json", NetworkUtil.MethodType.POST, locationsReq)

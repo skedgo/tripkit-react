@@ -119,7 +119,7 @@ class Segment extends SegmentTemplate {
     }
 
     public isPT(): boolean {
-        return this.modeIdentifier !== null && this.modeIdentifier.startsWith("pt");
+        return this.modeIdentifier !== null && this.modeIdentifier.startsWith(ModeIdentifier.PUBLIC_TRANSIT_ID);
     }
 
     public isTram(): boolean {
