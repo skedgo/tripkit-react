@@ -107,6 +107,9 @@ class TransportUtil {
         if (modeId.startsWith("wa_wal")) {
             return "walk";
         }
+        if (modeId.startsWith("wa_whe")) {
+            return "wheelchair";
+        }
         if (modeId.startsWith("ps_tax")) {
             return "taxi";
         }
@@ -157,14 +160,6 @@ class TransportUtil {
             }
         }
         return representativeSegment;
-    }
-
-    public static isPT(modeId: string) {
-        return modeId.startsWith("pt");
-    }
-
-    public static isWalk(modeId: string) {
-        return modeId === "wa_wal";
     }
 
     public static isCycle(modeId: string) {

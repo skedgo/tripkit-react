@@ -128,7 +128,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.state = {
             showSidebar: false,
             showSettings: false,
-            showTransportSettings: false,
+            showTransportSettings: true,
             mapView: false,
             showFavourites: false,
             showTripDetail: TKShareHelper.isSharedTripLink(),

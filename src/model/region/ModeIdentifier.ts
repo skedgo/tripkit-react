@@ -12,13 +12,38 @@ class ModeIdentifier {
 
     private _identifier: string = "";
 
+    public static readonly PUBLIC_TRANSIT_ID = "pt_";
+    public static readonly PUBLIC_TRANSPORT_ID = "pt_pub";
     public static readonly SCHOOLBUS_ID = "pt_ltd_SCHOOLBUS";
     public static readonly UBER_ID = "ps_tnc_UBER";
+    public static readonly CAR_ID = "me_car";
     public static readonly CAR_RENTAL_SW_ID = "me_car-r_SwiftFleet";
     public static readonly TAXI_ID = "ps_tax";
-    public static readonly PUBLIC_TRANSPORT_ID = "pt_pub";
     public static readonly TRAM_ID = "pt_pub_tram";
     public static readonly WALK_ID = "wa_wal";
+    public static readonly WHEELCHAIR_ID = "wa_whe";
+    public static readonly BICYCLE_ID = "cy_bic";
+    public static readonly BICYCLE_SHARE_ID = "cy_bic-s";
+
+    public isPT() {
+        return this.identifier.startsWith(ModeIdentifier.PUBLIC_TRANSIT_ID);
+    }
+
+    public isPTPub() {
+        return this.identifier.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+    }
+
+    public isWalk() {
+        return this.identifier === ModeIdentifier.WALK_ID;
+    }
+
+    public isWheelchair() {
+        return this.identifier === ModeIdentifier.WHEELCHAIR_ID;
+    }
+
+    public isBicycle() {
+        return this.identifier.startsWith(ModeIdentifier.BICYCLE_ID);
+    }
 
     get title(): string {
         return this._title;

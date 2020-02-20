@@ -2,6 +2,8 @@ import Location from "./Location";
 import {Moment} from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
+import RegionInfo from "./region/RegionInfo";
+import ModeInfo from "./trip/ModeInfo";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -91,7 +93,7 @@ class RoutingQuery {
             "&time=" + Math.floor(this.time.valueOf() / 1000);
     }
 
-    public getQueryUrl(modeSet: string[], options: TKUserProfile): string {
+    public getQueryUrl(modeSet: string[], options: TKUserProfile, regionInfo?: RegionInfo): string {
         if (this.from === null || this.to === null) {
             return "";
         }
@@ -99,22 +101,33 @@ class RoutingQuery {
         for (const mode of modeSet) {
             modeParams += "&modes=" + mode;
         }
-        // TODO: Model avoided modes
-        // if (modeSet.indexOf("pt_pub") !== -1) {
-        //     if (!options.isModeEnabled("pt_pub_bus")) {
-        //         modeParams += "&avoidModes[]=" + "pt_pub_bus";
-        //     }
-        //     if (!options.isModeEnabled("pt_pub_tram")) {
-        //         modeParams += "&avoidModes[]=" + "pt_pub_tram";
-        //     }
-        // }
+        let avoidModeParams = "";
+        if (regionInfo) {
+            console.log(regionInfo.transitModes);
+            const avoidModes = regionInfo.transitModes
+                .map((transitMode: ModeInfo) => transitMode.identifier!)
+                .filter((transitModeS: string) => !options.transportOptions.isPreferredTransport(transitModeS));
+            console.log(avoidModes);
+            for (const avoidMode of avoidModes) {
+                avoidModeParams += "&avoid=" + avoidMode;
+            }
+        }
+        const weightingPreferencesParam = "&wp=" + options.weightingPrefs.toUrlParam();
+        const minTransferTimeParam = "&tt=" + options.minimumTransferTime;
+        const walkingSpeedParam = "&ws=" + options.walkingSpeed;
+        const cyclingSpeedParam = "&cs=" + options.cyclingSpeed;
+        const concessionPricingParam = options.transitConcessionPricing ? "&conc=true" : ""; // API default: false
+        const wheelchairParam = options.wheelchair ? "&wheelchair=true" : ""; // API default: false
+
         return "routing.json?" +
             "from=(" + this.from.lat + "," + this.from.lng + ")&to=(" + this.to.lat + "," + this.to.lng + ")&" +
-            (this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter") + "=" + Math.floor(this.time.valueOf()/1000) +
-            modeParams +
-            "&wp=" + options.weightingPrefs.toUrlParam() +
-            "&tt=0&unit=auto&v=11&locale=en&ir=1&ws=1&cs=1&includeStops=true" +
-            (options.wheelchair ? "&wheelchair=true" : "");
+            (this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter") + "=" + Math.floor(this.time.valueOf() / 1000) +
+            modeParams + avoidModeParams +
+            weightingPreferencesParam +
+            minTransferTimeParam +
+            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
+            "&unit=auto&v=11&locale=en&ir=1&includeStops=true" +
+            wheelchairParam;
     }
 
     public isEmpty(): boolean {

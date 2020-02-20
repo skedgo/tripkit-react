@@ -4,7 +4,6 @@ import Region from "../model/region/Region";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUITransportOptionsViewDefaultStyle} from "./TKUITransportOptionsView.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
 import {CardPresentation, default as TKUICard} from "../card/TKUICard";
@@ -13,6 +12,7 @@ import RegionsData from "../data/RegionsData";
 import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
 import RegionInfo from "../model/region/RegionInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
+import ModeIdentifier from "../model/region/ModeIdentifier";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -75,6 +75,7 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
             return null;
         }
         const classes = this.props.classes;
+        const regionModes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
         return (
             <TKUICard
                 title={"Transport"}
@@ -82,8 +83,13 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
                 onRequestClose={this.onRequestClose}
             >
                 <div className={classes.main}>
-                    {region.modes.map((mode: string, i: number) => {
-                            const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
+                    {regionModes.map((mode: string, i: number) => {
+                        // Show wheelchair row just if region includes wheelchair accessibility information.
+                        if (mode === ModeIdentifier.WHEELCHAIR_ID &&
+                            (!this.props.regionInfo || !this.props.regionInfo.transitWheelchairAccessibility)) {
+                            return null;
+                        }
+                        const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
                         return <TKUITransportOptionsRow
                             mode={modeIdentifier}
                             value={this.state.update}

@@ -147,7 +147,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     )}
                 </div>
             </div>;
-        const minTransferTimeOption = TransportUtil.isPT(mode.identifier) &&
+        const minTransferTimeOption = mode.isPT() &&
             <div className={classes.sliderRow}>
                 <div className={classes.sliderHeader}>
                     <div>
@@ -168,7 +168,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     max={100}
                 />
             </div>;
-        const concessionPricingOption = TransportUtil.isPT(mode.identifier) && regionInfo && regionInfo.transitConcessionPricing &&
+        const concessionPricingOption = mode.isPT() && regionInfo && regionInfo.transitConcessionPricing &&
             <div className={classes.checkboxRow}>
                 <div>
                     Concession pricing
@@ -185,7 +185,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     inputProps={{'aria-label': 'primary checkbox'}}
                 />
             </div>;
-        const wheelchairOption = TransportUtil.isPT(mode.identifier) &&
+        const wheelchairOption = mode.isPT() &&
             <div className={classes.checkboxRow}>
                 <div>
                     Wheelchair information
@@ -203,7 +203,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 />
             </div>;
         let walkSpeedSelect = undefined;
-        if (TransportUtil.isWalk(mode.identifier)) {
+        if (mode.isWalk() || mode.isWheelchair()) {
             const walkSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
                     return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed)};
@@ -224,12 +224,12 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const walkSpeedOption = walkSpeedSelect &&
             <div className={classes.checkboxRow}>
                 <div>
-                    Walk speed
+                    {mode.isWalk() ? "Walk speed" : "Roll speed"}
                 </div>
                 {walkSpeedSelect}
             </div>;
         let cycleSpeedSelect = undefined;
-        if (TransportUtil.isCycle(mode.identifier)) {
+        if (mode.isBicycle()) {
             const cycleSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
                     return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed)};
@@ -283,9 +283,6 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                                 update.transportOptions.setTransportOption(mode.identifier,
                                     checked ? DisplayConf.NORMAL : DisplayConf.HIDDEN);
                                 this.props.onChange(update);
-                                if (!checked && this.state.expanded) {
-                                    this.setState({expanded: false})
-                                }
                             }}
                             onClick={event => event.stopPropagation()}
                             onFocus={event => event.stopPropagation()}
@@ -316,6 +313,15 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             </ExpansionPanel>
         );
 
+    }
+
+    public componentDidUpdate(prevProps: Readonly<IProps>) {
+        // This may happen when unchecking mode, or checking mutually exclusive mode (e.g. wa_wal and wa_whe)
+        const prevDisplayValue = prevProps.value.transportOptions.getTransportOption(prevProps.mode.identifier);
+        const displayValue = this.props.value.transportOptions.getTransportOption(this.props.mode.identifier);
+        if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
+            this.setState({expanded: false});
+        }
     }
 
 }
