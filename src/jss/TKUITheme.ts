@@ -17,7 +17,7 @@ export const tKUIDeaultTheme: TKUITheme = {
     colorInfo: '#2b7eed',
     colorWarning: '#fcba1e',
     colorError: '#e34040',
-    fontFamily: 'ProximaNova',
+    fontFamily: 'ProximaNova, sans-serif',
     colorPrimaryOpacity: (opacity: number) => 'rgba(35, 177, 94, ' + opacity + ')'
 };
 

@@ -7,14 +7,14 @@ import genStyles from "../css/GenStyle.css";
 export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> =
     (theme: TKUITheme) => ({
         main: {
-            // ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
-            //     minHeight: '236px'
-            // }
             ...genStyles.flex,
             width: '100%',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
                 height: '100%',
                 overflowY: 'hidden!important'
+            },
+            '& input[type=text]': {
+                fontFamily: theme.fontFamily
             }
         },
         queryPanel: {
