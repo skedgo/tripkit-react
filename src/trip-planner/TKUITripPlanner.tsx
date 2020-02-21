@@ -114,7 +114,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             showSidebar: false,
-            showSettings: true,
+            showSettings: false,
             showTransportSettings: false,
             mapView: false,
             showFavourites: false,
