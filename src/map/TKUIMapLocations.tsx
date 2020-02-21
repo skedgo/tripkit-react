@@ -38,17 +38,10 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     private readonly ZOOM_PARENT_LOCATIONS = 11;
 
     private locListenerSubscription: EventSubscription;
-    private optionsListenerSubscription: EventSubscription;
 
     constructor(props: Readonly<IProps>) {
         super(props);
         this.locListenerSubscription = LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
-        this.optionsListenerSubscription = OptionsData.instance.addChangeListener((update: TKUserProfile, prev: TKUserProfile) => {
-            // TODO: receive Options through prop so don't need to force update.
-            if (update.mapLayers !== prev.mapLayers) {
-                this.forceUpdate()
-            }
-        });
     }
 
     private getLocMarker(mapLocType: MapLocationType, loc: Location): React.ReactNode {
@@ -149,9 +142,6 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
     public componentWillUnmount() {
         if (this.locListenerSubscription) {
             this.locListenerSubscription.remove();
-        }
-        if (this.optionsListenerSubscription) {
-            this.optionsListenerSubscription.remove();
         }
     }
 

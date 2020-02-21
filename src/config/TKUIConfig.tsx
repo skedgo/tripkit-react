@@ -38,6 +38,7 @@ import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "../opt
 import {TKUIButtonProps, TKUIButtonStyle} from "../buttons/TKUIButton";
 import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "../options/TKUITransportSwitchesView";
 import {TKUISelectProps, TKUISelectStyle} from "../buttons/TKUISelect";
+import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../options/TKUIPrivacyOptionsView";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -79,6 +80,7 @@ interface ITKUIConfigOptional {
     TKUITransportSwitchesView: TKComponentConfig<TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle>;
     TKUITransportOptionsView: TKComponentConfig<TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle>;
     TKUITransportOptionsRow: TKComponentConfig<TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle>;
+    TKUIPrivacyOptionsView: TKComponentConfig<TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

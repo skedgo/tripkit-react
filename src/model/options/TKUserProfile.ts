@@ -47,6 +47,8 @@ class TKUserProfile {
     public walkingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
     @JsonProperty('cyclingSpeed', WalkingSpeedConverter, true)
     public cyclingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
+    @JsonProperty('trackTripSelections', Boolean, true)
+    public trackTripSelections: boolean = false;
 
     get modesDisabled(): string[] {
         return this._modesDisabled.concat(TKUserProfile.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));
