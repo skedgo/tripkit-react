@@ -55,7 +55,7 @@ class TKUIButton extends React.Component<IProps, {}> {
         const link = type === TKUIButtonType.PRIMARY_LINK;
         if (link) {
             return (
-                <button className={classNames(classes.main, classes.link)}
+                <button className={classNames(classes.main, classes.link, this.props.className)}
                         style={this.props.style}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}

@@ -104,20 +104,7 @@ interface IState {
     // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
     // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
     // - Maybe give it a try to make use of contexts more efficient? or maybe leave for later and continue with next item.
-    // - Finish propagating new arquitecture to all components.
-
-    // [ ] Start with architecture change.
-    // - mostrar stops en mapa
-    // - agregar skedgo geocoding source
-    // - Transport options view
     // - Mode by mode instructions
-    // Improve scheme to import, from class / element to entire module (see TODO on imports above)
-    // - Create a TKQueryProvider that encapsulates this part of the state (next five props), and that are passed to
-    // - Configuration points: provide all tripkit-iOS customization points. Then add more.
-    //     - Component-level customization en https://docs.google.com/document/d/1-TefPUgLV7RoK1qkr_j1XGSS9XSCUv0w9bMLk6__fUQ/edit#heading=h.s7sw7zyaie11
-    // -------------------------------------------------------------------------------------------------------------
-    // Limpiar codigo luego de todos los cambios que hice
-    // Mostrar / ocultar from / to / trips cuando se muestra un servicio. Ver todas las interacciones.
 
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
@@ -127,8 +114,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             showSidebar: false,
-            showSettings: false,
-            showTransportSettings: true,
+            showSettings: true,
+            showTransportSettings: false,
             mapView: false,
             showFavourites: false,
             showTripDetail: TKShareHelper.isSharedTripLink(),

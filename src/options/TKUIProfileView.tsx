@@ -22,6 +22,7 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
+import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -64,6 +65,7 @@ interface IState {
     update: TKUserProfile;
     schoolModeId?: ModeIdentifier;
     pickSchoolError: boolean;
+    showPersonalData: boolean;
     showTransports: boolean;
     showPriorities: boolean;
 }
@@ -75,6 +77,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         this.state = {
             update: this.props.value,
             pickSchoolError: false,
+            showPersonalData: false,
             showTransports: false,
             showPriorities: false
         };
@@ -113,6 +116,13 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const personalDataSettings = this.state.showPersonalData &&
+            <TKUIPrivacyOptionsView
+                value={this.state.update}
+                onChange={(update: TKUserProfile) => this.setState({update: update})}
+                onShowTransportOptions={() => this.setState({showTransports: true})}
+                onRequestClose={() => this.setState({showPersonalData: false})}
+            />;
         const transportSettings = this.state.showTransports &&
             <TKUITransportOptionsView
                 value={this.state.update}
@@ -135,6 +145,16 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 <div className={classes.main}>
                     <div className={classes.scrollPanel}>
                         <div className={classes.section}>
+                            <div className={classes.sectionBody}>
+                                <div className={classNames(classes.optionRow, classes.optionLink)}
+                                     onClick={() => this.setState({showPersonalData: true})}
+                                >
+                                    My Personal Data
+                                    <IconRightArrow/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={classes.section}>
                             <div className={classes.sectionTitle}>
                                 My transport
                             </div>
@@ -153,6 +173,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                 </div>
                             </div>
                         </div>
+                        {false &&   // Disabled for now
                         <div className={classes.section}>
                             <div className={classes.sectionTitle} tabIndex={0}>
                                 Map Options
@@ -192,7 +213,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                             overlay={
                                                 <div className={classes.tooltip}>
                                                     This option displays bike share locations. Check current
-                                                    availability <a href="https://airbike.network/#download" target="_blank"
+                                                    availability <a href="https://airbike.network/#download"
+                                                                    target="_blank"
                                                                     className="gl-link">here</a>.
                                                 </div>
                                             }
@@ -201,13 +223,15 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                             mouseEnterDelay={.5}
                                         >
                                             <div className={classes.checkboxGroup}>
-                                                <Checkbox id="mo-bs" checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
+                                                <Checkbox id="mo-bs"
+                                                          checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
                                                           onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}
                                                           ariaLabelledby={"label-mo-bs"}/>
                                                 <label htmlFor="mo-bs" id={"label-mo-bs"}>
                                                     Bike Share
                                                 </label>
-                                                <img src={Constants.absUrl("/images/ic-info-circle.svg")} aria-hidden={true}
+                                                <img src={Constants.absUrl("/images/ic-info-circle.svg")}
+                                                     aria-hidden={true}
                                                      className={classes.infoIcon}/>
                                             </div>
                                         </Tooltip>
@@ -215,13 +239,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
-                    {/*<TKUIButton*/}
-                        {/*text={"Close"}*/}
-                        {/*onClick={() => this.close(true)}*/}
-                        {/*className={classes.closeBtn}*/}
-                    {/*/>*/}
                 </div>
+                {personalDataSettings}
                 {transportSettings}
                 {prioritiesSettings}
             </TKUICard>
