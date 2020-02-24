@@ -46,6 +46,7 @@ interface ITKUIConfigRequired {
 
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
+    userLocationPromise: Promise<LatLng>;
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;

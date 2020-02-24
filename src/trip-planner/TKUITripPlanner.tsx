@@ -55,6 +55,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {
     userProfile: TKUserProfile;
     onUserProfileChange: (update: TKUserProfile) => void;
+    userLocationPromise?: Promise<LatLng>;
 }
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -122,15 +123,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTimetable: false
         };
 
-        GeolocationData.instance.requestCurrentLocation(true).then((userLocation: LatLng) => {
-            // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
-            // on shared links.
-            if (!this.props.query.isEmpty()) {
-                return;
-            }
-            const initViewport = {center: userLocation, zoom: 13};
-            this.props.onViewportChange(initViewport);
-        });
+        (this.props.userLocationPromise || GeolocationData.instance.requestCurrentLocation(true))
+            .then((userLocation: LatLng) => {
+                // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
+                // on shared links.
+                if (!this.props.query.isEmpty()) {
+                    return;
+                }
+                const initViewport = {center: userLocation, zoom: 13};
+                this.props.onViewportChange(initViewport);
+            });
 
         WaiAriaUtil.addTabbingDetection();
 
@@ -449,29 +451,34 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
-        <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) =>
-                <OptionsContext.Consumer>
-                    {(optionsContext: IOptionsContext) =>
-                        <RoutingResultsContext.Consumer>
-                            {(routingResultsContext: IRoutingResultsContext) =>
-                                <ServiceResultsContext.Consumer>
-                                    {(serviceContext: IServiceResultsContext) => (
-                                        props.children!({
-                                            ...routingResultsContext,
-                                            ...serviceContext,
-                                            ...viewportProps,
-                                            userProfile: optionsContext.value,
-                                            onUserProfileChange: optionsContext.onChange
-                                        })
-                                    )}
-                                </ServiceResultsContext.Consumer>
+        <TKUIConfigContext.Consumer>
+            {(config: TKUIConfig) =>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) =>
+                        <OptionsContext.Consumer>
+                            {(optionsContext: IOptionsContext) =>
+                                <RoutingResultsContext.Consumer>
+                                    {(routingResultsContext: IRoutingResultsContext) =>
+                                        <ServiceResultsContext.Consumer>
+                                            {(serviceContext: IServiceResultsContext) => (
+                                                props.children!({
+                                                    ...routingResultsContext,
+                                                    ...serviceContext,
+                                                    ...viewportProps,
+                                                    userProfile: optionsContext.value,
+                                                    onUserProfileChange: optionsContext.onChange,
+                                                    userLocationPromise: config.userLocationPromise
+                                                })
+                                            )}
+                                        </ServiceResultsContext.Consumer>
+                                    }
+                                </RoutingResultsContext.Consumer>
                             }
-                        </RoutingResultsContext.Consumer>
+                        </OptionsContext.Consumer>
                     }
-                </OptionsContext.Consumer>
+                </TKUIViewportUtil>
             }
-        </TKUIViewportUtil>
+        </TKUIConfigContext.Consumer>
     );
 };
 
