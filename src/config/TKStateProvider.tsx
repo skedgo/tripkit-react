@@ -7,6 +7,7 @@ import TKUIConfigProvider from "./TKUIConfigProvider";
 import RoutingQuery from "../model/RoutingQuery";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
+import TKI18nProvider from "../i18n/TKI18nProvider";
 
 interface IProps {
     config: TKUIConfig;
@@ -30,11 +31,12 @@ class TKStateProvider extends React.Component<IProps,{}> {
                                 initQuery={this.props.initQuery}
                                 initViewport={this.props.config.initViewport}
                                 options={optionsContext && optionsContext.value}
-                                // testTrips={testTrips}
                             >
                                 <ServiceResultsProvider>
                                     <TKFavouritesProvider>
-                                        {this.props.children}
+                                        <TKI18nProvider>
+                                            {this.props.children}
+                                        </TKI18nProvider>
                                     </TKFavouritesProvider>
                                 </ServiceResultsProvider>
                             </RoutingResultsProvider>
