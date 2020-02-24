@@ -9,6 +9,7 @@ import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
 import {useContext} from "react";
 import Util from "../util/Util";
+import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>, STYLE>(
     confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
@@ -35,6 +36,22 @@ function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS
         </TKUIConfigContext.Consumer>;
 }
 
+function i18nInjector<IMPL_PROPS extends TKI18nContextProps>(
+    // Consumer: React.ComponentType<IMPL_PROPS>
+    Consumer: React.ComponentType<any>
+): (props: Subtract<IMPL_PROPS, TKI18nContextProps>) => JSX.Element {
+    return (props: Subtract<IMPL_PROPS, TKI18nContextProps>) =>
+        <TKI18nContext.Consumer>
+            {(i18nProps: TKI18nContextProps) =>
+                <Consumer
+                    {...props}
+                    {...i18nProps}
+                />
+            }
+        </TKI18nContext.Consumer>
+
+}
+
 export type PropsMapper<INPUT_PROPS, OUTPUT_PROPS> =
     React.SFC<{inputProps: INPUT_PROPS, children: (outputProps: OUTPUT_PROPS) => React.ReactNode}>
 
@@ -49,7 +66,7 @@ export function mapperFromFunction<INPUT_PROPS, OUTPUT_PROPS>(mapperFc: (inputPr
 }
 
 export function connect<
-    IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS>,
+    IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS> & TKI18nContextProps,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,
     STYLE
     >(confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
@@ -60,6 +77,7 @@ export function connect<
     // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
     const WithStyleInjector = withStyleInjection(ComponentRenderer);
     // Wraps prev component to the final component, mapping client props to the component implementation props.
+    const WithI18nInjector = i18nInjector(WithStyleInjector);
     return (props: CLIENT_PROPS) =>
         <PropsMapper inputProps={props}>
             {(implProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => {
@@ -68,7 +86,7 @@ export function connect<
                         const componentConfig = confToCompMapper(config);
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
                             componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
-                        return <WithStyleInjector {...implProps}
+                        return <WithI18nInjector {...implProps}
                                                   defaultStyles={defaultConfig.styles}
                                                   configStyles={componentConfig && componentConfig.styles}
                                                   randomizeClassNames={randomizeClassNamesToPass}

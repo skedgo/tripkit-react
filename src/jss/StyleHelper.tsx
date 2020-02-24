@@ -5,6 +5,7 @@ import { ClassNameMap, Styles, StyleCreator, CSSProperties } from "react-jss";
 import * as CSS from 'csstype';
 import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKUITheme";
 import Util from "../util/Util";
+import {TKI18nContextProps} from "../i18n/TKI18nProvider";
 
 export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;
 
@@ -30,7 +31,10 @@ export interface TKUIWithStyle<ST, CP> {
     randomizeClassNames?: boolean
 }
 
-export interface TKUIWithClasses<STYLE, PROPS> {
+// TODO: maybe rename TKUIWithClasses to TKInjectedProps? It's not intuitive to extend this with TKI18nContextProps.
+// See if can put as another consumer (IConsumedProps) (e.g. using a helper function to easily consume it) without
+// adding too much boilerplate to current TKUI components scheme.
+export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
     refreshStyles: () => void;
