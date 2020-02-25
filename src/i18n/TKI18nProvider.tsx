@@ -1,13 +1,7 @@
 import React from "react";
 import { I18n, translate } from 'react-polyglot';
 
-// SEGUIR ACÁ:
-// Implement browser language detection (use some library) on html of client web-app. Maybe pass locale to config, similar
-// to userLocationPromise? Maybe if there's a promise passed, then don't show strings (instead of showing in english and
-// then switch). Pass detected locale + messages to TKI18nProvider as props (instead of state)? So, if no localePromise,
-// then pass locale: en and messages: require(i18n_en.json), and if there's a promise, pass nothing (meaning not show anything,
-// or show placeholders) and on promise resolution pass locale and messages. Warn: it makes sense to require default
-// locale messages (for en) inside I18nProvider, so maybe don't pass messages in that case.
+export type TKI18nMessages = { [key: string]: string; };
 
 export type TranslationFunction = (
     /** The key of the phrase to translate. */
@@ -32,14 +26,18 @@ const WithTranslate = translate()(
 
 const messages_en = require("./i18n_en.json");
 
-interface IState {
-    locale: string,
-    messages: any
+interface IProps {
+    dataPromise?: Promise<{locale: string, translations: TKI18nMessages}>
 }
 
-class TKI18nProvider extends React.Component<{}, IState> {
+interface IState {
+    locale: string,
+    messages: TKI18nMessages
+}
 
-    constructor(props: {}) {
+class TKI18nProvider extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
         super(props);
         this.state = {
             locale: 'en',
@@ -48,11 +46,6 @@ class TKI18nProvider extends React.Component<{}, IState> {
     }
 
     public render(): React.ReactNode {
-        // const locale = 'en';
-        // const messages = {
-        //     "where_do_you_want_to_go": "Where do you want to go?",
-        //     "where_do_you_want_to_go_X": "Where do you want to go, %{name}?"
-        // };
         return (
             <I18n locale={this.state.locale}
                   messages={this.state.messages}
@@ -73,6 +66,18 @@ class TKI18nProvider extends React.Component<{}, IState> {
                 </WithTranslate>
             </I18n>
         );
+    }
+
+    public componentDidMount() {
+        if (this.props.dataPromise) {
+            this.props.dataPromise
+                .then((data: {locale: string, translations: TKI18nMessages}) => {
+                    this.setState({
+                        locale: data.locale,
+                        messages: data.translations
+                    })
+                });
+        }
     }
 
 }

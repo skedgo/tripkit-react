@@ -34,7 +34,7 @@ class TKStateProvider extends React.Component<IProps,{}> {
                             >
                                 <ServiceResultsProvider>
                                     <TKFavouritesProvider>
-                                        <TKI18nProvider>
+                                        <TKI18nProvider dataPromise={this.props.config.i18nPromise}>
                                             {this.props.children}
                                         </TKI18nProvider>
                                     </TKFavouritesProvider>

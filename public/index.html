@@ -98,6 +98,33 @@
         }
 
         tKUserLocationPromise = tKRequestCurrentLocation(true);
+
+        function jsonCallback(response) {
+            if (response.status >= 200 && response.status < 300) {
+                return Promise.resolve(response.status === 204 ? {} : response.json());
+            } else {
+                return Promise.reject(new Error(response.statusText));
+            }
+        }
+
+        var language = navigator.language;
+        var tKI18nPromise = fetch("./i18n/i18n_" + language + ".json")
+            .then(jsonCallback)
+            .catch(() => {
+                if (language.indexOf('-') !== -1) {
+                    language = language.split('-')[0];
+                    return fetch("./i18n/i18n_" + language + ".json")
+                        .then(jsonCallback);
+                } else {
+                    return Promise.reject(new Error("No matching tranlations found for " + language))
+                }
+            })
+            .then((messagesJson) => {
+                return {
+                    locale: language,
+                    translations: messagesJson
+                }
+            })
     </script>
 </head>
 <body>
