@@ -39,6 +39,7 @@ import {TKUIButtonProps, TKUIButtonStyle} from "../buttons/TKUIButton";
 import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "../options/TKUITransportSwitchesView";
 import {TKUISelectProps, TKUISelectStyle} from "../buttons/TKUISelect";
 import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../options/TKUIPrivacyOptionsView";
+import {TKI18nMessages} from "../i18n/TKI18nProvider";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -47,6 +48,7 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     userLocationPromise: Promise<LatLng>;
+    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>
     theme: Partial<TKUITheme>;
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
