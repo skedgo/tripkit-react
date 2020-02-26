@@ -22,6 +22,7 @@ import TKUserProfile, {WalkingSpeed} from "../model/options/TKUserProfile";
 import TKUISlider from "./TKUISlider";
 import RegionInfo from "../model/region/RegionInfo";
 import TKUISelect from "../buttons/TKUISelect";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mode: ModeIdentifier;
@@ -83,11 +84,11 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         }
     }
 
-    private static walkingSpeedString(walkingSpeed: WalkingSpeed) {
+    private static walkingSpeedString(walkingSpeed: WalkingSpeed, t: TranslationFunction) {
         switch (walkingSpeed) {
-            case WalkingSpeed.SLOW: return "Slow";
-            case WalkingSpeed.AVERAGE: return "Medium";
-            default: return "Fast";
+            case WalkingSpeed.SLOW: return t("Slow");
+            case WalkingSpeed.AVERAGE: return t("Medium");
+            default: return t("Fast");
         }
     }
 
@@ -98,6 +99,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const regionInfo = this.props.regionInfo;
         const transitModes = regionInfo && regionInfo.transitModes;
         const classes = this.props.classes;
+        const t = this.props.t;
         const minimizedOption = false && // Hidden for now
             <div className={classes.checkboxRow}>
                 <div>
@@ -119,7 +121,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const preferredTransportOption = mode.identifier === 'pt_pub' &&
             <div className={classes.section}>
                 <div className={classes.sectionTitle}>
-                    Preferred Transport
+                    {t("Preferred.transport")}
                 </div>
                 <div className={classes.sectionBody}>
                     {transitModes && transitModes.map((transMode: ModeInfo, i: number) =>
@@ -151,7 +153,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             <div className={classes.sliderRow}>
                 <div className={classes.sliderHeader}>
                     <div>
-                        Min transfer time
+                        {t("Min.transfer.time")}
                     </div>
                     <div>
                         {value.minimumTransferTime + " mins"}
@@ -188,7 +190,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const wheelchairOption = mode.isPT() &&
             <div className={classes.checkboxRow}>
                 <div>
-                    Wheelchair information
+                    {t("Wheelchair.information")}
                 </div>
                 <GreenCheckbox
                     checked={value.wheelchair}
@@ -206,7 +208,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         if (mode.isWalk() || mode.isWheelchair()) {
             const walkSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
-                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed)};
+                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
                 });
             walkSpeedSelect =
                 <TKUISelect
@@ -224,7 +226,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const walkSpeedOption = walkSpeedSelect &&
             <div className={classes.checkboxRow}>
                 <div>
-                    {mode.isWalk() ? "Walk speed" : "Roll speed"}
+                    {mode.isWalk() ? t("Walk.speed") : t("Roll.speed")}
                 </div>
                 {walkSpeedSelect}
             </div>;
@@ -232,7 +234,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         if (mode.isBicycle()) {
             const cycleSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
-                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed)};
+                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
                 });
             cycleSpeedSelect =
                 <TKUISelect
@@ -250,7 +252,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const cycleSpeedOption = cycleSpeedSelect &&
             <div className={classes.checkboxRow}>
                 <div>
-                    Cycle speed
+                    {t("Cycle.speed")}
                 </div>
                 {cycleSpeedSelect}
             </div>;

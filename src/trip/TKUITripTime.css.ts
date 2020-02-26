@@ -1,8 +1,8 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {ITKUITripTimeProps, ITKUITripTimeStyle} from "./TKUITripTime";
 import genStyles from "../css/GenStyle.css";
+import {TKUITripTimeProps, TKUITripTimeStyle} from "./TKUITripTime";
 
-export const tKUITripTimeDefaultStyle: TKUIStyles<ITKUITripTimeStyle, ITKUITripTimeProps> = {
+export const tKUITripTimeDefaultStyle: TKUIStyles<TKUITripTimeStyle, TKUITripTimeProps> = {
     main: {
         ...genStyles.flex,
         ...genStyles.spaceBetween

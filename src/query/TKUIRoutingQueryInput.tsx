@@ -33,6 +33,7 @@ import Region from "model/region/Region";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect from "../buttons/TKUISelect";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -167,26 +168,27 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    private static timePrefString(timePref: TimePreference) {
+    private static timePrefString(timePref: TimePreference, t: TranslationFunction) {
         switch (timePref) {
-            case TimePreference.NOW: return "Leave now";
-            case TimePreference.LEAVE: return "Leave";
-            default: return "Arrive";
+            case TimePreference.NOW: return t("Leave.now");
+            case TimePreference.LEAVE: return t("Leave");
+            default: return t("Arrive");
         }
     }
 
-    public static getTimePrefOptions(): any[] {
+    public static getTimePrefOptions(t: TranslationFunction): any[] {
         return (Object.values(TimePreference))
             .map((value) => {
-                return { value: value, label: this.timePrefString(value)};
+                return { value: value, label: this.timePrefString(value, t)};
             });
     }
 
     public render(): React.ReactNode {
         const routingQuery = this.props.value;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
-        const fromPlaceholder = "Where are you going from?";
-        const toPlaceholder = "Where do you want to go?";
+        const t = this.props.t;
+        const fromPlaceholder = t("Where.are.you.going.from?");
+        const toPlaceholder = t("Where.do.you.want.to.go?");
         const ariaLabelFrom = routingQuery.from !== null ?
             "From " + routingQuery.from.address :
             fromPlaceholder.substring(0, fromPlaceholder.length - 3);
@@ -194,7 +196,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             "To " + routingQuery.to.address :
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
-        const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions();
+        const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
         return (
             <div className={classes.main}>
                 {this.props.landscape &&

@@ -28,6 +28,7 @@ interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
+    locale?: string;
 }
 
 interface IWithRoutingResultsState {

@@ -11,16 +11,18 @@ export type TranslationFunction = (
 ) => string
 
 export interface TKI18nContextProps {
+    locale: string;
     t: TranslationFunction;
 }
 
 export const TKI18nContext = React.createContext<TKI18nContextProps> ({
-    t: (key: string, params?: any) => ""
+    t: (key: string, params?: any) => "",
+    locale: 'en'
 });
 
 const WithTranslate = translate()(
     (props: {t: TranslationFunction, children: any}) => {
-        return props.children(props);
+        return props.children({t: props.t});
     }
 );
 
@@ -58,7 +60,7 @@ class TKI18nProvider extends React.Component<IProps, IState> {
                 <WithTranslate>
                     {(props: { t: TranslationFunction }) =>
                         <TKI18nContext.Provider
-                            value={props}
+                            value={{locale: this.state.locale, ...props}}
                         >
                             {this.props.children}
                         </TKI18nContext.Provider>

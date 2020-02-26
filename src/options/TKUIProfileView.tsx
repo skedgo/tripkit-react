@@ -136,9 +136,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 onChange={(prefsUpdate: TKWeightingPreferences) =>
                     this.setState((prevState: IState) => ({update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate})}))}
             />;
+        const t = this.props.t;
         return (
             <TKUICard
-                title={"Profile"}
+                title={t("Profile")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={() => this.close(true)}
             >
@@ -149,26 +150,26 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                 <div className={classNames(classes.optionRow, classes.optionLink)}
                                      onClick={() => this.setState({showPersonalData: true})}
                                 >
-                                    My Personal Data
+                                    {t("My.Personal.Data")}
                                     <IconRightArrow/>
                                 </div>
                             </div>
                         </div>
                         <div className={classes.section}>
                             <div className={classes.sectionTitle}>
-                                My transport
+                                {t("My.Transport")}
                             </div>
                             <div className={classes.sectionBody}>
                                 <div className={classNames(classes.optionRow, classes.optionLink)}
                                      onClick={() => this.setState({showTransports: true})}
                                 >
-                                    Transport
+                                    {t("Transport")}
                                     <IconRightArrow/>
                                 </div>
                                 <div className={classNames(classes.optionRow, classes.optionLink)}
                                      onClick={() => this.setState({showPriorities: true})}
                                 >
-                                    Priorities
+                                    {t("Priorities")}
                                     <IconRightArrow/>
                                 </div>
                             </div>

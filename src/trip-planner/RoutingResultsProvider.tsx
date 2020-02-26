@@ -54,7 +54,8 @@ class RoutingResultsProvider extends React.Component<{
     initQuery?: RoutingQuery,
     initViewport?: {center?: LatLng, zoom?: number},
     options: TKUserProfile,
-    testTrips?: Trip[]}, {}> {
+    testTrips?: Trip[],
+    locale?: string}, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
         props = {...props};
         return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
@@ -62,7 +63,11 @@ class RoutingResultsProvider extends React.Component<{
 
     public render(): React.ReactNode {
         return (
-            <this.ContextWithValue urlQuery={this.props.initQuery} initViewport={this.props.initViewport} options={this.props.options}/>
+            <this.ContextWithValue urlQuery={this.props.initQuery}
+                                   initViewport={this.props.initViewport}
+                                   options={this.props.options}
+                                   locale={this.props.locale}
+            />
         );
     }
 

@@ -185,6 +185,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const t = this.props.t;
         const searchBar =
             // this.state.cardPosition !== TKUISlideUpPosition.UP &&
             !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
@@ -219,7 +220,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const queryInput = this.props.directionsView &&
             !(this.props.portrait && this.state.showTripDetail && this.props.selected) &&
             <TKUIRoutingQueryInput
-                title={"Route"}
+                title={t("Route")}
                 isTripPlanner={true}
                 onShowTransportOptions={this.onShowTransportSettings}
                 collapsable={true}

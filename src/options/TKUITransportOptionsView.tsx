@@ -76,9 +76,10 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
         }
         const classes = this.props.classes;
         const regionModes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
+        const t = this.props.t;
         return (
             <TKUICard
-                title={"Transport"}
+                title={t("Transport")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.onRequestClose}
             >

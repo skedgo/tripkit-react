@@ -7,7 +7,7 @@ import TKUIConfigProvider from "./TKUIConfigProvider";
 import RoutingQuery from "../model/RoutingQuery";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
-import TKI18nProvider from "../i18n/TKI18nProvider";
+import TKI18nProvider, {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 interface IProps {
     config: TKUIConfig;
@@ -26,21 +26,27 @@ class TKStateProvider extends React.Component<IProps,{}> {
             <TKUIConfigProvider config={this.props.config}>
                 <OptionsProvider>
                     <OptionsContext.Consumer>
-                        {(optionsContext: IOptionsContext) => (
-                            <RoutingResultsProvider
-                                initQuery={this.props.initQuery}
-                                initViewport={this.props.config.initViewport}
-                                options={optionsContext && optionsContext.value}
-                            >
-                                <ServiceResultsProvider>
-                                    <TKFavouritesProvider>
-                                        <TKI18nProvider dataPromise={this.props.config.i18nPromise}>
-                                            {this.props.children}
-                                        </TKI18nProvider>
-                                    </TKFavouritesProvider>
-                                </ServiceResultsProvider>
-                            </RoutingResultsProvider>
-                        )}
+                        {(optionsContext: IOptionsContext) =>
+                            <TKI18nProvider dataPromise={this.props.config.i18nPromise}>
+                                <TKI18nContext.Consumer>
+                                    {(i18nProps: TKI18nContextProps) =>
+                                        <RoutingResultsProvider
+                                            initQuery={this.props.initQuery}
+                                            initViewport={this.props.config.initViewport}
+                                            options={optionsContext && optionsContext.value}
+                                            locale={i18nProps.locale}
+                                        >
+                                            <ServiceResultsProvider>
+                                                <TKFavouritesProvider>
+
+                                                    {this.props.children}
+                                                </TKFavouritesProvider>
+                                            </ServiceResultsProvider>
+                                        </RoutingResultsProvider>
+                                    }
+                                </TKI18nContext.Consumer>
+                            </TKI18nProvider>
+                        }
                     </OptionsContext.Consumer>
                 </OptionsProvider>
             </TKUIConfigProvider>
