@@ -78,6 +78,9 @@ class TKI18nProvider extends React.Component<IProps, IState> {
                         locale: data.locale,
                         messages: data.translations
                     })
+                })
+                .catch((error: Error) => {
+                    // console.log(error.message);
                 });
         }
     }

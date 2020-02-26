@@ -2,6 +2,7 @@ import {TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "./TKUIDateTimePicker";
 import genStyles from "../css/GenStyle.css";
+import {DeviceUtil, genStylesJSS} from "../index";
 
 export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle, TKUIDateTimePickerProps> =
     (theme: TKUITheme) => ({
@@ -15,7 +16,8 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& .react-datepicker__triangle::before': {
                 top: '-1px!important'
-            }
+            },
+            zIndex: '100!important'
         },
         calendar: {
             '&.react-datepicker': {
@@ -64,6 +66,24 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& button.react-datepicker__navigation--previous': {
                 borderRightColor: theme.colorPrimary
+            }
+        },
+        inputElem: {
+            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS
+        },
+        face: {
+            '& input': {
+                background: 'none',
+                border: 'none',
+            }
+        },
+        faceHidden: {
+            height: 0,
+            '& input': {
+                position: 'absolute',
+                zIndex: '-1',
+                height: '0',
+                width: '0'
             }
         }
     });

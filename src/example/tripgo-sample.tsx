@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper} from '../index';
+import DeviceUtil from "../util/DeviceUtil";
 
 
 const config: TKUIConfig = {

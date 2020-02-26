@@ -17,12 +17,18 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     dateFormat?: string;
     onBlur?: () => void;
     onClose?: () => void;
+    reference?: (ref: any) => void;
+    renderCustomInput?: (value: any, onClick: any) => JSX.Element;
+    popperPlacement?: string;
 }
 
 export interface IStyle {
     datePicker: CSSProps<IProps>;
     calendarPopper: CSSProps<IProps>;
     calendar: CSSProps<IProps>;
+    inputElem: CSSProps<IProps>;
+    face: CSSProps<IProps>;
+    faceHidden: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -47,6 +53,7 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
     constructor(props: IProps) {
         super(props);
         this.onValueChange = this.onValueChange.bind(this);
+        props.reference && props.reference(this);
     }
 
     public setFocus() {
@@ -86,6 +93,8 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
         // Switch to browser local timezone while preserving "display" date, so we avoid inconsistencies.
         const displayValue = DateTimeUtil.moment(this.props.value.format(this.props.dateFormat), this.props.dateFormat);
         const classes = this.props.classes;
+        const CustomInput = this.props.renderCustomInput ?
+            ((props: {value?: any, onClick?: any}) => this.props.renderCustomInput!(props.value, props.onClick)) : undefined;
         return (DeviceUtil.isDesktop || (DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX)) ?
             <DatePicker
                 selected={displayValue}
@@ -134,13 +143,31 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                         boundariesElement: "viewport"
                     }
                 }}
+                customInput={CustomInput && <CustomInput/>}
+                popperPlacement={this.props.popperPlacement}
             /> :
-            <DateTimeHTML5Input
-                value = {displayValue}
-                onChange = {this.onValueChange}
-                disabled={this.props.disabled}
-                ref={(el: any) => this.dateTimeHTML5Ref = el}
-            />
+            (CustomInput ?
+                <div className={classes.face}>
+                    {<CustomInput onClick={() => {
+                        this.dateTimeHTML5Ref && this.dateTimeHTML5Ref.focus();
+                    }}/>}
+                    <div className={classes.faceHidden}>
+                        <DateTimeHTML5Input
+                            value = {displayValue}
+                            onChange = {this.onValueChange}
+                            disabled={this.props.disabled}
+                            ref={(el: any) => this.dateTimeHTML5Ref = el}
+                            className={classes.inputElem}
+                        />
+                    </div>
+                </div> :
+                <DateTimeHTML5Input
+                    value = {displayValue}
+                    onChange = {this.onValueChange}
+                    disabled={this.props.disabled}
+                    ref={(el: any) => this.dateTimeHTML5Ref = el}
+                    className={classes.inputElem}
+                />)
     }
 
 }

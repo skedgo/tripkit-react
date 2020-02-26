@@ -72,8 +72,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             };
 
             this.rTSchedule = setInterval(() => {
-                // TODO:
-                // fireValueChangeEvent(); //to update 'time to depart' labels
+                this.forceUpdate(); //to update 'time to depart' labels
                 if (Features.instance.realtimeEnabled()) {
                     this.realtimeUpdate();
                 }
@@ -89,13 +88,13 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public requestMoreDepartures() {
             this.setState(() => {
-                if (this.isWaiting()) {
-                    return; // We are already awaiting for previously requested departures
-                }
-                this.setState({ displayLimit: this.state.displayLimit + this.getDisplaySnap() }, () => {
-                    this.coverDisplayLimit()
-                });
-            })
+                    if (this.isWaiting()) {
+                        return null; // We are already awaiting for previously requested departures
+                    }
+                    return { displayLimit: this.state.displayLimit + this.getDisplaySnap() }
+                },
+                () => this.coverDisplayLimit()
+            )
         }
 
         public onFilterChange(filter: string) {
@@ -213,19 +212,19 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             }
 
             this.requestDepartures().then((results: ServiceDeparture[]) => {
-                this.setState((prev: IWithServiceResultsState) => {
-                    this.updateDepartures(prev.departures.concat(results), () => this.coverDisplayLimit());
-                });
-            })
-                .catch((reason) => {
-                    console.log(reason);
-                });
+                this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
+                    () => this.coverDisplayLimit());
+            }).catch((reason) => {
+                console.log(reason);
+            });
         }
 
-        public updateDepartures(departures: ServiceDeparture[], callback?: () => void) {
-            const departuresUpdate = WithServiceResults.sortDepartures(departures);
-            this.setState({
-                departures: departuresUpdate
+        public updateDepartures(departuresUpdater: (prev: ServiceDeparture[]) => ServiceDeparture[], callback?: () => void) {
+            this.setState((prev: IWithServiceResultsState) => {
+                const departuresUpdate = WithServiceResults.sortDepartures(departuresUpdater(prev.departures));
+                return {
+                    departures: departuresUpdate
+                }
             });
             this.applyFilter(callback);
         }
@@ -360,9 +359,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                             departure.realtimeUpdate = service;
                         }
                     }
-                    this.setState((state: IWithServiceResultsState) => {
-                        this.updateDepartures(this.state.departures);
-                    });
+                    // Since mutably updated the state.
+                    this.forceUpdate();
             });
         }
 
@@ -371,8 +369,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return;
             }
             this.requestDepartures().then((results: ServiceDeparture[]) => {
-                this.setState((prev: IWithServiceResultsState) => {
-                    this.updateDepartures(prev.departures.concat(results), () => {
+                this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
+                    () => {
                         // This causes timetable to be populated with departures. Maybe just call at the end of the recursion,
                         // and avoid displaying the timetable in the meantime.
                         this.setState((prev: IWithServiceResultsState) => ({
@@ -385,11 +383,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                             this.requestUntilServiceFound(serviceTripId, limit - 1);
                         }
                     });
-                });
-            })
-                .catch((reason) => {
-                    console.log(reason);
-                });
+            }).catch((reason) => {
+                console.log(reason);
+            });
         }
 
         public onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment) {
