@@ -10,9 +10,8 @@ import ShapesPolyline from "./ShapesPolyline";
 import {IMapSegmentRenderer, TKUIMapViewClass} from "./TKUIMapView";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import {TKUIConfig} from "../config/TKUIConfig";
-import {TKUIConfigContext} from "../config/TKUIConfigProvider";
+import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
-import TKStateProvider from "../config/TKStateProvider";
 
 interface IProps {
     segment: Segment;
@@ -30,9 +29,9 @@ class MapTripSegment extends React.Component<IProps, {}> {
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) => {
                     const transIconHTML = renderToStaticMarkup(
-                        <TKStateProvider config={config}>
+                        <TKUIConfigProvider config={config}>
                             {TKUITransportPin.createForSegment(this.props.segment)}
-                        </TKStateProvider>
+                        </TKUIConfigProvider>
                     );
                     const icon = L.divIcon({
                         html: transIconHTML,
@@ -81,13 +80,13 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                 key={"vehicle"}
                                 icon={L.divIcon({
                                     html: renderToStaticMarkup(
-                                        <TKStateProvider config={config}>
+                                        <TKUIConfigProvider config={config}>
                                             <TKUIRealtimeVehicle
                                                 value={segment.realtimeVehicle}
                                                 label={segment.serviceNumber || undefined}
                                                 color={segment.serviceColor || undefined}
                                             />
-                                        </TKStateProvider>
+                                        </TKUIConfigProvider>
                                     ),
                                     iconSize: [40, 40],
                                     iconAnchor: [20, 20],

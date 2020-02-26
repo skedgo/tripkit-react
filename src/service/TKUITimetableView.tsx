@@ -13,7 +13,6 @@ import {Moment} from "moment";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
-import DateTimePickerFace from "../time/DateTimePickerFace";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
@@ -29,6 +28,7 @@ import {TKUIButtonType} from "../buttons/TKUIButton";
 import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TransportUtil from "../trip/TransportUtil";
+import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -85,11 +85,6 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
-        // If shared link then this is triggered from WithServicesResults.tsx constructor
-        if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
-            && props.onRequestMore) {
-            props.onRequestMore();
-        }
         this.onScroll = this.onScroll.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
     }
@@ -116,6 +111,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
         const classes = this.props.classes;
+        const t = this.props.t;
         const actions = (stop && this.props.actions) ?
             <TKUIActionsView
                 actions={this.props.actions!(stop)}
@@ -129,6 +125,11 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 return elems;
             }, []);
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+        const renderCustomInput = (value: any, onClick: any) => (
+            <button className={classes.faceButtonClass} onClick={onClick}>
+                <IconClock/>
+            </button>
+        );
         return (
             <TKUICard
                 title={this.props.title}
@@ -161,23 +162,14 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                     <div className={classes.secondaryBar}>
                         <div className={classes.filterPanel}>
                             <IconGlass className={classes.glassIcon}/>
-                            <input className={classes.filterInput} placeholder="Filter"
+                            <input className={classes.filterInput} placeholder={t("Search")}
                                    onChange={this.onFilterChange}/>
                         </div>
-                        <DateTimePickerFace
+                        <TKUIDateTimePicker
                             value={this.props.initTime}
                             onChange={this.props.onInitTimeChange}
-                            renderFaceButton={(value: Moment, onClick: (e: any) => void, onFocus: (e: any) => void) => {
-                                return (
-                                    <button
-                                        onClick={onClick}
-                                        onFocus={onFocus}
-                                        className={classes.faceButtonClass}
-                                    >
-                                        <IconClock/>
-                                    </button>
-                                )
-                            }}
+                            renderCustomInput={renderCustomInput}
+                            popperPlacement="top-end"
                         />
                     </div>
                     <div className={classes.listPanel}>
@@ -213,6 +205,14 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 </div>
             </TKUICard>
         );
+    }
+
+    public componentDidMount() {
+        // If shared link then this is triggered from WithServicesResults.tsx constructor
+        if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
+            && this.props.onRequestMore) {
+            this.props.onRequestMore();
+        }
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {

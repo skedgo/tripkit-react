@@ -8,9 +8,8 @@ import L from "leaflet";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {IMapSegmentRenderer} from "./TKUIMapView";
 import {TKUIConfig} from "../config/TKUIConfig";
-import {TKUIConfigContext} from "../config/TKUIConfigProvider";
+import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
-import TKStateProvider from "../config/TKStateProvider";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;
@@ -29,9 +28,9 @@ class MapService extends React.Component<IProps, {}> {
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) => {
                     const transIconHTML = renderToStaticMarkup(
-                        <TKStateProvider config={config}>
+                        <TKUIConfigProvider config={config}>
                             {TKUITransportPin.createForService(this.props.serviceDeparture)}
-                        </TKStateProvider>
+                        </TKUIConfigProvider>
                     );
                     const icon = L.divIcon({
                         html: transIconHTML,

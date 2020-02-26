@@ -7,6 +7,7 @@ interface IProps {
     value: Moment;
     onChange?: (value: Moment) => void;
     disabled?: boolean;
+    className?: string;
 }
 
 class DateTimeHTML5Input extends React.Component<IProps, {}> {
@@ -38,6 +39,7 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
                    disabled={this.props.disabled}
                    ref={(el: any) => this.inputRef = el}
                    id="query-datetime-picker"
+                   className={this.props.className}
             />
         )
     }

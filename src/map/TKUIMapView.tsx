@@ -52,8 +52,7 @@ import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
-import {TKUIConfigContext} from "../config/TKUIConfigProvider";
-import TKStateProvider from "../config/TKStateProvider";
+import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -392,9 +391,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.state.userLocation}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKStateProvider config={this.props.config}>
+                                    <TKUIConfigProvider config={this.props.config}>
                                         <TKUIMyLocationMapIcon/>
-                                    </TKStateProvider>
+                                    </TKUIConfigProvider>
                                 ),
                                 iconSize: [20, 20],
                                 iconAnchor: [10, 10],
@@ -409,9 +408,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.from!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKStateProvider config={this.props.config}>
+                                    <TKUIConfigProvider config={this.props.config}>
                                         <TKUIMapLocationIcon location={this.props.from!} from={true}/>
-                                    </TKStateProvider>
+                                    </TKUIConfigProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
@@ -433,9 +432,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKStateProvider config={this.props.config}>
+                                    <TKUIConfigProvider config={this.props.config}>
                                         <TKUIMapLocationIcon location={this.props.to!}/>
-                                    </TKStateProvider>
+                                    </TKUIConfigProvider>
                                 ),
                                 iconSize: [26, 39],
                                 iconAnchor: [13, 39],
@@ -486,13 +485,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     <Marker position={service.realtimeVehicle.location}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
-                                    <TKStateProvider config={this.props.config}>
+                                    <TKUIConfigProvider config={this.props.config}>
                                         <TKUIRealtimeVehicle
                                             value={service.realtimeVehicle}
                                             label={service.serviceNumber}
                                             color={service.serviceColor}
                                         />
-                                    </TKStateProvider>
+                                    </TKUIConfigProvider>
                                 ),
                                 iconSize: [40, 40],
                                 iconAnchor: [20, 20],
