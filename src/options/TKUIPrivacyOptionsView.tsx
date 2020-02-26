@@ -61,9 +61,10 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <TKUICard
-                title={"My Personal Data"}
+                title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
             >
@@ -73,14 +74,12 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             <div className={classes.optionRow}>
                                 <div>
                                     <div className={classes.optionTitle}>
-                                        Real-time information for transport options
+                                        {t("Real-time.information.for.transport.options")}
                                     </div>
                                     <div className={classes.optionDescription}>
-                                        To show transport options, we may share per-query information of start location,
-                                        end location, and query time with transport providers. You can disable each module
-                                        individually, where you don't want to share this data.
+                                        {t("To.show.transport.options,.we.may.share.per-query.information.of.start.location,.end.location,.and.query.time.with.transport.providers..You.can.disable.each.mode.individually,.where.you.dont.want.to.share.this.data.")}
                                     </div>
-                                    <TKUIButton text={"Edit transport modes"}
+                                    <TKUIButton text={t("Edit.transport.modes")}
                                                 type={TKUIButtonType.PRIMARY_LINK}
                                                 className={classes.optionLink}
                                                 onClick={this.props.onShowTransportOptions}
@@ -90,11 +89,10 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             <div className={classNames(classes.optionRow, classes.checkboxRow)}>
                                 <div>
                                     <div className={classes.optionTitle}>
-                                        Trip selections
+                                        {t("Trip.selections")}
                                     </div>
                                     <div className={classes.optionDescription}>
-                                        Help improve transport services in your area by allowing us to collect information about which trips you select in the app.
-                                        We aggregate the anonymised data and provide it to researchers, regulators, and transport providers.
+                                        {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anomymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
                                     </div>
                                 </div>
                                 <GreenCheckbox
@@ -111,14 +109,12 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             </div>
                         </div>
                         <div className={classes.sectionFooter}>
-                            We keep this data on servers in Australia, Europe, or the US.
-                            We retain this data forever to be able to create long-term trends. For more details,
-                            see our Privacy Policy.
+                            {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.forever.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
                         <div className={classes.section}>
                             <div className={classes.sectionBody}>
                                 <div className={classes.optionRow}>
-                                    <TKUIButton text={"Show our Privacy Policy"}
+                                    <TKUIButton text={t("Show.our.Privacy.Policy")}
                                                 type={TKUIButtonType.PRIMARY_LINK}
                                                 className={classes.optionLink}
                                                 onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}

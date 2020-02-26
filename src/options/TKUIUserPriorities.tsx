@@ -41,9 +41,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const priorities = this.props.value;
+        const t = this.props.t;
         return (
             <TKUICard
-                title={"My Priorities"}
+                title={t("My.Priorities")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
             >
@@ -57,9 +58,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value/100));
                         }}
                         thumbIcon={iconMoney}
-                        label={"Money"}
-                        leftLabel={"I don't care"}
-                        rightLabel={"Save money"}
+                        label={t("rQd-ri-hHa.text")}
+                        leftLabel={t("I.dont.care")}
+                        rightLabel={t("yuP-f9-IR1.text")}
                         min={0}
                         max={200}
                         // valueLabelDisplay={'on'}
@@ -70,9 +71,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         onChange={(event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value/100))}
                         thumbIcon={iconTime}
-                        label={"Time"}
-                        leftLabel={"I don't care"}
-                        rightLabel={"Save time"}
+                        label={t("o4h-JW-YBy.text")}
+                        leftLabel={t("I.dont.care")}
+                        rightLabel={t("KSL-Sc-UHU.text")}
                         min={0}
                         max={200}
                     />
@@ -81,9 +82,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         onChange={(event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value/100))}
                         thumbIcon={iconCarbon}
-                        label={"Carbon"}
-                        leftLabel={"I don't care"}
-                        rightLabel={"Reduce carbon"}
+                        label={t("EzB-oD-wvZ.text")}
+                        leftLabel={t("I.dont.care")}
+                        rightLabel={t("RKH-vV-EU9.text")}
                         min={0}
                         max={200}
                     />
@@ -92,9 +93,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         onChange={(event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value/100))}
                         thumbIcon={iconHassle}
-                        label={"Convenience"}
-                        leftLabel={"I don't care"}
-                        rightLabel={"Less hassle"}
+                        label={t("brC-tq-EEG.text")}
+                        leftLabel={t("I.dont.care")}
+                        rightLabel={t("g7e-OY-rPw.text")}
                         min={0}
                         max={200}
                     />

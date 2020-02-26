@@ -20,6 +20,7 @@ import classNames from "classnames";
 import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -38,8 +39,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     expanded?: boolean;
     onExpand?: (expand: boolean) => void;
 }
-
-export const TRIP_ALT_PICKED_EVENT = "onTripAltPicked";
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -84,6 +83,17 @@ export function badgeColor(badge: Badges): string {
         case Badges.GREENEST: return "rgb(0, 168, 143)";
         case Badges.HEALTHIEST: return "rgb(225, 91, 114)";
         default: return "rgb(24, 128, 231)";
+    }
+}
+
+function badgeLabel(badge: Badges, t: TranslationFunction): string {
+    switch (badge) {
+        case Badges.CHEAPEST: return t("Cheapest");
+        case Badges.EASIEST: return t("Easiest");
+        case Badges.FASTEST: return t("Fastest");
+        case Badges.GREENEST: return t("Greenest");
+        case Badges.HEALTHIEST: return t("Healthiest");
+        default: return t("Recommended");
     }
 }
 
@@ -138,7 +148,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                      key={"badge"}
                 >
                     {badgeIcon(this.props.badge)}
-                    {this.props.badge}
+                    {badgeLabel(this.props.badge, this.props.t)}
                 </div>
                 }
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>

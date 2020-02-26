@@ -1,25 +1,34 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
 import DateTimeUtil from "../util/DateTimeUtil";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITripTimeDefaultStyle} from "./TKUITripTime.css";
 import TripUtil from "./TripUtil";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
-export interface ITKUITripTimeProps extends TKUIWithStyle<ITKUITripTimeStyle, ITKUITripTimeProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     brief?: boolean;
 }
 
-interface IProps extends ITKUITripTimeProps {
-    classes: ClassNameMap<keyof ITKUITripTimeStyle>;
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export interface IStyle {
+    main: CSSProps<IProps>;
+    timePrimary: CSSProps<IProps>;
+    timeSecondary: CSSProps<IProps>;
 }
 
-export interface ITKUITripTimeStyle {
-    main: CSSProps<ITKUITripTimeProps>;
-    timePrimary: CSSProps<ITKUITripTimeProps>;
-    timeSecondary: CSSProps<ITKUITripTimeProps>;
-}
+export type TKUITripTimeProps = IProps;
+export type TKUITripTimeStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUITripTime {...props}/>,
+    styles: tKUITripTimeDefaultStyle,
+    classNamePrefix: "TKUITripTime"
+};
 
 class TKUITripTime extends React.Component<IProps, {}> {
 
@@ -27,6 +36,7 @@ class TKUITripTime extends React.Component<IProps, {}> {
         const trip = this.props.value;
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip, this.props.brief);
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <div className={classes.main}>
                 {(hasPT ?
@@ -38,20 +48,12 @@ class TKUITripTime extends React.Component<IProps, {}> {
                     [
                         <span className={classes.timePrimary} key={0}>{duration}</span>,
                         <span className={classes.timeSecondary} key={1}>
-                                {trip.queryIsLeaveAfter ? "arrive " + arrivalTime : "depart " + departureTime}
-                                    </span>
+                                {trip.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime})}
+                       </span>
                     ])}
             </div>
         );
     }
 }
-
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUITripTime");
-    return (props: ITKUITripTimeProps) => {
-        const stylesToPass = props.styles || tKUITripTimeDefaultStyle;
-        return <RawComponentStyled {...props} styles={stylesToPass}/>
-    };
-};
-
-export default Connect(TKUITripTime);
+export default connect((config: TKUIConfig) => config.TKUITripTime, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

@@ -40,6 +40,7 @@ import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "..
 import {TKUISelectProps, TKUISelectStyle} from "../buttons/TKUISelect";
 import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../options/TKUIPrivacyOptionsView";
 import {TKI18nMessages} from "../i18n/TKI18nProvider";
+import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -59,6 +60,7 @@ interface ITKUIConfigOptional {
     TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;
     TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
     TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
+    TKUITripTime: TKComponentConfig<TKUITripTimeProps, TKUITripTimeStyle>;
     TKUIRoutingResultsView: TKComponentConfig<TKUIResultsViewProps, TKUIResultsViewStyle>;
     TKUITripOverviewView: TKComponentConfig<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
     TKUISegmentOverview: TKComponentConfig<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;

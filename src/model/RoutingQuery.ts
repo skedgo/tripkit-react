@@ -103,11 +103,9 @@ class RoutingQuery {
         }
         let avoidModeParams = "";
         if (regionInfo) {
-            console.log(regionInfo.transitModes);
             const avoidModes = regionInfo.transitModes
                 .map((transitMode: ModeInfo) => transitMode.identifier!)
                 .filter((transitModeS: string) => !options.transportOptions.isPreferredTransport(transitModeS));
-            console.log(avoidModes);
             for (const avoidMode of avoidModes) {
                 avoidModeParams += "&avoid=" + avoidMode;
             }
@@ -126,7 +124,7 @@ class RoutingQuery {
             weightingPreferencesParam +
             minTransferTimeParam +
             walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
-            "&unit=auto&v=11&locale=en&ir=1&includeStops=true" +
+            "&unit=auto&v=11&ir=1&includeStops=true" +
             wheelchairParam;
     }
 

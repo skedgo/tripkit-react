@@ -51,7 +51,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
         logo: () => <TripgoLogo style={{height: '24px', width: '120px'}}/>,
         menuItems: () => [
             <TKUIDirectionsAction
-                text={"Get Direction"}
+                text={props.t("Get.directions")}
                 buttonType={TKUIButtonType.SECONDARY}
                 onClick={props.onRequestClose}
                 style={{
@@ -62,7 +62,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 key={1}
             />,
             <TKUIButton
-                text={"Favourites"}
+                text={props.t("Favourites")}
                 icon={<IconFavourite/>}
                 type={TKUIButtonType.SECONDARY}
                 style={{
@@ -77,7 +77,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 key={2}
             />,
             <TKUIButton
-                text={"Settings"}
+                text={props.t("Settings")}
                 icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
                 type={TKUIButtonType.SECONDARY}
                 style={{

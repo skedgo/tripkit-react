@@ -142,7 +142,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const sortOptions = this.getSortOptions();
         const injectedStyles = this.props.injectedStyles;
-        const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions();
+        const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
         const routingQuery = this.props.query;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
         const renderSubHeader = this.props.portrait ? () => {
