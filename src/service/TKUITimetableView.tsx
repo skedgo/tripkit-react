@@ -215,11 +215,15 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         }
     }
 
-    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {
+    public componentDidUpdate(prevProps: Readonly<IProps>): void {
         if (prevProps.departures.length === 0 && this.props.departures.length > 0) {
-            const now = DateTimeUtil.getNow().valueOf()/1000;
+            const now = DateTimeUtil.getNow().valueOf()/60000; // In minutes, with decimals
             const nextDepartureIndex = this.props.departures.findIndex((departure: ServiceDeparture) => {
-                return departure.actualStartTime >= now;
+                const actualStartTime = departure.actualStartTime/60; // In minutes, with decimals
+                let timeToDepart = actualStartTime - now;   // In minutes
+                // Round negative up, so less than a minute in the past from now are considered now.
+                timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
+                return timeToDepart >= 0;   // To be consistent with timeToDepart calculation in TKUIServiceDepartureRow
             });
             if (nextDepartureIndex !== -1 && this.scrollRef) {
                 Array.prototype.slice.call(this.scrollRef.children).filter((child: any) =>
