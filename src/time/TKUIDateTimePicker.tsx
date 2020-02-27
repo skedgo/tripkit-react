@@ -56,26 +56,6 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
         props.reference && props.reference(this);
     }
 
-    public setFocus() {
-        if (this.datePickerRef) {   // just if Device.isDesktop
-            this.datePickerRef.setOpen(true);
-        } else if (this.dateTimeHTML5Ref) { // just if !Device.isDesktop
-            this.dateTimeHTML5Ref.focus();
-        }
-    }
-
-    /**
-     * Version of setFocus that actually sets focus to input. Needed to take action on blur.
-     */
-    public setFocusActually() {
-        if (this.datePickerRef) {   // just if Device.isDesktop
-            this.datePickerRef.setFocus();
-            this.datePickerRef.setOpen(true);
-        } else if (this.dateTimeHTML5Ref) { // just if !Device.isDesktop
-            this.dateTimeHTML5Ref.focus();
-        }
-    }
-
     private onValueChange(value: Moment) {
         const onChange = this.props.onChange ? this.props.onChange :
             () => { // Avoid empty block warning

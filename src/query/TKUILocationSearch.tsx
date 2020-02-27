@@ -71,8 +71,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
-        const placeholder = this.props.t("Where.are.you.going.from?");
-        // const placeholder = this.props.t("Xs.Home", {0: "Mauro"});
+        const placeholder = this.props.t("Where.do.you.want.to.go?");
         return (
             <TKUIViewportUtil>
                 {(viewportProps: TKUIViewportUtilProps) =>

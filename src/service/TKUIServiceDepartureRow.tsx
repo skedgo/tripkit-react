@@ -123,7 +123,10 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;
         const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;
         const cancelled = departure.realTimeStatus === "CANCELLED";
-        const timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
+        let timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
+        // Round negative up, so less than a minute in the past from now are considered now.
+        timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
+        // const timeToDepart = Math.floor(departureTime.valueOf() / 60000) - Math.ceil(DateTimeUtil.getNow().valueOf() / 60000);
         const timeToDepartS = cancelled ? "Cancelled" : DateTimeUtil.minutesToDepartToString(timeToDepart);
         const time = this.getTime(departure);
         const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
