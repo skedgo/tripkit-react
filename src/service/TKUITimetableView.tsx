@@ -29,6 +29,7 @@ import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TransportUtil from "../trip/TransportUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
+import RegionsData from "../data/RegionsData";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -71,7 +72,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             <TKUIShareAction
                 title={"Share timetable"}
                 message={""}
-                link={TKShareHelper.getShareTimetable(stop)}
+                link={() => RegionsData.instance.requireRegions()
+                    .then(() => TKShareHelper.getShareTimetable(stop))}
                 vertical={true}
                 key={"actionShare"}
             />
@@ -221,7 +223,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             const nextDepartureIndex = this.props.departures.findIndex((departure: ServiceDeparture) => {
                 const actualStartTime = departure.actualStartTime/60; // In minutes, with decimals
                 let timeToDepart = actualStartTime - now;   // In minutes
-                // Round negative up, so less than a minute in the past from now are considered now.
+                // Round negative up, so less than a minute in the past from now is considered 'Now'.
                 timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
                 return timeToDepart >= 0;   // To be consistent with timeToDepart calculation in TKUIServiceDepartureRow
             });

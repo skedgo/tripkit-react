@@ -124,26 +124,18 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;
         const cancelled = departure.realTimeStatus === "CANCELLED";
         let timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
-        // Round negative up, so less than a minute in the past from now are considered now.
+        // Round negative up, so less than a minute in the past from now is considered 'Now'.
         timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
         // const timeToDepart = Math.floor(departureTime.valueOf() / 60000) - Math.ceil(DateTimeUtil.getNow().valueOf() / 60000);
         const timeToDepartS = cancelled ? "Cancelled" : DateTimeUtil.minutesToDepartToString(timeToDepart);
         const time = this.getTime(departure);
-        const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
-            departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
-            departure.realtimeVehicle.components[0][0].occupancy;
-        const hasTrainOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components
-            && departure.modeInfo.alt.includes("train");
         const classes = this.props.classes;
         const detailed = this.props.detailed;
-        const briefOccupancy = !detailed && hasBusOccupancy ?
-            <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!} brief={true}/> : undefined;
+        const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
+        const briefOccupancy = !detailed && occupancy ?
+            <TKUIOccupancySign status={occupancy} brief={true}/> : undefined;
         const briefWheelchair = !detailed && OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
             <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
-        const trainOccupancy = !detailed && hasTrainOccupancy ?
-            <div className={classes.trainOccupancy}>
-                <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>
-            </div> : undefined;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
                  onClick={this.props.onClick}>
@@ -155,13 +147,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                         </div>}
                         <img src={transIcon} className={classes.transIcon}/>
                         {briefWheelchair}
+                        {briefOccupancy}
                     </div>
                     <div className={classes.timeAndOccupancy}>
                         {time}
-                        {briefOccupancy}
                     </div>
                     <div className={classNames(classes.serviceDescription, "ServiceDepartureRow-serviceDescription gl-overflow-ellipsis")}>{serviceDescrText}</div>
-                    {trainOccupancy}
                 </div>
                 {this.props.renderRight ? this.props.renderRight() :
                     <div

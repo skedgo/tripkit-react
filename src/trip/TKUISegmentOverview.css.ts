@@ -80,7 +80,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
                 if (prevSegment && prevSegment.isStationay()) {
                     prevSegment = prevSegment.prevSegment();
                 }
-                const colourSegment = !segment.isWalking() && !segment.isStationay() ? segment : prevSegment;
+                const colourSegment = !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay() ? segment : prevSegment;
                 return colourSegment ? '4px solid ' + TransportUtil.getTransportColor(colourSegment.modeInfo!) : 'none';
             },
             ...genStyles.borderRadius(50, "%")
@@ -132,5 +132,5 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
 
 export function isIconOnDark(segment: Segment): boolean {
     const modeInfo = segment.modeInfo!;
-    return (!!modeInfo.remoteDarkIcon || !modeInfo.remoteIcon) && !segment.isWalking() && !segment.isStationay();
+    return (!!modeInfo.remoteDarkIcon || !modeInfo.remoteIcon) && !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay();
 }

@@ -18,6 +18,7 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import Region from "../model/region/Region";
 import {Subtract} from "utility-types";
 import DeviceUtil from "../util/DeviceUtil";
+import ModeIdentifier from "../model/region/ModeIdentifier";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMoreOptions?: () => void;
@@ -71,10 +72,11 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
         }
         const transOptions = this.props.value;
         const classes = this.props.classes;
+        const modes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
         return (
             <div className={classes.main}>
                 <div className={classes.modeSelector}>
-                    {region.modes.map((mode: string, index: number) => {
+                    {modes.map((mode: string, index: number) => {
                             const modeOption = transOptions.getTransportOption(mode);
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
                             const tooltip =

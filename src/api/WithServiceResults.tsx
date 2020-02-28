@@ -15,6 +15,7 @@ import {IServiceResultsContext as IServiceResConsumerProps} from "../service/Ser
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
 import {EventEmitter} from "fbemitter";
+import Region from "../model/region/Region";
 
 interface IWithServiceResultsProps {
     // TODO: Move to state, as startStop
@@ -246,41 +247,43 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public requestDepartures(): Promise<ServiceDeparture[]> {
             let startStopCode = this.state.startStop!.code;
-            const startRegionCode = RegionsData.instance.getRegion(this.state.startStop!)!.name;
-            // Remove 'Region_Code-' from stop codes. Shouldn't come from backend anymore
-            if (startStopCode.startsWith(startRegionCode + "-")) {
-                startStopCode = startStopCode.substring((startRegionCode + "-").length);
-            }
-            const stopIDs = [startStopCode];
-            // TODO: re-enable when implementing segment services.
-            // const endStopIDs = [];
-            // let disembarkationRegionCode: string | undefined = undefined;
-            // if (this.props.segment) {
-            // RegionsData.SegmentRegions segmentRegions = UserData.getRegionsData().getSegmentRegions(segment);
-            // startRegionCode = segmentRegions.getStartRegion().getCode();
-            // disembarkationRegionCode = !segmentRegions.getStartRegion().equals(segmentRegions.getEndRegion()) ?
-            //     segmentRegions.getEndRegion().getCode() : null;
-            // endStopIDs = Collections.singletonList(segment.getContinuationEndStopCode());
-            // }
-            const lastDepartureDate = this.getLastDepartureTime();
-            const initialTimeAtRequest = this.state.initTime;
-            const departuresRequest = {
-                region: startRegionCode,
-                embarkationStops: stopIDs,
-                timeStamp: lastDepartureDate
-            };
-            return TripGoApi.apiCallT("departures.json", NetworkUtil.MethodType.POST, ServiceDeparturesResult, departuresRequest)
-                .then((departuresResult: ServiceDeparturesResult) => {
-                        // Initial time changed, which triggered a clear, so should discard these results
-                        if (!initialTimeAtRequest.isSame(this.state.initTime)) {
-                            throw new Error("Results form an old request.");
+            return RegionsData.instance.getRegionP(this.state.startStop!).then((startRegion?: Region) => {
+                const startRegionCode = startRegion!.name;
+                // Remove 'Region_Code-' from stop codes. Shouldn't come from backend anymore
+                if (startStopCode.startsWith(startRegionCode + "-")) {
+                    startStopCode = startStopCode.substring((startRegionCode + "-").length);
+                }
+                const stopIDs = [startStopCode];
+                // TODO: re-enable when implementing segment services.
+                // const endStopIDs = [];
+                // let disembarkationRegionCode: string | undefined = undefined;
+                // if (this.props.segment) {
+                // RegionsData.SegmentRegions segmentRegions = UserData.getRegionsData().getSegmentRegions(segment);
+                // startRegionCode = segmentRegions.getStartRegion().getCode();
+                // disembarkationRegionCode = !segmentRegions.getStartRegion().equals(segmentRegions.getEndRegion()) ?
+                //     segmentRegions.getEndRegion().getCode() : null;
+                // endStopIDs = Collections.singletonList(segment.getContinuationEndStopCode());
+                // }
+                const lastDepartureDate = this.getLastDepartureTime();
+                const initialTimeAtRequest = this.state.initTime;
+                const departuresRequest = {
+                    region: startRegionCode,
+                    embarkationStops: stopIDs,
+                    timeStamp: lastDepartureDate
+                };
+                return TripGoApi.apiCallT("departures.json", NetworkUtil.MethodType.POST, ServiceDeparturesResult, departuresRequest)
+                    .then((departuresResult: ServiceDeparturesResult) => {
+                            // Initial time changed, which triggered a clear, so should discard these results
+                            if (!initialTimeAtRequest.isSame(this.state.initTime)) {
+                                throw new Error("Results form an old request.");
+                            }
+                            if (departuresResult.isError()) {
+                                throw new Error("Error loading departures.");
+                            }
+                            return departuresResult.getDepartures(this.state.startStop!);
                         }
-                        if (departuresResult.isError()) {
-                            throw new Error("Error loading departures.");
-                        }
-                        return departuresResult.getDepartures(this.state.startStop!);
-                    }
-                );
+                    );
+            });
         }
 
         public getLastDepartureTime(): number {
