@@ -37,7 +37,7 @@ class ServiceDeparture {
     private _realTimeDeparture: number | undefined = undefined;
     @JsonProperty("realTimeArrival", Number, true)
     public _realTimeArrival: number | undefined = undefined;
-    @JsonProperty("_realtimeVehicle", RealTimeVehicle, true)
+    @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
     private _realtimeVehicle: RealTimeVehicle | undefined = undefined;
     @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;

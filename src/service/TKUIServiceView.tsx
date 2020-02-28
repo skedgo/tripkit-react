@@ -23,6 +23,7 @@ import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -68,6 +69,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 message={""}
                 link={TKShareHelper.getShareService(service)}
                 vertical={true}
+                key={"actionShareService"}
             />
         ]
     }
@@ -108,22 +110,22 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         }
         const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
         const hasWheelchair = OptionsData.instance.get().wheelchair && departure.wheelchairAccessible;
-        const hasBusOccupancy = departure.realtimeVehicle && departure.realtimeVehicle.components &&
-            departure.realtimeVehicle.components.length === 1 && departure.realtimeVehicle.components[0].length === 1 &&
-            departure.realtimeVehicle.components[0][0].occupancy;
+        const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const classes = this.props.classes;
         const actions = this.props.actions ?
             <TKUIActionsView
                 actions={this.props.actions!(departure)}
                 className={classes.actionsPanel}
             /> : undefined;
-        const realtimePanel = hasWheelchair || hasBusOccupancy ?
+        const realtimePanel = hasWheelchair || occupancy ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
                     {hasWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
-                    {hasBusOccupancy ?
-                        <TKUIOccupancySign status={departure.realtimeVehicle!.components![0][0].occupancy!}
+                    {occupancy ?
+                        <TKUIOccupancySign status={occupancy}
                                            brief={!this.state.realtimeOpen}/> : undefined}
+                    {occupancy && this.state.realtimeOpen && departure.modeInfo.alt.includes("train") &&
+                    <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>}
                 </div>
                 <IconAngleDown
                     onClick={() => this.setState({realtimeOpen: !this.state.realtimeOpen})}

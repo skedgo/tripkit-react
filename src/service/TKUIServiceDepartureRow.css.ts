@@ -22,11 +22,13 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         header: {
             ...genStyles.flex,
-            ...genStyles.alignCenter
+            ...genStyles.alignCenter,
+            '& > *': {
+                marginRight: '4px'
+            }
         },
         transIcon:{
-            opacity: '.4',
-            margin: '0 4px'
+            opacity: '.4'
         },
         serviceNumber: {
             color: 'white',
