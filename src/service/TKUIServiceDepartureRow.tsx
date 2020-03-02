@@ -3,7 +3,6 @@ import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import OptionsData from "../data/OptionsData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
@@ -11,8 +10,10 @@ import classNames from "classnames";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import {Subtract} from "utility-types";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -21,7 +22,11 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderRight?: () => JSX.Element;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps {
+    options: TKUserProfile;
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -53,17 +58,10 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     randomizeClassNames: true // This needs to be true since multiple instances are rendered,
                               // each with a different service color.
 };
-
-export class TKUIServiceDepartureRowConfig implements TKUIWithStyle<IStyle, IProps> {
-    public styles = tKUIServiceDepartureRowDefaultStyle;
-    public randomizeClassNames?: boolean = true;
-
-    public static instance = new TKUIServiceDepartureRowConfig();
-}
-
 class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
     private getTime(departure: ServiceDeparture): JSX.Element | undefined {
+        const t = this.props.t;
         let status: string | undefined;
         let modifier: string | undefined = undefined;
         let statusClassname: string | undefined;
@@ -71,8 +69,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         if (departure.realTimeStatus === "CANCELLED") {
             status = "Cancelled";
             statusClassname = classes.delayed;
-        } else if (departure.realTimeDeparture === undefined) {
-            status = undefined;
+        } else if (departure.realTimeDeparture === undefined) { // Means realtimeStatus !== "IS_REAL_TIME"
+            status = t("No.real-time.available");
         } else {
             // Truncates to minutes before subtract to make diff consistent with displayed actual and original times
             const realtimeDiffInMinutes = Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
@@ -134,7 +132,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const briefOccupancy = !detailed && occupancy ?
             <TKUIOccupancySign status={occupancy} brief={true}/> : undefined;
-        const briefWheelchair = !detailed && OptionsData.instance.get().wheelchair && departure.wheelchairAccessible &&
+        const briefWheelchair = !detailed &&
+            (this.props.options.wheelchair || departure.wheelchairAccessible === false) &&
             <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
@@ -166,6 +165,15 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
     }
 }
 
-export default connect(
-    (config: TKUIConfig) => config.TKUIServiceDepartureRow, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                children!({
+                    ...inputProps,
+                    options: optionsContext.value
+                })
+            }
+        </OptionsContext.Consumer>;
+
+export default connect((config: TKUIConfig) => config.TKUIServiceDepartureRow, config, Mapper);
