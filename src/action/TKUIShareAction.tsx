@@ -7,6 +7,7 @@ import {ReactComponent as IconShare} from "../images/ic-share.svg";
 import TKUIShareView from "../share/TKUIShareView";
 import Util from "../util/Util";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 
 interface IProps {
     title: string;
@@ -38,6 +39,10 @@ class TKUIShareAction extends React.Component<IProps, {}> {
                                                         customMsg={this.props.message}
                                                     />,
                                                 open: true,
+                                                slideUpOptions: {
+                                                    position: TKUISlideUpPosition.UP,
+                                                    draggable: false
+                                                },
                                                 onRequestClose: () => {
                                                     setProps({
                                                         open: false
