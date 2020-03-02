@@ -12,7 +12,6 @@ import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
 import genStyles from "../css/GenStyle.css";
-import OptionsData from "../data/OptionsData";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
@@ -24,6 +23,8 @@ import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -43,13 +44,14 @@ interface IStyle {
     actionsPanel: CSSProps<IProps>;
 }
 
-interface IConnectionProps {
+interface IConsumedProps {
     title: string,
     departure: ServiceDeparture;
     eventBus?: EventEmitter;
+    options: TKUserProfile
 }
 
-interface IProps extends IClientProps, IConnectionProps, TKUIWithClasses<IStyle, IProps> {
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
     actions?: (service: ServiceDeparture) => JSX.Element[];
 }
 
@@ -109,7 +111,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
             }
         }
         const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
-        const hasWheelchair = OptionsData.instance.get().wheelchair && departure.wheelchairAccessible;
+        const showWheelchair = this.props.options.wheelchair || departure.wheelchairAccessible === false;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const classes = this.props.classes;
         const actions = this.props.actions ?
@@ -117,10 +119,10 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 actions={this.props.actions!(departure)}
                 className={classes.actionsPanel}
             /> : undefined;
-        const realtimePanel = hasWheelchair || occupancy ?
+        const realtimePanel = showWheelchair || occupancy ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
-                    {hasWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
+                    {showWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
                     {occupancy ?
                         <TKUIOccupancySign status={occupancy}
                                            brief={!this.state.realtimeOpen}/> : undefined}
@@ -192,25 +194,30 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: IConnectionProps) => React.ReactNode}> = (props: {children: (props: IConnectionProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
     return (
-        <ServiceResultsContext.Consumer>
-            {(serviceContext: IServiceResultsContext) => (
-                serviceContext.selectedService &&
-                props.children!({
-                    title: serviceContext.title,
-                    departure: serviceContext.selectedService,
-                    eventBus: serviceContext.servicesEventBus
-                })
-            )}
-        </ServiceResultsContext.Consumer>
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                <ServiceResultsContext.Consumer>
+                    {(serviceContext: IServiceResultsContext) => (
+                        serviceContext.selectedService &&
+                        props.children!({
+                            title: serviceContext.title,
+                            departure: serviceContext.selectedService,
+                            eventBus: serviceContext.servicesEventBus,
+                            options: optionsContext.value
+                        })
+                    )}
+                </ServiceResultsContext.Consumer>
+            }
+        </OptionsContext.Consumer>
     );
 };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
-            {(consumedProps: IConnectionProps) =>
+            {(consumedProps: IConsumedProps) =>
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;
 

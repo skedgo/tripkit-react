@@ -9,17 +9,23 @@ import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOvervi
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
 import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
-import OptionsData from "../data/OptionsData";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import {Subtract} from "utility-types";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
     actions?: JSX.Element[];
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps {
+    options: TKUserProfile;
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -83,8 +89,9 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
             segment.realtimeVehicle.components[0][0].occupancy;
         const classes = this.props.classes;
-        const hasWheelchair = OptionsData.instance.get().wheelchair && segment.isPT();
-        const wheelchairInfo = hasWheelchair &&
+        const showWheelchair = (this.props.options.wheelchair || segment.wheelchairAccessible === false) &&
+            segment.isPT();
+        const wheelchairInfo = showWheelchair &&
             <div className={classes.occupancy}>
                 <TKUIWheelchairInfo accessible={segment.wheelchairAccessible}/>
             </div>;
@@ -146,5 +153,15 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
     }
 }
 
-export default connect((config: TKUIConfig) => config.TKUISegmentOverview, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                children!({
+                    ...inputProps,
+                    options: optionsContext.value
+                })
+            }
+        </OptionsContext.Consumer>;
+
+export default connect((config: TKUIConfig) => config.TKUISegmentOverview, config, Mapper);

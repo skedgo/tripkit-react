@@ -36,17 +36,18 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         ...genStyles.column
     },
     serviceList: {
-        marginTop: '8px',
         minHeight: '20px',
         overflowX: 'hidden',
         ...genStyles.flex,
-        ...genStyles.alignCenter
+        ...genStyles.alignCenter,
+        ...genStyles.wrap
     },
     serviceNumber: {
         color: 'white',
         borderRadius: '4px',
         padding: '2px 4px',
-        marginLeft: '4px',
+        marginRight: '4px',
+        marginTop: '8px',
         ...genStyles.fontSM
     },
     actionsPanel: {
