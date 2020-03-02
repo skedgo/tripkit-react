@@ -62,6 +62,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUICard"
 };
 
+export function hasHandle(props: IProps): boolean {
+    return (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.SLIDE_UP_STYLE)
+        && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
+}
+
 class TKUICard extends React.Component<IProps, {}> {
 
     public static defaultProps: Partial<IProps> = {
@@ -74,8 +79,7 @@ class TKUICard extends React.Component<IProps, {}> {
         const presentation = this.props.presentation;
         const body =
             <div className={classNames(classes.main, "app-style")}>
-                {(this.props.presentation === CardPresentation.SLIDE_UP || this.props.presentation === CardPresentation.SLIDE_UP_STYLE)
-                && DeviceUtil.isTouch() &&
+                {hasHandle(this.props) &&
                 <div
                     className={classes.handle}
                     // onClick={() => this.setState({showTestCard: true})}

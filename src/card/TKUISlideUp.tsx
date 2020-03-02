@@ -1,10 +1,7 @@
 import React from "react";
-import Drawer from 'react-drag-drawer';
 import injectSheet, {ClassNameMap} from "react-jss";
+import Drawer from 'react-drag-drawer';
 import classNames from "classnames";
-import genStyles from "../css/GenStyle.css";
-import {tKUIColors} from "../jss/TKUITheme";
-import DeviceUtil from "../util/DeviceUtil";
 
 
 const styles = {
@@ -46,19 +43,25 @@ const styles = {
     },
     modalDown: {
         top: (props: IProps) => props.modalDown!.top + props.modalDown!.unit + '!important'
+    },
+    modalHidden: {
+        top: (props: IProps) => "100%!important"
     }
 };
 
 export enum TKUISlideUpPosition {
-    UP, MIDDLE, DOWN
+    UP, MIDDLE, DOWN, HIDDEN
 }
 
 export interface TKUISlideUpOptions {
     initPosition?: TKUISlideUpPosition;
     modalUp?: {top: number, unit: string};
     modalMiddle?: {top: number, unit: string};
-    modalDown?: {top: number, unit: string};
+    modalDown?: {top: number | string, unit: string};
+    // For controlled positioning. If set (not undefined), it takes precedence over this.state.position.
+    position?: TKUISlideUpPosition;
     onPositionChange?: (position: TKUISlideUpPosition) => void;
+    draggable?: boolean;
 }
 
 interface IProps extends TKUISlideUpOptions {
@@ -82,39 +85,56 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         modalUp: {top: 5, unit: 'px'},
         modalMiddle: {top: 50, unit: '%'},
         modalDown: {top: 90, unit: '%'},
-        open: true
+        open: true,
+        draggable: true
     };
 
     private dragHandleRef: any;
     private testCardContRef: any;
     private scrolling: any;
     private dragging: boolean = false;
+    private justTouched: boolean = false;
+    private justTouchedTimeout: any;
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            position: props.initPosition!,
+            position: props.position !== undefined ? props.position : props.initPosition!,
             touching: false
         };
         this.onDragHandleRef = this.onDragHandleRef.bind(this);
         this.onTouchStart = this.onTouchStart.bind(this);
         this.onTouchEnd = this.onTouchEnd.bind(this);
+        this.getPosition = this.getPosition.bind(this);
     }
 
     private onTouchStart(e: any) {
         this.setState({touching: true});
     }
 
+    private getPosition(): TKUISlideUpPosition {
+        return this.props.position !== undefined ? this.props.position : this.state.position;
+    }
+
     private onTouchEnd() {
         this.setState({touching: false});
-        if (this.state.position === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 300) {
+        if (this.getPosition() === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 300) {
             this.onPositionChange(TKUISlideUpPosition.DOWN);
-        } else if (this.state.position === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 100) {
+        } else if (this.getPosition() === TKUISlideUpPosition.UP && getTranslate3d(this.dragHandleRef)[1] > 100) {
             this.onPositionChange(TKUISlideUpPosition.MIDDLE);
-        } else if (this.state.position === TKUISlideUpPosition.MIDDLE && getTranslate3d(this.dragHandleRef)[1] > 100) {
+        } else if (this.getPosition() === TKUISlideUpPosition.MIDDLE && getTranslate3d(this.dragHandleRef)[1] > 100) {
             this.onPositionChange(TKUISlideUpPosition.DOWN);
         }
         this.setDragging(false);
+        this.setJustTouched();
+    }
+
+    private setJustTouched() {
+        if (this.justTouchedTimeout) {
+            clearTimeout(this.justTouchedTimeout);
+        }
+        this.justTouched = true;
+        this.justTouchedTimeout = setTimeout(() => this.justTouched = false, 1000);
     }
 
     private onPositionChange(position: TKUISlideUpPosition) {
@@ -132,7 +152,8 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         switch (position) {
             case TKUISlideUpPosition.UP: return classes.modalUp;
             case TKUISlideUpPosition.MIDDLE: return classes.modalMiddle;
-            default: return classes.modalDown;
+            case TKUISlideUpPosition.DOWN: return classes.modalDown;
+            default: return classes.modalHidden;
         }
     }
 
@@ -153,11 +174,11 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             <Drawer
                 open={this.props.open}
                 containerElementClass={classNames(classes.containerElement, this.props.containerClass,
-                    this.positionToClass(this.state.position, classes),
-                    this.state.touching && this.state.position !== TKUISlideUpPosition.UP ? classes.contElemTouching : undefined
+                    this.positionToClass(this.getPosition(), classes),
+                    this.state.touching && this.getPosition() !== TKUISlideUpPosition.UP ? classes.contElemTouching : undefined
                 )}
                 modalElementClass={classNames(classes.modalElement, this.props.modalClass,
-                    this.state.touching && this.state.position !== TKUISlideUpPosition.UP ? classes.modalElementTouching : undefined)}
+                    this.state.touching && this.getPosition() !== TKUISlideUpPosition.UP ? classes.modalElementTouching : undefined)}
                 allowClose={false}
                 inViewportChage={() => console.log("vp change")}
                 parentElement={document.body}
@@ -165,17 +186,24 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     this.testCardContRef = ref;
                     this.testCardContRef &&
                     this.testCardContRef.addEventListener("scroll", () => {
+                        // If scroll was not triggered by user touch, then it was triggered by content (children) grow,
+                        // (e.g. when departure rows appear) so shouldn't update position in this case, and also should
+                        // avoid scrolling.
+                        if (!this.justTouched) {
+                            this.testCardContRef.scrollTop = 0;
+                            return;
+                        }
                         window.clearTimeout(this.scrolling);
                         // console.log("scroll: " + this.testCardContRef.scrollTop);
-                        if (this.state.position === TKUISlideUpPosition.UP) {
+                        if (this.getPosition() === TKUISlideUpPosition.UP) {
                             this.testCardContRef.scrollTop = 0;
                         }
                         if (!this.state.touching) {
-                            if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
+                            if (this.getPosition() === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
                                 this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                 this.testCardContRef.scrollTop = 0;
                                 this.setDragging(false);
-                            } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
+                            } else if (this.getPosition() === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
                                 this.onPositionChange(TKUISlideUpPosition.UP);
                                 this.testCardContRef.scrollTop = 0;
                                 this.setDragging(false);
@@ -184,15 +212,15 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                         }
                         this.scrolling = setTimeout(() => {
                             if (!this.state.touching) {
-                                if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 250) {
+                                if (this.getPosition() === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 250) {
                                     this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
                                     this.setDragging(false);
-                                } else if (this.state.position === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
+                                } else if (this.getPosition() === TKUISlideUpPosition.DOWN && this.testCardContRef.scrollTop > 0) {
                                     this.onPositionChange(TKUISlideUpPosition.MIDDLE);
                                     this.testCardContRef.scrollTop = 0;
                                     this.setDragging(false);
-                                } else if (this.state.position === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
+                                } else if (this.getPosition() === TKUISlideUpPosition.MIDDLE && this.testCardContRef.scrollTop > 0) {
                                     this.onPositionChange(TKUISlideUpPosition.UP);
                                     this.testCardContRef.scrollTop = 0;
                                     this.setDragging(false);
@@ -214,7 +242,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     // console.log(getTranslate3d(this.dragHandleRef));
                     getTranslate3d(this.dragHandleRef)[1] > 50 && this.setDragging(true);
                 }}
-                // dontApplyListeners={true}
+                dontApplyListeners={this.props.draggable === false}
             >
                 {this.props.children}
             </Drawer>

@@ -1,10 +1,9 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUICardStyle, TKUICardProps, CardPresentation} from "./TKUICard";
+import {TKUICardStyle, TKUICardProps, CardPresentation, hasHandle} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
-import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
@@ -57,7 +56,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         header: {
-            padding: DeviceUtil.isTouch() ? '0 16px' : '12px 16px',
+            padding: (props: TKUICardProps) => hasHandle(props) ? '0 16px' : '12px 16px',
             color: 'black',
             borderBottom: '1px solid ' + tKUIColors.black4
         },

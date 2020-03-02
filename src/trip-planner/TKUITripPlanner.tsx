@@ -250,6 +250,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
+                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
                     modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
@@ -259,8 +260,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
                 slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
+                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 130, unit: 'px'} : undefined
                 }}
             /> : null;
         const favouritesView = this.state.showFavourites && !this.props.directionsView &&
