@@ -1,7 +1,6 @@
 import * as React from "react";
 import TripGroup from "../model/trip/TripGroup";
 import TripRowTrack from "./TripRowTrack";
-import {default as TrackTransport, TrackTransportProps} from "./TrackTransport";
 import TKUITripTime from "./TKUITripTime";
 import Trip from "../model/trip/Trip";
 import {EventEmitter} from "fbemitter";
@@ -115,7 +114,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
         const cost = trip.moneyCost === null ? undefined :
             (trip.moneyCost === 0 ? "Free" : currencySymbol + trip.moneyCost);
         const calories = trip.caloriesCost > 0 ? trip.caloriesCost + " kcal" : undefined;
-        const carbon = trip.carbonCost > 0 ? trip.carbonCost + " kg CO2" : undefined;
+        const carbon = trip.carbonCost === 0 ? " No CO2" : trip.carbonCost + " kg CO2";
         let info = cost || "";
         if (calories) {
             info += (info ? " · " : "") + calories;
@@ -161,7 +160,6 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         <TKUITripTime value={altTrip} brief={this.props.brief}/>
                         <div className={classes.trackAndAction}>
                             <TripRowTrack value={altTrip}
-                                          renderTransport={(props: TrackTransportProps) => <TrackTransport {...props}/>}
                                           className={classes.track}
                             />
                             <TKUIButton
