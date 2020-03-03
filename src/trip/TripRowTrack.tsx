@@ -1,12 +1,11 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
-import {TrackTransportProps} from "./TrackTransport";
 import Trip from "../model/trip/Trip";
 import {Visibility} from "../model/trip/SegmentTemplate";
+import TKUITrackTransport from "./TKUITrackTransport";
 
 export interface IProps {
     value: Trip;
-    renderTransport: <P extends TrackTransportProps>(transportProps: P) => JSX.Element;
     className?: string;
 }
 
@@ -21,11 +20,10 @@ class TripRowTrack extends React.Component<IProps, {}> {
         } else if (nOfSegments < 5) {
             brief = false;
         }
-        const TrackTransport = this.props.renderTransport;
         return (
             <div className={this.props.className}>
                 {segments.map((segment: Segment, i: number) =>
-                    <TrackTransport segment={segment} brief={brief} key={i}/>)}
+                    <TKUITrackTransport segment={segment} brief={brief} key={i}/>)}
             </div>
         );
     }

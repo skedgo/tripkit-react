@@ -22,11 +22,11 @@ class Trip {
     private _moneyCost: number | null = null;
     @JsonProperty("moneyUSDCost", Number, true)
     private _moneyUSDCost: number | null = 0;
-    @JsonProperty("carbonCost", Number, true)
+    @JsonProperty("carbonCost", Number, true)   // Required according to spec, but sometimes don't come.
     private _carbonCost: number = 0;
-    @JsonProperty("hassleCost", Number, true)
+    @JsonProperty("hassleCost", Number, true)   // Required according to spec, but sometimes don't come.
     private _hassleCost: number = 0;
-    @JsonProperty("caloriesCost", Number, true)
+    @JsonProperty("caloriesCost", Number, true) // Required according to spec, but sometimes don't come.
     private _caloriesCost: number = 0;
     @JsonProperty("saveURL", String, true)
     private _saveURL: string = "";
@@ -170,8 +170,8 @@ class Trip {
         return bicycleAccessible;
     }
 
-    public isSingleSegment(): boolean {
-        return this.segments.length === 1;
+    public isSingleSegment(visibility?: Visibility): boolean {
+        return this.getSegments(visibility).length === 1;
     }
 
     public getKey(): string {

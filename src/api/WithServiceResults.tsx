@@ -26,6 +26,7 @@ interface IWithServiceResultsState {
     startStop?: StopLocation;
     initTime: Moment;       // Default to now - 30mins(?)
     departures: ServiceDeparture[];    // It's sorted.
+    noRTDepartures: ServiceDeparture[];    // Sorted according to timetable (shedule) time, not considering realtime.
     selected?: ServiceDeparture;
     filter: string;
     departuresFiltered: ServiceDeparture[];
@@ -66,6 +67,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.state = {
                 initTime: initialTime,
                 departures: [],
+                noRTDepartures: [],
                 filter: "",
                 departuresFiltered: [],
                 displayLimit: 0,
@@ -124,6 +126,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.setState({
                 initTime: initTime,
                 departures: [],
+                noRTDepartures: [],
                 departuresFiltered: [],
                 displayLimit: 0,
                 initTimeChanged: true
@@ -223,8 +226,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public updateDepartures(departuresUpdater: (prev: ServiceDeparture[]) => ServiceDeparture[], callback?: () => void) {
             this.setState((prev: IWithServiceResultsState) => {
                 const departuresUpdate = WithServiceResults.sortDepartures(departuresUpdater(prev.departures));
+                const noRealtimeDeparturesUpdate = departuresUpdater(prev.departures);
                 return {
-                    departures: departuresUpdate
+                    departures: departuresUpdate,
+                    noRTDepartures: noRealtimeDeparturesUpdate
                 }
             });
             this.applyFilter(callback);
@@ -291,7 +296,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             if (this.state.departures.length === 0) {
                 lastDepartureDate = Math.floor(this.state.initTime.valueOf() / 1000);
             }  else {
-                lastDepartureDate = Math.floor(this.state.departures[this.state.departures.length - 1].startTime) + 1;
+                lastDepartureDate = Math.floor(this.state.noRTDepartures[this.state.noRTDepartures.length - 1].startTime) + 1;
             }
             return lastDepartureDate;
         }
@@ -397,6 +402,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                         startStop: stop,
                         initTime: initTime,
                         departures: [],
+                        noRTDepartures: [],
                         departuresFiltered: [],
                         displayLimit: 0,
                         initTimeChanged: true
