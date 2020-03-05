@@ -464,7 +464,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
                             const jsonConvert = new JsonConvert();
-                            const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);
+                            const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));
                             return routingResults.groups;
