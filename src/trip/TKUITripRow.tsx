@@ -149,27 +149,6 @@ class TKUITripRow extends React.Component<IProps, {}> {
         }
         const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
-        const TripAlternativeRow = (props: {value: Trip, past?: boolean, selected?: boolean,
-            onAlternativeClick?: (group: TripGroup, alt: Trip) => void, onDetailClick?: () => void}) =>
-            <div className={classNames(classes.alternative,
-                props.past && classes.pastAlternative,
-                props.selected && classes.selectedAlternative)}
-                 onClick={() => props.onAlternativeClick &&
-                     props.onAlternativeClick(trip as TripGroup, props.value)}
-            >
-                <TKUITripTime value={props.value} brief={this.props.brief}/>
-                <div className={classes.trackAndAction}>
-                    <TripRowTrack value={props.value}
-                                  className={classes.track}
-                    />
-                    <TKUIButton
-                        type={TKUIButtonType.PRIMARY_LINK}
-                        text={"Detail"}
-                        // onClick={props.onDetailClick}
-                        onClick={() => console.log("clicked")}
-                    />
-                </div>
-            </div>;
         return (
             <div className={classNames(classes.main, this.props.className)}
                  onClick={this.props.onClick}
@@ -190,14 +169,25 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 </div>
                 }
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>
-                    <TripAlternativeRow
-                        value={altTrip}
-                        past={visiblePastAlternatives.includes(altTrip)}
-                        selected={visibleAlternatives.length > 1 && this.props.selected && altTrip === selectedAlt}
-                        onAlternativeClick={this.props.onAlternativeClick}
-                        onDetailClick={this.props.onDetailClick}
-                        key={i}
-                    />)}
+                    <div className={classNames(classes.alternative,
+                        visiblePastAlternatives.includes(altTrip) && classes.pastAlternative,
+                        visibleAlternatives.length > 1 && this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
+                         onClick={() => this.props.onAlternativeClick &&
+                             this.props.onAlternativeClick(trip as TripGroup, altTrip)}
+                         key={i}
+                    >
+                        <TKUITripTime value={altTrip} brief={this.props.brief}/>
+                        <div className={classes.trackAndAction}>
+                            <TripRowTrack value={altTrip}
+                                          className={classes.track}
+                            />
+                            <TKUIButton
+                                type={TKUIButtonType.PRIMARY_LINK}
+                                text={"Detail"}
+                                onClick={this.props.onDetailClick}
+                            />
+                        </div>
+                    </div>)}
                 <div className={classes.footer}
                      key={"footer"}
                 >
