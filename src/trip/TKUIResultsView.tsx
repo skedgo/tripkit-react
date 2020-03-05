@@ -10,7 +10,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {TripSort} from "../api/WithRoutingResults";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
-import Select, { components } from 'react-select';
+import { components } from 'react-select';
 import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";

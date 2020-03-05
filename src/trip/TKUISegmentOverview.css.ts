@@ -36,6 +36,9 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             ...genStyles.column,
             ...genStyles.center
         },
+        preTime: {
+            marginBottom: 'auto'
+        },
         track: {
             width: '56px',
             ...genStyles.flex,
@@ -53,18 +56,21 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
                 if (prevSegment && prevSegment.isStationay()) { // Skip stationary segment.
                     prevSegment = prevSegment.prevSegment();
                 }
-                return prevSegment ? '4px solid ' + TransportUtil.getTransportColor(prevSegment.modeInfo!) : 'none';
+                return !prevSegment || isUnconnected(prevSegment) ? undefined :
+                    '4px solid ' + TransportUtil.getTransportColor(prevSegment.modeInfo!);
             },
             ...genStyles.grow
         },
         line: {
             borderLeft: (props: TKUISegmentOverviewProps) =>
-                '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
+                isUnconnected(props.value) ? undefined :
+                    '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
             ...genStyles.grow
         },
         posLine: {
             borderLeft: (props: TKUISegmentOverviewProps) =>
-                !props.value.arrival ? '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!) : 'none',
+                props.value.arrival || isUnconnected(props.value) ? undefined :
+                    '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
             ...genStyles.grow
         },
         noLine: {
@@ -132,5 +138,15 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
 
 export function isIconOnDark(segment: Segment): boolean {
     const modeInfo = segment.modeInfo!;
-    return (!!modeInfo.remoteDarkIcon || !modeInfo.remoteIcon) && !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay();
+    return !modeInfo.remoteIcon
+        && !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay();
+}
+
+export function isUnconnected(segment: Segment):boolean {
+    return segment.isWalking();
+}
+
+export function prevWaitingSegment(segment: Segment): Segment | undefined {
+    const prevSegment = segment.prevSegment();
+    return prevSegment && prevSegment.isStationay() ? prevSegment : undefined;
 }

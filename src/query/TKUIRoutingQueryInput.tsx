@@ -306,9 +306,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             className={classes.timePrefSelect}
                             menuStyle={{marginTop: '3px'}}
                         />
-                        {routingQuery.timePref !== TimePreference.NOW &&
+                        {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
                         <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                            value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
+                            value={routingQuery.time}
+                            timeZone={this.props.region.timezone}
                             onChange={(date: Moment) => this.updateQuery({time: date})}
                             timeFormat={DateTimeUtil.TIME_FORMAT}
                             dateFormat={DateTimeUtil.DATE_TIME_FORMAT}

@@ -35,8 +35,7 @@ class TransportUtil {
     }
 
     public static getTransportColor(modeInfo: ModeInfo): string | null {
-        // return this.getTransportColorByIconS(modeInfo.localIcon);
-        if (modeInfo !== null && modeInfo.identifier && modeInfo.identifier.startsWith("pt_pub") && modeInfo.color) {
+        if (modeInfo !== null && modeInfo.identifier && modeInfo.color) {
             return modeInfo.color.toRGB();
         }
         return this.getTransportColorByIconS(modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID) ?

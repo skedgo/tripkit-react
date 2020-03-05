@@ -18,6 +18,7 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -43,18 +44,23 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     props: {
         actions: (location: Location) => [
             location instanceof StopLocation ?
-            <ServiceResultsContext.Consumer key={1}>
-                {(context: IServiceResultsContext) =>
-                    <TKUIButton
-                        type={TKUIButtonType.PRIMARY_VERTICAL}
-                        icon={<IconClock/>}
-                        text={"Timetable"}
-                        onClick={() =>
-                            context.onStopChange(location)
-                        }
-                    />
-                }
-            </ServiceResultsContext.Consumer> : undefined,
+                <TKI18nContext.Consumer key={1}>
+                    {(i18nProps: TKI18nContextProps) =>
+                        <ServiceResultsContext.Consumer>
+                            {(context: IServiceResultsContext) =>
+                                <TKUIButton
+                                    type={TKUIButtonType.PRIMARY_VERTICAL}
+                                    icon={<IconClock/>}
+                                    text={i18nProps.t("Timetable")}
+                                    onClick={() =>
+                                        context.onStopChange(location)
+                                    }
+                                />
+                            }
+                        </ServiceResultsContext.Consumer>
+                    }
+                </TKI18nContext.Consumer>
+                : undefined,
             <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
             <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)} vertical={true}/>,
             <TKUIShareAction

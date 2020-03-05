@@ -53,7 +53,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         // remote icon for light background, so will use a local icon for dark background.
         const onDark = segment.arrival || (!modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined);
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
-            TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, onDark);
+            TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, onDark);
         const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return <TKUITransportPinConnected
             icon={transIcon}

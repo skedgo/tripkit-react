@@ -58,6 +58,9 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
             padding: '12px 10px',
             borderBottom: '1px solid #ECEBEB',
         },
+        pastAlternative: {
+            opacity: '.4'
+        },
         selectedAlternative: {
             borderLeft: '3px solid ' + theme.colorPrimary,
             paddingLeft: '7px!important'

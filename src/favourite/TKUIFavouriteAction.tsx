@@ -8,6 +8,7 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import Favourite from "../model/favourite/Favourite";
 import * as CSS from 'csstype';
 import TKUserProfile from "../model/options/TKUserProfile";
+import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 interface IProps {
     favourite: Favourite;
@@ -21,10 +22,6 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
         super(props);
         FavouritesData.instance.addChangeListener(() => this.forceUpdate());
         this.onClick = this.onClick.bind(this);
-    }
-
-    private getTitle(): string {
-        return this.exists() ? "Un-favourite" : "Favourite";
     }
 
     private renderIcon(): JSX.Element {
@@ -45,13 +42,17 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
     }
 
     public render(): JSX.Element {
-        return <TKUIButton
-            type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
-            icon={this.renderIcon()}
-            text={this.getTitle()}
-            style={{minWidth: '90px', ...this.props.style}}
-            onClick={this.onClick}
-        />
+        return <TKI18nContext.Consumer>
+            {(i18nProps: TKI18nContextProps) =>
+                <TKUIButton
+                    type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
+                    icon={this.renderIcon()}
+                    text={this.exists() ? i18nProps.t("Remove.from.favourites") : i18nProps.t("Add.to.favourites")}
+                    style={{minWidth: '90px', ...this.props.style}}
+                    onClick={this.onClick}
+                />
+            }
+        </TKI18nContext.Consumer>
     }
 
     private exists(): boolean {

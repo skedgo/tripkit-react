@@ -11,6 +11,7 @@ import {tKUIDateTimePickerDefaultStyle} from "./TKUIDateTimePicker.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Moment;
+    timeZone?: string;
     onChange?: (value: Moment) => void;
     disabled?: boolean;
     timeFormat?: string;
@@ -57,11 +58,7 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
     }
 
     private onValueChange(value: Moment) {
-        const onChange = this.props.onChange ? this.props.onChange :
-            () => { // Avoid empty block warning
-            };
-        const valueWithTimezone = DateTimeUtil.momentFromStringDefaultTZ(value.format(this.props.dateFormat), this.props.dateFormat);
-        onChange(valueWithTimezone);
+        this.props.onChange && this.props.onChange(value);
     }
 
     public isPopupOpen(): boolean {
@@ -69,9 +66,7 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        // react-datepicker is timezone agnostic, and it parses dates in browser local timezone.
-        // Switch to browser local timezone while preserving "display" date, so we avoid inconsistencies.
-        const displayValue = DateTimeUtil.moment(this.props.value.format(this.props.dateFormat), this.props.dateFormat);
+        const displayValue = this.props.value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const classes = this.props.classes;
         const CustomInput = this.props.renderCustomInput ?
             ((props: {value?: any, onClick?: any}) => this.props.renderCustomInput!(props.value, props.onClick)) : undefined;
@@ -93,7 +88,8 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                 onChangeRaw={(date) => {
                     this.changedRaw = true;
                     setTimeout(() => this.changedRaw = false, 100); // To avoid it to keep true if onChange is not called
-                    const moment = DateTimeUtil.momentFromStringDefaultTZ(date.target.value, this.props.dateFormat);
+                    const moment = DateTimeUtil.momentFromStringTZ(date.target.value,
+                        this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ, this.props.dateFormat);
                     if (moment.isValid()) {
                         this.onValueChange(moment);
                     }

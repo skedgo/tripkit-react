@@ -47,6 +47,7 @@ interface IStyle {
     track: CSSProps<IProps>;
     footer: CSSProps<IProps>;
     alternative: CSSProps<IProps>;
+    pastAlternative: CSSProps<IProps>;
     selectedAlternative: CSSProps<IProps>;
 }
 
@@ -123,14 +124,44 @@ class TKUITripRow extends React.Component<IProps, {}> {
             info += (info ? " · " : "") + carbon;
         }
         const alternatives = (trip as TripGroup).trips;
-        let nOfAlts = this.props.expanded ? alternatives.length :
-            Math.min(alternatives.length, this.props.visibleAlternatives ? this.props.visibleAlternatives : 2);
-        const visibleAlternatives = alternatives.slice(0, nOfAlts);
+        const pastAlternatives = alternatives.filter((alt: Trip) =>
+            alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
+            (alt.queryIsLeaveAfter ? Math.floor(alt.depart/60) < Math.floor(alt.queryTime/60) :
+                Math.floor(alt.arrive/60) > Math.floor(alt.queryTime/60)));
+        const futureAlternatives = alternatives.filter((alt: Trip) =>
+            alt.queryTime === null || alt.queryIsLeaveAfter === null ||
+            (alt.queryIsLeaveAfter ? Math.floor(alt.depart/60) >= Math.floor(alt.queryTime/60) :
+                Math.floor(alt.arrive/60) <= Math.floor(alt.queryTime/60)));
         const selectedAlt = (trip as TripGroup).getSelectedTrip();
-        if (!visibleAlternatives.includes(selectedAlt)) {
-            visibleAlternatives.push(selectedAlt)
+        const visiblePastAlternatives = this.props.expanded ? pastAlternatives :
+            pastAlternatives.includes(selectedAlt) ? [selectedAlt] : [];
+        const visibleFutureAlternatives = this.props.expanded ? futureAlternatives :
+                futureAlternatives.slice(0, Math.min(futureAlternatives.length,
+                    this.props.visibleAlternatives ? this.props.visibleAlternatives : 2));
+        if (futureAlternatives.includes(selectedAlt) && !visibleFutureAlternatives.includes(selectedAlt)) {
+            visibleFutureAlternatives.push(selectedAlt);
         }
+        const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
+        const TripAlternativeRow = (props: {value: Trip, past?: boolean, selected?: boolean}) =>
+            <div className={classNames(classes.alternative,
+                props.past && classes.pastAlternative,
+                props.selected && classes.selectedAlternative)}
+                 onClick={() => this.props.onAlternativeClick &&
+                     this.props.onAlternativeClick(trip as TripGroup, props.value)}
+            >
+                <TKUITripTime value={props.value} brief={this.props.brief}/>
+                <div className={classes.trackAndAction}>
+                    <TripRowTrack value={props.value}
+                                  className={classes.track}
+                    />
+                    <TKUIButton
+                        type={TKUIButtonType.PRIMARY_LINK}
+                        text={"Detail"}
+                        onClick={this.props.onDetailClick}
+                    />
+                </div>
+            </div>;
         return (
             <div className={classNames(classes.main, this.props.className)}
                  onClick={this.props.onClick}
@@ -151,25 +182,12 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 </div>
                 }
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>
-                    <div className={classNames(classes.alternative,
-                        nOfAlts > 1 && this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
-                         onClick={() => this.props.onAlternativeClick &&
-                         this.props.onAlternativeClick(trip as TripGroup, altTrip)}
-                         key={i}
-                    >
-                        <TKUITripTime value={altTrip} brief={this.props.brief}/>
-                        <div className={classes.trackAndAction}>
-                            <TripRowTrack value={altTrip}
-                                          className={classes.track}
-                            />
-                            <TKUIButton
-                                type={TKUIButtonType.PRIMARY_LINK}
-                                text={"Detail"}
-                                onClick={this.props.onDetailClick}
-                            />
-                        </div>
-                    </div>
-                )}
+                    <TripAlternativeRow
+                        value={altTrip}
+                        past={visiblePastAlternatives.includes(altTrip)}
+                        selected={visibleAlternatives.length > 1 && this.props.selected && altTrip === selectedAlt}
+                        key={i}
+                    />)}
                 <div className={classes.footer}
                      key={"footer"}
                 >

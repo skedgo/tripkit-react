@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps} from '../index';
+import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng} from '../index';
 import {ReactComponent as IconReport} from './images/icon-usersnap.svg';
 import classNames from 'classnames';
 import Usersnap from "./usersnap/Usersnap";
