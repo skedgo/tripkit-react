@@ -49,9 +49,10 @@ class RoutingResults {
             this.templatesMap.set(template.hashCode, template);
         }
         for (const group of this.groups) {
-            group.trips.sort((t1: Trip, t2: Trip) => {
+            const sorting = (t1: Trip, t2: Trip) => {
                 return t1.weightedScore - t2.weightedScore;
-            });
+            };
+            group.trips.sort(sorting);
             for (const trip of group.trips) {
                 for (const segment of trip.segments) {
                     Object.assign(segment, this.templatesMap.get(segment.segmentTemplateHashCode));

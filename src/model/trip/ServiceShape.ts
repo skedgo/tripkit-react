@@ -16,7 +16,7 @@ class ServiceShape {
     private _serviceNumber: string | null = null;
     @JsonProperty("serviceDirection", String, true)
     private _serviceDirection: string | null = null;
-    @JsonProperty("serviceColor", String, true)
+    @JsonProperty("serviceColor", Color, true)
     private _serviceColor: Color | null = null;
     /**
      * Missing when unknown.

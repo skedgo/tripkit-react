@@ -109,6 +109,7 @@ class Util {
         if (Environment.isDev()
             || (Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION))
             || (Environment.isProd() && level === Env.PRODUCTION)) {
+            console.log(obj);
         }
     }
 

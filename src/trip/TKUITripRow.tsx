@@ -123,7 +123,13 @@ class TKUITripRow extends React.Component<IProps, {}> {
         if (carbon) {
             info += (info ? " · " : "") + carbon;
         }
-        const alternatives = (trip as TripGroup).trips;
+        const alternatives = (trip as TripGroup).trips
+        // create a copy to preserve original sorting of trip.trips.
+        //     .slice()
+        //     // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
+        //     .sort((t1: Trip, t2: Trip) => {
+        //         return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
+        //     });
         const pastAlternatives = alternatives.filter((alt: Trip) =>
             alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
             (alt.queryIsLeaveAfter ? Math.floor(alt.depart/60) < Math.floor(alt.queryTime/60) :
@@ -143,12 +149,13 @@ class TKUITripRow extends React.Component<IProps, {}> {
         }
         const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
-        const TripAlternativeRow = (props: {value: Trip, past?: boolean, selected?: boolean}) =>
+        const TripAlternativeRow = (props: {value: Trip, past?: boolean, selected?: boolean,
+            onAlternativeClick?: (group: TripGroup, alt: Trip) => void, onDetailClick?: () => void}) =>
             <div className={classNames(classes.alternative,
                 props.past && classes.pastAlternative,
                 props.selected && classes.selectedAlternative)}
-                 onClick={() => this.props.onAlternativeClick &&
-                     this.props.onAlternativeClick(trip as TripGroup, props.value)}
+                 onClick={() => props.onAlternativeClick &&
+                     props.onAlternativeClick(trip as TripGroup, props.value)}
             >
                 <TKUITripTime value={props.value} brief={this.props.brief}/>
                 <div className={classes.trackAndAction}>
@@ -158,7 +165,8 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     <TKUIButton
                         type={TKUIButtonType.PRIMARY_LINK}
                         text={"Detail"}
-                        onClick={this.props.onDetailClick}
+                        // onClick={props.onDetailClick}
+                        onClick={() => console.log("clicked")}
                     />
                 </div>
             </div>;
@@ -186,6 +194,8 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         value={altTrip}
                         past={visiblePastAlternatives.includes(altTrip)}
                         selected={visibleAlternatives.length > 1 && this.props.selected && altTrip === selectedAlt}
+                        onAlternativeClick={this.props.onAlternativeClick}
+                        onDetailClick={this.props.onDetailClick}
                         key={i}
                     />)}
                 <div className={classes.footer}
@@ -210,6 +220,5 @@ class TKUITripRow extends React.Component<IProps, {}> {
     }
 }
 
-export default connect(
-    (config: TKUIConfig) => config.TKUITripRow, config,
+export default connect((config: TKUIConfig) => config.TKUITripRow, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
