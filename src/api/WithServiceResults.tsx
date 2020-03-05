@@ -225,8 +225,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public updateDepartures(departuresUpdater: (prev: ServiceDeparture[]) => ServiceDeparture[], callback?: () => void) {
             this.setState((prev: IWithServiceResultsState) => {
-                const departuresUpdate = WithServiceResults.sortDepartures(departuresUpdater(prev.departures));
-                const noRealtimeDeparturesUpdate = departuresUpdater(prev.departures);
+                const departuresUpdate = WithServiceResults.sortDepartures(departuresUpdater(prev.departures), true);
+                const noRealtimeDeparturesUpdate = WithServiceResults.sortDepartures(departuresUpdater(prev.noRTDepartures));
                 return {
                     departures: departuresUpdate,
                     noRTDepartures: noRealtimeDeparturesUpdate
@@ -244,9 +244,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             }, callback);
         }
 
-        public static sortDepartures(departures: ServiceDeparture[]): ServiceDeparture[] {
+        public static sortDepartures(departures: ServiceDeparture[], considerRealtime: boolean = false): ServiceDeparture[] {
             return departures.slice().sort((s1: ServiceDeparture, s2: ServiceDeparture) => {
-                return s1.actualStartTime - s2.actualStartTime;
+                return considerRealtime ? s1.actualStartTime - s2.actualStartTime : s1.startTime - s2.startTime;
             });
         }
 
