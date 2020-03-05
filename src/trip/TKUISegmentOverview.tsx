@@ -5,7 +5,12 @@ import TransportUtil from "./TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {ClassNameMap} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
-import {isIconOnDark, tKUISegmentOverviewDefaultStyle} from "./TKUISegmentOverview.css";
+import {
+    isIconOnDark,
+    isUnconnected,
+    prevWaitingSegment,
+    tKUISegmentOverviewDefaultStyle
+} from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
 import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
@@ -33,6 +38,7 @@ interface IStyle {
     title: CSSProps<IProps>;
     subtitle: CSSProps<IProps>;
     time: CSSProps<IProps>;
+    preTime: CSSProps<IProps>;
     track: CSSProps<IProps>;
     body: CSSProps<IProps>;
     preLine: CSSProps<IProps>;
@@ -62,10 +68,9 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.value;
-        const prevSegment = segment.prevSegment();
-        const prevWaitingSegment = prevSegment && prevSegment.isStationay() ? prevSegment : undefined;
-        const prevWaitingSegmentTime = prevWaitingSegment ?
-            DateTimeUtil.momentFromTimeTZ(prevWaitingSegment.startTime * 1000, segment.from.timezone)
+        const previousWaitingSegment = prevWaitingSegment(segment);
+        const prevWaitingSegmentTime = previousWaitingSegment ?
+            DateTimeUtil.momentFromTimeTZ(previousWaitingSegment.startTime * 1000, segment.from.timezone)
                 .format(DateTimeUtil.TIME_FORMAT_TRIP) : undefined;
         const startTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
             .format(DateTimeUtil.TIME_FORMAT_TRIP);
@@ -101,31 +106,32 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             </div> : undefined;
         const wcSegmentInfo = segment.isBicycle() || segment.isWheelchair() ?
             <TKUIWCSegmentInfo value={segment}/> : undefined;
+        const showPin = (segment.isFirst() || segment.arrival) && isUnconnected(segment);
         return (
             <div className={classes.main} tabIndex={0}>
                 <div className={classes.header}>
                     <div className={classes.track} aria-label="at">
                         <div className={classes.preLine}/>
-                        {((segment.isFirst() && !transportColor) || (segment.arrival && !transportColor)) ?
-                            <IconPinStart className={classes.iconPin}/> : <div className={classes.circle}/>}
+                        {showPin ? <IconPinStart className={classes.iconPin}/> : <div className={classes.circle}/>}
                         <div className={classes.posLine}/>
                     </div>
                     <div className={classes.title}>
                         {from}
-                        {prevWaitingSegment &&
-                        <span className={classes.subtitle}>{prevWaitingSegment.getAction()}</span>}
+                        {previousWaitingSegment &&
+                        <span className={classes.subtitle}>{previousWaitingSegment.getAction()}</span>}
                         {this.props.actions}
                     </div>
                     <div className={classes.time}>
-                        <span>{prevWaitingSegmentTime}</span>
-                        {startTime}
+                        {prevWaitingSegmentTime &&
+                        <span className={classes.preTime}>{prevWaitingSegmentTime}</span>}
+                        <span>{startTime}</span>
                     </div>
                 </div>
                 {!this.props.value.arrival ?
                     <div className={classes.body}>
                         <div className={classes.track}>
                             <div className={classes.line}/>
-                            <img src={TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, iconOnDark)}
+                            <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark)}
                                  className={classes.icon}
                                  aria-hidden={true}
                             />

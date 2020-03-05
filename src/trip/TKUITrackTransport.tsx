@@ -54,19 +54,23 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
             } else {
                 infoSubtitle = mainInfo;
             }
-        } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
-            infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
-        } else if (segment.realTime) {
-            infoSubtitle = t("Live.traffic");
         } else {
-            // TODO more cases
-            infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+            if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
+                infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
+            } else {
+                // TODO more cases
+                infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+            }
+            if (segment.realTime) {
+                infoTitle = infoSubtitle;
+                infoSubtitle = t("Live.traffic");
+            }
         }
         const modeInfo = segment.modeInfo!;
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                <img src={TransportUtil.getTransportIcon(modeInfo, !!segment.realTime, false)}
+                <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, false)}
                      alt={modeInfo.alt}
                      role="img" // Needed to be read by iOS VoiceOver
                      className={classes.icon}

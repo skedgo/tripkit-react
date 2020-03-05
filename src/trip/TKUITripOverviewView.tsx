@@ -24,6 +24,7 @@ import TKShareHelper from "../share/TKShareHelper";
 import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -49,12 +50,15 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripOverviewView",
     props: {
         actions: (trip: Trip) => [
-            <TKUIButton text={"Go"}
-                        icon={<IconDirections/>}
-                        type={TKUIButtonType.PRIMARY_VERTICAL}
-                        style={{minWidth: '90px'}}
-                        key={"actionGo"}
-            />,
+            <TKI18nContext.Consumer key={"actionGo"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <TKUIButton text={i18nProps.t("Go")}
+                                icon={<IconDirections/>}
+                                type={TKUIButtonType.PRIMARY_VERTICAL}
+                                style={{minWidth: '90px'}}
+                    />
+                }
+            </TKI18nContext.Consumer>,
             <RoutingResultsContext.Consumer key={"actionFavourite"}>
                 {(routingResultsContext: IRoutingResultsContext) =>
                     routingResultsContext.query.from && routingResultsContext.query.to &&
@@ -63,14 +67,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                         vertical={true}
                     />}
             </RoutingResultsContext.Consumer>,
-            <TKUIShareAction
-                title={"Share trip"}
-                message={""}
-                link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url
-                    .replace("tripgo.com", "tripkit.tripgo.com"))}
-                vertical={true}
-                key={"actionShare"}
-            />
+            <TKI18nContext.Consumer key={"actionShare"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <TKUIShareAction
+                        title={i18nProps.t("Share.Trip")}
+                        message={""}
+                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url
+                            .replace("tripgo.com", "tripkit.tripgo.com"))}
+                        vertical={true}
+                    />
+                }
+            </TKI18nContext.Consumer>
         ],
         segmentActions: (segment: Segment) => segment.arrival ? [
             <TKUIControlsCard key={"actionShareArrival"}>

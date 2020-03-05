@@ -113,10 +113,6 @@ class MapUtil {
         // const alreadyFits = GWTLatLngBounds.createFromHasLatLngBounds(currentBounds).resize(.8).toLatLngBounds().contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest()) &&
         //     reducedBounds.contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest());
         const reducedLatLngBounds = LeafletUtil.fromBBox(reducedBounds);
-        console.log(JSON.stringify(padding));
-        console.log("curr: " + JSON.stringify(currentBounds));
-        console.log("reduced: " + JSON.stringify(reducedBounds));
-        console.log("new bounds: " + JSON.stringify(bounds));
         const alreadyFits =
             // LeafletUtil.fromBBox(currentBounds).contains(LeafletUtil.fromLatLng(bounds.ne)) &&
             reducedLatLngBounds.contains(LeafletUtil.fromLatLng(bounds.sw)) &&

@@ -30,6 +30,7 @@ import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TransportUtil from "../trip/TransportUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
+import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -69,14 +70,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
         actions: (stop: StopLocation) => [
             <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
-            <TKUIShareAction
-                title={"Share timetable"}
-                message={""}
-                link={() => RegionsData.instance.requireRegions()
-                    .then(() => TKShareHelper.getShareTimetable(stop))}
-                vertical={true}
-                key={"actionShare"}
-            />
+            <TKI18nContext.Consumer key={"actionShare"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <TKUIShareAction
+                        title={"Share timetable"}
+                        message={""}
+                        link={() => RegionsData.instance.requireRegions()
+                            .then(() => TKShareHelper.getShareTimetable(stop))}
+                        vertical={true}
+                    />
+                }
+            </TKI18nContext.Consumer>
         ]
     }
 };

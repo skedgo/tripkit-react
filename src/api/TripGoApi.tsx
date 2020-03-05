@@ -66,10 +66,10 @@ class TripGoApi {
                 routingResults.setQuery(query);
                 routingResults.setSatappQuery(trip.satappQuery);
                 const tripGroups = routingResults.groups;
-                if (tripGroups.length === 0) {
+                if (tripGroups.length === 0 || tripGroups[0].trips.length === 0) {
                     throw new Error('Empty trip group.');
                 }
-                return tripGroups[0];
+                return tripGroups[0].trips[0];
             }).catch((reason: Error) => {
                 // Our api answers 200 with a null json when there is no update, so return undefined;
                 if (reason.message.includes("Unexpected end of JSON input")) {
