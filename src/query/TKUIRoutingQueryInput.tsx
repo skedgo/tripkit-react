@@ -74,12 +74,6 @@ interface IStyle {
     footer: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
-    selectContainer: CSSProps<IProps>;
-    selectControl: CSSProps<IProps>;
-    selectMenu: CSSProps<IProps>;
-    selectOption: CSSProps<IProps>;
-    selectOptionFocused: CSSProps<IProps>;
-    selectOptionSelected: CSSProps<IProps>;
 }
 
 export type TKUIRoutingQueryInputProps = IProps;

@@ -121,28 +121,5 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         },
         timePrefSelect: {
             minWidth: '92px'
-        },
-        selectContainer: {
-            minWidth: '92px',
-            ...genStyles.fontS
-        },
-        selectControl: {
-            border: 'none',
-            background: 'none',
-            cursor: 'pointer'
-        },
-        selectMenu: {
-            marginTop: '3px'
-        },
-        selectOption: {
-            color: tKUIColors.black1,
-            cursor: 'pointer'
-        },
-        selectOptionFocused: {
-            backgroundColor: theme.colorPrimaryOpacity(.2)
-        },
-        selectOptionSelected: {
-            color: 'white',
-            backgroundColor: theme.colorPrimaryOpacity(.5)
         }
     });

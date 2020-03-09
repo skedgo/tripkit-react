@@ -124,12 +124,12 @@ class TKUITripRow extends React.Component<IProps, {}> {
             info += (info ? " · " : "") + carbon;
         }
         const alternatives = (trip as TripGroup).trips
-        // create a copy to preserve original sorting of trip.trips.
-        //     .slice()
-        //     // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
-        //     .sort((t1: Trip, t2: Trip) => {
-        //         return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
-        //     });
+            // create a copy to preserve original sorting of trip.trips.
+            .slice()
+            // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
+            .sort((t1: Trip, t2: Trip) => {
+                return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
+            });
         const pastAlternatives = alternatives.filter((alt: Trip) =>
             alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
             (alt.queryIsLeaveAfter ? Math.floor(alt.depart/60) < Math.floor(alt.queryTime/60) :
