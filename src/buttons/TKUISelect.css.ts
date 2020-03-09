@@ -11,7 +11,8 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
         control: {
             border: 'none',
             background: 'none',
-            cursor: 'pointer',
+            boxShadow: 'none',
+            cursor: 'pointer'
         },
         menu: {
             marginTop: '1px'
