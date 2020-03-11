@@ -101,7 +101,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                                     transBtn :
                                     <TKUITooltip placement="top"
                                                  overlay={tooltip}
-                                                 overlayClassName={classes.tooltip}
+                                                 className={classes.tooltip}
                                                  mouseEnterDelay={.5}
                                                  arrowContent={null}
                                                  key={index}

@@ -13,8 +13,10 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mouseEnterDelay?: number;
     trigger?: string[];
     arrowContent?: React.ReactNode;
-    overlayClassName?: string;
+    className?: string;
+    arrowColor?: string;
     children?: any;
+    visible?: boolean;
 }
 
 export interface IStyle {
@@ -38,7 +40,7 @@ class TKUITooltip extends React.Component<IProps, {}> {
         return (
             <Tooltip
                 {...this.props as RCTooltip.Props}
-                overlayClassName={classNames("app-style", this.props.classes.main, this.props.overlayClassName)}
+                overlayClassName={classNames(this.props.classes.main, this.props.className)}
                 arrowContent={this.props.arrowContent}
             >
                 {this.props.children}

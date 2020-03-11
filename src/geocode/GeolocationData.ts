@@ -84,8 +84,8 @@ class GeolocationData {
     //     return this.requestCurrentLocationHTML5();
     // }
 
-    public requestCurrentLocation(dontAskUser?: boolean): Promise<LatLng> {
-        return tKRequestCurrentLocation(dontAskUser)
+    public requestCurrentLocation(dontAskUser?: boolean, fallback: boolean = false): Promise<LatLng> {
+        return tKRequestCurrentLocation(dontAskUser, fallback)
             .then((userLocation: [number, number]) =>
                 LatLng.createLatLng(userLocation[0], userLocation[1])
             );
@@ -102,12 +102,11 @@ class GeolocationData {
                     .then((currentLoc: LatLng) =>
                         this.currentLocBSubject && this.currentLocBSubject.next(currentLoc))
                     .catch((error: Error) => {
-                        console.log(error);
                         if (this.currentLocInterval) {
                             clearInterval(this.currentLocInterval);
                         }
                         if (this.currentLocBSubject) {
-                            this.currentLocBSubject.next(undefined);
+                            this.currentLocBSubject.error(error);
                             this.currentLocBSubject = undefined;
                         }
                     });
