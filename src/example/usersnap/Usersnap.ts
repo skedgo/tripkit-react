@@ -1,4 +1,5 @@
 import {TKState, TKUtil} from '../../index';
+import TKShareHelper from "../../share/TKShareHelper";
 
 class Usersnap {
 
@@ -34,7 +35,7 @@ class Usersnap {
         const plannerUrl = location.protocol + "//" + location.hostname
             + (location.port ? ":" + location.port : "") + location.pathname;
         this.feedbackData =
-            "webapp url: " + encodeURI(state.routingQuery.getGoUrl(plannerUrl)) + "\n\n"
+            "webapp url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n\n"
             + "options: " + JSON.stringify(optionsJson) + "\n\n"
             + "satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n\n"
             + "trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "");

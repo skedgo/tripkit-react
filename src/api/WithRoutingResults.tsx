@@ -24,7 +24,6 @@ import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
 
 interface IWithRoutingResultsProps {
-    urlQuery?: RoutingQuery;
     initViewport?: {center?: LatLng, zoom?: number};
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
@@ -67,7 +66,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 sort: TripSort.OVERALL,
                 waiting: false,
                 viewport: {center: MapUtil.worldCoords, zoom: 2},
-                directionsView: props.urlQuery !== undefined
+                directionsView: false
             };
 
             this.onQueryChange = this.onQueryChange.bind(this);
@@ -284,7 +283,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public render(): React.ReactNode {
-            const { urlQuery, ...props } = this.props as IWithRoutingResultsProps;
+            const props = this.props as IWithRoutingResultsProps;
             return <Consumer
                 {...props}
                 query={this.state.query}
@@ -318,10 +317,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
 
         public componentDidMount(): void {
-            const urlQuery: RoutingQuery | undefined = this.props.urlQuery;
-            if (urlQuery) {
-                this.onQueryChange(urlQuery);
-            }
             if (this.props.initViewport) {
                 this.onViewportChange(this.props.initViewport);
             }

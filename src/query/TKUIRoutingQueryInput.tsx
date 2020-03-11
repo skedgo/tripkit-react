@@ -40,6 +40,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showTransportsBtn?: boolean;
     onShowTransportOptions?: () => void;
     isTripPlanner?: boolean;
+    resolveCurrLocInFrom?: boolean;
     collapsable?: boolean;
     geocoderOptions?: MultiGeocoderOptions;
     onClearClicked?: () => void;
@@ -248,7 +249,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }
                                 this.showTooltip(true, false);
                             }}
-                            resolveCurr={routingQuery.to !== null} // Resolve curr loc on 'from' when 'to' is already set
+                            resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                             ref={(el:any) => this.fromLocRef = el}
                             inputAriaLabel={ariaLabelFrom}
                             inputId={"input-from"}

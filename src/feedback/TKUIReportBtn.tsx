@@ -12,6 +12,7 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import {tKUIReportBtnDefaultStyle} from "./TKUIReportBtn.css";
 import classNames from "classnames";
+import TKShareHelper from "../share/TKShareHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
@@ -47,7 +48,7 @@ export function feedbackTextFromState(state: TKState): string {
     const location = window.location;
     const plannerUrl = location.protocol + "//" + location.hostname
         + (location.port ? ":" + location.port : "") + location.pathname;
-    return "webapp url: " + encodeURI(state.routingQuery.getGoUrl(plannerUrl)) + "\n\n"
+    return "webapp url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n\n"
         + "options: " + JSON.stringify(optionsJson) + "\n\n"
         + "satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n\n"
         + "trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "");

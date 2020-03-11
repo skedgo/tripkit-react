@@ -7,10 +7,33 @@ import Usersnap from "./usersnap/Usersnap";
 
 
 const config: TKUIConfig = {
-    apiKey: 'xxx'
+    apiKey: '790892d5eae024712cfd8616496d7317',
+    theme: {
+        fontFamily: 'ProximaNova, sans-serif'
+    },
+    userLocationPromise: (window as any).tKUserLocationPromise ?
+        (window as any).tKUserLocationPromise
+            .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined,
+    i18nPromise: (window as any).tKI18nPromise,
+    TKUIReportBtn: {
+        // Good example of element replacement.
+        render: (props: TKUIReportBtnProps) =>
+            <IconReport
+                className={classNames(props.className, props.classes.main)}
+                onClick={() => {
+                    Usersnap.setFeedbackData(props.tKState);
+                    Usersnap.openReportWindow();
+                }}
+            />,
+        // More suitable if want to just change click behaviour, not icon.
+        // props: {
+        //     onClick: (state: TKState) => {
+        //         Usersnap.setFeedbackData(state);
+        //         Usersnap.openReportWindow();
+        //     }
+        // }
+    }
 };
-
-const urlQuery = TKShareHelper.getSharedQueryURL();
 
 ReactDOM.render(
     <TKUIProvider config={config} initQuery={urlQuery}>

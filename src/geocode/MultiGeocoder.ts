@@ -36,8 +36,11 @@ class MultiGeocoder {
         }
     }
 
-    public resolveLocation(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void) {
-        unresolvedLocation.source && this._options.getGeocoderById(unresolvedLocation.source)!.resolve(unresolvedLocation, callback);
+    public resolveLocation(unresolvedLocation: Location): Promise<Location> {
+        return unresolvedLocation.source ?
+            this._options.getGeocoderById(unresolvedLocation.source)!.resolve(unresolvedLocation) :
+            Promise.reject(new Error('Unable to resolve location with unknown source'));
+
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {

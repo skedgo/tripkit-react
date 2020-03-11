@@ -32,12 +32,11 @@ class CurrentLocationGeocoder implements IGeocoder {
         return CurrentLocationGeocoder.SOURCE_ID;
     }
 
-    resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
-        if (unresolvedLocation.isCurrLoc()) {
-            GeolocationData.instance.requestCurrentLocation().then((latLng: LatLng) => {
-                callback(Util.iAssign(unresolvedLocation, latLng));
-            })
-        }
+    resolve(unresolvedLocation: Location): Promise<Location> {
+        return unresolvedLocation.isCurrLoc() ?
+            GeolocationData.instance.requestCurrentLocation()
+                .then((latLng: LatLng) => Util.iAssign(unresolvedLocation, latLng)) :
+            Promise.reject(new Error('CurrentLocationGeocoder unable to resolve ' + Util.stringify(unresolvedLocation)));
     }
 
     reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {

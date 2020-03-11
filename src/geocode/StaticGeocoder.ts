@@ -56,8 +56,8 @@ class StaticGeocoder implements IGeocoder {
         return LocationUtil.relevance(query, r2.name, true) - LocationUtil.relevance(query, r1.name, true);
     }
 
-    public resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
-        // Not empty
+    public resolve(unresolvedLocation: Location): Promise<Location> {
+        return Promise.reject('StaticGeocoder does not support location resolution')
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
