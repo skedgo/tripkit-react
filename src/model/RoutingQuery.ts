@@ -75,24 +75,6 @@ class RoutingQuery {
             this.to !== null && (!checkResolved || this.to.isResolved());
     }
 
-    public getGoUrl(plannerUrl?: string): string {
-        const goURL = (plannerUrl ? plannerUrl : "https://tripgo.com");
-        if (this.from === null || this.to === null) {
-            return goURL;
-        }
-        return goURL + (goURL.includes("?") ? "&" : "?") +
-            "flat=" + this.from.lat + "&flng=" + this.from.lng +
-            "&fname=" + (this.from.isCurrLoc() && !this.from.isResolved() ? "My location" : this.from.address) +
-            (this.from.id ? "&fid=" + (this.from.id) : "") +
-            (this.from.source ? "&fsrc=" + (this.from.source) : "") +
-            "&tlat=" + this.to.lat + "&tlng=" + this.to.lng +
-            "&tname=" + (this.to.isCurrLoc() && !this.to.isResolved() ? "My location" : this.to.address) +
-            (this.to.id ? "&tid=" + (this.to.id) : "") +
-            (this.to.source ? "&tsrc=" + (this.to.source) : "") +
-            "&type=" + (this.timePref === TimePreference.NOW ? "0" : (this.timePref === TimePreference.LEAVE ? "1" : "2")) +
-            "&time=" + Math.floor(this.time.valueOf() / 1000);
-    }
-
     public getQueryUrl(modeSet: string[], options: TKUserProfile, regionInfo?: RegionInfo): string {
         if (this.from === null || this.to === null) {
             return "";

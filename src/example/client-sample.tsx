@@ -98,7 +98,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
     };
 
     ReactDOM.render(
-        <TKStateProvider config={config} initQuery={routingQuery}>
+        <TKStateProvider config={config}>
             <TKUITripPlanner/>
         </TKStateProvider>,
         containerElement);

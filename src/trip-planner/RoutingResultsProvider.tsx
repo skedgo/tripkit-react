@@ -51,7 +51,6 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
 });
 
 class RoutingResultsProvider extends React.Component<{
-    initQuery?: RoutingQuery,
     initViewport?: {center?: LatLng, zoom?: number},
     options: TKUserProfile,
     testTrips?: Trip[],
@@ -63,8 +62,7 @@ class RoutingResultsProvider extends React.Component<{
 
     public render(): React.ReactNode {
         return (
-            <this.ContextWithValue urlQuery={this.props.initQuery}
-                                   initViewport={this.props.initViewport}
+            <this.ContextWithValue initViewport={this.props.initViewport}
                                    options={this.props.options}
                                    locale={this.props.locale}
             />

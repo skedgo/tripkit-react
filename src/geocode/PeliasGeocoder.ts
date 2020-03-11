@@ -75,17 +75,17 @@ class PeliasGeocoder implements IGeocoder {
         });
     }
 
-    public resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
+    public resolve(unresolvedLocation: Location): Promise<Location> {
         const url = this.geocodeServer +  "/place?api_key=" + this.apiKey + "&ids=" + unresolvedLocation.id;
-        fetch(url, {
+        return fetch(url, {
             method: NetworkUtil.MethodType.GET
         }).then(NetworkUtil.jsonCallback).then((json: any) => {
             // TODO: implement properly
             unresolvedLocation.hasDetail = true;
-            callback(unresolvedLocation);
+            return unresolvedLocation;
         }).catch(() => {
             unresolvedLocation.hasDetail = true;
-            callback(unresolvedLocation)
+            return unresolvedLocation;
         });
     }
 

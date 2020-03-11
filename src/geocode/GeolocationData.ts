@@ -98,8 +98,19 @@ class GeolocationData {
         if (!this.currentLocBSubject) {
             this.currentLocBSubject = new BehaviorSubject<LatLng | undefined>(undefined);
             this.currentLocInterval = setInterval(() => {
-                this.requestCurrentLocation().then((currentLoc: LatLng) =>
-                    this.currentLocBSubject && this.currentLocBSubject.next(currentLoc));
+                this.requestCurrentLocation()
+                    .then((currentLoc: LatLng) =>
+                        this.currentLocBSubject && this.currentLocBSubject.next(currentLoc))
+                    .catch((error: Error) => {
+                        console.log(error);
+                        if (this.currentLocInterval) {
+                            clearInterval(this.currentLocInterval);
+                        }
+                        if (this.currentLocBSubject) {
+                            this.currentLocBSubject.next(undefined);
+                            this.currentLocBSubject = undefined;
+                        }
+                    });
                 // const value = this.currentLocBSubject!.getValue();
                 // this.currentLocBSubject!.next(LatLng.createLatLng(value ? value.lat + 1 : 0, 0));
             }, 3000);

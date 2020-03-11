@@ -7,7 +7,6 @@ import TKStateProvider from "./TKStateProvider";
 
 interface IProps {
     config: TKUIConfig;
-    initQuery?: RoutingQuery;
     children: ((state: TKState) => React.ReactNode) | React.ReactNode;
 }
 
@@ -18,7 +17,7 @@ class TKRoot extends React.Component<IProps,{}> {
 
     public render(): React.ReactNode {
         return (
-            <TKStateProvider config={this.props.config} initQuery={this.props.initQuery}>
+            <TKStateProvider config={this.props.config}>
                 {Util.isFunction(this.props.children) ?
                     <TKStateConsumer>
                         {(state: TKState) =>

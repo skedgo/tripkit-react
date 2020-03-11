@@ -11,7 +11,7 @@ interface IGeocoder {
 
     geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void;
 
-    resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void;
+    resolve(unresolvedLocation: Location): Promise<Location>;
 
     reverseGeocode(coord: LatLng, callback: (location: Location | null) => void): void;
 }

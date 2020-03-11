@@ -21,14 +21,20 @@ class Constants {
     }
 
     public static initialize() {
-        const currentScript = Constants.getCurrentScript();
-        const embedjsSrc = currentScript ? currentScript.src : "https://tripkit.tripgo.com/static/js";
+        try {
+            const currentScript = Constants.getCurrentScript();
+            const embedjsSrc = currentScript ? currentScript.src : "https://tripkit.tripgo.com/static/js";
 
-        Constants.DEPLOY_URL = embedjsSrc.indexOf("/embed.js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/embed.js")) :
-            embedjsSrc.indexOf("/static/js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/static/js")) :
-                embedjsSrc.slice(0, embedjsSrc.indexOf("/index.js"));
+            Constants.DEPLOY_URL = embedjsSrc.indexOf("/embed.js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/embed.js")) :
+                embedjsSrc.indexOf("/static/js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/static/js")) :
+                    embedjsSrc.slice(0, embedjsSrc.indexOf("/index.js"));
 
-        console.log("Constants.DEPLOY_URL = " + Constants.DEPLOY_URL);
+            console.log("Constants.DEPLOY_URL = " + Constants.DEPLOY_URL);
+        } catch (error) {
+            // TODO: analyze which url makes sense to use as fallback.
+            Constants.DEPLOY_URL = "https://tripkit.tripgo.com";
+            console.log("Constants.DEPLOY_URL = " + Constants.DEPLOY_URL + " (fallback)");
+        }
     }
 
     public static absUrl(path: string): string {

@@ -13,6 +13,7 @@ import {tKUIColors} from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import StopIcon from "../map/StopIcon";
 import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
+import {PropsMapper} from "../config/TKConfigHelper";
 
 class SkedgoGeocoder implements IGeocoder {
 
@@ -103,8 +104,9 @@ class SkedgoGeocoder implements IGeocoder {
         });
     }
 
-    public resolve(unresolvedLocation: Location, callback: (resolvedLocation: Location) => void): void {
+    public resolve(unresolvedLocation: Location): Promise<Location> {
         // Empty
+        return Promise.reject('SkedgoGeocoder does not support location resolution')
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {

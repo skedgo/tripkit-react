@@ -235,11 +235,16 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         this.userLocationSubscription = GeolocationData.instance.getCurrentLocObservable()
-            .subscribe((currLoc: LatLng | undefined) =>
+            .subscribe((currLoc: LatLng | undefined) => {
+                if (currLoc === undefined) {    // It means it failed getting user location
+                    this.userLocationSubscription = undefined;
+                    return;
+                }
                 this.setState((prev: IState) => {
                     !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
                     return {userLocation: currLoc}
-                }));
+                });
+            });
     }
 
     private hideCurrentLocation() {

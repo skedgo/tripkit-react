@@ -134,19 +134,26 @@ class LocationBox extends Component<IProps, IState> {
         if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
             (!locationValue.isCurrLoc() || this.props.resolveCurr)) {
             this.setState({waitingResolveFor: locationValue});
-            this.geocodingData.resolveLocation(locationValue, (resolvedLocation: Location) => {
-                if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
-                    this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
-                        this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
-                        console.log("Resolved: " + JSON.stringify(resolvedLocation));
-                    });
-                }
-                if (this.state.waitingResolveFor === locationValue) {
-                    this.setState({
-                        waitingResolveFor: undefined
-                    });
-                }
-            });
+            this.geocodingData.resolveLocation(locationValue)
+                .then((resolvedLocation: Location) => {
+                    if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
+                        this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
+                            this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
+                            console.log("Resolved: " + JSON.stringify(resolvedLocation));
+                        });
+                    }
+                    if (this.state.waitingResolveFor === locationValue) {
+                        this.setState({
+                            waitingResolveFor: undefined
+                        });
+                    }
+                })
+                .catch((error: Error) => {
+                    console.log(error);
+                    if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
+                        this.props.onChange && this.props.onChange(null, false);
+                    }
+                });
         }
     }
 

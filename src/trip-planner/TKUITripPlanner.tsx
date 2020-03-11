@@ -223,6 +223,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 title={t("Route")}
                 isTripPlanner={true}
                 onShowTransportOptions={this.onShowTransportSettings}
+                resolveCurrLocInFrom={this.props.query.to !== null}
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
@@ -384,6 +385,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         Modal.setAppElement(this.ref);
+
+        if (TKShareHelper.isSharedQueryLink()) {
+            const transports = TKShareHelper.parseTransportsQueryParam();
+            if (transports) {
+                const update = Util.iAssign(this.props.userProfile, {transportOptions: transports});
+                this.props.onUserProfileChange(update);
+            }
+            const query = TKShareHelper.parseSharedQueryLink();
+            if (query) {
+                this.props.onQueryChange(query);
+                this.props.onDirectionsView(true);
+                TKShareHelper.resetToHome();
+            }
+        }
 
         if (TKShareHelper.isSharedStopLink()) {
             const shareLinkPath = decodeURIComponent(document.location.pathname);

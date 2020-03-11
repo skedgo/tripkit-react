@@ -11,7 +11,6 @@ import TKI18nProvider, {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nP
 
 interface IProps {
     config: TKUIConfig;
-    initQuery?: RoutingQuery;
 }
 
 class TKStateProvider extends React.Component<IProps,{}> {
@@ -31,7 +30,6 @@ class TKStateProvider extends React.Component<IProps,{}> {
                                 <TKI18nContext.Consumer>
                                     {(i18nProps: TKI18nContextProps) =>
                                         <RoutingResultsProvider
-                                            initQuery={this.props.initQuery}
                                             initViewport={this.props.config.initViewport}
                                             options={optionsContext && optionsContext.value}
                                             locale={i18nProps.locale}
