@@ -34,6 +34,7 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import {tKUIColors} from "..";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -75,6 +76,7 @@ interface IStyle {
     footer: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
+    noCurrLocTooltip: CSSProps<IProps>;
 }
 
 export type TKUIRoutingQueryInputProps = IProps;
@@ -90,6 +92,7 @@ interface IState {
     timePanelOpen: boolean;
     fromTooltip: boolean;
     toTooltip: boolean;
+    showNoCurrLoc: boolean;
 }
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
@@ -104,7 +107,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         this.state = {
             timePanelOpen: false,
             fromTooltip: false,
-            toTooltip: false
+            toTooltip: false,
+            showNoCurrLoc: false
         };
         this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
         this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
@@ -160,6 +164,23 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             if (this.toLocRef && show) {
                 this.toLocRef.setFocus()
             }
+        }
+    }
+
+    private showNoCurrLocTimeout: any;
+
+    private showNoCurrLoc(show: boolean) {
+        if (this.state.showNoCurrLoc === show) {
+            return;
+        }
+        this.setState({showNoCurrLoc: show});
+        if (this.showNoCurrLocTimeout) {
+            clearTimeout(this.showNoCurrLocTimeout);
+        }
+        if (show) {
+            this.showNoCurrLocTimeout = setTimeout(() => {
+                this.showNoCurrLoc(false);
+            }, 10000);
         }
     }
 
@@ -226,35 +247,52 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)}/>
                         </div>}
                     <div className={classes.fromToInputsPanel}>
-                        <LocationBox
-                            geocodingData={this.geocodingDataFrom}
-                            bounds={this.props.bounds}
-                            focus={this.props.focusLatLng}
-                            value={routingQuery.from}
-                            placeholder={fromPlaceholder}
-                            onChange={(value: Location | null, highlighted: boolean) => {
-                                if (!highlighted) {
-                                    this.updateQuery({from: value});
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(true, undefined);
+                        <TKUITooltip
+                            overlay={
+                                <div className={classes.noCurrLocTooltip}>
+                                    Could not get your location. Please set manually
+                                </div>
+                            }
+                            arrowColor={tKUIColors.black2}
+                            visible={this.state.showNoCurrLoc}
+                            placement={this.props.portrait ? "bottom" : "left"}
+                        >
+                            <LocationBox
+                                geocodingData={this.geocodingDataFrom}
+                                bounds={this.props.bounds}
+                                focus={this.props.focusLatLng}
+                                value={routingQuery.from}
+                                placeholder={fromPlaceholder}
+                                onChange={(value: Location | null, highlighted: boolean) => {
+                                    if (value) {
+                                        this.showNoCurrLoc(false);
                                     }
-                                    if (value !== null) {
-                                        GATracker.instance.send("query input", "pick location",
-                                            value.isCurrLoc() ? "current location" : "type address");
+                                    if (!highlighted) {
+                                        this.updateQuery({from: value});
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(true, undefined);
+                                        }
+                                        if (value !== null) {
+                                            GATracker.instance.send("query input", "pick location",
+                                                value.isCurrLoc() ? "current location" : "type address");
+                                        }
+                                    } else {
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(true, value ? value : undefined);
+                                        }
                                     }
-                                } else {
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(true, value ? value : undefined);
-                                    }
-                                }
-                                this.showTooltip(true, false);
-                            }}
-                            resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
-                            ref={(el:any) => this.fromLocRef = el}
-                            inputAriaLabel={ariaLabelFrom}
-                            inputId={"input-from"}
-                            sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                        />
+                                    this.showTooltip(true, false);
+                                }}
+                                resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
+                                onFailedToResolveCurr={() => {
+                                    this.showNoCurrLoc(true);
+                                }}
+                                ref={(el:any) => this.fromLocRef = el}
+                                inputAriaLabel={ariaLabelFrom}
+                                inputId={"input-from"}
+                                sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                            />
+                        </TKUITooltip>
                         <div className={classes.divider}/>
                         <LocationBox
                             geocodingData={this.geocodingDataTo}

@@ -53,6 +53,9 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
+import {tKCheckGeolocationPermission} from "../util/GeolocationUtil";
+import {tKUIColors} from "../index";
+import TKUITooltip from "../card/TKUITooltip";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -84,6 +87,7 @@ export interface IStyle {
     vehicle: CSSProps<IProps>;
     segmentIconClassName: CSSProps<IProps>;
     vehicleClassName: CSSProps<IProps>;
+    noCurrLocTooltip: CSSProps<IProps>;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -117,6 +121,7 @@ interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
     menuPopupPosition?: L.LeafletMouseEvent;
     userLocation?: LatLng;
+    showNoCurrLoc?: string;
 }
 
 export interface IMapSegmentRenderer {
@@ -138,7 +143,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             mapLayers: new Map<MapLocationType, Location[]>()
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
-        this.onCurrentLocClicked = this.onCurrentLocClicked.bind(this);
+        this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
@@ -208,7 +213,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         if (fitSet.length === 1) {
-            const fitPoint = this.props.padding && this.props.padding.left ?
+            // To avoid wrong calculation in movePointInPixels due to special case of initial bounds.
+            const boundsEstablished = this.props.viewport &&
+                JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
+            const fitPoint = this.props.padding && this.props.padding.left && boundsEstablished ?
                 MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
                 this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
                 LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
@@ -229,23 +237,57 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     private userLocationSubscription?: any;
 
-    private onCurrentLocClicked() {
+    private onTrackUserLocation(explicitRequest: boolean = false) {
         this.state.userLocation && this.fitMap(Location.create(this.state.userLocation, "", "", ""), null);
         if (this.userLocationSubscription) {
             return;
         }
+        const self = this;
         this.userLocationSubscription = GeolocationData.instance.getCurrentLocObservable()
-            .subscribe((currLoc: LatLng | undefined) => {
-                if (currLoc === undefined) {    // It means it failed getting user location
+            .subscribe(
+                (currLoc: LatLng | undefined) => {
+                    this.setState((prev: IState) => {
+                        !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
+                        return {userLocation: currLoc}
+                    });
+                },
+                (error: Error) => {
                     this.userLocationSubscription = undefined;
-                    return;
-                }
-                this.setState((prev: IState) => {
-                    !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
-                    return {userLocation: currLoc}
+                    if (explicitRequest) {
+                        tKCheckGeolocationPermission()
+                            .then(function (granted) {
+                                // Permission API is supported
+                                if (!granted) {
+                                    self.showNoCurrLoc("Please allow this site to track your location");
+                                } else {
+                                    self.showNoCurrLoc("Could not get your location");
+                                }
+                            })
+                            .catch(() => {
+                                // Permission API is not supported
+                                self.showNoCurrLoc("Could not get your location");
+                            });
+                    }
                 });
-            });
     }
+
+    private showNoCurrLocTimeout: any;
+
+    private showNoCurrLoc(text: string | undefined) {
+        if (this.state.showNoCurrLoc === text) {
+            return;
+        }
+        this.setState({showNoCurrLoc: text});
+        if (this.showNoCurrLocTimeout) {
+            clearTimeout(this.showNoCurrLocTimeout);
+        }
+        if (text !== undefined) {
+            this.showNoCurrLocTimeout = setTimeout(() => {
+                this.showNoCurrLoc(undefined);
+            }, 10000);
+        }
+    }
+
 
     private hideCurrentLocation() {
         GeolocationData.instance.stopCurrentLocObservable();
@@ -512,11 +554,22 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => this.onResize()}
                 />
-                <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
-                        onClick={this.onCurrentLocClicked}
+                <TKUITooltip
+                    overlay={
+                        <div className={classes.noCurrLocTooltip}>
+                            {this.state.showNoCurrLoc}
+                        </div>
+                    }
+                    arrowColor={tKUIColors.black2}
+                    visible={!!this.state.showNoCurrLoc}
+                    placement={"right"}
                 >
-                    <IconCurrentLocation/>
-                </button>
+                    <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
+                            onClick={() => this.onTrackUserLocation(true)}
+                    >
+                        <IconCurrentLocation/>
+                    </button>
+                </TKUITooltip>
             </div>
         )
     }
@@ -576,7 +629,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // If computing trips from user location then show it on map.
         if ((!prevProps.from || !prevProps.to) && this.props.from && this.props.to && this.props.from.isCurrLoc()
             && !this.userLocationSubscription) {
-            this.onCurrentLocClicked();
+            this.onTrackUserLocation();
         }
 
         const trip = this.props.trip;

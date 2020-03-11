@@ -17,7 +17,7 @@ function tKRequestCurrentLocationHTML5() {
         }});
 }
 
-function tKCheckGeolocationPermission() {
+export function tKCheckGeolocationPermission() {
     return new Promise(function (resolve, reject) {
         navigator.permissions ?
             // Permission API is supported
@@ -32,21 +32,32 @@ function tKCheckGeolocationPermission() {
     })
 }
 
-export function tKRequestCurrentLocation(dontAskUser: any): Promise<any> {
+export function tKRequestCurrentLocation(dontAskUser: any, fallback: boolean = false): Promise<any> {
+    const tryIPFallbackFc = (fallback: boolean): Promise<any> => {
+        if (fallback) {
+            return tKRequestIPLocation();
+        } else {
+            throw new Error("Unable to detect user location.")
+        }
+    };
     if (dontAskUser) {
         return tKCheckGeolocationPermission()
             .then(function (granted) {
                 // Permission API is supported
-                return granted ? tKRequestCurrentLocationHTML5() : tKRequestIPLocation();
+                if (granted) {
+                    return tKRequestCurrentLocationHTML5();
+                } else {
+                    return tryIPFallbackFc(fallback);
+                }
             })
             .catch(function () {
                 // Permission API is not supported
-                return tKRequestIPLocation();
+                return tryIPFallbackFc(fallback);
             });
         // return this.requestCurrentLocationGMaps();
     }
     return tKRequestCurrentLocationHTML5()
         .catch(function () {
-            return tKRequestIPLocation();
+            return tryIPFallbackFc(fallback);
         });
 }
