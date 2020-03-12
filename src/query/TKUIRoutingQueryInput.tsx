@@ -35,6 +35,8 @@ import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {tKUIColors} from "..";
+import {ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
+import TKErrorHelper from "../error/TKErrorHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -92,7 +94,7 @@ interface IState {
     timePanelOpen: boolean;
     fromTooltip: boolean;
     toTooltip: boolean;
-    showNoCurrLoc: boolean;
+    showNoCurrLoc?: string;
 }
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
@@ -107,8 +109,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         this.state = {
             timePanelOpen: false,
             fromTooltip: false,
-            toTooltip: false,
-            showNoCurrLoc: false
+            toTooltip: false
         };
         this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
         this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
@@ -169,17 +170,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private showNoCurrLocTimeout: any;
 
-    private showNoCurrLoc(show: boolean) {
-        if (this.state.showNoCurrLoc === show) {
+    private showNoCurrLoc(text: string | undefined) {
+        if (this.state.showNoCurrLoc === text) {
             return;
         }
-        this.setState({showNoCurrLoc: show});
+        this.setState({showNoCurrLoc: text});
         if (this.showNoCurrLocTimeout) {
             clearTimeout(this.showNoCurrLocTimeout);
         }
-        if (show) {
+        if (text !== undefined) {
             this.showNoCurrLocTimeout = setTimeout(() => {
-                this.showNoCurrLoc(false);
+                this.showNoCurrLoc(undefined);
             }, 10000);
         }
     }
@@ -250,11 +251,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <TKUITooltip
                             overlay={
                                 <div className={classes.noCurrLocTooltip}>
-                                    Could not get your location. Please set manually
+                                    {this.state.showNoCurrLoc}
                                 </div>
                             }
                             arrowColor={tKUIColors.black2}
-                            visible={this.state.showNoCurrLoc}
+                            visible={!!this.state.showNoCurrLoc}
                             placement={this.props.portrait ? "bottom" : "left"}
                         >
                             <LocationBox
@@ -265,7 +266,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 placeholder={fromPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
                                     if (value) {
-                                        this.showNoCurrLoc(false);
+                                        this.showNoCurrLoc(undefined);
                                     }
                                     if (!highlighted) {
                                         this.updateQuery({from: value});
@@ -284,8 +285,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     this.showTooltip(true, false);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
-                                onFailedToResolveCurr={() => {
-                                    this.showNoCurrLoc(true);
+                                onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
+                                    this.showNoCurrLoc(TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
+                                        "Could not get your location accurately. Please set manually" : "Could not get your location. Please set manually");
                                 }}
                                 ref={(el:any) => this.fromLocRef = el}
                                 inputAriaLabel={ariaLabelFrom}

@@ -123,7 +123,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTimetable: false
         };
 
-        (this.props.userLocationPromise || GeolocationData.instance.requestCurrentLocation(true, true))
+        (this.props.userLocationPromise || GeolocationData.instance.requestCurrentLocation(true, undefined,true))
             .then((userLocation: LatLng) => {
                 // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
                 // on shared links.

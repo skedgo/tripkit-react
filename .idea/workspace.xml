@@ -5,17 +5,13 @@
       <change beforePath="$PROJECT_DIR$/src/api/TripGoApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/TripGoApi.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/example/tripgo-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo-sample.tsx" afterDir="false" />
     </list>
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council">
+      <change afterPath="$PROJECT_DIR$/src/error/TKError.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/error/TKErrorHelper.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUITooltip.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUITooltip.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUITooltip.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUITooltip.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geocode/GeolocationData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/GeolocationData.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/location_box/LocationBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/LocationBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/options/TKUITransportSwitchesView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUITransportSwitchesView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/GeolocationUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/GeolocationUtil.ts" afterDir="false" />
@@ -55,8 +51,8 @@
       <file leaf-file-name="TKUIRoutingQueryInput.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="257" column="68" lean-forward="true" selection-start-line="257" selection-start-column="68" selection-end-line="257" selection-end-column="68" />
+            <state relative-caret-position="204">
+              <caret line="289" column="94" selection-start-line="289" selection-start-column="94" selection-end-line="289" selection-end-column="94" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -64,44 +60,43 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUIRoutingQueryInput.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts">
+      <file leaf-file-name="TKError.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/error/TKError.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+            <state relative-caret-position="105">
+              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TKErrorHelper.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/error/TKErrorHelper.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Favourite.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/model/favourite/Favourite.ts">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="GeolocationUtil.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="23" column="33" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="260" column="54" selection-start-line="260" selection-start-column="41" selection-end-line="260" selection-end-column="54" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIMapView.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="535">
-              <caret line="114" column="10" selection-start-line="114" selection-start-column="10" selection-end-line="114" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUITooltip.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/card/TKUITooltip.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
+            <state relative-caret-position="147">
+              <caret line="563" column="43" selection-start-line="563" selection-start-column="36" selection-end-line="563" selection-end-column="43" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -121,19 +116,9 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>map</find>
-      <find>load</find>
-      <find>MapEvents</find>
-      <find>onload</find>
-      <find>http://localhost:3000/go/?flat=0&amp;flng=0&amp;fname=My%20location&amp;fsrc=CURRENT&amp;tlat=52.636596&amp;tlng=-1.138453&amp;tname=St%20Peter%27s%20Square,%20Leicester,%20England,%20United%20Kingdom&amp;tid=openstreetmap:venue:way/27072150&amp;tsrc=RECENT&amp;type=1&amp;time=1583867584&amp;transports=%7B%22transportToOption%22%3A%5B%5B%22me_car%22%2C2%5D%2C%5B%22wa_wal%22%2C2%5D%5D%2C%22avoidTransports%22%3A%5B%5D%7D</find>
-      <find>viewport</find>
-      <find>Map</find>
-      <find>Toolti</find>
-      <find>&lt;Toolti</find>
       <find>placement=</find>
       <find>showTooltip</find>
       <find>current</find>
-      <find>tKCheckGeolocationPermission</find>
       <find>currentLocBSubject</find>
       <find>overlayClassName</find>
       <find>aoo-s</find>
@@ -150,7 +135,17 @@
       <find>noCurrLocTooltip</find>
       <find>noCurrLocTKUITooltip</find>
       <find>TKUIToo</find>
+      <find>return new Error</find>
+      <find>tKRequestCurrentLocationHTML5</find>
+      <find>Could</find>
+      <find>tKCheckGeolocationPermission</find>
+      <find>Could not get</find>
+      <find>onFailedToResolveCurr</find>
       <find>showNoCurrLoc</find>
+      <find>state.s</find>
+      <find>Toolti</find>
+      <find>TKError</find>
+      <find>console</find>
     </findStrings>
     <replaceStrings>
       <replace>this.onQueryChange</replace>
@@ -199,8 +194,8 @@
       <dir>$PROJECT_DIR$/public</dir>
       <dir>$PROJECT_DIR$/public/i18n</dir>
       <dir>$PROJECT_DIR$/src/trip</dir>
-      <dir>$PROJECT_DIR$</dir>
       <dir>$PROJECT_DIR$/src</dir>
+      <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -221,10 +216,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/action/TKUIRouteToLocationAction.tsx" />
-        <option value="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" />
-        <option value="$PROJECT_DIR$/src/map/TKUITransportPin.tsx" />
-        <option value="$USER_HOME$/Downloads/routingRT.json" />
         <option value="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" />
         <option value="$PROJECT_DIR$/src/api/TripGoApi.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKUITripRow.css.ts" />
@@ -255,23 +246,27 @@
         <option value="$PROJECT_DIR$/src/share/TKShareHelper.ts" />
         <option value="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" />
         <option value="$PROJECT_DIR$/src/geocode/IGeocoder.ts" />
-        <option value="$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" />
         <option value="$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts" />
         <option value="$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" />
         <option value="$PROJECT_DIR$/src/geocode/StaticGeocoder.ts" />
         <option value="$PROJECT_DIR$/src/geocode/MultiGeocoder.ts" />
-        <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
-        <option value="$PROJECT_DIR$/src/location_box/LocationBox.tsx" />
-        <option value="$PROJECT_DIR$/src/util/GeolocationUtil.ts" />
-        <option value="$PROJECT_DIR$/src/geocode/GeolocationData.ts" />
         <option value="$PROJECT_DIR$/src/options/TKUITransportSwitchesView.tsx" />
         <option value="$PROJECT_DIR$/src/css/app.css" />
         <option value="$PROJECT_DIR$/src/card/TKUITooltip.css.ts" />
         <option value="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts" />
-        <option value="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapView.css.ts" />
         <option value="$PROJECT_DIR$/src/card/TKUITooltip.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
+        <option value="$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" />
+        <option value="$PROJECT_DIR$/src/geocode/GeolocationData.ts" />
+        <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
+        <option value="$PROJECT_DIR$/src/location_box/LocationBox.tsx" />
+        <option value="$PROJECT_DIR$/src/error/TKError.js" />
+        <option value="$PROJECT_DIR$/src/error/TKError2.ts" />
+        <option value="$PROJECT_DIR$/src/error/TKError.ts" />
+        <option value="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" />
+        <option value="$PROJECT_DIR$/src/error/TKErrorHelper.ts" />
+        <option value="$PROJECT_DIR$/src/util/GeolocationUtil.ts" />
       </list>
     </option>
   </component>
@@ -327,44 +322,20 @@
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="card" type="462c0819:PsiDirectoryNode" />
+              <item name="error" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
-              <item name="client-chym-web" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="geocode" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="location_box" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="options" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="query" type="462c0819:PsiDirectoryNode" />
+              <item name="model" type="462c0819:PsiDirectoryNode" />
+              <item name="favourite" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -538,21 +509,7 @@
       <workItem from="1578603484588" duration="28828000" />
       <workItem from="1581450147500" duration="148202000" />
       <workItem from="1582230370694" duration="132741000" />
-      <workItem from="1583673615878" duration="43553000" />
-    </task>
-    <task id="LOCAL-00148" summary="Tripkit web sdk:&#10;- Responsive UI.&#10;- bug fixing on favourites / recent.">
-      <created>1577106410335</created>
-      <option name="number" value="00148" />
-      <option name="presentableId" value="LOCAL-00148" />
-      <option name="project" value="LOCAL" />
-      <updated>1577106410335</updated>
-    </task>
-    <task id="LOCAL-00149" summary="Tripkit web sdk: properly handle timezones">
-      <created>1577372836799</created>
-      <option name="number" value="00149" />
-      <option name="presentableId" value="LOCAL-00149" />
-      <option name="project" value="LOCAL" />
-      <updated>1577372836800</updated>
+      <workItem from="1583673615878" duration="51971000" />
     </task>
     <task id="LOCAL-00150" summary="Tripkit web sdk: properly handle timezones">
       <created>1577394013550</created>
@@ -883,11 +840,25 @@
       <option name="project" value="LOCAL" />
       <updated>1583930611337</updated>
     </task>
-    <option name="localTasksCounter" value="197" />
+    <task id="LOCAL-00197" summary="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council">
+      <created>1583960207596</created>
+      <option name="number" value="00197" />
+      <option name="presentableId" value="LOCAL-00197" />
+      <option name="project" value="LOCAL" />
+      <updated>1583960207596</updated>
+    </task>
+    <task id="LOCAL-00198" summary="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council">
+      <created>1584026439565</created>
+      <option name="number" value="00198" />
+      <option name="presentableId" value="LOCAL-00198" />
+      <option name="project" value="LOCAL" />
+      <updated>1584026439565</updated>
+    </task>
+    <option name="localTasksCounter" value="199" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2242902000" />
+    <option name="totallyTimeSpent" value="2251320000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -921,7 +892,7 @@
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
       <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.38723403" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49713877" weight="0.4490085" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49713877" weight="0.44822696" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23390558" />
       <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.25957447" />
       <window_info anchor="right" id="Theme Preview" order="8" />
@@ -987,7 +958,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk: for Leicester City Council widget, https://redmine.buzzhives.com/issues/12300?issue_count=84&amp;issue_position=8&amp;next_issue_id=12373&amp;prev_issue_id=9739#note-19&#10;&#10;(2)" />
     <MESSAGE value="Tripkit web sdk: switched to rollup bundler." />
     <MESSAGE value="Tripkit web sdk: switched to rollup bundler (2)." />
     <MESSAGE value="Tripkit web sdk: extended transport settings." />
@@ -1012,7 +982,8 @@
     <MESSAGE value="Tripkit web sdk - i18n: testing + bug fixing (9)" />
     <MESSAGE value="Tripkit web sdk: testing + bug fixing (10)" />
     <MESSAGE value="Tripkit web sdk: testing + bug fixing (11)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: testing + bug fixing (11)" />
+    <MESSAGE value="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1036,42 +1007,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.module.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/buttons/TKUIButton.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="50" column="14" lean-forward="true" selection-start-line="44" selection-start-column="8" selection-end-line="50" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/jss/TKUITheme.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="150" column="21" selection-start-line="150" selection-start-column="21" selection-end-line="150" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/options/TKUITransportOptionsRow.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="157">
@@ -1243,13 +1178,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/geocode/MultiGeocoder.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="37" lean-forward="true" selection-start-line="37" selection-end-line="37" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/geocode/IGeocoder.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1264,16 +1192,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
           <caret line="58" column="67" selection-start-line="58" selection-start-column="67" selection-end-line="58" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1301,16 +1219,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/location_box/LocationBox.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="155" column="57" selection-start-line="155" selection-start-column="57" selection-end-line="155" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/@types/react-leaflet/index.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
@@ -1332,27 +1240,6 @@
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-150">
-          <caret line="350" column="36" selection-start-line="350" selection-start-column="36" selection-end-line="350" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="54" column="49" lean-forward="true" selection-start-line="53" selection-start-column="16" selection-end-line="54" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/geocode/GeolocationData.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
-          <caret line="110" column="28" selection-start-line="110" selection-start-column="28" selection-end-line="110" selection-end-column="28" />
         </state>
       </provider>
     </entry>
@@ -1407,16 +1294,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="257" column="68" lean-forward="true" selection-start-line="257" selection-start-column="68" selection-end-line="257" selection-end-column="68" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1436,7 +1313,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/card/TKUITooltip.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="192">
+        <state relative-caret-position="370">
           <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
@@ -1444,13 +1321,95 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/geocode/MultiGeocoder.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="118">
+          <caret line="38" column="19" selection-start-line="38" selection-start-column="19" selection-end-line="38" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="125" column="113" lean-forward="true" selection-start-line="125" selection-start-column="113" selection-end-line="125" selection-end-column="113" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="36" column="47" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geocode/GeolocationData.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="233">
+          <caret line="87" column="29" selection-start-line="87" selection-start-column="29" selection-end-line="87" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="498">
+          <caret line="99" column="29" selection-start-line="99" selection-start-column="8" selection-end-line="99" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/location_box/LocationBox.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="94">
+          <caret line="24" column="40" selection-start-line="24" selection-start-column="29" selection-end-line="24" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="260" column="54" selection-start-line="260" selection-start-column="41" selection-end-line="260" selection-end-column="54" />
+        <state relative-caret-position="147">
+          <caret line="563" column="43" selection-start-line="563" selection-start-column="36" selection-end-line="563" selection-end-column="43" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/favourite/Favourite.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/error/TKError.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="289" column="94" selection-start-line="289" selection-start-column="94" selection-end-line="289" selection-end-column="94" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/error/TKErrorHelper.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="23" column="33" selection-start-line="23" selection-start-column="33" selection-end-line="23" selection-end-column="33" />
         </state>
       </provider>
     </entry>

@@ -84,13 +84,15 @@ class GeolocationData {
     //     return this.requestCurrentLocationHTML5();
     // }
 
-    public requestCurrentLocation(dontAskUser?: boolean, fallback: boolean = false): Promise<LatLng> {
-        return tKRequestCurrentLocation(dontAskUser, fallback)
+    public requestCurrentLocation(dontAskUser: boolean = false, accuracyThreshold?: number, fallback: boolean = false): Promise<LatLng> {
+        return tKRequestCurrentLocation(dontAskUser, accuracyThreshold, fallback)
             .then((userLocation: [number, number]) =>
                 LatLng.createLatLng(userLocation[0], userLocation[1])
             );
     }
 
+    // TODO: maybe replace this implementation, based on intervals, with navigator.geolocation.watchPosition
+    // (see https://w3c.github.io/geolocation-api/#introduction).
     private currentLocInterval?: any;
     private currentLocBSubject?: BehaviorSubject<LatLng | undefined>;
 
