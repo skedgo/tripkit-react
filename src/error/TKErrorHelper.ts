@@ -6,7 +6,7 @@ class TKErrorHelper {
         if (!(error instanceof TKError)) {
             return false;
         }
-        return (error as TKError).code = code;
+        return (error as TKError).code === code;
     }
 
 }

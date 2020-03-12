@@ -53,9 +53,10 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
-import {tKCheckGeolocationPermission} from "../util/GeolocationUtil";
+import {ERROR_GEOLOC_DENIED, tKCheckGeolocationPermission} from "../util/GeolocationUtil";
 import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
+import TKErrorHelper from "../error/TKErrorHelper";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -144,6 +145,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
+        this.showNoCurrLoc = this.showNoCurrLoc.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
@@ -237,37 +239,24 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     private userLocationSubscription?: any;
 
-    private onTrackUserLocation(explicitRequest: boolean = false) {
-        this.state.userLocation && this.fitMap(Location.create(this.state.userLocation, "", "", ""), null);
+    private onTrackUserLocation(fit: boolean = false, onError?: (error: Error) => void) {
+        fit && this.state.userLocation && this.fitMap(Location.create(this.state.userLocation, "", "", ""), null);
         if (this.userLocationSubscription) {
             return;
         }
-        const self = this;
         this.userLocationSubscription = GeolocationData.instance.getCurrentLocObservable()
             .subscribe(
                 (currLoc: LatLng | undefined) => {
                     this.setState((prev: IState) => {
-                        !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
+                        fit && !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
                         return {userLocation: currLoc}
                     });
                 },
                 (error: Error) => {
                     this.userLocationSubscription = undefined;
-                    if (explicitRequest) {
-                        tKCheckGeolocationPermission()
-                            .then(function (granted) {
-                                // Permission API is supported
-                                if (!granted) {
-                                    self.showNoCurrLoc("Please allow this site to track your location");
-                                } else {
-                                    self.showNoCurrLoc("Could not get your location");
-                                }
-                            })
-                            .catch(() => {
-                                // Permission API is not supported
-                                self.showNoCurrLoc("Could not get your location");
-                            });
-                    }
+                    console.log(error);
+                    console.log("Está llegando acá!");
+                    onError && onError(error);
                 });
     }
 
@@ -565,7 +554,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     placement={"right"}
                 >
                     <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
-                            onClick={() => this.onTrackUserLocation(true)}
+                            onClick={() => this.onTrackUserLocation(true, (error: Error) => {
+                                if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
+                                    this.showNoCurrLoc("Please allow this site to track your location");
+                                } else {
+                                    this.showNoCurrLoc("Could not get your location");
+                                }
+                            })}
                     >
                         <IconCurrentLocation/>
                     </button>
