@@ -34,7 +34,7 @@ class CurrentLocationGeocoder implements IGeocoder {
 
     resolve(unresolvedLocation: Location): Promise<Location> {
         return unresolvedLocation.isCurrLoc() ?
-            GeolocationData.instance.requestCurrentLocation()
+            GeolocationData.instance.requestCurrentLocation(false, 200)
                 .then((latLng: LatLng) => Util.iAssign(unresolvedLocation, latLng)) :
             Promise.reject(new Error('CurrentLocationGeocoder unable to resolve ' + Util.stringify(unresolvedLocation)));
     }

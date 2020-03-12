@@ -22,7 +22,7 @@ interface IProps {
     value: Location | null,
     onChange?: (value: Location | null, highlighted: boolean) => void,
     resolveCurr?: boolean
-    onFailedToResolveCurr?: (highlighted: boolean) => void;
+    onFailedToResolveCurr?: (highlighted: boolean, error: Error) => void;
     inputAriaLabel?: string;
     inputId?: string;
     sideDropdown?: boolean;
@@ -151,7 +151,7 @@ class LocationBox extends Component<IProps, IState> {
                 })
                 .catch((error: Error) => {
                     if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
-                        this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(locationValue === this.state.highlightedValue);
+                        this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(locationValue === this.state.highlightedValue, error);
                         this.setValue(null, false, true);
                     }
                 });
