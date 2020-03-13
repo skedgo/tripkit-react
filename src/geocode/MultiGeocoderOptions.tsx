@@ -75,7 +75,8 @@ class MultiGeocoderOptions {
         FavouritesData.instance.addChangeListener((update: Favourite[]) =>
             favouritesGeocoder.setValues(favToLocations(update, false)));
 
-        const geocoders: IGeocoder[] = (showCurrLoc ? [currLocGeocoder] : [] as IGeocoder[]).concat([recentGeocoder, favouritesGeocoder, peliasGeocoder, skedgoGeocoder, citiesGeocoder]);
+        const geocoders: IGeocoder[] = (showCurrLoc ? [currLocGeocoder] : [] as IGeocoder[])
+            .concat([recentGeocoder, favouritesGeocoder, peliasGeocoder, skedgoGeocoder, citiesGeocoder]);
         const compare = (l1: Location, l2: Location, query: string) => {
 
             if (!query) {

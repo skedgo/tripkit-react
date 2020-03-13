@@ -93,10 +93,6 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   z-index: 1;
 }
 
-.app-style a {
-  color: inherit;
-}
-
 .app-style a[href*="//"] {
   background: none;
   padding: unset;

@@ -50,15 +50,15 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripOverviewView",
     props: {
         actions: (trip: Trip) => [
-            <TKI18nContext.Consumer key={"actionGo"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <TKUIButton text={i18nProps.t("Go")}
-                                icon={<IconDirections/>}
-                                type={TKUIButtonType.PRIMARY_VERTICAL}
-                                style={{minWidth: '90px'}}
-                    />
-                }
-            </TKI18nContext.Consumer>,
+            // <TKI18nContext.Consumer key={"actionGo"}>
+            //    {(i18nProps: TKI18nContextProps) =>
+            //        <TKUIButton text={i18nProps.t("Go")}
+            //                    icon={<IconDirections/>}
+            //                    type={TKUIButtonType.PRIMARY_VERTICAL}
+            //                    style={{minWidth: '90px'}}
+            //        />
+            //    }
+            //</TKI18nContext.Consumer>,
             <RoutingResultsContext.Consumer key={"actionFavourite"}>
                 {(routingResultsContext: IRoutingResultsContext) =>
                     routingResultsContext.query.from && routingResultsContext.query.to &&
