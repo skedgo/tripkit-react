@@ -1,7 +1,7 @@
 import LatLng from "../model/LatLng";
 import iplocation from "iplocation";
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import {tKRequestCurrentLocation} from "../util/GeolocationUtil";
+import {tKRequestCurrentLocation, TKUserPosition} from "../util/GeolocationUtil";
 
 class GeolocationData {
 
@@ -84,48 +84,37 @@ class GeolocationData {
     //     return this.requestCurrentLocationHTML5();
     // }
 
-    public requestCurrentLocation(dontAskUser: boolean = false, accuracyThreshold?: number, fallback: boolean = false): Promise<LatLng> {
-        return tKRequestCurrentLocation(dontAskUser, accuracyThreshold, fallback)
-            .then((userLocation: [number, number]) =>
-                LatLng.createLatLng(userLocation[0], userLocation[1])
-            );
+    public requestCurrentLocation(dontAskUser: boolean = false, fallback: boolean = false): Promise<TKUserPosition> {
+        return tKRequestCurrentLocation(dontAskUser, fallback);
     }
 
     // TODO: maybe replace this implementation, based on intervals, with navigator.geolocation.watchPosition
     // (see https://w3c.github.io/geolocation-api/#introduction).
     private currentLocInterval?: any;
-    private currentLocBSubject?: BehaviorSubject<LatLng | undefined>;
+    private currentLocBSubject?: BehaviorSubject<TKUserPosition | undefined>;
 
-    public getCurrentLocObservable(): Observable<LatLng | undefined> {
+    public getCurrentLocObservable(): Observable<TKUserPosition | undefined> {
         if (!this.currentLocBSubject) {
-            this.currentLocBSubject = new BehaviorSubject<LatLng | undefined>(undefined);
+            this.currentLocBSubject = new BehaviorSubject<TKUserPosition | undefined>(undefined);
             this.currentLocInterval = setInterval(() => {
                 this.requestCurrentLocation()
-                    .then((currentLoc: LatLng) =>
-                        this.currentLocBSubject && this.currentLocBSubject.next(currentLoc))
+                    .then((userPosition: TKUserPosition) =>
+                        this.currentLocBSubject && this.currentLocBSubject.next(userPosition))
                     .catch((error: Error) => {
-                        if (this.currentLocInterval) {
-                            clearInterval(this.currentLocInterval);
-                        }
-                        if (this.currentLocBSubject) {
-                            this.currentLocBSubject.error(error);
-                            this.currentLocBSubject = undefined;
-                        }
+                        this.stopCurrentLocObservable(error);
                     });
-                // const value = this.currentLocBSubject!.getValue();
-                // this.currentLocBSubject!.next(LatLng.createLatLng(value ? value.lat + 1 : 0, 0));
             }, 3000);
         }
         return this.currentLocBSubject.asObservable();
     }
 
-    public stopCurrentLocObservable() {
+    public stopCurrentLocObservable(error?: Error) {
         if (this.currentLocInterval) {
             clearInterval(this.currentLocInterval);
             this.currentLocInterval = undefined;
         }
         if (this.currentLocBSubject) {
-            this.currentLocBSubject.complete();
+            error ? this.currentLocBSubject.error(error) : this.currentLocBSubject.complete();
             this.currentLocBSubject = undefined;
         }
     }

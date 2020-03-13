@@ -7,6 +7,8 @@ import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import Util from "../util/Util";
 import GeolocationData from "./GeolocationData";
+import {ERROR_GEOLOC_INACCURATE, TKUserPosition} from "../util/GeolocationUtil";
+import {TKError} from "../error/TKError";
 
 class CurrentLocationGeocoder implements IGeocoder {
 
@@ -34,8 +36,13 @@ class CurrentLocationGeocoder implements IGeocoder {
 
     resolve(unresolvedLocation: Location): Promise<Location> {
         return unresolvedLocation.isCurrLoc() ?
-            GeolocationData.instance.requestCurrentLocation(false, 200)
-                .then((latLng: LatLng) => Util.iAssign(unresolvedLocation, latLng)) :
+            GeolocationData.instance.requestCurrentLocation(false)
+                .then((userPos: TKUserPosition) => {
+                    if (userPos.accuracy && userPos.accuracy > 200) {
+                        throw new TKError("Inaccurate geolocation.", ERROR_GEOLOC_INACCURATE);
+                    }
+                    return Util.iAssign(unresolvedLocation, userPos.latLng)
+                }) :
             Promise.reject(new Error('CurrentLocationGeocoder unable to resolve ' + Util.stringify(unresolvedLocation)));
     }
 

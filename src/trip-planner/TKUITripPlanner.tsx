@@ -49,6 +49,7 @@ import TKUIReportBtn from "../feedback/TKUIReportBtn";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
+import {TKUserPosition} from "../util/GeolocationUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -123,7 +124,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTimetable: false
         };
 
-        (this.props.userLocationPromise || GeolocationData.instance.requestCurrentLocation(true, undefined,true))
+        (this.props.userLocationPromise ||
+            GeolocationData.instance.requestCurrentLocation(true, true)
+                .then((userPosition: TKUserPosition) => userPosition.latLng))
             .then((userLocation: LatLng) => {
                 // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
                 // on shared links.
