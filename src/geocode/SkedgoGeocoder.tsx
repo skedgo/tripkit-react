@@ -13,7 +13,6 @@ import {tKUIColors} from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import StopIcon from "../map/StopIcon";
 import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
-import {PropsMapper} from "../config/TKConfigHelper";
 
 class SkedgoGeocoder implements IGeocoder {
 

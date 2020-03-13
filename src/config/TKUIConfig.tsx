@@ -43,6 +43,7 @@ import {TKI18nMessages} from "../i18n/TKI18nProvider";
 import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "../trip/TKUITrackTransport";
 import {TKUIW3wProps, TKUIW3wStyle} from "../location/TKUIW3w";
+import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICookiesBanner";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -75,6 +76,7 @@ interface ITKUIConfigOptional {
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
+    TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
     TKUIProfileView: TKComponentConfig<TKUIProfileViewProps, TKUIProfileViewStyle>;
