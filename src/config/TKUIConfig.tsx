@@ -42,6 +42,7 @@ import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../optio
 import {TKI18nMessages} from "../i18n/TKI18nProvider";
 import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "../trip/TKUITrackTransport";
+import {TKUIW3wProps, TKUIW3wStyle} from "../location/TKUIW3w";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -73,6 +74,7 @@ interface ITKUIConfigOptional {
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
+    TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
     TKUIProfileView: TKComponentConfig<TKUIProfileViewProps, TKUIProfileViewStyle>;

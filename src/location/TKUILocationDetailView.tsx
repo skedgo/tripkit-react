@@ -19,6 +19,10 @@ import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import TKUIW3w from "./TKUIW3w";
+import TripGoApi from "../api/TripGoApi";
+import NetworkUtil from "../util/NetworkUtil";
+import TKLocationInfo from "../model/location/TKLocationInfo";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -74,7 +78,16 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     }
 };
 
-class TKUILocationDetailView extends React.Component<IProps, {}> {
+interface IState {
+    locationInfo?: TKLocationInfo
+}
+
+class TKUILocationDetailView extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {}
+    }
 
     public render(): React.ReactNode {
         const location = this.props.location;
@@ -90,6 +103,7 @@ class TKUILocationDetailView extends React.Component<IProps, {}> {
         //         modalDown: {top: 'calc(100% - 165px)', unit: ''},
         //     });
         // }
+        const locationInfo = this.state.locationInfo;
         return (
             <TKUICard
                 title={title}
@@ -100,10 +114,19 @@ class TKUILocationDetailView extends React.Component<IProps, {}> {
                 // onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>
-
+                    {locationInfo && locationInfo.details && locationInfo.details.w3w &&
+                    <TKUIW3w w3w={locationInfo.details.w3w} w3wInfoURL={locationInfo.details.w3wInfoURL}/>}
                 </div>
             </TKUICard>
         );
+    }
+
+    public componentDidMount() {
+        // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
+        // then use that value.
+        const endpoint = "locationInfo.json?lat=" + this.props.location.lat + "&lng=" + this.props.location.lng;
+        TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, TKLocationInfo)
+            .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
     }
 
 }

@@ -1,4 +1,4 @@
-import {JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty} from "json2typescript";
 import BikePodLocation from "./BikePodLocation";
 import FacilityLocation from "./FacilityLocation";
 import CarParkLocation from "./CarParkLocation";
@@ -6,6 +6,7 @@ import {MapLocationType} from "./MapLocationType";
 import Location from "../Location";
 import StopLocation from "../StopLocation";
 
+@JsonObject
 class LocationsResult {
 
     constructor(level: 1 | 2 = 1) {

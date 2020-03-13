@@ -4,7 +4,7 @@ import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 
 export const tKUILocationDetailViewDefaultStyle: TKUIStyles<TKUILocationDetailViewStyle, TKUILocationDetailViewProps> = {
     main: {
-
+        padding: '40px 12px'
     },
     actionsPanel: {
         display: 'grid',
