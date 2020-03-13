@@ -286,11 +286,12 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
-                                    // console.log("On TKUIRoutingQueryInput: ");
-                                    // console.log(error);
-                                    // console.log(JSON.stringify(error));
+                                    console.log("On TKUIRoutingQueryInput: ");
+                                    console.log(error);
+                                    console.log(JSON.stringify(error));
                                     this.showNoCurrLoc(TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
-                                        "Could not get your location accurately. Please set manually" :
+                                        // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
+                                        "Could not get your location. Please set manually" :
                                         TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED) ?
                                             "You blocked this site access to your location, please unblock or set it manually" :
                                             "Could not get your location. Please set manually");

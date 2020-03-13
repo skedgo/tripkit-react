@@ -53,7 +53,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
-import {ERROR_GEOLOC_DENIED, tKCheckGeolocationPermission} from "../util/GeolocationUtil";
+import {ERROR_GEOLOC_DENIED, TKUserPosition} from "../util/GeolocationUtil";
 import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
@@ -121,7 +121,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
     menuPopupPosition?: L.LeafletMouseEvent;
-    userLocation?: LatLng;
+    userLocation?: TKUserPosition;
     showNoCurrLoc?: string;
 }
 
@@ -240,22 +240,22 @@ class TKUIMapView extends React.Component<IProps, IState> {
     private userLocationSubscription?: any;
 
     private onTrackUserLocation(fit: boolean = false, onError?: (error: Error) => void) {
-        fit && this.state.userLocation && this.fitMap(Location.create(this.state.userLocation, "", "", ""), null);
+        fit && this.state.userLocation && this.fitMap(Location.create(this.state.userLocation.latLng, "", "", ""), null);
         if (this.userLocationSubscription) {
             return;
         }
         this.userLocationSubscription = GeolocationData.instance.getCurrentLocObservable()
             .subscribe(
-                (currLoc: LatLng | undefined) => {
+                (userPosition?: TKUserPosition) => {
                     this.setState((prev: IState) => {
-                        fit && !prev.userLocation && currLoc && this.fitMap(Location.create(currLoc, "", "", ""), null);
-                        return {userLocation: currLoc}
+                        fit && !prev.userLocation && userPosition && this.fitMap(Location.create(userPosition.latLng, "", "", ""), null);
+                        return {userLocation: userPosition}
                     });
                 },
                 (error: Error) => {
+                    this.userLocationSubscription && this.userLocationSubscription.unsubscribe();
                     this.userLocationSubscription = undefined;
-                    console.log(error);
-                    console.log("Está llegando acá!");
+                    this.setState({userLocation: undefined});
                     onError && onError(error);
                 });
     }
@@ -275,14 +275,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 this.showNoCurrLoc(undefined);
             }, 10000);
         }
-    }
-
-
-    private hideCurrentLocation() {
-        GeolocationData.instance.stopCurrentLocObservable();
-        this.userLocationSubscription && this.userLocationSubscription.unsubscribe();
-        this.userLocationSubscription = undefined;
-        this.setState({userLocation: undefined});
     }
 
     private currentLocation = Location.createCurrLoc();
@@ -424,7 +416,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 >
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
-                    <Marker position={this.state.userLocation}
+                    <Marker position={this.state.userLocation.latLng}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
                                     <TKUIConfigProvider config={this.props.config}>
@@ -622,9 +614,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
 
         // If computing trips from user location then show it on map.
-        if ((!prevProps.from || !prevProps.to) && this.props.from && this.props.to && this.props.from.isCurrLoc()
-            && !this.userLocationSubscription) {
+        if (
+            this.props.from && this.props.from.isCurrLoc() && this.props.from.isResolved() && !this.userLocationSubscription) {
             this.onTrackUserLocation();
+            // This line is to display user location spot immediately, and avoid green pin showing first to be replaced
+            // by user location spot. Alternatively can make this.onTrackUserLocation() to use cached user position
+            // the first time, so spot also should show immediately.
+            this.setState({userLocation: {latLng: this.props.from}});
         }
 
         const trip = this.props.trip;
