@@ -58,6 +58,10 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         header: {
             padding: (props: TKUICardProps) => hasHandle(props) ? '0 16px' : '12px 16px',
             color: 'black',
+        },
+
+        subHeader: {
+            padding: '0 16px',
             borderBottom: '1px solid ' + tKUIColors.black4
         },
 

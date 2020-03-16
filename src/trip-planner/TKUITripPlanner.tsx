@@ -238,7 +238,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
+                    modalDown: this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
                 }}
             />;
         const departuresView = this.isShowTimetable() ?
@@ -249,9 +249,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     // Hide, but don't close, when service is selected.
-                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
+                    // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
+                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
+                    draggable: false,
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
-                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
+                    modalDown: this.ref ? {top: this.ref.offsetHeight - 40, unit: 'px'} : undefined
                 }}
             /> : null;
         const serviceDetailView = this.props.selectedService ?
@@ -260,7 +262,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
-                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 130, unit: 'px'} : undefined
+                    modalDown: this.ref ? {top: this.ref.offsetHeight - 130, unit: 'px'} : undefined
                 }}
             /> : null;
         const favouritesView = this.state.showFavourites && !this.props.directionsView &&
