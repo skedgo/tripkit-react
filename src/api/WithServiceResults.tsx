@@ -90,11 +90,11 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public requestMoreDepartures() {
-            this.setState(() => {
-                    if (this.isWaiting()) {
-                        return null; // We are already awaiting for previously requested departures
+            this.setState((prevState: IWithServiceResultsState) => {
+                    if (this.isWaiting(prevState)) { // We are already awaiting for previously requested departures,
+                        return null;                 // so avoid increasing display limit again.
                     }
-                    return { displayLimit: this.state.displayLimit + this.getDisplaySnap() }
+                    return { displayLimit: prevState.displayLimit + this.getDisplaySnap(prevState) }
                 },
                 () => this.coverDisplayLimit()
             )
@@ -102,27 +102,28 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public onFilterChange(filter: string) {
             this.setState({
-                filter: filter,
-                displayLimit: this.idealMinDisplayed
-            });
-            this.applyFilter(() => this.coverDisplayLimit());
+                    filter: filter,
+                    displayLimit: this.idealMinDisplayed
+                },
+                () => {
+                    this.applyFilter(() => this.coverDisplayLimit());
+                });
         }
 
-        public getDisplaySnap(): number {
-            // TODO: check if it should be as follows, but may trigger a lot of requests, should set a max, say, 4 times.
-            // return 45 * Math.max(this.state.departures.length / (this.state.departuresFiltered.length + 1), 1);
-            return 45 * Math.max(this.state.departuresFiltered.length / (this.state.departures.length + 1), 1);
+        public getDisplaySnap(state: IWithServiceResultsState): number {
+            return 45 * Math.min(((state.departuresFiltered.length + 1) * 3) / (state.departures.length + 1), 1);
         }
 
         public getDisplayDepartures(): ServiceDeparture[] {
             return this.state.departuresFiltered.slice(0, this.state.displayLimit);
         }
 
-        public isWaiting(): boolean {
-            return this.state.displayLimit > this.state.departuresFiltered.length;
+        public isWaiting(state: IWithServiceResultsState): boolean {
+            return state.displayLimit > state.departuresFiltered.length;
         }
 
         public onInitTimeChange(initTime: Moment) {
+            this.requestsWithoutNewResults = 0;
             this.setState({
                 initTime: initTime,
                 departures: [],
@@ -165,7 +166,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 if (stop) {
                     this.onInitTimeChange(DateTimeUtil.getNow().add(-15, 'm'));
                 }
-            })
+            });
         }
 
         public render(): React.ReactNode {
@@ -176,7 +177,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              onStopChange={this.onStopChange}
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
-                             waiting={this.isWaiting()}
+                             waiting={this.isWaiting(this.state)}
                              onFilterChange={this.onFilterChange}
                              title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
                              initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
@@ -188,15 +189,32 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             />;
         }
 
+        public coverDisplayRequestHash = "";
+
+        public getCoverDisplayRequestHash(): string {
+            const stopId = this.state.startStop && this.state.startStop.code!;
+            const lastDepartureDate = this.getLastDepartureTime();
+            return JSON.stringify({stopId: stopId, lastDepartureDate: lastDepartureDate})
+        }
+
         /**
          * requesting departures if those
          * matching the filter are not enough to fill the scroll panel.
          */
         public coverDisplayLimit() {
+            // Display limit already covered.
             if (this.state.displayLimit <= this.state.departuresFiltered.length) {
                 this.prevDeparturesCount = this.state.departuresFiltered.length;
                 return;
             }
+
+            // Already requested this departures (for stop + time)
+            const newCoverDisplayRequestHash = this.getCoverDisplayRequestHash();
+            if (this.coverDisplayRequestHash === newCoverDisplayRequestHash) {
+                console.log("it's returning here");
+                return;
+            }
+            this.coverDisplayRequestHash = newCoverDisplayRequestHash;
 
             // Set a limit to the number of consecutive requests that do not bring new results. Specially for the case of no results displayed at all.
             if (this.state.departuresFiltered.length < this.idealMinDisplayed && this.prevDeparturesCount === this.state.departuresFiltered.length && this.state.filter.startsWith(this.prevFilter)) {

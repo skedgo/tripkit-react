@@ -1,5 +1,9 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "./TKUIServiceDepartureRow";
+import {
+    getRealtimeDiffInMinutes,
+    TKUIServiceDepartureRowProps,
+    TKUIServiceDepartureRowStyle
+} from "./TKUIServiceDepartureRow";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
@@ -52,8 +56,12 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             color: tKUIColors.black1,
             ...genStyles.fontS
         },
-        delayed: {
+        cancelled: {
             color: theme.colorError
+        },
+        delayed: {
+            color: (props: TKUIServiceDepartureRowProps) =>
+                Math.abs(getRealtimeDiffInMinutes(props.value)) > 5 ? theme.colorError : theme.colorWarning
         },
         onTime: {
             color: theme.colorSuccess

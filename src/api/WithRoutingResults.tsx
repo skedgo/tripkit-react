@@ -133,6 +133,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.setState({
                 selected: select
             });
+            // Clearing selected should also clear realtime update interval.
+            if (select === undefined) {
+                this.onReqRealtimeFor(undefined);
+            }
         }
 
         public onSortChange(sort: TripSort): void {
