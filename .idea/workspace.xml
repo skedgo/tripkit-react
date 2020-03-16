@@ -6,14 +6,9 @@
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/client-chym-web.tsx" afterDir="false" />
     </list>
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/public/images/modeicons/ic-gondola-24px.svg" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Tripkit web sdk: fix to issues with service timetables.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
@@ -50,8 +45,38 @@
       <file leaf-file-name="TKUITripPlanner.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="192">
+              <caret line="457" column="9" selection-start-line="457" selection-start-column="9" selection-end-line="457" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WithServiceResults.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="166" column="115" selection-start-line="166" selection-start-column="115" selection-end-line="166" selection-end-column="115" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ServiceResultsProvider.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/service/ServiceResultsProvider.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="117">
+              <caret line="32" column="22" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WithRoutingResults.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="223">
-              <caret line="249" column="30" selection-start-line="249" selection-start-column="30" selection-end-line="249" selection-end-column="30" />
+              <caret line="128" column="24" selection-start-line="128" selection-start-column="24" selection-end-line="128" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -61,18 +86,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1804">
               <caret line="687" column="56" selection-start-line="687" selection-start-column="42" selection-end-line="687" selection-end-column="56" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WithServiceResults.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="253">
-              <caret line="225" column="35" selection-start-line="225" selection-start-column="35" selection-end-line="225" selection-end-column="35" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -104,13 +117,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>locationinfo.json</find>
-      <find>departuresToUpdate</find>
-      <find>Dela</find>
-      <find>routingContext.onChange</find>
-      <find>onChange</find>
-      <find>startStop</find>
-      <find>onStopChange</find>
       <find>onReqRealtimeFor</find>
       <find>realtimeUpdate</find>
       <find>rTSchedule</find>
@@ -128,12 +134,19 @@
       <find>onRequestM</find>
       <find>TKUIMapV</find>
       <find>serviceContext</find>
-      <find>requestsWithoutNewResults</find>
       <find>TODO</find>
       <find>Service</find>
       <find>onStopChange(undefined)</find>
-      <find>showTimetable</find>
       <find>open</find>
+      <find>isLocationDetailView</find>
+      <find>showTimetable</find>
+      <find>onQueryUpdate</find>
+      <find>SHowTime</find>
+      <find>showTimetableFor</find>
+      <find>onServiceSelection</find>
+      <find>requestsWithoutNewResults</find>
+      <find>showTimeta</find>
+      <find>onStopChange</find>
     </findStrings>
     <replaceStrings>
       <replace>this.onQueryChange</replace>
@@ -474,14 +487,7 @@
       <workItem from="1581450147500" duration="148202000" />
       <workItem from="1582230370694" duration="132741000" />
       <workItem from="1583673615878" duration="72759000" />
-      <workItem from="1584113104850" duration="20716000" />
-    </task>
-    <task id="LOCAL-00155" summary="Tripkit web sdk: &#10;- make TKUIMapLocationIcon to follow the normal configuration scheme.">
-      <created>1577811425840</created>
-      <option name="number" value="00155" />
-      <option name="presentableId" value="LOCAL-00155" />
-      <option name="project" value="LOCAL" />
-      <updated>1577811425840</updated>
+      <workItem from="1584113104850" duration="24654000" />
     </task>
     <task id="LOCAL-00156" summary="Tripkit web sdk: &#10;- Trip Overview view: avoid swipe to prev / next page when dragging card up / down.&#10;- Don't show transport on map pin when clicked for a while (assume it's about to be dragged).">
       <created>1577990417265</created>
@@ -819,11 +825,18 @@
       <option name="project" value="LOCAL" />
       <updated>1584123138297</updated>
     </task>
-    <option name="localTasksCounter" value="204" />
+    <task id="LOCAL-00204" summary="Tripkit web sdk: fix to issues with service timetables.">
+      <created>1584376786649</created>
+      <option name="number" value="00204" />
+      <option name="presentableId" value="LOCAL-00204" />
+      <option name="project" value="LOCAL" />
+      <updated>1584376786649</updated>
+    </task>
+    <option name="localTasksCounter" value="205" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2292824000" />
+    <option name="totallyTimeSpent" value="2296762000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -836,7 +849,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="825" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="4" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5028612" side_tool="true" weight="0.44978783" />
@@ -856,7 +868,7 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.38723403" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.38723403" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49713877" weight="0.44822696" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23390558" />
@@ -960,7 +972,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk: extended transport settings:&#10;- settings effect&#10;- code cleanup" />
     <MESSAGE value="Tripkit web sdk: extended transport settings:&#10;- privacy options" />
     <MESSAGE value="Tripkit web sdk: extended transport settings:&#10;- font fallback to sans-serif" />
     <MESSAGE value="Tripkit web sdk: allow external user geolocation resolution, to make it sooner / faster." />
@@ -985,7 +996,8 @@
     <MESSAGE value="Tripkit web sdk: Feature #12584 - &quot;My Location&quot; issue on PC - Leicester city Council. Surface accuracy so can decide what to do externally." />
     <MESSAGE value="Tripkit web sdk: add w3w to location details." />
     <MESSAGE value="Tripkit web sdk: work on cookies banner." />
-    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: work on cookies banner." />
+    <MESSAGE value="Tripkit web sdk: fix to issues with service timetables." />
+    <option name="LAST_COMMIT_MESSAGE" value="Tripkit web sdk: fix to issues with service timetables." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1009,16 +1021,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="43" column="17" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
-          <folding>
-            <element signature="e#109#150#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -1377,27 +1379,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3340">
-          <caret line="141" column="51" lean-forward="true" selection-start-line="141" selection-start-column="51" selection-end-line="141" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1804">
           <caret line="687" column="56" selection-start-line="687" selection-start-column="42" selection-end-line="687" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="225" column="35" selection-start-line="225" selection-start-column="35" selection-end-line="225" selection-end-column="35" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -1424,10 +1409,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+    <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="223">
-          <caret line="249" column="30" selection-start-line="249" selection-start-column="30" selection-end-line="249" selection-end-column="30" />
+          <caret line="128" column="24" selection-start-line="128" selection-start-column="24" selection-end-line="128" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/service/ServiceResultsProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="117">
+          <caret line="32" column="22" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="166" column="115" selection-start-line="166" selection-start-column="115" selection-end-line="166" selection-end-column="115" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="457" column="9" selection-start-line="457" selection-start-column="9" selection-end-line="457" selection-end-column="9" />
         </state>
       </provider>
     </entry>
