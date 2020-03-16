@@ -39,6 +39,7 @@ interface IStyle {
     main: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
+    subHeader: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
     headerLeft: CSS.Properties & CSSProperties<IProps>;
     title: CSS.Properties & CSSProperties<IProps>;
@@ -67,44 +68,57 @@ export function hasHandle(props: IProps): boolean {
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
 
-class TKUICard extends React.Component<IProps, {}> {
+interface IState {
+    handleRef?: any;
+}
+
+class TKUICard extends React.Component<IProps, IState> {
 
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
         open: true
     };
 
+    constructor(props: IProps) {
+        super(props);
+        this.state = {};
+    }
+
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const body =
             <div className={classNames(classes.main, "app-style")}>
-                {hasHandle(this.props) &&
-                <div
-                    className={classes.handle}
-                    // onClick={() => this.setState({showTestCard: true})}
-                >
-                    <div className={classes.handleLine}/>
-                </div>}
-                <div className={classes.header}>
-                    <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
-                        <div className={classes.headerLeft}>
-                            <div className={classes.title}>
-                                {this.props.title}
+                <div ref={(ref: any) => this.state.handleRef === undefined && this.setState({handleRef: ref})}>
+                    {hasHandle(this.props) &&
+                    <div
+                        className={classes.handle}
+                        // onClick={() => this.setState({showTestCard: true})}
+                    >
+                        <div className={classes.handleLine}/>
+                    </div>}
+                    <div className={classes.header}>
+                        <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
+                            <div className={classes.headerLeft}>
+                                <div className={classes.title}>
+                                    {this.props.title}
+                                </div>
+                                {this.props.subtitle &&
+                                <div className={classes.subtitle}>
+                                    {this.props.subtitle}
+                                </div>}
                             </div>
-                            {this.props.subtitle &&
-                            <div className={classes.subtitle}>
-                                {this.props.subtitle}
-                            </div>}
+                            {this.props.onRequestClose &&
+                            <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
+                                    aria-hidden={true}>
+                                <IconRemove aria-hidden={true}
+                                            className={classes.iconClear}
+                                            focusable="false"/>
+                            </button>}
                         </div>
-                        {this.props.onRequestClose &&
-                        <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
-                                aria-hidden={true}>
-                            <IconRemove aria-hidden={true}
-                                        className={classes.iconClear}
-                                        focusable="false"/>
-                        </button>}
                     </div>
+                </div>
+                <div className={classes.subHeader}>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
                 <TKUIScrollForCard className={classes.body} style={this.props.bodyStyle}>
@@ -115,6 +129,7 @@ class TKUICard extends React.Component<IProps, {}> {
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
                     {...this.props.slideUpOptions}
+                    handleRef={this.state.handleRef}
                     containerClass={classes.modalContainer}
                     modalClass={classes.modal}
                     open={this.props.open}
