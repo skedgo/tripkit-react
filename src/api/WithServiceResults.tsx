@@ -162,7 +162,11 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public onStopChange(stop?: StopLocation) {
-            this.setState({startStop: stop}, () => {
+            this.setState((prevState: IWithServiceResultsState) => {
+                return stop === undefined || stop !== prevState.startStop ?
+                    {startStop: stop, selected: undefined} :    // Clear selection if stop becomes undefined or it changes
+                    {startStop: stop}
+            }, () => {
                 if (stop) {
                     this.onInitTimeChange(DateTimeUtil.getNow().add(-15, 'm'));
                 }
