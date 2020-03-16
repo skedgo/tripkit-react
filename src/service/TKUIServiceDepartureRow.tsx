@@ -37,6 +37,7 @@ interface IStyle {
     serviceNumber: CSSProps<IProps>;
     transIcon: CSSProps<IProps>;
     time: CSSProps<IProps>;
+    cancelled: CSSProps<IProps>;
     delayed: CSSProps<IProps>;
     onTime: CSSProps<IProps>;
     separatorDot: CSSProps<IProps>;
@@ -58,6 +59,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     randomizeClassNames: true // This needs to be true since multiple instances are rendered,
                               // each with a different service color.
 };
+
+export function getRealtimeDiffInMinutes(departure: ServiceDeparture) {
+    return Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
+}
+
 class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
     private getTime(departure: ServiceDeparture): JSX.Element | undefined {
@@ -68,12 +74,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         if (departure.realTimeStatus === "CANCELLED") {
             status = "Cancelled";
-            statusClassname = classes.delayed;
+            statusClassname = classes.cancelled;
         } else if (departure.realTimeDeparture === undefined) { // Means realtimeStatus !== "IS_REAL_TIME"
             status = t("No.real-time.available");
         } else {
             // Truncates to minutes before subtract to make diff consistent with displayed actual and original times
-            const realtimeDiffInMinutes = Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
+            const realtimeDiffInMinutes = getRealtimeDiffInMinutes(departure);
             if (realtimeDiffInMinutes === 0) {
                 status = "On time";
                 statusClassname = classes.onTime;

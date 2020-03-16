@@ -230,7 +230,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
-                    this.props.onStopChange(undefined);
                     this.setState({showTimetable: false});
                     this.props.onDirectionsView(false);
                 }}
@@ -248,12 +247,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const departuresView = this.state.showTimetable ?
             <TKUITimetableView
-                open={this.props.stop && !this.props.trips}
                 onRequestClose={() => {
                     this.setState({showTimetable: false});
                 }}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
+                    // Hide, but don't close, when service is selected.
                     position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
                     modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
@@ -449,6 +448,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))) {
             this.setState({showTimetable: false});
         }
+
+        // Undefine stop when timetable is closed to avoid real-time updates to continue happening.
+        if (prevState.showTimetable && !this.state.showTimetable) {
+            this.props.onStopChange(undefined);
+        }
+
         if (prevProps.trips === undefined && this.props.trips !== undefined) {
             this.setState({showTimetable: false});
         }

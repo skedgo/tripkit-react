@@ -5,7 +5,6 @@ import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import {ReactComponent as IconSwap} from '../images/ic-swap.svg';
-import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
