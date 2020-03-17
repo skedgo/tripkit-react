@@ -223,7 +223,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 title={t("Route")}
                 isTripPlanner={true}
                 onShowTransportOptions={this.onShowTransportSettings}
-                resolveCurrLocInFrom={this.props.query.to !== null}
+                resolveCurrLocInFrom={this.props.query.from !== null && this.props.query.to !== null}
                 collapsable={true}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());

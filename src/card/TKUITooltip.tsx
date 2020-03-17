@@ -17,6 +17,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     arrowColor?: string;
     children?: any;
     visible?: boolean;
+    reference?: (ref: TKUITooltip) => void;
 }
 
 export interface IStyle {
@@ -34,12 +35,48 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITooltip"
 };
 
-class TKUITooltip extends React.Component<IProps, {}> {
+interface IState {
+    temporaryVisible: boolean;
+}
+
+class TKUITooltip extends React.Component<IProps, IState> {
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            temporaryVisible: false
+        };
+        this.isVisible = this.isVisible.bind(this);
+        this.setVisibleFor = this.setVisibleFor.bind(this);
+        if (props.reference) {
+            props.reference(this);
+        }
+    }
+
+    private isVisible(): boolean | undefined {
+        return this.state.temporaryVisible ? this.state.temporaryVisible : this.props.visible;
+    }
+
+    private visibleForTimeout: any;
+
+    public setVisibleFor(duration?: number) {
+        this.setState({temporaryVisible: duration !== undefined && duration > 0});
+        if (this.visibleForTimeout) {
+            clearTimeout(this.visibleForTimeout);
+            this.visibleForTimeout = undefined;
+        }
+        if (duration !== undefined && duration > 0) {
+            this.visibleForTimeout = setTimeout(() => {
+                this.setState({temporaryVisible: false});
+            }, duration);
+        }
+    }
 
     public render(): React.ReactNode {
         return (
             <Tooltip
                 {...this.props as RCTooltip.Props}
+                visible={this.isVisible()} // Override visible property.
                 overlayClassName={classNames(this.props.classes.main, this.props.className)}
                 arrowContent={this.props.arrowContent}
             >
@@ -47,7 +84,6 @@ class TKUITooltip extends React.Component<IProps, {}> {
             </Tooltip>
         );
     }
-
 }
 
 export default connect((config: TKUIConfig) => config.TKUITooltip, config,
