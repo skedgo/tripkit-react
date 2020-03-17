@@ -122,7 +122,7 @@ interface IState {
     mapLayers: Map<MapLocationType, Location[]>;
     menuPopupPosition?: L.LeafletMouseEvent;
     userLocation?: TKUserPosition;
-    showNoCurrLoc?: string;
+    userLocationTooltip?: string;
 }
 
 export interface IMapSegmentRenderer {
@@ -135,8 +135,8 @@ export interface IMapSegmentRenderer {
 class TKUIMapView extends React.Component<IProps, IState> {
 
     private leafletElement?: L.Map;
-
     private wasDoubleClick = false;
+    private userLocTooltipRef?: any;
 
     constructor(props: Readonly<IProps>) {
         super(props);
@@ -145,7 +145,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         };
         this.onMoveEnd = this.onMoveEnd.bind(this);
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
-        this.showNoCurrLoc = this.showNoCurrLoc.bind(this);
+        this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
@@ -260,20 +260,12 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 });
     }
 
-    private showNoCurrLocTimeout: any;
-
-    private showNoCurrLoc(text: string | undefined) {
-        if (this.state.showNoCurrLoc === text) {
-            return;
-        }
-        this.setState({showNoCurrLoc: text});
-        if (this.showNoCurrLocTimeout) {
-            clearTimeout(this.showNoCurrLocTimeout);
-        }
-        if (text !== undefined) {
-            this.showNoCurrLocTimeout = setTimeout(() => {
-                this.showNoCurrLoc(undefined);
-            }, 10000);
+    private showUserLocTooltip(text: string | undefined) {
+        this.setState({userLocationTooltip: text});
+        if (!text) {
+            this.userLocTooltipRef && this.userLocTooltipRef.setVisibleFor(undefined);
+        } else {
+            this.userLocTooltipRef && this.userLocTooltipRef.setVisibleFor(10000);
         }
     }
 
@@ -538,19 +530,20 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <TKUITooltip
                     overlay={
                         <div className={classes.noCurrLocTooltip}>
-                            {this.state.showNoCurrLoc}
+                            {this.state.userLocationTooltip}
                         </div>
                     }
                     arrowColor={tKUIColors.black2}
-                    visible={!!this.state.showNoCurrLoc}
+                    visible={false}
                     placement={"right"}
+                    reference={(ref: any) => this.userLocTooltipRef = ref}
                 >
                     <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
                             onClick={() => this.onTrackUserLocation(true, (error: Error) => {
                                 if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
-                                    this.showNoCurrLoc("Please allow this site to track your location");
+                                    this.showUserLocTooltip("Please allow this site to track your location");
                                 } else {
-                                    this.showNoCurrLoc("Could not get your location");
+                                    this.showUserLocTooltip("Could not get your location");
                                 }
                             })}
                     >

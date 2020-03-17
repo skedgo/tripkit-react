@@ -93,7 +93,8 @@ interface IState {
     timePanelOpen: boolean;
     fromTooltip: boolean;
     toTooltip: boolean;
-    showNoCurrLoc?: string;
+    fromTooltipText?: string;
+    toTooltipText?: string;
 }
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
@@ -102,6 +103,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     private geocodingDataTo: MultiGeocoder;
     private fromLocRef: any;
     private toLocRef: any;
+    private fromTooltipRef: any;
+    private toTooltipRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -111,7 +114,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             toTooltip: false
         };
         this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
-        this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
+        this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions);
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }
@@ -153,34 +156,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    private showTooltip(from: boolean, show: boolean) {
+    private showTooltip(from: boolean, text: string | undefined) {
         if (from) {
-            this.setState({fromTooltip: show});
-            if (this.fromLocRef && show) {
-                this.fromLocRef.setFocus()
+            this.setState({fromTooltipText: text});
+            if (!text) {
+                this.fromTooltipRef && this.fromTooltipRef.setVisibleFor(undefined);
+            } else {
+                this.fromTooltipRef && this.fromTooltipRef.setVisibleFor(10000);
             }
         } else {
-            this.setState({toTooltip: show});
-            if (this.toLocRef && show) {
-                this.toLocRef.setFocus()
+            this.setState({toTooltipText: text});
+            if (!text) {
+                this.toTooltipRef && this.toTooltipRef.setVisibleFor(undefined);
+            } else {
+                this.toTooltipRef && this.toTooltipRef.setVisibleFor(10000);
             }
-        }
-    }
-
-    private showNoCurrLocTimeout: any;
-
-    private showNoCurrLoc(text: string | undefined) {
-        if (this.state.showNoCurrLoc === text) {
-            return;
-        }
-        this.setState({showNoCurrLoc: text});
-        if (this.showNoCurrLocTimeout) {
-            clearTimeout(this.showNoCurrLocTimeout);
-        }
-        if (text !== undefined) {
-            this.showNoCurrLocTimeout = setTimeout(() => {
-                this.showNoCurrLoc(undefined);
-            }, 10000);
         }
     }
 
@@ -250,12 +240,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <TKUITooltip
                             overlay={
                                 <div className={classes.noCurrLocTooltip}>
-                                    {this.state.showNoCurrLoc}
+                                    {this.state.fromTooltipText}
                                 </div>
                             }
                             arrowColor={tKUIColors.black2}
-                            visible={!!this.state.showNoCurrLoc}
+                            visible={false}
                             placement={this.props.portrait ? "bottom" : "left"}
+                            reference={(ref: any) => this.fromTooltipRef = ref}
                         >
                             <LocationBox
                                 geocodingData={this.geocodingDataFrom}
@@ -264,9 +255,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 value={routingQuery.from}
                                 placeholder={fromPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
-                                    if (value) {
-                                        this.showNoCurrLoc(undefined);
-                                    }
                                     if (!highlighted) {
                                         this.updateQuery({from: value});
                                         if (this.props.onPreChange) {
@@ -281,14 +269,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(true, value ? value : undefined);
                                         }
                                     }
-                                    this.showTooltip(true, false);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
-                                    console.log("On TKUIRoutingQueryInput: ");
-                                    console.log(error);
-                                    console.log(JSON.stringify(error));
-                                    this.showNoCurrLoc(TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
+                                    this.showTooltip(true,TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
                                         // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
                                         "Could not get your location. Please set manually" :
                                         TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED) ?
@@ -302,35 +286,54 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             />
                         </TKUITooltip>
                         <div className={classes.divider}/>
-                        <LocationBox
-                            geocodingData={this.geocodingDataTo}
-                            bounds={this.props.bounds}
-                            focus={this.props.focusLatLng}
-                            value={routingQuery.to}
-                            placeholder={toPlaceholder}
-                            onChange={(value: Location | null, highlighted: boolean) => {
-                                if (!highlighted) {
-                                    this.updateQuery({to: value});
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(false, undefined);
+                        <TKUITooltip
+                            overlay={
+                                <div className={classes.noCurrLocTooltip}>
+                                    {this.state.toTooltipText}
+                                </div>
+                            }
+                            arrowColor={tKUIColors.black2}
+                            visible={false}
+                            placement={this.props.portrait ? "bottom" : "left"}
+                            reference={(ref: any) => this.toTooltipRef = ref}
+                        >
+                            <LocationBox
+                                geocodingData={this.geocodingDataTo}
+                                bounds={this.props.bounds}
+                                focus={this.props.focusLatLng}
+                                value={routingQuery.to}
+                                placeholder={toPlaceholder}
+                                onChange={(value: Location | null, highlighted: boolean) => {
+                                    if (!highlighted) {
+                                        this.updateQuery({to: value});
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(false, undefined);
+                                        }
+                                        if (value !== null) {
+                                            GATracker.instance.send("query input", "pick location",
+                                                value.isCurrLoc() ? "current location" : "type address");
+                                        }
+                                    } else {
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(false, value ? value : undefined);
+                                        }
                                     }
-                                    if (value !== null) {
-                                        GATracker.instance.send("query input", "pick location",
-                                            value.isCurrLoc() ? "current location" : "type address");
-                                    }
-                                } else {
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(false, value ? value : undefined);
-                                    }
-                                }
-                                this.showTooltip(false, false);
-                            }}
-                            resolveCurr={!!this.props.isTripPlanner}
-                            ref={(el:any) => this.toLocRef = el}
-                            inputAriaLabel={ariaLabelTo}
-                            inputId={"input-to"}
-                            sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                        />
+                                }}
+                                resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
+                                onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
+                                    this.showTooltip(false,TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
+                                        // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
+                                        "Could not get your location. Please set manually" :
+                                        TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED) ?
+                                            "You blocked this site access to your location, please unblock or set it manually" :
+                                            "Could not get your location. Please set manually");
+                                }}
+                                ref={(el:any) => this.toLocRef = el}
+                                inputAriaLabel={ariaLabelTo}
+                                inputId={"input-to"}
+                                sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                            />
+                        </TKUITooltip>
                     </div>
                     <IconSwap className={classes.swap}
                               aria-hidden={true}
@@ -377,6 +380,16 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             </div>
         );
     }
+
+    public componentDidUpdate(prevProps: Readonly<IProps>): void {
+        if (!prevProps.value.from && this.props.value.from) {
+            this.showTooltip(true,undefined);
+        }
+        if (!prevProps.value.to && this.props.value.to) {
+            this.showTooltip(false,undefined);
+        }
+    }
+
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = props => {
