@@ -76,7 +76,8 @@ class TKUITooltip extends React.Component<IProps, IState> {
         return (
             <Tooltip
                 {...this.props as RCTooltip.Props}
-                visible={this.isVisible()} // Override visible property.
+                // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
+                {...this.isVisible() ? {visible: this.isVisible()} : undefined}
                 overlayClassName={classNames(this.props.classes.main, this.props.className)}
                 arrowContent={this.props.arrowContent}
             >
