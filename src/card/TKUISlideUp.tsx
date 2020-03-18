@@ -34,18 +34,6 @@ const styles = {
         // marginTop: '350px'
         marginTop: '250px'
         // marginTop: '150px'
-    },
-    modalUp: {
-        top: (props: IProps) => props.modalUp!.top + props.modalUp!.unit + '!important'
-    },
-    modalMiddle: {
-        top: (props: IProps) => props.modalMiddle!.top + props.modalMiddle!.unit + '!important'
-    },
-    modalDown: {
-        top: (props: IProps) => props.modalDown!.top + props.modalDown!.unit + '!important'
-    },
-    modalHidden: {
-        top: (props: IProps) => "100%!important"
     }
 };
 
@@ -112,6 +100,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         this.getPosition = this.getPosition.bind(this);
         this.onPositionChange = this.onPositionChange.bind(this);
         this.onHandleClicked = this.onHandleClicked.bind(this);
+        this.getPositionTop = this.getPositionTop.bind(this);
     }
 
     private onTouchStart(e: any) {
@@ -156,13 +145,14 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         this.dragHandleRef.addEventListener("touchstart", this.onTouchStart);
         this.dragHandleRef.addEventListener("touchend", this.onTouchEnd);
     }
-    
-    private positionToClass(position: TKUISlideUpPosition, classes: ClassNameMap<any>): string {
+
+    private getPositionTop(): string {
+        const position = this.getPosition();
         switch (position) {
-            case TKUISlideUpPosition.UP: return classes.modalUp;
-            case TKUISlideUpPosition.MIDDLE: return classes.modalMiddle;
-            case TKUISlideUpPosition.DOWN: return classes.modalDown;
-            default: return classes.modalHidden;
+            case TKUISlideUpPosition.UP: return this.props.modalUp!.top + this.props.modalUp!.unit;
+            case TKUISlideUpPosition.MIDDLE: return this.props.modalMiddle!.top + this.props.modalMiddle!.unit;
+            case TKUISlideUpPosition.DOWN: return this.props.modalDown!.top + this.props.modalDown!.unit;
+            default: return "100%";
         }
     }
 
@@ -178,20 +168,26 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     }
 
     private onHandleClicked() {
-        if (this.state.position === TKUISlideUpPosition.DOWN) {
+        if (this.getPosition() === TKUISlideUpPosition.DOWN) {
             this.onPositionChange(TKUISlideUpPosition.MIDDLE);
-        } else if (this.state.position === TKUISlideUpPosition.MIDDLE) {
+        } else if (this.getPosition() === TKUISlideUpPosition.MIDDLE) {
             this.onPositionChange(TKUISlideUpPosition.UP);
+        }
+    }
+
+    private refreshPosition() {
+        if (this.testCardContRef) {
+            this.testCardContRef.style.top = this.getPositionTop();
         }
     }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        this.refreshPosition();
         return (
             <Drawer
                 open={this.props.open}
                 containerElementClass={classNames(classes.containerElement, this.props.containerClass,
-                    this.positionToClass(this.getPosition(), classes),
                     this.state.touching && this.getPosition() !== TKUISlideUpPosition.UP ? classes.contElemTouching : undefined
                 )}
                 modalElementClass={classNames(classes.modalElement, this.props.modalClass,
@@ -201,6 +197,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                 parentElement={document.body}
                 getContainerRef={(ref: any) => {
                     this.testCardContRef = ref;
+                    this.refreshPosition();
                     this.testCardContRef &&
                     this.testCardContRef.addEventListener("scroll", () => {
                         // If scroll was not triggered by user touch, then it was triggered by content (children) grow,

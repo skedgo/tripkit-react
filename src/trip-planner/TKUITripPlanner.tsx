@@ -218,7 +218,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.setState({showTransportSettings: false})}
             />;
         const queryInput = this.props.directionsView &&
-            !(this.props.portrait && this.state.showTripDetail && this.props.selected) &&
+            !(this.state.showTripDetail && this.props.selected) &&
             <TKUIRoutingQueryInput
                 title={t("Route")}
                 isTripPlanner={true}
@@ -238,7 +238,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
+                    modalDown: this.ref ? {top: this.ref.offsetHeight - 70, unit: 'px'} : undefined
                 }}
             />;
         const departuresView = this.isShowTimetable() ?
@@ -298,7 +298,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}
                     slideUpOptions={{
                         initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                        modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined
+                        modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'}
                     }}
                 >
                     {sortedTrips.map((trip: Trip, i: number) =>
