@@ -7,6 +7,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUITrackTransportDefaultStyle} from "./TKUITrackTransport.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
@@ -18,7 +19,9 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
     main: CSSProps<IProps>;
+    compositeIcon: CSSProps<IProps>;
     icon: CSSProps<IProps>;
+    alertIcon: CSSProps<IProps>;
     info: CSSProps<IProps>;
     subtitle: CSSProps<IProps>;
 }
@@ -70,12 +73,15 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, false)}
-                     alt={modeInfo.alt}
-                     role="img" // Needed to be read by iOS VoiceOver
-                     className={classes.icon}
-                     aria-label={modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + infoSubtitle}
-                />
+                <div className={classes.compositeIcon}>
+                    <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, false)}
+                         alt={modeInfo.alt}
+                         role="img" // Needed to be read by iOS VoiceOver
+                         className={classes.icon}
+                         aria-label={modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + infoSubtitle}
+                    />
+                    {segment.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
+                </div>
                 { this.props.brief ? null :
                     <div className={classes.info}
                          aria-hidden={true}

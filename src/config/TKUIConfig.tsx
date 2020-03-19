@@ -44,6 +44,8 @@ import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "../trip/TKUITrackTransport";
 import {TKUIW3wProps, TKUIW3wStyle} from "../location/TKUIW3w";
 import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICookiesBanner";
+import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "../alerts/TKUIAlertsSummary";
+import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -92,6 +94,8 @@ interface ITKUIConfigOptional {
     TKUITransportOptionsView: TKComponentConfig<TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle>;
     TKUITransportOptionsRow: TKComponentConfig<TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle>;
     TKUIPrivacyOptionsView: TKComponentConfig<TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle>;
+    TKUIAlertsSummary: TKComponentConfig<TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle>;
+    TKUIAlertsView: TKComponentConfig<TKUIAlertsViewProps, TKUIAlertsViewStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

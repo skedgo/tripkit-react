@@ -9,6 +9,7 @@ export interface TKUITheme {
     colorError: CSS.Color,
     fontFamily: CSS.FontFamilyProperty
     colorPrimaryOpacity: (opacity: number) => CSS.Color,
+    colorWarningOpacity: (opacity: number) => CSS.Color,
 }
 
 export const tKUIDeaultTheme: TKUITheme = {
@@ -18,7 +19,8 @@ export const tKUIDeaultTheme: TKUITheme = {
     colorWarning: '#fcba1e',
     colorError: '#e34040',
     fontFamily: 'ProximaNova, sans-serif',
-    colorPrimaryOpacity: (opacity: number) => 'rgba(35, 177, 94, ' + opacity + ')'
+    colorPrimaryOpacity: (opacity: number) => 'rgba(35, 177, 94, ' + opacity + ')',
+    colorWarningOpacity: (opacity: number) => 'rgba(252, 186, 30, ' + opacity + ')'
 };
 
 export const tKUIColors = {
