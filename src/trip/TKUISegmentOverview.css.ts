@@ -133,6 +133,9 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         occupancy: {
             marginBottom: '4px',
             ...genStyles.flex
+        },
+        alertsSummary: {
+            marginTop: '8px'
         }
     });
 

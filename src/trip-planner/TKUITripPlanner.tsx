@@ -394,7 +394,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             if (query) {
                 this.props.onQueryChange(query);
                 this.props.onDirectionsView(true);
-                TKShareHelper.resetToHome();
+                // TKShareHelper.resetToHome();
             }
         }
 

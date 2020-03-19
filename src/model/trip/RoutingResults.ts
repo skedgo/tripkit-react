@@ -3,6 +3,7 @@ import SegmentTemplate from "./SegmentTemplate";
 import TripGroup from "./TripGroup";
 import RoutingQuery from "../RoutingQuery";
 import Trip from "./Trip";
+import RealTimeAlert from "../service/RealTimeAlert";
 
 @JsonObject
 class RoutingResults {
@@ -14,7 +15,8 @@ class RoutingResults {
     private _segmentTemplates: SegmentTemplate[] = [];
     @JsonProperty('groups', [TripGroup], true)
     private _groups: TripGroup[] = [];
-    // @Json private List<GWTSegmentAlert> alerts;
+    @JsonProperty('alerts', [RealTimeAlert], true)
+    public alerts: RealTimeAlert[] = [];
 
     private query: RoutingQuery = new RoutingQuery();
     private satappQuery: string = "";
@@ -40,6 +42,7 @@ class RoutingResults {
     }
 
     private templatesMap: Map<number, SegmentTemplate> | null = null;
+    private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
 
     // This method mutate trip group objects, but it's not a problem since it's done just once and before using
     // them in the react system.
@@ -47,6 +50,9 @@ class RoutingResults {
         this.templatesMap = new Map<number, SegmentTemplate>();
         for (const template of this.segmentTemplates) {
             this.templatesMap.set(template.hashCode, template);
+        }
+        for (const alert of this.alerts) {
+            this.alertsMap.set(alert.hashCode, alert);
         }
         for (const group of this.groups) {
             const sorting = (t1: Trip, t2: Trip) => {
@@ -63,7 +69,16 @@ class RoutingResults {
                     if (segment.isLast() && !this.query.isEmpty()) {
                         segment.to.address = this.query.to!.address;
                     }
+                    const segmentAlerts = [];
+                    for (const alertHash of segment.alertHashCodes) {
+                        const segmentAlert = this.alertsMap.get(alertHash);
+                        if (segmentAlert) {
+                            segmentAlerts.push(segmentAlert);
+                        }
+                    }
+                    segment.alerts = segmentAlerts;
                 }
+
                 trip.satappQuery = this.satappQuery;
             }
             group.setSelected(0);

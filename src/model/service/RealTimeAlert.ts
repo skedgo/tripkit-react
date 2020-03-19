@@ -1,6 +1,21 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import Location from "../Location";
 import RealTimeAction from "./RealTimeAction";
+import {tKUIColors} from "../..";
+
+export enum AlertSeverity {
+    alert, warning, info
+}
+
+@JsonConverter
+export class AlertSeverityConverter implements JsonCustomConvert<AlertSeverity> {
+    public serialize(value: AlertSeverity): any { // Will not be used
+        return AlertSeverity[value];
+    }
+    public deserialize(obj: any): AlertSeverity {
+        return obj === "alert" ? AlertSeverity.alert : obj === "warning" ? AlertSeverity.warning : AlertSeverity.info;
+    }
+}
 
 @JsonObject
 class RealTimeAlert {
@@ -9,8 +24,8 @@ class RealTimeAlert {
     public title: string = "";
     @JsonProperty("hashCode")
     public hashCode: number = -1;
-    @JsonProperty("severity")
-    public severity: string = "";
+    @JsonProperty("severity", AlertSeverityConverter)
+    public severity: AlertSeverity = AlertSeverity.info;
     @JsonProperty("text", String, true)
     public text: string | undefined = undefined;
     @JsonProperty("url", String, true)

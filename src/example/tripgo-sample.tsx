@@ -17,14 +17,14 @@ const config: TKUIConfig = {
     i18nPromise: (window as any).tKI18nPromise,
     TKUIReportBtn: {
         // Good example of element replacement.
-        render: (props: TKUIReportBtnProps) =>
-            <IconReport
-                className={classNames(props.className, props.classes.main)}
-                onClick={() => {
-                    Usersnap.setFeedbackData(props.tKState);
-                    Usersnap.openReportWindow();
-                }}
-            />,
+        // render: (props: TKUIReportBtnProps) =>
+        //     <IconReport
+        //         className={classNames(props.className, props.classes.main)}
+        //         onClick={() => {
+        //             Usersnap.setFeedbackData(props.tKState);
+        //             Usersnap.openReportWindow();
+        //         }}
+        //     />,
         // More suitable if want to just change click behaviour, not icon.
         // props: {
         //     onClick: (state: TKState) => {

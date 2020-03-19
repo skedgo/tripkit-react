@@ -20,6 +20,8 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
+import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
+import TKUIAlertsView from "../alerts/TKUIAlertsView";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
@@ -52,6 +54,7 @@ interface IStyle {
     action: CSSProps<IProps>;
     notes: CSSProps<IProps>;
     occupancy: CSSProps<IProps>;
+    alertsSummary: CSSProps<IProps>;
 }
 
 export type TKUISegmentOverviewProps = IProps;
@@ -149,6 +152,10 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                                     <div key={i}>{note}</div>
                                 )}
                             </div>
+                            {segment.hasAlerts &&
+                            <div className={classes.alertsSummary}>
+                                <TKUIAlertsSummary alerts={segment.alerts}/>
+                            </div>}
                         </div>
                     </div>
                     :

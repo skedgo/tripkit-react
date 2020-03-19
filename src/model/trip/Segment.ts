@@ -7,6 +7,7 @@ import DateTimeUtil from "../../util/DateTimeUtil";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
+import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 
 @JsonObject
 class Segment extends SegmentTemplate {
@@ -44,6 +45,8 @@ class Segment extends SegmentTemplate {
     private _bicycleAccessible: boolean | null = null;
     @JsonProperty("ticket", Ticket, true)
     private _ticket: Ticket | null = null;
+
+    public alerts: RealTimeAlert[] = [];
 
     /**
      * Empty constructor, necessary for Util.clone
@@ -265,6 +268,24 @@ class Segment extends SegmentTemplate {
     public getKey(): string {
         return this.from.getKey() + this.to.getKey() + this.segmentTemplateHashCode;
     }
+
+    get hasAlerts(): boolean {
+        return this.alerts.length > 0;
+    }
+
+    get alertSeverity(): AlertSeverity {
+        return alertSeverity(this.alerts);
+    }
+}
+
+export function alertSeverity(alerts: RealTimeAlert[]): AlertSeverity {
+    let alertSeverity = AlertSeverity.info;
+    for (const alert of alerts) {
+        if (alert.severity < alertSeverity) { // '<' means 'more severe' according to the order of values of enum.
+            alertSeverity = alert.severity
+        }
+    }
+    return alertSeverity;
 }
 
 export default Segment;
