@@ -3,6 +3,7 @@ import EmbarkationStopResult from "./EmbarkationStopResult";
 import StopLocation from "../StopLocation";
 import ServiceDeparture from "./ServiceDeparture";
 import StopLocationParent from "./StopLocationParent";
+import RealTimeAlert from "./RealTimeAlert";
 
 @JsonObject
 class ServiceDeparturesResult {
@@ -12,8 +13,10 @@ class ServiceDeparturesResult {
     public embarkationStops: EmbarkationStopResult[] | undefined = undefined;
     @JsonProperty("parentInfo", StopLocationParent, true)
     public parentInfo: StopLocationParent | undefined = undefined;
-    // @JsonProperty("alerts", [RealTimeAlert], true)
-    // public alerts: RealTimeAlert[] | undefined = undefined
+    @JsonProperty('alerts', [RealTimeAlert], true)
+    public alerts: RealTimeAlert[] = [];
+
+    private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
 
     public isError() {
         return !this.embarkationStops;
@@ -21,6 +24,9 @@ class ServiceDeparturesResult {
 
     public getDepartures(startStop: StopLocation): ServiceDeparture[] {
         const departures: ServiceDeparture[] = [];
+        for (const alert of this.alerts) {
+            this.alertsMap.set(alert.hashCode, alert);
+        }
         for (const stopDepartures of this.embarkationStops!) {
             let departureStop = this.parentInfo ? this.parentInfo.getStopFromCode(stopDepartures.stopCode) : undefined;
             // TODO: When stop used to request departures does not come as part of parentInfo, is this still hapenning (shouldn't)?
@@ -31,15 +37,14 @@ class ServiceDeparturesResult {
                 departure.startStop = departureStop;
                 departure.startStopCode = stopDepartures.stopCode;
                 departures.push(departure);
-                // if (departure.getAlertHashCodes() != null) {
-                //     List<GWTSegmentAlert> alerts = new ArrayList<>();
-                //     for (Long alertHash : departure.getAlertHashCodes()) {
-                //         GWTSegmentAlert alert = getAlert(alertHash);
-                //         if (alert != null)
-                //             alerts.add(alert);
-                //     }
-                //     departure.setAlerts(alerts);
-                // }
+                const departureAlerts = [];
+                for (const alertHash of departure.alertHashCodes) {
+                    const departureAlert = this.alertsMap.get(alertHash);
+                    if (departureAlert) {
+                        departureAlerts.push(departureAlert);
+                    }
+                }
+                departure.alerts = departureAlerts;
             }
         }
         return departures;

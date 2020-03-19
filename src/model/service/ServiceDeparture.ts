@@ -5,6 +5,8 @@ import StopLocation from "../StopLocation";
 import RTServiceDepartureUpdate from "./RTServiceDepartureUpdate";
 import ServiceDetail from "./ServiceDetail";
 import RealTimeVehicle from "./RealTimeVehicle";
+import RealTimeAlert, {AlertSeverity} from "./RealTimeAlert";
+import {alertSeverity} from "../trip/Segment";
 
 @JsonObject
 class ServiceDeparture {
@@ -41,14 +43,15 @@ class ServiceDeparture {
     private _realtimeVehicle: RealTimeVehicle | undefined = undefined;
     @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
-    // @JsonProperty("alerts", [RealTimeAlert], true)
-    // public alerts: [RealTimeAlert] | undefined = undefined;
+    @JsonProperty("alertHashCodes", [Number], true)
+    public alertHashCodes: number[] = [];
 
     public startStop: StopLocation | undefined;
     public startStopCode: string = "";
     public realtimeUpdate: RTServiceDepartureUpdate = new RTServiceDepartureUpdate();
     public serviceDetail: ServiceDetail | undefined;
 
+    public alerts: RealTimeAlert[] = [];
 
     get realTimeDeparture(): number | undefined {
         return this.realtimeUpdate && this.realtimeUpdate.startTime ? this.realtimeUpdate.startTime : this._realTimeDeparture;
@@ -72,6 +75,15 @@ class ServiceDeparture {
             this.serviceDetail && this.serviceDetail.realtimeVehicle ? this.serviceDetail.realtimeVehicle :
                 this._realtimeVehicle;
     }
+
+    get hasAlerts(): boolean {
+        return this.alerts.length > 0;
+    }
+
+    get alertSeverity(): AlertSeverity {
+        return alertSeverity(this.alerts);
+    }
+
 }
 
 export default ServiceDeparture;

@@ -16,7 +16,8 @@ const styles = {
         top: '0',
         width: '100%',
         height: '100%',
-        minHeight: '550px',
+        // Comment this since it breaks the scroll height, and it's not longer necessary when !this.dragUpEnabled
+        // minHeight: '550px',
         borderTopLeftRadius: '4px',
         borderTopRightRadius: '4px',
         position: 'absolute',

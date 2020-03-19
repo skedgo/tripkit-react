@@ -25,6 +25,7 @@ import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
+import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -42,6 +43,8 @@ interface IStyle {
     realtimeInfo: CSSProps<IProps>;
     realtimeInfoDetailed: CSSProps<IProps>;
     actionsPanel: CSSProps<IProps>;
+    alertsSummary: CSSProps<IProps>;
+    alertsBrief: CSSProps<IProps>;
 }
 
 interface IConsumedProps {
@@ -110,16 +113,28 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 }
             }
         }
+        const classes = this.props.classes;
+        const t = this.props.t;
         const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
         const showWheelchair = this.props.options.wheelchair || departure.wheelchairAccessible === false;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
-        const classes = this.props.classes;
+        const alerts = !departure.hasAlerts ? null :
+            this.state.realtimeOpen ?
+                <div className={classes.alertsSummary}>
+                    <TKUIAlertsSummary
+                        alerts={departure.alerts}
+                        slideUpOptions={this.props.slideUpOptions ? {modalUp: this.props.slideUpOptions.modalUp} : undefined}
+                    />
+                </div> :
+                <div className={classes.alertsBrief}>
+                    {t("X.alerts", {0: departure.alerts.length})}
+                </div>;
         const actions = this.props.actions ?
             <TKUIActionsView
                 actions={this.props.actions!(departure)}
                 className={classes.actionsPanel}
             /> : undefined;
-        const realtimePanel = showWheelchair || occupancy ?
+        const realtimePanel = showWheelchair || occupancy || alerts ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
                     {showWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
@@ -128,6 +143,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                                            brief={!this.state.realtimeOpen}/> : undefined}
                     {occupancy && this.state.realtimeOpen && departure.modeInfo.alt.includes("train") &&
                     <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>}
+                    {alerts}
                 </div>
                 <IconAngleDown
                     onClick={() => this.setState({realtimeOpen: !this.state.realtimeOpen})}

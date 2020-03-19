@@ -192,7 +192,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 renderSubHeader={renderSubHeader}
                 slideUpOptions={slideUpOptions}
             >
-                <TKUIScrollForCard className={classNames(this.props.className, classes.main)}>
+                <div className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>
                         <TKUISelect
                             options={sortOptions}
@@ -231,7 +231,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     )}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
-                </TKUIScrollForCard>
+                </div>
             </TKUICard>
         );
     }
