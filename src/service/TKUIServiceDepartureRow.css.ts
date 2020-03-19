@@ -8,6 +8,7 @@ import {DynamicCSSRule, CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
+import {severityColor} from "../trip/TKUITrackTransport.css";
 
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
@@ -86,5 +87,15 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         trainOccupancy: {
             marginTop: '5px'
+        },
+        alertIcon: {
+            color: (props: TKUIServiceDepartureRowProps) => severityColor(props.value.alertSeverity, theme),
+            height: '20px',
+            width: '20px',
+            '& path': {
+                stroke: tKUIColors.white,
+                strokeWidth: '1px',
+                fill: 'currentColor'
+            }
         }
     });

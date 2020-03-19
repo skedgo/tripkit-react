@@ -7,9 +7,11 @@ import {tKUIAlertsSummaryDefaultStyle} from "./TKUIAlertsSummary.css";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
 import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import TKUIAlertsView from "./TKUIAlertsView";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alerts: RealTimeAlert[];
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -67,7 +69,8 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
                     alerts={alerts}
                     onRequestClose={() => this.setState({showAlertsView: false})}
                     slideUpOptions={{
-                        draggable: false
+                        draggable: false,
+                        ...this.props.slideUpOptions
                     }}
                 />}
             </div>

@@ -4,7 +4,7 @@ import {TKUITrackTransportProps, TKUITrackTransportStyle} from "./TKUITrackTrans
 import genStyles from "../css/GenStyle.css";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
 
-export function severityColor(alertSeverity: AlertSeverity, theme: TKUITheme) {
+export function severityColor(alertSeverity: AlertSeverity, theme: TKUITheme): string {
     return alertSeverity === AlertSeverity.alert ? theme.colorError :
         alertSeverity === AlertSeverity.warning ? theme.colorWarning : theme.colorInfo;
 }

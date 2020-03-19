@@ -2,6 +2,8 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import {severityColor} from "../trip/TKUITrackTransport.css";
+import {alertSeverity} from "../model/trip/Segment";
 
 export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIServiceViewProps> =
     (theme: TKUITheme) => ({
@@ -61,5 +63,11 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             marginTop: '15px',
             ...genStyles.flex,
             ...genStyles.spaceAround
+        },
+        alertsSummary: {
+            marginTop: '8px'
+        },
+        alertsBrief: {
+            color: (props: TKUIServiceViewProps) => severityColor(alertSeverity(props.departure.alerts), theme),
         }
     });

@@ -14,6 +14,7 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
+import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -47,6 +48,7 @@ interface IStyle {
     serviceDescription: CSSProps<IProps>;
     occupancy: CSSProps<IProps>;
     trainOccupancy: CSSProps<IProps>;
+    alertIcon: CSSProps<IProps>;
 }
 
 export type TKUIServiceDepartureRowProps = IProps;
@@ -153,6 +155,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                         <img src={transIcon} className={classes.transIcon}/>
                         {briefWheelchair}
                         {briefOccupancy}
+                        {departure.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
                     </div>
                     <div className={classes.timeAndOccupancy}>
                         {time}
