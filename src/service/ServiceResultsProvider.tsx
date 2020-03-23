@@ -1,15 +1,18 @@
 import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {Moment} from "moment-timezone";
-import withServiceResults from "../api/WithServiceResults";
+import withServiceResults, {IWithServiceResultsProps} from "../api/WithServiceResults";
 import StopLocation from "../model/StopLocation";
 import {EventEmitter} from "fbemitter";
 import DateTimeUtil from "../util/DateTimeUtil";
+import Segment from "../model/trip/Segment";
 
 export interface IServiceResultsContext {
     // stop query. Maybe group in class, similar to RoutingQuery. E.g. DeparturesQuery
-    stop?: StopLocation;
+    stop?: StopLocation;    // TODO: maybe more intuitive timetableForStop and onTimetableForStop?
     onStopChange: (stop?: StopLocation) => void;
+    timetableForSegment?: Segment;
+    onTimetableForSegment: (segment?: Segment) => void;
     initTime: Moment;
     onInitTimeChange?: (initTime: Moment) => void;
     onFilterChange?: (filter: string) => void;
@@ -26,6 +29,7 @@ export interface IServiceResultsContext {
 
 export const ServiceResultsContext = React.createContext<IServiceResultsContext>({
     onStopChange: (stop?: StopLocation) => {},
+    onTimetableForSegment: (segment?: Segment) => {},
     initTime: DateTimeUtil.getNow(),
     departures: [],
     waiting: true,
@@ -35,7 +39,7 @@ export const ServiceResultsContext = React.createContext<IServiceResultsContext>
     onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => {}
 });
 
-class ServiceResultsProvider extends React.Component<{}, {}> {
+class ServiceResultsProvider extends React.Component<IWithServiceResultsProps, {}> {
     private ContextWithValue = withServiceResults((props: IServiceResultsContext) =>
         <ServiceResultsContext.Provider value={props}>{this.props.children}</ServiceResultsContext.Provider>);
 

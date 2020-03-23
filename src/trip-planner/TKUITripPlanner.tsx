@@ -241,7 +241,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: this.ref ? {top: this.ref.offsetHeight - 70, unit: 'px'} : undefined
                 }}
             />;
-        const departuresView = this.isShowTimetable() ?
+        const timetableView = this.isShowTimetable() ?
             <TKUITimetableView
                 onRequestClose={() => {
                     this.showTimetableFor(undefined);
@@ -373,7 +373,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {favouritesView}
                         {routingResultsView}
                         {tripDetailView}
-                        {departuresView}
+                        {timetableView}
                         {serviceDetailView}
                     </div>
                 }
@@ -438,9 +438,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && this.props.query.to instanceof StopLocation
             && !this.props.directionsView) {
             this.showTimetableFor(this.props.query.to as StopLocation);
-        } else if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops.
+        } else if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
             && (!this.props.query.from || !(this.props.query.from instanceof StopLocation))
-            && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))) {
+            && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))
+            && (!this.props.timetableForSegment)) {
             this.showTimetableFor(undefined);
         }
 
@@ -466,7 +467,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
      */
     private isShowTimetable(props?: IProps) {
         const targetProps = props || this.props;
-        return targetProps.stop !== undefined;
+        return targetProps.stop !== undefined || targetProps.timetableForSegment !== undefined;
     }
 
     private showTimetableFor(stop?: StopLocation) {

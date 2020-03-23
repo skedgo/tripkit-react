@@ -25,8 +25,8 @@ class SegmentTemplate {
     private _from: Location = new Location();
     @JsonProperty("to", Location, true)
     private _to: Location = new Location();
-    @JsonProperty("modeInfo", ModeInfo, true)
-    private _modeInfo: ModeInfo | undefined = undefined;
+    @JsonProperty("modeInfo", ModeInfo, true) // required according to specs, but sometimes is missing
+    public modeInfo?: ModeInfo = undefined;
     @JsonProperty("modeIdentifier", String, true)
     private _modeIdentifier: string | null = null;
     @JsonProperty("action", String, true)
@@ -106,14 +106,6 @@ class SegmentTemplate {
 
     set to(value: Location) {
         this._to = value;
-    }
-
-    get modeInfo(): ModeInfo | undefined {
-        return this._modeInfo;
-    }
-
-    set modeInfo(value: ModeInfo | undefined) {
-        this._modeInfo = value;
     }
 
     get modeIdentifier(): string | null {

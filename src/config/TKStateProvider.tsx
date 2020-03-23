@@ -2,9 +2,8 @@ import * as React from "react";
 import {TKUIConfig} from "./TKUIConfig";
 import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../options/OptionsProvider";
 import ServiceResultsProvider from "../service/ServiceResultsProvider";
-import RoutingResultsProvider from "../trip-planner/RoutingResultsProvider";
+import RoutingResultsProvider, {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TKUIConfigProvider from "./TKUIConfigProvider";
-import RoutingQuery from "../model/RoutingQuery";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
@@ -34,12 +33,18 @@ class TKStateProvider extends React.Component<IProps,{}> {
                                             options={optionsContext && optionsContext.value}
                                             locale={i18nProps.locale}
                                         >
-                                            <ServiceResultsProvider>
-                                                <TKFavouritesProvider>
+                                            <RoutingResultsContext.Consumer>
+                                                {(routingResultsContext: IRoutingResultsContext) =>
+                                                    <ServiceResultsProvider
+                                                        onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
+                                                    >
+                                                        <TKFavouritesProvider>
 
-                                                    {this.props.children}
-                                                </TKFavouritesProvider>
-                                            </ServiceResultsProvider>
+                                                            {this.props.children}
+                                                        </TKFavouritesProvider>
+                                                    </ServiceResultsProvider>
+                                                }
+                                            </RoutingResultsContext.Consumer>
                                         </RoutingResultsProvider>
                                     }
                                 </TKI18nContext.Consumer>

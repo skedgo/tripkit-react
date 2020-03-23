@@ -22,6 +22,8 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
+import ServiceDeparture from "../model/service/ServiceDeparture";
+import Segment from "../model/trip/Segment";
 
 interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
@@ -77,6 +79,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onDirectionsView = this.onDirectionsView.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
+            this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.refreshRegionInfo = this.refreshRegionInfo.bind(this);
         }
@@ -286,6 +289,60 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
         }
 
+        public onSegmentServiceChange(segment: Segment, service: ServiceDeparture) {
+            const selectedTrip = this.state.selected;
+            if (!selectedTrip) {
+                return;
+            }
+            const waypointSegments = [];
+            for (const tripSegment of selectedTrip.segments) {
+                if (!tripSegment.modeIdentifier) {
+                    continue;
+                }
+                let waypointSegment;
+                if (tripSegment.serviceTripID && tripSegment.serviceTripID === segment.serviceTripID) {
+                    const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
+                    waypointSegment = {
+                        start: service.startStopCode,
+                        end: service.endStopCode,
+                        modes: [tripSegment.modeIdentifier],
+                        startTime: service.startTime,
+                        endTime: service.endTime,
+                        serviceTripID: service.serviceTripID,
+                        operator: service.operator,
+                        region: segmentRegions[0].name
+                    };
+                    if (segmentRegions[0] !== segmentRegions[1]) {
+                        Object.assign(waypointSegment, {disembarkationRegion: segmentRegions[1]})
+                    }
+                } else {
+                    const startLoc = tripSegment.from;
+                    const endLoc = tripSegment.to;
+                    waypointSegment = {
+                        start: "(" + startLoc.lat + "," + startLoc.lng + ")",
+                        end: "(" + endLoc.lat + "," + endLoc.lng + ")",
+                        modes: [tripSegment.modeIdentifier]
+                    }
+                }
+                waypointSegments.push(waypointSegment);
+            }
+            const requestBody = {
+                config: {v: 11},
+                segments: waypointSegments
+            };
+            TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
+                .then((result: RoutingResults) => {
+                    const tripAlternative = result.groups[0].trips[0];
+                    const selectedTripGroup = (selectedTrip as TripGroup);
+                    selectedTripGroup.trips.push(tripAlternative);
+                    const sorting = (t1: Trip, t2: Trip) => {
+                        return t1.weightedScore - t2.weightedScore;
+                    };
+                    selectedTripGroup.trips.sort(sorting);
+                    return this.onAlternativeChange(selectedTripGroup, tripAlternative);
+                });
+        };
+
         public render(): React.ReactNode {
             const props = this.props as IWithRoutingResultsProps;
             return <Consumer
@@ -316,6 +373,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onSortChange={this.onSortChange}
                 onReqRealtimeFor={this.onReqRealtimeFor}
                 onAlternativeChange={this.onAlternativeChange}
+                onSegmentServiceChange={this.onSegmentServiceChange}
             />;
         }
 

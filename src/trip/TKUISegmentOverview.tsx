@@ -21,7 +21,8 @@ import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
-import TKUIAlertsView from "../alerts/TKUIAlertsView";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
@@ -30,6 +31,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps {
     options: TKUserProfile;
+    onTimetableForSegment: (segment?: Segment) => void,
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -97,6 +99,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
             segment.realtimeVehicle.components[0][0].occupancy;
         const classes = this.props.classes;
+        const t = this.props.t;
         const showWheelchair = (this.props.options.wheelchair || segment.wheelchairAccessible === false) &&
             segment.isPT();
         const wheelchairInfo = showWheelchair &&
@@ -156,6 +159,13 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             <div className={classes.alertsSummary}>
                                 <TKUIAlertsSummary alerts={segment.alerts}/>
                             </div>}
+                            {segment.isPT() && !segment.isContinuation &&
+                            <TKUIButton
+                                type={TKUIButtonType.PRIMARY_LINK}
+                                text={t("Show.timetable")}
+                                onClick={() => this.props.onTimetableForSegment(segment)}
+                            />
+                            }
                         </div>
                     </div>
                     :
@@ -170,10 +180,15 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
     ({inputProps, children}) =>
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>
-                children!({
-                    ...inputProps,
-                    options: optionsContext.value
-                })
+                <ServiceResultsContext.Consumer>
+                    {(serviceContext: IServiceResultsContext) =>
+                        children!({
+                            ...inputProps,
+                            options: optionsContext.value,
+                            onTimetableForSegment: serviceContext.onTimetableForSegment
+                        })
+                    }
+                </ServiceResultsContext.Consumer>
             }
         </OptionsContext.Consumer>;
 

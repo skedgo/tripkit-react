@@ -9,6 +9,7 @@ import LocationUtil from "../util/LocationUtil";
 import City from "../model/location/City";
 import RegionInfo from "../model/region/RegionInfo";
 import RegionInfoResults from "../model/region/RegionInfoResults";
+import Segment from "../model/trip/Segment";
 
 export class RegionsData {
 
@@ -175,6 +176,13 @@ export class RegionsData {
 
     public getRegionInfo(code: string): RegionInfo | undefined {
         return this.regionInfos.get(code);
+    }
+
+    /**
+     * TODO: implement logic
+     */
+    public getSegmentRegions(segment: Segment): [Region, Region] {
+        return [this.getRegion(segment.from)!, this.getRegion(segment.to)!];
     }
 }
 
