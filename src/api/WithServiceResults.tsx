@@ -16,14 +16,15 @@ import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
 import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
+import StopsData from "../data/StopsData";
 
-interface IWithServiceResultsProps {
-    // TODO: Move to state, as startStop
-    segment?: Segment;
+export interface IWithServiceResultsProps {
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => void;
 }
 
 interface IWithServiceResultsState {
     startStop?: StopLocation;
+    segment?: Segment;
     initTime: Moment;       // Default to now - 30mins(?)
     departures: ServiceDeparture[];    // It's sorted.
     noRTDepartures: ServiceDeparture[];    // Sorted according to timetable (shedule) time, not considering realtime.
@@ -54,18 +55,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         constructor(props: Subtract<P, IServiceResConsumerProps> & IWithServiceResultsProps) {
             super(props);
             // TODO in GWT implementation initialTime has the proper timezone
-            const now = DateTimeUtil.getNow();
-            let initialTime;
-            if (props.segment) {
-                initialTime = DateTimeUtil.momentFromTimeTZ(props.segment.startTime * 1000).add(-30, 'm');
-                if (initialTime.isBefore(now)) {
-                    initialTime = now;
-                }
-            } else {
-                initialTime = now.add(-15, 'm');
-            }
             this.state = {
-                initTime: initialTime,
+                initTime: DateTimeUtil.getNow(),
                 departures: [],
                 noRTDepartures: [],
                 filter: "",
@@ -86,6 +77,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.onInitTimeChange = this.onInitTimeChange.bind(this);
             this.onServiceSelection = this.onServiceSelection.bind(this);
             this.onStopChange = this.onStopChange.bind(this);
+            this.onTimetableForSegment = this.onTimetableForSegment.bind(this);
             this.onFindAndSelectService = this.onFindAndSelectService.bind(this);
         }
 
@@ -141,24 +133,29 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             if (!departure || departure.serviceDetail) {
                 return
             }
-            const endpoint = "service.json"
-                + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
-                + "&serviceTripID=" + departure.serviceTripID
-                + "&startStopCode=" + departure.startStopCode
-                + "&embarkationDate=" + departure.startTime
-                + "&encode=true";
-            TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, ServiceDetail)
-                .then((result: ServiceDetail) => {
-                        // if (result.isError()) {
-                        //     throw new Error("Error loading departures.");
-                        // }
-                        const departureUpdate = departure;
-                        departureUpdate.serviceDetail = result;
-                        if (departure === this.state.selected) {
-                            this.setState({selected: departureUpdate});
+            if (this.state.segment) {   // Timetable for PT trip segment, so request alternative trip for new leg.
+                this.props.onSegmentServiceChange(this.state.segment, departure);
+            } else {    // Timetable for stop, so request departure details.
+                const endpoint = "service.json"
+                    + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
+                    + "&serviceTripID=" + departure.serviceTripID
+                    + "&startStopCode=" + departure.startStopCode
+                    + "&embarkationDate=" + departure.startTime
+                    + "&encode=true";
+
+                TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, ServiceDetail)
+                    .then((result: ServiceDetail) => {
+                            // if (result.isError()) {
+                            //     throw new Error("Error loading departures.");
+                            // }
+                            const departureUpdate = departure;
+                            departureUpdate.serviceDetail = result;
+                            if (departure === this.state.selected) {
+                                this.setState({selected: departureUpdate});
+                            }
                         }
-                    }
-                );
+                    );
+            }
         }
 
         public onStopChange(stop?: StopLocation) {
@@ -173,12 +170,38 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             });
         }
 
+        public onTimetableForSegment(segment?: Segment) {
+            this.setState({segment: segment},
+                () => {
+                    if (segment) {
+                        RegionsData.instance.getRegionP(segment.from)
+                            .then((fromRegion?: Region) =>
+                                fromRegion && StopsData.instance.getStopFromCode(fromRegion.name, segment.stopCode!)
+                                    .then((startStop: StopLocation) => {
+                                        this.setState({startStop: startStop},
+                                            () => {
+                                                let initialTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000).add(-30, 'm');
+                                                if (initialTime.isBefore(DateTimeUtil.getNow())) {
+                                                    initialTime = DateTimeUtil.getNow();
+                                                }
+                                                this.onInitTimeChange(initialTime);
+                                            });
+                                        }
+                                    )
+                            )
+
+                    }
+                });
+        }
+
         public render(): React.ReactNode {
             const {...props} = this.props as IWithServiceResultsProps;
             const startStop = this.state.startStop;
             return <Consumer {...props}
                              stop={startStop}
                              onStopChange={this.onStopChange}
+                             timetableForSegment={this.state.segment}
+                             onTimetableForSegment={this.onTimetableForSegment}
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting(this.state)}
@@ -275,29 +298,35 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public requestDepartures(): Promise<ServiceDeparture[]> {
             let startStopCode = this.state.startStop!.code;
             return RegionsData.instance.getRegionP(this.state.startStop!).then((startRegion?: Region) => {
-                const startRegionCode = startRegion!.name;
+                let startRegionCode = startRegion!.name;
                 // Remove 'Region_Code-' from stop codes. Shouldn't come from backend anymore
                 if (startStopCode.startsWith(startRegionCode + "-")) {
                     startStopCode = startStopCode.substring((startRegionCode + "-").length);
                 }
-                const stopIDs = [startStopCode];
-                // TODO: re-enable when implementing segment services.
-                // const endStopIDs = [];
-                // let disembarkationRegionCode: string | undefined = undefined;
-                // if (this.props.segment) {
-                // RegionsData.SegmentRegions segmentRegions = UserData.getRegionsData().getSegmentRegions(segment);
-                // startRegionCode = segmentRegions.getStartRegion().getCode();
-                // disembarkationRegionCode = !segmentRegions.getStartRegion().equals(segmentRegions.getEndRegion()) ?
-                //     segmentRegions.getEndRegion().getCode() : null;
-                // endStopIDs = Collections.singletonList(segment.getContinuationEndStopCode());
-                // }
+                const startStopIDs = [startStopCode];
+                let endStopIDs: string[] = [];
+                let endRegionCode: string | undefined = undefined;
+                const segment = this.state.segment;
+                if (segment) {
+                    const segmentRegions: [Region, Region] = RegionsData.instance.getSegmentRegions(segment);
+                    startRegionCode = segmentRegions[0].name;
+                    endRegionCode = segmentRegions[0] !== segmentRegions[1] ? segmentRegions[1].name : undefined;
+                    // TODO: add logic for continuation segments.
+                    endStopIDs = [segment.endStopCode!];
+                }
                 const lastDepartureDate = this.getLastDepartureTime();
                 const initialTimeAtRequest = this.state.initTime;
                 const departuresRequest = {
                     region: startRegionCode,
-                    embarkationStops: stopIDs,
+                    embarkationStops: startStopIDs,
                     timeStamp: lastDepartureDate
                 };
+                if (endStopIDs.length > 0) {
+                    Object.assign(departuresRequest, {
+                        disembarkationRegion: endRegionCode,
+                        disembarkationStops: endStopIDs
+                    });
+                }
                 return TripGoApi.apiCallT("departures.json", NetworkUtil.MethodType.POST, ServiceDeparturesResult, departuresRequest)
                     .then((departuresResult: ServiceDeparturesResult) => {
                             // Initial time changed, which triggered a clear, so should discard these results

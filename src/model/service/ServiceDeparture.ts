@@ -45,6 +45,8 @@ class ServiceDeparture {
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     @JsonProperty("alertHashCodes", [Number], true)
     public alertHashCodes: number[] = [];
+    @JsonProperty("endStopCode", String, true) // It comes when disembarkation stop was specified.
+    public endStopCode?: string = undefined;
 
     public startStop: StopLocation | undefined;
     public startStopCode: string = "";

@@ -59,8 +59,8 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
                     </span>
                     <IconRightArrow/>
                 </div>
-                {alerts.map((alert: RealTimeAlert) =>
-                    <div className={classes.alertTitle}>
+                {alerts.map((alert: RealTimeAlert, i: number) =>
+                    <div className={classes.alertTitle} key={i}>
                         {alert.title}
                     </div>
                 )}

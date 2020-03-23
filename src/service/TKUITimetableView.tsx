@@ -216,7 +216,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
     public componentDidMount() {
         // If shared link then this is triggered from WithServicesResults.tsx constructor
         if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
-            && this.props.onRequestMore) {
+            && !this.props.timetableForSegment && this.props.onRequestMore) {
             this.props.onRequestMore();
         }
     }

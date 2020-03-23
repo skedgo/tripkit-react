@@ -9,6 +9,8 @@ import LatLng from "../model/LatLng";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
+import ServiceDeparture from "../model/service/ServiceDeparture";
+import Segment from "../model/trip/Segment";
 
 export interface IRoutingResultsContext {
     query: RoutingQuery;
@@ -32,6 +34,7 @@ export interface IRoutingResultsContext {
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => void;
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
@@ -47,7 +50,8 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     sort: TripSort.OVERALL,
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
-    onAlternativeChange: (group: TripGroup, alt: Trip) => {}
+    onAlternativeChange: (group: TripGroup, alt: Trip) => {},
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => {}
 });
 
 class RoutingResultsProvider extends React.Component<{
