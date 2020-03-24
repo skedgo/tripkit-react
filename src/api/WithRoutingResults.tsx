@@ -24,6 +24,7 @@ import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
+import {TKError} from "../error/TKError";
 
 interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
@@ -44,6 +45,8 @@ interface IWithRoutingResultsState {
     selected?: Trip;
     sort: TripSort;
     waiting: boolean;
+    waitingTripUpdate: boolean;
+    tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
 }
 
 export enum TripSort {
@@ -67,6 +70,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 query: RoutingQuery.create(),
                 sort: TripSort.OVERALL,
                 waiting: false,
+                waitingTripUpdate: false,
                 viewport: {center: MapUtil.worldCoords, zoom: 2},
                 directionsView: false
             };
@@ -289,11 +293,26 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
         }
 
-        public onSegmentServiceChange(segment: Segment, service: ServiceDeparture) {
+        public onSegmentServiceChange(segment: Segment, service: ServiceDeparture, callback: () => void) {
             const selectedTrip = this.state.selected;
             if (!selectedTrip) {
                 return;
             }
+
+            // Find if there's already a trip for that service among selected trip alternatives.
+            const selectedTripGroup = selectedTrip as TripGroup;
+            for (const alternative of selectedTripGroup.trips) {
+                for (const altSegment of alternative.segments) {
+                    if (altSegment.serviceTripID === service.serviceTripID) {
+                        this.onAlternativeChange(selectedTripGroup, alternative);
+                        callback && callback();
+                        return;
+                    }
+                }
+            }
+
+            // Compute trip involving service through waypoints.json endpoint.
+            this.setState({waitingTripUpdate: true, tripUpdateError: undefined});
             const waypointSegments = [];
             for (const tripSegment of selectedTrip.segments) {
                 if (!tripSegment.modeIdentifier) {
@@ -333,14 +352,16 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
                 .then((result: RoutingResults) => {
                     const tripAlternative = result.groups[0].trips[0];
-                    const selectedTripGroup = (selectedTrip as TripGroup);
                     selectedTripGroup.trips.push(tripAlternative);
                     const sorting = (t1: Trip, t2: Trip) => {
                         return t1.weightedScore - t2.weightedScore;
                     };
                     selectedTripGroup.trips.sort(sorting);
-                    return this.onAlternativeChange(selectedTripGroup, tripAlternative);
-                });
+                    this.onAlternativeChange(selectedTripGroup, tripAlternative);
+                    this.setState({waitingTripUpdate: false});
+                })
+                .catch(() => this.setState({waitingTripUpdate: false, tripUpdateError: new TKError("Error updating trip")}))
+                .finally(() => callback && callback());
         };
 
         public render(): React.ReactNode {
@@ -367,6 +388,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onDirectionsView={this.onDirectionsView}
                 trips={this.state.trips}
                 waiting={this.state.waiting}
+                waitingTripUpdate={this.state.waitingTripUpdate}
+                tripUpdateError={this.state.tripUpdateError}
                 selected={this.state.selected}
                 onChange={this.onChange}
                 sort={this.state.sort}

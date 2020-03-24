@@ -19,7 +19,7 @@ import Region from "../model/region/Region";
 import StopsData from "../data/StopsData";
 
 export interface IWithServiceResultsProps {
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => void;
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
 }
 
 interface IWithServiceResultsState {
@@ -79,6 +79,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.onStopChange = this.onStopChange.bind(this);
             this.onTimetableForSegment = this.onTimetableForSegment.bind(this);
             this.onFindAndSelectService = this.onFindAndSelectService.bind(this);
+            this.getSelectedService = this.getSelectedService.bind(this);
         }
 
         public requestMoreDepartures() {
@@ -134,7 +135,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return
             }
             if (this.state.segment) {   // Timetable for PT trip segment, so request alternative trip for new leg.
-                this.props.onSegmentServiceChange(this.state.segment, departure);
+                this.props.onSegmentServiceChange(this.state.segment, departure, () => this.onTimetableForSegment(undefined));
             } else {    // Timetable for stop, so request departure details.
                 const endpoint = "service.json"
                     + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
@@ -194,6 +195,22 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 });
         }
 
+        public getSelectedService(): ServiceDeparture | undefined {
+            if (this.state.selected) {
+                return this.state.selected;
+            }
+            const segment = this.state.segment;
+            if (!segment) {
+                return undefined;
+            }
+            for (const departure of this.state.departures) {
+                if (departure.serviceTripID === segment.serviceTripID) {
+                    return departure;
+                }
+            }
+            return undefined;
+        }
+
         public render(): React.ReactNode {
             const {...props} = this.props as IWithServiceResultsProps;
             const startStop = this.state.startStop;
@@ -209,7 +226,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
                              initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
                              onInitTimeChange={this.onInitTimeChange}
-                             selectedService={this.state.selected}
+                             selectedService={this.getSelectedService()}
                              onServiceSelection={this.onServiceSelection}
                              servicesEventBus={this.eventBus}
                              onFindAndSelectService={this.onFindAndSelectService}
@@ -238,7 +255,6 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             // Already requested this departures (for stop + time)
             const newCoverDisplayRequestHash = this.getCoverDisplayRequestHash();
             if (this.coverDisplayRequestHash === newCoverDisplayRequestHash) {
-                console.log("it's returning here");
                 return;
             }
             this.coverDisplayRequestHash = newCoverDisplayRequestHash;

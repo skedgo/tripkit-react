@@ -15,13 +15,13 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
         },
         row: {
             marginBottom: '15px',
-            '&:hover': {
-                backgroundColor: '#fbfbfb'
-            }
+        //     '&:hover': {
+        //         backgroundColor: '#fbfbfb'
+        //     }
         },
-        rowSelected: {
-            backgroundColor: '#f3f3f3!important'
-        },
+        // rowSelected: {
+        //     backgroundColor: '#f3f3f3!important'
+        // },
         iconLoading: {
             margin: '0 5px',
             width: '20px',

@@ -10,6 +10,21 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 
+export const rowStyle = {
+    padding: '16px',
+    '&:hover': {
+        backgroundColor: tKUIColors.black5
+    },
+    '&:active': {
+        backgroundColor: tKUIColors.black4
+    }
+};
+
+export const rowSelectedStyle = (theme: TKUITheme) => ({
+    borderLeft: '4px solid ' + theme.colorPrimary,
+    paddingLeft: '12px', // 16px (row padding) - 4px (border width)
+    backgroundColor: theme.colorPrimaryOpacity(.08)
+});
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
     (theme: TKUITheme) => ({
@@ -17,6 +32,9 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.flex,
             ...genStyles.spaceBetween
         },
+        // Parameterize row and rowSelected classes as suggested in https://redmine.buzzhives.com/issues/12629#note-8
+        row: rowStyle,
+        rowSelected: rowSelectedStyle(theme),
         clickable: {
             cursor: 'pointer'
         },

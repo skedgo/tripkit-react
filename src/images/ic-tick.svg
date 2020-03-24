@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+    <!-- Generator: Sketch 3.2.2 (9983) - http://www.bohemiancoding.com/sketch -->
+    <title>ic-tick-24px</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Assets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-33.000000, -34.000000)" id="Tick">
+            <g transform="translate(33.000000, 34.000000)">
+                <rect id="Grid" x="0" y="0" width="24" height="24"></rect>
+                <path d="M20.3483739,5.34837341 C20.1559726,5.15597209 19.844501,5.15549946 19.6464693,5.35353117 L9.00000001,16.0000003 L4.35958768,11.3595877 C4.16099289,11.1609929 3.84306337,11.1569367 3.6516266,11.3483734 L2.34837342,12.6516266 C2.1559721,12.8440279 2.15935696,13.159357 2.35675467,13.3567547 L8.29028059,19.2902801 C8.68224785,19.6822473 9.3213502,19.6786495 9.70816864,19.2918311 L21.6522821,7.34771861 C21.8443218,7.15567893 21.843064,6.84306337 21.6516272,6.6516266 L20.3483739,5.34837341 Z" fill="#212121"></path>
+            </g>
+        </g>
+    </g>
+</svg>

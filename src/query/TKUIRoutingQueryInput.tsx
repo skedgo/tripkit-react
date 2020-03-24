@@ -24,7 +24,6 @@ import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
-import "../trip/TripAltBtn.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";

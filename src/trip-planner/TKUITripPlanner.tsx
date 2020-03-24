@@ -50,6 +50,7 @@ import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import {TKUserPosition} from "../util/GeolocationUtil";
+import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -87,25 +88,6 @@ interface IState {
     showTripDetail?: boolean;
     cardPosition?: TKUISlideUpPosition;
 }
-
-    // TODO:
-    // Set map padding according to visible area (card position + query panel)
-    // See why timetable view does not get scroll to bottom event, not getting more departures.
-    // When device is phone (or iphone + safari?) make fonts on all inputs to be > 16px to avoid safari zooming in.
-    // Naming convention: analyze when to suffix with 'View', maybe never? In iOS they use 'Card' suffix.
-    // - Maybe define a WithCard HOC that wraps a component inside a Card, and adds properties open, onRequestClose, and
-    // and any other property of card that want to expose to outside. OnRequestClose is passed to the card, but also to
-    // the consumer / wrapped component, so it can control close (e.g. needed by TKUIProfileView apply btn).
-    // Maybe also open? WithCard can be used to wrap connect: export default WithCard(connect(...)). Analyze where to
-    // call it.
-    // - TimeZone handling considering region change. Idea (think again): always handle moments in UTC, and convert to region timezone
-    // just when need to display. E.g. See value passed to <DateTimePicker/> in TKUIRoutingQueryInput. So every use of defaultTimezone
-    // in DateTimeUtil should be changed to use UTC.
-    // - Remove class TKUIWithStyle? Probably it doesn't make sense anymore to pass style or randomizeClassNames directly to components,
-    // instead should pass through config. Ignoring props.styles in withStyleInjection. Either remove property or merge.
-    // - Can define ITKUIXXXStyle simpler given I just use it to get keys with keyof?
-    // - Maybe give it a try to make use of contexts more efficient? or maybe leave for later and continue with next item.
-    // - Mode by mode instructions
 
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
@@ -244,19 +226,25 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const timetableView = this.isShowTimetable() ?
             <TKUITimetableView
                 onRequestClose={() => {
-                    this.showTimetableFor(undefined);
+                    if (this.props.timetableForSegment) {
+                        this.props.onTimetableForSegment(undefined);
+                    } else {
+                        this.showTimetableFor(undefined);
+                    }
                 }}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     // Hide, but don't close, when service is selected.
                     // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
-                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
+                    position: this.props.selectedService && !this.props.timetableForSegment ?
+                        TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
                     draggable: false,
-                    modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: this.props.timetableForSegment ? 40 :
+                            this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
                     modalDown: this.ref ? {top: this.ref.offsetHeight - 40, unit: 'px'} : undefined
                 }}
             /> : null;
-        const serviceDetailView = this.props.selectedService ?
+        const serviceDetailView = this.props.selectedService && !this.props.timetableForSegment ?
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
                 slideUpOptions={{
@@ -289,7 +277,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             /> : null;
 
         let tripDetailView: any;
-        if (this.state.showTripDetail && this.props.selected) {
+        if (this.state.showTripDetail && this.props.selected && !this.props.timetableForSegment) {
             const sortedTrips = this.props.trips || [];
             const selected = sortedTrips.indexOf(this.props.selected);
             tripDetailView =
@@ -375,6 +363,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {tripDetailView}
                         {timetableView}
                         {serviceDetailView}
+                        {<TKUIWaitingRequest
+                            status={this.props.waitingTripUpdate ? TKRequestStatus.wait :
+                                this.props.tripUpdateError ? TKRequestStatus.error : TKRequestStatus.success}
+                            message={this.props.waitingTripUpdate ? "Updating trip" :
+                                this.props.tripUpdateError ? "Error updating trip" : ""}
+                        />}
                     </div>
                 }
             </TKUIConfigContext.Consumer>

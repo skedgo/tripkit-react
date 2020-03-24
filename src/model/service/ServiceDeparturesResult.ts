@@ -1,9 +1,28 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, JsonCustomConvert, JsonConverter} from "json2typescript";
 import EmbarkationStopResult from "./EmbarkationStopResult";
 import StopLocation from "../StopLocation";
 import ServiceDeparture from "./ServiceDeparture";
 import StopLocationParent from "./StopLocationParent";
 import RealTimeAlert from "./RealTimeAlert";
+import Util from "../../util/Util";
+
+@JsonConverter
+export class StopsLocationConverter implements JsonCustomConvert<StopLocation[]> {
+    public serialize(location: StopLocation[]): any {
+        return Util.serialize(location);
+    }
+    public deserialize(locationsJson: any): StopLocation[] {
+        const locations: StopLocation[] = [];
+        for (const locationJson of locationsJson) {
+            if (locationJson.class === "ParentStopLocation" || locationJson.children) {
+                locations.push(Util.deserialize(locationJson, StopLocationParent));
+            } else {
+                locations.push(Util.deserialize(locationJson, StopLocation));
+            }
+        }
+        return locations;
+    }
+}
 
 @JsonObject
 class ServiceDeparturesResult {
@@ -15,11 +34,30 @@ class ServiceDeparturesResult {
     public parentInfo: StopLocationParent | undefined = undefined;
     @JsonProperty('alerts', [RealTimeAlert], true)
     public alerts: RealTimeAlert[] = [];
+    @JsonProperty("stops", StopsLocationConverter, true)    // Does not appear on api specs.
+    public stops: StopLocation[] | undefined = undefined;
 
     private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
 
     public isError() {
         return !this.embarkationStops;
+    }
+
+    public getStopFromCode(code: string): StopLocation | undefined {
+        let result = this.parentInfo && this.parentInfo.getStopFromCode(code);
+        if (!result && this.stops) {
+            for (const parentStop of this.stops) {
+                if (parentStop.code === code) {
+                    result = parentStop;
+                    break
+                }
+                if (parentStop instanceof StopLocationParent) {
+                    result = parentStop.getStopFromCode(code);
+                    break
+                }
+            }
+        }
+        return result;
     }
 
     public getDepartures(startStop: StopLocation): ServiceDeparture[] {
@@ -28,7 +66,7 @@ class ServiceDeparturesResult {
             this.alertsMap.set(alert.hashCode, alert);
         }
         for (const stopDepartures of this.embarkationStops!) {
-            let departureStop = this.parentInfo ? this.parentInfo.getStopFromCode(stopDepartures.stopCode) : undefined;
+            let departureStop = this.getStopFromCode(stopDepartures.stopCode);
             // TODO: When stop used to request departures does not come as part of parentInfo, is this still hapenning (shouldn't)?
             if (!departureStop && stopDepartures.stopCode === startStop.code) {
                 departureStop = startStop;
