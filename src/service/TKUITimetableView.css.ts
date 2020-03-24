@@ -112,7 +112,15 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         } as CSSProperties<TKUITimetableViewProps>
     },
     dapartureRow: {
-        padding: '20px 16px',
         borderBottom: '1px solid ' + tKUIColors.black4
+    },
+    iconLoading: {
+        margin: '10px',
+        width: '20px',
+        height: '20px',
+        color: '#6d6d6d',
+        ...genStyles.alignSelfCenter,
+        ...genStyles.animateSpin,
+        ...genStyles.svgFillCurrColor
     }
 };

@@ -31,6 +31,7 @@ import TransportUtil from "../trip/TransportUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -57,6 +58,7 @@ interface IStyle {
     filterInput: CSSProps<IProps>;
     faceButtonClass: CSSProps<IProps>;
     dapartureRow: CSSProps<IProps>;
+    iconLoading: CSSProps<IProps>;
 }
 
 export type TKUITimetableViewProps = IProps;
@@ -141,8 +143,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 title={this.props.title}
                 subtitle={subtitle}
                 open={this.props.open}
-                renderSubHeader={() =>
-                    <div className={classes.subHeader}>
+                renderSubHeader={this.props.timetableForSegment ? undefined :
+                    () => <div className={classes.subHeader}>
                         <div className={classes.serviceList}>
                             {serviceListSamples.map((service: ServiceDeparture, i: number) => {
                                 return service.serviceNumber &&
@@ -201,11 +203,14 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                 if (this.props.onServiceSelection) {
                                                     this.props.onServiceSelection(departure)
                                                 }}}
+                                            selected={departure === this.props.selectedService}
                                         />
                                     </div>
                                 );
                                 return elems;
                             }, [])}
+                            {this.props.waiting ?
+                                <IconSpin className={classes.iconLoading} focusable="false"/> : null}
                         </TKUIScrollForCard>
                     </div>
                 </div>

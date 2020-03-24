@@ -171,7 +171,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>
                     <div className={classNames(classes.alternative,
                         visiblePastAlternatives.includes(altTrip) && classes.pastAlternative,
-                        visibleAlternatives.length > 1 && this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
+                        this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
                          onClick={() => this.props.onAlternativeClick &&
                              this.props.onAlternativeClick(trip as TripGroup, altTrip)}
                          key={i}

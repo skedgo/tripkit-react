@@ -46,6 +46,7 @@ import {TKUIW3wProps, TKUIW3wStyle} from "../location/TKUIW3w";
 import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICookiesBanner";
 import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "../alerts/TKUIAlertsSummary";
 import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView";
+import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "../card/TKUIWaitingRequest";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -89,6 +90,7 @@ interface ITKUIConfigOptional {
     TKUIDateTimePicker: TKComponentConfig<TKUIDateTimePickerProps, TKUIDateTimePickerStyle>;
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
     TKUITooltip: TKComponentConfig<TKUITooltipProps, TKUITooltipStyle>;
+    TKUIWaitingRequest: TKComponentConfig<TKUIWaitingRequestProps, TKUIWaitingRequestStyle>;
     TKUIReportBtn: TKComponentConfig<TKUIReportBtnProps, TKUIReportBtnStyle>;
     TKUITransportSwitchesView: TKComponentConfig<TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle>;
     TKUITransportOptionsView: TKComponentConfig<TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle>;

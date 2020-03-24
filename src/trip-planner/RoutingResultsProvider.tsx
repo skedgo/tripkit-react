@@ -28,13 +28,15 @@ export interface IRoutingResultsContext {
 
     trips?: Trip[];
     waiting: boolean;
+    waitingTripUpdate: boolean;
+    tripUpdateError?: Error;
     selected?: Trip;
     onChange: (select?: Trip) => void;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => void;
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
@@ -46,12 +48,13 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     directionsView: false,
     onDirectionsView: (directionsView: boolean) => {},
     waiting: true,
+    waitingTripUpdate: false,
     onChange: (select?: Trip) => {},
     sort: TripSort.OVERALL,
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture) => {}
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => {}
 });
 
 class RoutingResultsProvider extends React.Component<{

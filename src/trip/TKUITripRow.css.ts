@@ -2,6 +2,7 @@ import {badgeColor, TKUITripRowProps, TKUITripRowStyle} from "./TKUITripRow";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import {rowSelectedStyle, rowStyle} from "../service/TKUIServiceDepartureRow.css";
 
 export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
     (theme: TKUITheme) => ({
@@ -55,14 +56,13 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
             }
         },
         alternative: {
-            padding: '12px 10px',
-            borderBottom: '1px solid #ECEBEB',
+            ...rowStyle,
+            borderBottom: '1px solid #ECEBEB'
+        },
+        selectedAlternative: {
+            ...rowSelectedStyle(theme)
         },
         pastAlternative: {
             opacity: '.4'
-        },
-        selectedAlternative: {
-            borderLeft: '3px solid ' + theme.colorPrimary,
-            paddingLeft: '7px!important'
         }
     });

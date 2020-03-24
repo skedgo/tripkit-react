@@ -37,7 +37,7 @@ export type TKUIWCSegmentInfoStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIWCSegmentInfo {...props}/>,
     styles: tKUIWCSegmentInfoDefaultStyle,
-    classNamePrefix: "TKUITripRow",
+    classNamePrefix: "TKUIWCSegmentInfo",
 };
 
 class TKUIWCSegmentInfo extends React.Component<IProps, {}> {

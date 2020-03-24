@@ -20,6 +20,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
     detailed?: boolean;
     onClick?: () => void;
+    selected?: boolean;
     renderRight?: () => JSX.Element;
 }
 
@@ -31,6 +32,8 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 
 interface IStyle {
     main: CSSProps<IProps>;
+    row: CSSProps<IProps>;
+    rowSelected: CSSProps<IProps>;
     clickable: CSSProps<IProps>;
     leftPanel: CSSProps<IProps>;
     header: CSSProps<IProps>;
@@ -144,7 +147,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             (this.props.options.wheelchair || departure.wheelchairAccessible === false) &&
             <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
         return (
-            <div className={classNames(classes.main, this.props.onClick && classes.clickable)}
+            <div className={classNames(classes.main, this.props.onClick && classes.clickable,
+                !detailed && classes.row, this.props.selected && classes.rowSelected)}
                  onClick={this.props.onClick}>
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>

@@ -53,7 +53,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 export interface IStyle {
     main: CSSProps<IProps>;
     row: CSSProps<IProps>;
-    rowSelected: CSSProps<IProps>;
+    // rowSelected: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
     sortBar: CSSProps<IProps>;
     sortSelect: CSSProps<IProps>;
@@ -213,7 +213,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         <TKUITripRow
                             value={trip}
                             selected={trip === this.props.value}
-                            className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
+                            // className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
+                            className={classNames(classes.row)}
                             onClick={() => this.props.onChange && this.props.onChange(trip)}
                             onFocus={() => this.props.onChange && this.props.onChange(trip)}
                             onAlternativeClick={this.props.onAlternativeChange}

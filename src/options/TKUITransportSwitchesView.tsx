@@ -8,7 +8,6 @@ import TKTransportOptions, {DisplayConf} from "../model/options/TKTransportOptio
 import RegionsData from "../data/RegionsData";
 import TransportUtil from "../trip/TransportUtil";
 import classNames from "classnames";
-import "../trip/TripAltBtn.css";
 import Util from "../util/Util";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import genStyles from "../css/GenStyle.css";
