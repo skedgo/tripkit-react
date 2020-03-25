@@ -23,6 +23,7 @@ import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
+import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -122,12 +123,20 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 onChange={(update: TKUserProfile) => this.setState({update: update})}
                 onShowTransportOptions={() => this.setState({showTransports: true})}
                 onRequestClose={() => this.setState({showPersonalData: false})}
+                slideUpOptions={{
+                    position: TKUISlideUpPosition.UP,
+                    draggable: false
+                }}
             />;
         const transportSettings = this.state.showTransports &&
             <TKUITransportOptionsView
                 value={this.state.update}
                 onChange={(update: TKUserProfile) => this.setState({update: update})}
                 onRequestClose={() => this.setState({showTransports: false})}
+                slideUpOptions={{
+                    position: TKUISlideUpPosition.UP,
+                    draggable: false
+                }}
             />;
         const prioritiesSettings = this.state.showPriorities
             && <TKUIUserPriorities
@@ -135,6 +144,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 value={this.state.update.weightingPrefs}
                 onChange={(prefsUpdate: TKWeightingPreferences) =>
                     this.setState((prevState: IState) => ({update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate})}))}
+                slideUpOptions={{
+                    position: TKUISlideUpPosition.UP,
+                    draggable: false
+                }}
             />;
         const t = this.props.t;
         return (
@@ -142,6 +155,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 title={t("Profile")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={() => this.close(true)}
+                slideUpOptions={{
+                    position: TKUISlideUpPosition.UP,
+                    draggable: false
+                }}
             >
                 <div className={classes.main}>
                     <div className={classes.scrollPanel}>

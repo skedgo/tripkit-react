@@ -3,6 +3,7 @@ import genStyles from "../css/GenStyle.css";
 
 interface IProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     scrollRef?: (instance: HTMLDivElement | null) => void;
+    cancelTouchEvents?: boolean;
 }
 
 /**
@@ -13,13 +14,13 @@ interface IProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivEle
 class TKUIScrollForCard extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const {scrollRef: any, ...props} = this.props;
+        const {scrollRef: any, cancelTouchEvents: boolean, ...props} = this.props;
         return (
             <div
                 {...props}
                 style={{...this.props.style, ...genStyles.scrollableY}}
                 ref={(scrollRef: any) => {
-                    if (scrollRef) {
+                    if (scrollRef && this.props.cancelTouchEvents) {
                         scrollRef.addEventListener("touchstart", (e: any) => {
                             e.stopPropagation();
                         });

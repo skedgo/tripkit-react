@@ -462,6 +462,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
                                   prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
+                this.state.query.isComplete(true) &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
             }
@@ -525,14 +526,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (!region) {
                 return [];
             }
-            const modes = region ? region.modes : [];
+            const modes = region.modes;
             const enabledModes = modes.filter((mode: string) =>
                 (options.transportOptions.isModeEnabled(mode)
                     || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();
-            if (multiModalSet.length !== 1) {
+            if (multiModalSet.length > 1) {
                 modeSets.push(multiModalSet);
             }
             return modeSets;
@@ -543,7 +544,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
-                            const jsonConvert = new JsonConvert();
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));

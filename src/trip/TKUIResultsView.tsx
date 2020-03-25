@@ -53,7 +53,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 export interface IStyle {
     main: CSSProps<IProps>;
     row: CSSProps<IProps>;
-    // rowSelected: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
     sortBar: CSSProps<IProps>;
     sortSelect: CSSProps<IProps>;
@@ -61,6 +60,7 @@ export interface IStyle {
     transportsBtn: CSSProps<IProps>;
     footer: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
+    noResults: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -140,6 +140,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         const sortOptions = this.getSortOptions();
         const injectedStyles = this.props.injectedStyles;
         const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
@@ -209,7 +210,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
                         </div>
                     </div>
-                    {this.props.values && this.props.values.map((trip: Trip, index: number) =>
+                    {this.props.values.map((trip: Trip, index: number) =>
                         <TKUITripRow
                             value={trip}
                             selected={trip === this.props.value}
@@ -230,6 +231,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                                 })}
                         />
                     )}
+                    {!this.props.waiting && this.props.values.length === 0
+                    && <div className={classes.noResults}>{t("No.routes.found.")}</div>}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
                 </div>
