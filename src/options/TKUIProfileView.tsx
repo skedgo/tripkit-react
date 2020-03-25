@@ -97,14 +97,18 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         });
     }
 
+    private applyChanges() {
+        if (!this.checkValid()) {
+            return;
+        }
+        if (this.props.onChange) {
+            this.props.onChange(this.state.update);
+        }
+    }
+
     private close(apply: boolean) {
         if (apply) {
-            if (!this.checkValid()) {
-                return;
-            }
-            if (this.props.onChange) {
-                this.props.onChange(this.state.update);
-            }
+            this.applyChanges();
         }
         if (this.props.onRequestClose) {
             this.props.onRequestClose();
@@ -122,7 +126,9 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 value={this.state.update}
                 onChange={(update: TKUserProfile) => this.setState({update: update})}
                 onShowTransportOptions={() => this.setState({showTransports: true})}
-                onRequestClose={() => this.setState({showPersonalData: false})}
+                onRequestClose={() =>
+                    this.setState({showPersonalData: false},
+                        () => this.applyChanges())}
                 slideUpOptions={{
                     position: TKUISlideUpPosition.UP,
                     draggable: false
@@ -132,7 +138,9 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             <TKUITransportOptionsView
                 value={this.state.update}
                 onChange={(update: TKUserProfile) => this.setState({update: update})}
-                onRequestClose={() => this.setState({showTransports: false})}
+                onRequestClose={() =>
+                    this.setState({showTransports: false},
+                        () => this.applyChanges())}
                 slideUpOptions={{
                     position: TKUISlideUpPosition.UP,
                     draggable: false
@@ -140,7 +148,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             />;
         const prioritiesSettings = this.state.showPriorities
             && <TKUIUserPriorities
-                onRequestClose={() => this.setState({showPriorities: false})}
+                onRequestClose={() => this.setState({showPriorities: false},
+                    () => this.applyChanges())}
                 value={this.state.update.weightingPrefs}
                 onChange={(prefsUpdate: TKWeightingPreferences) =>
                     this.setState((prevState: IState) => ({update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate})}))}

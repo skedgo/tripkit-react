@@ -13,6 +13,7 @@ import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKWeightingPreferences;
@@ -25,6 +26,7 @@ export interface IConsumedProps extends TKUIViewportUtilProps {}
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    resetBtn: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -101,6 +103,11 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         rightLabel={t("g7e-OY-rPw.text")}
                         min={0}
                         max={200}
+                    />
+                    <TKUIButton text={"Reset"}
+                                type={TKUIButtonType.SECONDARY}
+                                className={classes.resetBtn}
+                                onClick={() => this.props.onChange(TKWeightingPreferences.create())}
                     />
                 </div>
             </TKUICard>
