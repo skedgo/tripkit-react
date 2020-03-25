@@ -35,6 +35,10 @@
     .TKUICardCarousel-modal .carousel .control-dots {
         top: 5px;
     }
+
+    .TKUICardCarousel-modal .TKUICardCarousel-lotOfPages .carousel .control-dots {
+        top: -4px;
+    }
 }
 
 .TKUICardCarousel-modal,

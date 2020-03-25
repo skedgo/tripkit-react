@@ -32,6 +32,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     children?: any;
     bodyStyle?: CSS.Properties;
     touchEventsOnChildren?: boolean; // false by default.
+    handleRef?: (ref: any) => void;
 }
 
 interface IStyle {
@@ -90,7 +91,10 @@ class TKUICard extends React.Component<IProps, IState> {
         const presentation = this.props.presentation;
         const body =
             <div className={classNames(classes.main, "app-style")}>
-                <div ref={(ref: any) => this.state.handleRef === undefined && this.setState({handleRef: ref})}>
+                <div ref={(ref: any) => {
+                    this.state.handleRef === undefined && this.setState({handleRef: ref});
+                    this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
+                }}>
                     {hasHandle(this.props) &&
                     <div
                         className={classes.handle}

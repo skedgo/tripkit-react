@@ -29,6 +29,7 @@ import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     onRequestClose?: () => void;
+    handleRef?: (ref: any) => void;
 }
 
 export interface IStyle {
@@ -132,6 +133,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
                 presentation={CardPresentation.SLIDE_UP_STYLE}
+                handleRef={this.props.handleRef}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>
