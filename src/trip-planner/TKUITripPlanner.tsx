@@ -177,7 +177,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onDirectionsView(true);
                 }}
                 onShowSideBar={() => {
-                    return this.setState({showSidebar: true});
+                    this.setState({showSidebar: true});
                 }}
             />;
         const sideBar =
@@ -289,14 +289,18 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'}
                     }}
                 >
-                    {sortedTrips.map((trip: Trip, i: number) =>
-                        <TKUITripOverviewView
-                            value={trip}
-                            onRequestClose={() => {
-                                this.setState({showTripDetail: false})
-                            }}
-                            key={i + "-" + trip.getKey()}
-                        />)}
+                    {(registerHandle: (index: number, handle: any) => void) =>
+                        sortedTrips
+                            // .concat(sortedTrips)
+                            .map((trip: Trip, i: number) =>
+                                <TKUITripOverviewView
+                                    value={trip}
+                                    onRequestClose={() => {
+                                        this.setState({showTripDetail: false})
+                                    }}
+                                    key={i + "-" + trip.getKey()}
+                                    handleRef={(handleRef: any) => registerHandle(i, handleRef)}
+                                />)}
                 </TKUICardCarousel>;
         }
         const classes = this.props.classes;
@@ -388,7 +392,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             if (query) {
                 this.props.onQueryChange(query);
                 this.props.onDirectionsView(true);
-                // TKShareHelper.resetToHome();
+                TKShareHelper.resetToHome();
             }
         }
 

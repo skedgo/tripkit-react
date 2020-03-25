@@ -76,8 +76,8 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
             <TKUIViewportUtil>
                 {(viewportProps: TKUIViewportUtilProps) =>
                     <div className={classes.main}>
-                        <button className={classes.sideBarBtn}>
-                            <IconMenu className={classes.sideBarIcon} onClick={this.props.onShowSideBar}/>
+                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}>
+                            <IconMenu className={classes.sideBarIcon}/>
                         </button>
                         <LocationBox
                             geocodingData={this.geocodingData}
