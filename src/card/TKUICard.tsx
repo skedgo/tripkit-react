@@ -31,6 +31,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
     children?: any;
     bodyStyle?: CSS.Properties;
+    touchEventsOnChildren?: boolean; // false by default.
 }
 
 interface IStyle {
@@ -121,7 +122,16 @@ class TKUICard extends React.Component<IProps, IState> {
                 <div className={classes.subHeader}>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <TKUIScrollForCard className={classes.body} style={this.props.bodyStyle}>
+                <TKUIScrollForCard
+                    className={classes.body}
+                    style={this.props.bodyStyle}
+                    // Cancel touch events, to avoid scrolling to cause slide up card gesture to take place,
+                    // iff slide-up presentation, slide-up is draggable, and children don't need touch events
+                    // (which can be informed by client).
+                    cancelTouchEvents={presentation === CardPresentation.SLIDE_UP &&
+                    !(this.props.slideUpOptions && this.props.slideUpOptions.draggable === false) &&
+                    !this.props.touchEventsOnChildren}
+                >
                     {this.props.children}
                 </TKUIScrollForCard>
             </div>;

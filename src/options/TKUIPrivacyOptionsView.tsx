@@ -13,12 +13,14 @@ import { withStyles } from '@material-ui/core/styles';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import {TKUIButton, TKUIButtonType} from "../index";
 import Util from "../util/Util";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,
     onChange: (value: TKUserProfile) => void;
     onShowTransportOptions: () => void;
     onRequestClose?: () => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -67,6 +69,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                 title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
                     <div className={classes.section}>

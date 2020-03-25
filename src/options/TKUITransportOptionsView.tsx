@@ -13,11 +13,13 @@ import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
 import RegionInfo from "../model/region/RegionInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
 import ModeIdentifier from "../model/region/ModeIdentifier";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
-    value: TKUserProfile,
-    onChange: (value: TKUserProfile) => void
+    value: TKUserProfile;
+    onChange: (value: TKUserProfile) => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -82,6 +84,7 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
                 title={t("Transport")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.onRequestClose}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
                     {regionModes.map((mode: string, i: number) => {

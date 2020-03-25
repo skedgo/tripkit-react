@@ -12,11 +12,13 @@ import iconHassle from "../images/badges/ic-badge-like.svg";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKWeightingPreferences;
     onChange: (update: TKWeightingPreferences) => void;
     onRequestClose?: () => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 export interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -47,6 +49,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                 title={t("My.Priorities")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
                     <TKUISlider
