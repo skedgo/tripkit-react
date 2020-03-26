@@ -132,9 +132,10 @@ class TKUICard extends React.Component<IProps, IState> {
                     // Cancel touch events, to avoid scrolling to cause slide up card gesture to take place,
                     // iff slide-up presentation, slide-up is draggable, and children don't need touch events
                     // (which can be informed by client).
-                    cancelTouchEvents={presentation === CardPresentation.SLIDE_UP &&
-                    !(this.props.slideUpOptions && this.props.slideUpOptions.draggable === false) &&
-                    !this.props.touchEventsOnChildren}
+                    cancelTouchEvents={((presentation === CardPresentation.SLIDE_UP &&
+                        !(this.props.slideUpOptions && this.props.slideUpOptions.draggable === false)) ||
+                        presentation === CardPresentation.SLIDE_UP_STYLE)
+                    && !this.props.touchEventsOnChildren}
                 >
                     {this.props.children}
                 </TKUIScrollForCard>
