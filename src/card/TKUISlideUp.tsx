@@ -273,7 +273,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                         if (this.testCardContRef.scrollTop > 50) {
                             this.setDragging(true);
                         }
-                    })
+                    });
                 }}
                 getModalRef={(ref: any) => {
                     if (ref) {
