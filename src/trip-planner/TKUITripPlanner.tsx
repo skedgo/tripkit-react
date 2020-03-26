@@ -457,6 +457,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (!prevProps.directionsView && this.props.directionsView && this.isShowTimetable()) {
             this.showTimetableFor(undefined);
         }
+        // Showing trip details and query from/to changed (e.g. drag & frop of 'from' or 'to' pin), so set detail view
+        // off (display routing results for new query). Notice it shouldn't be other causes of re-computing trips since
+        // we are on trip details view.
+        if (this.state.showTripDetail &&
+            (prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to)) {
+            this.setState({showTripDetail: false});
+        }
     }
 
 

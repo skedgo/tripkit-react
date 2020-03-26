@@ -12,6 +12,7 @@ import Util from "../util/Util";
 import 'rc-tooltip/assets/bootstrap_white.css';
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
+import moment from "moment-timezone";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
@@ -120,7 +121,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private onPrefChange(timePref: TimePreference) {
         GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
-        if (timePref === TimePreference.NOW) {
+        if (timePref === TimePreference.NOW
+            || (this.props.value.timePref === TimePreference.NOW && !this.props.value.isComplete(true))) {
             this.updateQuery({
                 timePref: timePref,
                 time: DateTimeUtil.getNow()

@@ -293,7 +293,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 
     componentDidUpdate(prevProps: IProps) {
         if (prevProps.handleRef !== this.props.handleRef) {
-            this.props.handleRef.addEventListener("click", this.onHandleClicked);
+            this.props.handleRef && this.props.handleRef.addEventListener("click", this.onHandleClicked);
             // This ensures just the current handle has the handler, so it avoids associating
             // the handler more than once to a handle, e.g. when returning to the same page on TKUICardCarousel .
             if (prevProps.handleRef) {
