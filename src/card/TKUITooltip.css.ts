@@ -45,5 +45,17 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
                 marginRight: '-8px',
                 borderWidth: '0 8px 8px'
             }
+        },
+        overlayContent: {
+            ...genStyles.flex,
+            ...genStyles.grow,
+            ...genStyles.alignCenter,
+            ...genStyles.fontS,
+            ...genStyles.borderRadius(3),
+            background: 'white',
+            padding: '15px',
+            border: 'none',
+            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
+            fontFamily: theme.fontFamily
         }
     });

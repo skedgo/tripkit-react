@@ -77,7 +77,6 @@ interface IStyle {
     footer: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
-    noCurrLocTooltip: CSSProps<IProps>;
 }
 
 export type TKUIRoutingQueryInputProps = IProps;
@@ -239,17 +238,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </div>}
                     <div className={classes.fromToInputsPanel}>
                         <TKUITooltip
-                            overlay={
-                                <div className={classes.noCurrLocTooltip}>
-                                    {this.state.fromTooltipText}
-                                </div>
-                            }
+                            overlayContent={this.state.fromTooltipText}
                             arrowColor={tKUIColors.black2}
                             visible={false}
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
-                            <LocationBox
+                        <LocationBox
                                 geocodingData={this.geocodingDataFrom}
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
@@ -288,11 +283,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </TKUITooltip>
                         <div className={classes.divider}/>
                         <TKUITooltip
-                            overlay={
-                                <div className={classes.noCurrLocTooltip}>
-                                    {this.state.toTooltipText}
-                                </div>
-                            }
+                            overlayContent={this.state.toTooltipText}
                             arrowColor={tKUIColors.black2}
                             visible={false}
                             placement={this.props.portrait ? "bottom" : "left"}

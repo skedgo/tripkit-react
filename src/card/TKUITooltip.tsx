@@ -9,7 +9,10 @@ import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;
-    overlay: React.ReactNode;
+    // To set the overlay
+    overlay?: React.ReactNode;
+    // To set just the overlay content, that is, default overlay style applies in this case.
+    overlayContent?: React.ReactNode;
     mouseEnterDelay?: number;
     trigger?: string[];
     arrowContent?: React.ReactNode;
@@ -22,6 +25,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    overlayContent: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -73,9 +77,15 @@ class TKUITooltip extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const classes = this.props.classes;
+        const overlay = this.props.overlay ? this.props.overlay :
+            <div className={classes.overlayContent}>
+                {this.props.overlayContent}
+            </div>;
         return (
             <Tooltip
                 {...this.props as RCTooltip.Props}
+                overlay={overlay}
                 // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
                 {...this.isVisible() ? {visible: this.isVisible()} : undefined}
                 overlayClassName={classNames(this.props.classes.main, this.props.className)}

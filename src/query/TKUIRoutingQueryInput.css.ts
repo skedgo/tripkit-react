@@ -6,17 +6,6 @@ import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
 import {CSSProperties} from "react-jss";
 
-export const noCurrLocTooltipClass = {
-    ...genStyles.flex,
-    ...genStyles.grow,
-    ...genStyles.alignCenter,
-    ...genStyles.fontS,
-    ...genStyles.borderRadius(3),
-    background: 'white',
-    padding: '15px',
-    border: 'none',
-    boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
-};
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
     (theme: TKUITheme) => ({
         main: {
@@ -132,6 +121,5 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         },
         timePrefSelect: {
             minWidth: '92px'
-        },
-        noCurrLocTooltip: noCurrLocTooltipClass
+        }
     });
