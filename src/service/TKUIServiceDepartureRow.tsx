@@ -144,8 +144,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const briefOccupancy = !detailed && occupancy ?
             <TKUIOccupancySign status={occupancy} brief={true}/> : undefined;
         const briefWheelchair = !detailed &&
-            (this.props.options.wheelchair || departure.wheelchairAccessible === false) &&
-            <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true}/>;
+            (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&
+            <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true}/>;
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,
                 !detailed && classes.row, this.props.selected && classes.rowSelected)}

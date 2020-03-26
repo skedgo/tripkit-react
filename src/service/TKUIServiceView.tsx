@@ -115,8 +115,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         }
         const classes = this.props.classes;
         const t = this.props.t;
-        const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
-        const showWheelchair = this.props.options.wheelchair || departure.wheelchairAccessible === false;
+        const showWheelchair = this.props.options.wheelchair || departure.isWheelchairAccessible() === false;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const alerts = !departure.hasAlerts ? null :
             this.state.realtimeOpen ?
@@ -137,7 +136,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         const realtimePanel = showWheelchair || occupancy || alerts ?
             <div className={classes.realtimePanel}>
                 <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
-                    {showWheelchair && <TKUIWheelchairInfo accessible= {departure.wheelchairAccessible} brief={!this.state.realtimeOpen}/>}
+                    {showWheelchair && <TKUIWheelchairInfo accessible= {departure.isWheelchairAccessible()} brief={!this.state.realtimeOpen}/>}
                     {occupancy ?
                         <TKUIOccupancySign status={occupancy}
                                            brief={!this.state.realtimeOpen}/> : undefined}

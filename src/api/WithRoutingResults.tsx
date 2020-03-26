@@ -329,11 +329,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         endTime: service.endTime,
                         serviceTripID: service.serviceTripID,
                         operator: service.operator,
-                        region: segmentRegions[0].name
+                        region: segmentRegions[0].name,
+                        ...segmentRegions[0] !== segmentRegions[1] ? {
+                            disembarkationRegion: segmentRegions[1].name
+                        } : undefined
                     };
-                    if (segmentRegions[0] !== segmentRegions[1]) {
-                        Object.assign(waypointSegment, {disembarkationRegion: segmentRegions[1]})
-                    }
                 } else {
                     const startLoc = tripSegment.from;
                     const endLoc = tripSegment.to;
