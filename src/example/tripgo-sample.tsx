@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {MouseEvent} from 'react';
 import ReactDOM from 'react-dom';
-import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng} from '../index';
+import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng, TKState} from '../index';
 import {ReactComponent as IconReport} from './images/icon-usersnap.svg';
 import classNames from 'classnames';
 import Usersnap from "./usersnap/Usersnap";
@@ -25,13 +25,15 @@ const config: TKUIConfig = {
         //             Usersnap.openReportWindow();
         //         }}
         //     />,
-        // More suitable if want to just change click behaviour, not icon.
-        // props: {
-        //     onClick: (state: TKState) => {
-        //         Usersnap.setFeedbackData(state);
-        //         Usersnap.openReportWindow();
-        //     }
-        // }
+        // Other alternative, preserve all features on TKUIReportBtn
+        // (viz. copy to clipboard on right click).
+        props: {
+            renderIcon: () => <IconReport style={{height: '100%', width: '100%'}}/>,
+            onClick: (state: TKState) => {
+                Usersnap.setFeedbackData(state);
+                Usersnap.openReportWindow();
+            }
+        }
     }
 };
 

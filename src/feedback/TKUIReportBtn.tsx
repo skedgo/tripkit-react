@@ -1,5 +1,4 @@
-import * as React from "react";
-import Tooltip from "rc-tooltip";
+import React, {MouseEvent} from "react";
 import {ReactComponent as IconFeedback} from '../images/ic-feedback.svg';
 import copy from 'copy-to-clipboard';
 import OptionsData from "../data/OptionsData";
@@ -13,11 +12,14 @@ import {Subtract} from "utility-types";
 import {tKUIReportBtnDefaultStyle} from "./TKUIReportBtn.css";
 import classNames from "classnames";
 import TKShareHelper from "../share/TKShareHelper";
+import TKUITooltip from "../card/TKUITooltip";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
     tooltipClassName?: string;
+    renderIcon?: () => JSX.Element;
     onClick?: (state: TKState) => void;
+    onContextMenu?: (state: TKState) => void;
 }
 
 export interface IStyle {
@@ -64,25 +66,32 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const onClick = this.props.onClick ? this.props.onClick :
-            (state: TKState) => {
-                copy(feedbackTextFromState(state));
-                this.setState({feedbackTooltip: true});
-                setTimeout(() => this.setState({feedbackTooltip: false}), 3000);
-            };
+        const defaultAction = (state: TKState) => {
+            copy(feedbackTextFromState(state));
+            this.setState({feedbackTooltip: true});
+            setTimeout(() => this.setState({feedbackTooltip: false}), 3000);
+        };
+        const icon = this.props.renderIcon ? this.props.renderIcon() : <IconFeedback/>;
+        const onClick = this.props.onClick ? this.props.onClick : defaultAction;
+        const onContextMenu = this.props.onContextMenu ? this.props.onContextMenu : defaultAction;
+        const classes = this.props.classes;
         return (
-            <Tooltip
-                overlay={"Feedback info copied to clipboard"}
+            <TKUITooltip
+                overlayContent={"Feedback info copied to clipboard"}
                 placement={"left"}
-                overlayClassName={this.props.tooltipClassName}
                 visible={this.state.feedbackTooltip}
             >
-                <IconFeedback className={classNames(this.props.className, this.props.classes.main)}
-                     onClick={() => onClick(this.props.tKState)}
-                     aria-hidden={true}
-                     tabIndex={0}
-                />
-            </Tooltip>
+                <button className={classNames(this.props.className, classes.main)}
+                        onClick={() => onClick(this.props.tKState)}
+                        onContextMenu={(e: MouseEvent) => {
+                            onContextMenu(this.props.tKState);
+                            e.preventDefault();
+                        }}
+                        aria-hidden={true}
+                        tabIndex={0}>
+                    {icon}
+                </button>
+            </TKUITooltip>
         );
     }
 

@@ -4,7 +4,6 @@ import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
-import {noCurrLocTooltipClass} from "../query/TKUIRoutingQueryInput.css";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
@@ -112,6 +111,5 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             ...genStyles.flex,
             ...genStyles.alignCenter,
             zIndex: '1000!important'
-        },
-        noCurrLocTooltip: noCurrLocTooltipClass
+        }
     });

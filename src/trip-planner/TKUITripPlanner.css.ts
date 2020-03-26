@@ -51,14 +51,5 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             opacity: '.5',
             cursor: 'pointer',
             zIndex: '1000'
-        },
-        reportTooltipClassName: {
-            '& .rc-tooltip-inner': {
-                ...genStyles.flex,
-                alignItems: 'center',
-                WebkitAlignItems: 'center',
-                fontFamily: "Open Sans', sans-serif",
-                fontSize: '13px'
-            }
         }
     });

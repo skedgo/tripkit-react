@@ -67,7 +67,6 @@ export interface IStyle {
     queryPanel: CSSProps<IProps>;
     mapMain: CSSProps<IProps>;
     reportBtn: CSSProps<IProps>;
-    reportTooltipClassName: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -356,8 +355,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 />
                             </TKUIMapView>
                         </div>
-                        <TKUIReportBtn className={classes.reportBtn}
-                                       tooltipClassName={classes.reportTooltipClassName}/>
+                        <TKUIReportBtn className={classes.reportBtn}/>
                         {sideBar}
                         {settings}
                         {transportSettings}
@@ -426,6 +424,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     })
                 });
         }
+
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.keyCode === 27) { // Close sidebar on escape
+                if (this.state.showSidebar) {
+                    this.setState({showSidebar: false});
+                }
+            }
+        });
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {

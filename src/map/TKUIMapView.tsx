@@ -88,7 +88,6 @@ export interface IStyle {
     vehicle: CSSProps<IProps>;
     segmentIconClassName: CSSProps<IProps>;
     vehicleClassName: CSSProps<IProps>;
-    noCurrLocTooltip: CSSProps<IProps>;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -528,11 +527,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                      onResize={() => this.onResize()}
                 />
                 <TKUITooltip
-                    overlay={
-                        <div className={classes.noCurrLocTooltip}>
-                            {this.state.userLocationTooltip}
-                        </div>
-                    }
+                    overlayContent={this.state.userLocationTooltip}
                     arrowColor={tKUIColors.black2}
                     visible={false}
                     placement={"right"}
