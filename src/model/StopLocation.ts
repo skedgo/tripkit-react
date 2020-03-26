@@ -11,7 +11,7 @@ class StopLocation extends Location {
     @JsonProperty('modeInfo', ModeInfo)
     private _modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty('wheelchairAccessible', Boolean, true)
-    private _wheelchairAccessible: boolean | undefined = undefined;
+    public readonly wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty('url', String, true)
     private _url: string | undefined = undefined;
     @JsonProperty('shortName', String, true)    // In api docs it's named "shortName"
@@ -27,10 +27,6 @@ class StopLocation extends Location {
 
     get modeInfo(): ModeInfo {
         return this._modeInfo;
-    }
-
-    get wheelchairAccessible(): boolean | undefined {
-        return this._wheelchairAccessible;
     }
 
     get url(): string | undefined {

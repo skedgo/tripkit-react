@@ -50,7 +50,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             ...genStyles.grow,
             ...genStyles.flex,
             '&>*': {
-                marginRight: '5px'
+                marginRight: '10px'
             }
         },
         realtimeInfoDetailed: {

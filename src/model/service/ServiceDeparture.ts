@@ -48,8 +48,9 @@ class ServiceDeparture {
     @JsonProperty("endStopCode", String, true) // It comes when disembarkation stop was specified.
     public endStopCode?: string = undefined;
 
-    public startStop: StopLocation | undefined;
+    public startStop?: StopLocation;
     public startStopCode: string = "";
+    public endStop?: StopLocation; // It's set when endStopCode comes (see endStopCode comment above)
     public realtimeUpdate: RTServiceDepartureUpdate = new RTServiceDepartureUpdate();
     public serviceDetail: ServiceDetail | undefined;
 
@@ -84,6 +85,14 @@ class ServiceDeparture {
 
     get alertSeverity(): AlertSeverity {
         return alertSeverity(this.alerts);
+    }
+
+    public isWheelchairAccessible(): boolean | undefined {
+        if (this.startStop && this.startStop.wheelchairAccessible === false ||
+            this.endStop && this.endStop.wheelchairAccessible === false) {
+            return false;
+        }
+        return this.wheelchairAccessible;
     }
 
 }

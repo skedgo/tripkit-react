@@ -74,6 +74,9 @@ class ServiceDeparturesResult {
             for (const departure of stopDepartures.services) {
                 departure.startStop = departureStop;
                 departure.startStopCode = stopDepartures.stopCode;
+                if (departure.endStopCode) {
+                    departure.endStop = this.getStopFromCode(departure.endStopCode);
+                }
                 departures.push(departure);
                 const departureAlerts = [];
                 for (const alertHash of departure.alertHashCodes) {

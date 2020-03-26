@@ -66,6 +66,9 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& button.react-datepicker__navigation--previous': {
                 borderRightColor: theme.colorPrimary
+            },
+            '& li.react-datepicker__time-list-item--selected': {
+                backgroundColor: theme.colorPrimary + '!important'
             }
         },
         inputElem: {
