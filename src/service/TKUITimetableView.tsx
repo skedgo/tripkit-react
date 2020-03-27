@@ -175,6 +175,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                         </div>
                         <TKUIDateTimePicker
                             value={this.props.initTime}
+                            timeZone={stop.timezone}
                             onChange={this.props.onInitTimeChange}
                             renderCustomInput={renderCustomInput}
                             popperPlacement="top-end"
