@@ -3,6 +3,7 @@ import {TKUIShareViewProps, TKUIShareViewStyle} from "./TKUIShareView";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
+import {DeviceUtil, genStylesJSS} from "../index";
 
 export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShareViewProps> =
     (theme: TKUITheme) => ({
@@ -25,7 +26,7 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
             }
         },
         qrLabel: {
-
+            textAlign: 'center'
         },
         qrCode: {
             height: '120px',
@@ -45,7 +46,7 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
             height: '30px',
             padding: '0 5px',
             ...genStyles.borderRadius(5),
-            ...genStyles.fontS,
+            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
             ...genStyles.grow
         },
         linkIcon: {
@@ -53,15 +54,6 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
             height: '20px',
             marginLeft: '10px',
             cursor: 'pointer'
-        },
-        copiedTooltip: {
-            zIndex: '1100!important',
-            '& .rc-tooltip-inner': {
-                ...genStyles.flex,
-                ...genStyles.alignCenter,
-                fontFamily: theme.fontFamily,
-                fontSize: '13px'
-            }
         },
         separation: {
             paddingBottom: '30px',

@@ -282,7 +282,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             tripDetailView =
                 <TKUICardCarousel
                     selected={selected}
-                    onChange={(selected: number) => this.props.onChange(sortedTrips[selected])}
+                    onChange={(selected: number) => this.props.onChange( (this.props.trips || [])[selected])}
                     slideUpOptions={{
                         initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                         modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'}
@@ -290,7 +290,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 >
                     {(registerHandle: (index: number, handle: any) => void) =>
                         sortedTrips
-                            // .concat(sortedTrips)
                             .map((trip: Trip, i: number) =>
                                 <TKUITripOverviewView
                                     value={trip}

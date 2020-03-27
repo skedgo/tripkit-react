@@ -5,9 +5,10 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIShareViewDefaultStyle} from "./TKUIShareView.css";
 import {ReactComponent as IconLink} from "../images/share/ic-copy-link.svg";
 import copy from "copy-to-clipboard";
-import Tooltip from "rc-tooltip";
 import classNames from "classnames";
 import QRCode from "qrcode.react";
+import TKUITooltip from "../card/TKUITooltip";
+import {tKUIColors} from "../index";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     link?: string;
@@ -23,7 +24,6 @@ export interface IStyle {
     copyLinkPanel: CSSProps<IProps>;
     linkBox: CSSProps<IProps>;
     linkIcon: CSSProps<IProps>;
-    copiedTooltip: CSSProps<IProps>;
     separation: CSSProps<IProps>;
 }
 
@@ -79,12 +79,11 @@ class TKUIShareView extends React.Component<IProps, IState> {
                         Just scan the QR code with your phone or tablet camera
                     </div>
                 </div>
-                <Tooltip
-                    overlay={"Link copied to clipboard"}
-                    // placement={"bottom"}
+                <TKUITooltip
+                    overlayContent={"Link copied to clipboard"}
                     placement={"bottom"}
-                    overlayClassName={classes.copiedTooltip}
                     visible={this.state.copiedTooltip}
+                    arrowColor={tKUIColors.black2}
                 >
                     <div className={classes.copyLinkPanel}>
                         <input className={classes.linkBox}
@@ -102,7 +101,7 @@ class TKUIShareView extends React.Component<IProps, IState> {
                                   onClick={this.onCopyLink}
                         />
                     </div>
-                </Tooltip>
+                </TKUITooltip>
             </div>
         );
     }
