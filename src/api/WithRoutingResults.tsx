@@ -25,6 +25,7 @@ import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
+import TripUtil from "../trip/TripUtil";
 
 interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
@@ -303,7 +304,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             const selectedTripGroup = selectedTrip as TripGroup;
             for (const alternative of selectedTripGroup.trips) {
                 for (const altSegment of alternative.segments) {
-                    if (altSegment.serviceTripID === service.serviceTripID) {
+                    if (TripUtil.sameService(altSegment, service)) {
                         this.onAlternativeChange(selectedTripGroup, alternative);
                         callback && callback();
                         return;
@@ -352,6 +353,18 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
                 .then((result: RoutingResults) => {
                     const tripAlternative = result.groups[0].trips[0];
+                    // Set trip alternative queryTime and queryIsLeaveAfter with values of the original group, that is,
+                    // consider as if the alternative trip came originally with the group. This ensures it's properly
+                    // classified as a past or future trip by comparing trip departure time with query time (TKUITripRow).
+                    // TODO: an alternative is to save original query on trip.query and use that instead of trip.queryTime
+                    // and trip.queryIsLeaveAfter. Other relevant cases to check:
+                    // - realtime trip udpates: confirmed that queryTime coming with update coincides with original query time.
+                    // - load shared trip.
+                    const referenceTrip = selectedTripGroup.trips.length > 0 && selectedTripGroup.trips[0];
+                    if (referenceTrip) {
+                        tripAlternative.queryTime = referenceTrip.queryTime;
+                        tripAlternative.queryIsLeaveAfter = referenceTrip.queryIsLeaveAfter;
+                    }
                     selectedTripGroup.trips.push(tripAlternative);
                     const sorting = (t1: Trip, t2: Trip) => {
                         return t1.weightedScore - t2.weightedScore;

@@ -50,6 +50,7 @@ class ServiceDeparture {
 
     public startStop?: StopLocation;
     public startStopCode: string = "";
+    public startTimezone: string = "";  // startStop also has it, but sometimes startStop couldn't be set.
     public endStop?: StopLocation; // It's set when endStopCode comes (see endStopCode comment above)
     public realtimeUpdate: RTServiceDepartureUpdate = new RTServiceDepartureUpdate();
     public serviceDetail: ServiceDetail | undefined;
