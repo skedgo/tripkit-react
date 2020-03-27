@@ -16,7 +16,6 @@ import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
 import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import TKUIScrollForCard from "../card/TKUIScrollForCard";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
@@ -156,9 +155,10 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         className={classes.timePrefSelect}
                         menuStyle={{marginTop: '3px'}}
                     />
-                    {routingQuery.timePref !== TimePreference.NOW &&
+                    {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                        value={this.props.region ? routingQuery.time.tz(this.props.region.timezone) : routingQuery.time}
+                        value={routingQuery.time}
+                        timeZone={this.props.region.timezone}
                         onChange={(date: Moment) => this.updateQuery({time: date})}
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}

@@ -5,6 +5,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 
 interface IProps {
     value: Moment;
+    timeZone?: string;
     onChange?: (value: Moment) => void;
     disabled?: boolean;
     className?: string;
@@ -28,12 +29,14 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
+        const timeZone = this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ;
+        const displayValue = this.props.value.tz(timeZone);
         return (
             <input type={"datetime-local"}
-                   value={this.props.value.format(DateTimeUtil.HTML5_DATE_TIME_FORMAT)}
+                   value={displayValue.format(DateTimeUtil.HTML5_DATE_TIME_FORMAT)}
                    onChange={() => {
                        if (this.inputRef && this.props.onChange) {
-                           this.props.onChange(DateTimeUtil.moment(this.inputRef.value));
+                           this.props.onChange(DateTimeUtil.momentFromStringTZ(this.inputRef.value, timeZone));
                        }
                    }}
                    disabled={this.props.disabled}

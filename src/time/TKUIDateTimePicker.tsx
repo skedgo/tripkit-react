@@ -129,8 +129,9 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                     }}/>}
                     <div className={classes.faceHidden}>
                         <DateTimeHTML5Input
-                            value = {displayValue}
-                            onChange = {this.onValueChange}
+                            value={displayValue}
+                            timeZone={this.props.timeZone}
+                            onChange={this.onValueChange}
                             disabled={this.props.disabled}
                             ref={(el: any) => this.dateTimeHTML5Ref = el}
                             className={classes.inputElem}
@@ -138,8 +139,9 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                     </div>
                 </div> :
                 <DateTimeHTML5Input
-                    value = {displayValue}
-                    onChange = {this.onValueChange}
+                    value={displayValue}
+                    timeZone={this.props.timeZone}
+                    onChange={this.onValueChange}
                     disabled={this.props.disabled}
                     ref={(el: any) => this.dateTimeHTML5Ref = el}
                     className={classes.inputElem}
