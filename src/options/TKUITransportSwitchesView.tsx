@@ -93,6 +93,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                                 className={classNames(classes.modeIcon,
                                     modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
                                 onClick={() => this.onChange(mode)}
+                                {...DeviceUtil.isTouch() && {key: index}}
                             >
                                 <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
                             </button>;

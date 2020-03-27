@@ -84,7 +84,8 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.alignCenter,
-            ...genStyles.fontM
+            ...genStyles.fontM,
+            textAlign: 'center'
         }
 
     });

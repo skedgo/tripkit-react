@@ -20,13 +20,13 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
-import Tooltip from "rc-tooltip";
 import GATracker from "../analytics/GATracker";
 import {Moment} from "moment-timezone";
 import Region from "../model/region/Region";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect from "../buttons/TKUISelect";
+import {TKUITooltip} from "../index";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -166,16 +166,16 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     />
                     }
                     {this.props.onShowOptions &&
-                    <Tooltip placement="right"
-                             overlay={<TKUITransportSwitchesView onMoreOptions={this.props.onShowOptions}/>}
-                             overlayClassName="app-style TripRow-altTooltip"
-                             mouseEnterDelay={.5}
-                             trigger={["click"]}
+                    <TKUITooltip
+                        placement="right"
+                        overlay={<TKUITransportSwitchesView onMoreOptions={this.props.onShowOptions}/>}
+                        mouseEnterDelay={.5}
+                        trigger={["click"]}
                     >
                         <button className={classes.transportsBtn}>
                             Transport options
                         </button>
-                    </Tooltip>
+                    </TKUITooltip>
                     }
                 </div>
             )

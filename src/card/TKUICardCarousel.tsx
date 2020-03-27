@@ -71,6 +71,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                                 onChange={this.props.onChange}
                                 // emulateTouch={true}
                                 swipeable={!this.state.freezeCarousel}
+                                useKeyboardArrows={DeviceUtil.isDesktop}
                             >
                                 {React.Children.map(children, (child: any, i: number) =>
                                     <div className={"TKUICardCarousel-pageWrapper"} key={i}>
