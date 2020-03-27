@@ -1,5 +1,7 @@
 import Trip from "../model/trip/Trip";
 import DateTimeUtil from "../util/DateTimeUtil";
+import ServiceDeparture from "../model/service/ServiceDeparture";
+import Segment from "../model/trip/Segment";
 
 class TripUtil {
 
@@ -9,7 +11,7 @@ class TripUtil {
         const departMoment = DateTimeUtil.momentFromTimeTZ(depart * 1000, trip.segments[0].from.timezone);
         const queryMoment = trip.queryTime ? DateTimeUtil.momentFromTimeTZ(trip.queryTime * 1000, trip.segments[0].from.timezone) : undefined;
         let departureTime = departMoment.format(DateTimeUtil.TIME_FORMAT_TRIP);
-        if (brief && queryMoment && queryMoment.format("ddd D") !== departMoment.format("ddd D")) {
+        if (!brief && queryMoment && queryMoment.format("ddd D") !== departMoment.format("ddd D")) {
             departureTime = departMoment.format("ddd D") + ", " + departureTime;
         }
         // TODO: should be trip.segments[trip.segments.length - 1].to.timezone? Consider if to can be undefined.
@@ -20,6 +22,11 @@ class TripUtil {
         const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);
         const hasPT = trip.hasPublicTransport();
         return {departureTime, arrivalTime, duration, hasPT}
+    }
+
+    public static sameService(altSegment: Segment, service: ServiceDeparture) {
+        return altSegment.serviceTripID === service.serviceTripID // consider it's the same service if has the same id,
+            && Math.abs(altSegment.startTime - service.startTime) < 600;   // and are less than 10 mins apart.
     }
 
 }

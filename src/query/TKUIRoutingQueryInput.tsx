@@ -12,7 +12,6 @@ import Util from "../util/Util";
 import 'rc-tooltip/assets/bootstrap_white.css';
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
-import moment from "moment-timezone";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";

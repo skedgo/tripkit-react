@@ -17,6 +17,7 @@ import ServiceDetail from "../model/service/ServiceDetail";
 import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
 import StopsData from "../data/StopsData";
+import TripUtil from "../trip/TripUtil";
 
 export interface IWithServiceResultsProps {
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
@@ -117,6 +118,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public onInitTimeChange(initTime: Moment) {
             this.requestsWithoutNewResults = 0;
+            this.coverDisplayRequestHash = "";
             this.setState({
                 initTime: initTime,
                 departures: [],
@@ -181,7 +183,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                                     .then((startStop: StopLocation) => {
                                         this.setState({startStop: startStop},
                                             () => {
-                                                let initialTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000).add(-30, 'm');
+                                                let initialTime = DateTimeUtil.momentFromTimeTZ(
+                                                    (segment.trip.queryTime ? segment.trip.queryTime : segment.startTime) * 1000).add(-30, 'm');
                                                 if (initialTime.isBefore(DateTimeUtil.getNow())) {
                                                     initialTime = DateTimeUtil.getNow();
                                                 }
@@ -204,7 +207,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return undefined;
             }
             for (const departure of this.state.departures) {
-                if (departure.serviceTripID === segment.serviceTripID) {
+                if (TripUtil.sameService(segment, departure)) {
                     return departure;
                 }
             }

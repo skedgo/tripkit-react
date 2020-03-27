@@ -74,6 +74,7 @@ class ServiceDeparturesResult {
             for (const departure of stopDepartures.services) {
                 departure.startStop = departureStop;
                 departure.startStopCode = stopDepartures.stopCode;
+                departure.startTimezone = startStop.timezone;
                 if (departure.endStopCode) {
                     departure.endStop = this.getStopFromCode(departure.endStopCode);
                 }

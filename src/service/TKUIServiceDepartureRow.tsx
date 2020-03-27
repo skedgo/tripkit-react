@@ -101,10 +101,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                 }
             }
         }
+        const timezone = departure.startTimezone;
         let serviceTime;
-        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, departure.startStop!.timezone);
+        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
         if (departure.actualEndTime) {
-            const endTime = DateTimeUtil.momentFromTimeTZ(departure.actualEndTime * 1000, departure.startStop!.timezone);
+            const endTime = DateTimeUtil.momentFromTimeTZ(departure.actualEndTime * 1000, timezone);
             serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP) + " - " + endTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
         } else {
             serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
@@ -126,7 +127,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const departure = this.props.value;
-        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, departure.startStop!.timezone);
+        const timezone = departure.startTimezone;
+        const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
         const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
         const origin = departure.startStop && departure.startStop.shortName && departure.startStop.shortName.trim() ? departure.startStop.shortName : undefined;
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;

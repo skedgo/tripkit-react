@@ -13,9 +13,9 @@ class Trip {
     @JsonProperty("weightedScore", Number, true)
     private _weightedScore: number = 0;
     @JsonProperty("queryIsLeaveAfter", Boolean, true)
-    private _queryIsLeaveAfter: boolean | null = null;
+    public queryIsLeaveAfter: boolean | null = null;    // Don't set as readonly since I want to set it when results come from waypoints.json
     @JsonProperty("queryTime", Number, true)
-    private _queryTime: number | null = null;
+    public queryTime: number | null = null;             // Don't set as readonly since I want to set it when results come from waypoints.json
     @JsonProperty("currencySymbol", String, true)
     private _currencySymbol: string | null = null;
     @JsonProperty("moneyCost", Number, true)
@@ -53,14 +53,6 @@ class Trip {
 
     get weightedScore(): number {
         return this._weightedScore;
-    }
-
-    get queryIsLeaveAfter(): boolean | null {
-        return this._queryIsLeaveAfter;
-    }
-
-    get queryTime(): number | null {
-        return this._queryTime;
     }
 
     get currencySymbol(): string | null {
