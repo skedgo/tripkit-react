@@ -13,6 +13,8 @@ import {tKUIReportBtnDefaultStyle} from "./TKUIReportBtn.css";
 import classNames from "classnames";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUITooltip from "../card/TKUITooltip";
+import ContextMenuHandler from "../util/ContextMenuHandler";
+import DeviceUtil from "../util/DeviceUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
@@ -58,11 +60,14 @@ export function feedbackTextFromState(state: TKState): string {
 
 class TKUIReportBtn extends React.Component<IProps, IState> {
 
+    private contextMenuHandlerIOS: ContextMenuHandler | undefined;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
             feedbackTooltip: false
         };
+        this.contextMenuHandlerIOS = DeviceUtil.isIOS ? new ContextMenuHandler() : undefined;
     }
 
     public render(): React.ReactNode {
@@ -75,6 +80,11 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
         const onClick = this.props.onClick ? this.props.onClick : defaultAction;
         const onContextMenu = this.props.onContextMenu ? this.props.onContextMenu : defaultAction;
         const classes = this.props.classes;
+        const contextMenuHandler = (e: MouseEvent) => {
+            onContextMenu(this.props.tKState);
+            e.preventDefault && e.preventDefault(); // Since safari on iOS fails saying preventDefault is not defined.
+        };
+        this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(contextMenuHandler);
         return (
             <TKUITooltip
                 overlayContent={"Feedback info copied to clipboard"}
@@ -83,12 +93,15 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
             >
                 <button className={classNames(this.props.className, classes.main)}
                         onClick={() => onClick(this.props.tKState)}
-                        onContextMenu={(e: MouseEvent) => {
-                            onContextMenu(this.props.tKState);
-                            e.preventDefault();
-                        }}
                         aria-hidden={true}
-                        tabIndex={0}>
+                        tabIndex={0}
+                        onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
+                            contextMenuHandler}
+                        onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
+                        onTouchCancel={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchCancel}
+                        onTouchEnd={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchEnd}
+                        onTouchMove={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchMove}
+                >
                     {icon}
                 </button>
             </TKUITooltip>
