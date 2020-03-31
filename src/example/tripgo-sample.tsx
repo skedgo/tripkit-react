@@ -38,6 +38,6 @@ const config: TKUIConfig = {
 };
 
 ReactDOM.render(
-    <TKUIProvider config={config} initQuery={urlQuery}>
+    <TKRoot config={config}>
         <TKUITripPlanner/>
-    </TKUIProvider>, document.getElementById("tripgo-sample-root"));
+    </TKRoot>, document.getElementById("tripgo-sample-root"));
