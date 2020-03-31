@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-    </list>
     <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="">
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.module.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" afterDir="false" />
@@ -12,6 +8,11 @@
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
       <change beforePath="$PROJECT_DIR$/src/api/TripGoApi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/TripGoApi.tsx" afterDir="false" />
+    </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,11 +41,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="134">
-              <caret line="407" column="103" selection-start-line="407" selection-start-column="34" selection-end-line="407" selection-end-column="103" />
+            <state relative-caret-position="119">
+              <caret line="212" column="32" selection-start-line="212" selection-start-column="32" selection-end-line="212" selection-end-column="32" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -52,11 +53,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="104">
-              <caret line="60" column="18" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="18" />
+            <state relative-caret-position="249">
+              <caret line="35" column="32" lean-forward="true" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -64,13 +65,12 @@
       <file leaf-file-name="package-lock.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package-lock.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8159">
-              <caret line="11882" column="20" selection-start-line="11882" selection-start-column="20" selection-end-line="11882" selection-end-column="20" />
+            <state relative-caret-position="104">
+              <caret line="12214" column="17" selection-start-line="12214" selection-start-column="17" selection-end-line="12214" selection-end-column="17" />
               <folding>
                 <element signature="e#140#445#0" />
                 <element signature="e#473#2843#0" />
                 <element signature="e#2864#5093#0" />
-                <element signature="e#634947#635263#0" />
               </folding>
             </state>
           </provider>
@@ -154,9 +154,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>arrowContent</find>
-      <find>escape</find>
-      <find>currentColor</find>
       <find>IconFeedback</find>
       <find>actionMenuTooltip</find>
       <find>arrowColo</find>
@@ -179,11 +176,14 @@
       <find>tap</find>
       <find>react-leaf</find>
       <find>layer</find>
-      <find>tap=</find>
       <find>leaflet-</find>
       <find>react-leaflet</find>
       <find>leaflet</find>
       <find>leaflet&quot;</find>
+      <find>1.6.0</find>
+      <find>mapb</find>
+      <find>mapbox</find>
+      <find>tap=</find>
     </findStrings>
     <replaceStrings>
       <replace>this.onQueryChange</replace>
@@ -350,39 +350,6 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -561,14 +528,7 @@
       <workItem from="1584113104850" duration="65812000" />
       <workItem from="1585528472032" duration="108000" />
       <workItem from="1585579082649" duration="29183000" />
-      <workItem from="1585681939958" duration="5230000" />
-    </task>
-    <task id="LOCAL-00179" summary="Tripkit web sdk: extended transport settings:&#10;- privacy options">
-      <created>1582291079830</created>
-      <option name="number" value="00179" />
-      <option name="presentableId" value="LOCAL-00179" />
-      <option name="project" value="LOCAL" />
-      <updated>1582291079831</updated>
+      <workItem from="1585681939958" duration="6474000" />
     </task>
     <task id="LOCAL-00180" summary="Tripkit web sdk: extended transport settings:&#10;- font fallback to sans-serif">
       <created>1582296761403</created>
@@ -906,11 +866,18 @@
       <option name="project" value="LOCAL" />
       <updated>1585683076138</updated>
     </task>
-    <option name="localTasksCounter" value="228" />
+    <task id="LOCAL-00228" summary="See comment on TKUIMapView.tsx">
+      <created>1585688040745</created>
+      <option name="number" value="00228" />
+      <option name="presentableId" value="LOCAL-00228" />
+      <option name="project" value="LOCAL" />
+      <updated>1585688040745</updated>
+    </task>
+    <option name="localTasksCounter" value="229" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2473872000" />
+    <option name="totallyTimeSpent" value="2475116000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1010,7 +977,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk: add w3w to location details." />
     <MESSAGE value="Tripkit web sdk: work on cookies banner." />
     <MESSAGE value="Tripkit web sdk: fix to issues with service timetables." />
     <MESSAGE value="Tripkit web sdk: simplified show / hide timetable logic." />
@@ -1035,7 +1001,8 @@
     <MESSAGE value="Tripkit web sdk: improve feedback button." />
     <MESSAGE value="Tripkit web sdk: improve feedback button (2)." />
     <MESSAGE value="tripgo-sample" />
-    <option name="LAST_COMMIT_MESSAGE" value="tripgo-sample" />
+    <MESSAGE value="See comment on TKUIMapView.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="See comment on TKUIMapView.tsx" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1326,33 +1293,32 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="60" column="18" selection-start-line="60" selection-start-column="11" selection-end-line="60" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package-lock.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8159">
-          <caret line="11882" column="20" selection-start-line="11882" selection-start-column="20" selection-end-line="11882" selection-end-column="20" />
+        <state relative-caret-position="104">
+          <caret line="12214" column="17" selection-start-line="12214" selection-start-column="17" selection-end-line="12214" selection-end-column="17" />
           <folding>
             <element signature="e#140#445#0" />
             <element signature="e#473#2843#0" />
             <element signature="e#2864#5093#0" />
-            <element signature="e#634947#635263#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="407" column="103" selection-start-line="407" selection-start-column="34" selection-end-line="407" selection-end-column="103" />
+        <state relative-caret-position="119">
+          <caret line="212" column="32" selection-start-line="212" selection-start-column="32" selection-end-line="212" selection-end-column="32" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="249">
+          <caret line="35" column="32" lean-forward="true" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
         </state>
       </provider>
     </entry>
