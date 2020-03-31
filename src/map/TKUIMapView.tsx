@@ -404,6 +404,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                // Workaround: https://github.com/Leaflet/Leaflet/issues/6865
                                // Working example: https://www.mappite.org/tap/testTap2.html
                                // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
+                               // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
+                               // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
