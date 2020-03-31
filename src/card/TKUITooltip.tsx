@@ -20,6 +20,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     arrowColor?: string;
     children?: any;
     visible?: boolean;
+    onVisibleChange?: (visible?: boolean) => void;
     reference?: (ref: TKUITooltip) => void;
 }
 

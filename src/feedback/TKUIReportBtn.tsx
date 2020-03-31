@@ -72,6 +72,11 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
             actionMenuTooltip: false
         };
         this.contextMenuHandlerIOS = DeviceUtil.isIOS ? new ContextMenuHandler() : undefined;
+        this.showActionMenu = this.showActionMenu.bind(this);
+    }
+
+    private showActionMenu(show: boolean) {
+        this.setState({actionMenuTooltip: show});
     }
 
     public render(): React.ReactNode {
@@ -81,7 +86,7 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
             if (copy(feedbackTextFromState(state), {message: "Unable to copy"})) {
                 onShowActionDone("Feedback info copied to clipboard");
             }
-            this.setState({actionMenuTooltip: false});
+            this.showActionMenu(false);
         };
         const onShowActionDone = (msg: string) => {
             this.setState({actionDoneMessage: msg});
@@ -92,7 +97,7 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
         const onClick = this.props.onClick ? this.props.onClick : copyToClipboard;
         const classes = this.props.classes;
         const onShowActionsMenu = (e: MouseEvent) => {
-            this.setState({actionMenuTooltip: true});
+            this.showActionMenu(true);
             e.preventDefault && e.preventDefault(); // Since safari on iOS fails saying preventDefault is not defined.
         };
         this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(onShowActionsMenu);
@@ -126,6 +131,7 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
                     arrowColor={"transparent"}
                     placement={"leftBottom"}
                     visible={this.state.actionMenuTooltip}
+                    onVisibleChange={(visible?: boolean) => !visible && this.showActionMenu(false)}
                     key={1}
                 >
                     {feedbackBtn}
@@ -137,19 +143,6 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
                 />
             ]
         );
-    }
-
-    public componentDidMount() {
-        // Close action button when clicking outside the action menu
-        window.addEventListener("click", () => this.setState({actionMenuTooltip: false}));
-        // Close action menu on escape
-        window.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.keyCode === 27) {
-                if (this.state.actionMenuTooltip) {
-                    this.setState({actionMenuTooltip: false});
-                }
-            }
-        });
     }
 
     public componentDidUpdate(prevProps: IProps) {
