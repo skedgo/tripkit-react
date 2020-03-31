@@ -33,6 +33,12 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
                 marginBottom: '-8px',
                 borderWidth: '8px 0 8px 8px'
             },
+            '&.rc-tooltip-placement-leftBottom .rc-tooltip-arrow': {
+                borderLeftColor: 'currentColor!important',
+                right: '-8px',
+                marginBottom: '-8px',
+                borderWidth: '8px 0 8px 8px'
+            },
             '&.rc-tooltip-placement-top .rc-tooltip-arrow': {
                 borderTopColor: 'currentColor!important',
                 bottom: '-8px',

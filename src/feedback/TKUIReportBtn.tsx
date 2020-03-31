@@ -15,17 +15,20 @@ import TKShareHelper from "../share/TKShareHelper";
 import TKUITooltip from "../card/TKUITooltip";
 import ContextMenuHandler from "../util/ContextMenuHandler";
 import DeviceUtil from "../util/DeviceUtil";
+import {TKRequestStatus, default as TKUIWaitingRequest} from "../card/TKUIWaitingRequest";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
     tooltipClassName?: string;
     renderIcon?: () => JSX.Element;
     onClick?: (state: TKState) => void;
-    onContextMenu?: (state: TKState) => void;
 }
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    actionMenu: CSSProps<IProps>;
+    actionItem: CSSProps<IProps>;
+    actionIcon: CSSProps<IProps>;
 }
 
 interface IConsumedProps {
@@ -44,7 +47,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 interface IState {
-    feedbackTooltip: boolean;
+    actionDoneMessage?: string;
+    actionMenuTooltip: boolean;
 }
 
 export function feedbackTextFromState(state: TKState): string {
@@ -65,47 +69,87 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            feedbackTooltip: false
+            actionMenuTooltip: false
         };
         this.contextMenuHandlerIOS = DeviceUtil.isIOS ? new ContextMenuHandler() : undefined;
     }
 
     public render(): React.ReactNode {
-        const defaultAction = (state: TKState) => {
-            copy(feedbackTextFromState(state));
-            this.setState({feedbackTooltip: true});
-            setTimeout(() => this.setState({feedbackTooltip: false}), 3000);
+        const copyToClipboard = (state: TKState) => {
+            // On iOS, copy from copy-to-clipboard just works if it's called associated to a recognized event, like
+            // a click in our case.
+            if (copy(feedbackTextFromState(state), {message: "Unable to copy"})) {
+                onShowActionDone("Feedback info copied to clipboard");
+            }
+            this.setState({actionMenuTooltip: false});
+        };
+        const onShowActionDone = (msg: string) => {
+            this.setState({actionDoneMessage: msg});
+            setTimeout(() => this.setState({actionDoneMessage: undefined}), 3000);
+
         };
         const icon = this.props.renderIcon ? this.props.renderIcon() : <IconFeedback/>;
-        const onClick = this.props.onClick ? this.props.onClick : defaultAction;
-        const onContextMenu = this.props.onContextMenu ? this.props.onContextMenu : defaultAction;
+        const onClick = this.props.onClick ? this.props.onClick : copyToClipboard;
         const classes = this.props.classes;
-        const contextMenuHandler = (e: MouseEvent) => {
-            onContextMenu(this.props.tKState);
+        const onShowActionsMenu = (e: MouseEvent) => {
+            this.setState({actionMenuTooltip: true});
             e.preventDefault && e.preventDefault(); // Since safari on iOS fails saying preventDefault is not defined.
         };
-        this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(contextMenuHandler);
+        this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(onShowActionsMenu);
+        const feedbackBtn = <button className={classNames(this.props.className, classes.main)}
+                                    onClick={() => onClick(this.props.tKState)}
+                                    aria-hidden={true}
+                                    tabIndex={0}
+                                    onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
+                                        onShowActionsMenu}
+                                    onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
+                                    onTouchCancel={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchCancel}
+                                    onTouchEnd={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchEnd}
+                                    onTouchMove={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchMove}
+        >
+            {icon}
+        </button>;
         return (
-            <TKUITooltip
-                overlayContent={"Feedback info copied to clipboard"}
-                placement={"left"}
-                visible={this.state.feedbackTooltip}
-            >
-                <button className={classNames(this.props.className, classes.main)}
-                        onClick={() => onClick(this.props.tKState)}
-                        aria-hidden={true}
-                        tabIndex={0}
-                        onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
-                            contextMenuHandler}
-                        onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
-                        onTouchCancel={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchCancel}
-                        onTouchEnd={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchEnd}
-                        onTouchMove={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchMove}
+            [
+                <TKUITooltip
+                    overlay={
+                        <div className={classes.actionMenu}>
+                            <div onClick={() => copyToClipboard(this.props.tKState)}
+                                 className={classes.actionItem}
+                            >
+                                <IconFeedback className={classes.actionIcon}/>
+                                Copy to clipboard
+                            </div>
+
+                        </div>
+                    }
+                    arrowColor={"transparent"}
+                    placement={"leftBottom"}
+                    visible={this.state.actionMenuTooltip}
+                    key={1}
                 >
-                    {icon}
-                </button>
-            </TKUITooltip>
+                    {feedbackBtn}
+                </TKUITooltip>,
+                <TKUIWaitingRequest
+                    status={this.state.actionDoneMessage ? TKRequestStatus.success : undefined}
+                    message={this.state.actionDoneMessage}
+                    key={2}
+                />
+            ]
         );
+    }
+
+    public componentDidMount() {
+        // Close action button when clicking outside the action menu
+        window.addEventListener("click", () => this.setState({actionMenuTooltip: false}));
+        // Close action menu on escape
+        window.addEventListener('keydown', (e: KeyboardEvent) => {
+            if (e.keyCode === 27) {
+                if (this.state.actionMenuTooltip) {
+                    this.setState({actionMenuTooltip: false});
+                }
+            }
+        });
     }
 
     public componentDidUpdate(prevProps: IProps) {
