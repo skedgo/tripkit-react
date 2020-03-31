@@ -86,6 +86,7 @@ interface IState {
     showFavourites: boolean;
     showTripDetail?: boolean;
     cardPosition?: TKUISlideUpPosition;
+    tripUpdateStatus?: TKRequestStatus;
 }
 
 class TKUITripPlanner extends React.Component<IProps, IState> {
@@ -365,8 +366,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {timetableView}
                         {serviceDetailView}
                         {<TKUIWaitingRequest
-                            status={this.props.waitingTripUpdate ? TKRequestStatus.wait :
-                                this.props.tripUpdateError ? TKRequestStatus.error : TKRequestStatus.success}
+                            status={this.state.tripUpdateStatus}
                             message={this.props.waitingTripUpdate ? "Updating trip" :
                                 this.props.tripUpdateError ? "Error updating trip" : ""}
                         />}
@@ -468,6 +468,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (this.state.showTripDetail &&
             (prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to)) {
             this.setState({showTripDetail: false});
+        }
+
+        // Start waiting for trip update
+        if (!prevProps.waitingTripUpdate && this.props.waitingTripUpdate) {
+            this.setState({
+                tripUpdateStatus: TKRequestStatus.wait
+            })
+        }
+
+        // End waiting for trip update
+        if (prevProps.waitingTripUpdate && !this.props.waitingTripUpdate) {
+            this.setState({
+                tripUpdateStatus: this.props.tripUpdateError ? TKRequestStatus.error : TKRequestStatus.success
+            });
+            setTimeout(() => this.setState({
+                tripUpdateStatus: undefined
+            }), 2000);
         }
     }
 
