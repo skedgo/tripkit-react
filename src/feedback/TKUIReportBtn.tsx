@@ -52,14 +52,29 @@ interface IState {
 }
 
 export function feedbackTextFromState(state: TKState): string {
-    const optionsJson = Util.serialize(OptionsData.instance.get());
     const location = window.location;
     const plannerUrl = location.protocol + "//" + location.hostname
         + (location.port ? ":" + location.port : "") + location.pathname;
-    return "webapp url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n\n"
-        + "options: " + JSON.stringify(optionsJson) + "\n\n"
-        + "satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n\n"
-        + "trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "");
+    let feedbackS = "";
+    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n";
+    feedbackS += "\n";
+    feedbackS += "User profile: " + JSON.stringify(Util.serialize(state.userProfile)) + "\n";
+    if (state.selectedTrip) {
+        feedbackS += "\n";
+        feedbackS += "Selected trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "")+ "\n";
+        feedbackS += "Satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n";
+    }
+    if (state.stop) {
+        feedbackS += "\n";
+        feedbackS += "Timetable for stop: " + state.stop.code + "\n";
+        feedbackS += "Timetable init time: " + state.timetableInitTime.valueOf() + "\n";
+        feedbackS += "Share timetable url: " + TKShareHelper.getShareTimetable(state.stop) + "\n";
+        if (state.selectedService) {
+            feedbackS += "Selected service: " + state.selectedService.serviceTripID + "\n";
+            feedbackS += "Share service url: " + TKShareHelper.getShareService(state.selectedService) + "\n";
+        }
+    }
+    return feedbackS;
 }
 
 class TKUIReportBtn extends React.Component<IProps, IState> {

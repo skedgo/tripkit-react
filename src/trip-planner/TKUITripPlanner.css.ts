@@ -3,6 +3,7 @@ import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "./TKUITripPlan
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import {TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> =
     (theme: TKUITheme) => ({
@@ -45,7 +46,8 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         reportBtn: {
             position: 'absolute',
             right: '12px',
-            bottom: '80px',
+            bottom: !DeviceUtil.isPhone ? '80px' : undefined,
+            top: (props: TKUITKUITripPlannerProps) => DeviceUtil.isPhone ? (props.directionsView ? '128px' : '113px') : undefined,
             width: '30px',
             height: '30px',
             opacity: '.5',

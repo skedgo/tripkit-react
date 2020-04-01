@@ -67,7 +67,7 @@ class TKShareHelper {
     }
 
     public static getShareQuery(query: RoutingQuery, plannerUrl?: string): string {
-        let goURL = (plannerUrl ? plannerUrl : Constants.DEPLOY_URL) + "go/";
+        let goURL = (plannerUrl ? plannerUrl : Constants.DEPLOY_URL) + "go";
         goURL += (goURL.includes("?") ? "&" : "?");
         if (query.from) {
             goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +

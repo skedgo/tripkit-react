@@ -30,6 +30,7 @@ interface IProps {
     style?: CSS.Properties;
     menuStyle?: CSS.Properties;
     inputStyle?: CSS.Properties;
+    onFocus?: () => void;
 }
 
 interface IState {
@@ -395,6 +396,7 @@ class LocationBox extends Component<IProps, IState> {
                                 } else {
                                     this.refreshResults(this.state.inputText);
                                 }
+                                this.props.onFocus && this.props.onFocus();
                             },
                             "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.label).indexOf(this.highlightedItem) : undefined,
                             "aria-label": this.props.inputAriaLabel,
