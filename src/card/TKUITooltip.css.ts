@@ -8,6 +8,7 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
         main: {
             opacity: '1!important',
             background: 'none!important',
+            zIndex: '1100!important',
             // Just to use currentColor below
             color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : 'white',
             '& .rc-tooltip-inner': {
