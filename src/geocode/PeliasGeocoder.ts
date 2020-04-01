@@ -87,6 +87,10 @@ class PeliasGeocoder implements IGeocoder {
             unresolvedLocation.hasDetail = true;
             return unresolvedLocation;
         });
+
+        // TODO if unresolved location has no id, then assume that wants to do a forward search
+        // https://api.geocode.earth/v1/search?text=Glenfield post office&api_key=ge-63f76914953caba8&boundary.rect.min_lat=51.7&boundary.rect.max_lat=53&boundary.rect.min_lon=-1.5&boundary.rect.max_lon=0.1&focus.point.lat=52.63624&focus.point.lon=-1.14009
+        // https://api.geocode.earth/v1/search?text=Glenfield post office&api_key=ge-63f76914953caba8&boundary.rect.min_lat=51.7&boundary.rect.max_lat=53&boundary.rect.min_lon=-1.5&boundary.rect.max_lon=0.1
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
