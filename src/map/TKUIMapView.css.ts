@@ -4,6 +4,7 @@ import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
@@ -72,7 +73,8 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             ...resetStyles.button,
             position: 'absolute',
             right: '10px',
-            bottom: '30px',
+            bottom: !DeviceUtil.isPhone ? '30px' : undefined,
+            top: (props: TKUIMapViewProps) => DeviceUtil.isPhone ? (props.directionsView ? '83px' : '68px') : undefined,
             width: '35px',
             height: '35px',
             backgroundColor: 'white',

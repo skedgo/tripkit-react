@@ -51,6 +51,7 @@ import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import {TKUserPosition} from "../util/GeolocationUtil";
 import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
+import DeviceUtil from "../util/DeviceUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -217,10 +218,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUILocationDetailView
                 location={toLocation!}
                 slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : undefined,
+                    position: DeviceUtil.isDesktop ? (this.props.landscape ? TKUISlideUpPosition.UP : TKUISlideUpPosition.DOWN) : undefined,
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 70, unit: 'px'} : undefined
+                    modalDown: this.props.portrait && this.ref ? {top: this.ref.offsetHeight - 122, unit: 'px'} : undefined
                 }}
             />;
         const timetableView = this.isShowTimetable() ?
