@@ -142,7 +142,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                     this.setState({showTransports: false},
                         () => this.applyChanges())}
                 slideUpOptions={{
-                    position: TKUISlideUpPosition.UP,
+                    initPosition: TKUISlideUpPosition.UP,
                     draggable: false
                 }}
             />;

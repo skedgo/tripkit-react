@@ -10,9 +10,10 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import TKUISlideUp, {TKUISlideUpOptions} from "./TKUISlideUp";
+import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
+import TKUISlideUpOld from "./TKUISlideUpOld";
 
 export enum CardPresentation {
     MODAL,
@@ -36,7 +37,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 interface IStyle {
-    modal: CSS.Properties & CSSProperties<IProps>;
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
@@ -72,6 +72,7 @@ export function hasHandle(props: IProps): boolean {
 
 interface IState {
     handleRef?: any;
+    slideUpPosition: TKUISlideUpPosition;
 }
 
 class TKUICard extends React.Component<IProps, IState> {
@@ -83,7 +84,11 @@ class TKUICard extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            slideUpPosition: !this.props.slideUpOptions ? TKUISlideUpPosition.UP :
+                this.props.slideUpOptions.position ? this.props.slideUpOptions.position :
+                    this.props.slideUpOptions.initPosition ? this.props.slideUpOptions.initPosition : TKUISlideUpPosition.UP
+        }
     }
 
     public render(): React.ReactNode {
@@ -129,28 +134,23 @@ class TKUICard extends React.Component<IProps, IState> {
                 <TKUIScrollForCard
                     className={classes.body}
                     style={this.props.bodyStyle}
-                    // Cancel touch events, to avoid scrolling to cause slide up card gesture to take place,
-                    // iff slide-up presentation, slide-up is draggable, and children don't need touch events
-                    // (which can be informed by client).
-                    cancelTouchEvents={((presentation === CardPresentation.SLIDE_UP &&
-                        !(this.props.slideUpOptions && this.props.slideUpOptions.draggable === false)) ||
-                        presentation === CardPresentation.SLIDE_UP_STYLE)
-                    && !this.props.touchEventsOnChildren}
+                    // So dragging the card from its content, instead of scrolling it, will drag the card.
+                    freezeScroll={this.state.slideUpPosition !== TKUISlideUpPosition.UP}
                 >
                     {this.props.children}
                 </TKUIScrollForCard>
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
-                <TKUISlideUp
+                <TKUISlideUpOld
                     {...this.props.slideUpOptions}
                     handleRef={this.state.handleRef}
                     containerClass={classes.modalContainer}
-                    modalClass={classes.modal}
                     open={this.props.open}
+                    onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                 >
                     {body}
-                </TKUISlideUp>
+                </TKUISlideUpOld>
                 :
                 presentation === CardPresentation.MODAL ?
                     <Modal
@@ -170,7 +170,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         onRequestClose={this.props.onRequestClose}
                     >
                         {body}
-                    </Modal> : body
+                    </Modal> : this.props.open && body
         );
     }
 

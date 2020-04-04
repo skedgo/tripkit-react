@@ -10,7 +10,8 @@ const styles = {
         left: '0!important',
         right: '0!important',
         overflowX: 'visible',
-        background: 'none!important'
+        background: 'none!important',
+        height: '100%!important'
     },
     modalElement: {
         top: '0',
@@ -46,7 +47,7 @@ export interface TKUISlideUpOptions {
     initPosition?: TKUISlideUpPosition;
     modalUp?: {top: number, unit: string};
     modalMiddle?: {top: number, unit: string};
-    modalDown?: {top: number | string, unit: string};
+    modalDown?: {top: number, unit: string};
     // For controlled positioning. If set (not undefined), it takes precedence over this.state.position.
     position?: TKUISlideUpPosition;
     onPositionChange?: (position: TKUISlideUpPosition) => void;

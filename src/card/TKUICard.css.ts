@@ -18,18 +18,13 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             // overflowY: 'hidden!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
                 width: '450px',
-                left: '5px!important',
-                padding: '5px 5px 0 5px'
+                left: '10px!important',
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%',
                 left: '0px!important',
-                padding: '5px 0 0 0'
+                padding: '5px 5px 0 5px'
             }
-        },
-
-        modal: {
-            // width: '100%'
         },
 
         main: {
@@ -45,7 +40,6 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
                 || props.presentation === CardPresentation.SLIDE_UP_STYLE ? '12px 12px 0 0' : '0',
             ...genStyles.flex,
             ...genStyles.column,
-            margin: '0 5px'
         },
 
         innerMain: {

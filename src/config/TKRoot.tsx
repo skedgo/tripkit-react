@@ -1,6 +1,5 @@
 import * as React from "react";
 import {TKUIConfig} from "./TKUIConfig";
-import RoutingQuery from "../model/RoutingQuery";
 import Util from "../util/Util";
 import TKStateConsumer, {TKState} from "./TKStateConsumer";
 import TKStateProvider from "./TKStateProvider";

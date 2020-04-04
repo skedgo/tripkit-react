@@ -4,9 +4,10 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import "./TKUICardCarousel.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import DeviceUtil from "../util/DeviceUtil";
-import TKUISlideUp, {TKUISlideUpOptions} from "./TKUISlideUp";
+import {TKUISlideUpOptions} from "./TKUISlideUp";
 import classNames from "classnames";
 import Util from "../util/Util";
+import TKUISlideUpOld from "./TKUISlideUpOld";
 
 interface IProps {
     selected?: number;
@@ -47,10 +48,10 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
         return (
             <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
-                    <TKUISlideUp
+                    <TKUISlideUpOld
                         {...this.props.slideUpOptions}
                         containerClass={"TKUICardCarousel-modalContainer"}
-                        modalClass={"TKUICardCarousel-modal"}
+                        // modalClass={"TKUICardCarousel-modal"}
                         onDrag={() => {
                             this.setState({freezeCarousel: true});
                         }}
@@ -80,7 +81,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                                 )}
                             </Carousel>
                         </div>
-                    </TKUISlideUp>
+                    </TKUISlideUpOld>
                 }
             </TKUIViewportUtil>
         );
