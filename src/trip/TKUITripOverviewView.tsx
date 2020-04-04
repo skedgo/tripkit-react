@@ -17,7 +17,6 @@ import {Visibility} from "../model/trip/SegmentTemplate";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import TKUIShareView from "../share/TKUIShareView";
-import TKUIControlsCard from "../card/TKUIControlsCard";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import TKShareHelper from "../share/TKShareHelper";
@@ -25,11 +24,15 @@ import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import TKUIRendersCard from "../card/TKUIRendersCard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     onRequestClose?: () => void;
     handleRef?: (ref: any) => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 export interface IStyle {
@@ -81,35 +84,45 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             </TKI18nContext.Consumer>
         ],
         segmentActions: (segment: Segment) => segment.arrival ? [
-            <TKUIControlsCard key={"actionShareArrival"}>
-                {(setProps: (props: TKUICardClientProps) => void) => {
-                    return <TKUIButton text={"Share arrival"}
-                                       type={TKUIButtonType.PRIMARY_LINK}
-                                       style={{
-                                           paddingLeft: 0,
-                                           ...genStyles.justifyStart
-                                       }}
-                                       onClick={() => {
-                                           setProps({
-                                               title: "Share arrival",
-                                               presentation: CardPresentation.MODAL,
-                                               children:
-                                                   <TKUIShareView
-                                                       link={TKShareHelper.getShareSegmentArrival(segment)}
-                                                       customMsg={""}
-                                                   />,
-                                               open: true,
-                                               onRequestClose: () => {
-                                                   setProps({
-                                                       open: false
-                                                   })
-                                               }
-                                           });
-                                       }}
-                                       key={"shareArrivalBtn"}
-                    />;
-                }}
-            </TKUIControlsCard>
+            <TKUIRendersCard key={"actionShareArrival"}>
+                {(renderCard: (props: TKUICardClientProps, id: any) => void) =>
+                    <TKUIViewportUtil>
+                        {(viewportProps: TKUIViewportUtilProps) =>
+                            <TKUIButton text={"Share arrival"}
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        style={{
+                                            paddingLeft: 0,
+                                            ...genStyles.justifyStart
+                                        }}
+                                        onClick={() => {
+                                            const cardProps = {
+                                                title: "Share arrival",
+                                                presentation: viewportProps.portrait ? CardPresentation.SLIDE_UP : CardPresentation.MODAL,
+                                                slideUpOptions: {
+                                                    position: TKUISlideUpPosition.UP,
+                                                    draggable: false
+                                                },
+                                                children:
+                                                    <TKUIShareView
+                                                        link={TKShareHelper.getShareSegmentArrival(segment)}
+                                                        customMsg={""}
+                                                    />,
+                                                open: true,
+                                                onRequestClose: () => {
+                                                    renderCard({
+                                                        ...cardProps,
+                                                        open: false
+                                                    }, segment)
+                                                }
+                                            };
+                                            renderCard(cardProps, segment);
+                                        }}
+                                        key={"shareArrivalBtn"}
+                            />
+                        }
+                    </TKUIViewportUtil>
+                }
+            </TKUIRendersCard>
         ] : []
     }
 };
@@ -132,8 +145,9 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 subtitle={subtitle}
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
-                presentation={CardPresentation.SLIDE_UP_STYLE}
+                presentation={CardPresentation.SLIDE_UP}
                 handleRef={this.props.handleRef}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
                     {segments.map((segment: Segment, index: number) =>

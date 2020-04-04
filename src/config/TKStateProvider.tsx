@@ -7,6 +7,7 @@ import TKUIConfigProvider from "./TKUIConfigProvider";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import TKUICardProvider from "../card/TKUICardProvider";
 
 interface IProps {
     config: TKUIConfig;
@@ -39,8 +40,9 @@ class TKStateProvider extends React.Component<IProps,{}> {
                                                         onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
                                                     >
                                                         <TKFavouritesProvider>
-
-                                                            {this.props.children}
+                                                            <TKUICardProvider>
+                                                                {this.props.children}
+                                                            </TKUICardProvider>
                                                         </TKFavouritesProvider>
                                                     </ServiceResultsProvider>
                                                 }

@@ -180,18 +180,12 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 </div>
             )
         } : undefined;
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        if (!slideUpOptions.modalUp) {
-            Object.assign(slideUpOptions, {
-                modalDown: {top: 78, unit: '%'},
-            });
-        }
         return (
             <TKUICard
                 title={this.props.landscape ? "Routing results" : undefined}
                 presentation={CardPresentation.SLIDE_UP}
                 renderSubHeader={renderSubHeader}
-                slideUpOptions={slideUpOptions}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classNames(this.props.className, classes.main)}>
                     <div className={classes.sortBar}>
