@@ -7,7 +7,7 @@ import DeviceUtil from "../util/DeviceUtil";
 import {TKUISlideUpOptions} from "./TKUISlideUp";
 import classNames from "classnames";
 import Util from "../util/Util";
-import TKUISlideUpOld from "./TKUISlideUpOld";
+import TKUISlideUp from "./TKUISlideUp";
 
 interface IProps {
     selected?: number;
@@ -48,7 +48,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
         return (
             <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
-                    <TKUISlideUpOld
+                    <TKUISlideUp
                         {...this.props.slideUpOptions}
                         containerClass={"TKUICardCarousel-modalContainer"}
                         onDrag={() => {
@@ -80,7 +80,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                                 )}
                             </Carousel>
                         </div>
-                    </TKUISlideUpOld>
+                    </TKUISlideUp>
                 }
             </TKUIViewportUtil>
         );

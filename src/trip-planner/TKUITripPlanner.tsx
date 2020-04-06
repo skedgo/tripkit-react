@@ -281,7 +281,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     initPosition: TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
+                    modalMiddle: {top: 55, unit: '%'},
                     modalDown: {top: this.ref.offsetHeight - 80, unit: 'px'}
                 }}
             />;
@@ -298,8 +298,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined,
-                    modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
-                    modalDown: {top: this.ref.offsetHeight * .9, unit: 'px'}
+                    modalMiddle: {top: 55, unit: '%'},
+                    modalDown: {top: 90, unit: '%'}
                 }}
             /> : null;
 
@@ -316,8 +316,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             draggable: true,
                             modalUp: this.props.landscape ? {top: 5, unit: 'px'} : undefined,
-                            modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
-                            modalDown: {top: this.ref.offsetHeight * .9, unit: 'px'}
+                            modalMiddle: {top: 55, unit: '%'},
+                            modalDown: {top: 90, unit: '%'}
                         }}
                     />
             } else {
