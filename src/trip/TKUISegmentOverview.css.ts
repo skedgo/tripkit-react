@@ -146,7 +146,7 @@ export function isIconOnDark(segment: Segment): boolean {
 }
 
 export function isUnconnected(segment: Segment):boolean {
-    return segment.isWalking();
+    return segment.isWalking() || segment.isWheelchair();
 }
 
 export function prevWaitingSegment(segment: Segment): Segment | undefined {

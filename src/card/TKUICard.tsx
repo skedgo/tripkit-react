@@ -13,7 +13,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
-import TKUISlideUpOld from "./TKUISlideUpOld";
+import TKUISlideUp from "./TKUISlideUp";
 
 export enum CardPresentation {
     MODAL,
@@ -144,7 +144,7 @@ class TKUICard extends React.Component<IProps, IState> {
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
-                <TKUISlideUpOld
+                <TKUISlideUp
                     {...this.props.slideUpOptions}
                     handleRef={this.state.handleRef}
                     containerClass={classes.modalContainer}
@@ -152,7 +152,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                 >
                     {body}
-                </TKUISlideUpOld>
+                </TKUISlideUp>
                 :
                 presentation === CardPresentation.MODAL ?
                     <Modal
