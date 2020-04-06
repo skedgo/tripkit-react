@@ -33,6 +33,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     handleRef?: (ref: any) => void;
     slideUpOptions?: TKUISlideUpOptions;
+    cardPresentation?: CardPresentation;
 }
 
 export interface IStyle {
@@ -145,7 +146,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 subtitle={subtitle}
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
                 handleRef={this.props.handleRef}
                 slideUpOptions={this.props.slideUpOptions}
             >

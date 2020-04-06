@@ -51,7 +51,6 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                     <TKUISlideUpOld
                         {...this.props.slideUpOptions}
                         containerClass={"TKUICardCarousel-modalContainer"}
-                        // modalClass={"TKUICardCarousel-modal"}
                         onDrag={() => {
                             this.setState({freezeCarousel: true});
                         }}

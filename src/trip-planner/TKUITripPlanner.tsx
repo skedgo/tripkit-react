@@ -53,6 +53,7 @@ import {TKUserPosition} from "../util/GeolocationUtil";
 import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUICardContainer from "../card/TKUICardContainer";
+import {CardPresentation} from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -194,6 +195,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const settings = this.state.showSettings &&
             <TKUIProfileView
                 onRequestClose={() => this.setState({showSettings: false})}
+                slideUpOptions={{
+                    initPosition: TKUISlideUpPosition.UP,
+                    draggable: false
+                }}
             />;
         const transportSettings = this.state.showTransportSettings &&
             <TKUITransportOptionsView
@@ -226,8 +231,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUILocationDetailView
                 location={toLocation!}
                 slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : undefined,
-                    draggable: !DeviceUtil.isDesktop,
+                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                    position: DeviceUtil.isTouch() ? undefined :
+                        this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                    draggable: DeviceUtil.isTouch(),
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
                     modalDown: this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
@@ -259,6 +266,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    position: DeviceUtil.isTouch() ? undefined :
+                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
                     modalDown: this.ref ? {top: this.ref.offsetHeight - 130, unit: 'px'} : undefined
                 }}
@@ -269,6 +279,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => {this.setState({showFavourites: false})}}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
+                    draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
                     modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
                     modalDown: {top: this.ref.offsetHeight - 80, unit: 'px'}
@@ -280,9 +291,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onDetailsClicked={() => {
                     this.setState({showTripDetail: true});
                 }}
-                onShowOptions={this.onShowSettings}
+                onShowOptions={this.onShowTransportSettings}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    position: DeviceUtil.isTouch() ? undefined :
+                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined,
                     modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
                     modalDown: {top: this.ref.offsetHeight * .9, unit: 'px'}
@@ -291,43 +305,51 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         let tripDetailView: any;
         if (this.state.showTripDetail && this.props.selected && !this.props.timetableForSegment) {
-            tripDetailView =
-                <TKUITripOverviewView
-                    value={this.props.selected}
-                    onRequestClose={() => {
-                        this.setState({showTripDetail: false})
-                    }}
-                    slideUpOptions={{
-                        initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                        modalUp: this.props.landscape ? {top: 5, unit: 'px'} : undefined,
-                        modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
-                        modalDown: {top: this.ref.offsetHeight * .9, unit: 'px'}
-                    }}
-                />
-            // TODO: re-enable carousel for desktop
-            // const sortedTrips = this.props.trips || [];
-            // const selected = sortedTrips.indexOf(this.props.selected);
-            // tripDetailView =
-            //     <TKUICardCarousel
-            //         selected={selected}
-            //         onChange={(selected: number) => this.props.onChange( (this.props.trips || [])[selected])}
-            //         slideUpOptions={{
-            //             initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-            //             modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'}
-            //         }}
-            //     >
-            //         {(registerHandle: (index: number, handle: any) => void) =>
-            //             sortedTrips
-            //                 .map((trip: Trip, i: number) =>
-            //                     <TKUITripOverviewView
-            //                         value={trip}
-            //                         onRequestClose={() => {
-            //                             this.setState({showTripDetail: false})
-            //                         }}
-            //                         key={i + "-" + trip.getKey()}
-            //                         handleRef={(handleRef: any) => registerHandle(i, handleRef)}
-            //                     />)}
-            //     </TKUICardCarousel>;
+            if (DeviceUtil.isTouch()) {
+                tripDetailView =
+                    <TKUITripOverviewView
+                        value={this.props.selected}
+                        onRequestClose={() => {
+                            this.setState({showTripDetail: false})
+                        }}
+                        slideUpOptions={{
+                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            draggable: true,
+                            modalUp: this.props.landscape ? {top: 5, unit: 'px'} : undefined,
+                            modalMiddle: {top: this.ref.offsetHeight * .55, unit: 'px'},
+                            modalDown: {top: this.ref.offsetHeight * .9, unit: 'px'}
+                        }}
+                    />
+            } else {
+                const sortedTrips = this.props.trips || [];
+                const selected = sortedTrips.indexOf(this.props.selected);
+                tripDetailView =
+                    <TKUICardCarousel
+                        selected={selected}
+                        onChange={(selected: number) => this.props.onChange((this.props.trips || [])[selected])}
+                        slideUpOptions={{
+                            position: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'},
+                            draggable: false
+                        }}
+                    >
+                        {(registerHandle: (index: number, handle: any) => void) =>
+                            sortedTrips
+                                .map((trip: Trip, i: number) =>
+                                    <TKUITripOverviewView
+                                        value={trip}
+                                        onRequestClose={() => {
+                                            this.setState({showTripDetail: false})
+                                        }}
+                                        key={i + "-" + trip.getKey()}
+                                        handleRef={(handleRef: any) => registerHandle(i, handleRef)}
+                                        cardPresentation={CardPresentation.SLIDE_UP_STYLE}
+                                        slideUpOptions={{
+                                            draggable: false    // Needs to specify so it's needed by TKUIScrollForCard
+                                        }}
+                                    />)}
+                    </TKUICardCarousel>;
+            }
         }
         const classes = this.props.classes;
         const mapPadding: TKUIMapPadding = {};
@@ -385,19 +407,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         <TKUIReportBtn className={classes.reportBtn}/>
                         {sideBar}
                         {settings}
-                        {transportSettings}
                         {locationDetailView}
                         {favouritesView}
                         {routingResultsView}
                         {tripDetailView}
                         {timetableView}
                         {serviceDetailView}
+                        {transportSettings}
+                        <TKUICardContainer/>
                         {<TKUIWaitingRequest
                             status={this.state.tripUpdateStatus}
                             message={this.props.waitingTripUpdate ? "Updating trip" :
                                 this.props.tripUpdateError ? "Error updating trip" : ""}
                         />}
-                        <TKUICardContainer/>
                     </div>
                 }
             </TKUIConfigContext.Consumer>

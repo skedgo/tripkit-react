@@ -33,6 +33,9 @@ interface IState {
 
 class TKUISlideUpOld extends React.Component<IProps, IState> {
 
+    // To get its height, allows to calculate percent units (TODO), and to properly set card height for scroll.
+    private containerElem?: any;
+
     public static defaultProps: Partial<IProps> = {
         initPosition: TKUISlideUpPosition.UP,
         modalUp: {top: 5, unit: 'px'},
@@ -44,10 +47,11 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
+        const position = this.props.position !== undefined ? this.props.position : props.initPosition!;
         this.state = {
-            position: this.props.position ? this.props.position : props.initPosition!,
+            position: position,
             touching: false,
-            top: this.getTopFromPosition(props.initPosition!),
+            top: this.getTopFromPosition(position),
             deltaTop: 0
 
         };
@@ -67,12 +71,12 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
     }
 
     private getTopFromPosition(position: TKUISlideUpPosition): number {
+        const containerHeight = this.containerElem ? this.containerElem.offsetHeight : 1000;
         switch (position) {
             case TKUISlideUpPosition.UP: return this.props.modalUp!.top;
             case TKUISlideUpPosition.MIDDLE: return this.props.modalMiddle!.top;
             case TKUISlideUpPosition.DOWN: return this.props.modalDown!.top;
-            default: return 0;
-            // default: return "100%";
+            default: return containerHeight;
         }
     }
 
@@ -101,21 +105,21 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
         }
         let targetPos: TKUISlideUpPosition;
         if (this.state.deltaTop > 0) {
-            if (this.state.position === TKUISlideUpPosition.UP) {
+            if (this.getPosition() === TKUISlideUpPosition.UP) {
                 targetPos = this.state.top > this.getTopFromPosition(TKUISlideUpPosition.MIDDLE) ?
                     TKUISlideUpPosition.DOWN : TKUISlideUpPosition.MIDDLE;
             } else {
-                targetPos = this.state.position === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.DOWN : this.state.position;
+                targetPos = this.getPosition() === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.DOWN : this.getPosition();
             }
         } else if (this.state.deltaTop < 0) {
-            if (this.state.position === TKUISlideUpPosition.DOWN) {
+            if (this.getPosition() === TKUISlideUpPosition.DOWN) {
                 targetPos = this.state.top < this.getTopFromPosition(TKUISlideUpPosition.MIDDLE) ?
                     TKUISlideUpPosition.UP: TKUISlideUpPosition.MIDDLE;
             } else {
-                targetPos = this.state.position === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.UP : this.state.position;
+                targetPos = this.getPosition() === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.UP : this.getPosition();
             }
         } else {    // This happens whe user taps the card.
-            targetPos = this.state.position;
+            targetPos = this.getPosition();
         }
         // To reflect card reached a definite position (user is not dragging it), so next a tap doesn't trigger a card
         // position change
@@ -125,10 +129,18 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
         this.onPositionChange(targetPos);
     }
 
+    private getPosition() {
+        return this.props.position !== undefined ? this.props.position : this.state.position;
+    }
+
     private onHandleClicked() {
-        if (this.state.position === TKUISlideUpPosition.DOWN) {
+        // If not draggable or position is controlled, do nothing.
+        if (this.props.draggable === false || this.props.position) {
+            return;
+        }
+        if (this.getPosition() === TKUISlideUpPosition.DOWN) {
             this.onPositionChange(TKUISlideUpPosition.MIDDLE);
-        } else if (this.state.position === TKUISlideUpPosition.MIDDLE) {
+        } else if (this.getPosition() === TKUISlideUpPosition.MIDDLE) {
             this.onPositionChange(TKUISlideUpPosition.UP);
         }
     }
@@ -153,8 +165,22 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
                 onStop={this.onStop}
                 disabled={this.props.draggable === false}
             >
-                <div className={classNames(classes.container, this.props.containerClass)}>
+                <div className={classNames(classes.container, this.props.containerClass)}
+                     ref={(ref: any) => {
+                         if (ref) {
+                             this.containerElem = ref.parentElement
+                         }
+                     }}
+                >
+                    <div style={{
+                        height: this.containerElem ?
+                            (this.props.draggable !== false ?
+                                this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
+                                this.containerElem.offsetHeight - this.state.top + "px") :
+                            "100%"
+                    }}>
                     {this.props.children}
+                    </div>
                 </div>
             </Draggable>
         );
@@ -168,6 +194,9 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
             if (prevProps.handleRef) {
                 prevProps.handleRef.removeEventListener("click", this.onHandleClicked);
             }
+        }
+        if (prevProps.position !== this.props.position) {
+            this.onPositionChange(this.getPosition());
         }
     }
 }

@@ -637,7 +637,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (this.leafletElement) {
             const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
             const options = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
-            this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]), options);
+            try {
+                this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]), options);
+            } catch(error) {
+                // TODO: fix it
+                console.log("Prevent bounds exception : ");
+                console.error(error);
+            }
         }
     }
 
