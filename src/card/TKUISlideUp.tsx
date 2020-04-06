@@ -1,3 +1,5 @@
+// TODO: remove this one and remane TKUISlideUpOld -> TKUISlideUp
+
 import React from "react";
 import injectSheet, {ClassNameMap} from "react-jss";
 import Drawer from 'react-drag-drawer';
