@@ -55,6 +55,7 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
         this.onDrag = this.onDrag.bind(this);
         this.onStop = this.onStop.bind(this);
         this.onPositionChange = this.onPositionChange.bind(this);
+        this.onHandleClicked = this.onHandleClicked.bind(this);
     }
 
     private onPositionChange(position: TKUISlideUpPosition) {
@@ -106,20 +107,34 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
             } else {
                 targetPos = this.state.position === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.DOWN : this.state.position;
             }
-        } else {
+        } else if (this.state.deltaTop < 0) {
             if (this.state.position === TKUISlideUpPosition.DOWN) {
                 targetPos = this.state.top < this.getTopFromPosition(TKUISlideUpPosition.MIDDLE) ?
                     TKUISlideUpPosition.UP: TKUISlideUpPosition.MIDDLE;
             } else {
                 targetPos = this.state.position === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.UP : this.state.position;
             }
+        } else {    // This happens whe user taps the card.
+            targetPos = this.state.position;
         }
+        // To reflect card reached a definite position (user is not dragging it), so next a tap doesn't trigger a card
+        // position change
+        this.setState({
+            deltaTop: 0
+        });
         this.onPositionChange(targetPos);
+    }
+
+    private onHandleClicked() {
+        if (this.state.position === TKUISlideUpPosition.DOWN) {
+            this.onPositionChange(TKUISlideUpPosition.MIDDLE);
+        } else if (this.state.position === TKUISlideUpPosition.MIDDLE) {
+            this.onPositionChange(TKUISlideUpPosition.UP);
+        }
     }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
-        // this.refreshPosition();
         if (!this.props.open) {
             return null;
         }
@@ -143,6 +158,17 @@ class TKUISlideUpOld extends React.Component<IProps, IState> {
                 </div>
             </Draggable>
         );
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (prevProps.handleRef !== this.props.handleRef) {
+            this.props.handleRef && this.props.handleRef.addEventListener("click", this.onHandleClicked);
+            // This ensures just the current handle has the handler, so it avoids associating
+            // the handler more than once to a handle, e.g. when returning to the same page on TKUICardCarousel .
+            if (prevProps.handleRef) {
+                prevProps.handleRef.removeEventListener("click", this.onHandleClicked);
+            }
+        }
     }
 }
 
