@@ -44,7 +44,7 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
-        if (!query) {
+        if (!query || !autocomplete) {
             callback([]);
             return;
         }

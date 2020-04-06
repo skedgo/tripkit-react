@@ -436,11 +436,17 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 this.props.onUserProfileChange(update);
             }
             const query = TKShareHelper.parseSharedQueryLink();
+            const viewport = TKShareHelper.parseViewport();
+            if (viewport) {
+                this.props.onViewportChange(viewport);
+            }
             if (query) {
                 this.props.onQueryChange(query);
-                this.props.onDirectionsView(true);
-                TKShareHelper.resetToHome();
+                if (query.isComplete(false)) {
+                    this.props.onDirectionsView(true);
+                }
             }
+            TKShareHelper.resetToHome();
         }
 
         if (TKShareHelper.isSharedStopLink()) {

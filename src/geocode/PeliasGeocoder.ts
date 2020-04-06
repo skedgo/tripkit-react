@@ -49,34 +49,61 @@ class PeliasGeocoder implements IGeocoder {
                 return;
             }
         }
-        const url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
-            + (bounds ?
-                    "&boundary.rect.min_lat=" + bounds.minLat +
-                    "&boundary.rect.max_lat=" + bounds.maxLat +
-                    "&boundary.rect.min_lon=" + bounds.minLng +
-                    "&boundary.rect.max_lon=" + bounds.maxLng : ""
-            )
-            + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
-            + "&text=" + query;
+        if (autocomplete) {
+            const url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
+                + (bounds ?
+                        "&boundary.rect.min_lat=" + bounds.minLat +
+                        "&boundary.rect.max_lat=" + bounds.maxLat +
+                        "&boundary.rect.min_lon=" + bounds.minLng +
+                        "&boundary.rect.max_lon=" + bounds.maxLng : ""
+                )
+                + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
+                + "&text=" + query;
 
-        fetch(url, {
-            method: NetworkUtil.MethodType.GET
-        }).then(NetworkUtil.jsonCallback).then((json: any) => {
-            const features = (json as FeatureCollection).features;
-            const locationResults = !features ? [] : features
-                .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
-            if (center) {
-                this.cache.addResults(query, autocomplete, center, locationResults);
-            }
-            callback(locationResults.slice(0, this.options.resultsLimit));
-        }).catch(reason => {
-            Util.log(url + " failed. Reason: " + reason, Env.PRODUCTION);
-            callback([]);
-        });
+            fetch(url, {
+                method: NetworkUtil.MethodType.GET
+            }).then(NetworkUtil.jsonCallback).then((json: any) => {
+                const features = (json as FeatureCollection).features;
+                const locationResults = !features ? [] : features
+                    .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
+                if (center) {
+                    this.cache.addResults(query, autocomplete, center, locationResults);
+                }
+                callback(locationResults.slice(0, this.options.resultsLimit));
+            }).catch(reason => {
+                Util.log(url + " failed. Reason: " + reason, Env.PRODUCTION);
+                callback([]);
+            });
+        } else {
+            const url = this.geocodeServer + "/search?api_key=" + this.apiKey
+                + (bounds ?
+                        "&boundary.rect.min_lat=" + bounds.minLat +
+                        "&boundary.rect.max_lat=" + bounds.maxLat +
+                        "&boundary.rect.min_lon=" + bounds.minLng +
+                        "&boundary.rect.max_lon=" + bounds.maxLng : ""
+                )
+                + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
+                + "&size=1"
+                + "&text=" + query;
+            fetch(url, {
+                method: NetworkUtil.MethodType.GET
+            }).then(NetworkUtil.jsonCallback).then((json: any) => {
+                const features = (json as FeatureCollection).features;
+                const locationResults = !features ? [] : features
+                    .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
+                if (center) {
+                    this.cache.addResults(query, autocomplete, center, locationResults);
+                }
+                callback(locationResults.slice(0, this.options.resultsLimit));
+            }).catch(reason => {
+                Util.log(url + " failed. Reason: " + reason, Env.PRODUCTION);
+                callback([]);
+            });
+        }
     }
 
     public resolve(unresolvedLocation: Location): Promise<Location> {
-        const url = this.geocodeServer +  "/place?api_key=" + this.apiKey + "&ids=" + unresolvedLocation.id;
+        const url = this.geocodeServer + "/place?api_key=" + this.apiKey + "&ids=" + unresolvedLocation.id;
         return fetch(url, {
             method: NetworkUtil.MethodType.GET
         }).then(NetworkUtil.jsonCallback).then((json: any) => {
@@ -87,10 +114,6 @@ class PeliasGeocoder implements IGeocoder {
             unresolvedLocation.hasDetail = true;
             return unresolvedLocation;
         });
-
-        // TODO if unresolved location has no id, then assume that wants to do a forward search
-        // https://api.geocode.earth/v1/search?text=Glenfield post office&api_key=ge-63f76914953caba8&boundary.rect.min_lat=51.7&boundary.rect.max_lat=53&boundary.rect.min_lon=-1.5&boundary.rect.max_lon=0.1&focus.point.lat=52.63624&focus.point.lon=-1.14009
-        // https://api.geocode.earth/v1/search?text=Glenfield post office&api_key=ge-63f76914953caba8&boundary.rect.min_lat=51.7&boundary.rect.max_lat=53&boundary.rect.min_lon=-1.5&boundary.rect.max_lon=0.1
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {

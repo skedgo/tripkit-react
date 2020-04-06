@@ -1,5 +1,5 @@
 import * as React from "react";
-import LocationBox from "../location_box/LocationBox";
+import LocationBox, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../location_box/LocationBox";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
@@ -268,12 +268,18 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
-                                    this.showTooltip(true,TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
+                                    let errorMessage: string;
+                                    if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
+                                        errorMessage = "Cannot resolve address, try another search and pick result from autocomplete list."
+                                    } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
                                         // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
-                                        "Could not get your location. Please set manually" :
-                                        TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED) ?
-                                            "You blocked this site access to your location, please unblock or set it manually" :
-                                            "Could not get your location. Please set manually");
+                                        errorMessage = "Could not get your location. Please set manually";
+                                    } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
+                                        errorMessage = "You blocked this site access to your location, please unblock or set it manually";
+                                    } else {
+                                        errorMessage = "Could not get your location. Please set manually";
+                                    }
+                                    this.showTooltip(true,errorMessage);
                                 }}
                                 ref={(el:any) => this.fromLocRef = el}
                                 inputAriaLabel={ariaLabelFrom}
@@ -315,12 +321,18 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
-                                    this.showTooltip(false,TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE) ?
+                                    let errorMessage: string;
+                                    if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
+                                        errorMessage = "Cannot resolve address, try another search and pick a result from the autocomplete list."
+                                    } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
                                         // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
-                                        "Could not get your location. Please set manually" :
-                                        TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED) ?
-                                            "You blocked this site access to your location, please unblock or set it manually" :
-                                            "Could not get your location. Please set manually");
+                                        errorMessage = "Could not get your location. Please set manually";
+                                    } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
+                                        errorMessage = "You blocked this site access to your location, please unblock or set it manually";
+                                    } else {
+                                        errorMessage = "Could not get your location. Please set manually";
+                                    }
+                                    this.showTooltip(false,errorMessage);
                                 }}
                                 ref={(el:any) => this.toLocRef = el}
                                 inputAriaLabel={ariaLabelTo}
