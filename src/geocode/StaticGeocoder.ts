@@ -41,6 +41,10 @@ class StaticGeocoder implements IGeocoder {
             }
             return;
         }
+        if (!autocomplete) {
+            callback([]);
+            return;
+        }
         const results = this.values.filter((value: Location) => {
             let valueS = (value.name ? value.name.toLowerCase() : "");
             valueS += (value.address ? (valueS ? " " : "") + value.address.toLowerCase() : "");

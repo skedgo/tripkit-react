@@ -13,6 +13,8 @@ import DeviceUtil from "../util/DeviceUtil";
 import {resetStyles} from "../css/ResetStyle.css";
 import City from "../model/location/City";
 import * as CSS from 'csstype';
+import RegionsData from "../data/RegionsData";
+import {TKError} from "../error/TKError";
 
 interface IProps {
     geocodingData: MultiGeocoder,
@@ -43,6 +45,8 @@ interface IState {
     waiting: boolean;
     waitingResolveFor?: Location;
 }
+
+export const ERROR_UNABLE_TO_RESOLVE_ADDRESS = "ERROR_UNABLE_TO_RESOLVE_ADDRESS";
 
 class LocationBox extends Component<IProps, IState> {
 
@@ -136,26 +140,61 @@ class LocationBox extends Component<IProps, IState> {
         if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
             (!locationValue.isCurrLoc() || this.props.resolveCurr)) {
             this.setState({waitingResolveFor: locationValue});
-            this.geocodingData.resolveLocation(locationValue)
-                .then((resolvedLocation: Location) => {
-                    if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
-                        this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
-                            this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
-                            console.log("Resolved: " + JSON.stringify(resolvedLocation));
-                        });
-                    }
-                    if (this.state.waitingResolveFor === locationValue) {
-                        this.setState({
-                            waitingResolveFor: undefined
-                        });
-                    }
-                })
-                .catch((error: Error) => {
-                    if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
-                        this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(locationValue === this.state.highlightedValue, error);
-                        this.setValue(null, false, true);
-                    }
-                });
+            if (locationValue.source) {
+                this.geocodingData.resolveLocation(locationValue)
+                    .then((resolvedLocation: Location) => {
+                        if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
+                            this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
+                                this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
+                                console.log("Resolved: " + JSON.stringify(resolvedLocation));
+                            });
+                        }
+                        if (this.state.waitingResolveFor === locationValue) {
+                            this.setState({
+                                waitingResolveFor: undefined
+                            });
+                        }
+                    })
+                    .catch((error: Error) => {
+                        if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
+                            this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(locationValue === this.state.highlightedValue, error);
+                            this.setValue(null, false, true);
+                        }
+                    });
+            } else {
+                const searchAddress = () => {
+                    this.geocodingData.geocode(locationValue.address, false, this.props.bounds ?
+                        this.props.bounds : null, this.props.focus ? this.props.focus : null,
+                        (query: string, results: Location[]) => {
+                            if (this.state.waitingResolveFor === locationValue) {
+                                this.setState({
+                                    waitingResolveFor: undefined
+                                });
+                            }
+                            if (locationValue === this.state.locationValue) {
+                                if (results.length > 0) {
+                                    this.setValue(results[0], false, true, () => {
+                                        this.itemToLocationMap.set(LocationBox.itemText(locationValue), results[0]);
+                                        console.log("Resolved: " + JSON.stringify(results[0]));
+                                    });
+                                } else {
+                                    this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(
+                                        locationValue === this.state.highlightedValue,
+                                        new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
+                                    // this.setValue(null, false, true);
+                                }
+                            }
+                        })
+                };
+                if (this.props.bounds) {
+                    searchAddress()
+                } else {
+                    RegionsData.instance.requireRegions().then(() => {
+                        setTimeout(searchAddress, 100);
+                    });
+                }
+
+            }
         }
     }
 

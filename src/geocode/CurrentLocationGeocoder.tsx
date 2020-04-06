@@ -23,7 +23,11 @@ class CurrentLocationGeocoder implements IGeocoder {
     }
 
     geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
-        callback(!query ? [Location.createCurrLoc()] : []);
+        if (autocomplete) {
+            callback(!query ? [Location.createCurrLoc()] : []);
+        } else {
+            callback([]);
+        }
     }
 
     getOptions(): GeocoderOptions {

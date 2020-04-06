@@ -90,15 +90,14 @@ class TKShareHelper {
         const searchStr = window.location.search;
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
-        if (queryMap && queryMap.flat) {
-            routingQuery = RoutingQuery.create(
-                Location.create(LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)),
-                    queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc),
-                Location.create(LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)),
-                    queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc),
+        if (queryMap) {
+            const fromLatLng = queryMap.flat ? LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)) : new LatLng();
+            const from = Location.create(fromLatLng, queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc);
+            const toLatlng = queryMap.tlat ? LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)) : new LatLng();
+            const to = Location.create(toLatlng, queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc);
+            routingQuery = RoutingQuery.create(from, to,
                 queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
-                queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000)
-            )
+                queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000))
         }
         return routingQuery;
     }
@@ -107,6 +106,13 @@ class TKShareHelper {
         const searchStr = window.location.search;
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         return queryMap && queryMap.transports && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.transports)), TKTransportOptions);
+    }
+
+    public static parseViewport(): {center: LatLng, zoom: number} | undefined {
+        const searchStr = window.location.search;
+        const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
+        return queryMap && queryMap.clat && queryMap.clng && queryMap.zoom ?
+            {center: LatLng.createLatLng(queryMap.clat, queryMap.clng), zoom: queryMap.zoom} : undefined;
     }
 
     public static resetToHome() {
