@@ -94,6 +94,7 @@ class TKUICard extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
+        const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         const body =
             <div className={classNames(classes.main, "app-style")}>
                 <div ref={(ref: any) => {
@@ -135,7 +136,8 @@ class TKUICard extends React.Component<IProps, IState> {
                     className={classes.body}
                     style={this.props.bodyStyle}
                     // So dragging the card from its content, instead of scrolling it, will drag the card.
-                    freezeScroll={this.state.slideUpPosition !== TKUISlideUpPosition.UP}
+                    // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
+                    freezeScroll={draggable && this.state.slideUpPosition !== TKUISlideUpPosition.UP}
                 >
                     {this.props.children}
                 </TKUIScrollForCard>

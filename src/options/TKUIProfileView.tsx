@@ -23,11 +23,12 @@ import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
-import {TKUISlideUpPosition} from "../card/TKUISlideUp";
+import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
@@ -164,10 +165,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 title={t("Profile")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={() => this.close(true)}
-                slideUpOptions={{
-                    position: TKUISlideUpPosition.UP,
-                    draggable: false
-                }}
+                slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
                     <div className={classes.scrollPanel}>
