@@ -31,6 +31,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     value: Location | null;
     onChange?: (value: Location | null) => void;
     onPreChange?: (location?: Location) => void;
+    onInputTextChange?: (text: string) => void;
     bounds?: BBox;
     focusLatLng?: LatLng;
 }
@@ -97,6 +98,9 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                     }
                                 }
                             }}
+                            onInputTextChange={(text: string) => {
+                                this.props.onInputTextChange && this.props.onInputTextChange(text);
+                            }}
                             iconEmpty={<IconGlass className={classes.glassIcon}/>}
                             style={this.props.injectedStyles.locationBox}
                             inputStyle={this.props.injectedStyles.locationBoxInput}
@@ -139,6 +143,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             },
                             onPreChange: routingContext.onPreChange &&
                             ((location?: Location) => routingContext.onPreChange!(false, location)),
+                            onInputTextChange: routingContext.onInputTextChange &&
+                            ((text: string) => routingContext.onInputTextChange!(false, text)),
                             bounds: bounds,
                             focusLatLng: focusLatLng,
                             ...viewportProps

@@ -19,6 +19,9 @@ export interface IRoutingResultsContext {
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
+    inputTextFrom: string,
+    inputTextTo: string,
+    onInputTextChange?: (from: boolean, text: string) => void,
     region?: Region;
     regionInfo?: RegionInfo;
     viewport?: {center?: LatLng, zoom?: number};    // Maybe define viewport as required.
@@ -54,7 +57,10 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => {}
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => {},
+    inputTextFrom: "",
+    inputTextTo:  "",
+    onInputTextChange: (from: boolean, text: string) => {}
 });
 
 class RoutingResultsProvider extends React.Component<{

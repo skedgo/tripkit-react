@@ -51,6 +51,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     value: RoutingQuery;
     onChange?: (routingQuery: RoutingQuery) => void;
     onPreChange?: (from: boolean, location?: Location) => void;
+    onInputTextChange?: (from: boolean, text: string) => void;
     bounds?: BBox;
     focusLatLng?: LatLng;
     region?: Region;
@@ -266,11 +267,14 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         }
                                     }
                                 }}
+                                onInputTextChange={(text: string) => {
+                                    this.props.onInputTextChange && this.props.onInputTextChange(true, text);
+                                }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
                                     let errorMessage: string;
                                     if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
-                                        errorMessage = "Cannot resolve address, try another search and pick result from autocomplete list."
+                                        errorMessage = "Cannot resolve address, try another search and pick a result from the autocomplete list."
                                     } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
                                         // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
                                         errorMessage = "Could not get your location. Please set manually";
@@ -318,6 +322,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(false, value ? value : undefined);
                                         }
                                     }
+                                }}
+                                onInputTextChange={(text: string) => {
+                                    this.props.onInputTextChange && this.props.onInputTextChange(false, text);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolveCurr={(highlighted: boolean, error: Error) => {
@@ -412,6 +419,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             value: routingContext.query,
                             onChange: routingContext.onQueryChange,
                             onPreChange: routingContext.onPreChange,
+                            onInputTextChange: routingContext.onInputTextChange,
                             bounds: bounds,
                             focusLatLng: focusLatLng,
                             region: routingContext.region,

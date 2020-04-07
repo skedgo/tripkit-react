@@ -23,6 +23,7 @@ interface IProps {
     focus?: LatLng,
     value: Location | null,
     onChange?: (value: Location | null, highlighted: boolean) => void,
+    onInputTextChange?: (text: string) => void,
     resolveCurr?: boolean
     onFailedToResolveCurr?: (highlighted: boolean, error: Error) => void;
     inputAriaLabel?: string;
@@ -189,6 +190,8 @@ class LocationBox extends Component<IProps, IState> {
                 if (this.props.bounds) {
                     searchAddress()
                 } else {
+                    // Wait for bounds, which are set after regions data arrive (geocoder is limited to region bounds,
+                    // and focused to center of first city, if any, or region bounds center otherwise.
                     RegionsData.instance.requireRegions().then(() => {
                         setTimeout(searchAddress, 100);
                     });
@@ -375,13 +378,16 @@ class LocationBox extends Component<IProps, IState> {
         }
     }
 
-    public componentDidUpdate(prevProps: IProps) {
+    public componentDidUpdate(prevProps: IProps, prevState: IState) {
         if (this.props.value !== prevProps.value && this.props.value !== this.state.locationValue) {
             this.setValue(this.props.value);
         }
         if (this.props.resolveCurr && !prevProps.resolveCurr
             && this.props.value && this.props.value.isCurrLoc() && !this.props.value.isResolved()) {
             this.resolve(this.props.value);
+        }
+        if (prevState.inputText !== this.state.inputText) {
+            this.props.onInputTextChange && this.props.onInputTextChange(this.state.inputText);
         }
     }
 

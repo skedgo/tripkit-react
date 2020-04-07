@@ -9,6 +9,7 @@ import StopLocation from "../model/StopLocation";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {Moment} from "moment-timezone";
+import Location from "../model/Location";
 
 interface IProps {
     children: (state: TKState) => React.ReactNode;
@@ -16,6 +17,10 @@ interface IProps {
 
 export interface TKState {
     routingQuery: RoutingQuery;
+    preFrom?: Location;
+    preTo?: Location;
+    inputTextFrom: string;
+    inputTextTo: string;
     region?: Region;
     userProfile: TKUserProfile;
     trips?: Trip[];
@@ -37,6 +42,10 @@ class TKStateConsumer extends React.Component<IProps,{}> {
                                 {(serviceContext: IServiceResultsContext) => {
                                     const state: TKState = {
                                         routingQuery: routingContext.query,
+                                        preFrom: routingContext.preFrom,
+                                        preTo: routingContext.preTo,
+                                        inputTextFrom: routingContext.inputTextFrom,
+                                        inputTextTo: routingContext.inputTextTo,
                                         region: routingContext.region,
                                         userProfile: optionsContext.value,
                                         trips: routingContext.trips,
