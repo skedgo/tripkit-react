@@ -38,6 +38,8 @@ interface IWithRoutingResultsState {
     query: RoutingQuery;
     preFrom?: Location;
     preTo?: Location;
+    inputTextFrom: string;
+    inputTextTo: string
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     regionInfo?: RegionInfo;
@@ -69,6 +71,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             super(props);
             this.state = {
                 query: RoutingQuery.create(),
+                inputTextFrom: "",
+                inputTextTo: "",
                 sort: TripSort.OVERALL,
                 waiting: false,
                 waitingTripUpdate: false,
@@ -391,6 +395,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         this.setState({preFrom: location})
                     } else {
                         this.setState({preTo: location})
+                    }
+                }}
+                inputTextFrom={this.state.inputTextFrom}
+                inputTextTo={this.state.inputTextTo}
+                onInputTextChange={(from: boolean, text: string) => {
+                    if (from) {
+                        this.setState({inputTextFrom: text});
+                    } else {
+                        this.setState({inputTextTo: text});
                     }
                 }}
                 region={this.state.region}

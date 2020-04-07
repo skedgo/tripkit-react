@@ -35,6 +35,6 @@ export {tKUIColors} from "./jss/TKUITheme";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
-    import("./example/tripgo-sample");
-    // import("./example/client-chym-web/client-chym-web");
+    // import("./example/tripgo-sample");
+    import("./example/client-chym-web/client-chym-web");
 }
