@@ -25,7 +25,7 @@ interface IProps {
     onChange?: (value: Location | null, highlighted: boolean) => void,
     onInputTextChange?: (text: string) => void,
     resolveCurr?: boolean
-    onFailedToResolveCurr?: (highlighted: boolean, error: Error) => void;
+    onFailedToResolve?: (highlighted: boolean, error: Error) => void;
     inputAriaLabel?: string;
     inputId?: string;
     sideDropdown?: boolean;
@@ -158,7 +158,7 @@ class LocationBox extends Component<IProps, IState> {
                     })
                     .catch((error: Error) => {
                         if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
-                            this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(locationValue === this.state.highlightedValue, error);
+                            this.props.onFailedToResolve && this.props.onFailedToResolve(locationValue === this.state.highlightedValue, error);
                             this.setValue(null, false, true);
                         }
                     });
@@ -179,7 +179,7 @@ class LocationBox extends Component<IProps, IState> {
                                         console.log("Resolved: " + JSON.stringify(results[0]));
                                     });
                                 } else {
-                                    this.props.onFailedToResolveCurr && this.props.onFailedToResolveCurr(
+                                    this.props.onFailedToResolve && this.props.onFailedToResolve(
                                         locationValue === this.state.highlightedValue,
                                         new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
                                     // this.setValue(null, false, true);
