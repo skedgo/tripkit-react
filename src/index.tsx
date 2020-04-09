@@ -18,6 +18,7 @@ export {TKUIButtonType} from "./buttons/TKUIButton";
 export {default as genStylesJSS} from "./css/GenStyle.css";
 export {default as genStyles} from "./css/general.module.css";
 export {default as LatLng} from "./model/LatLng";
+export {default as TKLocation} from "./model/Location";
 export {default as Region} from "./model/region/Region";
 export {default as RoutingQuery} from "./model/RoutingQuery";
 export {default as TKUserProfile} from "./model/options/TKUserProfile";
@@ -35,6 +36,6 @@ export {tKUIColors} from "./jss/TKUITheme";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
-    // import("./example/tripgo-sample");
-    import("./example/client-chym-web/client-chym-web");
+    import("./example/tripgo-sample");
+    // import("./example/client-chym-web/client-chym-web");
 }

@@ -120,22 +120,18 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             return false;
         }
         let targetPos: TKUISlideUpPosition;
-        if (this.state.deltaTop > 0) {
-            if (this.getPosition() === TKUISlideUpPosition.UP) {
-                targetPos = this.state.top > this.getTopFromPosition(TKUISlideUpPosition.MIDDLE) ?
-                    TKUISlideUpPosition.DOWN : TKUISlideUpPosition.MIDDLE;
-            } else {
-                targetPos = this.getPosition() === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.DOWN : this.getPosition();
-            }
-        } else if (this.state.deltaTop < 0) {
-            if (this.getPosition() === TKUISlideUpPosition.DOWN) {
-                targetPos = this.state.top < this.getTopFromPosition(TKUISlideUpPosition.MIDDLE) ?
-                    TKUISlideUpPosition.UP: TKUISlideUpPosition.MIDDLE;
-            } else {
-                targetPos = this.getPosition() === TKUISlideUpPosition.MIDDLE ? TKUISlideUpPosition.UP : this.getPosition();
-            }
-        } else {    // This happens whe user taps the card.
-            targetPos = this.getPosition();
+        const top = this.state.top;
+        const deltaTop = this.state.deltaTop;
+        if (top < this.getTopFromPosition(TKUISlideUpPosition.MIDDLE)) {
+            // If deltaTop = 0, it means the user surpassed the top limits of the device screen, so go (stay) UP.
+            targetPos = deltaTop <= 0 ? TKUISlideUpPosition.UP : TKUISlideUpPosition.MIDDLE;
+        } else if (top > this.getTopFromPosition(TKUISlideUpPosition.MIDDLE)) {
+            // If deltaTop = 0, it means the user surpassed the bottom limits of the device screen.
+            targetPos = deltaTop >= 0 ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.MIDDLE;
+        } else if (deltaTop !== 0) { // If top is exactly at MIDDLE position and deltaTop is not 0, then go DOWN or UP depending on deltaTop
+            targetPos = deltaTop > 0 ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP;
+        } else { // If top is exactly at MIDDLE position and deltaTop is 0, then it means the user tapped the card, so stay at MIDDLE.
+            targetPos = TKUISlideUpPosition.MIDDLE;
         }
         // To reflect card reached a definite position (user is not dragging it), so next a tap doesn't trigger a card
         // position change
@@ -183,7 +179,12 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             >
                 <div className={classNames(classes.container, this.props.containerClass)}
                      ref={(ref: any) => {
-                         if (ref && !this.containerElem) {
+                         ref && console.log(ref.parentElement.offsetHeight);
+                         if (ref && ref.parentElement !== this.containerElem) {
+                             console.log("alert!  " + (this.containerElem ? this.containerElem.offsetHeight : ""))
+                         }
+                         // if (ref && !this.containerElem) {
+                         if (ref && ref.parentElement !== this.containerElem) {
                              this.containerElem = ref.parentElement;
                              this.onPositionChange(this.getPosition());
                          }
