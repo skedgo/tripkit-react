@@ -46,12 +46,26 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         reportBtn: {
             position: 'absolute',
             right: '12px',
-            bottom: !DeviceUtil.isPhone ? '80px' : undefined,
-            top: (props: TKUITKUITripPlannerProps) => DeviceUtil.isPhone ? (props.directionsView ? '128px' : '113px') : undefined,
             width: '30px',
             height: '30px',
             opacity: '.5',
             cursor: 'pointer',
-            zIndex: '1000'
+            // TODO: replaced next props by two separate classes below until making
+            // a props update refresh injected css. See comment in StyleHelper.onRefreshStyles
+            // Increase z-index just on landscape to avoid button getting behind modal background.
+            // zIndex: (props: TKUITKUITripPlannerProps) => props.landscape || (props.portrait && !DeviceUtil.isPhone) ? '2000' : '1000'
+            // bottom: (props: TKUITKUITripPlannerProps) => props.landscape ? '80px' : undefined,
+            // top: (props: TKUITKUITripPlannerProps) => props.portrait ? (props.directionsView ? '128px' : '113px') : undefined,
+            // zIndex: (props: TKUITKUITripPlannerProps) => props.landscape ? '2000' : '1000'
+        },
+        reportBtnLandscape: {
+            bottom: '80px',
+            top: undefined,
+            zIndex: '2000'
+        },
+        reportBtnPortrait: {
+            bottom: undefined,
+            top: (props: TKUITKUITripPlannerProps) => props.directionsView ? '128px' : '113px',
+            zIndex: (props: TKUITKUITripPlannerProps) => '1000'
         }
     });

@@ -1,5 +1,5 @@
-import {TKState, TKUtil} from '../../index';
-import TKShareHelper from "../../share/TKShareHelper";
+import {TKState} from '../../index';
+import {feedbackTextFromState} from "../../index";
 
 class Usersnap {
 
@@ -30,15 +30,7 @@ class Usersnap {
     };
 
     public static setFeedbackData(state: TKState) {
-        const optionsJson = TKUtil.serialize(state.userProfile);
-        const location = window.location;
-        const plannerUrl = location.protocol + "//" + location.hostname
-            + (location.port ? ":" + location.port : "") + location.pathname;
-        this.feedbackData =
-            "webapp url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n\n"
-            + "options: " + JSON.stringify(optionsJson) + "\n\n"
-            + "satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n\n"
-            + "trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "");
+        this.feedbackData = feedbackTextFromState(state);
     }
 
 }

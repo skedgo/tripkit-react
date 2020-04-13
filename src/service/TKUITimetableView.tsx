@@ -239,7 +239,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             });
             if (nextDepartureIndex !== -1 && this.scrollRef) {
                 Array.prototype.slice.call(this.scrollRef.children).filter((child: any) =>
-                    !child.className.includes("DaySeparator")
+                    child.className.includes // This is to filter svg IconSpin, which has className.includes undefined
+                    && !child.className.includes("DaySeparator")
                 )[nextDepartureIndex].scrollIntoView();
             }
         }

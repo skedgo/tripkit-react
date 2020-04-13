@@ -77,6 +77,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     tripToBadge: Map<Trip, Badges>;
     expanded?: Trip;
+    showTransportSwitches: boolean;
 }
 
 class TKUIResultsView extends React.Component<IProps, IState> {
@@ -86,7 +87,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            tripToBadge: new Map<Trip, Badges>()
+            tripToBadge: new Map<Trip, Badges>(),
+            showTransportSwitches: false
         };
         this.onKeyDown = this.onKeyDown.bind(this);
     }
@@ -168,11 +170,20 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     {this.props.onShowOptions &&
                     <TKUITooltip
                         placement="right"
-                        overlay={<TKUITransportSwitchesView onMoreOptions={this.props.onShowOptions}/>}
-                        mouseEnterDelay={.5}
-                        trigger={["click"]}
+                        overlay={
+                            <TKUITransportSwitchesView
+                                onMoreOptions={this.props.onShowOptions ?
+                                    () => {
+                                        this.setState({showTransportSwitches: false});
+                                        this.props.onShowOptions!();
+                                    } : undefined}
+                            />
+                        }
+                        visible={this.state.showTransportSwitches}
+                        onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
                     >
-                        <button className={classes.transportsBtn}>
+                        <button className={classes.transportsBtn}
+                                onClick={() => this.setState({showTransportSwitches: true})}>
                             Transport options
                         </button>
                     </TKUITooltip>

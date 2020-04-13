@@ -94,6 +94,7 @@ interface IState {
     toTooltip: boolean;
     fromTooltipText?: string;
     toTooltipText?: string;
+    showTransportSwitches: boolean;
 }
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
@@ -110,7 +111,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         this.state = {
             timePanelOpen: false,
             fromTooltip: false,
-            toTooltip: false
+            toTooltip: false,
+            showTransportSwitches: false
         };
         this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
         this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions);
@@ -355,13 +357,19 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement="right"
                             overlay={
                                 <TKUITransportSwitchesView
-                                    onMoreOptions={this.props.onShowTransportOptions}
+                                    onMoreOptions={this.props.onShowTransportOptions ?
+                                        () => {
+                                            this.setState({showTransportSwitches: false});
+                                            this.props.onShowTransportOptions!();
+                                        } : undefined}
                                 />
                             }
-                            mouseEnterDelay={.5}
-                            trigger={["click"]}
+                            visible={this.state.showTransportSwitches}
+                            onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
                         >
-                            <button className={classes.transportsBtn}>
+                            <button className={classes.transportsBtn}
+                                    onClick={() => this.setState({showTransportSwitches: true})}
+                            >
                                 Transport options
                             </button>
                         </TKUITooltip>}
