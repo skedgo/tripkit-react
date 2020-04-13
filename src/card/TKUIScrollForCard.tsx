@@ -18,7 +18,7 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
     private lastTouchY: number = 0;
 
     public render(): React.ReactNode {
-        const {scrollRef: any, ...props} = this.props;
+        const {scrollRef: any, freezeScroll: boolean, ...props} = this.props;
         return (
             <div
                 {...props}

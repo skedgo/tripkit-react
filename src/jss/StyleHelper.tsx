@@ -82,6 +82,13 @@ export function withStyleInjection<
             this.onRefreshStyles();
         }
 
+        /**
+         * TODO: re-injecting sheet to refresh styles has the problem that it triggers the re-construction of the
+         * entire subtree.
+         * As per react-jss documentation, it seems that refresh of css on props update should happen automatically:
+         * https://cssinjs.org/react-jss/?v=v10.0.0-alpha.3#dynamic-values
+         * Investigate why it doesn't work.
+         */
         public onRefreshStyles(forceUpdate: boolean = false) {
             const props = this.props;
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);

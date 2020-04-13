@@ -70,6 +70,8 @@ export interface IStyle {
     queryPanel: CSSProps<IProps>;
     mapMain: CSSProps<IProps>;
     reportBtn: CSSProps<IProps>;
+    reportBtnLandscape: CSSProps<IProps>;
+    reportBtnPortrait: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -169,6 +171,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             !toLocation.isDroppedPin() && !(toLocation instanceof StopLocation);
     }
 
+    private isShowTripDetail() {
+        return this.state.showTripDetail && this.props.selected && !this.props.timetableForSegment;
+    }
+
+    private isShowServiceDetail() {
+        return this.props.selectedService && !this.props.timetableForSegment;
+    }
+
+    /**
+     * If this.ref wasn't computed use body height. Notice this may cause issues if
+     * body's height doesn't coincide with parent height, and we actually want parent
+     * height.
+     */
+    private getContainerHeight(): number {
+        return this.ref ? this.ref.offsetHeight : (window as any).document.body.offsetHeight;
+    }
+
     public render(): React.ReactNode {
         const t = this.props.t;
         const searchBar =
@@ -209,7 +228,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     initPosition: TKUISlideUpPosition.UP,
                     draggable: false,
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
+                    modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
             />;
         const queryInput = this.props.directionsView &&
@@ -237,7 +256,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     draggable: DeviceUtil.isTouch(),
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 145, unit: 'px'} : undefined
+                    modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
             />;
         const timetableView = this.isShowTimetable() ?
@@ -258,10 +277,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     draggable: false,
                     modalUp: this.props.landscape ? {top: this.props.timetableForSegment ? 40 :
                             this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 40, unit: 'px'} : undefined
+                    modalDown: {top: this.getContainerHeight() - 40, unit: 'px'}
                 }}
             /> : null;
-        const serviceDetailView = this.props.selectedService && !this.props.timetableForSegment ?
+        const serviceDetailView = this.isShowServiceDetail() ?
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}
                 slideUpOptions={{
@@ -270,7 +289,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
-                    modalDown: this.ref ? {top: this.ref.offsetHeight - 130, unit: 'px'} : undefined
+                    modalDown: {top: this.getContainerHeight() - 130, unit: 'px'}
                 }}
             /> : null;
         const favouritesView = this.state.showFavourites && !this.props.directionsView &&
@@ -282,7 +301,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
                     modalMiddle: {top: 55, unit: '%'},
-                    modalDown: {top: this.ref.offsetHeight - 80, unit: 'px'}
+                    modalDown: {top: this.getContainerHeight() - 80, unit: 'px'}
                 }}
             />;
         const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
@@ -304,11 +323,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             /> : null;
 
         let tripDetailView: any;
-        if (this.state.showTripDetail && this.props.selected && !this.props.timetableForSegment) {
+        if (this.isShowTripDetail()) {
             if (DeviceUtil.isTouch()) {
                 tripDetailView =
                     <TKUITripOverviewView
-                        value={this.props.selected}
+                        value={this.props.selected!}
                         onRequestClose={() => {
                             this.setState({showTripDetail: false})
                         }}
@@ -322,14 +341,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
-                const selected = sortedTrips.indexOf(this.props.selected);
+                const selected = sortedTrips.indexOf(this.props.selected!);
                 tripDetailView =
                     <TKUICardCarousel
                         selected={selected}
                         onChange={(selected: number) => this.props.onChange((this.props.trips || [])[selected])}
                         slideUpOptions={{
                             position: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                            modalDown: {top: this.ref.offsetHeight - 100, unit: 'px'},
+                            modalDown: {top: this.getContainerHeight() - 100, unit: 'px'},
                             draggable: false
                         }}
                     >
@@ -358,7 +377,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             && !locationDetailView ? 0 : 500;
         } else {
             if (this.props.directionsView && this.props.trips) {
-                mapPadding.bottom = this.ref ? this.ref.offsetHeight * .50 : 20;
+                mapPadding.bottom = this.getContainerHeight() * .50;
             }
             if (queryInput) {
                 mapPadding.top = 100;
@@ -366,7 +385,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 mapPadding.top = 50;
             }
             if (serviceDetailView) {
-                mapPadding.bottom = this.ref ? this.ref.offsetHeight * .55 : 20;
+                mapPadding.bottom = this.getContainerHeight() * .55;
             }
         }
         // this.props.landscape ? {left: 500} :
@@ -376,7 +395,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {(config: TKUIConfig) =>
                     <div id="mv-main-panel"
                          className={classNames(classes.main, "app-style")}
-                         ref={el => this.ref = el}
+                         ref={el => {
+                             if(el) {   // since el comes null intermittently
+                                 this.ref = el;
+                             }
+                         }}
                     >
                         <div className={classNames(classes.queryPanel
                             // , "sg-animate-fade",
@@ -404,7 +427,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 />
                             </TKUIMapView>
                         </div>
-                        <TKUIReportBtn className={classes.reportBtn}/>
+                        <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>
                         {sideBar}
                         {settings}
                         {locationDetailView}
@@ -427,6 +450,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
+        // TODO: what happens if this.ref is not instantiated yet, or changes since trip planner is re-build?
+        // E.g. refresh styles.
         Modal.setAppElement(this.ref);
 
         if (TKShareHelper.isSharedQueryLink()) {
@@ -484,6 +509,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             if (e.keyCode === 27) { // Close sidebar on escape
                 if (this.state.showSidebar) {
                     this.setState({showSidebar: false});
+                } else if (this.isShowTripDetail()) {
+                    this.setState({showTripDetail: false});
+                } else if (this.isShowServiceDetail()) {
+                    this.props.onServiceSelection(undefined);
                 }
             }
         });
@@ -542,6 +571,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 tripUpdateStatus: undefined
             }), 2000);
         }
+
+        // Need to re-inject styles so css properties based on portrait / landscape take effect.
+        // TODO: disable since it triggers the re-construction of TKUITripPlanner, which causes some issues.
+        // See comment on StyleHelper.onRefreshStyles and on TKUITripPlanner.css.ts
+        // if (prevProps.landscape !== this.props.landscape) {
+        //     this.props.refreshStyles()
+        // }
     }
 
 

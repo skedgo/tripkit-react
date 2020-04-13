@@ -73,8 +73,6 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             ...resetStyles.button,
             position: 'absolute',
             right: '10px',
-            bottom: !DeviceUtil.isPhone ? '30px' : undefined,
-            top: (props: TKUIMapViewProps) => DeviceUtil.isPhone ? (props.directionsView ? '83px' : '68px') : undefined,
             width: '35px',
             height: '35px',
             backgroundColor: 'white',
@@ -88,7 +86,19 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
                 color: theme.colorPrimary,
                 width: '100%',
                 height: '100%'
-            }
+            },
+            // TODO: replaced next props by two separate classes below until making
+            // a props update refresh injected css. See comment in StyleHelper.onRefreshStyles
+            // bottom: (props: TKUIMapViewProps) => props.landscape ? '30px' : undefined,
+            // top: (props: TKUIMapViewProps) => props.portrait ? (props.directionsView ? '83px' : '68px') : undefined,
+        },
+        currentLocBtnLandscape: {
+            bottom: '30px',
+            top: undefined,
+        },
+        currentLocBtnPortrait: {
+            bottom: undefined,
+            top: (props: TKUIMapViewProps) => props.directionsView ? '83px' : '68px',
         },
         resolvingCurrLoc: {
             '& svg': {

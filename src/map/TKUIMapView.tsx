@@ -84,6 +84,8 @@ export interface IStyle {
     menuPopupRight: CSSProps<IProps>;
     currentLocMarker: CSSProps<IProps>;
     currentLocBtn: CSSProps<IProps>;
+    currentLocBtnLandscape: CSSProps<IProps>;
+    currentLocBtnPortrait: CSSProps<IProps>;
     resolvingCurrLoc: CSSProps<IProps>;
     vehicle: CSSProps<IProps>;
     segmentIconClassName: CSSProps<IProps>;
@@ -535,7 +537,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     placement={"right"}
                     reference={(ref: any) => this.userLocTooltipRef = ref}
                 >
-                    <button className={classNames(classes.currentLocBtn, this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
+                    <button className={classNames(classes.currentLocBtn,
+                        this.props.landscape ? classes.currentLocBtnLandscape : classes.currentLocBtnPortrait,
+                        this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
                             onClick={() => this.onTrackUserLocation(true, (error: Error) => {
                                 if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
                                     this.showUserLocTooltip("Please allow this site to track your location");
@@ -582,8 +586,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.wasDoubleClick = true;
         });
 
-        // TODO Delete:
-        setTimeout(() => this.onResize(), 5000);
+        // TODO Delete: Can actually delete this? It causes an exception sometimes
+        // setTimeout(() => this.onResize(), 5000);
     }
 
     public componentDidUpdate(prevProps: IProps): void {
@@ -631,6 +635,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 }
             }
         }
+
+        // Need to re-inject styles so css properties based on portrait / landscape take effect.
+        // TODO: disable since it triggers the re-construction of TKUITripPlanner, which causes some issues.
+        // See comment on StyleHelper.onRefreshStyles
+        // if (prevProps.landscape !== this.props.landscape) {
+        //     this.props.refreshStyles()
+        // }
     }
 
     public fitBounds(bounds: BBox) {
