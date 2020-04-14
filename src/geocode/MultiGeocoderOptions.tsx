@@ -42,10 +42,14 @@ class MultiGeocoderOptions {
         const favToLocations = (favourites: Favourite[], recent: boolean) => {
             const locations = favourites
                 .map((favourite: Favourite) => Util.iAssign(
+                    // TODO: for trips it's just adding to, see if should add also from.
                     favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
                     { // To avoid mutating original location.
                         source: recent ? recentSourceId : favouritesSourceId
                     }));
+            // TODO: remove redundant / analogous favourites, which may happen since they come
+            // from different sources. Probably use the analogResults function below, but
+            // before overriding source to that of Favourite / Recent.
             return Util.addAllNoRep(([] as Location[]), locations,
                 (e1?: Location | null, e2?: Location | null) =>
                     e1 === undefined ? e2 === undefined :
@@ -123,13 +127,18 @@ class MultiGeocoderOptions {
 
             return 0;
         };
+
+        // It's used to remove duplicates from different sources. We assume results returned
+        // by each source is free of duplicates (is responsibility of the source to ensure that)
         const analogResults = (r1: Location, r2: Location) => {
             const relevance = Math.max(LocationUtil.relevance(r1.address, r2.address) , LocationUtil.relevance(r2.address, r1.address));
             const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
             if (r1.source !== r2.source) {
                 Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance);
             }
-            if (r1.source !== r2.source && relevance > .7 && (LocationUtil.distanceInMetres(r1, r2) < 100)) {
+            if (r1.source !== r2.source &&
+                ((r1 instanceof StopLocation && r2 instanceof StopLocation) ? r1.equals(r2) :
+                        relevance > .7 && (LocationUtil.distanceInMetres(r1, r2) < 100))) {
                 return true;
             }
             return false;

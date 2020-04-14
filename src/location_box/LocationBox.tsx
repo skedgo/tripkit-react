@@ -94,6 +94,10 @@ class LocationBox extends Component<IProps, IState> {
         return location instanceof City ? location.name : location.address;
     }
 
+    private static itemId(location: Location): string {
+        return LocationBox.itemText(location) + (location.id ? "-" + location.id : "");
+    }
+
     /**
      * Set a location to the location box.
      * @param {Location | null} locationValue - The location to set.
@@ -146,7 +150,7 @@ class LocationBox extends Component<IProps, IState> {
                     .then((resolvedLocation: Location) => {
                         if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
                             this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
-                                this.itemToLocationMap.set(LocationBox.itemText(locationValue), resolvedLocation);
+                                this.itemToLocationMap.set(LocationBox.itemId(locationValue), resolvedLocation);
                                 console.log("Resolved: " + JSON.stringify(resolvedLocation));
                             });
                         }
@@ -175,7 +179,7 @@ class LocationBox extends Component<IProps, IState> {
                             if (locationValue === this.state.locationValue) {
                                 if (results.length > 0) {
                                     this.setValue(results[0], false, true, () => {
-                                        this.itemToLocationMap.set(LocationBox.itemText(locationValue), results[0]);
+                                        this.itemToLocationMap.set(LocationBox.itemId(locationValue), results[0]);
                                         console.log("Resolved: " + JSON.stringify(results[0]));
                                     });
                                 } else {
@@ -234,9 +238,9 @@ class LocationBox extends Component<IProps, IState> {
         this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
-                const displayText = LocationBox.itemText(results[i]);
-                items.push({label: displayText});
-                this.itemToLocationMap.set(displayText, results[i]);
+                const item = {label: LocationBox.itemText(results[i]), id: LocationBox.itemId(results[i])};
+                items.push(item);
+                this.itemToLocationMap.set(item.id, results[i]);
             }
         }
         // Next two lines are to reset highlighted item
@@ -252,8 +256,8 @@ class LocationBox extends Component<IProps, IState> {
         })
     }
 
-    private onSelect(selectedItem: string) {
-        const locationValue = this.itemToLocationMap.get(selectedItem);
+    private onSelect(selectedItem: string, item: any) {
+        const locationValue = this.itemToLocationMap.get(item.id);
         this.setValue(locationValue!, false, true);
         this.inputRef.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
     }
@@ -355,9 +359,9 @@ class LocationBox extends Component<IProps, IState> {
 
     private renderItem(item: any, isHighlighted: boolean) {
         if (isHighlighted) {
-            this.highlightedItem = item.label;
+            this.highlightedItem = item.id;
         }
-        const location = this.itemToLocationMap.get(item.label)!;
+        const location = this.itemToLocationMap.get(item.id)!;
         const geocoder = this.geocodingData.options.getGeocoderById(location.source!);
         return (
             <ResultItem
@@ -443,7 +447,7 @@ class LocationBox extends Component<IProps, IState> {
                                 }
                                 this.props.onFocus && this.props.onFocus();
                             },
-                            "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.label).indexOf(this.highlightedItem) : undefined,
+                            "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.id).indexOf(this.highlightedItem) : undefined,
                             "aria-label": this.props.inputAriaLabel,
                             id: this.props.inputId,
                             "aria-owns": this.state.ddopen() ? popupId : undefined,

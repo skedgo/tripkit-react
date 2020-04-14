@@ -50,7 +50,8 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         header: {
-            padding: (props: TKUICardProps) => hasHandle(props) ? '0 16px' : '12px 16px',
+            // If !hasHandle(props) set padding top of 15px to compensate 15px height handle
+            padding: (props: TKUICardProps) => hasHandle(props) ? '0 16px' : '15px 16px 12px',
             color: 'black',
         },
 
