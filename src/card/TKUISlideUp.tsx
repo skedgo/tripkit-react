@@ -179,11 +179,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             >
                 <div className={classNames(classes.container, this.props.containerClass)}
                      ref={(ref: any) => {
-                         ref && console.log(ref.parentElement.offsetHeight);
-                         if (ref && ref.parentElement !== this.containerElem) {
-                             console.log("alert!  " + (this.containerElem ? this.containerElem.offsetHeight : ""))
-                         }
-                         // if (ref && !this.containerElem) {
                          if (ref && ref.parentElement !== this.containerElem) {
                              this.containerElem = ref.parentElement;
                              this.onPositionChange(this.getPosition());

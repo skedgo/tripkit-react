@@ -259,7 +259,7 @@ class LocationBox extends Component<IProps, IState> {
     private onSelect(selectedItem: string, item: any) {
         const locationValue = this.itemToLocationMap.get(item.id);
         this.setValue(locationValue!, false, true);
-        this.inputRef.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
+        this.inputRef && this.inputRef.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
     }
 
     /**
@@ -309,7 +309,12 @@ class LocationBox extends Component<IProps, IState> {
     private onClearClicked() {
         // focus() must be called after completion of setState() inside setValue()
         this.setValue(null, false, true,
-            () => this.inputRef.focus());
+            () => {
+                setTimeout(() => {
+                    this.inputRef && this.inputRef.focus();
+                }, 100);    // TODO: see why: if don't put this timeout focus is not set, or is lost.
+
+            });
     }
 
     // noinspection JSUnusedLocalSymbols
@@ -398,13 +403,6 @@ class LocationBox extends Component<IProps, IState> {
     public componentDidMount() {
         this.setValue(this.props.value);
     }
-
-    public setFocus() {
-        if (this.inputRef) {
-            this.inputRef.focus();
-        }
-    }
-
     private getPopupId() {
         return this.props.inputId ? "popup-" + this.props.inputId : undefined;
     }
@@ -461,7 +459,11 @@ class LocationBox extends Component<IProps, IState> {
                         ...this.props.style
                     }}
                     autoHighlight={false}
-                    ref={el => this.inputRef = el}
+                    ref={el => {
+                        if (el) {
+                            this.inputRef = el;
+                        }
+                    }}
                     selectOnBlur={true}
                 />
         );
