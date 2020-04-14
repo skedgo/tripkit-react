@@ -2,11 +2,13 @@ import * as React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import RealTimeAlert from "../model/service/RealTimeAlert";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUIAlertsViewDefaultStyle} from "./TKUIAlertsView.css";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
+import TKUIRendersCard from "../card/TKUIRendersCard";
+import {Subtract} from "utility-types";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alerts: RealTimeAlert[];
@@ -14,7 +16,11 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps {
+    renderCard: (props: TKUICardClientProps, id: any) => void;
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -36,20 +42,30 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUIAlertsView extends React.Component<IProps, {}> {
 
-    public render(): React.ReactNode {
+    constructor(props: IProps) {
+        super(props);
+        this.renderCard = this.renderCard.bind(this);
+        this.renderCard(true);
+    }
+
+    /**
+     * Call this function on construction and update, instead on render, since if on the latter a warn is triggered
+     * by react that a render shouldn't have a collateral effect.
+     */
+    private renderCard(open: boolean) {
         const classes = this.props.classes;
         const t = this.props.t;
         const alerts = this.props.alerts;
-        return (
-            <TKUICard
-                title={t("Alerts")}
-                presentation={CardPresentation.SLIDE_UP}
-                slideUpOptions={this.props.slideUpOptions}
-                onRequestClose={this.props.onRequestClose}
-            >
+        this.props.renderCard({
+            title: t("Alerts"),
+            presentation: CardPresentation.SLIDE_UP,
+            slideUpOptions: this.props.slideUpOptions,
+            onRequestClose: this.props.onRequestClose,
+            open: open,
+            children:
                 <div className={classes.main}>
-                    {alerts.map((alert: RealTimeAlert) =>
-                        <div className={classes.alert}>
+                    {alerts.map((alert: RealTimeAlert, i: number) =>
+                        <div className={classes.alert} key={i}>
                             <AlertIcon className={classes.alertIcon}/>
                             <div className={classes.content}>
                                 <div className={classes.title}>
@@ -61,11 +77,32 @@ class TKUIAlertsView extends React.Component<IProps, {}> {
                             </div>
                         </div>)}
                 </div>
-            </TKUICard>
-        )
+        }, this);
+    }
+
+    public render(): React.ReactNode {
+        return null;
+    }
+
+    public componentDidUpdate() {
+        this.renderCard(true);
+    }
+
+    public componentWillUnmount() {
+        this.renderCard(false);
     }
 
 }
 
-export default connect((config: TKUIConfig) => config.TKUIAlertsView, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <TKUIRendersCard>
+            {(renderCard: (props: TKUICardClientProps, id: any) => void) =>
+                children!({
+                    ...inputProps,
+                    renderCard: renderCard
+                })
+            }
+        </TKUIRendersCard>;
+
+export default connect((config: TKUIConfig) => config.TKUIAlertsView, config, Mapper);
