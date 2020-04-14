@@ -1,11 +1,3 @@
-html {
-  height: 100%;
-  /* Prevent overscroll/bounce effect on main element. See
-  https://www.bram.us/2016/05/02/prevent-overscroll-bounce-in-ios-mobilesafari-pure-css/ */
-  position: fixed;
-  overflow: hidden;
-}
-
 #trip-planner-root {
   overflow-x: hidden;
 }
