@@ -66,17 +66,16 @@
         html, body, #tripgo-sample-root {
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
             width: 100%;
             display: -webkit-flex;
             display: flex;
-        }
 
-        /*@media (min-width: 801px) {*/
-            /*#tripgo-sample-root {*/
-                /*height: 100vh;*/
-            /*}*/
-        /*}*/
+            height: 100%;
+            /* Prevent overscroll/bounce effect on main element. See
+            https://www.bram.us/2016/05/02/prevent-overscroll-bounce-in-ios-mobilesafari-pure-css/ */
+            position: fixed;
+            overflow: hidden;
+        }
     </style>
     <script>
         var tKUserLocationPromise;
