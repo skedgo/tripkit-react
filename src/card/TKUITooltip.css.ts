@@ -2,6 +2,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITheme} from "../jss/TKUITheme";
 import {TKUITooltipProps, TKUITooltipStyle} from "./TKUITooltip";
 import genStyles from "../css/GenStyle.css";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipProps> =
     (theme: TKUITheme) => ({
@@ -9,6 +10,7 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
             opacity: '1!important',
             background: 'none!important',
             zIndex: '1100!important',
+            maxWidth: '95%',
             // Just to use currentColor below
             color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : 'white',
             '& .rc-tooltip-inner': {
@@ -64,5 +66,21 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
             border: 'none',
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             fontFamily: theme.fontFamily
-        }
+        },
+        btnClear: {
+            ...resetStyles.button,
+            padding: '0',
+            height: '18px',
+            width: '18px',
+            cursor: 'pointer',
+            marginLeft: '15px',
+            ...genStyles.noShrink,
+            ...genStyles.alignSelfStart
+        },
+        iconClear: {
+            color: 'black',
+            width: '100%',
+            height: '100%',
+            ...genStyles.svgFillCurrColor
+        },
     });

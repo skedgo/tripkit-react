@@ -1,4 +1,4 @@
-import React from "react";
+import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import genStyles from "../css/general.module.css";
@@ -32,8 +32,11 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
     children?: any;
     bodyStyle?: CSS.Properties;
+    bodyClassName?: string;
     touchEventsOnChildren?: boolean; // false by default.
     handleRef?: (ref: any) => void;
+    scrollRef?: (instance: HTMLDivElement | null) => void;
+    onScroll?: UIEventHandler<HTMLDivElement>;
 }
 
 interface IStyle {
@@ -73,6 +76,7 @@ export function hasHandle(props: IProps): boolean {
 interface IState {
     handleRef?: any;
     slideUpPosition: TKUISlideUpPosition;
+    cardOnTop: boolean;
 }
 
 class TKUICard extends React.Component<IProps, IState> {
@@ -84,10 +88,12 @@ class TKUICard extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
+        const slideUpPosition = !this.props.slideUpOptions ? TKUISlideUpPosition.UP :
+            this.props.slideUpOptions.position ? this.props.slideUpOptions.position :
+                this.props.slideUpOptions.initPosition ? this.props.slideUpOptions.initPosition : TKUISlideUpPosition.UP;
         this.state = {
-            slideUpPosition: !this.props.slideUpOptions ? TKUISlideUpPosition.UP :
-                this.props.slideUpOptions.position ? this.props.slideUpOptions.position :
-                    this.props.slideUpOptions.initPosition ? this.props.slideUpOptions.initPosition : TKUISlideUpPosition.UP
+            slideUpPosition: slideUpPosition,
+            cardOnTop: slideUpPosition === TKUISlideUpPosition.UP
         }
     }
 
@@ -133,11 +139,13 @@ class TKUICard extends React.Component<IProps, IState> {
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
                 <TKUIScrollForCard
-                    className={classes.body}
+                    className={classNames(classes.body, this.props.bodyClassName)}
                     style={this.props.bodyStyle}
                     // So dragging the card from its content, instead of scrolling it, will drag the card.
                     // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
-                    freezeScroll={draggable && this.state.slideUpPosition !== TKUISlideUpPosition.UP}
+                    freezeScroll={draggable && !this.state.cardOnTop}
+                    scrollRef={this.props.scrollRef}
+                    onScroll={this.props.onScroll}
                 >
                     {this.props.children}
                 </TKUIScrollForCard>
@@ -150,6 +158,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     containerClass={classes.modalContainer}
                     open={this.props.open}
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
+                    cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
                 >
                     {body}
                 </TKUISlideUp>

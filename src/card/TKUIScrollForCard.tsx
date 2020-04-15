@@ -22,8 +22,13 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
         return (
             <div
                 {...props}
-                style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} : {overflowY: 'hidden'},
-                }}
+                // If freezeScroll (card not on top) and scroll is at initial position, then set overflowY to visible,
+                // instead of hidden, since it avoids the undesired scroll freeze problem. Still need to use hidden
+                // otherwise, e.g. when user did scroll down, then dragged the card down from header to middle position,
+                // and then dragged the card up to top from its body. In this situation we need the workaround below.
+                style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} :
+                        this.scrollRef && this.scrollRef.scrollTop <= 10 ? {overflowY: 'visible'} : {overflowY: 'hidden'}}}
+                // style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} : {overflowY: 'hidden'}}}
                 ref={(scrollRef: any) => {
                     if (scrollRef && !this.scrollRef) {
                         this.scrollRef = scrollRef;
@@ -41,7 +46,7 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
                             // web-app or address bar hidden on Safari) and after dragging card up from its body, and
                             // immediatly trying to scroll down (i.e. slide fingers upwards). If continue trying to scroll
                             // down repeatedly the scroll continues freezed, but if I wait for just 1 or 2 seconds it
-                            // recovers movement. The workaround detets finger touch move and adjust scroll programatically
+                            // recovers movement. The workaround detects finger touch move and adjust scroll programatically
                             // to mimic finger direction. Use 1.5 to give a bit more speed.
                             // TODO: solve the underlying issue. In the meantime, ensure the workaround activates just
                             // when neccesary: Sadfari + iOS + find other conditions, so doesn't cause any bad effect
@@ -60,13 +65,12 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
                     }
                     if (this.props.scrollRef) {
                         this.props.scrollRef(scrollRef);
-
                     }
                 }}
             >
                 {this.props.children}
             </div>
-        )
+        );
     }
 
 }

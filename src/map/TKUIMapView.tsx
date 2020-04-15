@@ -536,6 +536,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     visible={false}
                     placement={"right"}
                     reference={(ref: any) => this.userLocTooltipRef = ref}
+                    onRequestClose={() => this.showUserLocTooltip(undefined)}
                 >
                     <button className={classNames(classes.currentLocBtn,
                         this.props.landscape ? classes.currentLocBtnLandscape : classes.currentLocBtnPortrait,

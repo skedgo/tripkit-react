@@ -20,6 +20,7 @@ interface IProps extends TKUISlideUpOptions {
     onDragEnd?: () => void;
     handleRef?: any;
     draggable?: boolean;
+    cardOnTop?: (onTop: boolean) => void;
 }
 
 interface IState {
@@ -199,7 +200,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         );
     }
 
-    componentDidUpdate(prevProps: IProps) {
+    componentDidUpdate(prevProps: IProps, prevState: IState) {
         if (prevProps.handleRef !== this.props.handleRef) {
             this.props.handleRef && this.props.handleRef.addEventListener("click", this.onHandleClicked);
             // This ensures just the current handle has the handler, so it avoids associating
@@ -210,6 +211,11 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         }
         if (prevProps.position !== this.props.position) {
             this.onPositionChange(this.getPosition());
+        }
+        if (this.props.cardOnTop &&
+            (prevProps.position !== this.props.position || prevState.position !== this.state.position
+                || prevState.top !== this.state.top)) {
+            this.props.cardOnTop(this.state.top === this.getTopFromPosition(TKUISlideUpPosition.UP));
         }
     }
 }

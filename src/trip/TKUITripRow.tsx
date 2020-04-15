@@ -181,11 +181,12 @@ class TKUITripRow extends React.Component<IProps, {}> {
                             <TripRowTrack value={altTrip}
                                           className={classes.track}
                             />
+                            {this.props.onDetailClick &&
                             <TKUIButton
                                 type={TKUIButtonType.PRIMARY_LINK}
                                 text={"Detail"}
                                 onClick={this.props.onDetailClick}
-                            />
+                            />}
                         </div>
                     </div>)}
                 <div className={classes.footer}

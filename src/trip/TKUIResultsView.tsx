@@ -27,6 +27,7 @@ import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect from "../buttons/TKUISelect";
 import {TKUITooltip} from "../index";
+import DeviceUtil from "../util/DeviceUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -219,12 +220,14 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         <TKUITripRow
                             value={trip}
                             selected={trip === this.props.value}
-                            // className={classNames(classes.row, trip === this.props.value && classes.rowSelected)}
                             className={classNames(classes.row)}
-                            onClick={() => this.props.onChange && this.props.onChange(trip)}
+                            onClick={() => {
+                                this.props.onChange && this.props.onChange(trip);
+                                DeviceUtil.isPhone && this.props.onDetailsClicked && this.props.onDetailsClicked();
+                            }}
                             onFocus={() => this.props.onChange && this.props.onChange(trip)}
                             onAlternativeClick={this.props.onAlternativeChange}
-                            onDetailClick={this.props.onDetailsClicked}
+                            onDetailClick={!DeviceUtil.isPhone ? this.props.onDetailsClicked : undefined}
                             onKeyDown={this.onKeyDown}
                             key={index + trip.getKey()}
                             reference={(el: any) => this.rowRefs[index] = el}
