@@ -6,6 +6,7 @@ import Tooltip from "rc-tooltip";
 import {RCTooltip} from "rc-tooltip";
 import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
 import classNames from "classnames";
+import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;
@@ -22,11 +23,14 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     visible?: boolean;
     onVisibleChange?: (visible?: boolean) => void;
     reference?: (ref: TKUITooltip) => void;
+    onRequestClose?: () => void;
 }
 
 export interface IStyle {
     main: CSSProps<IProps>;
     overlayContent: CSSProps<IProps>;
+    btnClear: CSSProps<IProps>;
+    iconClear: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -82,6 +86,13 @@ class TKUITooltip extends React.Component<IProps, IState> {
         const overlay = this.props.overlay ? this.props.overlay :
             <div className={classes.overlayContent}>
                 {this.props.overlayContent}
+                {this.props.onRequestClose &&
+                <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
+                        aria-hidden={true}>
+                    <IconRemove aria-hidden={true}
+                                className={classes.iconClear}
+                                focusable="false"/>
+                </button>}
             </div>;
         return (
             <Tooltip
@@ -89,7 +100,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
                 overlay={overlay}
                 // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
                 {...this.isVisible() ? {visible: this.isVisible()} : undefined}
-                overlayClassName={classNames(this.props.classes.main, this.props.className)}
+                overlayClassName={classNames(classes.main, this.props.className)}
                 arrowContent={this.props.arrowContent}
             >
                 {this.props.children}

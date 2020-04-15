@@ -167,34 +167,32 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 }
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
+                scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
             >
                 <div className={classes.main}>
-
-                    <div className="gl-scrollable-y" ref={(scrollRef: any) => this.scrollRef = scrollRef}>
-                        {stops &&
-                        <TKUIStopSteps
-                            steps={stops}
-                            // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
-                            leftLabel = {(step: ServiceStopLocation) => step.departure ?
-                                DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-                                step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
-                            }
-                            rightLabel={(step: ServiceStopLocation) => step.name}
-                            // TODO: use to mark vehicle's current position
-                            // stepMarker={(step: ServiceStopLocation) =>
-                            //     step.departure === departure.startTime ?
-                            //         <img src={transIcon} className={classes.currStopMarker} alt=""/>
-                            //         :undefined
-                            // }
-                            stepClassName={(step: ServiceStopLocation) =>
-                                (step.departure && step.departure < departure.startTime ? classes.pastStop :
-                                    step.departure === departure.startTime ? classes.currStop : undefined)}
-                            borderColor={TransportUtil.getServiceDepartureColor(departure)}
-                            onStepClicked={(step: ServiceStopLocation) =>
-                                this.props.eventBus && this.props.eventBus.emit(STOP_CLICKED_EVENT, step)}
-                        />
+                    {stops &&
+                    <TKUIStopSteps
+                        steps={stops}
+                        // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
+                        leftLabel = {(step: ServiceStopLocation) => step.departure ?
+                            DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
+                            step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
                         }
-                    </div>
+                        rightLabel={(step: ServiceStopLocation) => step.name}
+                        // TODO: use to mark vehicle's current position
+                        // stepMarker={(step: ServiceStopLocation) =>
+                        //     step.departure === departure.startTime ?
+                        //         <img src={transIcon} className={classes.currStopMarker} alt=""/>
+                        //         :undefined
+                        // }
+                        stepClassName={(step: ServiceStopLocation) =>
+                            (step.departure && step.departure < departure.startTime ? classes.pastStop :
+                                step.departure === departure.startTime ? classes.currStop : undefined)}
+                        borderColor={TransportUtil.getServiceDepartureColor(departure)}
+                        onStepClicked={(step: ServiceStopLocation) =>
+                            this.props.eventBus && this.props.eventBus.emit(STOP_CLICKED_EVENT, step)}
+                    />
+                    }
                 </div>
             </TKUICard>
         );

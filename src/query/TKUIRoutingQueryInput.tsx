@@ -243,7 +243,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             overlayContent={this.state.fromTooltipText}
                             arrowColor={tKUIColors.black2}
                             visible={false}
-                            onVisibleChange={(visible?: boolean) => !visible && this.showTooltip(true, undefined)}
+                            onVisibleChange={DeviceUtil.isTouch() ?
+                                (visible?: boolean) => !visible && this.showTooltip(true, undefined) : undefined}
+                            onRequestClose={() => this.showTooltip(true, undefined)}
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
@@ -287,7 +289,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             overlayContent={this.state.toTooltipText}
                             arrowColor={tKUIColors.black2}
                             visible={false}
-                            onVisibleChange={(visible?: boolean) => !visible && this.showTooltip(false, undefined)}
+                            onVisibleChange={DeviceUtil.isTouch() ?
+                                (visible?: boolean) => !visible && this.showTooltip(false, undefined) : undefined}
+                            onRequestClose={() => this.showTooltip(false, undefined)}
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.toTooltipRef = ref}
                         >
