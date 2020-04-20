@@ -23,7 +23,7 @@ class Constants {
     public static initialize() {
         try {
             const currentScript = Constants.getCurrentScript();
-            const embedjsSrc = currentScript ? currentScript.src : "https://tripkit.tripgo.com/static/js";
+            const embedjsSrc = currentScript ? currentScript.src : "https://tripgo.com/static/js";
 
             Constants.DEPLOY_URL = embedjsSrc.indexOf("/embed.js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/embed.js")) :
                 embedjsSrc.indexOf("/static/js") !== -1 ? embedjsSrc.slice(0, embedjsSrc.indexOf("/static/js")) :
@@ -32,16 +32,16 @@ class Constants {
             console.log("Constants.DEPLOY_URL = " + Constants.DEPLOY_URL);
         } catch (error) {
             // TODO: analyze which url makes sense to use as fallback.
-            Constants.DEPLOY_URL = "https://tripkit.tripgo.com";
+            Constants.DEPLOY_URL = "https://tripgo.com";
             console.log("Constants.DEPLOY_URL = " + Constants.DEPLOY_URL + " (fallback)");
         }
     }
 
     public static absUrl(path: string): string {
         // return this.DEPLOY_URL + path;
-        // Using tripkit.tripgo.com as static assets repository.
+        // Using tripgo.com as static assets repository.
         // TODO: avoid this.
-        return "https://tripkit.tripgo.com" + path;
+        return "https://tripgo.com" + path;
     }
 
 }

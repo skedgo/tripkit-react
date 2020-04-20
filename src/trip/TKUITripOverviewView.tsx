@@ -77,8 +77,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                     <TKUIShareAction
                         title={i18nProps.t("Share.Trip")}
                         message={""}
-                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url
-                            .replace("tripgo.com", "tripkit.tripgo.com"))}
+                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
                         vertical={true}
                     />
                 }
