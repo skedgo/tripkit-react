@@ -62,8 +62,7 @@ class TripGoApi {
         return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
             + "v=11", NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
-                const jsonConvert = new JsonConvert();
-                const routingResults: RoutingResults = jsonConvert.deserialize(routingResultsJson, RoutingResults);
+                const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                 routingResults.setQuery(query);
                 routingResults.setSatappQuery(trip.satappQuery);
                 const tripGroups = routingResults.groups;
@@ -85,8 +84,7 @@ class TripGoApi {
         return this.apiCall("stopFinder.json", NetworkUtil.MethodType.POST,
             {region: regionCode, code: stopCode})
             .then((stopJson: any) => {
-                const jsonConvert = new JsonConvert();
-                return jsonConvert.deserialize(stopJson, StopLocation);
+                return Util.deserialize(stopJson, StopLocation);
             });
     }
 

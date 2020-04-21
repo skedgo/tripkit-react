@@ -1,9 +1,9 @@
 import {CSSProps} from "../jss/StyleHelper";
-import jss, {JSSPlugin} from 'jss';
+import jss from 'jss';
 import camelCase from 'jss-plugin-camel-case';
 import genStyles from "./GenStyle.css";
 
-jss.use(camelCase() as JSSPlugin);
+jss.use(camelCase());
 
 interface ITKUIResetStyle {
     button: CSSProps<{}>;
@@ -62,7 +62,8 @@ export const resetStyles: ITKUIResetStyle = {
     }
 };
 
-export const resetClasses = jss.createStyleSheet(resetStyles,
+// TODO: neede to add as any to avoid type error.
+export const resetClasses = jss.createStyleSheet(resetStyles as any,
     {
         classNamePrefix: 'reset-'
     }).attach().classes;

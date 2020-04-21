@@ -10,6 +10,7 @@ import City from "../model/location/City";
 import RegionInfo from "../model/region/RegionInfo";
 import RegionInfoResults from "../model/region/RegionInfoResults";
 import Segment from "../model/trip/Segment";
+import Util from "../util/Util";
 
 export class RegionsData {
 
@@ -23,10 +24,9 @@ export class RegionsData {
     private regionInfos: Map<string, RegionInfo> = new Map<string, RegionInfo>();
 
     constructor() {
-        const jsonConvert = new JsonConvert();
         this.regionsRequest = TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 })
             .then((regionResultsJson: any) => {
-                return jsonConvert.deserialize(regionResultsJson, RegionResults) as RegionResults;
+                return Util.deserialize(regionResultsJson, RegionResults) as RegionResults;
             });
         this.regionsPromise = this.regionsRequest.then((regionResults: RegionResults) => {
             this.regions = new Map<string, Region>();
@@ -36,7 +36,7 @@ export class RegionsData {
             this._regionList = Array.from(this.regions.values());
             const modes: {[index: string]:any} = regionResults.modes;
             for (const modeKey of Object.keys(modes)) {
-                const modeIdentifier = jsonConvert.deserialize(modes[modeKey], ModeIdentifier) as ModeIdentifier;
+                const modeIdentifier = Util.deserialize(modes[modeKey], ModeIdentifier) as ModeIdentifier;
                 modeIdentifier.identifier = modeKey;
                 this._modes.set(modeKey, modeIdentifier);
             }

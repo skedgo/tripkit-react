@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps} from "react-leaflet";
+import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport} from "react-leaflet";
 import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -205,7 +205,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     private fitMap(from: Location | null, to: Location | null) {
         const fromLoc = from;
         const toLoc = to;
-        const fitSet = [];
+        const fitSet: Location[] = [];
         if (fromLoc && fromLoc.isResolved()) {
             fitSet.push(fromLoc);
         }
@@ -368,14 +368,14 @@ class TKUIMapView extends React.Component<IProps, IState> {
             <div className={classes.main}>
                 <RLMap
                     className={classes.leaflet}
-                    viewport={this.props.viewport}
+                    viewport={this.props.viewport as Viewport}
                     // TODO: check I don't need to pass boundsOptios to fitBounds anymore
                     boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
-                    onViewportChanged={(viewport: {center?: [number, number], zoom?: number}) => {
+                    onViewportChanged={(viewport: Viewport) => {
                         this.onViewportChange({
                             center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
-                            zoom: viewport.zoom
+                            zoom: viewport.zoom ? viewport.zoom : undefined
                         });
                     }}
                     onclick={(event: L.LeafletMouseEvent) => {

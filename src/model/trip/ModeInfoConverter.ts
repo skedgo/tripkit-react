@@ -12,8 +12,7 @@ export class ModeInfoConverter implements JsonCustomConvert<ModeInfo> {
         if (Util.isEmpty(modeInfo)) {
             return new ModeInfo();
         }
-        const jsonConvert = new JsonConvert();
-        return jsonConvert.deserialize(modeInfo, ModeInfo);
+        return Util.deserialize(modeInfo, ModeInfo);
     }
 }
 

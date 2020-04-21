@@ -6,6 +6,7 @@ import {EventEmitter, EventSubscription} from "fbemitter";
 import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
 import ModeIdentifier from "../model/region/ModeIdentifier";
+import Util from "../util/Util";
 
 class LocationsData {
 
@@ -37,7 +38,7 @@ class LocationsData {
     public getRequestLocations(region: string, level: 1 | 2, bounds?: BBox): LocationsResult {
         const cachedResults = new LocationsResult(level);
         const cellIDs = level === 1 ? [region] : MapUtil.cellsForBounds(bounds!, LocationsData.cellsPerDegree);
-        const requestCells = [];
+        const requestCells: any[] = [];
         for (const cellID of cellIDs) {
             const cellResults = this.cellToLocResult.get(cellID);
             if (cellResults) {
@@ -59,8 +60,7 @@ class LocationsData {
 
             TripGoApi.apiCall("locations.json", NetworkUtil.MethodType.POST, locationsReq)
                 .then((groupsJson: any) => {
-                    const jsonConvert = new JsonConvert();
-                    const groups: LocationsResult[] = groupsJson.groups.map((group: any) => jsonConvert.deserialize(group, LocationsResult));
+                    const groups: LocationsResult[] = groupsJson.groups.map((group: any) => Util.deserialize(group, LocationsResult));
                     const result = new LocationsResult(level);
                     for (const group of groups) {
                         this.cellToLocResult.set(group.key, group);

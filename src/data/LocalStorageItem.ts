@@ -1,5 +1,6 @@
 import {JsonConvert} from "json2typescript";
 import {EventEmitter, EventSubscription} from "fbemitter";
+import Util from "../util/Util";
 
 class LocalStorageItem<T> {
 
@@ -37,8 +38,7 @@ class LocalStorageItem<T> {
     }
 
     protected deserialize(itemJson: any): T {
-        const jsonConvert: JsonConvert = new JsonConvert();
-        return jsonConvert.deserialize(itemJson, this.classRef);
+        return Util.deserialize(itemJson, this.classRef);
     }
 
     private saveToLS(item: T) {

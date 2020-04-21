@@ -79,7 +79,7 @@ class ServiceDeparturesResult {
                     departure.endStop = this.getStopFromCode(departure.endStopCode);
                 }
                 departures.push(departure);
-                const departureAlerts = [];
+                const departureAlerts: RealTimeAlert[] = [];
                 for (const alertHash of departure.alertHashCodes) {
                     const departureAlert = this.alertsMap.get(alertHash);
                     if (departureAlert) {

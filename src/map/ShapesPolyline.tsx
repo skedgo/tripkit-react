@@ -45,7 +45,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         const polylineArray = polylineOptionsArray
             .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
-        const stopMarkers = [];
+        const stopMarkers: any[] = [];
         if (this.props.shapes) {
             for (const shape of this.props.shapes) {
                 if (shape.stops) {

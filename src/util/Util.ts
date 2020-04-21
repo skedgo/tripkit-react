@@ -90,7 +90,7 @@ class Util {
     }
 
     public static deserialize<T>(json: any, classRef: { new(): T }): T {
-        return this.jsonConvert().deserialize(json, classRef);
+        return this.jsonConvert().deserialize(json, classRef) as T;
     }
 
     public static serialize<T>(value: T): any {

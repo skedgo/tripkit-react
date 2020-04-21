@@ -31,9 +31,9 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     protected deserialize(itemJson: any): Favourite[] {
         return (itemJson as any[]).map((item: any) =>
-            item.stop ? Util.jsonConvert().deserialize(item, FavouriteStop) :
-                item.location ? Util.jsonConvert().deserialize(item, FavouriteLocation) :
-                Util.jsonConvert().deserialize(item, FavouriteTrip)
+            item.stop ? Util.deserialize(item, FavouriteStop) :
+                item.location ? Util.deserialize(item, FavouriteLocation) :
+                Util.deserialize(item, FavouriteTrip)
         )
     }
 
