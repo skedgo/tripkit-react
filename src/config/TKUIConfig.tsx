@@ -47,6 +47,8 @@ import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICoo
 import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "../alerts/TKUIAlertsSummary";
 import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView";
 import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "../card/TKUIWaitingRequest";
+import {TKUIMapPopupProps, TKUIMapPopupStyle} from "../map/TKUIMapPopup";
+import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "../location_box/TKUIAutocompleteResult";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -86,6 +88,7 @@ interface ITKUIConfigOptional {
     TKUIUserPriorities: TKComponentConfig<TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
     TKUIMyLocationMapIcon: TKComponentConfig<TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle>;
+    TKUIMapPopup: TKComponentConfig<TKUIMapPopupProps, TKUIMapPopupStyle>;
     TKUIRealtimeVehicle: TKComponentConfig<TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle>;
     TKUIDateTimePicker: TKComponentConfig<TKUIDateTimePickerProps, TKUIDateTimePickerStyle>;
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
@@ -98,6 +101,7 @@ interface ITKUIConfigOptional {
     TKUIPrivacyOptionsView: TKComponentConfig<TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle>;
     TKUIAlertsSummary: TKComponentConfig<TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle>;
     TKUIAlertsView: TKComponentConfig<TKUIAlertsViewProps, TKUIAlertsViewStyle>;
+    TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

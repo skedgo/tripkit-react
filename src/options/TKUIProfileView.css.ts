@@ -112,5 +112,8 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
             width: '200px!important',
             marginLeft: 'auto',
             marginRight: 'auto',
+        },
+        link: {
+            ...genStyles.link
         }
     });

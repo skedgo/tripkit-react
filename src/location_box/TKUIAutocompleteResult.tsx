@@ -1,15 +1,16 @@
 import React, {Component} from "react";
 import Location from "../model/Location";
-import './ResultItem.css';
 import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
 import {ReactComponent as IconCurrLoc} from '../images/location/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
 import SkedgoGeocoder from "../geocode/SkedgoGeocoder";
-import classNames from "classnames";
-import genStylesCss from "../css/general.module.css";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {tKUIAutocompleteResultDefaultStyle} from "./TKUIAutocompleteResult.css";
 
-interface IProps {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     highlighted: boolean;
     ariaSelected?: boolean;
@@ -18,9 +19,30 @@ interface IProps {
     renderIcon?: (location: Location) => JSX.Element;
 }
 
-class ResultItem extends Component<IProps, {}> {
+interface IStyle {
+    main: CSSProps<IProps>;
+    icon: CSSProps<IProps>;
+    address: CSSProps<IProps>;
+    mainAddress: CSSProps<IProps>;
+    matchingSubstr: CSSProps<IProps>;
+    secondaryAddress: CSSProps<IProps>;
+}
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUIAutocompleteResultProps = IProps;
+export type TKUIAutocompleteResultStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIAutocompleteResult {...props}/>,
+    styles: tKUIAutocompleteResultDefaultStyle,
+    classNamePrefix: "TKUIAutocompleteResult"
+};
+
+class TKUIAutocompleteResult extends Component<IProps, {}> {
 
     public render(): React.ReactNode {
+        const classes = this.props.classes;
         let addressComponent: JSX.Element;
         if (this.props.location.suggestion
             && this.props.location.suggestion.structured_formatting) { // Google result
@@ -36,34 +58,34 @@ class ResultItem extends Component<IProps, {}> {
                 if (offset < substrOffset) {
                     mainAddressComponents.push(<span key={offset}>{mainText.substr(offset, substrOffset)}</span>);
                 }
-                mainAddressComponents.push(<span key={substrOffset} className="ResultItem-matchingSubstr">{mainText.substr(substrOffset, substrLength)}</span>);
+                mainAddressComponents.push(<span key={substrOffset} className={classes.matchingSubstr}>{mainText.substr(substrOffset, substrLength)}</span>);
                 offset = substrOffset + substrLength;
             }
             mainAddressComponents.push(<span key={offset}>{mainText.substr(offset, mainText.length)}</span>);
-            mainAddressComponent = <span key={1} className="ResultItem-mainAddress">{mainAddressComponents}</span>;
-            addressComponent = <span className="ResultItem-address"> {[
+            mainAddressComponent = <span key={1} className={classes.mainAddress}>{mainAddressComponents}</span>;
+            addressComponent = <span className={classes.address}> {[
                 mainAddressComponent,
-                <span key={2} className="ResultItem-secondaryAddress">{structuredFormatting.secondary_text}</span>
+                <span key={2} className={classes.secondaryAddress}>{structuredFormatting.secondary_text}</span>
             ]}
             </span>;
         } else {
             addressComponent =
-                <span className="ResultItem-address">
+                <span className={classes.address}>
                     {   (Environment.isDevAnd(this.props.location.source === SkedgoGeocoder.SOURCE_ID  && false) ? "*SG*" : "") +
                         LocationUtil.getMainText(this.props.location)
                     }
-                    <span key={2} className="ResultItem-secondaryAddress">{LocationUtil.getSecondaryText(this.props.location)}</span>
+                    <span key={2} className={classes.secondaryAddress}>{LocationUtil.getSecondaryText(this.props.location)}</span>
                 </span>;
         }
         return (
             <div style={{background: this.props.highlighted ? '#efeded' : 'white'}}
-                 className={"gl-flex gl-space-between ResultItem"}
+                 className={classes.main}
                  onClick={this.props.onClick}
                  role="option"
                  id={this.props.id}
                  aria-selected={this.props.ariaSelected}
             >
-                <div className={classNames("ResultItem-icon", genStylesCss.svgPathFillCurrColor)}>
+                <div className={classes.icon}>
                     {this.props.renderIcon ? this.props.renderIcon(this.props.location) :
                     this.props.location.isCurrLoc() ? <IconCurrLoc aria-hidden={true} focusable="false"/> : <IconPin/>}
                 </div>
@@ -73,4 +95,5 @@ class ResultItem extends Component<IProps, {}> {
     }
 }
 
-export default ResultItem;
+export default connect((config: TKUIConfig) => config.TKUIAutocompleteResult, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

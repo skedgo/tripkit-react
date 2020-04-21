@@ -5,7 +5,7 @@ import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
-import ResultItem from "./ResultItem";
+import TKUIAutocompleteResult from "./TKUIAutocompleteResult";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
@@ -369,7 +369,7 @@ class LocationBox extends Component<IProps, IState> {
         const location = this.itemToLocationMap.get(item.id)!;
         const geocoder = this.geocodingData.options.getGeocoderById(location.source!);
         return (
-            <ResultItem
+            <TKUIAutocompleteResult
                 id={"item-" + this.state.items.indexOf(item)}
                 key={this.state.items.indexOf(item)}
                 location={location}

@@ -75,5 +75,15 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
             height: '10px',
             width: '10px',
             marginLeft: '10px'
+        },
+        iconAngleRotate: {
+            ...genStyles.rotate180
+        },
+        toggle: {
+            ...genStyles.flex
+        },
+
+        toggleButton: {
+            ...genStyles.link
         }
     });

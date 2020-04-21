@@ -25,6 +25,7 @@ interface ITKUIGenStyle {
     relative: CSSProps<{}>;
     hidden: CSSProps<{}>;
     rotate180: CSSProps<{}>;
+    overflowEllipsis: CSSProps<{}>;
 
     fontL: CSSProps<{}>;
     fontM: CSSProps<{}>;
@@ -37,6 +38,8 @@ interface ITKUIGenStyle {
 
     borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
     transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
+
+    link: CSSProps<{}>;
 }
 
 const genStyles: ITKUIGenStyle = {
@@ -165,6 +168,13 @@ const genStyles: ITKUIGenStyle = {
         transform: 'rotate(180deg)'
     },
 
+    overflowEllipsis: {
+        whiteSpace: 'nowrap',
+        overflowX: 'hidden',
+        textOverflow: 'ellipsis',
+        display: 'block'
+    },
+
     fontL: {
         fontSize: '20px',
         lineHeight: '28px'
@@ -205,7 +215,17 @@ const genStyles: ITKUIGenStyle = {
         MsTransform: 'rotate(' + angle + unit + ')',
         MozTransform: 'rotate(' + angle + unit + ')',
         transform: 'rotate(' + angle + unit + ')'
-    })
+    }),
+
+    // TODO: maybe move to a stylesheet that can be customized on skd config.
+    link: {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+        opacity: '.8',
+        '&:hover': {
+            opacity: '1'
+        }
+    }
 };
 
 export default genStyles;

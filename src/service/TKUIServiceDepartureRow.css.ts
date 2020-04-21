@@ -40,7 +40,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         leftPanel: {
             ...genStyles.grow,
-            /* Needed for gl-overflow-ellipsis to work for serviceDescription: 50px of transIconPanel + 60px of timeToDepart */
+            /* Needed for genStyles.overflowEllipsis to work for serviceDescription: 50px of transIconPanel + 60px of timeToDepart */
             maxWidth: 'calc(100% - 70px)'
         },
         header: {
@@ -73,7 +73,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         serviceDescription: {
             marginTop: '5px',
             color: tKUIColors.black1,
-            ...genStyles.fontS
+            ...genStyles.fontS,
+            ...genStyles.overflowEllipsis
         },
         cancelled: {
             color: theme.colorError
@@ -92,7 +93,10 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             color: theme.colorSuccess,
             fontWeight: 'bold',
             ...genStyles.flex,
-            ...genStyles.alignSelfStart
+            ...genStyles.alignSelfStart,
+            ...genStyles.alignCenter,
+            ...genStyles.center,
+            ...genStyles.noShrink
         },
         timeToDepartCancelled: {
             color: theme.colorError
