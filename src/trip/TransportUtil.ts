@@ -148,7 +148,7 @@ class TransportUtil {
     }
 
     private static getRepresentativeSegment(trip: Trip): Segment | null {
-        let representativeSegment = null;
+        let representativeSegment: Segment | null = null;
         for (const segment of trip.segments) {
             if (segment.isSchoolbus()) {
                 representativeSegment = segment;

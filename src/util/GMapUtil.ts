@@ -24,8 +24,8 @@ class GMapUtil {
 
     public static initMap() {
         // Extract latLng and zoom from url with form /@/LAT,LONG,ZOOMz
-        let urlLatLng = null;
-        let urlMapZoom = null;
+        let urlLatLng: LatLng | null = null;
+        let urlMapZoom: Number | null = null;
         const pathname = window.location.pathname;
         if (pathname.includes("/@/")) {
             let mapPositionString = pathname.substring(pathname.indexOf("/@/") + "/@/".length, pathname.length);
@@ -148,7 +148,7 @@ class GMapUtil {
     public static addOsmMapType(map: any) {
         const osmName = "OSM";
         const url = "	http://otile1.mqcdn.com/tiles/1.0.0/map/";
-        const mapTypeIds = [];
+        const mapTypeIds: any[] = [];
         // OSM Type
         const osmTypeOptions = {
             getTileUrl: (coord: any, zoom: number) => {

@@ -69,7 +69,7 @@ class RoutingResults {
                     if (segment.isLast() && !this.query.isEmpty()) {
                         segment.to.address = this.query.to!.address;
                     }
-                    const segmentAlerts = [];
+                    const segmentAlerts: RealTimeAlert[] = [];
                     for (const alertHash of segment.alertHashCodes) {
                         const segmentAlert = this.alertsMap.get(alertHash);
                         if (segmentAlert) {

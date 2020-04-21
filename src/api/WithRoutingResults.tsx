@@ -9,7 +9,6 @@ import RegionsData from "../data/RegionsData";
 import NetworkUtil from "../util/NetworkUtil";
 import Environment, {Env} from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
-import {JsonConvert} from "json2typescript";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
@@ -318,12 +317,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
             // Compute trip involving service through waypoints.json endpoint.
             this.setState({waitingTripUpdate: true, tripUpdateError: undefined});
-            const waypointSegments = [];
+            const waypointSegments: any[] = [];
             for (const tripSegment of selectedTrip.segments) {
                 if (!tripSegment.modeIdentifier) {
                     continue;
                 }
-                let waypointSegment;
+                let waypointSegment: any;
                 if (tripSegment.serviceTripID && tripSegment.serviceTripID === segment.serviceTripID) {
                     const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
                     waypointSegment = {
@@ -577,8 +576,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         })
                         .catch(reason => {
                             if (Environment.isDevAnd(false)) {
-                                const jsonConvert = new JsonConvert();
-                                const routingResults: RoutingResults = jsonConvert.deserialize(this.getRoutingResultsJSONTest(), RoutingResults);
+                                const routingResults: RoutingResults = Util.deserialize(this.getRoutingResultsJSONTest(), RoutingResults);
                                 return routingResults.groups;
                             }
                             throw reason;

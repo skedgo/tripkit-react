@@ -59,9 +59,9 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         // Warning: with defaultValue + onChangeCommited slider won't update if priorities modified from
                         // outside.
                         value={priorities.money * 100}
-                        onChange={(event: any, value: any) => {
+                        onChange={((event: any, value: any) => {
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value/100));
-                        }}
+                        }) as any}
                         thumbIcon={iconMoney}
                         label={t("rQd-ri-hHa.text")}
                         leftLabel={t("I.dont.care")}
@@ -73,8 +73,8 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     />
                     <TKUISlider
                         value={priorities.time * 100}
-                        onChange={(event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value/100))}
+                        onChange={((event: any, value: any) =>
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value/100))) as any}
                         thumbIcon={iconTime}
                         label={t("o4h-JW-YBy.text")}
                         leftLabel={t("I.dont.care")}
@@ -84,8 +84,8 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     />
                     <TKUISlider
                         value={priorities.carbon * 100}
-                        onChange={(event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value/100))}
+                        onChange={((event: any, value: any) =>
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value/100))) as any}
                         thumbIcon={iconCarbon}
                         label={t("EzB-oD-wvZ.text")}
                         leftLabel={t("I.dont.care")}
@@ -95,8 +95,8 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     />
                     <TKUISlider
                         value={priorities.hassle * 100}
-                        onChange={(event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value/100))}
+                        onChange={((event: any, value: any) =>
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value/100))) as any}
                         thumbIcon={iconHassle}
                         label={t("brC-tq-EEG.text")}
                         leftLabel={t("I.dont.care")}

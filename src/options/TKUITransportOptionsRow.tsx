@@ -161,11 +161,11 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 </div>
                 <TKUISlider
                     value={value.minimumTransferTime}
-                    onChange={(event: any, value: any) => {
+                    onChange={((event: any, value: any) => {
                         const userProfileUpdate = Util.deepClone(this.props.value);
                         userProfileUpdate.minimumTransferTime = value;
                         this.props.onChange(userProfileUpdate);
-                    }}
+                    }) as any}
                     min={0}
                     max={100}
                 />
@@ -204,7 +204,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
             </div>;
-        let walkSpeedSelect = undefined;
+        let walkSpeedSelect: any = undefined;
         if (mode.isWalk() || mode.isWheelchair()) {
             const walkSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
@@ -230,7 +230,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 </div>
                 {walkSpeedSelect}
             </div>;
-        let cycleSpeedSelect = undefined;
+        let cycleSpeedSelect: any = undefined;
         if (mode.isBicycle()) {
             const cycleSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
                 .map((value) => {
