@@ -32,8 +32,7 @@ class TripGoApi {
     }
 
     public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
-        return this.apiCall(endpoint, method, body,
-            Environment.isBeta())
+        return this.apiCall(endpoint, method, body)
             .then(NetworkUtil.deserializer(resultClassRef));
     }
 
