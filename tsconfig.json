@@ -5,7 +5,7 @@
     "module": "esnext",
     "target": "es6",
     "lib": [
-      "es5",
+//      "es5",
       "es6",
       "dom",
       "dom.iterable",
@@ -25,7 +25,8 @@
     "allowJs": true,
     "declaration": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "noImplicitAny": false
   },
   "include": [
     "src"

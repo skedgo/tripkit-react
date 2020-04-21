@@ -26,6 +26,8 @@ module.exports = {
             // config.output.filename = '[name].js';
 
             //CSS Overrides
+            //Issue: if upgrade react-scripts 3.3.0 then the css file doesn't get index.css as name, but static/js/main.[hash].css
+            //TODO: get rid of all import XXX.css, switch to JSS, so I have no global .css in the end.
             config.plugins[4].options.filename = 'index.css';
             // #Modular lib
             // config.plugins[4].options.filename = '[name].css';
