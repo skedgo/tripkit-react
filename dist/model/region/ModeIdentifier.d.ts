@@ -1,0 +1,33 @@
+import Color from "../trip/Color";
+declare class ModeIdentifier {
+    private _title;
+    private _color;
+    private _icon;
+    private _identifier;
+    static readonly PUBLIC_TRANSIT_ID = "pt_";
+    static readonly PUBLIC_TRANSPORT_ID = "pt_pub";
+    static readonly SCHOOLBUS_ID = "pt_ltd_SCHOOLBUS";
+    static readonly UBER_ID = "ps_tnc_UBER";
+    static readonly CAR_ID = "me_car";
+    static readonly CAR_RENTAL_SW_ID = "me_car-r_SwiftFleet";
+    static readonly TAXI_ID = "ps_tax";
+    static readonly TRAM_ID = "pt_pub_tram";
+    static readonly WALK_ID = "wa_wal";
+    static readonly WHEELCHAIR_ID = "wa_whe";
+    static readonly BICYCLE_ID = "cy_bic";
+    static readonly BICYCLE_SHARE_ID = "cy_bic-s";
+    isPT(): boolean;
+    isPTPub(): boolean;
+    isWalk(): boolean;
+    isWheelchair(): boolean;
+    isBicycle(): boolean;
+    get title(): string;
+    set title(value: string);
+    get color(): Color | null;
+    set color(value: Color | null);
+    get icon(): string | null;
+    set icon(value: string | null);
+    get identifier(): string;
+    set identifier(value: string);
+}
+export default ModeIdentifier;

@@ -1,0 +1,2 @@
+(window["webpackJsonptripkit-react"]=window["webpackJsonptripkit-react"]||[]).push([[0],{454:function(a,t,i){"use strict";i.r(t);var r=i(880),o=i(15);o.a.global.$=r,o.a.global.jQuery=r}}]);
+//# sourceMappingURL=0.chunk.js.map
