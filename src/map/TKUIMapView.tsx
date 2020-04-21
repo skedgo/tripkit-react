@@ -42,7 +42,7 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
-import MapLocationPopup from "./MapLocationPopup";
+import TKUIMapPopup from "./TKUIMapPopup";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
 import {withTheme} from "react-jss";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
@@ -575,10 +575,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
             autoPan={false}
         >
-            <MapLocationPopup value={location}
-                              onAction={location instanceof StopLocation ?
-                                  () => this.props.onLocAction
-                                      && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>
+            <TKUIMapPopup title={location.name || LocationUtil.getMainText(location)}
+                          onAction={location instanceof StopLocation ?
+                              () => this.props.onLocAction
+                                  && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>
         </Popup>;
     }
 

@@ -1,11 +1,12 @@
 import * as React from "react";
-import "./SegmentPopup.css";
 import Segment from "../model/trip/Segment";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
+import TKUIMapPopup from "./TKUIMapPopup";
+import genStyles from "../css/GenStyle.css";
 
 export interface IProps {
     segment: Segment;
@@ -31,17 +32,19 @@ class SegmentPopup extends React.Component<IProps, IState> {
         const subtitle = !segment.arrival ?
             (segment.isFirst() ? "To " + segment.to.getDisplayString() : "From " + segment.from.getDisplayString()) : undefined;
         return (
-                <div className="SegmentPopup">
-                    <div className="SegmentPopup-title gl-overflow-ellipsis">{title}</div>
-                    <div className="SegmentPopup-subtitle">{subtitle}</div>
-                    {this.state.interchangeUrl ?
-                        <div className="SegmentPopup-link gl-link"
-                             onClick={() => window.open(this.state.interchangeUrl,'_blank')}
-                        >View stop map</div> :
-                        null
-                    }
-                </div>
-            );
+            <TKUIMapPopup
+                title={title}
+                subtitle={subtitle}
+                renderMoreInfo={this.state.interchangeUrl ?
+                    () => <div style={{...genStyles.link,   // TODO: hover rule will not work.
+                        borderTop: '1px solid #ECEBEB',
+                        marginTop: '7px',
+                        paddingTop: '7px'}}
+                               onClick={() => window.open(this.state.interchangeUrl,'_blank')}
+                    >View stop map</div> : undefined
+                }
+            />
+        );
     }
 
     public componentDidMount(): void {

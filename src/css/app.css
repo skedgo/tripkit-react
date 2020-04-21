@@ -97,16 +97,6 @@ body.user-is-tabbing .app-style .TripPlanner-queryInput div:focus {
   overflow: unset;
 }
 
-.app-style .gl-link {
-  text-decoration: underline;
-  cursor: pointer;
-  opacity: .8;
-}
-
-.app-style .gl-link:hover {
-  opacity: 1;
-}
-
 .app-style button.TripPlanner-optionsBtn {
   font-size: 13px;
   padding: 10px;

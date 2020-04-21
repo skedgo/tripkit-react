@@ -1,6 +1,5 @@
 import * as React from "react";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
-import "./MapLocationPopup.css";
 import genStyles from "../css/GenStyle.css";
 import DateTimeUtil from "../util/DateTimeUtil";
 import {tKUIColors} from "../jss/TKUITheme";
@@ -29,8 +28,8 @@ class TKUIRealtimeVehiclePopup extends React.Component<IProps, IState> {
         const title = this.props.title.charAt(0).toUpperCase() + this.props.title.substring(1);
         const text = "Updated " + this.state.secsOld + "s ago";
         return (
-            <div className="MapLocationPopup"
-                 style={{...genStyles.flex, ...genStyles.column, ...genStyles.center, ...genStyles.fontM}}
+            <div style={{...genStyles.flex, ...genStyles.column, ...genStyles.center, ...genStyles.fontM,
+                     padding: '5px 10px'}}
             >
                 {title}
                 <div style={{

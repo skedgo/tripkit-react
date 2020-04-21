@@ -50,6 +50,7 @@ export interface IStyle {
     tooltipOverlay: CSSProps<IProps>;
     checkboxGroup: CSSProps<IProps>;
     closeBtn: CSSProps<IProps>;
+    link: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -240,7 +241,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                                     This option displays bike share locations. Check current
                                                     availability <a href="https://airbike.network/#download"
                                                                     target="_blank"
-                                                                    className="gl-link">here</a>.
+                                                                    className={classes.link}>here</a>.
                                                 </div>
                                             }
                                             align={{offset: [0, -10]}}

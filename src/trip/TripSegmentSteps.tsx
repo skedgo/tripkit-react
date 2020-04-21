@@ -40,6 +40,9 @@ export interface ITKUITripSergmentStepsStyle {
     circleFirstLast: CSSProps<IStyleRelevantProps>;
     iconPanel: CSSProps<IStyleRelevantProps>;
     iconAngleDown: CSSProps<IStyleRelevantProps>;
+    iconAngleRotate: CSSProps<IStyleRelevantProps>;
+    toggle: CSSProps<IStyleRelevantProps>;
+    toggleButton: CSSProps<IStyleRelevantProps>;
 }
 
 export class ITKUITripSergmentStepsConfig implements TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
@@ -74,7 +77,7 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
         return (
             <div>
                 {this.props.toggleLabel ?
-                    <div className="gl-flex">
+                    <div className={classes.toggle}>
                         <div className={classes.iconPanel}/>
                         <div className={classNames(classes.linePanel)}>
                             <div className={classes.line}
@@ -83,13 +86,13 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
                                      borderLeftStyle: borderLeftStyle
                                  }}/>
                         </div>
-                        <button className="gl-link"
+                        <button className={classes.toggleButton}
                                 onClick={() => this.setState({open: !this.state.open})}
                                 aria-expanded={this.state.open}
                                 aria-controls={this.id}
                         >
                             {this.props.toggleLabel(this.state.open)}
-                            <IconAngleDown className={classes.iconAngleDown + (this.state.open ? " gl-rotate180" : "")}
+                            <IconAngleDown className={classNames(classes.iconAngleDown, (this.state.open && classes.iconAngleRotate))}
                                            focusable="false"
                             />
                         </button>

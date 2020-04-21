@@ -306,7 +306,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
-                className="gl-no-shrink"
                 onDetailsClicked={() => {
                     this.setState({showTripDetail: true});
                 }}
@@ -471,6 +470,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onDirectionsView(true);
                 }
             }
+            // TODO: uncomment
             // TKShareHelper.resetToHome();
         }
 

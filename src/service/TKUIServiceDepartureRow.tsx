@@ -166,11 +166,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                     <div className={classes.timeAndOccupancy}>
                         {time}
                     </div>
-                    <div className={classNames(classes.serviceDescription, "ServiceDepartureRow-serviceDescription gl-overflow-ellipsis")}>{serviceDescrText}</div>
+                    <div className={classes.serviceDescription}>{serviceDescrText}</div>
                 </div>
                 {this.props.renderRight ? this.props.renderRight() :
                     <div
-                        className={classNames("gl-flex gl-align-center gl-center gl-no-shrink", classes.timeToDepart,
+                        className={classNames(classes.timeToDepart,
                             cancelled && classes.timeToDepartCancelled, timeToDepart < 0 &&  classes.timeToDepartPast)}>
                         {timeToDepartS}
                     </div>
