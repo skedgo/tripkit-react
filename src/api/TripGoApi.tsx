@@ -32,7 +32,8 @@ class TripGoApi {
     }
 
     public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
-        return this.apiCall(endpoint, method, body)
+        return this.apiCall(endpoint, method, body,
+            Environment.isBeta())
             .then(NetworkUtil.deserializer(resultClassRef));
     }
 
@@ -41,8 +42,9 @@ class TripGoApi {
         return server + (endpoint.startsWith("/") ? "" : "/") + endpoint;
     }
 
-    public static apiCallUrl(url: string, method: string, body?: any, prod?: boolean): Promise<any> {
-        return fetch(url, {
+    public static apiCallUrl(url: string, method: string, body?: any, cache: boolean = false): Promise<any> {
+        // TODO: Fetch with chacé, just for development, to avoid doing so much api calls and accelerating answers.
+        return NetworkUtil.fetch(url, {
             method: method,
             headers: {
                 'X-TripGo-Version': 'w3.2018.12.20',
