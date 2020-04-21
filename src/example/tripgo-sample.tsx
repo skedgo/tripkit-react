@@ -1,6 +1,8 @@
 import React, {MouseEvent} from 'react';
 import ReactDOM from 'react-dom';
-import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng, TKState} from '../index';
+import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng, TKState}
+from '../index';
+// from 'tripkit-react';
 import {ReactComponent as IconReport} from './images/icon-usersnap.svg';
 import classNames from 'classnames';
 import Usersnap from "./usersnap/Usersnap";
