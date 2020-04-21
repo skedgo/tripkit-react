@@ -1,0 +1,34 @@
+import BikePodLocation from "./BikePodLocation";
+import FacilityLocation from "./FacilityLocation";
+import CarParkLocation from "./CarParkLocation";
+import { MapLocationType } from "./MapLocationType";
+import Location from "../Location";
+import StopLocation from "../StopLocation";
+declare class LocationsResult {
+    constructor(level?: 1 | 2);
+    private _key;
+    private _hashCode;
+    private _bikePods;
+    private _facilities;
+    private _carParks;
+    private _stops;
+    private _level;
+    get key(): string;
+    set key(value: string);
+    get hashCode(): number;
+    set hashCode(value: number);
+    get bikePods(): BikePodLocation[] | undefined;
+    set bikePods(value: BikePodLocation[] | undefined);
+    get facilities(): FacilityLocation[] | undefined;
+    set facilities(value: FacilityLocation[] | undefined);
+    get carParks(): CarParkLocation[] | undefined;
+    set carParks(value: CarParkLocation[] | undefined);
+    get stops(): StopLocation[] | undefined;
+    set stops(value: StopLocation[] | undefined);
+    get level(): 1 | 2;
+    set level(value: 1 | 2);
+    add(other: LocationsResult): void;
+    isEmpty(): boolean;
+    getByType(type: MapLocationType): Location[];
+}
+export default LocationsResult;

@@ -1,0 +1,30 @@
+{
+  "short_name": "TripGo Web",
+  "name": "TripGo Web Trip Planner",
+  "icons": [
+    {
+      "src": "images/favicon/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "images/favicon/favicon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "images/favicon/favicon-128x128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "images/favicon/favicon-196x196.png",
+      "type": "image/png",
+      "sizes": "196x196"
+    }
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#23b15e",
+  "background_color": "#ffffff"
+}
