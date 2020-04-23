@@ -49,6 +49,8 @@ import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView
 import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "../card/TKUIWaitingRequest";
 import {TKUIMapPopupProps, TKUIMapPopupStyle} from "../map/TKUIMapPopup";
 import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "../location_box/TKUIAutocompleteResult";
+import {TKUILocationBoxProps, TKUILocationBoxStyle} from "../location_box/TKUILocationBox";
+import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCarousel";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -101,7 +103,9 @@ interface ITKUIConfigOptional {
     TKUIPrivacyOptionsView: TKComponentConfig<TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle>;
     TKUIAlertsSummary: TKComponentConfig<TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle>;
     TKUIAlertsView: TKComponentConfig<TKUIAlertsViewProps, TKUIAlertsViewStyle>;
+    TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
+    TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

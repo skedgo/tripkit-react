@@ -1,5 +1,5 @@
 import * as React from "react";
-import LocationBox, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../location_box/LocationBox";
+import TKUILocationBox, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../location_box/TKUILocationBox";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
@@ -101,8 +101,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private geocodingDataFrom: MultiGeocoder;
     private geocodingDataTo: MultiGeocoder;
-    private fromLocRef: any;
-    private toLocRef: any;
     private fromTooltipRef: any;
     private toTooltipRef: any;
 
@@ -249,7 +247,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
-                        <LocationBox
+                        <TKUILocationBox
                                 geocodingData={this.geocodingDataFrom}
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
@@ -277,7 +275,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) =>
                                     this.showTooltip(true, this.getErrorMessage(error))}
-                                ref={(el:any) => this.fromLocRef = el}
                                 inputAriaLabel={ariaLabelFrom}
                                 inputId={"input-from"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
@@ -295,7 +292,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.toTooltipRef = ref}
                         >
-                            <LocationBox
+                            <TKUILocationBox
                                 geocodingData={this.geocodingDataTo}
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
@@ -323,7 +320,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) =>
                                     this.showTooltip(false, this.getErrorMessage(error))}
-                                ref={(el:any) => this.toLocRef = el}
                                 inputAriaLabel={ariaLabelTo}
                                 inputId={"input-to"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}

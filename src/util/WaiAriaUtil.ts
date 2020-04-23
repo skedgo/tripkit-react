@@ -1,3 +1,5 @@
+import {genClassNames} from "../css/GenStyle.css";
+
 class WaiAriaUtil {
 
     public static addTabbingDetection() {
@@ -6,7 +8,7 @@ class WaiAriaUtil {
 
     private static handleFirstTab(e: any) {
         if (e.keyCode === 9) {
-            document.body.classList.add('user-is-tabbing');
+            document.body.classList.add(genClassNames.userIsTabbing);
 
             window.removeEventListener('keydown', WaiAriaUtil.handleFirstTab);
             window.addEventListener('mousedown', WaiAriaUtil.handleMouseDownOnce);
@@ -14,7 +16,7 @@ class WaiAriaUtil {
     }
 
     private static handleMouseDownOnce() {
-        document.body.classList.remove('user-is-tabbing');
+        document.body.classList.remove(genClassNames.userIsTabbing);
 
         window.removeEventListener('mousedown', WaiAriaUtil.handleMouseDownOnce);
         window.addEventListener('keydown', WaiAriaUtil.handleFirstTab);

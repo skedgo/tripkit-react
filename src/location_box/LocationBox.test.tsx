@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import LocationBox from "./LocationBox";
+import TKUILocationBox from "./TKUILocationBox";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import LatLng from "../model/LatLng";
@@ -8,7 +8,7 @@ import LatLng from "../model/LatLng";
 
 const LocationBoxWithGMapsApi = () => {
     const geocodingData: MultiGeocoder = new MultiGeocoder();
-    return <LocationBox
+    return <TKUILocationBox
         geocodingData={geocodingData}
         placeholder="Enter an address..."
         value={Location.create(LatLng.createLatLng(10, 10), "", "","")}

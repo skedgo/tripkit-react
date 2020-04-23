@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const appDirectory = fs.realpathSync(process.cwd());
 const resolveApp = relativePath => path.resolve(appDirectory, relativePath);
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+// const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
 
 module.exports = {
     paths: function(paths, env) {
@@ -26,12 +28,17 @@ module.exports = {
             // config.output.filename = '[name].js';
 
             //CSS Overrides
-            //Issue: if upgrade react-scripts 3.3.0 then the css file doesn't get index.css as name, but static/js/main.[hash].css
-            //TODO: get rid of all import XXX.css, switch to JSS, so I have no global .css in the end.
-            config.plugins[4].options.filename = 'index.css';
-            // #Modular lib
-            // config.plugins[4].options.filename = '[name].css';
-
+            const miniCssOptions = {
+                filename: 'index.css',
+                chunkFilename: 'static/css/[name].[contenthash:8].chunk.css'
+            };
+            config.plugins.forEach( (p,i) => {
+                if( p instanceof MiniCssExtractPlugin) {
+                    //delete p;
+                    config.plugins.splice(i,1, new MiniCssExtractPlugin( miniCssOptions ));
+                    // config.plugins.splice(i+1,0, HTMLInlineCSSWebpackPlugin());
+                }
+            });
 
             // config.externals = {
             //     react: 'react'

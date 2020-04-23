@@ -1,5 +1,4 @@
 import * as React from "react";
-import '../css/app.css';
 import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
@@ -17,7 +16,6 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
 import TKUIProfileView from "../options/TKUIProfileView";
@@ -54,6 +52,7 @@ import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUICardContainer from "../card/TKUICardContainer";
 import {CardPresentation} from "../card/TKUICard";
+import {genClassNames} from "../css/GenStyle.css";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -393,7 +392,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
                     <div id="mv-main-panel"
-                         className={classNames(classes.main, "app-style")}
+                         className={classNames(classes.main, genClassNames.root)}
                          ref={el => {
                              if(el) {   // since el comes null intermittently
                                  this.ref = el;

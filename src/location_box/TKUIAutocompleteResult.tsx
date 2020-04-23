@@ -17,6 +17,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClick?: () => void;
     id?: string;
     renderIcon?: (location: Location) => JSX.Element;
+    reference?: (el: any) => void;
 }
 
 interface IStyle {
@@ -84,6 +85,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                  role="option"
                  id={this.props.id}
                  aria-selected={this.props.ariaSelected}
+                 ref={this.props.reference}
             >
                 <div className={classes.icon}>
                     {this.props.renderIcon ? this.props.renderIcon(this.props.location) :
@@ -95,5 +97,10 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
     }
 }
 
-export default connect((config: TKUIConfig) => config.TKUIAutocompleteResult, config,
+const Connected = connect((config: TKUIConfig) => config.TKUIAutocompleteResult, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+// If I need it many times then add to connect function.
+export default React.forwardRef((props: IClientProps, ref: any) => (
+    <Connected {...props} reference={ref}/>
+));

@@ -1,7 +1,6 @@
 import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
-import genStyles from "../css/general.module.css";
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
@@ -14,6 +13,7 @@ import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
+import {genClassNames} from "../css/GenStyle.css";
 
 export enum CardPresentation {
     MODAL,
@@ -102,7 +102,7 @@ class TKUICard extends React.Component<IProps, IState> {
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         const body =
-            <div className={classNames(classes.main, "app-style")}>
+            <div className={classNames(classes.main, genClassNames.root)}>
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
                     this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
@@ -115,7 +115,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         <div className={classes.handleLine}/>
                     </div>}
                     <div className={classes.header}>
-                        <div className={classNames(genStyles.flex, genStyles.spaceBetween, genStyles.alignCenter)}>
+                        <div className={classNames(genClassNames.flex, genClassNames.spaceBetween, genClassNames.alignCenter)}>
                             <div className={classes.headerLeft}>
                                 <div className={classes.title}>
                                     {this.props.title}

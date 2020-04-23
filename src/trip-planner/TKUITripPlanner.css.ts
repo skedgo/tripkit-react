@@ -3,7 +3,6 @@ import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "./TKUITripPlan
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import {TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> =
     (theme: TKUITheme) => ({
