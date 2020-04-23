@@ -22,6 +22,7 @@ import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "../trip/TKUI
 import {TKUIWithClasses} from "../jss/StyleHelper";
 import {Subtract} from 'utility-types';
 import TKStateProvider from "../config/TKStateProvider";
+import {genClassNames} from "..";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -41,7 +42,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
         )
     }
     const containerElement = document.getElementById(containerId) as HTMLElement;
-    containerElement.className = "app-style";
+    containerElement.className = genClassNames.root;
 
 
     const config: TKUIConfig = {

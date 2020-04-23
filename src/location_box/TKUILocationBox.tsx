@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Autocomplete from 'react-autocomplete';
-import './LocationBox.css';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
@@ -15,8 +14,13 @@ import City from "../model/location/City";
 import * as CSS from 'csstype';
 import RegionsData from "../data/RegionsData";
 import {TKError} from "../error/TKError";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
+import {genClassNames} from "../css/GenStyle.css";
 
-interface IProps {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     geocodingData: MultiGeocoder,
     placeholder?: string,
     bounds?: BBox,
@@ -36,6 +40,26 @@ interface IProps {
     onFocus?: () => void;
 }
 
+interface IStyle {
+    main: CSSProps<IProps>;
+    iconLoading: CSSProps<IProps>;
+    btnClear: CSSProps<IProps>;
+    iconClear: CSSProps<IProps>;
+    menu: CSSProps<IProps>;
+    sideMenu: CSSProps<IProps>;
+}
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUILocationBoxProps = IProps;
+export type TKUILocationBoxStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUILocationBox {...props}/>,
+    styles: tKUILocationBoxDefaultStyle,
+    classNamePrefix: "TKUILocationBox"
+};
+
 interface IState {
     inputText: string,
     locationValue: Location | null,
@@ -49,7 +73,7 @@ interface IState {
 
 export const ERROR_UNABLE_TO_RESOLVE_ADDRESS = "ERROR_UNABLE_TO_RESOLVE_ADDRESS";
 
-class LocationBox extends Component<IProps, IState> {
+class TKUILocationBox extends Component<IProps, IState> {
 
     private itemToLocationMap: Map<string, Location> = new Map<string, Location>();
     private highlightedItem: string | null = null;
@@ -95,7 +119,7 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     private static itemId(location: Location): string {
-        return LocationBox.itemText(location) + (location.id ? "-" + location.id : "");
+        return TKUILocationBox.itemText(location) + (location.id ? "-" + location.id : "");
     }
 
     /**
@@ -110,7 +134,7 @@ class LocationBox extends Component<IProps, IState> {
         }
         let inputText = this.state.inputText;
         if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? LocationBox.itemText(locationValue) : '';
+            inputText = locationValue ? TKUILocationBox.itemText(locationValue) : '';
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
@@ -150,7 +174,7 @@ class LocationBox extends Component<IProps, IState> {
                     .then((resolvedLocation: Location) => {
                         if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
                             this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
-                                this.itemToLocationMap.set(LocationBox.itemId(locationValue), resolvedLocation);
+                                this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), resolvedLocation);
                                 console.log("Resolved: " + JSON.stringify(resolvedLocation));
                             });
                         }
@@ -179,7 +203,7 @@ class LocationBox extends Component<IProps, IState> {
                             if (locationValue === this.state.locationValue) {
                                 if (results.length > 0) {
                                     this.setValue(results[0], false, true, () => {
-                                        this.itemToLocationMap.set(LocationBox.itemId(locationValue), results[0]);
+                                        this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), results[0]);
                                         console.log("Resolved: " + JSON.stringify(results[0]));
                                     });
                                 } else {
@@ -238,7 +262,7 @@ class LocationBox extends Component<IProps, IState> {
         this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
-                const item = {label: LocationBox.itemText(results[i]), id: LocationBox.itemId(results[i])};
+                const item = {label: TKUILocationBox.itemText(results[i]), id: TKUILocationBox.itemId(results[i])};
                 items.push(item);
                 this.itemToLocationMap.set(item.id, results[i]);
             }
@@ -287,18 +311,19 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     private renderInput(props: any) {
+        const classes = this.props.classes;
         return (
-            <div className="LocationBox">
+            <div className={classes.main}>
                 <input type="text" {...props} style={this.props.inputStyle}/>
                 {   this.state.waiting || this.state.waitingResolveFor ?
-                    <IconSpin className="LocationBox-iconLoading sg-animate-spin" focusable="false"/> :
+                    <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?
                         <button onClick={this.onClearClicked}
-                                className="LocationBox-btnClear"
+                                className={classes.btnClear}
                                 style={resetStyles.button}
                                 aria-hidden={true}
                                 tabIndex={-1}>
-                            <IconRemove aria-hidden={true} className="LocationBox-iconClear" focusable="false"/>
+                            <IconRemove aria-hidden={true} className={classes.iconClear} focusable="false"/>
                         </button> :
                         this.props.iconEmpty || "")
                 }
@@ -319,12 +344,13 @@ class LocationBox extends Component<IProps, IState> {
 
     // noinspection JSUnusedLocalSymbols
     private renderMenu(items: any[], value: any, style: any) {
+        const classes = this.props.classes;
         if (this.props.sideDropdown) {
             const overlay = <div
                 children={items}
                 role="listbox"
                 id={this.getPopupId()}
-                className="app-style"
+                className={genClassNames.root}
                 style={{width: "250px"}}
             />;
             return <Tooltip
@@ -332,7 +358,7 @@ class LocationBox extends Component<IProps, IState> {
                 overlay={overlay}
                 arrowContent={<div className="rc-tooltip-arrow-inner"/>}
                 visible={true}
-                overlayClassName="LocationBox-sideMenu"
+                overlayClassName={classes.sideMenu}
             >
                 <div
                     style={{
@@ -355,7 +381,7 @@ class LocationBox extends Component<IProps, IState> {
                     }
                 }
                 children={items}
-                className="LocationBox-menu"
+                className={classes.menu}
                 role="listbox"
                 id={this.getPopupId()}
             />
@@ -408,6 +434,7 @@ class LocationBox extends Component<IProps, IState> {
     }
 
     public render() {
+        const classes = this.props.classes;
         const popupId = this.getPopupId();
         return (
                 <Autocomplete
@@ -470,4 +497,5 @@ class LocationBox extends Component<IProps, IState> {
     }
 }
 
-export default LocationBox;
+export default connect((config: TKUIConfig) => config.TKUILocationBox, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

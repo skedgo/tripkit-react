@@ -30,6 +30,7 @@
     "customize-cra": "^0.9.1",
     "detect-browser": "^3.0.0",
     "fbemitter": "^2.1.1",
+    "html-inline-css-webpack-plugin": "^1.8.0",
     "iplocation": "^6.1.0",
     "jquery": "^3.5.0",
     "json-typescript-mapper": "^1.1.3",

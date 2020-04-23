@@ -1,4 +1,3 @@
-import './css/global.css';
 import {TKUIConfig as TKUIConfigForExport} from "./config/TKUIConfig";
 import {TKUITheme as TKUIThemeForExport} from "./jss/TKUITheme";
 import {IRoutingResultsContext as IRoutingResultsContextForExport} from "./trip-planner/RoutingResultsProvider";
@@ -16,7 +15,7 @@ export {default as TKUITransportSwitchesView} from "./options/TKUITransportSwitc
 export {default as TKUIButton} from "./buttons/TKUIButton";
 export {TKUIButtonType} from "./buttons/TKUIButton";
 export {default as genStylesJSS} from "./css/GenStyle.css";
-export {default as genStyles} from "./css/general.module.css";
+export {genClassNames} from "./css/GenStyle.css";
 export {default as LatLng} from "./model/LatLng";
 export {default as TKLocation} from "./model/Location";
 export {default as Region} from "./model/region/Region";

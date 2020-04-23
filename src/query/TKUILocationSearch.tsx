@@ -10,7 +10,7 @@ import LatLng from "../model/LatLng";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
-import LocationBox from "../location_box/LocationBox";
+import TKUILocationBox from "../location_box/TKUILocationBox";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import {ReactComponent as IconMenu} from '../images/ic-menu.svg';
 import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
@@ -80,7 +80,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                         <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}>
                             <IconMenu className={classes.sideBarIcon}/>
                         </button>
-                        <LocationBox
+                        <TKUILocationBox
                             geocodingData={this.geocodingData}
                             bounds={this.props.bounds}
                             focus={this.props.focusLatLng}

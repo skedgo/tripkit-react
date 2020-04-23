@@ -1,7 +1,16 @@
 import * as CSS from 'csstype';
 import {CSSProps} from "../jss/StyleHelper";
+// TODO: switch to react-jss v10 that provides createUseStyles. Fix issue with hooks first, since v10 uses hooks. Allow
+// to get rid of @types/react-jss
+// import {createUseStyles} from 'react-jss';
+import jss from 'jss';
+import camelCase from 'jss-plugin-camel-case';
+import nested from 'jss-nested';
+import global from 'jss-plugin-global';
 
-interface ITKUIGenStyle {
+jss.use(camelCase(), nested(), global());
+
+interface ITKUIGenStyleClasses {
     flex: CSS.Properties;
     column: CSS.Properties;
     center: CSS.Properties;
@@ -36,13 +45,73 @@ interface ITKUIGenStyle {
 
     textGray: CSSProps<{}>;
 
-    borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
-    transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
-
     link: CSSProps<{}>;
+
+    root: CSSProps<{}>;
+
+    focusTarget: CSSProps<{}>;
+
+    userIsTabbing: CSSProps<{}>;
 }
 
-const genStyles: ITKUIGenStyle = {
+interface ITKUIGenStyleCreators {
+    borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
+    transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
+}
+
+interface ITKUIGenStyle extends ITKUIGenStyleClasses, ITKUIGenStyleCreators {}
+
+// TODO: confirm automatic vendor prefixing works. See: https://cssinjs.org/jss-plugin-vendor-prefixer/?v=v10.1.1.
+// See if need to import it, probably yes:
+const keyframesStyle = {
+    // '@-ms-keyframes spin': {
+    //     from: {
+    //         '-ms-transform': 'rotate(0deg)'
+    //     },
+    //     to: {
+    //         '-ms-transform': 'rotate(360deg)'
+    //     }
+    // },
+    // '@-moz-keyframes spin': {
+    //     from: {
+    //         '-moz-transform': 'rotate(0deg)'
+    //     }, to: {
+    //         '-moz-transform': 'rotate(360deg)'
+    //     }
+    // },
+    // '@-webkit-keyframes spin': {
+    //     from: {
+    //         '-webkit-transform': 'rotate(0deg)'
+    //     },
+    //     to: {
+    //         '-webkit-transform': 'rotate(360deg)'
+    //     }
+    // },
+    '@keyframes spin': {
+        from: {
+            transform: 'rotate(0deg)'
+        },
+        to: {
+            transform: 'rotate(360deg)'
+        }
+    },
+    // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
+    // '@font-face': [
+    //     {
+    //         fontFamily: 'ProximaNova',
+    //         src: "url('/fonts/269860_3_0.eot'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype')"
+    //     },
+    //     {
+    //         fontFamily: 'ProximaNova',
+    //         src: "url('/fonts/269860_2_0.eot'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.woff') format('woff'), url('/fonts/269860_2_0.ttf') format('truetype')",
+    //         fontWeight: 'bold',
+    //     }
+    // ]
+};
+
+const keyFramesStyles = jss.createStyleSheet(keyframesStyle as any).attach();
+
+const genStyleClasses: ITKUIGenStyleClasses = {
 
     flex: {
         ...{display: '-webkit-flex'},
@@ -133,7 +202,7 @@ const genStyles: ITKUIGenStyle = {
     },
 
     animateSpin: {
-        animation: 'spin 1.5s linear infinite'
+        animation: keyFramesStyles.keyframes.spin + ' 1.5s linear infinite'
     },
 
     svgFillCurrColor: {
@@ -204,6 +273,75 @@ const genStyles: ITKUIGenStyle = {
         color: '#212a3399'
     },
 
+    // TODO: maybe move to a stylesheet that can be customized on SDK config.
+    link: {
+        textDecoration: 'underline',
+        cursor: 'pointer',
+        opacity: '.8',
+        '&:hover': {
+            opacity: '1'
+        }
+    },
+
+    // Element selector styles, and other general selector styles, to be applied just to elements 'below' element(s)
+    // with .root className. This avoids applying styles to elements 'outside' the SDK when it's embedded on client
+    // webapp.
+    root: {
+        '& input::-ms-clear': {
+            display: 'none'
+        },
+        '& input[type=text]': {
+            padding: '1px'
+        },
+        // --------------------------------------------------------------------------------------------------------
+        // TODO: check if following rules are still necessary / convenient. Preserve them for now to avoid breaks.
+        '& a[href*="//"]': {
+            background: 'none',
+            padding: 'unset',
+            margin: 'unset',
+            zIndex: 'unset',
+            overflow: 'unset'
+        },
+        WebkitBoxSizing: 'border-box',
+        MozBoxSizing: 'border-box',
+        boxSizing: 'border-box',
+        lineHeight: 'normal',
+        '& *': {
+            boxShadow: 'none',     // To avoid glow effect on focus
+            outline: 'none!important',  // To avoid glow effet on focus
+            WebkitBoxSizing: 'border-box',
+            MozBoxSizing: 'border-box',
+            boxSizing: 'border-box',
+        }
+        // --------------------------------------------------------------------------------------------------------
+    },
+
+    // Use this class to mark elements to be highlighted on focus.
+    focusTarget: {
+        boxShadow: 'none'
+    },
+
+    userIsTabbing: {
+        ['& $root input[type=text]:focus,' +
+        '& $root button:focus,' +
+        '& $root a:focus,' +
+        '& $root select:focus,' +
+        '& $root textarea:focus,' +
+        '& $root div:focus,'
+        // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, do doesn't match the style.
+        // '& $focusTarget:focus'
+            ]: {
+            // outline: '2px solid #024dff',
+            boxShadow: '0px 0px 3px 3px #024dff!important'  // To prevail to boxShadow: none of resetStyles.
+        },
+        // '& $root $focusTarget': {
+        //     display: 'flex'
+        // }
+    }
+
+};
+
+const genStyleCreators: ITKUIGenStyleCreators = {
     borderRadius: (radius: number, unit: string = 'px') => ({
         borderRadius: radius + unit,
         WebkitBorderRadius: radius + unit,
@@ -216,16 +354,55 @@ const genStyles: ITKUIGenStyle = {
         MozTransform: 'rotate(' + angle + unit + ')',
         transform: 'rotate(' + angle + unit + ')'
     }),
+};
 
-    // TODO: maybe move to a stylesheet that can be customized on skd config.
-    link: {
-        textDecoration: 'underline',
-        cursor: 'pointer',
-        opacity: '.8',
-        '&:hover': {
-            opacity: '1'
+const genStyles = {...genStyleClasses, ...genStyleCreators};
+const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyleSheet(genStyleClasses as any).attach().classes;
+
+const otherStyles = {
+    // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
+    '@font-face': [
+        {
+            fontFamily: 'ProximaNova',
+            src: "url('/fonts/269860_3_0.eot'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype')"
+        },
+        {
+            fontFamily: 'ProximaNova',
+            src: "url('/fonts/269860_2_0.eot'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.woff') format('woff'), url('/fonts/269860_2_0.ttf') format('truetype')",
+            fontWeight: 'bold',
+        }
+    ],
+
+    // TODO: check if media queries work, or need to use a jss plugin.
+    ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
+        /* IE10+ CSS styles go here */
+        '@global': {
+            ['.' + genClassNames.root]: {
+                '& button': {
+                    background: 'none',
+                    fontFamily: 'inherit',
+                    color: 'inherit'
+                }
+            },
+            // TODO: check if next rule is still necessary, and works ok on IE. Commented by now
+            /* max-height: 100% does not work on IE, so causes issues with scroll */
+            // 'ReactModal__Content': {
+            //     height: '100%'
+            // }
+        }
+    },
+    '@global': {
+        '.ReactModalPortal': {
+            'zIndex': '1080'
+        },
+
+        '.ReactModal__Overlay': {
+            'zIndex': '1001'
         }
     }
 };
 
+jss.createStyleSheet(otherStyles as any).attach();
+
 export default genStyles;
+export {genClassNames};

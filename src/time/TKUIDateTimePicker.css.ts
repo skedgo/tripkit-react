@@ -7,7 +7,8 @@ import {DeviceUtil, genStylesJSS} from "../index";
 export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle, TKUIDateTimePickerProps> =
     (theme: TKUITheme) => ({
         datePicker: {
-            fontFamily: theme.fontFamily
+            fontFamily: theme.fontFamily,
+            fontSize: '13px'
         },
         calendarPopper: {
             marginTop: '12px!important',

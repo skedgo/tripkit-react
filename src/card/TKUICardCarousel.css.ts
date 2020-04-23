@@ -1,0 +1,92 @@
+import {TKUITheme} from "../jss/TKUITheme";
+import {TKUIStyles} from "../jss/StyleHelper";
+import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
+import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+
+export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKUICardCarouselProps> =
+    (theme: TKUITheme) => ({
+        modalContainer: {
+            alignItems: 'unset!important',
+            // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
+            // so need to explicitly set overflowY to hidden to override overflowY value.
+            // overflowY: 'hidden!important',
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                width: '450px',
+                left: '5px!important',
+                padding: '5px 5px 0 5px'
+            },
+            ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
+                width: '100%',
+                left: '0px!important',
+                padding: '5px 5px 0 5px'
+            }
+        },
+        main: {
+            width: '100%',
+            height: '100%',
+            '& .slider.animated .slide, .carousel .slide': {
+                padding: '35px 0 0',
+                height: '100%',
+                background: 'none'
+            },
+            '& .carousel .control-dots': {
+                top: '5px',
+                position: 'absolute',
+                textAlign: 'center',
+                width: '70%',
+                height: '25px',
+                margin: '0 15% 0 15%',
+                padding: '0'
+            },
+            '& .carousel .control-dots .dot': {
+                transition: 'opacity .25s ease-in',
+                opacity: '.5',
+                background: 'black',
+                borderRadius: '50%',
+                width: '10px',
+                height: '10px',
+                cursor: 'pointer',
+                display: 'inline-block',
+                margin: '0 8px'
+            },
+            '& .carousel .control-dots .dot.selected': {
+                opacity: '1'
+            },
+            '& > *, .carousel-slider, .slider-wrapper, .slider': {
+                height: '100%'
+            },
+            '& .carousel .slide > *': {
+                textAlign: 'initial'
+            },
+            '& .carousel .slide img': {
+                width: 'initial'
+            },
+            '& .carousel.carousel-slider .control-arrow': {
+                background: 'rgba(0, 0, 0, .4)',
+                height: '30px',
+                marginRight: '30px',
+                marginLeft: '30px',
+                opacity: '1',
+                borderRadius: '10px',
+                fontSize: '14px'
+            },
+            '& .carousel.carousel-slider .control-arrow:hover': {
+                background: 'rgba(0, 0, 0, 0.6)'
+            },
+            '& .carousel .control-arrow:before, .carousel.carousel-slider .control-arrow:before': {
+                margin: '0 10px',
+                display: 'inline-block',
+                borderTop: '5px solid transparent',
+                borderBottom: '5px solid transparent',
+                content: "''"
+            }
+        },
+        lotOfPages: {
+            '& .carousel .control-dots': {
+                top: '-4px'
+            }
+        },
+        pageWrapper: {
+            height: '100%'
+        }
+    });
