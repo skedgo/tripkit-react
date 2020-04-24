@@ -299,10 +299,19 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         if (this.props.values && prevProps.values !== this.props.values) {
             this.refreshBadges();
         }
+
+        if (this.props.query.to !== prevProps.query.to) {
+            this.setState({toLocInfo: undefined});
+            this.refreshAlert();
+        }
     }
 
     public componentDidMount() {
         this.refreshBadges();
+        this.refreshAlert();
+    }
+
+    private refreshAlert() {
         this.props.query.to && LocationsData.instance.getLocationInfo(this.props.query.to)
             .then((locInfo: TKLocationInfo) => this.setState({toLocInfo: locInfo}));
     }
