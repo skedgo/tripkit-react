@@ -4,13 +4,14 @@ import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "./TKUIAlertsSummar
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {alertSeverity} from "../model/trip/Segment";
 import genStyles from "../css/GenStyle.css";
+import Color from "../model/trip/Color";
 
 export const tKUIAlertsSummaryDefaultStyle: TKUIStyles<TKUIAlertsSummaryStyle, TKUIAlertsSummaryProps> =
     (theme: TKUITheme) => ({
         main: {
             padding: '8px 12px',
-            border: '1px solid ' + theme.colorWarningOpacity(.6),
-            background: theme.colorWarningOpacity(.12),
+            border: (props: TKUIAlertsSummaryProps) => '1px solid ' + Color.createFromString(severityColor(alertSeverity(props.alerts), theme)).toRGBA(.6),
+            background: (props: TKUIAlertsSummaryProps) => Color.createFromString(severityColor(alertSeverity(props.alerts), theme)).toRGBA(.12),
             ...genStyles.borderRadius(12)
         },
         header: {

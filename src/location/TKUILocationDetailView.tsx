@@ -20,9 +20,10 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import TKUIW3w from "./TKUIW3w";
-import TripGoApi from "../api/TripGoApi";
-import NetworkUtil from "../util/NetworkUtil";
 import TKLocationInfo from "../model/location/TKLocationInfo";
+import RealTimeAlert from "../model/service/RealTimeAlert";
+import TKUIAlertRow from "../alerts/TKUIAlertRow";
+import LocationsData from "../data/LocationsData";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -32,6 +33,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 export interface IStyle {
     main: CSSProps<IProps>;
     actionsPanel: CSSProps<IProps>;
+    alertsContainer: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -111,9 +113,14 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 renderSubHeader={subHeader}
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
-                // onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>
+                    {locationInfo && locationInfo.alerts && locationInfo.alerts.length > 0 &&
+                    <div className={classes.alertsContainer}>
+                        {locationInfo.alerts.map((alert: RealTimeAlert, i: number) =>
+                            <TKUIAlertRow alert={alert} key={i} asCard={true}/>
+                        )}
+                    </div>}
                     {locationInfo && locationInfo.details && locationInfo.details.w3w &&
                     <TKUIW3w w3w={locationInfo.details.w3w} w3wInfoURL={locationInfo.details.w3wInfoURL}/>}
                 </div>
@@ -124,9 +131,8 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
     public componentDidMount() {
         // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
-        const endpoint = "locationInfo.json?lat=" + this.props.location.lat + "&lng=" + this.props.location.lng;
-        TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, TKLocationInfo)
-            .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
+        LocationsData.instance.getLocationInfo(this.props.location)
+            .then((result: TKLocationInfo) => this.setState({locationInfo: result}));
     }
 
 }
