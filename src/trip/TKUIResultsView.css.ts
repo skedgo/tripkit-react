@@ -76,5 +76,9 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             margin: '24px 0',
             ...genStyles.fontM,
             color: tKUIColors.black2
+        },
+        alertContainer: {
+            padding: '10px',
+            borderBottom: '1px solid #ECEBEB'
         }
     });

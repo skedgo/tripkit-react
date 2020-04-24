@@ -28,6 +28,10 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import TKUISelect from "../buttons/TKUISelect";
 import {TKUITooltip} from "../index";
 import DeviceUtil from "../util/DeviceUtil";
+import LocationsData from "../data/LocationsData";
+import TKLocationInfo from "../model/location/TKLocationInfo";
+import TKUIAlertRow from "../alerts/TKUIAlertRow";
+import TKUIAlertsView from "../alerts/TKUIAlertsView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -61,6 +65,7 @@ export interface IStyle {
     footer: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
     noResults: CSSProps<IProps>;
+    alertContainer: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -79,6 +84,8 @@ interface IState {
     tripToBadge: Map<Trip, Badges>;
     expanded?: Trip;
     showTransportSwitches: boolean;
+    toLocInfo?: TKLocationInfo;
+    showAlertsView?: boolean;
 }
 
 class TKUIResultsView extends React.Component<IProps, IState> {
@@ -200,6 +207,21 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classNames(this.props.className, classes.main)}>
+                    {this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
+                    <div className={classes.alertContainer}>
+                        <TKUIAlertRow alert={this.state.toLocInfo.alerts[0]} asCard={true} brief={true}
+                                      onClick={() => this.setState({showAlertsView: true})}
+                        />
+                        {this.state.showAlertsView &&
+                        <TKUIAlertsView
+                            alerts={this.state.toLocInfo.alerts}
+                            onRequestClose={() => this.setState({showAlertsView: false})}
+                            slideUpOptions={{
+                                draggable: false,
+                                zIndex: 1006    // To be above query input. TODO: define constants for all these z-index(s).
+                            }}
+                        />}
+                    </div>}
                     <div className={classes.sortBar}>
                         <TKUISelect
                             options={sortOptions}
@@ -281,6 +303,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         this.refreshBadges();
+        this.props.query.to && LocationsData.instance.getLocationInfo(this.props.query.to)
+            .then((locInfo: TKLocationInfo) => this.setState({toLocInfo: locInfo}));
     }
 
     public componentWillUnmount() {

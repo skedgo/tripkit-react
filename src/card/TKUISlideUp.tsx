@@ -7,7 +7,7 @@ const styles = {
     container: {
         position: 'absolute',
         top: 0,
-        zIndex: '1002',
+        zIndex: (props: IProps) => props.zIndex !== undefined ? props.zIndex : '1002',
         height: '100%'
     }
 };
@@ -43,6 +43,7 @@ export interface TKUISlideUpOptions {
     position?: TKUISlideUpPosition;
     onPositionChange?: (position: TKUISlideUpPosition) => void;
     draggable?: boolean;
+    zIndex?: number;
 }
 
 class TKUISlideUp extends React.Component<IProps, IState> {

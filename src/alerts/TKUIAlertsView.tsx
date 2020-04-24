@@ -6,9 +6,9 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUIAlertsViewDefaultStyle} from "./TKUIAlertsView.css";
 import {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
 import TKUIRendersCard from "../card/TKUIRendersCard";
 import {Subtract} from "utility-types";
+import TKUIAlertRow from "./TKUIAlertRow";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alerts: RealTimeAlert[];
@@ -24,11 +24,6 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 
 interface IStyle {
     main: CSSProps<IProps>;
-    alert: CSSProps<IProps>;
-    content: CSSProps<IProps>;
-    alertIcon: CSSProps<IProps>;
-    title: CSSProps<IProps>;
-    text: CSSProps<IProps>;
 }
 
 export type TKUIAlertsViewProps = IProps;
@@ -65,17 +60,7 @@ class TKUIAlertsView extends React.Component<IProps, {}> {
             children:
                 <div className={classes.main}>
                     {alerts.map((alert: RealTimeAlert, i: number) =>
-                        <div className={classes.alert} key={i}>
-                            <AlertIcon className={classes.alertIcon}/>
-                            <div className={classes.content}>
-                                <div className={classes.title}>
-                                    {alert.title}
-                                </div>
-                                <div className={classes.text}>
-                                    {alert.text}
-                                </div>
-                            </div>
-                        </div>)}
+                        <TKUIAlertRow alert={alert} key={i}/>)}
                 </div>
         }, this);
     }

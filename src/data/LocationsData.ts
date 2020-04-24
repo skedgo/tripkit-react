@@ -7,6 +7,8 @@ import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import Util from "../util/Util";
+import TKLocationInfo from "../model/location/TKLocationInfo";
+import LatLng from "../model/LatLng";
 
 class LocationsData {
 
@@ -70,6 +72,12 @@ class LocationsData {
                 });
         }
         return cachedResults;
+    }
+
+    // TODO: cache this in a map from latLng (string) to TKLocationInfo.
+    public getLocationInfo(latLng: LatLng): Promise<TKLocationInfo> {
+        const endpoint = "locationInfo.json?lat=" + latLng.lat + "&lng=" + latLng.lng;
+        return TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, TKLocationInfo);
     }
 }
 

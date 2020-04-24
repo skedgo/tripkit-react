@@ -5,7 +5,16 @@ import LocationUtil from "../util/LocationUtil";
 
 export const tKUILocationDetailViewDefaultStyle: TKUIStyles<TKUILocationDetailViewStyle, TKUILocationDetailViewProps> = {
     main: {
-        padding: '40px 12px'
+        padding: '40px 12px',
+        '&>*': {
+            marginBottom: '25px'
+        }
+    },
+    alertsContainer: {
+        borderBottom: '1px solid #ECEBEB',
+        '&>*:not(last-child)': {
+            marginBottom: '15px'
+        }
     },
     actionsPanel: {
         display: 'grid',
