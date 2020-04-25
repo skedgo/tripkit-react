@@ -23,7 +23,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%',
                 left: '0px!important',
-                padding: '5px 5px 0 5px'
+                padding: '0 5px'
             }
         },
 
