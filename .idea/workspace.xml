@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+    <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="">
+      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.module.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/client-chym-web.tsx" afterDir="false" />
+    </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
       <change beforePath="$PROJECT_DIR$/dist/action/TKUIActionsView.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/action/TKUIRouteToLocationAction.d.ts" beforeDir="false" />
@@ -245,14 +250,24 @@
       <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
     </list>
-    <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="">
-      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/client-chym-web.tsx" afterDir="false" />
-    </list>
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/asset-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/polyfills-ie11.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/service-worker.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -281,32 +296,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package-lock.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <file leaf-file-name="RealTimeAlert.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="15465" column="18" selection-start-line="15465" selection-start-column="18" selection-end-line="15465" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUISlideUp.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="43" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
+            <state relative-caret-position="88">
+              <caret line="21" column="14" lean-forward="true" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
               <folding>
-                <element signature="e#0#26#0" expanded="true" />
+                <element signature="e#0#91#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="TKUIResultsView.tsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="58" column="31" selection-start-line="58" selection-start-column="31" selection-end-line="58" selection-end-column="31" />
+            <state relative-caret-position="327">
+              <caret line="217" column="38" lean-forward="true" selection-start-line="217" selection-start-column="38" selection-end-line="217" selection-end-column="38" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TKUIAlertsSummary.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="52" column="41" lean-forward="true" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="41" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -323,7 +344,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>withStyle</find>
       <find>pageWra</find>
       <find>children?:</find>
       <find>lotOf</find>
@@ -353,6 +373,7 @@
       <find>I don</find>
       <find>'</find>
       <find>react-dragga</find>
+      <find>slideUpOptions</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;-&quot;</replace>
@@ -428,8 +449,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/map/TKUIRealtimeVehiclePopup.tsx" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapLocationPopup.css.ts" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapLocationPopup.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapPopup.css.ts" />
@@ -474,11 +493,13 @@
         <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.css.ts" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertRow.css.ts" />
-        <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.css.ts" />
         <option value="$PROJECT_DIR$/src/jss/TKUITheme.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" />
+        <option value="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" />
+        <option value="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" />
+        <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" />
       </list>
     </option>
   </component>
@@ -708,13 +729,6 @@
       <workItem from="1586872138735" duration="50418000" />
       <workItem from="1587489764529" duration="1056000" />
       <workItem from="1587491712120" duration="57169000" />
-    </task>
-    <task id="LOCAL-00207" summary="Tripkit web sdk: add curr loc warn tooltips to destination input. Move logic of temporary display inside TKUITooltip.">
-      <created>1584475630422</created>
-      <option name="number" value="00207" />
-      <option name="presentableId" value="LOCAL-00207" />
-      <option name="project" value="LOCAL" />
-      <updated>1584475630422</updated>
     </task>
     <task id="LOCAL-00208" summary="Tripkit web sdk: tune card positioning.">
       <created>1584546784984</created>
@@ -1052,11 +1066,18 @@
       <option name="project" value="LOCAL" />
       <updated>1587656456228</updated>
     </task>
-    <option name="localTasksCounter" value="256" />
+    <task id="LOCAL-00256" summary="Downgrade to react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks&#10; * scroll inside slide-up on touch devices. See change log:&#10; * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020">
+      <created>1587820445540</created>
+      <option name="number" value="00256" />
+      <option name="presentableId" value="LOCAL-00256" />
+      <option name="project" value="LOCAL" />
+      <updated>1587820445540</updated>
+    </task>
+    <option name="localTasksCounter" value="257" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2709795000" />
+    <option name="totallyTimeSpent" value="2712126000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1069,6 +1090,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="827" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
@@ -1091,9 +1113,9 @@
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.33380482" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" visible="true" weight="0.4427157" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.4427157" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
-      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2503536" />
+      <window_info active="true" anchor="bottom" id="Find" order="2" sideWeight="0.49928468" visible="true" weight="0.2503536" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="1" />
@@ -1218,7 +1240,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk: more minnor fixes and refinements." />
     <MESSAGE value="Tripkit web sdk: re-implement drag up / down card gesture. Other improvements on cards." />
     <MESSAGE value="Tripkit web sdk: tap on card header moves it up." />
     <MESSAGE value="Tripkit web sdk: more improvements on cards." />
@@ -1243,7 +1264,8 @@
     <MESSAGE value="Work on switching remaining .css to JSS (2)" />
     <MESSAGE value="Work on switching remaining .css to JSS (3)" />
     <MESSAGE value="- Finish switching remaining .css to JSS&#10;- Fix to issue: change path + name of extracted .css on MiniCssExtractPlugin, on config-overrides.js." />
-    <option name="LAST_COMMIT_MESSAGE" value="- Finish switching remaining .css to JSS&#10;- Fix to issue: change path + name of extracted .css on MiniCssExtractPlugin, on config-overrides.js." />
+    <MESSAGE value="Downgrade to react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks&#10; * scroll inside slide-up on touch devices. See change log:&#10; * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020" />
+    <option name="LAST_COMMIT_MESSAGE" value="Downgrade to react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks&#10; * scroll inside slide-up on touch devices. See change log:&#10; * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1484,13 +1506,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="51" column="45" selection-start-line="51" selection-start-column="45" selection-end-line="51" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsView.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="975">
@@ -1505,23 +1520,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="537">
           <caret line="76" column="20" selection-start-line="76" selection-start-column="20" selection-end-line="76" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="827">
-          <caret line="57" column="47" lean-forward="true" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
           <folding>
-            <element signature="e#0#31#0" expanded="true" />
+            <element signature="e#0#44#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="22" column="54" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
         </state>
       </provider>
     </entry>
@@ -1529,6 +1530,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="101">
           <caret line="15" column="87" lean-forward="true" selection-start-line="15" selection-start-column="65" selection-end-line="15" selection-end-column="87" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1549,16 +1553,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4080">
-          <caret line="305" column="9" selection-start-line="305" selection-start-column="9" selection-end-line="305" selection-end-column="9" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/share/TKShareHelper.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -1575,16 +1569,6 @@
           <caret line="465" column="24" selection-start-line="465" selection-start-column="24" selection-end-line="465" selection-end-column="24" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-          <folding>
-            <element signature="e#0#91#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1643,7 +1627,7 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
-          <caret line="58" column="31" selection-start-line="58" selection-start-column="31" selection-end-line="58" selection-end-column="31" />
+          <caret line="58" column="32" selection-start-line="58" selection-start-column="32" selection-end-line="58" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -1656,10 +1640,61 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="43" selection-start-line="7" selection-start-column="43" selection-end-line="7" selection-end-column="43" />
+        <state relative-caret-position="120">
+          <caret line="8" column="82" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="8" selection-end-column="82" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="574">
+          <caret line="70" column="15" selection-start-line="70" selection-start-column="15" selection-end-line="70" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.css.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="22" column="54" selection-start-line="22" selection-start-column="54" selection-end-line="22" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="21" column="14" lean-forward="true" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#91#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="52" column="41" lean-forward="true" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="327">
+          <caret line="217" column="38" lean-forward="true" selection-start-line="217" selection-start-column="38" selection-end-line="217" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
