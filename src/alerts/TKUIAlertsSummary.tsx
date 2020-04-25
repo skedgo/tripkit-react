@@ -52,18 +52,26 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
         const alerts = this.props.alerts;
         return (
             <div className={classes.main}>
-                <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
-                    <AlertIcon className={classes.alertIcon}/>
-                    <span className={classes.numOfAlerts}>
-                        {t("X.alerts", {0: alerts.length})}
-                    </span>
-                    <IconRightArrow/>
-                </div>
-                {alerts.map((alert: RealTimeAlert, i: number) =>
-                    <div className={classes.alertTitle} key={i}>
-                        {alert.title}
+                {alerts.length === 1 ?
+                    <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
+                        <AlertIcon className={classes.alertIcon}/>
+                        <span className={classes.numOfAlerts}>{alerts[0].title}</span>
+                        <IconRightArrow/>
                     </div>
-                )}
+                    :
+                    <div>
+                        <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
+                            <AlertIcon className={classes.alertIcon}/>
+                            <span className={classes.numOfAlerts}>{t("X.alerts", {0: alerts.length})}</span>
+                            <IconRightArrow/>
+                        </div>
+                        {alerts.map((alert: RealTimeAlert, i: number) =>
+                            <div className={classes.alertTitle} key={i}>
+                                {alert.title}
+                            </div>
+                        )}
+                    </div>
+                }
                 {this.state.showAlertsView &&
                 <TKUIAlertsView
                     alerts={alerts}

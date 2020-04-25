@@ -30,8 +30,7 @@ import {TKUITooltip} from "../index";
 import DeviceUtil from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
-import TKUIAlertRow from "../alerts/TKUIAlertRow";
-import TKUIAlertsView from "../alerts/TKUIAlertsView";
+import TKUIAlertsSummary from "alerts/TKUIAlertsSummary";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -85,7 +84,6 @@ interface IState {
     expanded?: Trip;
     showTransportSwitches: boolean;
     toLocInfo?: TKLocationInfo;
-    showAlertsView?: boolean;
 }
 
 class TKUIResultsView extends React.Component<IProps, IState> {
@@ -209,18 +207,13 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 <div className={classNames(this.props.className, classes.main)}>
                     {this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
                     <div className={classes.alertContainer}>
-                        <TKUIAlertRow alert={this.state.toLocInfo.alerts[0]} asCard={true} brief={true}
-                                      onClick={() => this.setState({showAlertsView: true})}
-                        />
-                        {this.state.showAlertsView &&
-                        <TKUIAlertsView
+                        <TKUIAlertsSummary
                             alerts={this.state.toLocInfo.alerts}
-                            onRequestClose={() => this.setState({showAlertsView: false})}
                             slideUpOptions={{
                                 draggable: false,
                                 zIndex: 1006    // To be above query input. TODO: define constants for all these z-index(s).
                             }}
-                        />}
+                        />
                     </div>}
                     <div className={classes.sortBar}>
                         <TKUISelect
