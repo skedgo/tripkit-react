@@ -20,7 +20,10 @@ class Location extends LatLng {
     public suggestion?: any;
     public hasDetail?: boolean;
     @JsonProperty('timezone', String)
-    public timezone: string = "";
+    private _timezone: string = "";
+    // Workaround since Locations sometimes come with 'timeZone' instead of 'timezone'. Clean this when fixed.
+    @JsonProperty('timeZone', String, true)
+    public timeZone: string | undefined = undefined;
 
     public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);
@@ -32,7 +35,7 @@ class Location extends LatLng {
         // when created client-side. Now it may be "". Check if it's initialized to avoid requesting regions
         // prematurely, before api key was set.
         const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
-        instance.timezone = region ? region.timezone : "";
+        instance._timezone = region ? region.timezone : "";
         return instance;
     }
 
@@ -81,6 +84,14 @@ class Location extends LatLng {
 
     set id(value: string) {
         this._id = value;
+    }
+
+    get timezone(): string {
+        return this.timeZone || this._timezone;
+    }
+
+    set timezone(value: string) {
+        this._timezone = value;
     }
 
     public getDisplayString(): string {

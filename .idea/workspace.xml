@@ -6,7 +6,18 @@
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/QueryWidget.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/client-chym-web/client-chym-web.tsx" afterDir="false" />
     </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #12777: Show location-based alerts. Final refinements.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Location.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Location.ts" afterDir="false" />
+    </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js.map" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/action/TKUIActionsView.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/action/TKUIRouteToLocationAction.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/action/TKUIShareAction.d.ts" beforeDir="false" />
@@ -22,6 +33,7 @@
       <change beforePath="$PROJECT_DIR$/dist/api/TripGoApi.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/api/WithRoutingResults.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/api/WithServiceResults.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/asset-manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/buttons/TKUIButton.css.d.ts" beforeDir="false" />
@@ -84,7 +96,11 @@
       <change beforePath="$PROJECT_DIR$/dist/geocode/SkedgoGeocoder.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/geocode/StaticGeocoder.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/i18n/TKI18nProvider.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js.map" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/jslib/JQuery.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/jss/StyleHelper.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/jss/TKUITheme.d.ts" beforeDir="false" />
@@ -182,6 +198,7 @@
       <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportSwitchesView.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/options/TKUIUserPriorities.css.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/options/TKUIUserPriorities.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/polyfills-ie11.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/precache-manifest.d35ce71f5b15de325d64b533ba293d0b.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/privacy/TKUICookiesBanner.css.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/privacy/TKUICookiesBanner.d.ts" beforeDir="false" />
@@ -190,6 +207,7 @@
       <change beforePath="$PROJECT_DIR$/dist/query/TKUIRoutingQueryInput.css.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/query/TKUIRoutingQueryInput.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/registerServiceWorker.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/service-worker.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/service/DaySeparator.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/service/ServiceResultsProvider.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/service/TKUIServiceDepartureRow.css.d.ts" beforeDir="false" />
@@ -250,25 +268,6 @@
       <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
     </list>
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/0.chunk.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/1.chunk.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/3.chunk.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/asset-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/asset-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.css.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.css.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/polyfills-ie11.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service-worker.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/service-worker.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" afterDir="false" />
-    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -276,6 +275,11 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -299,8 +303,8 @@
       <file leaf-file-name="RealTimeAlert.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="21" column="14" lean-forward="true" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
+            <state relative-caret-position="285">
+              <caret line="33" column="35" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
               <folding>
                 <element signature="e#0#91#0" expanded="true" />
               </folding>
@@ -308,13 +312,49 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUIResultsView.tsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TKUIResultsView.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="217" column="38" lean-forward="true" selection-start-line="217" selection-start-column="38" selection-end-line="217" selection-end-column="38" />
+            <state relative-caret-position="160">
+              <caret line="168" column="52" selection-start-line="168" selection-start-column="52" selection-end-line="168" selection-end-column="52" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Location.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/model/Location.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1199">
+              <caret line="23" column="110" selection-start-line="23" selection-start-column="110" selection-end-line="23" selection-end-column="110" />
+              <folding>
+                <element signature="e#0#37#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TKUISlideUp.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="79">
+              <caret line="8" column="82" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="8" selection-end-column="82" />
+              <folding>
+                <element signature="e#0#26#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TKUICard.css.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/card/TKUICard.css.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="111">
+              <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
+              <folding>
+                <element signature="e#0#44#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -324,7 +364,7 @@
         <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="288">
-              <caret line="52" column="41" lean-forward="true" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="41" />
+              <caret line="51" column="41" lean-forward="true" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="41" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -449,8 +489,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/map/TKUIMapLocationPopup.tsx" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapPopup.css.ts" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapPopup.tsx" />
         <option value="$PROJECT_DIR$/src/map/ServiceStopPopup.tsx" />
@@ -500,6 +538,8 @@
         <option value="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" />
+        <option value="$PROJECT_DIR$/src/card/TKUICard.css.ts" />
+        <option value="$PROJECT_DIR$/src/model/Location.ts" />
       </list>
     </option>
   </component>
@@ -544,6 +584,17 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="card" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -729,13 +780,6 @@
       <workItem from="1586872138735" duration="50418000" />
       <workItem from="1587489764529" duration="1056000" />
       <workItem from="1587491712120" duration="57169000" />
-    </task>
-    <task id="LOCAL-00208" summary="Tripkit web sdk: tune card positioning.">
-      <created>1584546784984</created>
-      <option name="number" value="00208" />
-      <option name="presentableId" value="LOCAL-00208" />
-      <option name="project" value="LOCAL" />
-      <updated>1584546784985</updated>
     </task>
     <task id="LOCAL-00209" summary="Tripkit web sdk: alerts on service departures.">
       <created>1584648218792</created>
@@ -1073,11 +1117,18 @@
       <option name="project" value="LOCAL" />
       <updated>1587820445540</updated>
     </task>
-    <option name="localTasksCounter" value="257" />
+    <task id="LOCAL-00257" summary="Feature #12777: Show location-based alerts. Final refinements.">
+      <created>1587822994210</created>
+      <option name="number" value="00257" />
+      <option name="presentableId" value="LOCAL-00257" />
+      <option name="project" value="LOCAL" />
+      <updated>1587822994210</updated>
+    </task>
+    <option name="localTasksCounter" value="258" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2712126000" />
+    <option name="totallyTimeSpent" value="2713870000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1111,11 +1162,11 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.33380482" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.33380482" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.4427157" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
-      <window_info active="true" anchor="bottom" id="Find" order="2" sideWeight="0.49928468" visible="true" weight="0.2503536" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2503536" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="1" />
@@ -1240,7 +1291,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Tripkit web sdk: re-implement drag up / down card gesture. Other improvements on cards." />
     <MESSAGE value="Tripkit web sdk: tap on card header moves it up." />
     <MESSAGE value="Tripkit web sdk: more improvements on cards." />
     <MESSAGE value="Tripkit web sdk: more improvements on cards (2)." />
@@ -1265,7 +1315,8 @@
     <MESSAGE value="Work on switching remaining .css to JSS (3)" />
     <MESSAGE value="- Finish switching remaining .css to JSS&#10;- Fix to issue: change path + name of extracted .css on MiniCssExtractPlugin, on config-overrides.js." />
     <MESSAGE value="Downgrade to react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks&#10; * scroll inside slide-up on touch devices. See change log:&#10; * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020" />
-    <option name="LAST_COMMIT_MESSAGE" value="Downgrade to react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks&#10; * scroll inside slide-up on touch devices. See change log:&#10; * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020" />
+    <MESSAGE value="Feature #12777: Show location-based alerts. Final refinements." />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #12777: Show location-based alerts. Final refinements." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1304,13 +1355,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/card/TKUICardCarousel.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="61" selection-start-line="2" selection-start-column="45" selection-end-line="2" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/react-responsive-carousel/lib/es/main.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1489,13 +1533,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/Location.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="478">
-          <caret line="110" column="99" selection-start-line="110" selection-start-column="93" selection-end-line="110" selection-end-column="99" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/location/TKUILocationDetailView.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1795">
@@ -1638,16 +1675,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="82" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="8" selection-end-column="82" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="574">
@@ -1669,20 +1696,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="21" column="14" lean-forward="true" selection-start-line="21" selection-start-column="14" selection-end-line="21" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#91#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
-          <caret line="52" column="41" lean-forward="true" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="41" />
+          <caret line="51" column="41" lean-forward="true" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="41" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -1691,10 +1708,50 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="217" column="38" lean-forward="true" selection-start-line="217" selection-start-column="38" selection-end-line="217" selection-end-column="38" />
+        <state relative-caret-position="160">
+          <caret line="168" column="52" selection-start-line="168" selection-start-column="52" selection-end-line="168" selection-end-column="52" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/service/RealTimeAlert.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="33" column="35" selection-start-line="33" selection-start-column="35" selection-end-line="33" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#91#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="8" column="82" lean-forward="true" selection-start-line="6" selection-start-column="14" selection-end-line="8" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/card/TKUICard.css.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="111">
+          <caret line="23" column="16" selection-start-line="23" selection-start-column="16" selection-end-line="23" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/Location.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1199">
+          <caret line="23" column="110" selection-start-line="23" selection-start-column="110" selection-end-line="23" selection-end-column="110" />
+          <folding>
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
