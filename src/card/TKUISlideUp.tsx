@@ -3,6 +3,12 @@ import injectSheet, {ClassNameMap} from "react-jss";
 import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
 
+/**
+ * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
+ * scroll inside slide-up on touch devices. See change log:
+ * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020
+ */
+
 const styles = {
     container: {
         position: 'absolute',

@@ -1,7 +1,6 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import Location from "../Location";
 import RealTimeAction from "./RealTimeAction";
-import {tKUIColors} from "../..";
 
 export enum AlertSeverity {
     alert, warning, info
