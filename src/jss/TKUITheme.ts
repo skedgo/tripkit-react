@@ -15,7 +15,7 @@ export interface TKUITheme {
 export const tKUIDeaultTheme: TKUITheme = {
     colorPrimary: '#23b15e',
     colorSuccess: '#23b15e',
-    colorInfo: '#808080', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
+    colorInfo: '#454c50', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
     colorWarning: '#fcba1e',
     colorError: '#e34040',
     fontFamily: 'ProximaNova, sans-serif',

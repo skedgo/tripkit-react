@@ -15,7 +15,7 @@ import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
 import {Subtract} from "utility-types";
 import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {connect, PropsMapper, replaceStyle} from "../config/TKConfigHelper";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
@@ -26,11 +26,17 @@ import Region from "../model/region/Region";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect from "../buttons/TKUISelect";
-import {TKUITooltip} from "../index";
+import {tKUIColors, TKUITheme, TKUITooltip} from "../index";
 import DeviceUtil from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import TKUIAlertsSummary from "alerts/TKUIAlertsSummary";
+import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
+import {alertSeverity} from "../model/trip/Segment";
+import Color from "../model/trip/Color";
+import {severityColor} from "./TKUITrackTransport.css";
+import genStyles from "../css/GenStyle.css";
+import {AlertSeverity} from "../model/service/RealTimeAlert";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -64,7 +70,6 @@ export interface IStyle {
     footer: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
     noResults: CSSProps<IProps>;
-    alertContainer: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -206,15 +211,52 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             >
                 <div className={classNames(this.props.className, classes.main)}>
                     {this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
-                    <div className={classes.alertContainer}>
-                        <TKUIAlertsSummary
-                            alerts={this.state.toLocInfo.alerts}
-                            slideUpOptions={{
-                                draggable: false,
-                                zIndex: 1006    // To be above query input. TODO: define constants for all these z-index(s).
-                            }}
-                        />
-                    </div>}
+                    // TODO: Define a TKUIStyleOverride that encapsulates all the following, i.e.,
+                    // the consumer, the call to replaceStyle, and the provider.
+                    <TKUIConfigContext.Consumer>
+                        {(config: TKUIConfig) => {
+                            const stylesOverride =
+                                (theme: TKUITheme) => ({
+                                    main: (defaultStyle) => ({
+                                        ...defaultStyle,
+                                        background: Color.createFromString(severityColor(alertSeverity(this.state.toLocInfo!.alerts), theme)).toRGB(),
+                                        color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
+                                        ...genStyles.borderRadius(0)
+                                    }),
+                                    alertIcon: (defaultStyle) => ({
+                                        ...defaultStyle,
+                                        color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
+                                        '& path': {
+                                            // stroke: tKUIColors.white,
+                                            strokeWidth: '1px',
+                                            fill: 'currentColor'
+                                        }
+                                    }),
+                                    numOfAlerts: (defaultStyle) => ({
+                                        ...defaultStyle,
+                                        ...genStyles.fontM,
+                                        fontWeight: 'normal'
+                                    }),
+                                    rightArrowIcon: (defaultStyle) => ({
+                                        ...defaultStyle,
+                                        visibility: 'hidden'
+                                    })
+                                });
+                            const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);
+                            // TODO delete next line
+                            // this.state.toLocInfo!.alerts[0].severity = AlertSeverity.info;
+                            return (<TKUIConfigProvider config={configOverride}>
+                                <TKUIAlertsSummary
+                                    alerts={this.state.toLocInfo!.alerts}
+                                    slideUpOptions={{
+                                        draggable: false,
+                                        zIndex: 1006    // To be above query input. TODO: define constants for all these z-index(s).
+                                    }}
+                                />
+                            </TKUIConfigProvider>);
+                        }}
+                    </TKUIConfigContext.Consumer>
+                    }
                     <div className={classes.sortBar}>
                         <TKUISelect
                             options={sortOptions}

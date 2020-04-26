@@ -22,6 +22,7 @@ interface IStyle {
     alertIcon: CSSProps<IProps>;
     numOfAlerts: CSSProps<IProps>;
     alertTitle: CSSProps<IProps>;
+    rightArrowIcon: CSSProps<IProps>;
 }
 
 export type TKUIAlertsSummaryProps = IProps;
@@ -56,14 +57,14 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
                     <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
                         <AlertIcon className={classes.alertIcon}/>
                         <span className={classes.numOfAlerts}>{alerts[0].title}</span>
-                        <IconRightArrow/>
+                        <IconRightArrow className={classes.rightArrowIcon}/>
                     </div>
                     :
                     <div>
                         <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
                             <AlertIcon className={classes.alertIcon}/>
                             <span className={classes.numOfAlerts}>{t("X.alerts", {0: alerts.length})}</span>
-                            <IconRightArrow/>
+                            <IconRightArrow className={classes.rightArrowIcon}/>
                         </div>
                         {alerts.map((alert: RealTimeAlert, i: number) =>
                             <div className={classes.alertTitle} key={i}>
