@@ -1,5 +1,7 @@
 import * as React from "react";
 import {
+    mergeStyles,
+    TKUICustomStyles,
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
@@ -96,4 +98,14 @@ export function connect<
                 </TKUIConfigContext.Consumer>
             }}
         </PropsMapper>
+}
+
+export function replaceStyle<ST,PR extends TKUIWithClasses<ST, PR>>
+(config: TKUIConfig, componentKey: string, styles: TKUICustomStyles<ST, PR>): TKUIConfig {
+    const resultConfig = Object.assign({}, config);
+    const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
+    const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
+    resultComponent.styles = resultComponent.styles ? mergeStyles(resultComponent.styles, styles) : styles;
+    resultConfig[componentKey] = resultComponent;
+    return resultConfig;
 }

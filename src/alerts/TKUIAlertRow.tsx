@@ -38,7 +38,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 function urlify(text) {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     return text.replace(urlRegex, function(url) {
-        return '<a href="' + url + '" ' + 'style="color: black" target="_blank"'+'>' + url + '</a>';
+        return '<a href="' + url + '" ' + 'target="_blank"'+'>' + url + '</a>';
     });
 }
 

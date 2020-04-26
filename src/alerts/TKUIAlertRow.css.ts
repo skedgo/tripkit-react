@@ -4,6 +4,7 @@ import {severityColor} from "../trip/TKUITrackTransport.css";
 import genStyles from "../css/GenStyle.css";
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "./TKUIAlertRow";
 import Color from "../model/trip/Color";
+import {AlertSeverity} from "../model/service/RealTimeAlert";
 
 export const tKUIAlertRowDefaultStyle: TKUIStyles<TKUIAlertRowStyle, TKUIAlertRowProps> =
     (theme: TKUITheme) => ({
@@ -13,11 +14,22 @@ export const tKUIAlertRowDefaultStyle: TKUIStyles<TKUIAlertRowStyle, TKUIAlertRo
         },
         asCard: {
             padding: '8px 12px',
-            border: (props: TKUIAlertRowProps) => '1px solid ' + Color.createFromString(severityColor(props.alert.severity, theme)).toRGBA(.6),
-            background: (props: TKUIAlertRowProps) => Color.createFromString(severityColor(props.alert.severity, theme)).toRGBA(.12),
+            background: (props: TKUIAlertRowProps) => Color.createFromString(severityColor(props.alert.severity, theme)).toRGB(),
             ...genStyles.borderRadius(12),
+            color: (props: TKUIAlertRowProps) => props.alert.severity === AlertSeverity.warning ? 'black' : 'white',
             '&$main': {
                 ...genStyles.alignCenter
+            },
+            '& $alertIcon': {
+                color: (props: TKUIAlertRowProps) => props.alert.severity === AlertSeverity.warning ? 'black' : 'white',
+                '& path': {
+                    stroke: 'none',
+                    strokeWidth: '1px',
+                    fill: 'currentColor'
+                }
+            },
+            '& a': {
+                color: theme.colorPrimary
             }
         },
         alertIcon: {

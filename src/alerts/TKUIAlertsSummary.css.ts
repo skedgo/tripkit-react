@@ -9,7 +9,7 @@ import Color from "../model/trip/Color";
 export const tKUIAlertsSummaryDefaultStyle: TKUIStyles<TKUIAlertsSummaryStyle, TKUIAlertsSummaryProps> =
     (theme: TKUITheme) => ({
         main: {
-            padding: '8px 12px',
+            padding: '12px 16px',
             border: (props: TKUIAlertsSummaryProps) => '1px solid ' + Color.createFromString(severityColor(alertSeverity(props.alerts), theme)).toRGBA(.6),
             background: (props: TKUIAlertsSummaryProps) => Color.createFromString(severityColor(alertSeverity(props.alerts), theme)).toRGBA(.12),
             ...genStyles.borderRadius(12)
@@ -38,5 +38,8 @@ export const tKUIAlertsSummaryDefaultStyle: TKUIStyles<TKUIAlertsSummaryStyle, T
             borderTop: '1px solid ' + tKUIColors.black4,
             marginTop: '8px',
             paddingTop: '8px'
+        },
+        rightArrowIcon: {
+            ...genStyles.svgFillCurrColor
         }
     });

@@ -19,7 +19,8 @@ class Location extends LatLng {
     public source: string | undefined = undefined;
     public suggestion?: any;
     public hasDetail?: boolean;
-    @JsonProperty('timezone', String)
+    // Set as optional since sometimes doesn't come. In docs it says it's required. See comment below.
+    @JsonProperty('timezone', String, true)
     private _timezone: string = "";
     // Workaround since Locations sometimes come with 'timeZone' instead of 'timezone'. Clean this when fixed.
     @JsonProperty('timeZone', String, true)

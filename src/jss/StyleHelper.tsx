@@ -40,6 +40,38 @@ export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     refreshStyles: () => void;
 }
 
+export function mergeStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
+    return (theme: TKUITheme) => {
+        const themedStyle1: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(style1) ?
+            (style1 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            style1 as Partial<CustomStyles<keyof ST, PR>>;
+        const themedStyle2: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(style2) ?
+            (style2 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            style2 as Partial<CustomStyles<keyof ST, PR>>;
+        const overrideStyles =
+            Object.keys(themedStyle2)
+                .reduce((overrideStylesMerge: Partial<CustomStyles<keyof ST, PR>>, className: string) => {
+                    const style1CustomCssProps: TKUICustomCSSProperties<PR> = themedStyle1[className];
+                    const style2CustomCssProps: TKUICustomCSSProperties<PR> = themedStyle2[className];
+                    const mergedStyleProps: CSSPropertiesCreator<PR> =
+                        (defaultStyle: CSSProperties<PR>) => {
+                            const style1CssProps: CSSProperties<PR> = Util.isFunction(style1CustomCssProps) ?
+                                (style1CustomCssProps as CSSPropertiesCreator<PR>)(defaultStyle) :
+                                style1CustomCssProps as CSSProperties<PR>;
+                            const style2CssProps: CSSProperties<PR> = Util.isFunction(style2CustomCssProps) ?
+                                (style2CustomCssProps as CSSPropertiesCreator<PR>)(style1CssProps) :
+                                style2CustomCssProps as CSSProperties<PR>;
+                            return style2CssProps;
+                        };
+                    return {
+                        ...overrideStylesMerge,
+                        [className]: mergedStyleProps
+                    }
+                }, {});
+        return {...style1, ...overrideStyles};
+    }
+}
+
 export function withStyleInjection<
     STYLE,
     IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>,
