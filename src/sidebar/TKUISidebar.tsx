@@ -104,10 +104,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 marginTop: '15px'
             };
             return [
-                <button style={storeBtnStyle} key={1}>
+                <button style={storeBtnStyle} key={1}
+                        onClick={() => window.open("https://itunes.apple.com/app/apple-store/id533630842?pt=1111758&ct=Website&mt=8",'_blank')}
+                >
                     <AppleStoreLogo style={{marginRight: '10px'}}/> App Store
                 </button>,
-                <button style={storeBtnStyle} key={2}>
+                <button style={storeBtnStyle} key={2}
+                        onClick={() => window.open("https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner&hl=en",'_blank')}
+                >
                     <PlayStoreLogo style={{marginRight: '10px'}}/> Google Play
                 </button>
             ]}
