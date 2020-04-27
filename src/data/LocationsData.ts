@@ -76,13 +76,14 @@ class LocationsData {
 
     private locationInfoCache: Map<string, Promise<TKLocationInfo>> = new Map<string, Promise<TKLocationInfo>>();
 
-    public getLocationInfo(latLng: LatLng): Promise<TKLocationInfo> {
-        const cacheKey = latLng.getKey();
+    public getLocationInfo(id: LatLng | string): Promise<TKLocationInfo> {
+        const cacheKey = id instanceof LatLng ? id.getKey() : id;
         const cachedResult = this.locationInfoCache.get(cacheKey);
         if (cachedResult) {
             return cachedResult;
         } else {
-            const endpoint = "locationInfo.json?lat=" + latLng.lat + "&lng=" + latLng.lng;
+            const endpoint = "locationInfo.json?" +
+                (id instanceof LatLng ? "lat=" + id.lat + "&lng=" + id.lng : "&identifier=" + id);
             const result = TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, TKLocationInfo);
             this.locationInfoCache.set(cacheKey, result);
             return result;
