@@ -1,18 +1,26 @@
 import React, {MouseEvent} from 'react';
 import ReactDOM from 'react-dom';
-import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng, TKState}
-from '../index';
+import {TKUITripPlanner, TKRoot, TKUIConfig, TKShareHelper, TKUIReportBtnProps, LatLng, TKState, Environment}
+    from '../index';
 // from 'tripkit-react';
 import {ReactComponent as IconReport} from './images/icon-usersnap.svg';
-import classNames from 'classnames';
 import Usersnap from "./usersnap/Usersnap";
 
+
+
+const analyticsConfig = Environment.isProd() ? {
+    google: {
+        trackingId: "UA-31384649-1",
+        debug: true
+    }
+} : undefined;
 
 const config: TKUIConfig = {
     apiKey: '790892d5eae024712cfd8616496d7317',
     theme: {
         fontFamily: 'ProximaNova, sans-serif'
     },
+    analytics: analyticsConfig,
     userLocationPromise: (window as any).tKUserLocationPromise ?
         (window as any).tKUserLocationPromise
             .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined,

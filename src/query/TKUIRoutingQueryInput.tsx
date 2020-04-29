@@ -119,7 +119,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     }
 
     private onPrefChange(timePref: TimePreference) {
-        GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
+        GATracker.event({
+            category: "query input",
+            action: "select time pref",
+            label: timePref.toLowerCase()
+        });
         if (timePref === TimePreference.NOW
             || (this.props.value.timePref === TimePreference.NOW && !this.props.value.isComplete(true))) {
             this.updateQuery({
@@ -260,8 +264,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(true, undefined);
                                         }
                                         if (value !== null) {
-                                            GATracker.instance.send("query input", "pick location",
-                                                value.isCurrLoc() ? "current location" : "type address");
+                                            GATracker.event({
+                                                category: "query input",
+                                                action: "pick from location",
+                                                label: value.isCurrLoc() ? "current location" : "type address"
+                                            });
                                         }
                                     } else {
                                         if (this.props.onPreChange) {
@@ -305,8 +312,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(false, undefined);
                                         }
                                         if (value !== null) {
-                                            GATracker.instance.send("query input", "pick location",
-                                                value.isCurrLoc() ? "current location" : "type address");
+                                            GATracker.event({
+                                                category: "query input",
+                                                action: "pick to location",
+                                                label: value.isCurrLoc() ? "current location" : "type address"
+                                            });
                                         }
                                     } else {
                                         if (this.props.onPreChange) {

@@ -133,7 +133,11 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     }
 
     private onPrefChange(timePref: TimePreference) {
-        GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
+        GATracker.event({
+            category: "query input",
+            action: "select time pref",
+            label: timePref.toLowerCase()
+        });
         if (timePref === TimePreference.NOW) {
             this.updateQuery({
                 timePref: timePref,

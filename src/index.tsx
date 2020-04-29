@@ -33,6 +33,7 @@ export {default as DeviceUtil} from "./util/DeviceUtil";
 export {default as TKUIConstants} from "./util/Constants";
 export {tKUIColors} from "./jss/TKUITheme";
 export {feedbackTextFromState} from "./feedback/TKUIReportBtn";
+export {default as Environment} from "./env/Environment";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
