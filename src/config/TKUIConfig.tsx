@@ -52,6 +52,8 @@ import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "../locat
 import {TKUILocationBoxProps, TKUILocationBoxStyle} from "../location_box/TKUILocationBox";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCarousel";
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
+import {Tracker} from 'react-ga';
+import {TrackerOptions} from "../analytics/GATracker";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -60,8 +62,9 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     userLocationPromise: Promise<LatLng>;
-    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>
+    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>;
     theme: Partial<TKUITheme>;
+    analytics?: {google?: TrackerOptions | TrackerOptions[]};
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;

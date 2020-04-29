@@ -143,7 +143,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private onShowSettings() {
-        GATracker.instance.send('query input', 'click', 'options button');
+        GATracker.event({
+            category: "query input",
+            action: "display transport switches"
+        });
         RegionsData.instance.requireRegions().then(() => this.setState({showSettings: true}));
     }
 
@@ -515,6 +518,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }
             }
         });
+
+        setTimeout(() => GATracker.pageview(window.location.pathname + window.location.search), 1000);
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {

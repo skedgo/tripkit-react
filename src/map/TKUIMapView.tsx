@@ -736,8 +736,13 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                                     if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
                                                                         return;
                                                                     }
-                                                                    onMapLocChanged(!from, clickLatLng);
-                                                                    GATracker.instance.send("query input", "pick location", "drop pin");
+                                                                    const isFrom = !from;
+                                                                    onMapLocChanged(isFrom, clickLatLng);
+                                                                    GATracker.event({
+                                                                        category: "query input",
+                                                                        action: isFrom ? "pick from location" : "pick to location",
+                                                                        label: "drop to"
+                                                                    });
                                                                 }
                                                             } else {
                                                                 if (!to || clickLatLng instanceof StopLocation) {

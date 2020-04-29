@@ -58,7 +58,11 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
@@ -70,7 +74,11 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
@@ -82,7 +90,11 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
