@@ -10,8 +10,10 @@ import Usersnap from "./usersnap/Usersnap";
 
 const analyticsConfig = Environment.isProd() ? {
     google: {
-        trackingId: "UA-31384649-1",
-        debug: true
+        tracker: {
+            trackingId: "UA-31384649-1",
+            debug: true
+        }
     }
 } : undefined;
 
