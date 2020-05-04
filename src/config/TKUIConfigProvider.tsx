@@ -27,7 +27,8 @@ class TKUIConfigProvider extends React.Component<{config: TKUIConfig},{}> {
         const config = this.props.config;
         if (config.analytics && config.analytics.google) {
             const gaConfig = config.analytics.google;
-            GATracker.initialize(Array.isArray(gaConfig) ? gaConfig : [gaConfig]);
+            GATracker.initialize(Array.isArray(gaConfig.tracker) ? gaConfig.tracker : [gaConfig.tracker],
+                gaConfig.initOptions);
         }
     }
 
