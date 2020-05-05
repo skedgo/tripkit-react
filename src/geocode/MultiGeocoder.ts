@@ -7,6 +7,7 @@ import Environment from "../env/Environment";
 import MultiGeocoderOptions from "./MultiGeocoderOptions";
 import Util from "../util/Util";
 import PeliasGeocoder from "./PeliasGeocoder";
+import SkedgoGeocoder from "./SkedgoGeocoder";
 
 class MultiGeocoder {
 
@@ -44,7 +45,15 @@ class MultiGeocoder {
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
-        this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID)!.reverseGeocode(coord, callback);
+        // TODO: fix. It maybe de case that neither Pelias nor Skedgo geocoders were included.
+        // Also reverseGeocode on SkedgoGeocoder is not implemented. Maybe can implement it
+        // and use SkedGo geocoder as callback, but create an instance on MultiGeocoder since it may not
+        // be included on this._options.geocoders.
+        let reverseGeocoder = this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID);
+        if (!reverseGeocoder) {
+            reverseGeocoder = this._options.getGeocoderById(SkedgoGeocoder.SOURCE_ID);
+        }
+        reverseGeocoder!.reverseGeocode(coord, callback);
     }
 
     private merge(query: string, results: Map<IGeocoder, Location[]>): Location[] {

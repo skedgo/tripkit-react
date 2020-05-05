@@ -43,7 +43,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     isTripPlanner?: boolean;
     resolveCurrLocInFrom?: boolean;
     collapsable?: boolean;
-    geocoderOptions?: MultiGeocoderOptions;
     onClearClicked?: () => void;
 }
 
@@ -99,8 +98,6 @@ interface IState {
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
-    private geocodingDataFrom: MultiGeocoder;
-    private geocodingDataTo: MultiGeocoder;
     private fromTooltipRef: any;
     private toTooltipRef: any;
 
@@ -112,8 +109,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             toTooltip: false,
             showTransportSwitches: false
         };
-        this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
-        this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions);
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }
@@ -251,8 +246,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
-                        <TKUILocationBox
-                                geocodingData={this.geocodingDataFrom}
+                            <TKUILocationBox
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
                                 value={routingQuery.from}
@@ -300,7 +294,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             reference={(ref: any) => this.toTooltipRef = ref}
                         >
                             <TKUILocationBox
-                                geocodingData={this.geocodingDataTo}
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
                                 value={routingQuery.to}

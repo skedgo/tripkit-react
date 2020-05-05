@@ -5,7 +5,6 @@ import NetworkUtil from "../util/NetworkUtil";
 import GeocodingCache from "./GeocodingCache";
 import LatLng from "../model/LatLng";
 import Util from "../util/Util";
-import GeolocationData from "./GeolocationData";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
 import {Env} from "../env/Environment";

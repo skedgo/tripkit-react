@@ -16,12 +16,16 @@ import RegionsData from "../data/RegionsData";
 import {TKError} from "../error/TKError";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
 import {genClassNames} from "../css/GenStyle.css";
+import IGeocoder from "../geocode/IGeocoder";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import {Subtract} from 'utility-types';
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    geocodingData: MultiGeocoder,
+    showCurrLoc?: boolean,
     placeholder?: string,
     bounds?: BBox,
     focus?: LatLng,
@@ -49,7 +53,11 @@ interface IStyle {
     sideMenu: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps {
+    customGeocoders?: IGeocoder[];
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUILocationBoxProps = IProps;
 export type TKUILocationBoxStyle = IStyle;
@@ -100,7 +108,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             },
             waiting: false
         };
-        this.geocodingData = props.geocodingData;
+        this.geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(this.props.showCurrLoc, this.props.customGeocoders));
         this.handleAutocompleteResults = this.handleAutocompleteResults.bind(this);
         this.renderInput = this.renderInput.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
@@ -497,5 +505,24 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-export default connect((config: TKUIConfig) => config.TKUILocationBox, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
+    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+        return (
+            <TKUIConfigContext.Consumer>
+                {(config: TKUIConfig) =>
+                    props.children!({
+                        customGeocoders: config.geocoding ? config.geocoding.customGeocoders : undefined
+                    })
+                }
+            </TKUIConfigContext.Consumer>
+        );
+    };
+
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
+
+export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);
