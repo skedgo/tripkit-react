@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport} from "react-leaflet";
+import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport, TileLayerProps} from "react-leaflet";
 import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -57,6 +57,9 @@ import {ERROR_GEOLOC_DENIED, TKUserPosition} from "../util/GeolocationUtil";
 import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
+import {TileLayer} from "react-leaflet";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import IGeocoder from "../geocode/IGeocoder";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -64,7 +67,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideLocations?: boolean;
     bounds?: BBox;
     padding?: TKUIMapPadding
-    children: any;
     // TODO: Put the following props inside config?
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
@@ -108,7 +110,9 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     config: TKUIConfig;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+    tileLayerProps?: TileLayerProps;
+}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -117,6 +121,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props}/>,
     styles: tKUIMapViewDefaultStyle,
     classNamePrefix: "TKUIMapView",
+    props: {
+        tileLayerProps: {
+            attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
+            url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        }
+    }
 };
 
 interface IState {
@@ -409,6 +419,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
                                // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
+                    <TileLayer
+                        {...this.props.tileLayerProps!}
+                    />
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
                     <Marker position={this.state.userLocation.latLng}
@@ -525,7 +538,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
                     </Marker>}
                     {menuPopup}
-                    {this.props.children}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => this.onResize()}
@@ -674,9 +686,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
 let geocodingData: MultiGeocoder;
 
-function getGeocodingData() {
+function getGeocodingData(customGeocoders?: IGeocoder[]) {
     if (!geocodingData) {
-        geocodingData = new MultiGeocoder();
+        geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(true, customGeocoders));
     }
     return geocodingData;
 }
@@ -707,7 +719,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                             [isFrom ? "from" : "to"]: mapLocation
                                                         }));
                                                         if (mapLocation.isDroppedPin()) {
-                                                            getGeocodingData().reverseGeocode(latLng, loc => {
+                                                            getGeocodingData(config.geocoding && config.geocoding.customGeocoders)
+                                                                .reverseGeocode(latLng, loc => {
                                                                 if (loc !== null) {
                                                                     // Need to use onQueryUpdate instead of onQueryChange since
                                                                     // routingContext.query can be outdated at the time this callback is

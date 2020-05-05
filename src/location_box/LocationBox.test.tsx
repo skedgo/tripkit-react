@@ -9,7 +9,6 @@ import LatLng from "../model/LatLng";
 const LocationBoxWithGMapsApi = () => {
     const geocodingData: MultiGeocoder = new MultiGeocoder();
     return <TKUILocationBox
-        geocodingData={geocodingData}
         placeholder="Enter an address..."
         value={Location.create(LatLng.createLatLng(10, 10), "", "","")}
     />

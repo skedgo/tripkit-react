@@ -20,12 +20,9 @@ import CurrentLocationGeocoder from "./CurrentLocationGeocoder";
 
 class MultiGeocoderOptions {
 
-    public static default(showCurrLoc: boolean = true) {
+    public static default(showCurrLoc: boolean = true, customGeocoders?: IGeocoder[]): MultiGeocoderOptions {
 
         const currLocGeocoder = new CurrentLocationGeocoder();
-
-        const peliasGeocoder = new PeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
-        peliasGeocoder.getOptions().resultsLimit = 5;
 
         const skedgoGeocoder = new SkedgoGeocoder();
         skedgoGeocoder.getOptions().resultsLimit = 2;
@@ -80,7 +77,8 @@ class MultiGeocoderOptions {
             favouritesGeocoder.setValues(favToLocations(update, false)));
 
         const geocoders: IGeocoder[] = (showCurrLoc ? [currLocGeocoder] : [] as IGeocoder[])
-            .concat([recentGeocoder, favouritesGeocoder, peliasGeocoder, skedgoGeocoder, citiesGeocoder]);
+            .concat([recentGeocoder, favouritesGeocoder, skedgoGeocoder, citiesGeocoder])
+            .concat(customGeocoders ? customGeocoders : []);
         const compare = (l1: Location, l2: Location, query: string) => {
 
             if (!query) {

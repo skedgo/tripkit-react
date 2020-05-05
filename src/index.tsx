@@ -35,6 +35,7 @@ export {tKUIColors} from "./jss/TKUITheme";
 export {feedbackTextFromState} from "./feedback/TKUIReportBtn";
 export {default as Environment} from "./env/Environment";
 export {default as TKGATracker} from "./analytics/GATracker";
+export {default as TKPeliasGeocoder} from "./geocode/PeliasGeocoder";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {

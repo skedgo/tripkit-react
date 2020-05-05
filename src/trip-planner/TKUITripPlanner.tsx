@@ -5,7 +5,6 @@ import Modal from 'react-modal';
 import Util from "../util/Util";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
-import {TileLayer} from "react-leaflet";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIResultsView from "../trip/TKUIResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
@@ -419,14 +418,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         this.showTimetableFor(loc as StopLocation);
                                         FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
                                     }
-                                }}
-                            >
-                                <TileLayer
-                                    attribution="&copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                                    // url="http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg"
-                                    url="https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
-                                />
-                            </TKUIMapView>
+                                }}/>
                         </div>
                         <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>
                         {sideBar}

@@ -54,6 +54,7 @@ import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCaro
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
 import {Tracker, InitializeOptions} from 'react-ga';
 import {TrackerOptions} from "../analytics/GATracker";
+import IGeocoder from "../geocode/IGeocoder";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -68,7 +69,11 @@ interface ITKUIConfigOptional {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;
     }};
+    geocoding?: {
+        customGeocoders?: IGeocoder[];
+    }
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
@@ -111,7 +116,6 @@ interface ITKUIConfigOptional {
     TKUIAlertsSummary: TKComponentConfig<TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle>;
     TKUIAlertsView: TKComponentConfig<TKUIAlertsViewProps, TKUIAlertsViewStyle>;
     TKUIAlertRow: TKComponentConfig<TKUIAlertRowProps, TKUIAlertRowStyle>;
-    TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
 }

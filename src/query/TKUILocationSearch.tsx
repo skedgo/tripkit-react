@@ -23,7 +23,6 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
-    geocoderOptions?: MultiGeocoderOptions;
     onDirectionsClicked?: () => void;
 }
 
@@ -62,14 +61,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUILocationSearch extends React.Component<IProps, {}> {
 
-    private geocodingData: MultiGeocoder;
-
-
-    constructor(props: IProps) {
-        super(props);
-        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
-    }
-
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const placeholder = this.props.t("Where.do.you.want.to.go?");
@@ -81,7 +72,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                             <IconMenu className={classes.sideBarIcon}/>
                         </button>
                         <TKUILocationBox
-                            geocodingData={this.geocodingData}
+                            showCurrLoc={false}
                             bounds={this.props.bounds}
                             focus={this.props.focusLatLng}
                             value={this.props.value}
