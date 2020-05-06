@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {ChangeEvent} from "react";
 import {
     IServiceResultsContext,
     ServiceResultsContext
@@ -6,7 +6,6 @@ import {
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ReactComponent as IconClock} from "../images/ic-clock.svg";
-import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";

@@ -1,11 +1,11 @@
-import * as React from "react";
+import React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUISelectDefaultStyle} from "./TKUISelect.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Select from 'react-select';
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
-import {CSSProperties} from "react";
+import * as CSS from 'csstype';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     options: any[];
@@ -14,8 +14,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     menuIsOpen?: boolean;
     components?: any;
     className?: string;
-    controlStyle?: CSSProperties;
-    menuStyle?: CSSProperties;
+    controlStyle?: CSS.Properties;
+    menuStyle?: CSS.Properties;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}

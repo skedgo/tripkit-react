@@ -1,7 +1,6 @@
-import * as React from "react";
+import React, {CSSProperties} from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
-import {CSSProperties} from "react";
 import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
@@ -12,7 +11,6 @@ import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import {ReactComponent as IconDirections} from "../images/ic-directions.svg";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
