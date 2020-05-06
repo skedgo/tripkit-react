@@ -119,7 +119,7 @@ class Location extends LatLng {
     equals(other: any): boolean {
         return other &&
             JSON.stringify(
-                Util.iAssign(this, {source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined})) ===
+                Util.iAssign(this as any, {source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined})) ===
             JSON.stringify(Util.iAssign(other, {source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined}));
     }
 }

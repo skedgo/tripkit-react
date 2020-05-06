@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext} from "react";
 import {
     mergeStyles,
     TKUICustomStyles,
@@ -9,7 +9,6 @@ import {TKUIConfig, TKComponentDefaultConfig, TKComponentConfig} from "./TKUICon
 import {TKUIConfigContext} from "./TKUIConfigProvider";
 import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
-import {useContext} from "react";
 import Util from "../util/Util";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 

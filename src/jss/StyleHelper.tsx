@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import injectSheet, {JssProvider, withTheme} from "react-jss";
 import { Subtract } from "utility-types";
 import { ClassNameMap, Styles, StyleCreator, CSSProperties } from "react-jss";

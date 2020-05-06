@@ -374,11 +374,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
         const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
         const service = this.props.service;
+        const viewport = this.props.viewport;
+        const leafletViewport = viewport ?
+            {center: viewport.center ? [viewport.center.lat, viewport.center.lng] as [number, number] : undefined, zoom: viewport.zoom}
+            : undefined;
         return (
             <div className={classes.main}>
                 <RLMap
                     className={classes.leaflet}
-                    viewport={this.props.viewport as Viewport}
+                    viewport={leafletViewport}
                     // TODO: check I don't need to pass boundsOptios to fitBounds anymore
                     boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
