@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist/esm",
+    "jsx": "react",
+    "lib": [
+      "es2017",
+      "dom"
+//      "es6",
+//      "dom",
+//      "dom.iterable",
+//      "esnext"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": false,
+    "target": "es5",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "suppressImplicitAnyIndexErrors": true
+
+//    "forceConsistentCasingInFileNames": true,
+//    "resolveJsonModule": true,
+//    "allowJs": true,
+//    "isolatedModules": true
+  },
+  "include": [
+    "./src/*",
+    "./src/**/*"
+  ],
+  "exclude": [
+    "./src/**/**.test.tsx",
+    "./src/**/**.test.ts",
+    "./src/**/**.stories.ts",
+    "./src/**/**.stories.tsx",
+    "./src/**/examples/**"
+  ]
+}
