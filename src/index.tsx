@@ -1,4 +1,4 @@
-// import "reflect-metadata";
+import "reflect-metadata";
 import {TKUIConfig as TKUIConfigForExport} from "./config/TKUIConfig";
 import {TKUITheme as TKUIThemeForExport} from "./jss/TKUITheme";
 import {IRoutingResultsContext as IRoutingResultsContextForExport} from "./trip-planner/RoutingResultsProvider";
