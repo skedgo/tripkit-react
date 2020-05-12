@@ -1,3 +1,10 @@
+// This import is to avoid the following runtime error:
+// Uncaught TypeError: Reflect.metadata is not a function
+// However this error still happens when including module declaration on package.json, so remove it for now.
+// Also tried importing it from TKStateProvider, in case the reason is that when client uses tripkit-react in esm
+// format it optimizes compilation and doesn't include an import on index.tsx, but it doesn't work.
+// Maybe try including it on polyfills.ts (see https://stackoverflow.com/a/53791071)
+// TODO: Fix this to distribute library as esm.
 import "reflect-metadata";
 import {TKUIConfig as TKUIConfigForExport} from "./config/TKUIConfig";
 import {TKUITheme as TKUIThemeForExport} from "./jss/TKUITheme";

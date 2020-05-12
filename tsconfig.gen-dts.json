@@ -2,7 +2,7 @@
   "compilerOptions": {
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist/esm",
+    "outDir": "dist/js",
     "jsx": "react",
     "lib": [
       "es2017",
