@@ -1,63 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #12827: TripKit React - Integrate Google Analytics&#10;- Provide a way to override the GA on host page for embedded web-app based on tripkit.">
-      <change afterPath="$PROJECT_DIR$/scripts/copyFiles.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tsconfig.gen-dts.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin-from.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-arrive-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/polyfills-ie11.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/.babelrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/apple-store-logo.ffdf0298.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-alert.03c9c248.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-down.e05198c2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-right.4ca7bfeb.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-arrow-back.29765934.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-check.0eae3c0d.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-leaf.f6abd4f9.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-lightning.6bad6a52.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-like.bbadba73.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-money.9d2d80ff.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-city.b4311c33.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-clock.58ae24db.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-copy-link.0f9bb363.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross.6fb22587.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross2.a70464f3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-curr-loc.8f2ce267.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-directions.e5cf47cf.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-fav-star.6b3d3a35.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite-outline.302e6bd3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite.0c3ba1fe.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-location.b223e342.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-trip.aecd904f.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-feedback.20791662.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-glass.732e7c85.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-loading2.7e6a33c2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head-pointer.e2b98b87.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head.ec287ddd.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-menu.629024ad.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-passenger.eea06877.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-pin-start.fc329d29.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-service-stop.f07690e1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-settings-gear.6d78f561.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-share.9b3c0523.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-swap.8d14fd94.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-tick.52fa6624.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-carriage.ef09d603.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-head.fb217f8a.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-triangle-down.29b96747.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_accessible.466156cc.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_inaccessible.bdea4ca8.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_unknown.79626b5b.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/icon-usersnap.15c2ff91.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/play-store-logo.9e121932.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/tripgo_logo.2499220e.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
-    </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
       <change beforePath="$PROJECT_DIR$/dist/.well-known/apple-app-site-association" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/.well-known/assetlinks.json" beforeDir="false" />
@@ -213,6 +156,8 @@
       <change beforePath="$PROJECT_DIR$/dist/images/ic-info-circle.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/ic-sort.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/map/ic-arrive-flag.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin-from.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-alert-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bCycle-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bayAreaBikeShare-24px.svg" beforeDir="false" />
@@ -268,6 +213,7 @@
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-wheelchair-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-wheelchair.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-alert-24px.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-arrive-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bCycle-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bayAreaBikeShare-24px.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bicycle-24px.svg" beforeDir="false" />
@@ -449,7 +395,51 @@
       <change beforePath="$PROJECT_DIR$/dist/share/TKUIShareView.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/sidebar/TKUISidebar.css.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/sidebar/TKUISidebar.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/apple-store-logo.ffdf0298.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-alert.03c9c248.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-down.e05198c2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-right.4ca7bfeb.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-arrow-back.29765934.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-check.0eae3c0d.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-leaf.f6abd4f9.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-lightning.6bad6a52.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-like.bbadba73.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-money.9d2d80ff.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-city.b4311c33.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-clock.58ae24db.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-copy-link.0f9bb363.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross.6fb22587.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross2.a70464f3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-curr-loc.8f2ce267.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-directions.e5cf47cf.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-fav-star.6b3d3a35.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite-outline.302e6bd3.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite.0c3ba1fe.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-location.b223e342.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-trip.aecd904f.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-feedback.20791662.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-glass.732e7c85.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-loading2.7e6a33c2.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head-pointer.e2b98b87.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head.ec287ddd.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin.2f567391.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-menu.629024ad.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-passenger.eea06877.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-pin-start.fc329d29.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-service-stop.f07690e1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-settings-gear.6d78f561.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-share.9b3c0523.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-swap.8d14fd94.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-tick.52fa6624.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-carriage.ef09d603.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-head.fb217f8a.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-triangle-down.29b96747.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_accessible.466156cc.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_inaccessible.bdea4ca8.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_unknown.79626b5b.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/icon-usersnap.15c2ff91.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/play-store-logo.9e121932.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/static/media/tripgo_logo.2499220e.svg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/time/DateTimeHTML5Input.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/time/TKUIDateTimePicker.css.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/time/TKUIDateTimePicker.d.ts" beforeDir="false" />
@@ -491,6 +481,12 @@
       <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
     </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #12317: TripKit React - Setup as npm package.&#10;- Fixed to run-time TypeError on clients when run compiled (npm run build; serve -s build). It fixed after properly configuring module systems (cjs for main,">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.gen-dts.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.gen-dts.json" afterDir="false" />
+    </list>
     <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -499,6 +495,11 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -519,25 +520,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="17" selection-start-column="17" selection-end-column="17" />
+            <state relative-caret-position="90">
+              <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+              <folding>
+                <element signature="e#114#140#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.d.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/reflect-metadata/index.d.ts">
-          <provider selected="true" editor-type-id="text-editor" />
+      <file leaf-file-name="TKStateProvider.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/TKStateProvider.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
         </entry>
       </file>
-      <file leaf-file-name=".babelrc" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.babelrc">
+      <file leaf-file-name="TKRoot.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/config/TKRoot.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="35" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="35" />
+            <state>
+              <folding>
+                <element signature="e#0#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -545,16 +558,28 @@
       <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="23" lean-forward="true" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
+            <state relative-caret-position="60">
+              <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
               <folding>
+                <element signature="n#!!block;n#dependencies#0;n#!!top" />
+                <element signature="n#!!block;n#scripts#0;n#!!top" />
                 <element signature="n#!!block;n#devDependencies#0;n#!!top" />
+                <element signature="n#!!block;n#browserslist#0;n#!!top" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="City.ts" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tsconfig.gen-dts.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/tsconfig.gen-dts.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="City.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/location/City.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="60">
@@ -608,15 +633,6 @@
               <folding>
                 <element signature="e#0#62#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServiceShape.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/model/trip/ServiceShape.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -739,7 +755,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/card/TKUICard.css.ts" />
         <option value="$PROJECT_DIR$/src/model/service/RealTimeAction.ts" />
         <option value="$PROJECT_DIR$/src/trip/TKUIResultsView.css.ts" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.css.ts" />
@@ -784,12 +799,13 @@
         <option value="$PROJECT_DIR$/.babelrc" />
         <option value="$PROJECT_DIR$/src/images/ic-cross.svg" />
         <option value="$PROJECT_DIR$/dist/js/images/ic-cross.svg" />
-        <option value="$PROJECT_DIR$/tsconfig.gen-dts.json" />
         <option value="$PROJECT_DIR$/dist/esm/images/ic-cross.svg" />
         <option value="$PROJECT_DIR$/dist/esm/location_box/TKUILocationBox.js" />
         <option value="$PROJECT_DIR$/scripts/copyFiles.js" />
-        <option value="$PROJECT_DIR$/src/index.tsx" />
+        <option value="$PROJECT_DIR$/tsconfig.gen-dts.json" />
+        <option value="$PROJECT_DIR$/src/config/TKStateProvider.tsx" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/index.tsx" />
       </list>
     </option>
   </component>
@@ -838,13 +854,7 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="reflect-metadata" type="462c0819:PsiDirectoryNode" />
+              <item name="dist" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
@@ -855,7 +865,7 @@
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="i18n" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -1045,14 +1055,7 @@
       <workItem from="1588693477773" duration="427000" />
       <workItem from="1588801001969" duration="113000" />
       <workItem from="1588801163069" duration="9990000" />
-      <workItem from="1589059856141" duration="1284000" />
-    </task>
-    <task id="LOCAL-00218" summary="Tripkit web sdk:&#10;- refresh query time to now when switching from leave now to leave after and not showing trips (i.e. from or to not set).&#10;- if showing trip details and query from/to changed (e.g. drag &amp; frop of 'from' or 'to' pin), then set detail view off (display routing results for new query).">
-      <created>1585232620381</created>
-      <option name="number" value="00218" />
-      <option name="presentableId" value="LOCAL-00218" />
-      <option name="project" value="LOCAL" />
-      <updated>1585232620381</updated>
+      <workItem from="1589059856141" duration="5324000" />
     </task>
     <task id="LOCAL-00219" summary="Tripkit web sdk:&#10;- close sidebar on escape.&#10;- Report button which opens usersnap report UI on click, and copy feedback to clipboard on right click.">
       <created>1585239106608</created>
@@ -1390,11 +1393,18 @@
       <option name="project" value="LOCAL" />
       <updated>1588798370564</updated>
     </task>
-    <option name="localTasksCounter" value="267" />
+    <task id="LOCAL-00267" summary="Feature #12317: TripKit React - Setup as npm package.&#10;- integrate svgr babel plugin.&#10;Now clients work on dev mode, still don't work compiled.">
+      <created>1589061440466</created>
+      <option name="number" value="00267" />
+      <option name="presentableId" value="LOCAL-00267" />
+      <option name="project" value="LOCAL" />
+      <updated>1589061440466</updated>
+    </task>
+    <option name="localTasksCounter" value="268" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2792007000" />
+    <option name="totallyTimeSpent" value="2796047000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1406,31 +1416,32 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="831" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="829" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
+      <window_info anchor="right" id="Maven Projects" order="9" weight="0.3297568" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32016924" />
+      <window_info id="Designer" order="2" />
+      <window_info anchor="right" id="Database" order="5" weight="0.3297568" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="UI Designer" order="4" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32905984" />
       <window_info anchor="right" id="SvgViewer" order="8" weight="0.3297568" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
-      <window_info anchor="right" id="Maven Projects" order="9" weight="0.3297568" />
-      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.3799435" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.3794076" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" visible="true" weight="0.30098453" />
-      <window_info id="Capture Tool" order="7" />
-      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32056737" />
-      <window_info id="Designer" order="2" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" visible="true" weight="0.30042315" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
-      <window_info anchor="right" id="Database" order="5" weight="0.3297568" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info id="UI Designer" order="4" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2496454" />
       <window_info anchor="right" id="Theme Preview" order="7" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
@@ -1441,7 +1452,6 @@
       <window_info anchor="right" id="Maven" order="10" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2496454" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1494,7 +1504,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Move css styles applied to html tag out of app.css to index.html. It's wrong conceptually and it causes problems when client widget is embedded (e.g. CHYM)." />
     <MESSAGE value="Fixes on LocationBox and geocoding." />
     <MESSAGE value="More fixes on LocationBox and geocoding." />
     <MESSAGE value="Feedback from Adrian" />
@@ -1519,7 +1528,8 @@
     <MESSAGE value="Feature #12827: TripKit React - Integrate Google Analytics" />
     <MESSAGE value="Feature #12827: TripKit React - Integrate Google Analytics&#10;- Provide a way to override the GA on host page for embedded web-app based on tripkit." />
     <MESSAGE value="Feature #12317: TripKit React - Setup as npm package." />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #12317: TripKit React - Setup as npm package." />
+    <MESSAGE value="Feature #12317: TripKit React - Setup as npm package.&#10;- integrate svgr babel plugin.&#10;Now clients work on dev mode, still don't work compiled." />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #12317: TripKit React - Setup as npm package.&#10;- integrate svgr babel plugin.&#10;Now clients work on dev mode, still don't work compiled." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1563,27 +1573,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-303">
-          <caret line="221" column="17" lean-forward="true" selection-start-line="221" selection-start-column="17" selection-end-line="221" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-            <element signature="e#7863#7964#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="204" column="15" lean-forward="true" selection-start-line="196" selection-start-column="12" selection-end-line="204" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dist/js/index.js.map" />
     <entry file="file://$PROJECT_DIR$/dist/js/index.js" />
     <entry file="file://$PROJECT_DIR$/src/query/TKUILocationSearch.tsx">
@@ -1639,13 +1628,6 @@
     <entry file="file://$PROJECT_DIR$/dist/esm/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-57" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tsconfig.gen-dts.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="25" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/images/badges/ic-badge-check.svg">
@@ -1744,32 +1726,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/copyFiles.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="16" selection-start-column="16" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/reflect-metadata/index.d.ts">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" selection-start-column="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="23" lean-forward="true" selection-start-line="12" selection-start-column="23" selection-end-line="12" selection-end-column="23" />
-          <folding>
-            <element signature="n#!!block;n#devDependencies#0;n#!!top" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/Location.ts">
       <provider selected="true" editor-type-id="text-editor">
@@ -1781,12 +1739,68 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/copyFiles.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="16" selection-start-column="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/location/City.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" column="22" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tsconfig.gen-dts.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKRoot.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKStateProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="56" selection-start-line="9" selection-start-column="56" selection-end-line="9" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
+          <folding>
+            <element signature="n#!!block;n#dependencies#0;n#!!top" />
+            <element signature="n#!!block;n#scripts#0;n#!!top" />
+            <element signature="n#!!block;n#devDependencies#0;n#!!top" />
+            <element signature="n#!!block;n#browserslist#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="1" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+          <folding>
+            <element signature="e#114#140#0" expanded="true" />
           </folding>
         </state>
       </provider>
