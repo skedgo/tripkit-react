@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+    <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/.well-known/apple-app-site-association" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/.well-known/assetlinks.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/0.chunk.js" beforeDir="false" />
@@ -481,19 +483,7 @@
       <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
     </list>
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #12317: TripKit React - Setup as npm package.&#10;- Fixed to run-time TypeError on clients when run compiled (npm run build; serve -s build). It fixed by forcing cjs module system, but still breaks with esm module system).">
-      <change afterPath="$PROJECT_DIR$/.npmignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api-mark-logo.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.babelrc" beforeDir="false" afterPath="$PROJECT_DIR$/.babelrc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/act-react.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rollup.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/DeviceUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/DeviceUtil.ts" afterDir="false" />
-    </list>
-    <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -501,11 +491,6 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
-  </component>
-  <component name="ChangesViewManager">
-    <option name="groupingKeys">
-      <option value="directory" />
-    </option>
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -526,7 +511,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
@@ -534,6 +519,27 @@
               <folding>
                 <element signature="n#!!block;n#browserslist#0;n#!!top" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="45">
+                <caret line="3" selection-start-line="3" selection-end-line="3" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -558,7 +564,7 @@
         <entry file="file://$PROJECT_DIR$/src/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="399">
-              <caret line="52" column="4" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+              <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -684,7 +690,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/jss/TKUITheme.ts" />
         <option value="$PROJECT_DIR$/src/model/service/RealTimeAlert.ts" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx" />
         <option value="$PROJECT_DIR$/src/alerts/TKUIAlertRow.css.ts" />
@@ -735,6 +740,7 @@
         <option value="$PROJECT_DIR$/src/util/DeviceUtil.ts" />
         <option value="$PROJECT_DIR$/src/index.tsx" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -779,24 +785,6 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@material-ui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@material-ui" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -987,14 +975,7 @@
       <workItem from="1588801001969" duration="113000" />
       <workItem from="1588801163069" duration="9990000" />
       <workItem from="1589059856141" duration="10133000" />
-      <workItem from="1589299401434" duration="9138000" />
-    </task>
-    <task id="LOCAL-00220" summary="Tripkit web sdk:&#10;- on timetables show services as inaccessible if the departure stop is inaccessible. Also if it's trip alternative service timetable and departure or arrival stop is inaccessible.&#10;- testing and refinements on interregional support.">
-      <created>1585253006656</created>
-      <option name="number" value="00220" />
-      <option name="presentableId" value="LOCAL-00220" />
-      <option name="project" value="LOCAL" />
-      <updated>1585253006656</updated>
+      <workItem from="1589299401434" duration="9876000" />
     </task>
     <task id="LOCAL-00221" summary="Tripkit web sdk:&#10;- indicate when trip time is on a different day than the query.&#10;- fuzzy detection of same service based on id + 'similar' time.&#10;- avoid crash when departure stop not set (which shouldn't happen, back-end issue).">
       <created>1585323432127</created>
@@ -1332,11 +1313,18 @@
       <option name="project" value="LOCAL" />
       <updated>1589289494252</updated>
     </task>
-    <option name="localTasksCounter" value="269" />
+    <task id="LOCAL-00269" summary="Feature #12317: TripKit React - Setup as npm package.&#10;- dependency cleanup">
+      <created>1589406545152</created>
+      <option name="number" value="00269" />
+      <option name="presentableId" value="LOCAL-00269" />
+      <option name="project" value="LOCAL" />
+      <updated>1589406545152</updated>
+    </task>
+    <option name="localTasksCounter" value="270" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2809994000" />
+    <option name="totallyTimeSpent" value="2810732000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1436,7 +1424,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="More fixes on LocationBox and geocoding." />
     <MESSAGE value="Feedback from Adrian" />
     <MESSAGE value="Remove hardcoded references to tripkit.tripgo.com (dev url)." />
     <MESSAGE value="fix to merge conflict 2." />
@@ -1461,7 +1448,8 @@
     <MESSAGE value="Feature #12317: TripKit React - Setup as npm package." />
     <MESSAGE value="Feature #12317: TripKit React - Setup as npm package.&#10;- integrate svgr babel plugin.&#10;Now clients work on dev mode, still don't work compiled." />
     <MESSAGE value="Feature #12317: TripKit React - Setup as npm package.&#10;- Fixed to run-time TypeError on clients when run compiled (npm run build; serve -s build). It fixed by forcing cjs module system, but still breaks with esm module system)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #12317: TripKit React - Setup as npm package.&#10;- Fixed to run-time TypeError on clients when run compiled (npm run build; serve -s build). It fixed by forcing cjs module system, but still breaks with esm module system)." />
+    <MESSAGE value="Feature #12317: TripKit React - Setup as npm package.&#10;- dependency cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #12317: TripKit React - Setup as npm package.&#10;- dependency cleanup" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1635,19 +1623,6 @@
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="45">
-            <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/options/TKUISlider.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="391">
@@ -1809,7 +1784,7 @@
     <entry file="file://$PROJECT_DIR$/src/index.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="399">
-          <caret line="52" column="4" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -1835,6 +1810,23 @@
           <folding>
             <element signature="n#!!block;n#browserslist#0;n#!!top" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="45">
+            <caret line="3" selection-start-line="3" selection-end-line="3" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
         </state>
       </provider>
     </entry>
