@@ -1,14 +1,12 @@
 {
   "presets": [
     "@babel/react",
-//    "@svgr/babel-preset",
     ["@dr.pogodin/babel-preset-svgr", {
       "mimicCreateReactApp": true
     }],
-//    "@dr.pogodin/babel-preset-svgr",
     "@babel/preset-typescript"
   ],
-  "ignore": ["**/__snapshots__", "**/*.d.ts", "**/*.test.*"],
+  "ignore": ["**/__snapshots__", "**/*.d.ts", "**/*.test.*", "src/example"],
   "plugins": [
     "babel-plugin-transform-typescript-metadata",
     ["@babel/plugin-proposal-decorators", { "legacy": true }],

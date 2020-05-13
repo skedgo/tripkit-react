@@ -1,6 +1,3 @@
-// import browser from "browser-detect";
-// import {detect} from "detect-browser";
-
 export enum Device {
     PHONE = "PHONE",
     TABLET = "TABLET",
@@ -133,12 +130,6 @@ class DeviceUtil {
         document.getElementsByTagName("body")[0].classList.add("device-" + DeviceUtil.device.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("os-" + DeviceUtil.os.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("browser-" + DeviceUtil.browser.toLowerCase());
-
-        // window.alert(JSON.stringify(detect()) + " " + DeviceUtil.findBrowser());
-        // window.alert(JSON.stringify(browser()) + " " + DeviceUtil.findBrowser());
-        // window.alert(window.navigator.userAgent.toLowerCase() + "      " + DeviceUtil.findBrowser());
-        // window.alert(DeviceUtil.findBrowser());
-        // window.alert(window.navigator.userAgent.toLowerCase());
     }
 }
 
