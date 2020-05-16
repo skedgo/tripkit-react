@@ -1,489 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/.well-known/apple-app-site-association" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/.well-known/assetlinks.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/0.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/1.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/3.chunk.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/action/TKUIActionsView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/action/TKUIRouteToLocationAction.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/action/TKUIShareAction.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/alerts/TKUIAlertsSummary.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/alerts/TKUIAlertsSummary.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/alerts/TKUIAlertsView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/alerts/TKUIAlertsView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/analytics/GATracker.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/analytics/PlannedTripsTracker.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/analytics/model/ChoiceSegment.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/analytics/model/PlannedTrip.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/analytics/model/TripChoice.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/api/TripGoApi.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/api/WithRoutingResults.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/api/WithServiceResults.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/asset-manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/Checkbox.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/RadioBtn.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/TKUIButton.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/TKUIButton.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/TKUISelect.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/buttons/TKUISelect.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUICard.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUICard.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUICardCarousel.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUICardContainer.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUICardProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUIRendersCard.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUIScrollForCard.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUISlideUp.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUITooltip.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUITooltip.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUIWaitingRequest.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/card/TKUIWaitingRequest.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKConfigHelper.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKRoot.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKStateConsumer.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKStateProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKUIConfig.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/config/TKUIConfigProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/css/GenStyle.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/css/ResetStyle.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/FavouritesData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItem.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/LocalStorageItemArray.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/LocationsData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/OptionsData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/RegionsData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/data/StopsData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/embed.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/embedQuerySample.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/embedTripPlannerSample.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/env/Environment.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/env/Features.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/error/TKError.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/error/TKErrorHelper.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/example/client-chym-web/QueryWidget.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/example/client-chym-web/client-chym-web.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/example/client-sample.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/example/tripgo-sample.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/example/usersnap/Usersnap.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/FavouriteBtn.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKFavouritesProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKUIFavouriteAction.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKUIFavouriteRow.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKUIFavouriteRow.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKUIFavouritesView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/favourite/TKUIFavouritesView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/feedback/TKUIReportBtn.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/feedback/TKUIReportBtn.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/234DF5_3_0.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/234DF5_3_0.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/234DF5_3_0.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_2_0.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_2_0.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_2_0.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_3_0.eot" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_3_0.ttf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/fonts/269860_3_0.woff" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/CurrentLocationGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocoderOptions.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/GeocodingCache.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/GeolocationData.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/IGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/MultiGeocoderOptions.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/PeliasGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/SkedgoGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/geocode/StaticGeocoder.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/TKI18nProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_ar.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_cs.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_da.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_de.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_es-AR.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_es.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_et.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_fi.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_fr.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_he.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_hu.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_id.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_it.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_ja.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_ko.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_nl.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_no.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_pl.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_pt.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_ru.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_sv.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_tr.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_vi.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_zh-Hans.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/i18n/i18n_zh-Hant.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-114x114.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-120x120.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-144x144.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-152x152.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-57x57.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-60x60.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-72x72.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon-76x76.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/apple-touch-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon-128x128.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon-16x16.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon-196x196.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon-32x32.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon-96x96.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipad_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipad_splash_landscape.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipad_splash_landscape_2048x1496.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipad_splash_landscape_2048x1536.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipadpro1_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipadpro2_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/ipadpro3_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphone5_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphone6_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphoneplus_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphonex_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphonexr_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/favicon/iphonexsmax_splash.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/ic-info-circle.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/ic-sort.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-arrive-flag.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin-from.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/map/ic-map-pin.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-alert-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bCycle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bayAreaBikeShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bicycle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bicycle-share-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bikeRack.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bikeShare.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bixi-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bus-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bus-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-bus-school-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-cableCar-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-cableCar-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-car-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-car-pool-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-car-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-car-share-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-car2Go-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-carNextDoor-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-citiBike-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-divvy-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-ferry-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-ferry-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-gondola-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-lightRail-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-lightRail-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-melbourneBikeShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-monorail-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-monorail-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-motorbike-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-motorbike-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-myway.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-parkAndRide.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-parking-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-plane-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-publicTransport-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-rideShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-school-bus-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-shuttle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-sidecar-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-subway-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-subway-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-taxi-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-taxi-24px_orig.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-taxi-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-toll-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-train-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-train-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-tram-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-transfer-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-wait-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-walk-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-wheelchair-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ic-wheelchair.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-alert-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-arrive-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bCycle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bayAreaBikeShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bicycle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bicycle-share-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bixi-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bus-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bus-24px.svg_old" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-bus-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-cableCar-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-cableCar-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-car-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-car-pool-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-car-share-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-car2Go-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-carNextDoor-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-citiBike-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-collect-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-divvy-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-ferry-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-ferry-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-lightRail-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-lightRail-24px.svg_old" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-lightRail-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-melbourneBikeShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-monorail-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-monorail-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-motorbike-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-parking-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-plane-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-publicTransport-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-rideShare-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-school-bus-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-school-bus-24px.svg_old" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-shuttle-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-sidecar-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-subway-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-subway-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-taxi-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-taxi-24px_orig.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-taxi-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-toll-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-train-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-train-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-tram-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-transfer-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-wait-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-wait-realtime-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-walk-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/images/modeicons/ondark/ic-wheelchair-24px.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.css.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/jslib/JQuery.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/jss/StyleHelper.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/jss/TKUITheme.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location/TKUILocationDetailView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location/TKUILocationDetailView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location/TKUIW3w.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location/TKUIW3w.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location_box/LocationBox.test.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/location_box/ResultItem.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/manifest.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/MapLocationPopup.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/MapService.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/MapTripSegment.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/SegmentPopup.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/ServiceStopPopup.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/ShapesPolyline.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/StopIcon.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/StreetsPolyline.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMapLocationIcon.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMapLocationIcon.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMapLocations.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMapView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMapView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMyLocationMapIcon.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIMyLocationMapIcon.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIRealtimeVehicle.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIRealtimeVehicle.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUIRealtimeVehiclePopup.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUITransportPin.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/map/TKUITransportPin.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/BBox.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/LatLng.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/Location.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/RoutingQuery.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/ServiceStopLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/StopLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/favourite/Favourite.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/favourite/FavouriteLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/favourite/FavouriteStop.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/favourite/FavouriteTrip.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/BikePodLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/CarParkLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/City.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/FacilityLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationConverter.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationInfoDetails.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/LocationsResult.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/MapLocationType.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/location/TKLocationInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/options/TKTransportOptions.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/options/TKUserProfile.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/options/TKWeightingPreferences.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/region/ModeIdentifier.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/region/Region.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionInfoResults.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/region/RegionResults.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/EmbarkationStopResult.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/LatestResult.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/RTServiceDepartureUpdate.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/RealTimeAction.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/RealTimeAlert.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/RealTimeVehicle.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/ServiceDeparture.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/ServiceDeparturesResult.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/ServiceDetail.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/StopLocationParent.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/VehicleComponent.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/service/VehicleLocation.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/Color.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/ModeInfoConverter.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/RoutingResults.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/Segment.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/SegmentTemplate.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/ServiceShape.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/Street.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/Ticket.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/Trip.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/model/trip/TripGroup.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/OptionsProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/SchoolPicker.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIPrivacyOptionsView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIPrivacyOptionsView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIProfileView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIProfileView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUISlider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportOptionsRow.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportOptionsRow.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportOptionsView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportOptionsView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportSwitchesView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUITransportSwitchesView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIUserPriorities.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/options/TKUIUserPriorities.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/precache-manifest.d35ce71f5b15de325d64b533ba293d0b.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/privacy/TKUICookiesBanner.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/privacy/TKUICookiesBanner.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/query/TKUILocationSearch.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/query/TKUILocationSearch.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/query/TKUIRoutingQueryInput.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/query/TKUIRoutingQueryInput.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/registerServiceWorker.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service-worker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/DaySeparator.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/ServiceResultsProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUIServiceDepartureRow.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUIServiceDepartureRow.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUIServiceView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUIServiceView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUITimetableView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/TKUITimetableView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUIOccupancyInfo.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUIOccupancyInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUITrainOccupancyInfo.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUITrainOccupancyInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUIWheelchairInfo.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/service/occupancy/TKUIWheelchairInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/share/TKShareHelper.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/share/TKUIShareView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/share/TKUIShareView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/sidebar/TKUISidebar.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/sidebar/TKUISidebar.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/apple-store-logo.ffdf0298.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-alert.03c9c248.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-down.e05198c2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-angle-right.4ca7bfeb.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-arrow-back.29765934.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-check.0eae3c0d.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-leaf.f6abd4f9.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-lightning.6bad6a52.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-like.bbadba73.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-badge-money.9d2d80ff.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-city.b4311c33.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-clock.58ae24db.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-copy-link.0f9bb363.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross.6fb22587.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-cross2.a70464f3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-curr-loc.8f2ce267.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-directions.e5cf47cf.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-fav-star.6b3d3a35.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite-outline.302e6bd3.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favorite.0c3ba1fe.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-location.b223e342.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-favourite-trip.aecd904f.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-feedback.20791662.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-glass.732e7c85.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-loading2.7e6a33c2.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head-pointer.e2b98b87.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin-head.ec287ddd.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-map-pin.2f567391.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-menu.629024ad.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-passenger.eea06877.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-pin-start.fc329d29.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-service-stop.f07690e1.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-settings-gear.6d78f561.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-share.9b3c0523.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-swap.8d14fd94.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-tick.52fa6624.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-carriage.ef09d603.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-train-head.fb217f8a.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic-triangle-down.29b96747.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_accessible.466156cc.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_inaccessible.bdea4ca8.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/ic_wheelchair_unknown.79626b5b.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/icon-usersnap.15c2ff91.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/play-store-logo.9e121932.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/static/media/tripgo_logo.2499220e.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/time/DateTimeHTML5Input.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/time/TKUIDateTimePicker.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/time/TKUIDateTimePicker.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip-planner/RoutingResultsProvider.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TKUITripPlanner.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip-planner/TKUITripPlanner.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKMetricClassifier.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUIResultsView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUIResultsView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUISegmentOverview.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUISegmentOverview.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITrackTransport.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITrackTransport.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripOverviewView.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripOverviewView.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripRow.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripRow.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripTime.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUITripTime.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUIWCSegmentInfo.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TKUIWCSegmentInfo.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TransportUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TripRowTrack.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.css.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TripSegmentSteps.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/trip/TripUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/Constants.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/ContextMenuHandler.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/DateTimeUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/DeviceUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/GMapUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/GeolocationUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/LeafletUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/LocationUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/MapUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/NetworkUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/TKUIResponsiveUtil.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/Usersnap.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/Util.d.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/util/WaiAriaUtil.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -511,23 +34,36 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
+      <file leaf-file-name="tripgo-sample.tsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/example/tripgo-sample.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+            <state relative-caret-position="339">
+              <caret line="33" column="45" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="45" />
               <folding>
-                <element signature="n#!!block;n#browserslist#0;n#!!top" />
+                <element signature="e#0#40#0" expanded="true" />
+                <element signature="e#287#359#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
-              <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+              <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" column="10" lean-forward="true" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+              <folding>
+                <element signature="n#!!block;n#browserslist#0;n#!!top" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -536,26 +72,10 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="45">
-                <caret line="3" selection-start-line="3" selection-end-line="3" />
+              <first_editor>
+                <caret column="70" selection-start-column="60" selection-end-column="70" />
               </first_editor>
               <second_editor />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/node_modules/@material-ui/core/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-389" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package-lock.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package-lock.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="15345" column="23" selection-start-line="15345" selection-start-column="18" selection-end-line="15345" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -563,8 +83,8 @@
       <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="399">
-              <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
+            <state relative-caret-position="44">
+              <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -585,7 +105,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>node-po</find>
       <find>peer</find>
       <find>polyline-encoded</find>
       <find>@material-ui/core</find>
@@ -615,6 +134,7 @@
       <find>react-ga</find>
       <find>react-jss</find>
       <find>react-leaflet</find>
+      <find>react-router</find>
     </findStrings>
     <replaceStrings>
       <replace>&quot;-&quot;</replace>
@@ -735,12 +255,12 @@
         <option value="$PROJECT_DIR$/tsconfig.gen-dts.json" />
         <option value="$PROJECT_DIR$/src/config/TKStateProvider.tsx" />
         <option value="$PROJECT_DIR$/.babelrc" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/.npmignore" />
         <option value="$PROJECT_DIR$/src/util/DeviceUtil.ts" />
         <option value="$PROJECT_DIR$/src/index.tsx" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -785,6 +305,11 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -911,7 +436,7 @@
     <task active="true" id="Default" summary="Default task">
       <changelist id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="" />
       <changelist id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
-      <changelist id="69977fdd-2e1f-49d7-b207-04e763e45db9" name="Do not commit - CHYM client" comment="" />
+      <changelist id="" name="Do not commit - CHYM client" comment="" />
       <created>1543528547598</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
@@ -1324,7 +849,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2810732000" />
+    <option name="totallyTimeSpent" value="2813134000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1336,7 +861,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="827" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="826" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
@@ -1356,23 +881,84 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.37906647" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.37818697" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.2446959" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
       <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.24893919" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" order="0" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
-      <window_info anchor="right" x="0" y="0" width="310" height="623" id="Documentation" order="11" side_tool="true" weight="0.3297568" />
       <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
+      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32016924" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info anchor="right" id="Maven" order="10" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="npm" order="6" side_tool="true" />
+      <window_info anchor="right" id="Palette" order="2" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Maven Projects" order="9" weight="0.3297568" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info id="Image Layers" order="3" />
+      <window_info anchor="right" x="0" y="0" width="310" height="623" id="Documentation" order="11" side_tool="true" weight="0.3297568" />
+      <window_info anchor="right" id="Database" order="5" weight="0.3297568" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.37906647" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32905984" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.24893919" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="right" id="SvgViewer" order="8" weight="0.3297568" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info id="UI Designer" order="4" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.2446959" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info id="Designer" order="2" />
     </layout>
+    <layout-to-restore>
+      <window_info anchor="right" id="Maven" order="10" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info id="Designer" order="2" />
+      <window_info anchor="right" id="Palette" order="2" />
+      <window_info id="Image Layers" order="3" />
+      <window_info anchor="bottom" id="TypeScript" order="8" sideWeight="0.49928468" weight="0.32107496" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.4425532" />
+      <window_info anchor="bottom" id="Docker" order="13" show_stripe_button="false" />
+      <window_info anchor="right" id="Capture Analysis" order="4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
+      <window_info anchor="bottom" id="Messages" order="0" />
+      <window_info anchor="right" x="0" y="0" width="310" height="623" id="Documentation" order="11" side_tool="true" weight="0.3297568" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info id="npm" order="6" side_tool="true" />
+      <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.38014185" />
+      <window_info anchor="right" id="Maven Projects" order="9" weight="0.3297568" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
+      <window_info anchor="right" id="Database" order="5" weight="0.3297568" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32905984" />
+      <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Theme Preview" order="7" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.2496454" />
+      <window_info anchor="right" id="SvgViewer" order="8" weight="0.3297568" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -1498,34 +1084,12 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="48" column="31" selection-start-line="48" selection-start-column="31" selection-end-line="48" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-cross.js" />
     <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-alert.js" />
     <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-alert.svg" />
     <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-cross.svg" />
-    <entry file="file://$PROJECT_DIR$/dist/esm/location_box/TKUILocationBox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="12" column="61" selection-start-line="12" selection-start-column="61" selection-end-line="12" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-cross.svg.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31">
-          <caret line="4" column="30" lean-forward="true" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-angle-down.svg.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/dist/esm/location_box/TKUILocationBox.js" />
+    <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-cross.svg.js" />
+    <entry file="file://$PROJECT_DIR$/dist/esm/images/ic-angle-down.svg.js" />
     <entry file="file://$PROJECT_DIR$/node_modules/reflect-metadata/index.d.ts">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1606,11 +1170,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/api/TripGoApi.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-671">
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
-        </state>
+        <state relative-caret-position="-671" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api-mark-logo.svg">
@@ -1648,9 +1208,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="142">
           <caret line="31" column="17" lean-forward="true" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1679,19 +1236,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="7" selection-start-column="7" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rollup.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="3" column="25" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/rollup.config.js" />
     <entry file="file://$PROJECT_DIR$/src/util/DeviceUtil.ts">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1720,9 +1268,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="9" column="40" selection-start-line="9" selection-start-column="40" selection-end-line="9" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1771,26 +1316,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/tripgo-sample.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="7" selection-start-line="8" selection-start-column="7" selection-end-line="8" selection-end-column="7" />
-          <folding>
-            <element signature="e#287#359#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="399">
-          <caret line="52" column="4" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package-lock.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="166">
@@ -1803,30 +1328,65 @@
         <state relative-caret-position="-389" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
+    <entry file="file://$PROJECT_DIR$/tsconfig.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
-          <folding>
-            <element signature="n#!!block;n#browserslist#0;n#!!top" />
-          </folding>
+        <state relative-caret-position="180">
+          <caret line="12" column="6" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="45">
-            <caret line="3" selection-start-line="3" selection-end-line="3" />
-          </first_editor>
-          <second_editor />
+    <entry file="file://$PROJECT_DIR$/src/geocode/MultiGeocoderOptions.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="61" selection-start-line="12" selection-start-column="61" selection-end-line="12" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
-          <caret line="10" column="1" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+          <caret line="10" column="3" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor>
+            <caret column="70" selection-start-column="60" selection-end-column="70" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="10" lean-forward="true" selection-start-line="17" selection-start-column="10" selection-end-line="17" selection-end-column="10" />
+          <folding>
+            <element signature="n#!!block;n#browserslist#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="36" column="19" lean-forward="true" selection-start-line="36" selection-start-column="19" selection-end-line="36" selection-end-column="19" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/tripgo-sample.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="33" column="45" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+            <element signature="e#287#359#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
