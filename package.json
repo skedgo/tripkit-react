@@ -1,13 +1,12 @@
 {
   "name": "tripkit-react",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "dist/js/index.js",
   "_module": "dist/esm/index.js",
   "types": "dist/js/index.d.ts",
   "private": false,
   "publishConfig": {
-    "access": "public",
-    "tag": "prerelease"
+    "access": "public"
   },
   "sideEffects": false,
   "dependencies": {
