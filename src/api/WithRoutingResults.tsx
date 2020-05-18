@@ -47,6 +47,7 @@ interface IWithRoutingResultsState {
     selected?: Trip;
     sort: TripSort;
     waiting: boolean;
+    routingError?: TKError;
     waitingTripUpdate: boolean;
     tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
 }
@@ -58,6 +59,8 @@ export enum TripSort {
     PRICE = "Price",
     CARBON = "Greener"
 }
+
+export const ROUTING_NOT_SUPPORTED = "Routing.from.X.to.X.is.not.yet.supported";
 
 // function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
@@ -129,7 +132,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     if (this.state.trips !== null) {
                         this.setState({
                             trips: undefined,
-                            waiting: false
+                            waiting: false,
+                            routingError: undefined
                         });
                     }
                 }
@@ -209,34 +213,37 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             const options = this.props.options;
             this.setState({
                 trips: [],
-                waiting: true
+                waiting: true,
+                routingError: undefined
             });
-            this.computeTrips(query).then((tripPromises: Array<Promise<Trip[]>>) => {
-                if (tripPromises.length === 0) {
-                    this.setState({waiting: false});
-                    return;
-                }
-                const waitingState = {
-                    query: query,
-                    options: options,
-                    remaining: tripPromises.length
-                };
-                tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
-                    if (!this.sameApiQueries(this.state.query, this.props.options, query, options)) {
+            this.computeTrips(query)
+                .then((tripPromises: Array<Promise<Trip[]>>) => {
+                    if (tripPromises.length === 0) {
+                        this.setState({waiting: false});
                         return;
                     }
-                    if (trips !== null && this.state.trips !== null) {
-                        trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
-                    }
-                    this.setState(prevState => {
-                        return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
-                    });
-                    this.checkWaiting(waitingState)
-                }).catch((reason: any) => {
-                    Util.log(reason, Env.PRODUCTION);
-                    this.checkWaiting(waitingState)
-                }))
-            });
+                    const waitingState = {
+                        query: query,
+                        options: options,
+                        remaining: tripPromises.length
+                    };
+                    tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
+                        if (!this.sameApiQueries(this.state.query, this.props.options, query, options)) {
+                            return;
+                        }
+                        if (trips !== null && this.state.trips !== null) {
+                            trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
+                        }
+                        this.setState(prevState => {
+                            return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
+                        });
+                        this.checkWaiting(waitingState)
+                    }).catch((error: Error) => {
+                        Util.log(error, Env.PRODUCTION);
+                        this.checkWaiting(waitingState);
+                        this.setState({routingError: error});
+                    }))
+                });
         }
 
         public checkWaiting(waitingState: any) {
@@ -413,6 +420,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onDirectionsView={this.onDirectionsView}
                 trips={this.state.trips}
                 waiting={this.state.waiting}
+                routingError={this.state.routingError}
                 waitingTripUpdate={this.state.waitingTripUpdate}
                 tripUpdateError={this.state.tripUpdateError}
                 selected={this.state.selected}
@@ -569,6 +577,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
+                            if (routingResultsJson.error) {
+                                throw new TKError("Routing not supported", ROUTING_NOT_SUPPORTED);
+                            }
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));

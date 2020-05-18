@@ -11,6 +11,7 @@ import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
+import {TKError} from "../error/TKError";
 
 export interface IRoutingResultsContext {
     query: RoutingQuery;
@@ -31,6 +32,7 @@ export interface IRoutingResultsContext {
 
     trips?: Trip[];
     waiting: boolean;
+    routingError?: TKError;
     waitingTripUpdate: boolean;
     tripUpdateError?: Error;
     selected?: Trip;

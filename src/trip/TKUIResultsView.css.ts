@@ -76,5 +76,23 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             margin: '24px 0',
             ...genStyles.fontM,
             color: tKUIColors.black2
+        },
+        errorPanel: {
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.alignCenter,
+            padding: '40px 16px'
+        },
+        imgConstruction: {
+            width: '200px',
+            height: '200px'
+        },
+        errorActions: {
+            width: '250px',
+            ...genStyles.flex,
+            ...genStyles.column,
+            '&>*:not(:first-child)': {
+                marginTop: '8px'
+            }
         }
     });

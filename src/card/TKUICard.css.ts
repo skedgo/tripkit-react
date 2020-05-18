@@ -40,6 +40,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
                 || props.presentation === CardPresentation.SLIDE_UP_STYLE ? '12px 12px 0 0' : '0',
             ...genStyles.flex,
             ...genStyles.column,
+            overflow: 'hidden'
         },
 
         innerMain: {

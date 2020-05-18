@@ -11,6 +11,7 @@ import {TKUITheme as TKUIThemeForExport} from "./jss/TKUITheme";
 import {IRoutingResultsContext as IRoutingResultsContextForExport} from "./trip-planner/RoutingResultsProvider";
 import {TKState as TKUIStateForExport} from "./config/TKStateConsumer";
 import {TKUIReportBtnProps as TKUIReportBtnPropsForExport} from "./feedback/TKUIReportBtn";
+import {TKUIResultsViewProps as TKUIResultsViewPropsForExport} from "./trip/TKUIResultsView";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
 export type TKUIConfig = TKUIConfigForExport;
@@ -46,9 +47,12 @@ export {feedbackTextFromState} from "./feedback/TKUIReportBtn";
 export {default as Environment} from "./env/Environment";
 export {default as TKGATracker} from "./analytics/GATracker";
 export {default as TKPeliasGeocoder} from "./geocode/PeliasGeocoder";
+export {default as TKUICard} from "./card/TKUICard";
+export {TKError} from "./error/TKError";
+export type TKUIResultsViewProps = TKUIResultsViewPropsForExport;
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-// if (document.getElementById("tripgo-sample-root")) {
-//     import("./example/tripgo-sample");
+if (document.getElementById("tripgo-sample-root")) {
+    import("./example/tripgo/tripgo-sample");
     // import("./example/client-chym-web/client-chym-web");
-// }
+}

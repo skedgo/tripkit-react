@@ -14,6 +14,10 @@ class City extends Location {
     @JsonProperty('timezone', String)
     public timezone: string = '';
 
+    get address(): string {
+        return this.title;
+    }
+
     get name(): string {
         return this.title;
     }

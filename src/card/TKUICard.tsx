@@ -114,6 +114,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     >
                         <div className={classes.handleLine}/>
                     </div>}
+                    {(this.props.title || this.props.subtitle || this.props.onRequestClose) &&
                     <div className={classes.header}>
                         <div className={classNames(genClassNames.flex, genClassNames.spaceBetween, genClassNames.alignCenter)}>
                             <div className={classes.headerLeft}>
@@ -133,7 +134,7 @@ class TKUICard extends React.Component<IProps, IState> {
                                             focusable="false"/>
                             </button>}
                         </div>
-                    </div>
+                    </div>}
                 </div>
                 <div className={classes.subHeader}>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
