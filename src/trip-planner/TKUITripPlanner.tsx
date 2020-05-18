@@ -305,7 +305,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: {top: this.getContainerHeight() - 80, unit: 'px'}
                 }}
             />;
-        const routingResultsView = this.props.directionsView && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
+        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
             <TKUIResultsView
                 onDetailsClicked={() => {
                     this.setState({showTripDetail: true});

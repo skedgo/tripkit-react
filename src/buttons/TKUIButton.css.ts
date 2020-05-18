@@ -30,6 +30,9 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
         primary: {
             backgroundColor: theme.colorPrimary,
             color: 'white',
+            padding: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL) ? '8px' :
+                    props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '8px 20px',
             '&:hover': {
                 backgroundColor: theme.colorPrimaryOpacity(.5)
             },
@@ -45,6 +48,8 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
         secondary: {
             background: 'none',
             color: 'black',
+            padding: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
             border: '2px solid ' + tKUIColors.black4,
             '&:hover': {
                 borderColor: tKUIColors.black2,
@@ -64,7 +69,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
         },
 
         link: {
-            color: theme.colorPrimary,
+            color: theme.colorPrimary
         },
 
         iconContainer: {

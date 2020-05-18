@@ -26,7 +26,7 @@ import Region from "../model/region/Region";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect from "../buttons/TKUISelect";
-import {TKUITheme, TKUITooltip} from "../index";
+import {TKUIButtonType, TKUITheme, TKUITooltip} from "../index";
 import DeviceUtil from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
@@ -37,6 +37,10 @@ import Color from "../model/trip/Color";
 import {severityColor} from "./TKUITrackTransport.css";
 import genStyles from "../css/GenStyle.css";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
+import {TKError} from "../error/TKError";
+import LocationUtil from "../util/LocationUtil";
+import {ReactComponent as ImgConstruction} from "../images/img-construction.svg";
+import TKUIButton from "../buttons/TKUIButton";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -51,6 +55,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     value?: Trip;
     onChange?: (value: Trip) => void;
     waiting?: boolean; // TODO: allow values to be undefined so no need for waiting prop.
+    routingError?: TKError;
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
     query: RoutingQuery;
     sort: TripSort;
@@ -70,9 +75,14 @@ export interface IStyle {
     footer: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
     noResults: CSSProps<IProps>;
+    errorPanel: CSSProps<IProps>;
+    imgConstruction: CSSProps<IProps>;
+    errorActions: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+    errorActions: (error: TKError) => JSX.Element[];
+}
 
 export type TKUIResultsViewProps = IProps;
 export type TKUIResultsViewStyle = IStyle;
@@ -81,7 +91,15 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",
-    randomizeClassNames: false
+    randomizeClassNames: false,
+    props: (props: IProps) => ({
+        errorActions: (error: TKError) => [
+            <TKUIButton text={props.t("Plan.a.new.trip")}
+                        type={TKUIButtonType.SECONDARY}
+                        onClick={() => props.onQueryUpdate({from: null, to: null})}
+            />
+        ]
+    })
 };
 
 interface IState {
@@ -206,15 +224,27 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 </div>
             )
         } : undefined;
+        const error = !this.props.waiting && this.props.routingError &&
+            <div className={classes.errorPanel}>
+                <ImgConstruction className={classes.imgConstruction}/>
+                <div className={classes.noResults}>{t("Routing.from.X.to.X.is.not.yet.supported",
+                    {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)})}</div>
+                {this.props.errorActions.length > 0 &&
+                <div className={classes.errorActions}>
+                    {this.props.errorActions(this.props.routingError)}
+                </div>}
+            </div>;
         return (
             <TKUICard
-                title={this.props.landscape ? "Routing results" : undefined}
+                title={this.props.landscape && !error ? "Routing results" : undefined}
                 presentation={CardPresentation.SLIDE_UP}
-                renderSubHeader={renderSubHeader}
+                renderSubHeader={!error ? renderSubHeader : undefined}
                 slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classNames(this.props.className, classes.main)}>
-                    {this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
+                    {!this.props.routingError && this.props.values.length > 0 &&
+                    // length > 0 also prevents showing alert before routingError happens, and then so to disappear.
+                    this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
                     // TODO: Define a TKUIStyleOverride that encapsulates all the following, i.e.,
                     // the consumer, the call to replaceStyle, and the provider.
                     <TKUIConfigContext.Consumer>
@@ -261,6 +291,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         }}
                     </TKUIConfigContext.Consumer>
                     }
+                    {!error &&
                     <div className={classes.sortBar}>
                         <TKUISelect
                             options={sortOptions}
@@ -273,10 +304,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                                 IndicatorsContainer: (props: any) => null
                             }}
                         />
-                        <div>
-
-                        </div>
-                    </div>
+                        <div/>
+                    </div>}
                     {this.props.values.map((trip: Trip, index: number) =>
                         <TKUITripRow
                             value={trip}
@@ -300,7 +329,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                                 })}
                         />
                     )}
-                    {!this.props.waiting && this.props.values.length === 0
+                    {error}
+                    {!this.props.waiting && !this.props.routingError && this.props.values.length === 0
                     && <div className={classes.noResults}>{t("No.routes.found.")}</div>}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}
@@ -373,6 +403,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             const consumerProps: IConsumedProps = {
                                 values: routingContext.trips || [],
                                 waiting: routingContext.waiting,
+                                routingError: routingContext.routingError,
                                 value: routingContext.selected,
                                 onChange: (trip: Trip) => {
                                     routingContext.onChange(trip);
