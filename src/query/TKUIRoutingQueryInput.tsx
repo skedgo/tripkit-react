@@ -1,5 +1,5 @@
 import * as React from "react";
-import TKUILocationBox, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../location_box/TKUILocationBox";
+import TKUILocationBox from "../location_box/TKUILocationBox";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
@@ -32,7 +32,7 @@ import TKUISelect from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
-import TKErrorHelper from "../error/TKErrorHelper";
+import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;

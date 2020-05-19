@@ -60,8 +60,6 @@ export enum TripSort {
     CARBON = "Greener"
 }
 
-export const ROUTING_NOT_SUPPORTED = "Routing.from.X.to.X.is.not.yet.supported";
-
 // function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
@@ -578,7 +576,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
                             if (routingResultsJson.error) {
-                                throw new TKError("Routing not supported", ROUTING_NOT_SUPPORTED);
+                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString());
                             }
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
@@ -590,7 +588,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 const routingResults: RoutingResults = Util.deserialize(this.getRoutingResultsJSONTest(), RoutingResults);
                                 return routingResults.groups;
                             }
-                            throw reason;
+                            throw reason.code ? reason : new TKError("Something went wrong.");
                         });
                 });
             });
