@@ -1,5 +1,10 @@
 import {TKError} from "./TKError";
 
+// TripGo api errors
+export const ERROR_ROUTING_NOT_SUPPORTED = "1001";
+export const ERROR_DESTINATION_OUTSIDE_COVERAGE = "1003";
+export const ERROR_UNABLE_TO_RESOLVE_ADDRESS = "ERROR_UNABLE_TO_RESOLVE_ADDRESS";
+
 class TKErrorHelper {
 
     public static hasErrorCode(error: Error, code: string) {

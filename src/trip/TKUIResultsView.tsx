@@ -41,6 +41,7 @@ import {TKError} from "../error/TKError";
 import LocationUtil from "../util/LocationUtil";
 import {ReactComponent as ImgConstruction} from "../images/img-construction.svg";
 import TKUIButton from "../buttons/TKUIButton";
+import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -224,16 +225,23 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 </div>
             )
         } : undefined;
-        const error = !this.props.waiting && this.props.routingError &&
-            <div className={classes.errorPanel}>
-                <ImgConstruction className={classes.imgConstruction}/>
-                <div className={classes.noResults}>{t("Routing.from.X.to.X.is.not.yet.supported",
-                    {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)})}</div>
-                {this.props.errorActions.length > 0 &&
-                <div className={classes.errorActions}>
-                    {this.props.errorActions(this.props.routingError)}
-                </div>}
-            </div>;
+        let error: JSX.Element | undefined = undefined;
+        if (!this.props.waiting && this.props.routingError) {
+            const errorMessage = TKErrorHelper.hasErrorCode(this.props.routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
+                t("Routing.from.X.to.X.is.not.yet.supported",
+                {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)}) + "." :
+                this.props.routingError.message;
+            error =
+                <div className={classes.errorPanel}>
+                    <ImgConstruction className={classes.imgConstruction}/>
+                    <div className={classes.noResults}>{errorMessage}</div>
+                    {this.props.errorActions.length > 0 &&
+                    <div className={classes.errorActions}>
+                        {this.props.errorActions(this.props.routingError)}
+                    </div>}
+                </div>;
+        }
+
         return (
             <TKUICard
                 title={this.props.landscape && !error ? "Routing results" : undefined}

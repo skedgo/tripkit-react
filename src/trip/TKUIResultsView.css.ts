@@ -73,9 +73,11 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
         noResults: {
             ...genStyles.flex,
             ...genStyles.center,
+            ...genStyles.alignCenter,
             margin: '24px 0',
             ...genStyles.fontM,
-            color: tKUIColors.black2
+            color: tKUIColors.black2,
+            textAlign: 'center'
         },
         errorPanel: {
             ...genStyles.flex,

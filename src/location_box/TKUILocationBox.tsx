@@ -23,6 +23,7 @@ import IGeocoder from "../geocode/IGeocoder";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {Subtract} from 'utility-types';
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
+import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
@@ -78,8 +79,6 @@ interface IState {
     waiting: boolean;
     waitingResolveFor?: Location;
 }
-
-export const ERROR_UNABLE_TO_RESOLVE_ADDRESS = "ERROR_UNABLE_TO_RESOLVE_ADDRESS";
 
 class TKUILocationBox extends Component<IProps, IState> {
 
