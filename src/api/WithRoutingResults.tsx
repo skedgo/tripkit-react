@@ -236,7 +236,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                             return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
                         });
                         this.checkWaiting(waitingState)
-                    }).catch((error: Error) => {
+                    }).catch((error: TKError) => {
                         Util.log(error, Env.PRODUCTION);
                         this.checkWaiting(waitingState);
                         this.setState({routingError: error});
@@ -576,7 +576,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
                             if (routingResultsJson.error) {
-                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString());
+                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString(), routingResultsJson.userError);
                             }
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
@@ -588,7 +588,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 const routingResults: RoutingResults = Util.deserialize(this.getRoutingResultsJSONTest(), RoutingResults);
                                 return routingResults.groups;
                             }
-                            throw reason.code ? reason : new TKError("Something went wrong.");
+                            throw reason.code ? reason : new TKError(reason.message);
                         });
                 });
             });

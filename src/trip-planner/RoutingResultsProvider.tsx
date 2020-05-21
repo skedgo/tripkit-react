@@ -34,7 +34,7 @@ export interface IRoutingResultsContext {
     waiting: boolean;
     routingError?: TKError;
     waitingTripUpdate: boolean;
-    tripUpdateError?: Error;
+    tripUpdateError?: TKError;
     selected?: Trip;
     onChange: (select?: Trip) => void;
     sort: TripSort;

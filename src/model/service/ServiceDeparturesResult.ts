@@ -37,11 +37,14 @@ class ServiceDeparturesResult {
     @JsonProperty("stops", StopsLocationConverter, true)    // Does not appear on api specs.
     public stops: StopLocation[] | undefined = undefined;
 
-    private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
+    @JsonProperty("error", String, true)    // Does not appear on api specs.
+    public error: string | undefined = undefined;
+    // @JsonProperty("errorCode", Number, true)    // Does not appear on api specs, neither comes on response.
+    // public errorCode: number | undefined = undefined;
+    @JsonProperty("userError", Boolean, true)    // Does not appear on api specs.
+    public userError: boolean | undefined = undefined;
 
-    public isError() {
-        return !this.embarkationStops;
-    }
+    private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
 
     public getStopFromCode(code: string): StopLocation | undefined {
         let result = this.parentInfo && this.parentInfo.getStopFromCode(code);
