@@ -1,12 +1,12 @@
 class TKError extends Error {
 
     public code?: string;
-    public userError?: boolean;
+    public usererror?: boolean;
 
-    constructor(message: string, code?: string, userError?: boolean) {
+    constructor(message: string, code?: string, usererror?: boolean) {
         super(message);
         this.code = code;
-        this.userError = userError;
+        this.usererror = usererror;
     }
 
     public toString(): string {

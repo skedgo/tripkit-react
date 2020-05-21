@@ -576,7 +576,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
                             if (routingResultsJson.error) {
-                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString(), routingResultsJson.userError);
+                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString(), routingResultsJson.usererror);
                             }
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);

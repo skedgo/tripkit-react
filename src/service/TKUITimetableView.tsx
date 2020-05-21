@@ -142,7 +142,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         );
         let error: JSX.Element | undefined = undefined;
         if (!this.props.waiting && this.props.serviceError) {
-            const errorMessage = this.props.serviceError.userError ? this.props.serviceError.message : "Something went wrong.";
+            const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : "Something went wrong.";
             error =
                 <TKUIErrorView
                     error={this.props.serviceError}

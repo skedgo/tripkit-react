@@ -370,7 +370,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                                 throw new TKError("Results from an old request.", ERROR_DEPARTURES_FROM_OLD_REQUEST);
                             }
                             if (departuresResult.error) {
-                                throw new TKError(departuresResult.error, departuresResult.error, departuresResult.userError);
+                                throw new TKError(departuresResult.error, departuresResult.error, departuresResult.usererror);
                             }
                             return departuresResult.getDepartures(this.state.startStop!);
                         }
