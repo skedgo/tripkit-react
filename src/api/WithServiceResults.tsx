@@ -18,6 +18,8 @@ import {EventEmitter} from "fbemitter";
 import Region from "../model/region/Region";
 import StopsData from "../data/StopsData";
 import TripUtil from "../trip/TripUtil";
+import {TKError} from "../error/TKError";
+import {ERROR_DEPARTURES_FROM_OLD_REQUEST, default as TKErrorHelper} from "../error/TKErrorHelper";
 
 export interface IWithServiceResultsProps {
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
@@ -34,6 +36,7 @@ interface IWithServiceResultsState {
     departuresFiltered: ServiceDeparture[];
     displayLimit: number;
     initTimeChanged: boolean;
+    serviceError?: TKError;
 }
 
 
@@ -125,14 +128,18 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 noRTDepartures: [],
                 departuresFiltered: [],
                 displayLimit: 0,
-                initTimeChanged: true
+                initTimeChanged: true,
+                serviceError: undefined
             }, () => {
                 this.requestMoreDepartures();
             });
         }
 
         public onServiceSelection(departure?: ServiceDeparture) {
-            this.setState({selected: departure});
+            this.setState({
+                selected: departure,
+                serviceError: undefined
+            });
             if (!departure || departure.serviceDetail) {
                 return
             }
@@ -157,7 +164,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                                 this.setState({selected: departureUpdate});
                             }
                         }
-                    );
+                    ).catch((error: Error) => {
+                        this.setState({serviceError: new TKError(error.message)});
+                    });
             }
         }
 
@@ -225,6 +234,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              onRequestMore={this.requestMoreDepartures}
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting(this.state)}
+                             serviceError={this.state.serviceError}
                              onFilterChange={this.onFilterChange}
                              title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
                              initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
@@ -279,11 +289,18 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return;
             }
 
+            this.setState({serviceError: undefined});
             this.requestDepartures().then((results: ServiceDeparture[]) => {
                 this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
                     () => this.coverDisplayLimit());
-            }).catch((reason) => {
-                console.log(reason);
+            }).catch((error: TKError) => {
+                console.log(error);
+                if (this.state.departures.length === 0 && !TKErrorHelper.hasErrorCode(error, ERROR_DEPARTURES_FROM_OLD_REQUEST)) {
+                    this.setState({
+                        serviceError: error,
+                        displayLimit: 0 // to set waiting to false;
+                    });
+                }
             });
         }
 
@@ -350,14 +367,16 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     .then((departuresResult: ServiceDeparturesResult) => {
                             // Initial time changed, which triggered a clear, so should discard these results
                             if (!initialTimeAtRequest.isSame(this.state.initTime)) {
-                                throw new Error("Results form an old request.");
+                                throw new TKError("Results from an old request.", ERROR_DEPARTURES_FROM_OLD_REQUEST);
                             }
-                            if (departuresResult.isError()) {
-                                throw new Error("Error loading departures.");
+                            if (departuresResult.error) {
+                                throw new TKError(departuresResult.error, departuresResult.error, departuresResult.userError);
                             }
                             return departuresResult.getDepartures(this.state.startStop!);
                         }
-                    );
+                    ).catch((error) => {
+                        throw error.code ? error : new TKError(error.message);
+                    });
             });
         }
 

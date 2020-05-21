@@ -78,23 +78,5 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.fontM,
             color: tKUIColors.black2,
             textAlign: 'center'
-        },
-        errorPanel: {
-            ...genStyles.flex,
-            ...genStyles.column,
-            ...genStyles.alignCenter,
-            padding: '40px 16px'
-        },
-        imgConstruction: {
-            width: '200px',
-            height: '200px'
-        },
-        errorActions: {
-            width: '250px',
-            ...genStyles.flex,
-            ...genStyles.column,
-            '&>*:not(:first-child)': {
-                marginTop: '8px'
-            }
         }
     });

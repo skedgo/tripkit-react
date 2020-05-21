@@ -39,9 +39,9 @@ import genStyles from "../css/GenStyle.css";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
 import {TKError} from "../error/TKError";
 import LocationUtil from "../util/LocationUtil";
-import {ReactComponent as ImgConstruction} from "../images/img-construction.svg";
 import TKUIButton from "../buttons/TKUIButton";
 import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper";
+import TKUIErrorView from "../error/TKUIErrorView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -76,9 +76,6 @@ export interface IStyle {
     footer: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
     noResults: CSSProps<IProps>;
-    errorPanel: CSSProps<IProps>;
-    imgConstruction: CSSProps<IProps>;
-    errorActions: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
@@ -98,6 +95,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             <TKUIButton text={props.t("Plan.a.new.trip")}
                         type={TKUIButtonType.SECONDARY}
                         onClick={() => props.onQueryUpdate({from: null, to: null})}
+                        key={"Plan.a.new.trip"}
             />
         ]
     })
@@ -229,17 +227,15 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         if (!this.props.waiting && this.props.routingError) {
             const errorMessage = TKErrorHelper.hasErrorCode(this.props.routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
-                {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)}) + "." :
-                this.props.routingError.message;
+                    {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)}) + "." :
+                this.props.routingError.userError ? this.props.routingError.message : "Something went wrong.";
             error =
-                <div className={classes.errorPanel}>
-                    <ImgConstruction className={classes.imgConstruction}/>
-                    <div className={classes.noResults}>{errorMessage}</div>
-                    {this.props.errorActions.length > 0 &&
-                    <div className={classes.errorActions}>
-                        {this.props.errorActions(this.props.routingError)}
-                    </div>}
-                </div>;
+                <TKUIErrorView
+                    error={this.props.routingError}
+                    message={errorMessage}
+                    actions={this.props.errorActions}
+                />
+
         }
 
         return (

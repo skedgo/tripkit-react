@@ -31,6 +31,8 @@ import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
+import TKUIErrorView from "../error/TKUIErrorView";
+import {TKError} from "../error/TKError";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -41,6 +43,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
     actions?: (stop: StopLocation) => JSX.Element[];
+    errorActions?: (error: TKError) => JSX.Element[];
 }
 
 interface IStyle {
@@ -137,6 +140,16 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 <IconClock/>
             </button>
         );
+        let error: JSX.Element | undefined = undefined;
+        if (!this.props.waiting && this.props.serviceError) {
+            const errorMessage = this.props.serviceError.userError ? this.props.serviceError.message : "Something went wrong.";
+            error =
+                <TKUIErrorView
+                    error={this.props.serviceError}
+                    message={errorMessage}
+                    actions={this.props.errorActions}
+                />
+        }
         return (
             <TKUICard
                 title={this.props.title}
@@ -165,6 +178,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 // for Safari so div below filter can actually get a height and scroll happens there.
                 bodyStyle={{height: '100%'}}
             >
+                {error ? error :
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>
                         <div className={classes.filterPanel}>
@@ -213,7 +227,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                 <IconSpin className={classes.iconLoading} focusable="false"/> : null}
                         </TKUIScrollForCard>
                     </div>
-                </div>
+                </div>}
             </TKUICard>
         );
     }

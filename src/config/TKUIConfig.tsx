@@ -55,6 +55,7 @@ import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
 import {Tracker, InitializeOptions} from 'react-ga';
 import {TrackerOptions} from "../analytics/GATracker";
 import IGeocoder from "../geocode/IGeocoder";
+import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -118,6 +119,7 @@ interface ITKUIConfigOptional {
     TKUIAlertRow: TKComponentConfig<TKUIAlertRowProps, TKUIAlertRowStyle>;
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
+    TKUIErrorView: TKComponentConfig<TKUIErrorViewProps, TKUIErrorViewStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

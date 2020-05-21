@@ -6,6 +6,7 @@ import StopLocation from "../model/StopLocation";
 import {EventEmitter} from "fbemitter";
 import DateTimeUtil from "../util/DateTimeUtil";
 import Segment from "../model/trip/Segment";
+import {TKError} from "../error/TKError";
 
 export interface IServiceResultsContext {
     // stop query. Maybe group in class, similar to RoutingQuery. E.g. DeparturesQuery
@@ -21,6 +22,7 @@ export interface IServiceResultsContext {
 
     departures: ServiceDeparture[];
     waiting: boolean;
+    serviceError?: TKError;
     title: string;
     selectedService?: ServiceDeparture;
     onServiceSelection: (departure?: ServiceDeparture) => void;
