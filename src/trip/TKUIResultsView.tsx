@@ -228,7 +228,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             const errorMessage = TKErrorHelper.hasErrorCode(this.props.routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
                     {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)}) + "." :
-                this.props.routingError.userError ? this.props.routingError.message : "Something went wrong.";
+                this.props.routingError.usererror ? this.props.routingError.message : "Something went wrong.";
             error =
                 <TKUIErrorView
                     error={this.props.routingError}

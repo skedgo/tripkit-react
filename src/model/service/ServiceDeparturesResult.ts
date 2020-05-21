@@ -41,8 +41,8 @@ class ServiceDeparturesResult {
     public error: string | undefined = undefined;
     // @JsonProperty("errorCode", Number, true)    // Does not appear on api specs, neither comes on response.
     // public errorCode: number | undefined = undefined;
-    @JsonProperty("userError", Boolean, true)    // Does not appear on api specs.
-    public userError: boolean | undefined = undefined;
+    @JsonProperty("usererror", Boolean, true)    // Does not appear on api specs.
+    public usererror: boolean | undefined = undefined;
 
     private alertsMap: Map<number, RealTimeAlert> = new Map<number, RealTimeAlert>();
 

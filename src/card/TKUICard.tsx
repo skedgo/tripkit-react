@@ -8,12 +8,13 @@ import {Subtract} from "utility-types";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 export enum CardPresentation {
     MODAL,
@@ -28,6 +29,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
     presentation?: CardPresentation;
+    presentationFromViewport?: (portrait: boolean) => CardPresentation;
     slideUpOptions?: TKUISlideUpOptions;
     open?: boolean;
     children?: any;
@@ -192,9 +194,17 @@ class TKUICard extends React.Component<IProps, IState> {
         //     this.props.refreshStyles();
         // }
     }
-
 }
 
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) => {
+                return children!({...inputProps, ...viewportProps,
+                    presentation: inputProps.presentationFromViewport ? inputProps.presentationFromViewport(viewportProps.portrait) :
+                        inputProps.presentation});
+            }}
+        </TKUIViewportUtil>;
+
 export default connect(
-    (config: TKUIConfig) => config.TKUICard, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+    (config: TKUIConfig) => config.TKUICard, config, Mapper);
