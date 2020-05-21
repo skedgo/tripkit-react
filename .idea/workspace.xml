@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/error/TKUIErrorView.css.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/error/TKUIErrorView.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/tripgo/feedback/RequestSupportAction.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/tripgo/feedback/TGUIFeedbackForm.css.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/tripgo/feedback/TGUIFeedbackForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithServiceResults.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKStateConsumer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKStateConsumer.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/error/TKError.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/error/TKError.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/error/TKErrorHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/error/TKErrorHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/service/ServiceDeparturesResult.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/service/ServiceDeparturesResult.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/ServiceResultsProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/ServiceResultsProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUITimetableView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUITimetableView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIResultsView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIResultsView.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIResultsView.tsx" afterDir="false" />
-    </list>
     <list id="a6984f09-2f94-4638-8765-1d51dbba39e8" name="Example tripgo" comment="">
       <change beforePath="$PROJECT_DIR$/src/example/images/icon-usersnap.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/images/icon-usersnap.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/example/tripgo-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/example/usersnap/Usersnap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/usersnap/Usersnap.ts" afterDir="false" />
+    </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -72,14 +54,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="WithServiceResults.tsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="WithServiceResults.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="250">
+            <state relative-caret-position="279">
               <caret line="154" lean-forward="true" selection-start-line="154" selection-end-line="154" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TKError.ts" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/error/TKError.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="5" column="10" lean-forward="true" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -543,14 +534,7 @@
       <workItem from="1589891685321" duration="7178000" />
       <workItem from="1589914534439" duration="405000" />
       <workItem from="1589915152310" duration="114000" />
-      <workItem from="1589920909984" duration="20669000" />
-    </task>
-    <task id="LOCAL-00224" summary="Tripkit web sdk:&#10;- home screen icon for iOS&#10;- splash screen for iOS&#10;- detect context menu event on iOS">
-      <created>1585609504165</created>
-      <option name="number" value="00224" />
-      <option name="presentableId" value="LOCAL-00224" />
-      <option name="project" value="LOCAL" />
-      <updated>1585609504166</updated>
+      <workItem from="1589920909984" duration="20912000" />
     </task>
     <task id="LOCAL-00225" summary="Tripkit web sdk: improve feedback button.">
       <created>1585672834454</created>
@@ -888,11 +872,18 @@
       <option name="project" value="LOCAL" />
       <updated>1589930175363</updated>
     </task>
-    <option name="localTasksCounter" value="273" />
+    <task id="LOCAL-00273" summary="Work on Feature #12822: TripKit React: Display errors&#10;- timetable view">
+      <created>1590094332013</created>
+      <option name="number" value="00273" />
+      <option name="presentableId" value="LOCAL-00273" />
+      <option name="project" value="LOCAL" />
+      <updated>1590094332013</updated>
+    </task>
+    <option name="localTasksCounter" value="274" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2863531000" />
+    <option name="totallyTimeSpent" value="2863774000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -905,7 +896,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="826" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.5035765" side_tool="true" weight="0.4471086" />
@@ -925,11 +915,11 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" weight="0.3796034" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.3796034" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.24362606" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
-      <window_info active="true" anchor="bottom" id="Find" order="2" sideWeight="0.49928468" visible="true" weight="0.24787535" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.24787535" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
@@ -1029,7 +1019,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Commit dist folder." />
     <MESSAGE value="Commit dist folder (2)." />
     <MESSAGE value="Commit dist folder (3)." />
     <MESSAGE value="Commit dist folder (4)." />
@@ -1054,7 +1043,8 @@
     <MESSAGE value="v0.1.3" />
     <MESSAGE value="Work on Feature #12822: TripKit React: Display errors" />
     <MESSAGE value="More work on Feature #12822: TripKit React: Display errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="More work on Feature #12822: TripKit React: Display errors" />
+    <MESSAGE value="Work on Feature #12822: TripKit React: Display errors&#10;- timetable view" />
+    <option name="LAST_COMMIT_MESSAGE" value="Work on Feature #12822: TripKit React: Display errors&#10;- timetable view" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1461,13 +1451,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/error/TKError.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="10" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1504,11 +1487,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/api/WithServiceResults.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
+        <state relative-caret-position="279">
           <caret line="154" lean-forward="true" selection-start-line="154" selection-end-line="154" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/error/TKError.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="10" lean-forward="true" selection-start-line="5" selection-start-column="10" selection-end-line="5" selection-end-column="10" />
         </state>
       </provider>
     </entry>
