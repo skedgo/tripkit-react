@@ -23,7 +23,7 @@ export enum CardPresentation {
     NONE
 }
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
