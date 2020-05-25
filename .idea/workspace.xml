@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list id="a6984f09-2f94-4638-8765-1d51dbba39e8" name="Example tripgo" comment="" />
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geocode/MultiGeocoderOptions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/MultiGeocoderOptions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/images/ic-fav-star.svg" beforeDir="false" afterPath="$PROJECT_DIR$/src/images/ic-fav-star.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -35,67 +35,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MultiGeocoderOptions.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geocode/MultiGeocoderOptions.tsx">
+      <file leaf-file-name="TKUISlideUp.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="12" column="63" lean-forward="true" selection-start-line="12" selection-start-column="63" selection-end-line="12" selection-end-column="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ic-fav-star.svg" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/images/ic-fav-star.svg">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="tripgo-sample.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="283">
-              <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
-              <folding>
-                <element signature="e#0#40#0" expanded="true" />
-                <element signature="e#345#417#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIAutocompleteResult.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/location_box/TKUIAutocompleteResult.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="12" column="53" lean-forward="true" selection-start-line="12" selection-start-column="53" selection-end-line="12" selection-end-column="53" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PeliasGeocoder.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="56" column="50" selection-start-line="56" selection-start-column="50" selection-end-line="56" selection-end-column="50" />
-              <folding>
-                <element signature="e#0#36#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SkedgoGeocoder.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="116" column="11" selection-start-line="116" selection-start-column="11" selection-end-line="116" selection-end-column="11" />
+            <state relative-caret-position="135">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -103,32 +47,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GeocoderOptions.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geocode/GeocoderOptions.ts">
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="30">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+              <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUILocationSearch.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/query/TKUILocationSearch.tsx">
+      <file leaf-file-name="LICENSE" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/LICENSE">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="918">
-              <caret line="138" column="42" selection-start-line="138" selection-start-column="36" selection-end-line="138" selection-end-column="42" />
+            <state>
+              <caret column="14" selection-start-column="14" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUITripPlanner.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <file leaf-file-name="package-lock.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/package-lock.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="196" column="23" selection-start-line="196" selection-start-column="23" selection-end-line="196" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="152">
+              <caret line="15263" column="79" selection-start-line="15263" selection-start-column="64" selection-end-line="15263" selection-end-column="79" />
             </state>
           </provider>
         </entry>
@@ -146,8 +87,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>error</find>
-      <find>errorAct</find>
       <find>TKUIConfig</find>
       <find>consumer</find>
       <find>displayLimit</find>
@@ -176,6 +115,8 @@
       <find>QueryWid</find>
       <find>citiesGeocoder</find>
       <find>ic-fav-star</find>
+      <find>react-draggable</find>
+      <find>autho</find>
     </findStrings>
     <replaceStrings>
       <replace>randomizeClassNames</replace>
@@ -251,7 +192,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/images/ic-cross.svg" />
         <option value="$PROJECT_DIR$/dist/js/images/ic-cross.svg" />
         <option value="$PROJECT_DIR$/dist/esm/images/ic-cross.svg" />
         <option value="$PROJECT_DIR$/dist/esm/location_box/TKUILocationBox.js" />
@@ -263,7 +203,6 @@
         <option value="$PROJECT_DIR$/src/util/DeviceUtil.ts" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/model/location/City.ts" />
         <option value="$PROJECT_DIR$/src/card/TKUICard.css.ts" />
         <option value="$PROJECT_DIR$/src/buttons/TKUIButton.css.ts" />
@@ -302,6 +241,8 @@
         <option value="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" />
         <option value="$PROJECT_DIR$/src/geocode/MultiGeocoderOptions.tsx" />
         <option value="$PROJECT_DIR$/src/images/ic-fav-star.svg" />
+        <option value="$PROJECT_DIR$/LICENSE" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -348,11 +289,6 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -545,21 +481,7 @@
       <workItem from="1589914534439" duration="405000" />
       <workItem from="1589915152310" duration="114000" />
       <workItem from="1589920909984" duration="29541000" />
-      <workItem from="1590410970743" duration="5117000" />
-    </task>
-    <task id="LOCAL-00229" summary="See comment on TKUIMapView.tsx 2">
-      <created>1585690628319</created>
-      <option name="number" value="00229" />
-      <option name="presentableId" value="LOCAL-00229" />
-      <option name="project" value="LOCAL" />
-      <updated>1585690628319</updated>
-    </task>
-    <task id="LOCAL-00230" summary="Tripkit web sdk: fix to issues with z-indexes">
-      <created>1585753172766</created>
-      <option name="number" value="00230" />
-      <option name="presentableId" value="LOCAL-00230" />
-      <option name="project" value="LOCAL" />
-      <updated>1585753172767</updated>
+      <workItem from="1590410970743" duration="9690000" />
     </task>
     <task id="LOCAL-00231" summary="Tripkit web sdk: more minnor fixes and refinements.">
       <created>1585769772404</created>
@@ -890,11 +812,25 @@
       <option name="project" value="LOCAL" />
       <updated>1590415206462</updated>
     </task>
-    <option name="localTasksCounter" value="278" />
+    <task id="LOCAL-00278" summary="Fix to issue on svg.">
+      <created>1590418789126</created>
+      <option name="number" value="00278" />
+      <option name="presentableId" value="LOCAL-00278" />
+      <option name="project" value="LOCAL" />
+      <updated>1590418789126</updated>
+    </task>
+    <task id="LOCAL-00279" summary="Set exact version for react-draggable library since minnor version update breaks my custom implementation for draggable card.">
+      <created>1590434607328</created>
+      <option name="number" value="00279" />
+      <option name="presentableId" value="LOCAL-00279" />
+      <option name="project" value="LOCAL" />
+      <updated>1590434607328</updated>
+    </task>
+    <option name="localTasksCounter" value="280" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2877520000" />
+    <option name="totallyTimeSpent" value="2882093000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -926,9 +862,9 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32893" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.37853107" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49785408" visible="true" weight="0.7330508" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.24293785" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49642345" weight="0.24435028" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26680973" />
       <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49928468" weight="0.24717514" />
       <window_info anchor="right" id="Theme Preview" order="7" />
@@ -994,8 +930,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Massive dependency update. Fix to related issues. (2)" />
-    <MESSAGE value="Work on switching remaining .css to JSS" />
     <MESSAGE value="Work on switching remaining .css to JSS (2)" />
     <MESSAGE value="Work on switching remaining .css to JSS (3)" />
     <MESSAGE value="- Finish switching remaining .css to JSS&#10;- Fix to issue: change path + name of extracted .css on MiniCssExtractPlugin, on config-overrides.js." />
@@ -1019,7 +953,9 @@
     <MESSAGE value="Work on Feature #12822: TripKit React: Display errors&#10;- timetable view (3)" />
     <MESSAGE value="TKUIRemoteCard" />
     <MESSAGE value="Bug #12949: Difficulty entering locations&#10;added restrictToBounds parameter (default to false) to Pelias geocoder." />
-    <option name="LAST_COMMIT_MESSAGE" value="Bug #12949: Difficulty entering locations&#10;added restrictToBounds parameter (default to false) to Pelias geocoder." />
+    <MESSAGE value="Fix to issue on svg." />
+    <MESSAGE value="Set exact version for react-draggable library since minnor version update breaks my custom implementation for draggable card." />
+    <option name="LAST_COMMIT_MESSAGE" value="Set exact version for react-draggable library since minnor version update breaks my custom implementation for draggable card." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1068,20 +1004,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="46" column="38" lean-forward="true" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/error/TKUIErrorView.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="25" column="10" selection-start-line="25" selection-start-column="10" selection-end-line="25" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUIResultsView.css.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="551">
@@ -1286,16 +1208,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2490">
-          <caret line="169" column="28" selection-start-line="169" selection-start-column="24" selection-end-line="169" selection-end-column="28" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2145">
@@ -1463,8 +1375,36 @@
     <entry file="file://$PROJECT_DIR$/src/images/ic-fav-star.svg">
       <provider selected="true" editor-type-id="images" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/card/TKUISlideUp.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package-lock.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="15263" column="79" selection-start-line="15263" selection-start-column="64" selection-end-line="15263" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/LICENSE">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="14" selection-start-column="14" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
     </entry>
   </component>
   <component name="masterDetails">
