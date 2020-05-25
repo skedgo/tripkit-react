@@ -1,6 +1,6 @@
 {
   "name": "tripkit-react",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "dist/js/index.js",
   "_module": "dist/esm/index.js",
   "types": "dist/js/index.d.ts",
@@ -8,6 +8,8 @@
   "publishConfig": {
     "access": "public"
   },
+  "author": "SkedGo",
+  "license": "MIT",
   "sideEffects": false,
   "dependencies": {
     "@mapbox/polyline": "^1.0.0",
