@@ -1,7 +1,6 @@
 import React from "react";
 import IGeocoder from "./IGeocoder";
 import Location from "../model/Location";
-import PeliasGeocoder from "./PeliasGeocoder";
 import SkedgoGeocoder from "./SkedgoGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import StopLocation from "../model/StopLocation";
