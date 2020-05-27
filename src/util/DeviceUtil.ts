@@ -120,6 +120,8 @@ class DeviceUtil {
     public static isIOS = DeviceUtil.os === OS.IOS;
     public static isAndroid = DeviceUtil.os === OS.ANDROID;
 
+    public static isIE = DeviceUtil.findBrowser() === BROWSER.IE;
+
     public static isTouch() {
         return ( 'ontouchstart' in window ) ||
             ( navigator.maxTouchPoints > 0 ) ||

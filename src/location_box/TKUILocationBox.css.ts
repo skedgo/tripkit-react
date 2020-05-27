@@ -22,7 +22,10 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
                 // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
                 // always fontM (16px).
                 ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
-                lineHeight: '30px'
+                lineHeight: '30px',
+                ...DeviceUtil.isIE && {
+                    height: '30px'
+                }
             }
         },
         iconLoading: {

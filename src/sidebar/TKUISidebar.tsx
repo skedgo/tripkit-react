@@ -15,6 +15,7 @@ import TKUIDirectionsAction from "../action/TKUIRouteToLocationAction";
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconFavourite} from "../images/ic-favorite-outline.svg";
 import {ReactComponent as IconSettings} from "../images/ic-settings-gear.svg";
+import DeviceUtil from "../util/DeviceUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -101,7 +102,10 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 ...genStyles.borderRadius(8),
                 padding: '8px',
                 width: '130px',
-                marginTop: '15px'
+                marginTop: '15px',
+                ...DeviceUtil.isIE && {
+                    color: 'white'
+                }
             };
             return [
                 <button style={storeBtnStyle} key={1}
@@ -136,8 +140,8 @@ class TKUISidebar extends React.Component<IProps, {}> {
                 <div className={classes.main}>
                     <div className={classes.header}>
                         {this.props.logo && this.props.logo()}
-                        <button className={classes.closeBtn}>
-                            <IconCross onClick={this.props.onRequestClose}/>
+                        <button className={classes.closeBtn} onClick={this.props.onRequestClose}>
+                            <IconCross/>
                         </button>
                     </div>
                     <div className={classes.body}>

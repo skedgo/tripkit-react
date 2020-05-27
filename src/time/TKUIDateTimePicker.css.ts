@@ -3,12 +3,14 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "./TKUIDateTimePicker";
 import genStyles from "../css/GenStyle.css";
 import {DeviceUtil, genStylesJSS} from "../index";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle, TKUIDateTimePickerProps> =
     (theme: TKUITheme) => ({
         datePicker: {
             fontFamily: theme.fontFamily,
-            fontSize: '13px'
+            fontSize: '13px',
+            ...resetStyles.input
         },
         calendarPopper: {
             marginTop: '12px!important',
@@ -73,7 +75,8 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             }
         },
         inputElem: {
-            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS
+            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+            ...resetStyles.input
         },
         face: {
             '& input': {
