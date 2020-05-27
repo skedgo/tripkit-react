@@ -379,16 +379,14 @@ const otherStyles = {
         '@global': {
             ['.' + genClassNames.root]: {
                 '& button': {
-                    background: 'none',
+                    // background: 'none',
                     fontFamily: 'inherit',
-                    color: 'inherit'
+                    // color: 'inherit'
                 }
             },
-            // TODO: check if next rule is still necessary, and works ok on IE. Commented by now
-            /* max-height: 100% does not work on IE, so causes issues with scroll */
-            // 'ReactModal__Content': {
-            //     height: '100%'
-            // }
+            '*': {
+                MsOverflowStyle: 'none'
+            }
         }
     },
     '@global': {
@@ -397,7 +395,7 @@ const otherStyles = {
         },
 
         '.ReactModal__Overlay': {
-            'zIndex': '1001'
+            'zIndex': '1080'
         }
     }
 };

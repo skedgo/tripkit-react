@@ -99,21 +99,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             padding: '0 5px 0 15px',
             ...genStyles.flex,
             ...genStyles.alignCenter,
-            ...genStyles.spaceBetween,
-            '& input': {
-                border: 'none',
-                background: 'initial',
-                WebkitAppearance: 'none',
-                MozAppearance: 'none',
-                MsAppearance: 'none',
-                OAppearance: 'none',
-                WebkitBoxShadow: 'none!important',
-                MozBoxShadow: 'none!important',
-                boxShadow: 'none!important',
-                margin: 'initial',
-                height: 'initial',
-                lineHeight: 'normal'
-            }
+            ...genStyles.spaceBetween
         },
         transportsBtn: {
             ...resetStyles.button,

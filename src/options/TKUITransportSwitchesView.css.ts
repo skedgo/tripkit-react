@@ -6,6 +6,7 @@ import {
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwitchesViewStyle, TKUITransportSwitchesViewProps> =
     (theme: TKUITheme) => ({
@@ -22,7 +23,10 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
         },
         modeSelector: {
             ...genStyles.flex,
-            ...genStyles.wrap
+            ...genStyles.wrap,
+            ...DeviceUtil.isIE && {
+                maxWidth: '255px'   // Need this since flex-wrap is not supported on IE (or set display: block on main)
+            }
         },
         modeIcon: {
             ...resetStyles.button,

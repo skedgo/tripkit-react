@@ -39,11 +39,6 @@ module.exports = {
                     // config.plugins.splice(i+1,0, HTMLInlineCSSWebpackPlugin());
                 }
             });
-
-            // config.externals = {
-            //     react: 'react'
-            // };
-
         }
 
         config.optimization.splitChunks = {

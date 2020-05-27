@@ -40,6 +40,7 @@
     "qrcode.react": "^1.0.0",
     "query-string": "^5.1.1",
     "rc-tooltip": "^3.7.2",
+    "react-app-polyfill": "^1.0.6",
     "react-app-rewired": "^2.1.5",
     "react-autocomplete": "^1.8.1",
     "react-datepicker": "^1.5.0",
@@ -106,7 +107,7 @@
     "concurrently": "^5.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "^3.2.0",
+    "react-scripts": "^3.4.1",
     "svg-react-loader": "^0.4.6",
     "tslib": "^1.9.3",
     "typescript": "^3.7.4"
@@ -118,6 +119,7 @@
       "not op_mini all"
     ],
     "development": [
+      "ie 11",
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"

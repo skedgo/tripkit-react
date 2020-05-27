@@ -1,5 +1,7 @@
 import {createGenerateClassName} from 'react-jss'
 import * as CSS from 'csstype';
+import DeviceUtil from "../util/DeviceUtil";
+import Color from "../model/trip/Color";
 
 export interface TKUITheme {
     colorPrimary: CSS.Color,
@@ -41,3 +43,11 @@ export const generateClassNameFactory = (prefix: string) =>
     };
 
 export const generateClassNameSeed = createGenerateClassName();
+
+if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
+    tKUIColors.black1 = Color.createFromString('#212A33').toRGBA(.6);
+    tKUIColors.black2 = Color.createFromString('#212A33').toRGBA(.3);
+    tKUIColors.black3 = Color.createFromString('#212A33').toRGBA(.18);
+    tKUIColors.black4 = Color.createFromString('#212A33').toRGBA(.12);
+    tKUIColors.black5 = Color.createFromString('#212A33').toRGBA(.08);
+}

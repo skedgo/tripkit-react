@@ -2,6 +2,7 @@ import {CSSProps} from "../jss/StyleHelper";
 import jss from 'jss';
 import camelCase from 'jss-plugin-camel-case';
 import genStyles from "./GenStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 jss.use(camelCase());
 
@@ -27,7 +28,11 @@ export const resetStyles: ITKUIResetStyle = {
         appearance: 'initial',
         cursor: 'pointer',
         border: 'none',
-        padding: 'initial'
+        padding: 'initial',
+        ...DeviceUtil.isIE && {
+            background: 'none',  // 'initial' value is not supported by IE
+            padding: '0'
+        }
     },
     select: {
         WebkitAppearance: 'none',
@@ -58,7 +63,10 @@ export const resetStyles: ITKUIResetStyle = {
         margin: 'initial',
         height: 'initial',
         lineHeight: 'normal',
-        ...genStyles.borderRadius(0, '')
+        ...genStyles.borderRadius(0, ''),
+        ...DeviceUtil.isIE && {
+            background: 'none'  // 'initial' value is not supported by IE
+        }
     }
 };
 

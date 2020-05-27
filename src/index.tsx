@@ -1,3 +1,5 @@
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
 // This import is to avoid the following runtime error:
 // Uncaught TypeError: Reflect.metadata is not a function
 // However this error still happens when including module declaration on package.json, so remove it for now.

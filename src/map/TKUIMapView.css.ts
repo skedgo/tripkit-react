@@ -75,7 +75,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             right: '10px',
             width: '35px',
             height: '35px',
-            backgroundColor: 'white',
+            background: 'white',
             // opacity: '.5',
             cursor: 'pointer',
             zIndex: '1000',
