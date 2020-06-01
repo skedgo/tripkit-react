@@ -24,7 +24,9 @@ export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProperties<Props>) 
 
 export type TKUICustomCSSProperties<Props> = CSSProperties<Props> | CSSPropertiesCreator<Props>;
 
-export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>
+export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
+
+export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
     styles?: TKUIStyles<ST, CP>,
