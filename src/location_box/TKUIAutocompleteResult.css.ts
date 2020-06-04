@@ -22,7 +22,6 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
         icon: {
             margin: '0 10px',
             height: '18px',
-            width: '18px',
             color: tKUIColors.black1,
             ...genStyles.svgPathFillCurrColor,
             '&>*': {
