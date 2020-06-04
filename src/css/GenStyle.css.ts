@@ -360,19 +360,6 @@ const genStyles = {...genStyleClasses, ...genStyleCreators};
 const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyleSheet(genStyleClasses as any).attach().classes;
 
 const otherStyles = {
-    // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
-    '@font-face': [
-        {
-            fontFamily: 'ProximaNova',
-            src: "url('/fonts/269860_3_0.eot'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype')"
-        },
-        {
-            fontFamily: 'ProximaNova',
-            src: "url('/fonts/269860_2_0.eot'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.woff') format('woff'), url('/fonts/269860_2_0.ttf') format('truetype')",
-            fontWeight: 'bold',
-        }
-    ],
-
     // TODO: check if media queries work, or need to use a jss plugin.
     ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
         /* IE10+ CSS styles go here */

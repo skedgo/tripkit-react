@@ -20,7 +20,7 @@ export const tKUIDeaultTheme: TKUITheme = {
     colorInfo: '#454c50', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
     colorWarning: '#fcba1e',
     colorError: '#e34040',
-    fontFamily: 'ProximaNova, sans-serif',
+    fontFamily: 'sans-serif',
     // TODO: get rid of this, replace by Color.createFromString() (see TKUIAlertRow.css.ts).
     colorPrimaryOpacity: (opacity: number) => 'rgba(35, 177, 94, ' + opacity + ')',
     colorWarningOpacity: (opacity: number) => 'rgba(252, 186, 30, ' + opacity + ')'
