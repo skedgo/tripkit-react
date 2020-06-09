@@ -32,6 +32,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     handleRef?: (ref: any) => void;
     slideUpOptions?: TKUISlideUpOptions;
     cardPresentation?: CardPresentation;
+    onRequestAlternativeRoutes?: (segment: Segment) => void;
 }
 
 export interface IStyle {
@@ -153,6 +154,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                             value={segment}
                             key={index}
                             actions={this.props.segmentActions && this.props.segmentActions(segment)}
+                            onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
                         />
                     )}
                     <TKUISegmentOverview
