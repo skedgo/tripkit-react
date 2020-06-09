@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import SegmentTemplate, {Visibility} from "./SegmentTemplate";
 import Trip from "./Trip";
 import Color from "./Color";
@@ -9,9 +9,28 @@ import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 
+
+export enum TripAvailability {
+    AVAILABLE = "AVAILABLE",
+    MISSED_PREBOOKING_WINDOW = "MISSED_PREBOOKING_WINDOW",
+    CANCELLED = "CANCELLED"
+}
+
+@JsonConverter
+export class TripAvailabilityConverter implements JsonCustomConvert<TripAvailability> {
+    public serialize(value: TripAvailability): any {
+        return TripAvailability[value];
+    }
+    public deserialize(obj: any): TripAvailability {
+        return TripAvailability[obj as string];
+    }
+}
+
 @JsonObject
 class Segment extends SegmentTemplate {
 
+    @JsonProperty("id", String, true)
+    public id: string = "";
     @JsonProperty("startTime")
     private _startTime: number = 0;
     @JsonProperty("endTime")
@@ -32,6 +51,9 @@ class Segment extends SegmentTemplate {
     private _realTime: boolean | null = null;
     @JsonProperty("isCancelled", Boolean, true)
     private _isCancelled: boolean | null = null;
+    // Api specs says it's required, but it's more robust to assume it could be missing and set a default.
+    @JsonProperty("availability", TripAvailabilityConverter, true)
+    public availability: TripAvailability = TripAvailability.AVAILABLE;
     @JsonProperty("realtimeVehicle", RealTimeVehicle, true)
     public realtimeVehicle: RealTimeVehicle | undefined = undefined;
     @JsonProperty("realtimeAlternativeVehicle", [RealTimeVehicle], true)
@@ -173,6 +195,16 @@ class Segment extends SegmentTemplate {
             this.trip.segments[this.trip.segments.indexOf(this) - 1];
     }
 
+    public nextSegment(): Segment | undefined {
+        return this.arrival ? undefined :
+            this.isLast() ? this.trip.arrivalSegment : this.trip.segments[this.trip.segments.indexOf(this) + 1];
+    }
+
+    public hasContinuation(): boolean {
+        const nextSegment = this.nextSegment();
+        return nextSegment !== undefined && nextSegment.isContinuation
+    }
+
     public isMyWay(): boolean {
         return (this.ticket !== null && this.ticket.name.toLowerCase().includes("myway"))
             || this.notes.toLowerCase().includes("myway");
@@ -187,9 +219,9 @@ class Segment extends SegmentTemplate {
     }
 
     public getColor(): string {
-        // if (this.serviceColor !== null) {
-        //     return this.serviceColor.toRGB();
-        // }
+        if (this.serviceColor !== null) {
+            return this.serviceColor.toRGB();
+        }
         let color;
         if (this.modeInfo) {
             color = TransportUtil.getTransportColor(this.modeInfo);

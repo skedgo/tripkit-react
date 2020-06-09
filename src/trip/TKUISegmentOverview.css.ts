@@ -2,7 +2,6 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "./TKUISegmentOverview";
 import genStyles from "../css/GenStyle.css";
-import TransportUtil from "./TransportUtil";
 import Segment from "../model/trip/Segment";
 
 export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyle, TKUISegmentOverviewProps> =
@@ -21,7 +20,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.center,
-            ...genStyles.grow
+            ...genStyles.grow,
+            margin: '10px 0'
         },
         subtitle: {
             ...genStyles.fontS,
@@ -57,28 +57,28 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
                     prevSegment = prevSegment.prevSegment();
                 }
                 return !prevSegment || isUnconnected(prevSegment) ? undefined :
-                    '4px solid ' + TransportUtil.getTransportColor(prevSegment.modeInfo!);
+                    '4px solid ' + prevSegment.getColor();
             },
             ...genStyles.grow
         },
         line: {
             borderLeft: (props: TKUISegmentOverviewProps) =>
                 isUnconnected(props.value) ? undefined :
-                    '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
+                    '4px solid ' + props.value.getColor(),
             ...genStyles.grow
         },
         posLine: {
             borderLeft: (props: TKUISegmentOverviewProps) =>
                 props.value.arrival || isUnconnected(props.value) ? undefined :
-                    '4px solid ' + TransportUtil.getTransportColor(props.value.modeInfo!),
+                    '4px solid ' + props.value.getColor(),
             ...genStyles.grow
         },
         noLine: {
             ...genStyles.grow
         },
         circle: {
-            width: '16px',
-            height: '16px',
+            width: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
+            height: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
             border: (props: TKUISegmentOverviewProps) => {
                 const segment = props.value;
                 let prevSegment = segment.prevSegment();
@@ -87,7 +87,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
                     prevSegment = prevSegment.prevSegment();
                 }
                 const colourSegment = !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay() ? segment : prevSegment;
-                return colourSegment ? '4px solid ' + TransportUtil.getTransportColor(colourSegment.modeInfo!) : 'none';
+                return colourSegment ? '4px solid ' + colourSegment.getColor() : 'none';
             },
             ...genStyles.borderRadius(50, "%")
         },
@@ -98,9 +98,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         icon: {
             background: (props: TKUISegmentOverviewProps) => {
-                const modeInfo = props.value.modeInfo!;
                 const iconOnDark = isIconOnDark(props.value);
-                let transportColor = TransportUtil.getTransportColor(modeInfo);
+                let transportColor = props.value.getColor();
                 if (!transportColor) {
                     transportColor = 'black'
                 }
@@ -117,7 +116,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         description: {
             padding: '10px 0',
-            margin: '10px 16px 10px 0',
+            marginRight: '16px',
             borderTop: '1px solid ' + tKUIColors.black4,
             borderBottom: '1px solid ' + tKUIColors.black4,
             ...genStyles.grow,
@@ -136,6 +135,16 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         alertsSummary: {
             marginTop: '8px'
+        },
+        cancelledBanner: {
+            background: theme.colorWarning,
+            padding: '15px 30px',
+            ...genStyles.flex,
+            ...genStyles.column
+        },
+        cancelledMsg: {
+            ...genStyles.fontM,
+            marginBottom: '10px'
         }
     });
 

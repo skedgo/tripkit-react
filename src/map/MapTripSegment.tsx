@@ -39,35 +39,37 @@ class MapTripSegment extends React.Component<IProps, {}> {
                         iconSize: [40, 62],
                         iconAnchor: [20, 62]
                     });
-                    return [<Marker icon={icon} position={segment.from} key={"pin"}
-                                    draggable={this.props.ondragend !== undefined}
-                                    riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
-                                    ondragend={(event: L.DragEndEvent) => {
-                                        if (this.props.ondragend) {
-                                            const latLng = event.target.getLatLng();
-                                            this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
-                                        }
-                                    }}
-                    >
-                        {this.props.renderer.renderPopup &&
-                        <Popup offset={[0, -46]}
-                               closeButton={false}
+                    return [
+                        segment.hasVisibility(Visibility.ON_MAP) &&
+                        <Marker icon={icon} position={segment.from} key={"pin"}
+                                draggable={this.props.ondragend !== undefined}
+                                riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
+                                ondragend={(event: L.DragEndEvent) => {
+                                    if (this.props.ondragend) {
+                                        const latLng = event.target.getLatLng();
+                                        this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
+                                    }
+                                }}
                         >
-                            {this.props.renderer.renderPopup()}
-                        </Popup>
-                        }
-                    </Marker>,
+                            {this.props.renderer.renderPopup &&
+                            <Popup offset={[0, -46]}
+                                   closeButton={false}
+                            >
+                                {this.props.renderer.renderPopup()}
+                            </Popup>
+                            }
+                        </Marker>,
                         segment.shapes ?
-                            <ShapesPolyline key={"map-polyline" + segment.trip.getKey()}
-                                            id={"map-polyline" + segment.trip.getKey()}
+                            <ShapesPolyline key={"map-polyline" + segment.trip.getKey() + segment.id}
+                                            id={"map-polyline" + segment.trip.getKey() + segment.id}
                                             shapes={segment.shapes}
                                             polylineOptions={this.props.renderer.polylineOptions}
                                             renderServiceStop={this.props.renderer.renderServiceStop}
                                             renderServiceStopPopup={this.props.renderer.renderServiceStopPopup}
                             /> :
                             segment.streets ?
-                                <StreetsPolyline key={"map-polyline" + segment.trip.getKey()}
-                                                 id={"map-polyline" + segment.trip.getKey()}
+                                <StreetsPolyline key={"map-polyline" + segment.trip.getKey() + segment.id}
+                                                 id={"map-polyline" + segment.trip.getKey() + segment.id}
                                                  color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
                                                  modeInfo={segment.modeInfo}
                                                  streets={segment.streets}

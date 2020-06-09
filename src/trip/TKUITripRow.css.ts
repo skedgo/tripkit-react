@@ -64,5 +64,12 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
         },
         pastAlternative: {
             opacity: '.4'
+        },
+        crossOut: {
+            borderTop: '1px solid black',
+            position: 'absolute',
+            top: '50%',
+            width: '100%',
+            zIndex: '1'
         }
     });
