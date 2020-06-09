@@ -52,6 +52,7 @@ import DeviceUtil from "../util/DeviceUtil";
 import TKUICardContainer from "../card/TKUICardContainer";
 import {CardPresentation} from "../card/TKUICard";
 import {genClassNames} from "../css/GenStyle.css";
+import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -125,6 +126,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onShowSettings = this.onShowSettings.bind(this);
         this.onShowTransportSettings = this.onShowTransportSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
+        this.onRequestAlternativeRoutes = this.onRequestAlternativeRoutes.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -187,6 +189,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
      */
     private getContainerHeight(): number {
         return this.ref ? this.ref.offsetHeight : (window as any).document.body.offsetHeight;
+    }
+
+    private onRequestAlternativeRoutes(segment: Segment) {
+        const targetSegment = segment.isContinuation ? segment.prevSegment()! : segment;
+        this.props.onQueryUpdate({
+            from: targetSegment.from,
+            time: DateTimeUtil.momentFromTimeTZ(targetSegment.startTime * 1000, segment.from.timezone)
+        });
+        this.setState({showTripDetail: false})
     }
 
     public render(): React.ReactNode {
@@ -338,6 +349,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             modalMiddle: {top: 55, unit: '%'},
                             modalDown: {top: 90, unit: '%'}
                         }}
+                        onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -366,6 +378,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         slideUpOptions={{
                                             draggable: false    // Needs to specify so it's needed by TKUIScrollForCard
                                         }}
+                                        onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
                                     />)}
                     </TKUICardCarousel>;
             }

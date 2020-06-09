@@ -27,6 +27,7 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
     actions?: JSX.Element[];
+    onRequestAlternativeRoutes?: (segment: Segment) => void;
 }
 
 interface IConsumedProps {
@@ -174,8 +175,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     :
                     null
                 }
-                {/*Disable re-route banner. TODO: finish implementation and enable*/}
-                {false && segment.isPT() && segment.availability === TripAvailability.CANCELLED && !segment.hasContinuation() &&
+                {segment.isPT() && segment.availability === TripAvailability.CANCELLED && !segment.hasContinuation() &&
                 <div className={classes.cancelledBanner}>
                     <div className={classes.cancelledMsg}>
                         {t("Service.has.been.cancelled.")}
@@ -183,6 +183,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     <TKUIButton
                         type={TKUIButtonType.SECONDARY}
                         text={t("Alternative.routes")}
+                        onClick={() => this.props.onRequestAlternativeRoutes && this.props.onRequestAlternativeRoutes(segment)}
                     />
                 </div>}
             </div>
