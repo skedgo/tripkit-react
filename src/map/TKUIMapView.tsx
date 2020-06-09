@@ -320,7 +320,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             };
         let tripSegments;
         if (this.props.trip) {
-            tripSegments = this.props.trip.getSegments(Visibility.ON_MAP).concat([this.props.trip.arrivalSegment]);
+            // Use Visibility.IN_DETAILS instead of Visibility.ON_MAP, since every segment visible in details
+            // should show shapes on map. Then only segments with ON_MAP will show pins (e.g. continuation segments
+            // won't), MapTripSegment will differentiate that.
+            tripSegments = this.props.trip.getSegments(Visibility.IN_DETAILS).concat([this.props.trip.arrivalSegment]);
         }
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
         const classes = this.props.classes;

@@ -48,6 +48,10 @@ class TripGroup extends Trip {
             Object.assign(this, this.trips[this.selected]); // Assign values of new selected trip
         }
     }
+
+    public allCancelled(): boolean {
+        return this.trips.every((value: Trip) => value.isCancelled());
+    }
 }
 
 export default TripGroup;

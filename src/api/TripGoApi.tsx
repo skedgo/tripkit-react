@@ -60,7 +60,7 @@ class TripGoApi {
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
         const updateURL = trip.updateURL;
         return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
-            + "v=11", NetworkUtil.MethodType.GET)
+            + "v=11" + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
                 const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                 routingResults.setQuery(query);

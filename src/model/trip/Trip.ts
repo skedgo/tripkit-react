@@ -1,5 +1,5 @@
 import {JsonObject, JsonProperty} from "json2typescript";
-import Segment from "./Segment";
+import Segment, {TripAvailability} from "./Segment";
 import Util from "../../util/Util";
 import {Visibility} from "./SegmentTemplate";
 
@@ -197,6 +197,10 @@ class Trip {
 
     get duration(): number {
         return this.arrive - this.depart;
+    }
+
+    public isCancelled(): boolean {
+        return this.segments.find((value: Segment) => value.availability === TripAvailability.CANCELLED) !== undefined;
     }
 }
 

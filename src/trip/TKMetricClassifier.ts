@@ -1,4 +1,5 @@
 import Trip from "../model/trip/Trip";
+import TripGroup from "../model/trip/TripGroup";
 
 export enum Badges {
     CHEAPEST = "Cheapest",
@@ -54,6 +55,14 @@ class TKMetricClassifier {
         // recommended > fast > cheap > healthy > easy > green
 
         // guard let trip = tripGroup.visibleTrip else { return nil }
+
+        // Don't give any badge to groups which only have cancellations (see #13016).
+        // TODO check: if I want the badge to be reused by another trip maybe also need to exclude
+        // cancelled groups from ranges calculation (getTripClassifications()).
+        if (trip instanceof TripGroup && trip.allCancelled()) {
+            return undefined;
+        }
+
         if (this.matches(ranges.weighted, trip.weightedScore)) {
             return Badges.RECOMMENDED;
         }
