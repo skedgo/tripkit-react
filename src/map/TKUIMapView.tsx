@@ -44,7 +44,6 @@ import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 import TKUIMapPopup from "./TKUIMapPopup";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
-import {withTheme} from "react-jss";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";

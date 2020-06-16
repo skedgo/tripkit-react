@@ -6,7 +6,8 @@ import {tKUITransportOptionsViewDefaultStyle} from "./TKUITransportOptionsView.c
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import {CardPresentation} from "../card/TKUICard";
+import TKUICardRemote from "../card/TKUICardRemote";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import RegionsData from "../data/RegionsData";
 import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
@@ -80,7 +81,7 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
         const regionModes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
         const t = this.props.t;
         return (
-            <TKUICard
+            <TKUICardRemote
                 title={t("Transport")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.onRequestClose}
@@ -102,7 +103,7 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
                         />
                     })}
                 </div>
-            </TKUICard>
+            </TKUICardRemote>
         );
     }
 

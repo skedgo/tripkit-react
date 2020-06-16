@@ -2,6 +2,7 @@ import React from "react";
 import injectSheet, {ClassNameMap} from "react-jss";
 import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
+import {cardSpacing} from "../jss/TKUITheme";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -59,7 +60,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 
     public static defaultProps: Partial<IProps> = {
         initPosition: TKUISlideUpPosition.UP,
-        modalUp: {top: 5, unit: 'px'},
+        modalUp: {top: cardSpacing(), unit: 'px'},
         modalMiddle: {top: 325, unit: 'px'},
         modalDown: {top: 650, unit: 'px'},
         open: true,
@@ -223,6 +224,13 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             (prevProps.position !== this.props.position || prevState.position !== this.state.position
                 || prevState.top !== this.state.top)) {
             this.props.cardOnTop(this.state.top === this.getTopFromPosition(TKUISlideUpPosition.UP));
+        }
+        // Top from position changed due to a change on current position top prop change
+        // (this.props.modalXXX.top). E.g. this.props.modalUp.top may have changed due to
+        // a switch between landscape / portrait orientation.
+        if (prevProps.position === this.props.position && prevState.position === this.state.position &&
+            this.state.top !== this.getTopFromPosition(this.state.position)) {
+            this.onPositionChange(this.getPosition());
         }
     }
 }

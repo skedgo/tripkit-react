@@ -40,6 +40,7 @@ export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
     refreshStyles: () => void;
+    theme: TKUITheme;
 }
 
 export function mergeStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
@@ -133,6 +134,7 @@ export function withStyleInjection<
                     <this.StyledComponent {...props}
                                           injectedStyles={this.stylesToInject(theme as TKUITheme)}
                                           refreshStyles={() => this.onRefreshStyles(true)}
+                                          theme={theme}
                     />
                 </JssProvider>
             );

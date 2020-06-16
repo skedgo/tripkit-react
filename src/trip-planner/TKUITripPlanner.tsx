@@ -53,6 +53,7 @@ import TKUICardContainer from "../card/TKUICardContainer";
 import {CardPresentation} from "../card/TKUICard";
 import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
+import {cardSpacing} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -228,6 +229,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.setState({showSettings: false})}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
+                    modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     draggable: false
                 }}
             />;
@@ -239,7 +241,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     draggable: false,
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
             />;
@@ -267,7 +269,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     onPositionChange: (position: TKUISlideUpPosition) => this.setState({cardPosition: position}),
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: 48 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
             />;
@@ -288,7 +290,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
                     draggable: false,
                     modalUp: this.props.landscape ? {top: this.props.timetableForSegment ? 40 :
-                            this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
+                            (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 40, unit: 'px'}
                 }}
             /> : null;
@@ -300,7 +302,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     position: DeviceUtil.isTouch() ? undefined :
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? {top: this.props.directionsView ? 195 : 65, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 130, unit: 'px'}
                 }}
             /> : null;
@@ -311,7 +313,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? {top: 65, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: 48 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalMiddle: {top: 55, unit: '%'},
                     modalDown: {top: this.getContainerHeight() - 80, unit: 'px'}
                 }}
@@ -327,7 +329,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     position: DeviceUtil.isTouch() ? undefined :
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? {top: 195, unit: 'px'} : undefined,
+                    modalUp: this.props.landscape ? {top: 176 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalMiddle: {top: 55, unit: '%'},
                     modalDown: {top: 90, unit: '%'}
                 }}
@@ -345,7 +347,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         slideUpOptions={{
                             initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             draggable: true,
-                            modalUp: this.props.landscape ? {top: 5, unit: 'px'} : undefined,
+                            modalUp: this.props.landscape ? {top: 5, unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                             modalMiddle: {top: 55, unit: '%'},
                             modalDown: {top: 90, unit: '%'}
                         }}

@@ -12,8 +12,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import {withTheme} from "react-jss";
-import {tKUIColors, tKUIDeaultTheme} from "../jss/TKUITheme";
+import {tKUIColors} from "../jss/TKUITheme";
 import ModeInfo from "../model/trip/ModeInfo";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
@@ -61,27 +60,28 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITransportOptionsRow"
 };
 
-const GreenCheckbox = withStyles({
-        root: {
-            color: tKUIColors.black1,
-            '&$checked': {
-                color: tKUIDeaultTheme.colorPrimary,    // TODO: avoid hardcoding
-            },
-        },
-        checked: {},
-    })((props: CheckboxProps) => <Checkbox color="default" {...props} />);
-
 interface IState {
     expanded: boolean;
 }
 
 class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
+    private GreenCheckbox;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
             expanded: false
-        }
+        };
+        this.GreenCheckbox = withStyles({
+            root: {
+                color: tKUIColors.black1,
+                '&$checked': {
+                    color: props.theme.colorPrimary,
+                },
+            },
+            checked: {},
+        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
     }
 
     private static walkingSpeedString(walkingSpeed: WalkingSpeed, t: TranslationFunction) {
@@ -105,7 +105,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     Minimised
                 </div>
-                <GreenCheckbox
+                <this.GreenCheckbox
                     checked={displayValue === DisplayConf.BRIEF}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -132,7 +132,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             <div className={classes.prefModeTitle}>
                                 {transMode.alt}
                             </div>
-                            <GreenCheckbox
+                            <this.GreenCheckbox
                                 checked={value.transportOptions.isPreferredTransport(transMode.identifier!)}
                                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                     const checked = event.target.checked;
@@ -175,7 +175,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     Concession pricing
                 </div>
-                <GreenCheckbox
+                <this.GreenCheckbox
                     checked={value.transitConcessionPricing}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -192,7 +192,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div>
                     {t("Wheelchair.information")}
                 </div>
-                <GreenCheckbox
+                <this.GreenCheckbox
                     checked={value.wheelchair}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         const checked = event.target.checked;
@@ -277,7 +277,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     id="panel1a-header"
                 >
                     <div className={classes.main}>
-                        <GreenCheckbox
+                        <this.GreenCheckbox
                             checked={displayValue !== DisplayConf.HIDDEN}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 const checked = event.target.checked;

@@ -9,7 +9,8 @@ import iconMoney from "../images/badges/ic-badge-money.svg";
 import iconCarbon from "../images/badges/ic-badge-leaf.svg";
 import iconTime from "../images/ic-clock.svg";
 import iconHassle from "../images/badges/ic-badge-like.svg";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
+import {CardPresentation} from "../card/TKUICard";
+import TKUICardRemote from "../card/TKUICardRemote";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
@@ -47,7 +48,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
         const priorities = this.props.value;
         const t = this.props.t;
         return (
-            <TKUICard
+            <TKUICardRemote
                 title={t("My.Priorities")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
@@ -110,7 +111,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                 onClick={() => this.props.onChange(TKWeightingPreferences.create())}
                     />
                 </div>
-            </TKUICard>
+            </TKUICardRemote>
         );
     }
 }

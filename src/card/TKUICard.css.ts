@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUICardStyle, TKUICardProps, CardPresentation, hasHandle} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {cardSpacing, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 
@@ -17,13 +17,13 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             // so need to explicitly set overflowY to hidden to override overflowY value.
             // overflowY: 'hidden!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                width: '450px',
-                left: '10px!important',
+                width: queryWidth + 'px',
+                left: cardSpacing() + 'px!important',
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%',
                 left: '0px!important',
-                padding: '0 5px'
+                padding: '0 ' + cardSpacing(false) + 'px'
             }
         },
 
@@ -39,8 +39,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
                 props.presentation === CardPresentation.SLIDE_UP
                 || props.presentation === CardPresentation.SLIDE_UP_STYLE ? '12px 12px 0 0' : '0',
             ...genStyles.flex,
-            ...genStyles.column,
-            overflow: 'hidden'
+            ...genStyles.column
         },
 
         innerMain: {

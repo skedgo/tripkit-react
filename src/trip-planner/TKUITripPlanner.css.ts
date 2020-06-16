@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "./TKUITripPlanner";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
-import {TKUITheme} from "../jss/TKUITheme";
+import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> =
@@ -19,19 +19,17 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         },
         queryPanel: {
             position: 'absolute',
-            width: '450px',
-            top: '10px',
-            left: '10px',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                width: '450px',
-                left: '10px',
+                width: queryWidth + 'px',
+                top: cardSpacing() + 'px',
+                left: cardSpacing() + 'px',
                 zIndex: '1005' // above card modal container
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%',
                 top: '0',
                 left: '0',
-                padding: '5px 5px 0 5px',
+                padding: cardSpacing(false) + 'px ' + cardSpacing(false) + 'px 0 ' + cardSpacing(false) + 'px',
                 zIndex: '1001' // below card modal container
             }
         },

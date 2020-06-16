@@ -5,7 +5,7 @@ import {
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
@@ -23,7 +23,7 @@ export const rowStyle = {
 export const rowSelectedStyle = (theme: TKUITheme) => ({
     borderLeft: '4px solid ' + theme.colorPrimary,
     paddingLeft: '12px', // 16px (row padding) - 4px (border width)
-    backgroundColor: theme.colorPrimaryOpacity(.08)
+    backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
 });
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =

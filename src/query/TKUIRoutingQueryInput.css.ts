@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
 import {CSSProperties} from "react-jss";
@@ -76,7 +76,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         },
         locTarget: {
             borderColor: theme.colorPrimary,
-            backgroundColor: theme.colorPrimaryOpacity(.7)
+            backgroundColor: colorWithOpacity(theme.colorPrimary, .7)
         },
         dotIcon: {
             width: '2px',

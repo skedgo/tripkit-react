@@ -65,5 +65,9 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             background: '#154c7b',
             color: 'white',
             padding: '20px'
+        },
+        nativeAppsTitle: {
+            ...theme.textSizeBody,
+            ...theme.textWeightRegular
         }
     });

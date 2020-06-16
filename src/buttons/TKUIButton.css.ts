@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIButtonProps, TKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
@@ -34,10 +34,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL) ? '8px' :
                     props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '8px 20px',
             '&:hover': {
-                backgroundColor: theme.colorPrimaryOpacity(.5)
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
             },
             '&:disabled': {
-                backgroundColor: theme.colorPrimaryOpacity(.5),
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .5),
                 cursor: 'initial'
             },
             '&:active': {
