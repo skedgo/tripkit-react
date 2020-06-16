@@ -24,6 +24,7 @@ import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
+import {cardSpacing} from "../jss/TKUITheme";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -133,6 +134,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                         () => this.applyChanges())}
                 slideUpOptions={{
                     position: TKUISlideUpPosition.UP,
+                    modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     draggable: false
                 }}
             />;
@@ -145,6 +147,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                         () => this.applyChanges())}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
+                    modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     draggable: false
                 }}
             />;
@@ -157,6 +160,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                     this.setState((prevState: IState) => ({update: Util.iAssign(prevState.update, {weightingPrefs: prefsUpdate})}))}
                 slideUpOptions={{
                     position: TKUISlideUpPosition.UP,
+                    modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     draggable: false
                 }}
             />;

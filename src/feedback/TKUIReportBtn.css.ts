@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIReportBtnProps, TKUIReportBtnStyle} from "./TKUIReportBtn";
 import {resetStyles} from "../css/ResetStyle.css";
 import genStyles from "../css/GenStyle.css";
@@ -19,7 +19,7 @@ export const tKUIReportBtnDefaultStyle: TKUIStyles<TKUIReportBtnStyle, TKUIRepor
             padding: '5px',
             cursor: 'pointer',
             '&:hover': {
-                backgroundColor: theme.colorPrimaryOpacity(.08)
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
             }
         },
         actionIcon: {

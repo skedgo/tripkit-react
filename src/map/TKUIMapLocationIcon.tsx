@@ -3,7 +3,6 @@ import {ReactComponent as IconPin} from '../images/map/ic-map-pin.svg';
 import Location from "../model/Location";
 import StopLocation from "../model/StopLocation";
 import TransportUtil from "../trip/TransportUtil";
-import {withTheme} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";

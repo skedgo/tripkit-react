@@ -22,7 +22,6 @@ import TKStateConsumer, {TKState} from "../../config/TKStateConsumer";
 import {TKUITimetableViewProps} from "../../service/TKUITimetableView";
 
 
-
 const analyticsConfig = Environment.isProd() ? {
     google: {
         tracker: {

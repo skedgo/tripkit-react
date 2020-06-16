@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {alertSeverity} from "../model/trip/Segment";
@@ -40,7 +40,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             width: '24px',
             height: '24px',
             padding: '7px',
-            background: theme.colorPrimaryOpacity(.12),
+            background: colorWithOpacity(theme.colorPrimary, .12),
             ...genStyles.borderRadius(50, "%"),
             ...genStyles.svgFillCurrColor,
             color: theme.colorPrimary,

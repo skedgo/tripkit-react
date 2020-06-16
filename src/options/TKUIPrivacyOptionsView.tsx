@@ -5,7 +5,8 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import {tKUIPrivacyOptionsViewDefaultStyle} from "./TKUIPrivacyOptionsView.css";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import {CardPresentation} from "../card/TKUICard";
+import TKUICardRemote from "../card/TKUICardRemote";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
 import {tKUIColors, tKUIDeaultTheme} from "../jss/TKUITheme";
@@ -49,23 +50,29 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIPrivacyOptionsView"
 };
 
-const GreenCheckbox = withStyles({
-    root: {
-        color: tKUIColors.black1,
-        '&$checked': {
-            color: tKUIDeaultTheme.colorPrimary,    // TODO: avoid hardcoding
-        },
-    },
-    checked: {},
-})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
-
 class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
+
+    private GreenCheckbox;
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {};
+        this.GreenCheckbox = withStyles({
+            root: {
+                color: tKUIColors.black1,
+                '&$checked': {
+                    color: props.theme.colorPrimary,
+                },
+            },
+            checked: {},
+        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
+    }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
         return (
-            <TKUICard
+            <TKUICardRemote
                 title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
@@ -98,7 +105,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anomymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
                                     </div>
                                 </div>
-                                <GreenCheckbox
+                                <this.GreenCheckbox
                                     checked={this.props.value.trackTripSelections}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         const checked = event.target.checked;
@@ -127,7 +134,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                         </div>
                     </div>
                 </div>
-            </TKUICard>
+            </TKUICardRemote>
         )
     }
 

@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
@@ -10,15 +10,12 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
             // so need to explicitly set overflowY to hidden to override overflowY value.
             // overflowY: 'hidden!important',
+            left: '0!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                width: '450px',
-                left: '5px!important',
-                padding: '5px 5px 0 5px'
+                width: queryWidth + 2 * cardSpacing() + 'px' // 2 * cardSpacing of left and right padding on pageWrapper class
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
-                width: '100%',
-                left: '0px!important',
-                padding: '5px 5px 0 5px'
+                width: '100%'
             }
         },
         main: {
@@ -87,6 +84,12 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             }
         },
         pageWrapper: {
-            height: '100%'
+            height: '100%',
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                padding: '0 '+ cardSpacing() +'px'
+            },
+            ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
+                padding: '0 '+ cardSpacing(false) +'px'
+            }
         }
     });

@@ -1,25 +1,38 @@
 import * as React from "react";
 import {TKUIConfig} from "./TKUIConfig";
-import {generateClassNameSeed, tKUIDeaultTheme} from "../jss/TKUITheme";
+import {generateClassNameSeed, tKUIDeaultTheme, TKUITheme} from "../jss/TKUITheme";
 import {JssProvider, ThemeProvider} from "react-jss";
 import GATracker from "../analytics/GATracker";
+import Util from "../util/Util";
+import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../options/OptionsProvider";
 
 export const TKUIConfigContext = React.createContext<TKUIConfig>({} as TKUIConfig);
 
 class TKUIConfigProvider extends React.Component<{config: TKUIConfig},{}> {
 
     public render(): React.ReactNode {
-        const customTheme = this.props.config && this.props.config.theme;
+        const customThemeCreator = this.props.config && this.props.config.theme;
         return (
-            <TKUIConfigContext.Provider value={{...this.props.config}}>
-                <JssProvider generateClassName={generateClassNameSeed}>
-                    <ThemeProvider theme={{...tKUIDeaultTheme, ...customTheme}}>
-                        <>
-                            {this.props.children}
-                        </>
-                    </ThemeProvider>
-                </JssProvider>
-            </TKUIConfigContext.Provider>
+            <OptionsProvider>
+                <OptionsContext.Consumer>
+                    {(optionsContext: IOptionsContext) => {
+                        // Light mode by default
+                        const isDark = optionsContext.value.isDarkMode === true ||
+                            (optionsContext.value.isDarkMode === undefined && this.props.config.isDarkDefault === true);
+                        const customTheme = Util.isFunction(customThemeCreator) ?
+                            (customThemeCreator as ((isDark: boolean) => TKUITheme))(isDark) : customThemeCreator;
+                        return <TKUIConfigContext.Provider value={{...this.props.config}}>
+                            <JssProvider generateClassName={generateClassNameSeed}>
+                                <ThemeProvider theme={{...tKUIDeaultTheme(isDark), ...customTheme}}>
+                                    <>
+                                        {this.props.children}
+                                    </>
+                                </ThemeProvider>
+                            </JssProvider>
+                        </TKUIConfigContext.Provider>;
+                    }}
+                </OptionsContext.Consumer>
+            </OptionsProvider>
         );
     }
 

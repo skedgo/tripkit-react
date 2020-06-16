@@ -65,7 +65,8 @@ interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     userLocationPromise: Promise<LatLng>;
     i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>;
-    theme: Partial<TKUITheme>;
+    theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
+    isDarkDefault: boolean,
     analytics?: {google?: {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;

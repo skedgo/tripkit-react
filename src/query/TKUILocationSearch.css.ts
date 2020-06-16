@@ -1,13 +1,13 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationSearchProps, TKUILocationSearchStyle} from "./TKUILocationSearch";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle, TKUILocationSearchProps> =
     (theme: TKUITheme) => ({
         main: {
-            backgroundColor: 'white',
+            backgroundColor: theme.isLight ? tKUIColors.white : tKUIColors.black,
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             padding: '6px 8px',
             fontFamily: theme.fontFamily,
@@ -18,7 +18,7 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
                 ...genStyles.fontMImp
             },
             '& input::placeholder': {
-                color: tKUIColors.black2
+                ...theme.textColorDisabled
             }
         },
         sideBarBtn: {
@@ -28,17 +28,17 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             padding: '10px',
             ...genStyles.borderRadius(50, "%"),
             '&:hover': {
-                backgroundColor: tKUIColors.black5
+                backgroundColor: theme.isLight ? tKUIColors.black5 : tKUIColors.white5
             },
             '&:active': {
-                backgroundColor: tKUIColors.black4
+                backgroundColor: theme.isLight ? tKUIColors.black4 : tKUIColors.white4
             }
         },
         sideBarIcon: {
             width: '100%',
             height: '100%',
             ...genStyles.svgFillCurrColor,
-            color: tKUIColors.black1
+            color: theme.isLight ? tKUIColors.black1 : tKUIColors.white1
         },
         locationBox: {
             ...genStyles.grow,
@@ -72,10 +72,10 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             height: '36px',
             ...genStyles.borderRadius(50, "%"),
             '&:hover': {
-                backgroundColor: theme.colorPrimaryOpacity(.16)
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .16)
             },
             '&:active': {
-                backgroundColor: theme.colorPrimaryOpacity(.24)
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .24)
             },
             ...genStyles.flex,
             ...genStyles.center,

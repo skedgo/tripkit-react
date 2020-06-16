@@ -33,6 +33,7 @@ export interface IStyle {
     body: CSSProps<IProps>;
     menuItems: CSSProps<IProps>;
     nativeAppLinksPanel: CSSProps<IProps>;
+    nativeAppsTitle: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -150,7 +151,9 @@ class TKUISidebar extends React.Component<IProps, {}> {
                         </div>
                         {this.props.nativeAppLinks &&
                             <div className={classes.nativeAppLinksPanel}>
-                                <div>Get mobile app:</div>
+                                <div className={classes.nativeAppsTitle}>
+                                    Get mobile app:
+                                </div>
                                 {this.props.nativeAppLinks()}
                             </div>
                         }
