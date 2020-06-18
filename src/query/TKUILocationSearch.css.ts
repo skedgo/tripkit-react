@@ -18,6 +18,7 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
                 ...genStyles.fontMImp
             },
             '& input::placeholder': {
+                ...theme.textSizeBody,
                 ...theme.textColorDisabled
             }
         },
@@ -55,9 +56,6 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             ...genStyles.borderRadius(12),
         },
         glassIcon: {
-            margin: '8px',
-            height: '20px',
-            width: '20px',
             ...genStyles.svgFillCurrColor,
             color: tKUIColors.black1
         },

@@ -7,7 +7,7 @@ export const tKUITripOverviewViewDefaultStyle: TKUIStyles<TKUITripOverviewViewSt
         padding: '15px 0'
     },
     actionsPanel: {
-        marginTop: '15px',
+        margin: '24px 0 16px',
         ...genStyles.flex,
         ...genStyles.spaceAround
     }

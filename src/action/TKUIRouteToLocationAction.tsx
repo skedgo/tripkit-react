@@ -13,6 +13,7 @@ interface IProps {
     buttonType?: TKUIButtonType;
     style?: CSS.Properties;
     onClick?: () => void;
+    className?: string;
 }
 
 class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
@@ -28,6 +29,7 @@ class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
                                 icon={<IconDirections/>}
                                 text={this.props.text ? this.props.text : i18nProps.t("Direction")}
                                 style={{minWidth: '90px', ...this.props.style}}
+                                className={this.props.className}
                                 onClick={() => {
                                     this.props.location &&
                                     context.onQueryChange(Util.iAssign(context.query,

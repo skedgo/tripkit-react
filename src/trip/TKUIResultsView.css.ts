@@ -57,12 +57,12 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             minWidth: '92px'
         },
         noResults: {
+            ...theme.textSizeBody,
+            ...theme.textColorDisabled,
             ...genStyles.flex,
             ...genStyles.center,
             ...genStyles.alignCenter,
             margin: '24px 0',
-            ...genStyles.fontM,
-            color: tKUIColors.black2,
             textAlign: 'center'
         }
     });

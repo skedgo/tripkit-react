@@ -18,7 +18,6 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
@@ -33,6 +32,7 @@ import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
 import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -57,11 +57,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
-    main: CSSProps<IProps>;
-    header: CSSProps<IProps>;
-    title: CSSProps<IProps>;
-    btnClear: CSSProps<IProps>;
-    iconClear: CSSProps<IProps>;
     btnBack: CSSProps<IProps>;
     fromToPanel: CSSProps<IProps>;
     fromToInputsPanel: CSSProps<IProps>;
@@ -201,25 +196,14 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
         return (
-            <div className={classes.main}>
-                {this.props.landscape &&
-                <div className={classes.header}>
-                    {this.props.title &&
-                    <div className={classes.title}>
-                        {this.props.title}
-                    </div>}
-                    {this.props.onClearClicked &&
-                    <button
-                        className={classes.btnClear}
-                        aria-hidden={true}
-                        onClick={this.props.onClearClicked}
-                    >
-                        <IconRemove aria-hidden={true}
-                                    className={classes.iconClear}
-                                    focusable="false"/>
-                    </button>}
-                </div>
-                }
+            <TKUICard
+                presentation={CardPresentation.NONE}
+                title={this.props.landscape ? this.props.title : undefined}
+                onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
+                headerDividerVisible={false}
+                scrollable={false}
+                overflowVisible={true}
+            >
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
                         this.props.onClearClicked &&
@@ -334,49 +318,49 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                               onClick={this.onSwapClicked}/>
                 </div>
                 {this.props.landscape &&
-                    <div
-                        className={classes.footer}>
-                        <TKUISelect
-                            options={timePrefOptions}
-                            value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
-                            onChange={(option) => this.onPrefChange(option.value)}
-                            className={classes.timePrefSelect}
-                            menuStyle={{marginTop: '3px'}}
-                        />
-                        {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
-                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                            value={routingQuery.time}
-                            timeZone={this.props.region.timezone}
-                            onChange={(date: Moment) => this.updateQuery({time: date})}
-                            timeFormat={DateTimeUtil.TIME_FORMAT}
-                            dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
-                            disabled={datePickerDisabled}
-                        />
+                <div
+                    className={classes.footer}>
+                    <TKUISelect
+                        options={timePrefOptions}
+                        value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                        onChange={(option) => this.onPrefChange(option.value)}
+                        className={classes.timePrefSelect}
+                        menuStyle={{marginTop: '3px'}}
+                    />
+                    {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
+                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                        value={routingQuery.time}
+                        timeZone={this.props.region.timezone}
+                        onChange={(date: Moment) => this.updateQuery({time: date})}
+                        timeFormat={DateTimeUtil.TIME_FORMAT}
+                        dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                        disabled={datePickerDisabled}
+                    />
+                    }
+                    {this.props.showTransportsBtn !== false &&
+                    <TKUITooltip
+                        placement="right"
+                        overlay={
+                            <TKUITransportSwitchesView
+                                onMoreOptions={this.props.onShowTransportOptions ?
+                                    () => {
+                                        this.setState({showTransportSwitches: false});
+                                        this.props.onShowTransportOptions!();
+                                    } : undefined}
+                            />
                         }
-                        {this.props.showTransportsBtn !== false &&
-                        <TKUITooltip
-                            placement="right"
-                            overlay={
-                                <TKUITransportSwitchesView
-                                    onMoreOptions={this.props.onShowTransportOptions ?
-                                        () => {
-                                            this.setState({showTransportSwitches: false});
-                                            this.props.onShowTransportOptions!();
-                                        } : undefined}
-                                />
-                            }
-                            visible={this.state.showTransportSwitches}
-                            onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                        visible={this.state.showTransportSwitches}
+                        onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                    >
+                        <button className={classes.transportsBtn}
+                                onClick={() => this.setState({showTransportSwitches: true})}
                         >
-                            <button className={classes.transportsBtn}
-                                    onClick={() => this.setState({showTransportSwitches: true})}
-                            >
-                                Transport options
-                            </button>
-                        </TKUITooltip>}
-                    </div>
+                            Transport options
+                        </button>
+                    </TKUITooltip>}
+                </div>
                 }
-            </div>
+            </TKUICard>
         );
     }
 

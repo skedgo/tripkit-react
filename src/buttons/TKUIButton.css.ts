@@ -76,7 +76,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             width: '24px',
             height: '24px',
             marginRight: (props: TKUIButtonProps) =>
-                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '0' : '15px',
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '0' : '16px',
             '& svg': {
                 ...genStyles.svgFillCurrColor
             },

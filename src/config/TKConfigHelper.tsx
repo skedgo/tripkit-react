@@ -6,7 +6,7 @@ import {
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
 import {TKUIConfig, TKComponentDefaultConfig, TKComponentConfig} from "./TKUIConfig";
-import {TKUIConfigContext} from "./TKUIConfigProvider";
+import {TKUIConfigContext, default as TKUIConfigProvider} from "./TKUIConfigProvider";
 import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";
 import Util from "../util/Util";
@@ -108,3 +108,16 @@ export function replaceStyle<ST,PR extends TKUIWithClasses<ST, PR>>
     resultConfig[componentKey] = resultComponent;
     return resultConfig;
 }
+
+export const TKStyleOverride = (props: {componentKey: string, stylesOverride: any, children: any}) => (
+    <TKUIConfigContext.Consumer>
+        {(config: TKUIConfig) => {
+            const configOverride = replaceStyle(config, props.componentKey, props.stylesOverride);
+            return (
+                <TKUIConfigProvider config={configOverride}>
+                    {props.children}
+                </TKUIConfigProvider>
+            )
+        }}
+    </TKUIConfigContext.Consumer>
+);

@@ -40,11 +40,14 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const segment = this.props.segment;
         const t = this.props.t;
-        let infoTitle: string | null = null;
-        let infoSubtitle: string;
+        let infoTitle: string | undefined;
+        let infoSubtitle: string | undefined;
+        const brief = this.props.brief;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
-            infoSubtitle = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
+            if (!brief) {
+                infoSubtitle = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
+            }
         } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && (segment.isBicycle() || segment.isWheelchair())) {
             // TODO getDurationWithContinuation
             const mainInfo = segment.metres !== undefined ?
@@ -61,8 +64,9 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
             if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
                 infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
             } else {
-                // TODO more cases
-                infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+                if (!brief) {
+                    infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+                }
             }
             if (segment.realTime) {
                 infoTitle = infoSubtitle;
@@ -82,13 +86,13 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                     />
                     {segment.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
                 </div>
-                { this.props.brief ? null :
+                { (infoTitle || infoSubtitle) ?
                     <div className={classes.info}
                          aria-hidden={true}
                     >
                         {infoTitle ? <div>{infoTitle}</div> : null}
                         <div className={classes.subtitle}>{infoSubtitle}</div>
-                    </div> }
+                    </div> : null }
             </div>
         );
     }

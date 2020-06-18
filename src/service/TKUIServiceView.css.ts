@@ -13,7 +13,6 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             ...genStyles.column
         },
         serviceOverview: {
-            margin: '10px 0',
             ...genStyles.flex,
             ...genStyles.column
         },
@@ -60,7 +59,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             },
         },
         actionsPanel: {
-            marginTop: '15px',
+            margin: '24px 0 16px',
             ...genStyles.flex,
             ...genStyles.spaceAround
         },

@@ -2,6 +2,7 @@ import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKUICardCarouselProps> =
     (theme: TKUITheme) => ({
@@ -16,6 +17,9 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%'
+            },
+            '&>*': {
+                paddingBottom: (props: TKUICardCarouselProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
             }
         },
         main: {
