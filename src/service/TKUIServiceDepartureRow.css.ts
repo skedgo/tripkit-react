@@ -63,7 +63,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         time: {
             color: tKUIColors.black1,
-            marginRight: '10px'
+            marginRight: '10px',
+            ...theme.textSizeBody
         },
         timeAndOccupancy: {
             marginTop: '5px',
@@ -71,9 +72,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.alignCenter
         },
         serviceDescription: {
-            marginTop: '5px',
-            color: tKUIColors.black1,
-            ...genStyles.fontS,
+            ...theme.textSizeCaption,
+            ...theme.textColorGray,
             ...genStyles.overflowEllipsis
         },
         cancelled: {

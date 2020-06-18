@@ -8,36 +8,6 @@ import {CSSProperties} from "react-jss";
 
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
     (theme: TKUITheme) => ({
-        main: {
-            backgroundColor: 'white',
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
-            ...genStyles.borderRadius(12, "px"),
-            fontFamily: theme.fontFamily
-        },
-        header: {
-            padding: '12px 16px',
-            color: 'black',
-            ...genStyles.flex,
-            ...genStyles.alignCenter,
-            ...genStyles.spaceBetween
-        },
-        title: {
-            ...genStyles.fontL,
-        },
-        btnClear: {
-            ...resetStyles.button,
-            padding: '0',
-            height: '24px',
-            width: '24px',
-            cursor: 'pointer',
-            ...genStyles.alignSelfStart
-        },
-        iconClear: {
-            color: 'black',
-            width: '100%',
-            height: '100%',
-            ...genStyles.svgFillCurrColor
-        },
         btnBack: {
             ...resetStyles.button,
             padding: '0',
@@ -47,7 +17,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             cursor: 'pointer'
         },
         fromToPanel: {
-            marginBottom: '20px',
+            marginBottom: (props: TKUIRoutingQueryInputProps) => props.landscape ? '20px' : '0',
             ...genStyles.flex,
             ...genStyles.alignCenter
         },
@@ -103,7 +73,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         },
         transportsBtn: {
             ...resetStyles.button,
-            padding: '10px'
+            padding: '10px',
+            ...theme.textSizeCaption,
+            ...theme.textWeightSemibold,
+            ...theme.textColorGray
         },
         timePrefSelect: {
             minWidth: '92px'

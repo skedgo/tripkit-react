@@ -8,20 +8,20 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
     (theme: TKUITheme) => ({
         modalContainer: {
             zIndex: '1005!important',
-            background: 'none!important',
             fontFamily: theme.fontFamily,
-            // The +5px is due to shadow being on modal.
-            width: '305px',
             paddingRight: '5px',
             ...genStyles.flex,
             justifyContent: 'flex-start!important',
-            WebkitJustifyContent: 'flex-start!important'
+            WebkitJustifyContent: 'flex-start!important',
+            background: 'rgba(255, 255, 255, 0.75)!important',
+        },
+        modalClosed: {  // Workaround to react-drag-drawer issue: modalContainer takes a while to dissapear
+            background: 'none!important',
         },
         modal: {
             backgroundColor: 'white',
+            width: '300px',
             height: '100%',
-            width: '100%',
-            // Shadow needs to be here since modalContainer hides a little while after modal.
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             ...genStyles.flex
         },
@@ -42,8 +42,12 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
         closeBtn: {
             ...resetStyles.button,
             '& svg': {
-                width: '22px',
-                height: '22px'
+                width: '24px',
+                height: '24px',
+                padding: '6px',
+                '& path': {
+                    fill: tKUIColors.black1
+                }
             }
         },
         body: {
@@ -56,18 +60,34 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             ...genStyles.column,
             ...genStyles.grow,
             ...genStyles.alignStart,
-            padding: '20px 0',
+            padding: '16px 8px 0 8px',
             '&>*': {
-                marginBottom: '10px'
+                marginBottom: '8px'
             }
+        },
+        menuItem: {
+            padding: '8px 16px!important',
+            '&:hover': {
+                background: theme.isLight ? tKUIColors.black5 : tKUIColors.white5
+            },
+            ...theme.textWeightRegular,
+            color: tKUIColors.black1 + '!important',
+            border: 'none!important',
+            width: '100%!important',
         },
         nativeAppLinksPanel: {
             background: '#154c7b',
             color: 'white',
-            padding: '20px'
+            padding: '16px 24px 20px 24px'
         },
         nativeAppsTitle: {
             ...theme.textSizeBody,
-            ...theme.textWeightRegular
+            ...theme.textWeightRegular,
+            marginBottom: '16px'
+        },
+        nativeAppLinks: {
+            '&>*:last-child': {
+                marginTop: '8px'
+            }
         }
     });

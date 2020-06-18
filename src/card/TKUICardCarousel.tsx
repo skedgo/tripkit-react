@@ -9,8 +9,9 @@ import Util from "../util/Util";
 import TKUISlideUp from "./TKUISlideUp";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUICardCarouselDefaultStyle} from "./TKUICardCarousel.css";
+import {Subtract} from "utility-types";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: number;
@@ -19,6 +20,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     children?: any;
 }
 
+interface IConsumedPros extends TKUIViewportUtilProps {}
+
 interface IStyle {
     modalContainer: CSSProps<IProps>;
     main: CSSProps<IProps>;
@@ -26,7 +29,7 @@ interface IStyle {
     pageWrapper: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedPros, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUICardCarouselProps = IProps;
 export type TKUICardCarouselStyle = IStyle;
@@ -69,47 +72,50 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
             this.props.children;
         const classes = this.props.classes;
         return (
-            <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) =>
-                    <TKUISlideUp
-                        {...this.props.slideUpOptions}
-                        containerClass={classes.modalContainer}
-                        onDrag={() => {
-                            this.setState({freezeCarousel: true});
-                        }}
-                        onDragEnd={() => {
-                            this.setState({freezeCarousel: false});
-                        }}
-                        handleRef={this.props.selected !== undefined && this.state.handles.get(this.props.selected)}
+            <TKUISlideUp
+                {...this.props.slideUpOptions}
+                containerClass={classes.modalContainer}
+                onDrag={() => {
+                    this.setState({freezeCarousel: true});
+                }}
+                onDragEnd={() => {
+                    this.setState({freezeCarousel: false});
+                }}
+                handleRef={this.props.selected !== undefined && this.state.handles.get(this.props.selected)}
+            >
+                <div className={classNames(classes.main,
+                    children && Array.isArray(children) && children.length > 12 && classes.lotOfPages)}>
+                    <Carousel
+                        showStatus={false}
+                        showThumbs={false}
+                        showArrows={!DeviceUtil.isTouch()}
+                        // showIndicators={!DeviceUtil.isTouch()}
+                        transitionTime={500}
+                        selectedItem={this.props.selected}
+                        onChange={this.props.onChange}
+                        // emulateTouch={true}
+                        swipeable={!this.state.freezeCarousel}
+                        useKeyboardArrows={DeviceUtil.isDesktop}
                     >
-                        <div className={classNames(classes.main,
-                            children && Array.isArray(children) && children.length > 12 && classes.lotOfPages)}>
-                            <Carousel
-                                showStatus={false}
-                                showThumbs={false}
-                                showArrows={!DeviceUtil.isTouch()}
-                                // showIndicators={!DeviceUtil.isTouch()}
-                                transitionTime={500}
-                                selectedItem={this.props.selected}
-                                onChange={this.props.onChange}
-                                // emulateTouch={true}
-                                swipeable={!this.state.freezeCarousel}
-                                useKeyboardArrows={DeviceUtil.isDesktop}
-                            >
-                                {React.Children.map(children, (child: any, i: number) =>
-                                    <div className={classes.pageWrapper} key={i}>
-                                        {child}
-                                    </div>
-                                )}
-                            </Carousel>
-                        </div>
-                    </TKUISlideUp>
-                }
-            </TKUIViewportUtil>
+                        {React.Children.map(children, (child: any, i: number) =>
+                            <div className={classes.pageWrapper} key={i}>
+                                {child}
+                            </div>
+                        )}
+                    </Carousel>
+                </div>
+            </TKUISlideUp>
         );
     }
 
 }
 
-export default connect((config: TKUIConfig) => config.TKUICardCarousel, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) => {
+                return children!({...inputProps, ...viewportProps});
+            }}
+        </TKUIViewportUtil>;
+
+export default connect((config: TKUIConfig) => config.TKUICardCarousel, config, Mapper);

@@ -9,6 +9,8 @@ import Favourite from "../model/favourite/Favourite";
 import * as CSS from 'csstype';
 import TKUserProfile from "../model/options/TKUserProfile";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import {TKStyleOverride} from "../config/TKConfigHelper";
+import {colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
 
 interface IProps {
     favourite: Favourite;
@@ -42,15 +44,35 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
     }
 
     public render(): JSX.Element {
+        const stylesOverride = this.exists() ?
+            (theme: TKUITheme) => ({
+                secondary: (defaultStyle) => ({
+                    ...defaultStyle,
+                    background: colorWithOpacity(theme.colorPrimary, .08),
+                    border: '2px solid ' + theme.colorPrimary,
+                    '& svg': {
+                        color: theme.colorPrimary
+                    },
+                    '&:hover': {
+                        borderColor: colorWithOpacity(theme.colorPrimary, .3)
+                    },
+                    '&:active': {
+                        borderColor: colorWithOpacity(theme.colorPrimary, .12),
+                        backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
+                    },
+                })
+            }) : {};
         return <TKI18nContext.Consumer>
             {(i18nProps: TKI18nContextProps) =>
-                <TKUIButton
-                    type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
-                    icon={this.renderIcon()}
-                    text={this.exists() ? i18nProps.t("Remove.from.favourites") : i18nProps.t("Add.to.favourites")}
-                    style={{minWidth: '90px', ...this.props.style}}
-                    onClick={this.onClick}
-                />
+                <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={stylesOverride}>
+                    <TKUIButton
+                        type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
+                        icon={this.renderIcon()}
+                        text={this.exists() ? i18nProps.t("Remove.from.favourites") : i18nProps.t("Add.to.favourites")}
+                        style={{minWidth: '90px', ...this.props.style}}
+                        onClick={this.onClick}
+                    />
+                </TKStyleOverride>
             }
         </TKI18nContext.Consumer>
     }

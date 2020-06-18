@@ -1,6 +1,6 @@
 import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
@@ -39,7 +39,12 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     handleRef?: (ref: any) => void;
     scrollRef?: (instance: HTMLDivElement | null) => void;
     onScroll?: UIEventHandler<HTMLDivElement>;
+    headerDividerVisible?: boolean;
+    scrollable?: boolean;
+    overflowVisible?: boolean;
 }
+
+interface IConsumedProps extends TKUIViewportUtilProps {}
 
 interface IStyle {
     modalContainer: CSS.Properties & CSSProperties<IProps>;
@@ -48,7 +53,7 @@ interface IStyle {
     header: CSS.Properties & CSSProperties<IProps>;
     subHeader: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
-    headerLeft: CSS.Properties & CSSProperties<IProps>;
+    headerTop: CSS.Properties & CSSProperties<IProps>;
     title: CSS.Properties & CSSProperties<IProps>;
     subtitle: CSS.Properties & CSSProperties<IProps>;
     btnClear: CSS.Properties & CSSProperties<IProps>;
@@ -57,7 +62,7 @@ interface IStyle {
     handleLine: CSS.Properties & CSSProperties<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUICardProps = IProps;
 export type TKUICardStyle = IStyle;
@@ -118,15 +123,9 @@ class TKUICard extends React.Component<IProps, IState> {
                     </div>}
                     {(this.props.title || this.props.subtitle || this.props.onRequestClose) &&
                     <div className={classes.header}>
-                        <div className={classNames(genClassNames.flex, genClassNames.spaceBetween, genClassNames.alignCenter)}>
-                            <div className={classes.headerLeft}>
-                                <div className={classes.title}>
-                                    {this.props.title}
-                                </div>
-                                {this.props.subtitle &&
-                                <div className={classes.subtitle}>
-                                    {this.props.subtitle}
-                                </div>}
+                        <div className={classes.headerTop}>
+                            <div className={classes.title}>
+                                {this.props.title}
                             </div>
                             {this.props.onRequestClose &&
                             <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
@@ -136,22 +135,28 @@ class TKUICard extends React.Component<IProps, IState> {
                                             focusable="false"/>
                             </button>}
                         </div>
+                        {this.props.subtitle &&
+                        <div className={classes.subtitle}>
+                            {this.props.subtitle}
+                        </div>}
                     </div>}
                 </div>
                 <div className={classes.subHeader}>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <TKUIScrollForCard
-                    className={classNames(classes.body, this.props.bodyClassName)}
-                    style={this.props.bodyStyle}
-                    // So dragging the card from its content, instead of scrolling it, will drag the card.
-                    // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
-                    freezeScroll={draggable && !this.state.cardOnTop}
-                    scrollRef={this.props.scrollRef}
-                    onScroll={this.props.onScroll}
-                >
-                    {this.props.children}
-                </TKUIScrollForCard>
+                {this.props.scrollable !== false ?
+                    <TKUIScrollForCard
+                        className={classNames(classes.body, this.props.bodyClassName)}
+                        style={this.props.bodyStyle}
+                        // So dragging the card from its content, instead of scrolling it, will drag the card.
+                        // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
+                        freezeScroll={draggable && !this.state.cardOnTop}
+                        scrollRef={this.props.scrollRef}
+                        onScroll={this.props.onScroll}
+                    >
+                        {this.props.children}
+                    </TKUIScrollForCard> : this.props.children
+                }
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?

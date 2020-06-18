@@ -4,7 +4,6 @@ import {
     ServiceResultsContext
 } from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ReactComponent as IconClock} from "../images/ic-clock.svg";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
@@ -55,12 +54,11 @@ interface IStyle {
     serviceNumber: CSSProps<IProps>;
     actionsPanel: CSSProps<IProps>;
     secondaryBar: CSSProps<IProps>;
-    filterPanel: CSSProps<IProps>;
-    glassIcon: CSSProps<IProps>;
     filterInput: CSSProps<IProps>;
     faceButtonClass: CSSProps<IProps>;
     dapartureRow: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
+    noResults: CSSProps<IProps>;
 }
 
 export type TKUITimetableViewProps = IProps;
@@ -181,17 +179,20 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 {error ? error :
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>
-                        <div className={classes.filterPanel}>
-                            <IconGlass className={classes.glassIcon}/>
-                            <input className={classes.filterInput} placeholder={t("Search")}
-                                   onChange={this.onFilterChange}/>
-                        </div>
+                        <input className={classes.filterInput} placeholder={t("Search")}
+                               onChange={this.onFilterChange}/>
                         <TKUIDateTimePicker
                             value={this.props.initTime}
                             timeZone={stop.timezone}
                             onChange={this.props.onInitTimeChange}
                             renderCustomInput={renderCustomInput}
-                            popperPlacement="top-end"
+                            popperPlacement="bottom-end"
+                            popperModifiers={{
+                                offset: {
+                                    enabled: true,
+                                    offset: "15px, 0px"
+                                }
+                            }}
                         />
                     </div>
                     <div className={classes.listPanel}>
@@ -225,6 +226,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             }, [])}
                             {this.props.waiting ?
                                 <IconSpin className={classes.iconLoading} focusable="false"/> : null}
+                            {!this.props.waiting && !this.props.serviceError && this.props.departures.length === 0
+                            && <div className={classes.noResults}>{"No results"}</div>}
                         </TKUIScrollForCard>
                     </div>
                 </div>}

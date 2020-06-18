@@ -26,8 +26,12 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
                 // instead of hidden, since it avoids the undesired scroll freeze problem. Still need to use hidden
                 // otherwise, e.g. when user did scroll down, then dragged the card down from header to middle position,
                 // and then dragged the card up to top from its body. In this situation we need the workaround below.
-                style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} :
-                        this.scrollRef && this.scrollRef.scrollTop <= 10 ? {overflowY: 'visible'} : {overflowY: 'hidden'}}}
+                style={{
+                    ...this.props.style,
+                    ...!this.props.freezeScroll ? {overflowY: 'scroll'} :
+                        this.scrollRef && this.scrollRef.scrollTop <= 10 ? {overflowY: 'visible'} : {overflowY: 'hidden'},
+                    ...{overflowX: 'hidden'}
+                }}
                 // style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} : {overflowY: 'hidden'}}}
                 ref={(scrollRef: any) => {
                     if (scrollRef && !this.scrollRef) {

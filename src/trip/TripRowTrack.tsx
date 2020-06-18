@@ -15,9 +15,9 @@ class TripRowTrack extends React.Component<IProps, {}> {
         let brief: boolean | undefined;
         const segments = this.props.value.getSegments(Visibility.IN_SUMMARY);
         const nOfSegments = segments.length;
-        if (nOfSegments > 5 || (nOfSegments > 3 && window.innerWidth <= 400)) {
+        if (nOfSegments > 4 || (nOfSegments > 3 && window.innerWidth <= 400)) {
             brief = true;
-        } else if (nOfSegments < 5) {
+        } else if (nOfSegments < 4) {
             brief = false;
         }
         return (
