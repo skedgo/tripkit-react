@@ -25,6 +25,7 @@ import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUIRendersCard from "../card/TKUIRendersCard";
+import {cardSpacing} from "../jss/TKUITheme";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -99,7 +100,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                                                 presentation: viewportProps.portrait ? CardPresentation.SLIDE_UP : CardPresentation.MODAL,
                                                 slideUpOptions: {
                                                     position: TKUISlideUpPosition.UP,
-                                                    draggable: false
+                                                    draggable: false,
+                                                    modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'}
                                                 },
                                                 children:
                                                     <TKUIShareView

@@ -1,9 +1,10 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUIResultsViewProps, TKUIResultsViewStyle} from "./TKUIResultsView";
 import Constants from "../util/Constants";
-import {important, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, important, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResultsViewProps> =
     (theme: TKUITheme) => ({
@@ -56,7 +57,15 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             padding: '10px'
         },
         timePrefSelect: {
-            minWidth: '92px'
+            minWidth: '92px',
+            '& *': {
+                ...DeviceUtil.isPhone ? {...genStyles.fontM} : theme.textSizeCaption,
+                ...theme.textWeightSemibold,
+                ...important(theme.textColorGray)
+            },
+            '& path': {
+                fill: black(1, theme.isDark)
+            }
         },
         noResults: {
             ...theme.textSizeBody,

@@ -89,12 +89,12 @@ const config: TKUIConfig = {
                     TKErrorHelper.hasErrorCode(error, ERROR_DESTINATION_OUTSIDE_COVERAGE)) {
                     errorActions = [
                         <RequestSupportAction
-                            key={"Request.support"}
                             actionTitle={props.t("Request.support")}
                             formTitle={"Request route"}
                             formMessage={"Please support routing between " + query.from!.address + " and " + query.to!.address + "\n\n" +
                             "From coordinate: " + query.from!.lat + ", " + query.from!.lng + "\n" +
                             "To coordinate: " + query.to!.lat + ", " + query.to!.lng}
+                            key={"Request.support"}
                         />
                     ].concat(errorActions);
                 } else {

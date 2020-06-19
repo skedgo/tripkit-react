@@ -97,7 +97,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             '& svg': {
                 width: '24px',
                 height: '24px',
-                color: tKUIColors.black1,
+                color: black(1, theme.isDark),
                 ...genStyles.svgPathFillCurrColor
             } as CSSProperties<TKUITimetableViewProps>
         },

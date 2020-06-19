@@ -10,7 +10,7 @@ export const tKUIFavouriteRowDefaultStyle: TKUIStyles<TKUIFavouriteRowStyle, TKU
             ...genStyles.flex,
             ...genStyles.alignCenter,
             padding: '10px 15px',
-            borderBottom: '1px solid ' + tKUIColors.black4,
+            ...theme.divider,
             cursor: (props: TKUIFavouriteRowProps) => props.onClick && 'pointer',
             '&:hover': {
                 background: black(5, theme.isDark)
