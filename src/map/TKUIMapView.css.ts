@@ -46,7 +46,8 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...genStyles.borderRadius(0)
+                ...genStyles.borderRadius(0),
+                background: 'none'
             },
             '& .leaflet-popup-tip-container': {
                 display: 'none'
@@ -68,13 +69,19 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         menuPopupContent: {
             ...genStyles.flex,
             ...genStyles.column,
-            padding: '5px 0'
+            padding: '5px 0',
+            background: white(0, theme.isDark),
+            boxShadow: theme.isLight ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
+            ...genStyles.borderRadius(4)
         },
         menuPopupItem: {
             padding: '5px 10px',
             cursor: 'pointer',
+            color: black(1, theme.isDark),
             '&:hover': {
-                backgroundColor: tKUIColors.black4
+                backgroundColor: black(4, theme.isDark)
             }
         },
         currentLocMarker: {

@@ -88,7 +88,8 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
         },
         inputElem: {
             ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
-            ...resetStyles.input
+            ...resetStyles.input,
+            ...theme.textColorGray
         },
         face: {
             '& input': {

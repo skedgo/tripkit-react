@@ -13,7 +13,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             margin: '10px',
             height: '24px',
             width: '24px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            '& path': {
+                fill: black(1, theme.isDark)
+            }
         },
         fromToPanel: {
             marginBottom: (props: TKUIRoutingQueryInputProps) => props.landscape ? '20px' : '0',
@@ -63,7 +66,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         swap: {
             cursor: 'pointer',
             padding: '10px',
-            boxSizing: 'content-box!important'
+            boxSizing: 'content-box!important',
+            '& path': {
+                fill: black(1, theme.isDark)
+            }
         },
         footer: {
             backgroundColor: theme.isLight ? '#e6eff2' : '#384450',
