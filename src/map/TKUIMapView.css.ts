@@ -10,6 +10,9 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         main: {
             ...genStyles.flex,
             ...genStyles.grow,
+            '& .leaflet-container': {
+                background: theme.isLight ? '#ddd' : black(0)
+            },
             '& .leaflet-popup-content': {
                 margin: '0'
             },
