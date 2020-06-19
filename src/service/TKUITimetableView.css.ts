@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUITimetableViewProps, TKUITimetableViewStyle} from "./TKUITimetableView";
 import {resetStyles} from "../css/ResetStyle.css";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {CSSProperties} from "react-jss";
 import DeviceUtil from "../util/DeviceUtil";
@@ -19,9 +19,6 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.column,
             ...genStyles.grow,
             ...genStyles.relative,
-            '&>*': {
-                borderBottom: '1px solid lightgray;'
-            }
         },
         containerPanel: {
             ...genStyles.scrollableY,
@@ -29,7 +26,8 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.column,
             ...genStyles.grow,
             '&>*': {
-                ...genStyles.noShrink
+                ...genStyles.noShrink,
+                ...theme.divider
             } as CSSProperties<TKUITimetableViewProps>
         },
         subHeader: {
@@ -62,7 +60,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         },
         secondaryBar: {
             padding: '8px 16px',
-            backgroundColor: '#e6eff2',
+            backgroundColor: theme.isLight ? '#e6eff2' : '#384450',
             borderBottom: '1px solid ' + tKUIColors.black4,
             ...genStyles.flex,
             ...genStyles.alignCenter,
@@ -78,15 +76,15 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
         },
         filterInput: {
             boxShadow: 'none!important',
-            backgroundColor: 'white',
-            border: '1px solid ' + tKUIColors.black3,
-            color: tKUIColors.black1,
+            backgroundColor: white(0, theme.isDark),
+            border: '1px solid ' + black(3, theme.isDark),
+            color: black(1, theme.isDark),
             height: '32px',
             padding: '6px 12px',
             ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
             ...genStyles.grow,
             '&::placeholder': {
-                color: tKUIColors.black2
+                color: black(2, theme.isDark)
             },
             ...genStyles.borderRadius(8),
             ...genStyles.grow

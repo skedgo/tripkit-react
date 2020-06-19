@@ -16,10 +16,10 @@ import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
+// TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
     MODAL,
     SLIDE_UP,
-    SLIDE_UP_STYLE,
     NONE
 }
 
@@ -76,7 +76,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 export function hasHandle(props: IProps): boolean {
-    return (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.SLIDE_UP_STYLE)
+    return (props.presentation === CardPresentation.SLIDE_UP || (!!props.slideUpOptions && !!props.slideUpOptions.showHandle))
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
 

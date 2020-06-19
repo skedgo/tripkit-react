@@ -1,4 +1,4 @@
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "./TKUIAutocompleteResult";
 import genStyles from "../css/GenStyle.css";
@@ -12,17 +12,20 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             padding: '12px 5px',
             fontSize: '13px',
             cursor: 'pointer',
-            borderBottom: '1px solid #cbcbcb',
+            ...theme.divider,
             margin: '0 5px',
-            color:  '#4d4c4d',
+            color:  theme.isLight ? '#4d4c4d' : colorWithOpacity(tKUIColors.white, .9),
             '&:last-child': {
                 borderBottom: 'none'
             }
         },
+        highlighted: {
+            background: theme.isLight ? '#efeded' : white(3)
+        },
         icon: {
             margin: '0 10px',
             height: '18px',
-            color: tKUIColors.black1,
+            color: black(1, theme.isDark),
             ...genStyles.svgPathFillCurrColor,
             '&>*': {
                 height: '18px',
@@ -47,7 +50,7 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
         },
         secondaryAddress: {
             marginLeft: '5px',
-            color: 'grey',
+            color: black(1, theme.isDark),
             fontWeight: 'initial',
             ...genStyles.overflowEllipsis
         }

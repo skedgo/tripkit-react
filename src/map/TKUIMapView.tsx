@@ -59,6 +59,7 @@ import TKErrorHelper from "../error/TKErrorHelper";
 import {TileLayer} from "react-leaflet";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import IGeocoder from "../geocode/IGeocoder";
+import {black} from "../jss/TKUITheme";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -550,7 +551,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 />
                 <TKUITooltip
                     overlayContent={this.state.userLocationTooltip}
-                    arrowColor={tKUIColors.black2}
+                    arrowColor={this.props.theme.isLight ? tKUIColors.black2 : tKUIColors.black1}
                     visible={false}
                     placement={"right"}
                     reference={(ref: any) => this.userLocTooltipRef = ref}

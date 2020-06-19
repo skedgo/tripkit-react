@@ -11,7 +11,7 @@ export const tKUIColors = {
     black3: '#212a332e',
     black4: '#212a331f',
     black5: '#20293114',
-    white: '#fff',
+    white: '#ffffff',
     white1: '#fff9',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
@@ -26,6 +26,25 @@ export function colorWithOpacity(colorS: string, opacity: number): string {
 export const queryWidth = 384;
 export function cardSpacing(landscape: boolean = true) {
     return landscape ? 16 : 5;
+}
+
+export function black(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
+    return dual ? white(n) : tKUIColors[Object.keys(tKUIColors)[n]];
+}
+
+export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): string {
+    return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 6]];
+}
+
+export function important(style: CSS.Properties): CSS.Properties {
+    const styleImportant = {...style};
+    for (const key of Object.keys(style)) {
+        if (styleImportant[key].includes('!important')) {
+            continue;
+        }
+        styleImportant[key] = styleImportant[key] + '!important';
+    }
+    return styleImportant;
 }
 
 
@@ -52,6 +71,10 @@ export interface TKUITheme {
     textWeightMedium: CSS.Properties;
     textWeightSemibold: CSS.Properties;
     textWeightBold: CSS.Properties;
+
+    cardBackground: CSS.Properties;
+    divider: CSS.Properties;
+    modalFog: CSS.Properties;
 
 }
 
@@ -95,6 +118,20 @@ export const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
             },
             textWeightBold: {
                 fontWeight: 700
+            },
+
+            cardBackground: {
+                backgroundColor: !isDark ? tKUIColors.white : tKUIColors.black,
+                boxShadow: !isDark ?
+                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
+                ...genStyles.borderRadius(12)
+            },
+            divider: {
+                borderBottom: '1px solid ' + black(4, isDark)
+            },
+            modalFog: {
+                background: (!isDark ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),
             }
 
         };

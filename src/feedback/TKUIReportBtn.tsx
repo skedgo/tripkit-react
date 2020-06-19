@@ -1,7 +1,6 @@
 import React, {MouseEvent} from "react";
 import {ReactComponent as IconFeedback} from '../images/ic-feedback.svg';
 import copy from 'copy-to-clipboard';
-import OptionsData from "../data/OptionsData";
 import Util from "../util/Util";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 import {TKState, default as TKStateConsumer} from "../config/TKStateConsumer";
@@ -16,7 +15,6 @@ import TKUITooltip from "../card/TKUITooltip";
 import ContextMenuHandler from "../util/ContextMenuHandler";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKRequestStatus, default as TKUIWaitingRequest} from "../card/TKUIWaitingRequest";
-import {TKError} from "..";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;

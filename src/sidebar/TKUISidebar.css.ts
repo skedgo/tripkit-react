@@ -1,4 +1,4 @@
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUISidebarProps, TKUISidebarStyle} from "./TKUISidebar";
 import genStyles from "../css/GenStyle.css";
@@ -13,16 +13,17 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             ...genStyles.flex,
             justifyContent: 'flex-start!important',
             WebkitJustifyContent: 'flex-start!important',
-            background: 'rgba(255, 255, 255, 0.75)!important',
+            background: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)) + '!important',
         },
         modalClosed: {  // Workaround to react-drag-drawer issue: modalContainer takes a while to dissapear
             background: 'none!important',
         },
         modal: {
-            backgroundColor: 'white',
+            backgroundColor: white(0, theme.isDark),
             width: '300px',
             height: '100%',
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
+            boxShadow: theme.isLight ? '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important' :
+                '0 0 4px 0 rgba(128, 128, 128,.4), 0 6px 12px 0 rgba(128, 128, 128,.08)!important',
             ...genStyles.flex
         },
         main: {
@@ -37,7 +38,7 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             ...genStyles.noShrink,
             height: '90px',
             padding: '0 20px',
-            borderBottom: '1px solid ' + tKUIColors.black4
+            borderBottom: '1px solid ' + black(4, theme.isDark)
         },
         closeBtn: {
             ...resetStyles.button,
@@ -46,7 +47,7 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
                 height: '24px',
                 padding: '6px',
                 '& path': {
-                    fill: tKUIColors.black1
+                    fill: black(1, theme.isDark)
                 }
             }
         },
@@ -65,18 +66,8 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
                 marginBottom: '8px'
             }
         },
-        menuItem: {
-            padding: '8px 16px!important',
-            '&:hover': {
-                background: theme.isLight ? tKUIColors.black5 : tKUIColors.white5
-            },
-            ...theme.textWeightRegular,
-            color: tKUIColors.black1 + '!important',
-            border: 'none!important',
-            width: '100%!important',
-        },
         nativeAppLinksPanel: {
-            background: '#154c7b',
+            background: theme.isLight ? '#154c7b' : '#558ab7',
             color: 'white',
             padding: '16px 24px 20px 24px'
         },

@@ -129,7 +129,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const departure = this.props.value;
         const timezone = departure.startTimezone;
         const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
-        const transIcon = TransportUtil.getTransportIcon(departure.modeInfo);
+        const transIcon = TransportUtil.getTransportIcon(departure.modeInfo, false, this.props.theme.isDark);
         const origin = departure.startStop && departure.startStop.shortName && departure.startStop.shortName.trim() ? departure.startStop.shortName : undefined;
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;
         const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;

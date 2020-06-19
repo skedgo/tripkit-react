@@ -7,15 +7,14 @@ import {resetStyles} from "../css/ResetStyle.css";
 export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle, TKUILocationSearchProps> =
     (theme: TKUITheme) => ({
         main: {
-            backgroundColor: theme.isLight ? tKUIColors.white : tKUIColors.black,
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
+            ...theme.cardBackground,
             padding: '6px 8px',
             fontFamily: theme.fontFamily,
-            ...genStyles.borderRadius(12, "px"),
             ...genStyles.flex,
             ...genStyles.alignCenter,
             '& input[type=text]': {
-                ...genStyles.fontMImp
+                ...theme.textSizeBody,
+                ...theme.textColorDefault
             },
             '& input::placeholder': {
                 ...theme.textSizeBody,
@@ -52,8 +51,7 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             top: '43px',
             left: '-61px',
             position: 'absolute',
-            minWidth: '211px',
-            ...genStyles.borderRadius(12),
+            minWidth: '211px'
         },
         glassIcon: {
             ...genStyles.svgFillCurrColor,

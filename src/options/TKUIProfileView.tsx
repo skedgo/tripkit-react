@@ -3,7 +3,6 @@ import Util from "../util/Util";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
 import ModeIdentifier from "../model/region/ModeIdentifier";
-import Checkbox from "../buttons/Checkbox";
 import {MapLocationType} from "../model/location/MapLocationType";
 import Tooltip from "rc-tooltip";
 import Constants from "../util/Constants";
@@ -24,7 +23,9 @@ import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
-import {cardSpacing} from "../jss/TKUITheme";
+import {black, cardSpacing} from "../jss/TKUITheme";
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import { withStyles } from '@material-ui/core/styles';
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -44,6 +45,7 @@ export interface IStyle {
     sectionBody: CSSProps<IProps>;
     optionRow: CSSProps<IProps>;
     optionLink: CSSProps<IProps>;
+    checkboxRow: CSSProps<IProps>;
     specialServices: CSSProps<IProps>;
     icon: CSSProps<IProps>;
     infoIcon: CSSProps<IProps>;
@@ -76,6 +78,8 @@ interface IState {
 
 class TKUIProfileView extends React.Component<IProps, IState> {
 
+    private GreenCheckbox;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -87,7 +91,20 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
+        this.createCheckboxComponent(props);
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
+    }
+
+    private createCheckboxComponent(props: IProps) {
+        this.GreenCheckbox = withStyles({
+            root: {
+                color: black(1, props.theme.isDark),
+                '&$checked': {
+                    color: props.theme.colorPrimary,
+                },
+            },
+            checked: {},
+        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
     }
 
     private onMapOptionChange(option: MapLocationType, checked: boolean) {
@@ -214,10 +231,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
                                              className={classes.icon}
                                              aria-hidden="true"/>
-                                        <Checkbox id="mo-mw"
-                                                  checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}
-                                                  onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}
-                                                  ariaLabelledby={"label-mo-mw"}/>
+                                        {/*<Checkbox id="mo-mw"*/}
+                                                  {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}*/}
+                                                  {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}*/}
+                                                  {/*ariaLabelledby={"label-mo-mw"}/>*/}
                                         <label htmlFor="mo-mw" id={"label-mo-mw"}>
                                             MyWay retailers
                                         </label>
@@ -226,10 +243,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
                                              className={classes.icon}
                                              aria-hidden="true"/>
-                                        <Checkbox id="mo-pr"
-                                                  checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}
-                                                  onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}
-                                                  ariaLabelledby={"label-mo-pr"}/>
+                                        {/*<Checkbox id="mo-pr"*/}
+                                                  {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}*/}
+                                                  {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}*/}
+                                                  {/*ariaLabelledby={"label-mo-pr"}/>*/}
                                         <label htmlFor="mo-pr" id={"label-mo-pr"}>
                                             Park & Ride
                                         </label>
@@ -253,10 +270,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                             mouseEnterDelay={.5}
                                         >
                                             <div className={classes.checkboxGroup}>
-                                                <Checkbox id="mo-bs"
-                                                          checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}
-                                                          onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}
-                                                          ariaLabelledby={"label-mo-bs"}/>
+                                                {/*<Checkbox id="mo-bs"*/}
+                                                          {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}*/}
+                                                          {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}*/}
+                                                          {/*ariaLabelledby={"label-mo-bs"}/>*/}
                                                 <label htmlFor="mo-bs" id={"label-mo-bs"}>
                                                     Bike Share
                                                 </label>
@@ -270,6 +287,35 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         }
+                        <div className={classes.section}>
+                            <div className={classes.sectionTitle}>
+                                {"Appearence"}
+                            </div>
+                            <div className={classes.sectionBody}>
+                                <div className={classNames(classes.optionRow, classes.checkboxRow)}>
+                                    <div>
+                                        {"Dark mode"}
+                                    </div>
+                                    <this.GreenCheckbox
+                                        checked={this.state.update.isDarkMode}
+                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                            const checked = event.target.checked;
+                                            this.setState((prevState: IState) => ({
+                                                update: Util.iAssign(prevState.update, { isDarkMode: checked })
+                                            }), () => {
+                                                this.applyChanges();
+                                                setTimeout(() => {
+                                                    this.createCheckboxComponent(this.props);
+                                                    this.forceUpdate();
+                                                }, 100);
+                                            });
+                                        }}
+                                        value="primary"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {personalDataSettings}

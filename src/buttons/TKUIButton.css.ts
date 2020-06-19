@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
 import {TKUIButtonProps, TKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
@@ -11,7 +11,8 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.center,
-            ...genStyles.fontM,
+            ...theme.textSizeBody,
+            ...theme.textWeightSemibold,
             fontFamily: theme.fontFamily,
             padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' :
@@ -47,24 +48,24 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
 
         secondary: {
             background: 'none',
-            color: 'black',
+            color: black(0, theme.isDark),
             padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
-            border: '2px solid ' + tKUIColors.black4,
+            border: '2px solid ' + black(4, theme.isDark),
             '&:hover': {
-                borderColor: tKUIColors.black2,
+                borderColor: black(2, theme.isDark),
             },
             '&:disabled': {
-                borderColor: tKUIColors.black4,
+                borderColor: black(4, theme.isDark),
                 opacity: '.7',
                 cursor: 'initial'
             },
             '&:active': {
-                borderColor: tKUIColors.black4,
-                backgroundColor: tKUIColors.black5
+                borderColor: black(4, theme.isDark),
+                backgroundColor: black(5, theme.isDark)
             },
             '& svg': {
-                color: tKUIColors.black1
+                color: black(1, theme.isDark)
             }
         },
 
@@ -89,7 +90,8 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.alignCenter,
-            ...genStyles.fontM,
+            ...theme.textSizeBody,
+            ...theme.textWeightSemibold,
             textAlign: 'center'
         }
 

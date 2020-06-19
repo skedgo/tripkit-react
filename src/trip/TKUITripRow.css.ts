@@ -1,16 +1,16 @@
 import {badgeColor, TKUITripRowProps, TKUITripRowStyle} from "./TKUITripRow";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {rowSelectedStyle, rowStyle} from "../service/TKUIServiceDepartureRow.css";
 
 export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
     (theme: TKUITheme) => ({
         main: {
-            background: 'white',
-            borderTop: '1px solid #ECEBEB',
-            borderRight: '1px solid #ECEBEB',
-            borderBottom: '1px solid #ECEBEB',
+            background: white(0, theme.isDark),
+            borderTop: '1px solid ' + black(4, theme.isDark),
+            borderRight: '1px solid ' + black(4, theme.isDark),
+            borderBottom: '1px solid ' + black(4, theme.isDark),
             cursor: 'pointer'
         },
         badge: {
@@ -28,7 +28,7 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
             }
         },
         info: {
-            color: tKUIColors.black1,
+            color: black(1, theme.isDark),
             ...genStyles.fontS
         },
         trackAndAction: {
@@ -57,7 +57,7 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
         },
         alternative: {
             ...rowStyle,
-            borderBottom: '1px solid #ECEBEB'
+            borderBottom: '1px solid ' + black(4, theme.isDark)
         },
         selectedAlternative: {
             ...rowSelectedStyle(theme)

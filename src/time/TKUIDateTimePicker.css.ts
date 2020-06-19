@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "./TKUIDateTimePicker";
 import genStyles from "../css/GenStyle.css";
@@ -10,12 +10,13 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
         datePicker: {
             fontFamily: theme.fontFamily,
             fontSize: '13px',
+            ...theme.textColorGray,
             ...resetStyles.input
         },
         calendarPopper: {
             marginTop: '12px!important',
             '& .react-datepicker__triangle': {
-                borderBottomColor: 'white!important'
+                borderBottomColor: white(0, theme.isDark) + '!important'
             },
             '& .react-datepicker__triangle::before': {
                 top: '-1px!important'
@@ -23,6 +24,7 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             zIndex: '100!important'
         },
         calendar: {
+            background: white(0, theme.isDark),
             '&.react-datepicker': {
                 border: 'none',
                 ...genStyles.borderRadius(12),
@@ -41,11 +43,11 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& .react-datepicker__current-month': {
                 padding: '12px 0',
-                borderBottom: '1px solid #cbcbcb'
+                borderBottom: '1px solid ' + black(4, theme.isDark)
             },
             '& .react-datepicker__header--time': {
                 padding: '12px 0',
-                borderBottom: '1px solid #cbcbcb'
+                borderBottom: '1px solid ' + black(4, theme.isDark)
             },
             '& li.react-datepicker__time-list-item': {
                 whiteSpace: 'nowrap',
@@ -53,12 +55,19 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
                 padding: '8px 5px !important',
                 fontSize: '13px'
             },
-            '& .react-datepicker__day--selected, .react-datepicker__day--keyboard-selected, .react-datepicker__day--selected:hover, .react-datepicker__day--keyboard-selected:hover': {
+            '& .react-datepicker__time-container': {
+                borderLeft: '1px solid ' + black(4, theme.isDark)
+            },
+            '& .react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list li.react-datepicker__time-list-item:hover': {
+                backgroundColor: theme.isDark ? white(3) : '#f0f0f0'
+            },
+            '& .react-datepicker__day.react-datepicker__day--selected, .react-datepicker__day.react-datepicker__day--keyboard-selected, .react-datepicker__day.react-datepicker__day--selected:hover, .react-datepicker__day.react-datepicker__day--keyboard-selected:hover': {
                 backgroundColor: theme.colorPrimary,
                 ...genStyles.borderRadius(50, '%')
             },
             '& .react-datepicker__day:hover': {
-                ...genStyles.borderRadius(50, '%')
+                ...genStyles.borderRadius(50, '%'),
+                backgroundColor: theme.isDark ? white(3) : '#f0f0f0'
             },
             '& button.react-datepicker__navigation': {
                 top: '14px',
@@ -72,6 +81,9 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& li.react-datepicker__time-list-item--selected': {
                 backgroundColor: theme.colorPrimary + '!important'
+            },
+            '& *': {
+                color: black(0, theme.isDark)
             }
         },
         inputElem: {

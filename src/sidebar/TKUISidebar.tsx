@@ -8,7 +8,7 @@ import {ReactComponent as TripgoLogo} from '../images/logo/tripgo_logo.svg';
 import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
 import genStyles, {genClassNames} from "../css/GenStyle.css";
 import classNames from "classnames";
-import {tKUIColors} from "../jss/TKUITheme";
+import {black} from "../jss/TKUITheme";
 import TKUIDirectionsAction from "../action/TKUIRouteToLocationAction";
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconFavourite} from "../images/ic-favorite-outline.svg";
@@ -33,7 +33,6 @@ export interface IStyle {
     closeBtn: CSSProps<IProps>;
     body: CSSProps<IProps>;
     menuItems: CSSProps<IProps>;
-    menuItem: CSSProps<IProps>;
     nativeAppLinksPanel: CSSProps<IProps>;
     nativeAppsTitle: CSSProps<IProps>;
     nativeAppLinks: CSSProps<IProps>;
@@ -60,10 +59,10 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                     ...defaultStyle,
                     padding: '8px 16px!important',
                     '&:hover': {
-                        background: theme.isLight ? tKUIColors.black5 : tKUIColors.white5
+                        background: black(5, theme.isDark)
                     },
                     ...theme.textWeightRegular,
-                    color: tKUIColors.black1 + '!important',
+                    color: black(1, theme.isDark) + '!important',
                     border: 'none!important',
                     width: '100%!important',
                     ...genStyles.justifyStart

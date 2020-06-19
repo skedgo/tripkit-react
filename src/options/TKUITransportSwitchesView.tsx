@@ -80,7 +80,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
                             const tooltip =
                                 <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
-                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
+                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
                                     <div className={classes.tooltipRight}>
                                         <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
                                         <div className={modeOption === DisplayConf.HIDDEN ?
@@ -95,7 +95,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                                 onClick={() => this.onChange(mode)}
                                 {...DeviceUtil.isTouch() && {key: index}}
                             >
-                                <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, false)}/>
+                                <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
                             </button>;
                             return ( DeviceUtil.isTouch() ?
                                     transBtn :

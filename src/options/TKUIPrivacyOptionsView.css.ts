@@ -19,7 +19,7 @@ export const tKUIPrivacyOptionsViewDefaultStyle: TKUIStyles<TKUIPrivacyOptionsVi
         sectionBody: {
             padding: '0 30px',
             borderTop: '1px solid ' + tKUIColors.black4,
-            borderBottom: '1px solid ' + tKUIColors.black4
+            ...theme.divider
         },
         sectionFooter: {
             ...genStyles.fontS,
@@ -29,7 +29,7 @@ export const tKUIPrivacyOptionsViewDefaultStyle: TKUIStyles<TKUIPrivacyOptionsVi
             ...genStyles.flex,
             padding: '15px 0',
             '&:not(:last-child)': {
-                borderBottom: '1px solid ' + tKUIColors.black4
+                ...theme.divider
             }
         },
         optionTitle: {

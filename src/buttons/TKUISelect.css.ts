@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {colorWithOpacity, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUISelectProps, TKUISelectStyle} from "./TKUISelect";
 import genStyles from "../css/GenStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
@@ -19,10 +19,13 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
             }
         },
         menu: {
-            marginTop: '1px'
+            marginTop: '1px',
+            background: white(0, theme.isDark)
         },
         option: {
-            color: tKUIColors.black1,
+            ...theme.textSizeCaption,
+            ...theme.textWeightSemibold,
+            ...theme.textColorGray,
             cursor: 'pointer'
         },
         optionFocused: {

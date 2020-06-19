@@ -140,7 +140,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                         <div className={classes.track}>
                             <div className={classes.line}/>
                             {!segment.isContinuation &&
-                            <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark)}
+                            <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark || this.props.theme.isDark)}
                                  className={classes.icon}
                                  aria-hidden={true}
                             />}

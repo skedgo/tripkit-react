@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUIResultsViewProps, TKUIResultsViewStyle} from "./TKUIResultsView";
 import Constants from "../util/Constants";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {important, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
 
@@ -10,7 +10,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
         main: {
             ...genStyles.flex,
             ...genStyles.column,
-            background: '#f5f6f7',
+            background: theme.isLight ? '#e6eff2' : '#384450',
             minHeight: '100%'
         },
         row: {
@@ -30,7 +30,9 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.spaceBetween,
             padding: '10px',
             ...genStyles.fontS,
-            color: tKUIColors.black1
+            '& *': {
+                ...important(theme.textColorGray)
+            }
         },
         sortSelect: {
             minWidth: '200px',

@@ -1,4 +1,4 @@
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "./TKUITransportOptionsRow";
 import genStyles from "../css/GenStyle.css";
@@ -9,6 +9,8 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
             padding: '15px',
             ...genStyles.flex,
             ...genStyles.alignCenter,
+            ...theme.textColorDefault,
+            ...theme.textSizeBody,
             '& .MuiExpansionPanelDetails-root': {
                 background: '#efefef'
             }
@@ -23,7 +25,9 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
             margin: '0 10px'
         },
         expansionPanel: {
-            borderBottom: '1px solid ' + tKUIColors.black4,
+            ...theme.divider,
+            background: white(0, theme.isDark),
+            color: black(0, theme.isDark),
             '&:before': {
                 display: 'none'
             }
@@ -32,7 +36,7 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.grow,
-            background: '#efefef',
+            background: theme.isLight ? '#efefef' : white(3),
             padding: '15px 10px!important',
             '& > div:not(:last-child)': {
                 marginBottom: '15px'
@@ -50,7 +54,7 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
         sectionBody: {
             ...genStyles.flex,
             ...genStyles.column,
-            background: 'white',
+            background: white(0, theme.isDark),
             padding: '10px 20px',
             '& > div:not(:last-child)': {
                 borderBottom: '1px solid ' + tKUIColors.black4,
@@ -69,7 +73,7 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
         sliderRow: {
             ...genStyles.flex,
             ...genStyles.column,
-            background: 'white',
+            background: white(0, theme.isDark),
             padding: '10px 0',
             '& > *:last-child': {
                 color: theme.colorPrimary

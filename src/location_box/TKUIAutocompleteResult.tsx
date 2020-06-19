@@ -9,6 +9,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIAutocompleteResultDefaultStyle} from "./TKUIAutocompleteResult.css";
+import classNames from "classnames";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -22,6 +23,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IStyle {
     main: CSSProps<IProps>;
+    highlighted: CSSProps<IProps>;
     icon: CSSProps<IProps>;
     address: CSSProps<IProps>;
     mainAddress: CSSProps<IProps>;
@@ -79,8 +81,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                 </span>;
         }
         return (
-            <div style={{background: this.props.highlighted ? '#efeded' : 'white'}}
-                 className={classes.main}
+            <div className={classNames(classes.main, this.props.highlighted && classes.highlighted)}
                  onClick={this.props.onClick}
                  role="option"
                  id={this.props.id}
