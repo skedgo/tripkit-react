@@ -2,13 +2,15 @@ import * as React from "react";
 import {Slider, SliderProps, withStyles} from '@material-ui/core';
 import Constants from "../util/Constants";
 import genStyles from "../css/GenStyle.css";
+import {black, white} from "../jss/TKUITheme";
 
 export type TKUISliderProps = SliderProps &
     {
         thumbIcon?: string,
         label?: string,
         leftLabel?: string,
-        rightLabel?: string
+        rightLabel?: string,
+        isDarkMode?: boolean
     }
 
 class TKUISlider extends React.Component<TKUISliderProps, {}> {
@@ -17,8 +19,9 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
 
     constructor(props: TKUISliderProps) {
         super(props);
-        const iOSBoxShadow =
-            '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)!important';
+        const iOSBoxShadow = !props.isDarkMode ?
+            '0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)!important' :
+            '0 3px 1px rgba(255,255,255,0.1),0 0px 8px rgba(255,255,255,0.2),0 0 0 1px rgba(255,255,255,0.1)!important';
         this.WithStyle = withStyles({
             root: {
                 color: 'inherit',
@@ -26,7 +29,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
             thumb: {
                 height: 28,
                 width: 28,
-                backgroundColor: '#fff',
+                backgroundColor: white(0, this.props.isDarkMode),
                 boxShadow: iOSBoxShadow,
                 marginTop: -14,
                 marginLeft: -14,
@@ -51,7 +54,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
         return (
             <div style={genStyles.fontS}>
                 <this.WithStyle {...sliderProps}/>
-                <div style={{...genStyles.flex, ...genStyles.spaceBetween, color: 'black'}}>
+                <div style={{...genStyles.flex, ...genStyles.spaceBetween, color: black(0, this.props.isDarkMode)}}>
                     <span style={{minWidth: '100px'}}>{this.props.leftLabel}</span>
                     <span>{this.props.label}</span>
                     <span style={{minWidth: '100px', textAlign: 'right'}}>{this.props.rightLabel}</span>

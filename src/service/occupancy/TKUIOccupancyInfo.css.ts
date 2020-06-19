@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../../jss/StyleHelper";
 import {ITKUIOccupancyInfoProps, ITKUIOccupancyInfoStyle} from "./TKUIOccupancyInfo";
-import {tKUIColors, TKUITheme} from "../../jss/TKUITheme";
+import {black, TKUITheme} from "../../jss/TKUITheme";
 import genStyles from "../../css/GenStyle.css";
 
 export const tKUIOccupancyInfoDefaultStyle: TKUIStyles<ITKUIOccupancyInfoStyle, ITKUIOccupancyInfoProps> =
@@ -17,14 +17,17 @@ export const tKUIOccupancyInfoDefaultStyle: TKUIStyles<ITKUIOccupancyInfoStyle, 
             height: '16px',
             width: 'auto',
             marginRight: '2px',
-            opacity: .2
+            opacity: .2,
+            '& path': {
+                fill: black(0, theme.isDark)
+            }
         },
         passenger: {
             opacity: .6
         },
         text: {
             ...genStyles.fontS,
-            color: tKUIColors.black1,
+            color: black(1, theme.isDark),
             marginLeft: '5px'
         }
     });

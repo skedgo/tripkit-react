@@ -78,7 +78,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 <div className={classes.compositeIcon}>
-                    <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, false)}
+                    <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, this.props.theme.isDark)}
                          alt={modeInfo.alt}
                          role="img" // Needed to be read by iOS VoiceOver
                          className={classes.icon}

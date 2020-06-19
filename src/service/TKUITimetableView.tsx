@@ -208,6 +208,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone)}
                                                              key={"day-" + i}
                                                              scrollRef={this.scrollRef}
+                                                             isDark={this.props.theme.isDark}
                                     />)
                                 }
                                 elems.push(

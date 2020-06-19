@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationBoxProps, TKUILocationBoxStyle} from "./TKUILocationBox";
 import genStyles from "../css/GenStyle.css";
@@ -23,6 +23,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
                 // always fontM (16px).
                 ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
                 lineHeight: '30px',
+                color: black(1, theme.isDark),
                 ...DeviceUtil.isIE && {
                     height: '30px'
                 }
@@ -50,8 +51,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             cursor: 'pointer'
         },
         menu: {
-            border: '1px solid #cbcbcb',
-            backgroundColor: 'white',
+            ...theme.cardBackground,
             padding: '5px 0',
             zIndex: '10'
         },

@@ -2,9 +2,8 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIMapViewProps, TKUIMapViewStyle} from "./TKUIMapView";
 import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
-import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
@@ -17,6 +16,18 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
                 ...genStyles.borderRadius(12)
+            },
+            '& .leaflet-bar': {
+                boxShadow: theme.isLight ?
+                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
+            },
+            '& .leaflet-bar a:first-child': {
+                ...theme.divider
+            },
+            '& .leaflet-bar a, .leaflet-bar a:hover': {
+                backgroundColor: white(0, theme.isDark),
+                color: black(1, theme.isDark)
             }
         } as CSSProperties<TKUIMapViewProps>,
         leaflet: {
@@ -75,8 +86,10 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             right: '10px',
             width: '35px',
             height: '35px',
-            background: 'white',
-            // opacity: '.5',
+            background: white(0, theme.isDark),
+            boxShadow: theme.isLight ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
             cursor: 'pointer',
             zIndex: '1000',
             padding: '3px',

@@ -376,9 +376,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         }}
                                         key={i + "-" + trip.getKey()}
                                         handleRef={(handleRef: any) => registerHandle(i, handleRef)}
-                                        cardPresentation={CardPresentation.SLIDE_UP_STYLE}
+                                        cardPresentation={CardPresentation.NONE}
                                         slideUpOptions={{
-                                            draggable: false    // Needs to specify so it's needed by TKUIScrollForCard
+                                            draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
+                                            showHandle: true
                                         }}
                                         onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
                                     />)}

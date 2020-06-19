@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIShareViewProps, TKUIShareViewStyle} from "./TKUIShareView";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 import {DeviceUtil, genStylesJSS} from "../index";
@@ -42,12 +42,13 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
         },
         linkBox: {
             ...resetStyles.input,
-            border: '1px solid ' + tKUIColors.black1,
+            border: '1px solid ' + black(1, theme.isDark),
             height: '30px',
             padding: '0 5px',
             ...genStyles.borderRadius(5),
             ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
-            ...genStyles.grow
+            ...genStyles.grow,
+            color: black(0, theme.isDark)
         },
         linkIcon: {
             width: '20px',

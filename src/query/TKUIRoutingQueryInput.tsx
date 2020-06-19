@@ -262,6 +262,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputId={"input-from"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
                                 onFocus={() => this.showTooltip(true, undefined)}
+                                menuStyle={{
+                                    borderTopLeftRadius: '0',
+                                    borderTopRightRadius: '0'
+                                }}
                             />
                         </TKUITooltip>
                         <div className={classes.divider}/>
@@ -309,6 +313,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputId={"input-to"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
                                 onFocus={() => this.showTooltip(false, undefined)}
+                                menuStyle={{
+                                    borderTopLeftRadius: '0',
+                                    borderTopRightRadius: '0'
+                                }}
                             />
                         </TKUITooltip>
                     </div>

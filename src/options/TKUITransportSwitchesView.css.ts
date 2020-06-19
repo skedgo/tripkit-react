@@ -5,14 +5,14 @@ import {
 } from "./TKUITransportSwitchesView";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwitchesViewStyle, TKUITransportSwitchesViewProps> =
     (theme: TKUITheme) => ({
         main: {
             padding: '10px',
-            backgroundColor: '#f5f6f7',
+            backgroundColor: theme.isLight ? '#f5f6f7' : '#384450',
             ...genStyles.borderRadius(12),
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             maxWidth: '255px',
@@ -30,7 +30,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
         },
         modeIcon: {
             ...resetStyles.button,
-            background: 'white',
+            background: white(0, theme.isDark),
             padding: '7px',
             margin: '10px',
             ...genStyles.borderRadius(50, "%"),
@@ -50,7 +50,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
             }
         },
         tooltipContent: {
-            background: 'white',
+            background: white(0, theme.isDark),
             padding: '8px 24px 8px 16px',
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             ...genStyles.borderRadius(25),
@@ -72,7 +72,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
             ...genStyles.column
         },
         tooltipTitle: {
-            color: tKUIColors.black1,
+            color: black(1, theme.isDark),
             fontWeight: 'bold'
         },
         tooltipStateEnabled: {

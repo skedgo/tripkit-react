@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "./TKUITrackTransport";
 import genStyles from "../css/GenStyle.css";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
@@ -21,7 +21,10 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
         icon: {
             width: '24px',
             height: '24px',
-            marginRight: '3px'
+            marginRight: '3px',
+            ...theme.isDark && {
+                opacity: .4
+            }
         },
         alertIcon: {
             color: (props: TKUITrackTransportProps) => severityColor(props.segment.alertSeverity, theme),
@@ -44,6 +47,6 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
             padding: (props: TKUITrackTransportProps) => props.brief === false ? '0 5px' : undefined
         },
         subtitle: {
-            color: tKUIColors.black1
+            color: black(1, theme.isDark)
         }
     });

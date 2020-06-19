@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "./TKUISegmentOverview";
 import genStyles from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
@@ -15,7 +15,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             ...genStyles.alignStretch
         },
         title: {
-            fontWeight: '600',
+            ...theme.textWeightSemibold,
             ...genStyles.fontM,
             ...genStyles.flex,
             ...genStyles.column,
@@ -25,13 +25,13 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         subtitle: {
             ...genStyles.fontS,
-            color: tKUIColors.black1,
+            color: black(1, theme.isDark),
             fontWeight: 'normal'
         },
         time: {
-            color: tKUIColors.black1,
+            ...theme.textSizeCaption,
+            ...theme.textColorGray,
             margin: '0 16px',
-            ...genStyles.fontS,
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.center
@@ -92,9 +92,12 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             ...genStyles.borderRadius(50, "%")
         },
         iconPin: {
-            opacity: '.6',
+            opacity: '.4',
             width: '24px',
             height: '24px',
+            '& path': {
+                fill: black(0, theme.isDark)
+            }
         },
         icon: {
             background: (props: TKUISegmentOverviewProps) => {
@@ -108,7 +111,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             padding: (props: TKUISegmentOverviewProps) => isIconOnDark(props.value) ? '3px' : '0',
             opacity: (props: TKUISegmentOverviewProps) => {
                 const modeInfo = props.value.modeInfo!;
-                return isIconOnDark(props.value) || modeInfo.remoteIcon ? '1' : '.6';
+                return isIconOnDark(props.value) || modeInfo.remoteIcon ? '1' : '.4';
             },
             width: '24px!important',
             height: '24px',
@@ -117,8 +120,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         description: {
             padding: '10px 0',
             marginRight: '16px',
-            borderTop: '1px solid ' + tKUIColors.black4,
-            borderBottom: '1px solid ' + tKUIColors.black4,
+            borderTop: '1px solid ' + black(4, theme.isDark),
+            borderBottom: '1px solid ' + black(4, theme.isDark),
             ...genStyles.grow,
         },
         action: {
@@ -127,7 +130,7 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         notes: {
             ...genStyles.fontS,
-            color: tKUIColors.black1
+            color: black(1, theme.isDark)
         },
         occupancy: {
             marginBottom: '4px',

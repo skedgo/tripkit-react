@@ -1,9 +1,8 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, important, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
-import DeviceUtil from "../util/DeviceUtil";
 import {CSSProperties} from "react-jss";
 
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
@@ -26,8 +25,13 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             ...genStyles.column,
             ...genStyles.grow,
             '& input': {
-                ...DeviceUtil.isPhone && { fontSize: '16px!important' }
-            } as CSSProperties<TKUIRoutingQueryInputProps>
+                fontSize: '16px!important',
+                ...theme.textColorDefault
+            },
+            '& input::placeholder': {
+                ...theme.textSizeBody,
+                ...theme.textColorDisabled
+            }
         },
         locSelector: {
             padding: '9px 15px',
@@ -41,7 +45,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             width: '12px',
             height: '12px',
             boxSizing: 'border-box',
-            border: '2px solid ' + tKUIColors.black1,
+            border: '2px solid ' + black(1, theme.isDark),
             ...genStyles.borderRadius(50, "%")
         },
         locTarget: {
@@ -51,10 +55,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         dotIcon: {
             width: '2px',
             height: '2px',
-            background: tKUIColors.black1
+            background: black(1, theme.isDark)
         },
         divider: {
-            borderBottom: '1px solid ' + tKUIColors.black4
+            borderBottom: '1px solid ' + black(4, theme.isDark)
         },
         swap: {
             cursor: 'pointer',
@@ -62,7 +66,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             boxSizing: 'content-box!important'
         },
         footer: {
-            backgroundColor: '#e6eff2',
+            backgroundColor: theme.isLight ? '#e6eff2' : '#384450',
             borderBottomLeftRadius: '12px',
             borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,
@@ -79,6 +83,14 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             ...theme.textColorGray
         },
         timePrefSelect: {
-            minWidth: '92px'
+            minWidth: '92px',
+            '& *': {
+                ...theme.textSizeCaption,
+                ...theme.textWeightSemibold,
+                ...important(theme.textColorGray)
+            },
+            '& path': {
+                fill: black(1, theme.isDark)
+            }
         }
     });

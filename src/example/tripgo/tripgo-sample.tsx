@@ -20,6 +20,7 @@ import TKErrorHelper from "../../error/TKErrorHelper";
 import {ERROR_ROUTING_NOT_SUPPORTED, ERROR_DESTINATION_OUTSIDE_COVERAGE} from "../../error/TKErrorHelper";
 import TKStateConsumer, {TKState} from "../../config/TKStateConsumer";
 import {TKUITimetableViewProps} from "../../service/TKUITimetableView";
+import {TKUIMapViewProps} from "../../map/TKUIMapView";
 
 
 const analyticsConfig = Environment.isProd() ? {
@@ -39,6 +40,7 @@ const config: TKUIConfig = {
     theme: {
         fontFamily: 'ProximaNova, sans-serif'
     },
+    // isDarkDefault: true,
     analytics: analyticsConfig,
     userLocationPromise: (window as any).tKUserLocationPromise ?
         (window as any).tKUserLocationPromise
@@ -68,13 +70,15 @@ const config: TKUIConfig = {
         }
     },
     TKUIMapView: {
-        props: {
+        props: (props: TKUIMapViewProps) => ({
             tileLayerProps: {
                 attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
                 // url: "http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg",
-                url: "https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
+                url: props.theme.isLight ?
+                    "https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA":
+                    "https://api.mapbox.com/styles/v1/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA"
             }
-        }
+        })
     },
     TKUIRoutingResultsView: {
         props: (props: TKUIResultsViewProps) => ({

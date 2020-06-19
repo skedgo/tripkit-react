@@ -6,7 +6,7 @@ import Tooltip from "rc-tooltip";
 import {RCTooltip} from "rc-tooltip";
 import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
 import classNames from "classnames";
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;

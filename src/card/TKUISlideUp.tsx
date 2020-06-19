@@ -51,6 +51,7 @@ export interface TKUISlideUpOptions {
     onPositionChange?: (position: TKUISlideUpPosition) => void;
     draggable?: boolean;
     zIndex?: number;
+    showHandle?: boolean;
 }
 
 class TKUISlideUp extends React.Component<IProps, IState> {

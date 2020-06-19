@@ -12,7 +12,7 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import {tKUIColors} from "../jss/TKUITheme";
+import {black} from "../jss/TKUITheme";
 import ModeInfo from "../model/trip/ModeInfo";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
@@ -75,7 +75,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         };
         this.GreenCheckbox = withStyles({
             root: {
-                color: tKUIColors.black1,
+                color: black(1, props.theme.isDark),
                 '&$checked': {
                     color: props.theme.colorPrimary,
                 },
@@ -126,7 +126,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div className={classes.sectionBody}>
                     {transitModes && transitModes.map((transMode: ModeInfo, i: number) =>
                         <div className={classes.checkboxRow} key={i}>
-                            <img src={TransportUtil.getTransportIcon(transMode, false, false)}
+                            <img src={TransportUtil.getTransportIcon(transMode, false, this.props.theme.isDark)}
                                  className={classes.transIcon}
                             />
                             <div className={classes.prefModeTitle}>
@@ -168,6 +168,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     }) as any}
                     min={0}
                     max={100}
+                    isDarkMode={this.props.theme.isDark}
                 />
             </div>;
         const concessionPricingOption = mode.isPT() && regionInfo && regionInfo.transitConcessionPricing &&
@@ -291,7 +292,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             value="primary"
                             inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
-                        <img src={TransportUtil.getTransportIconModeId(mode, false, false)}
+                        <img src={TransportUtil.getTransportIconModeId(mode, false, this.props.theme.isDark)}
                              className={classes.transIcon}
                         />
                         {mode.title}

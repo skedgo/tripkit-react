@@ -9,7 +9,7 @@ import {CardPresentation} from "../card/TKUICard";
 import TKUICardRemote from "../card/TKUICardRemote";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
-import {tKUIColors, tKUIDeaultTheme} from "../jss/TKUITheme";
+import {black} from "../jss/TKUITheme";
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import {TKUIButton, TKUIButtonType} from "../index";
@@ -59,7 +59,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
         this.state = {};
         this.GreenCheckbox = withStyles({
             root: {
-                color: tKUIColors.black1,
+                color: black(1, props.theme.isDark),
                 '&$checked': {
                     color: props.theme.colorPrimary,
                 },
@@ -121,15 +121,16 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                         <div className={classes.sectionFooter}>
                             {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.forever.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
-                        <div className={classes.section}>
-                            <div className={classes.sectionBody}>
-                                <div className={classes.optionRow}>
-                                    <TKUIButton text={t("Show.our.Privacy.Policy")}
-                                                type={TKUIButtonType.PRIMARY_LINK}
-                                                className={classes.optionLink}
-                                                onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
-                                    />
-                                </div>
+                    </div>
+                    <div style={this.props.theme.divider}/>
+                    <div className={classes.section}>
+                        <div className={classes.sectionBody}>
+                            <div className={classes.optionRow}>
+                                <TKUIButton text={t("Show.our.Privacy.Policy")}
+                                            type={TKUIButtonType.PRIMARY_LINK}
+                                            className={classes.optionLink}
+                                            onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
+                                />
                             </div>
                         </div>
                     </div>
