@@ -10,6 +10,7 @@ import {IMapSegmentRenderer} from "./TKUIMapView";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;
@@ -29,7 +30,11 @@ class MapService extends React.Component<IProps, {}> {
                 {(config: TKUIConfig) => {
                     const transIconHTML = renderToStaticMarkup(
                         <TKUIConfigProvider config={config}>
-                            {TKUITransportPin.createForService(this.props.serviceDeparture)}
+                            <OptionsContext.Consumer>
+                                {(optionsContext: IOptionsContext) =>
+                                TKUITransportPin.createForService(this.props.serviceDeparture, !!optionsContext.value.isDarkMode)
+                                }
+                            </OptionsContext.Consumer>
                         </TKUIConfigProvider>
                     );
                     const icon = L.divIcon({

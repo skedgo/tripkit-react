@@ -43,8 +43,6 @@ interface ITKUIGenStyleClasses {
 
     fontMImp: CSSProps<{}>;
 
-    textGray: CSSProps<{}>;
-
     link: CSSProps<{}>;
 
     root: CSSProps<{}>;
@@ -269,10 +267,6 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         lineHeight: '16px'
     },
 
-    textGray: {
-        color: '#212a3399'
-    },
-
     // TODO: maybe move to a stylesheet that can be customized on SDK config.
     link: {
         textDecoration: 'underline',
@@ -366,9 +360,7 @@ const otherStyles = {
         '@global': {
             ['.' + genClassNames.root]: {
                 '& button': {
-                    // background: 'none',
                     fontFamily: 'inherit',
-                    // color: 'inherit'
                 }
             },
             '*': {

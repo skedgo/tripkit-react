@@ -3,6 +3,7 @@ import {black, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "./TKUITrackTransport";
 import genStyles from "../css/GenStyle.css";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
+import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
 
 export function severityColor(alertSeverity: AlertSeverity, theme: TKUITheme): string {
     return alertSeverity === AlertSeverity.alert ? theme.colorError :
@@ -23,7 +24,8 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
             height: '24px',
             marginRight: '3px',
             ...theme.isDark && {
-                opacity: .4
+                opacity: (props: TKUITrackTransportProps) =>
+                    (!props.segment.modeInfo || !isRemoteIcon(props.segment.modeInfo)) ? '.4' : undefined
             }
         },
         alertIcon: {

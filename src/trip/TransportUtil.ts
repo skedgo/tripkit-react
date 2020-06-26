@@ -8,17 +8,37 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class TransportUtil {
 
-    public static getTransportIcon(modeInfo: ModeInfo, isRealtime = false, onDark = false): string {
-        if (modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID)) {  // TODO: Hardcoded for TC
-            return this.getTransportIconLocal("school-bus", isRealtime, false);
+    /**
+     *
+     * @param {ModeInfo} modeInfo
+     * @param {boolean} isRealtime
+     * @param {boolean} onDark
+     * @param {boolean} remoteOverOnDark indicates we prefer the remote icon, even if it doesn't match onDark requirement.
+     * @returns {string}
+     */
+    public static getTransportIcon(modeInfo: ModeInfo, isRealtime = false, onDark = false, remoteOverOnDark = true): string {
+        const iconRemote = this.getTransportIconRemote(modeInfo, onDark);
+        if (iconRemote) {
+            return iconRemote;
+        }
+        // No remote icon satisfying onDark requierement / preference
+        if (remoteOverOnDark) { // If remote is a priority over onDark, return a remote icon anyway, if there's one.
+            const iconRemoteInverted = this.getTransportIconRemote(modeInfo, !onDark);
+            if (iconRemoteInverted) { // If not, then there's no remote icon.
+                return iconRemoteInverted;
+            }
+        }
+        return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
+    }
+
+    public static getTransportIconRemote(modeInfo: ModeInfo, onDark = false): string | undefined {
+        if (!onDark && modeInfo.remoteIcon) {
+            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteIcon + ".svg";
         }
         if (onDark && modeInfo.remoteDarkIcon) {
             return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteDarkIcon + ".svg";
         }
-        if (modeInfo.remoteIcon) {
-            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteIcon + ".svg";
-        }
-        return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
+        return undefined;
     }
 
     public static getTransportIconModeId(modeIdentifier: ModeIdentifier, isRealtime = false, onDark = false): string {

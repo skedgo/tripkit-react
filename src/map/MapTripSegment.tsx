@@ -12,6 +12,7 @@ import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 
 interface IProps {
     segment: Segment;
@@ -30,7 +31,11 @@ class MapTripSegment extends React.Component<IProps, {}> {
                 {(config: TKUIConfig) => {
                     const transIconHTML = renderToStaticMarkup(
                         <TKUIConfigProvider config={config}>
-                            {TKUITransportPin.createForSegment(this.props.segment)}
+                            <OptionsContext.Consumer>
+                                {(optionsContext: IOptionsContext) =>
+                                    TKUITransportPin.createForSegment(this.props.segment, !!optionsContext.value.isDarkMode)
+                                }
+                            </OptionsContext.Consumer>
                         </TKUIConfigProvider>
                     );
                     const icon = L.divIcon({

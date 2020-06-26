@@ -48,7 +48,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
 
         secondary: {
             background: 'none',
-            color: black(0, theme.isDark),
+            ...theme.textColorDefault,
             padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
             border: '2px solid ' + black(4, theme.isDark),

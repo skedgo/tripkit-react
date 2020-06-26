@@ -20,7 +20,7 @@ export const tGUIFeedbackFormDefaultStyle: TKUIStyles<TGUIFeedbackFormStyle, TGU
             position: 'relative'
         },
         label: {
-            color: tKUIColors.black1,
+            ...theme.textColorGray,
             marginRight: '10px'
         },
         input: {
@@ -41,7 +41,7 @@ export const tGUIFeedbackFormDefaultStyle: TKUIStyles<TGUIFeedbackFormStyle, TGU
             ...genStyles.grow
         },
         footer: {
-            color: tKUIColors.black1,
+            ...theme.textColorGray,
             marginRight: '-15px',
             marginLeft: '-15px',
             paddingRight: '15px',

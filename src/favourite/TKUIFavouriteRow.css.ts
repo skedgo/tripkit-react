@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "./TKUIFavouriteRow";
 import genStyles from "../css/GenStyle.css";
-import {black, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIFavouriteRowDefaultStyle: TKUIStyles<TKUIFavouriteRowStyle, TKUIFavouriteRowProps> =
@@ -23,7 +23,7 @@ export const tKUIFavouriteRowDefaultStyle: TKUIStyles<TKUIFavouriteRowStyle, TKU
             ...genStyles.center,
             ...genStyles.alignCenter,
             ...genStyles.svgFillCurrColor,
-            color: tKUIColors.black1
+            color: black(1, theme.isDark)
         },
         text: {
             marginLeft: '10px',

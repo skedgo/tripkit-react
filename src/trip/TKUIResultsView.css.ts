@@ -1,10 +1,11 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUIResultsViewProps, TKUIResultsViewStyle} from "./TKUIResultsView";
-import Constants from "../util/Constants";
 import {black, important, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
+import iconSort from "../images/ic-sort.svg";
+import iconSortDark from "../images/ic-sort-dark.svg";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResultsViewProps> =
     (theme: TKUITheme) => ({
@@ -21,7 +22,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             margin: '0 5px',
             width: '20px',
             height: '20px',
-            color: '#6d6d6d',
+            color: black(1, theme.isDark),
             ...genStyles.alignSelfCenter,
             ...genStyles.animateSpin,
             ...genStyles.svgFillCurrColor
@@ -40,12 +41,11 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.grow
         },
         sortSelectControl: {
-            backgroundImage: 'url('+ Constants.absUrl("/images/ic-sort.svg") + ')!important',
+            backgroundImage: 'url('+ (theme.isLight ? iconSort : iconSortDark) + ')!important',
             backgroundRepeat: 'no-repeat!important',
             backgroundPosition: '10px 50%!important',
             backgroundSize: '18px',
             paddingLeft: '35px',
-            backgroundColor: '#00000000'
         },
         footer: {
             ...genStyles.flex,

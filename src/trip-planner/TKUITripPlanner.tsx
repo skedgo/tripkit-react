@@ -159,6 +159,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
             this.props.onQueryUpdate({to: favourite.stop});
+            this.props.onStopChange(favourite.stop);
         } else if (favourite instanceof FavouriteLocation) {
             this.props.onQueryUpdate({from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW});
             this.props.onDirectionsView(true);
@@ -260,7 +261,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const toLocation = this.props.query.to;
         const locationDetailView = TKUITripPlanner.isLocationDetailView(this.props) && !this.state.showFavourites &&
-            !(this.state.showSettings && this.props.portrait) &&
+            !(this.state.showSettings && this.props.portrait) &&    // TODO: all of this interactions will not be needed anymore after using RemoteCards, which will stack properly (need to extend it to support multiple cards at once).
             <TKUILocationDetailView
                 location={toLocation!}
                 slideUpOptions={{
@@ -440,12 +441,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {sideBar}
                         {settings}
                         {locationDetailView}
-                        {favouritesView}
                         {routingResultsView}
                         {tripDetailView}
                         {timetableView}
                         {serviceDetailView}
                         {transportSettings}
+                        {favouritesView}
                         <TKUICardContainer/>
                         {<TKUIWaitingRequest
                             status={this.state.tripUpdateStatus}

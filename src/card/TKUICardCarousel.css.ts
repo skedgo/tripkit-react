@@ -1,4 +1,4 @@
-import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
+import {black, cardSpacing, colorWithOpacity, queryWidth, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
@@ -42,7 +42,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             '& .carousel .control-dots .dot': {
                 transition: 'opacity .25s ease-in',
                 opacity: '.5',
-                background: 'black',
+                background: black(0, theme.isDark),
                 borderRadius: '50%',
                 width: '10px',
                 height: '10px',
@@ -63,7 +63,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
                 width: 'initial'
             },
             '& .carousel.carousel-slider .control-arrow': {
-                background: 'rgba(0, 0, 0, .4)',
+                background: colorWithOpacity(black(0, theme.isDark), .4),
                 height: '30px',
                 marginRight: '30px',
                 marginLeft: '30px',
@@ -72,7 +72,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
                 fontSize: '14px'
             },
             '& .carousel.carousel-slider .control-arrow:hover': {
-                background: 'rgba(0, 0, 0, 0.6)'
+                background: black(1, theme.isDark)
             },
             '& .carousel .control-arrow:before, .carousel.carousel-slider .control-arrow:before': {
                 margin: '0 10px',

@@ -1,6 +1,6 @@
 import {badgeColor, TKUITripRowProps, TKUITripRowStyle} from "./TKUITripRow";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {rowSelectedStyle, rowStyle} from "../service/TKUIServiceDepartureRow.css";
 
@@ -56,7 +56,7 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
             }
         },
         alternative: {
-            ...rowStyle,
+            ...rowStyle(theme),
             borderBottom: '1px solid ' + black(4, theme.isDark)
         },
         selectedAlternative: {
@@ -66,7 +66,7 @@ export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowP
             opacity: '.4'
         },
         crossOut: {
-            borderTop: '1px solid black',
+            borderTop: '1px solid ' + black(0, theme.isDark),
             position: 'absolute',
             top: '50%',
             width: '100%',

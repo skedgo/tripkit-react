@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationSearchProps, TKUILocationSearchStyle} from "./TKUILocationSearch";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
@@ -28,17 +28,17 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             padding: '10px',
             ...genStyles.borderRadius(50, "%"),
             '&:hover': {
-                backgroundColor: theme.isLight ? tKUIColors.black5 : tKUIColors.white5
+                backgroundColor: black(5, theme.isDark)
             },
             '&:active': {
-                backgroundColor: theme.isLight ? tKUIColors.black4 : tKUIColors.white4
+                backgroundColor: black(4, theme.isDark)
             }
         },
         sideBarIcon: {
             width: '100%',
             height: '100%',
             ...genStyles.svgFillCurrColor,
-            color: theme.isLight ? tKUIColors.black1 : tKUIColors.white1
+            color: black(1, theme.isDark)
         },
         locationBox: {
             ...genStyles.grow,
@@ -55,10 +55,10 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
         },
         glassIcon: {
             ...genStyles.svgFillCurrColor,
-            color: tKUIColors.black1
+            color: black(1, theme.isDark)
         },
         divider: {
-            borderLeft: '1px solid ' + tKUIColors.black3,
+            borderLeft: '1px solid ' + black(3, theme.isDark),
             ...genStyles.alignSelfStretch,
             margin: '8px'
         },

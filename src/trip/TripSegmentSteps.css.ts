@@ -26,8 +26,8 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
         },
         rightLabel: {
             margin: '12px 16px',
-            ...theme.textSizeCaption,
-            ...theme.textColorGray
+            ...theme.textSizeBody,
+            ...theme.textColorDefault
         },
         linePanel: {
             backgroundColor: (props: IStyleRelevantProps) => props.borderColor,

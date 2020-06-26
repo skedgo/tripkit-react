@@ -12,7 +12,7 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
             zIndex: '1100!important',
             maxWidth: '95%',
             // Just to use currentColor below
-            color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : 'white',
+            color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : white(0, theme.isDark),
             '& .rc-tooltip-inner': {
                 border: 'none',
                 padding: '0 !important',

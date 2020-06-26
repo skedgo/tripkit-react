@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {alertSeverity} from "../model/trip/Segment";
@@ -18,7 +18,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
         },
         pastStop: {
             '& div': {
-                color: tKUIColors.black2
+                ...theme.textColorDisabled
             }
         },
         currStop: {
