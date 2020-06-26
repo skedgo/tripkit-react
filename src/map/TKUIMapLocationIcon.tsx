@@ -7,6 +7,7 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -20,6 +21,7 @@ export interface IStyle {
     main: CSSProps<IProps>;
     iconPin: CSSProps<IProps>;
     icon: CSSProps<IProps>;
+    iconInverted: CSSProps<IProps>;
     clickAndHold: CSSProps<IProps>;
 }
 
@@ -64,13 +66,19 @@ class TKUIMapLocationIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const location = this.props.location;
-        let iconSrc: string | undefined;
+        let transIcon: string | undefined;
+        let invertedWrtMode = false;
         if (location instanceof StopLocation) {
-            iconSrc = TransportUtil.getTransportIcon(location.modeInfo, false, true);
-            const remoteIcon = location.modeInfo.remoteIcon !== undefined;
+            const modeInfo = location.modeInfo;
+            const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
+            transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);
+            invertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
         }
         const classes = this.props.classes;
-        const icon = iconSrc && <img src={iconSrc} className={classes.icon}/>;
+        const icon = transIcon &&
+            <div className={classNames(classes.icon, invertedWrtMode && classes.iconInverted)}>
+                <img src={transIcon}/>
+            </div>;
         return <div className={classes.main}
                     id={this.id}>
             <IconPin className={classes.iconPin}/>

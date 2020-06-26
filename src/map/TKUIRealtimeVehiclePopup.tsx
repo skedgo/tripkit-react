@@ -34,7 +34,6 @@ class TKUIRealtimeVehiclePopup extends React.Component<IProps, IState> {
                 {title}
                 <div style={{
                     ...genStyles.fontSM,
-                    color: tKUIColors.black1,
                     whiteSpace: 'nowrap'
                 }}>
                     {text}

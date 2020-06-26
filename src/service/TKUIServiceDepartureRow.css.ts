@@ -5,20 +5,21 @@ import {
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
-import {colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
+import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
 
-export const rowStyle = {
+export const rowStyle = (theme: TKUITheme) => ({
     padding: '16px',
     '&:hover': {
-        backgroundColor: tKUIColors.black5
-    },
+        backgroundColor: black(5, theme.isDark)
+},
     '&:active': {
-        backgroundColor: tKUIColors.black4
-    }
-};
+    backgroundColor: black(4, theme.isDark)
+}
+});
 
 export const rowSelectedStyle = (theme: TKUITheme) => ({
     borderLeft: '4px solid ' + theme.colorPrimary,
@@ -33,7 +34,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.spaceBetween
         },
         // Parameterize row and rowSelected classes as suggested in https://redmine.buzzhives.com/issues/12629#note-8
-        row: rowStyle,
+        row: rowStyle(theme),
         rowSelected: rowSelectedStyle(theme),
         clickable: {
             cursor: 'pointer'
@@ -51,7 +52,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             }
         },
         transIcon:{
-            opacity: '.4'
+            opacity: (props: TKUIServiceDepartureRowProps) => !isRemoteIcon(props.value.modeInfo) ? '.4' : undefined
         },
         serviceNumber: {
             color: 'white',
@@ -62,7 +63,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.fontSM
         },
         time: {
-            color: tKUIColors.black1,
+            ...theme.textColorGray,
             marginRight: '10px',
             ...theme.textSizeBody
         },

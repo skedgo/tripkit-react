@@ -25,7 +25,7 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
         icon: {
             margin: '0 10px',
             height: '18px',
-            color: black(1, theme.isDark),
+            ...theme.textColorGray,
             ...genStyles.svgPathFillCurrColor,
             '&>*': {
                 height: '18px',
@@ -43,14 +43,14 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             fontWeight: 'bold'
         },
         mainAddress: {
-            color: 'black'
+            ...theme.textColorDefault
         },
         matchingSubstr: {
             fontWeight: 'bold'
         },
         secondaryAddress: {
             marginLeft: '5px',
-            color: black(1, theme.isDark),
+            ...theme.textColorGray,
             fontWeight: 'initial',
             ...genStyles.overflowEllipsis
         }

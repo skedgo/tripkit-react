@@ -26,8 +26,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.column,
             ...genStyles.grow,
             '&>*': {
-                ...genStyles.noShrink,
-                ...theme.divider
+                ...genStyles.noShrink
             } as CSSProperties<TKUITimetableViewProps>
         },
         subHeader: {
@@ -102,13 +101,13 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             } as CSSProperties<TKUITimetableViewProps>
         },
         dapartureRow: {
-            borderBottom: '1px solid ' + tKUIColors.black4
+            ...theme.divider
         },
         iconLoading: {
             margin: '10px',
             width: '20px',
             height: '20px',
-            color: '#6d6d6d',
+            color: black(1, theme.isDark),
             ...genStyles.alignSelfCenter,
             ...genStyles.animateSpin,
             ...genStyles.svgFillCurrColor

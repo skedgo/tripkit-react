@@ -506,6 +506,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             }}
                             onLocAction={this.props.onLocAction}
                             omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
+                            isDarkMode={this.props.theme.isDark}
                         />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {

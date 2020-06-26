@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import {TKUIErrorViewProps, TKUIErrorViewStyle} from "./TKUIErrorView";
 import genStyles from "../css/GenStyle.css";
 
@@ -21,7 +21,7 @@ export const tKUIErrorViewDefaultStyle: TKUIStyles<TKUIErrorViewStyle, TKUIError
             ...genStyles.alignCenter,
             margin: '24px 0',
             ...genStyles.fontM,
-            color: tKUIColors.black2,
+            color: black(2, theme.isDark),
             textAlign: 'center'
         },
         errorActions: {

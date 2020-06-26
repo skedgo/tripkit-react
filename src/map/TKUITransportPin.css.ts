@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITransportPinProps, TKUITransportPinStyle} from "./TKUITransportPin";
 import genStyles from "../css/GenStyle.css";
@@ -14,7 +14,11 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             position: 'initial!important',
             height: '48px',
             width: '48px',
-            outline: 'none!important'
+            outline: 'none!important',
+            '& circle, path': {
+                fill: white(0, theme.isDark),
+                stroke: black(0, theme.isDark)
+            }
         },
         transport: {
             position: 'absolute',
@@ -28,14 +32,18 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             transform: 'translate(-50%)',
             width: '24px',
             height: '24px',
+            background: (props: TKUITransportPinProps) => props.iconForDark !== theme.isDark && !props.arriveSegment ?
+                white(0, props.iconForDark) : undefined,
+            border: (props: TKUITransportPinProps) => props.iconForDark !== theme.isDark && !props.arriveSegment ?
+                '1px solid ' + white(1, props.iconForDark) : undefined
         },
         timeLabel: {
             position: 'absolute',
             top: '12px',
             left: '30px',
-            backgroundColor: 'black',
+            backgroundColor: black(0, theme.isDark),
             opacity: '.7',
-            color: 'white',
+            color: white(0, theme.isDark),
             padding: '3px 10px 3px 14px',
             WebkitBorderRadius: '0 10px 10px 0',
             MozBorderRadius: '0 10px 10px 0',
@@ -51,7 +59,6 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             },
             '& $pin:hover path': {
                 strokeDasharray: '4',
-                stroke: 'black'
             },
             '& $pin:hover': {
                 opacity: '.9'
@@ -70,7 +77,7 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             },
             '& $pin:hover circle': {
                 strokeDasharray: '4',
-                stroke: 'black'
+                stroke: black(0, theme.isDark)
             },
             '& $pin:hover': {
                 opacity: '.9'

@@ -39,7 +39,7 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
             margin: '10px',
             width: '40px',
             height: '40px',
-            color: '#6d6d6d',
+            color: black(1, theme.isDark),
             ...genStyles.alignSelfCenter,
             ...genStyles.animateSpin,
             ...genStyles.svgFillCurrColor

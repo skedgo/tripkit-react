@@ -34,7 +34,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             width: '16px',
             height: '16px',
             '& path': {
-                fill: '#6d6d6d'
+                fill: black(1, theme.isDark)
             },
             ...genStyles.animateSpin
         },
@@ -48,7 +48,9 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             margin: '0 5px',
             width: '17px',
             height: '17px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            ...genStyles.svgFillCurrColor,
+            color: black(1, theme.isDark)
         },
         menu: {
             ...theme.cardBackground,

@@ -18,7 +18,11 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...genStyles.borderRadius(12)
+                ...theme.cardBackground,
+                ...theme.textColorGray
+            },
+            '& .leaflet-popup-tip': {
+                background: white(0, theme.isDark)
             },
             '& .leaflet-bar': {
                 boxShadow: theme.isLight ?
