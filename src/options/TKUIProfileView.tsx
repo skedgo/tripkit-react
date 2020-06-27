@@ -19,13 +19,13 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
+import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
-import {black, cardSpacing} from "../jss/TKUITheme";
-import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-import { withStyles } from '@material-ui/core/styles';
+import {cardSpacing} from "../jss/TKUITheme";
+import TKUISelect from "../buttons/TKUISelect";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -39,7 +39,6 @@ interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
 
 export interface IStyle {
     main: CSSProps<IProps>;
-    scrollPanel: CSSProps<IProps>;
     section: CSSProps<IProps>;
     sectionTitle: CSSProps<IProps>;
     sectionBody: CSSProps<IProps>;
@@ -54,6 +53,7 @@ export interface IStyle {
     checkboxGroup: CSSProps<IProps>;
     closeBtn: CSSProps<IProps>;
     link: CSSProps<IProps>;
+    optionSelect: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -91,20 +91,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
-        this.createCheckboxComponent(props);
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
-    }
-
-    private createCheckboxComponent(props: IProps) {
-        this.GreenCheckbox = withStyles({
-            root: {
-                color: black(1, props.theme.isDark),
-                '&$checked': {
-                    color: props.theme.colorPrimary,
-                },
-            },
-            checked: {},
-        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
     }
 
     private onMapOptionChange(option: MapLocationType, checked: boolean) {
@@ -181,6 +168,11 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                     draggable: false
                 }}
             />;
+        const appearenceOptions: any[] = [
+            { value: undefined, label: "Match OS"},
+            { value: false, label: "Light"},
+            { value: true, label: "Dark"}
+        ];
         const t = this.props.t;
         return (
             <TKUICard
@@ -190,130 +182,124 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
-                    <div className={classes.scrollPanel}>
-                        <div className={classes.section}>
-                            <div className={classes.sectionBody}>
-                                <div className={classNames(classes.optionRow, classes.optionLink)}
-                                     onClick={() => this.setState({showPersonalData: true})}
-                                >
-                                    {t("My.Personal.Data")}
-                                    <IconRightArrow/>
-                                </div>
+                    <div className={classes.section}>
+                        <div className={classes.sectionBody}>
+                            <div className={classNames(classes.optionRow, classes.optionLink)}
+                                 onClick={() => this.setState({showPersonalData: true})}
+                            >
+                                {t("My.Personal.Data")}
+                                <IconRightArrow/>
                             </div>
                         </div>
-                        <div className={classes.section}>
-                            <div className={classes.sectionTitle}>
-                                {t("My.Transport")}
+                    </div>
+                    <div className={classes.section}>
+                        <div className={classes.sectionTitle}>
+                            {t("My.Transport")}
+                        </div>
+                        <div className={classes.sectionBody}>
+                            <div className={classNames(classes.optionRow, classes.optionLink)}
+                                 onClick={() => this.setState({showTransports: true})}
+                            >
+                                {t("Transport")}
+                                <IconRightArrow/>
                             </div>
-                            <div className={classes.sectionBody}>
-                                <div className={classNames(classes.optionRow, classes.optionLink)}
-                                     onClick={() => this.setState({showTransports: true})}
-                                >
-                                    {t("Transport")}
-                                    <IconRightArrow/>
-                                </div>
-                                <div className={classNames(classes.optionRow, classes.optionLink)}
-                                     onClick={() => this.setState({showPriorities: true})}
-                                >
-                                    {t("Priorities")}
-                                    <IconRightArrow/>
-                                </div>
+                            <div className={classNames(classes.optionRow, classes.optionLink)}
+                                 onClick={() => this.setState({showPriorities: true})}
+                            >
+                                {t("Priorities")}
+                                <IconRightArrow/>
                             </div>
                         </div>
-                        {false &&   // Disabled for now
-                        <div className={classes.section}>
-                            <div className={classes.sectionTitle} tabIndex={0}>
-                                Map Options
-                            </div>
-                            <div className={classes.sectionBody}>
-                                <div className={classNames(classes.optionRow, classes.specialServices)}>
-                                    <div>
-                                        <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
-                                             className={classes.icon}
-                                             aria-hidden="true"/>
-                                        {/*<Checkbox id="mo-mw"*/}
-                                                  {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}*/}
-                                                  {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}*/}
-                                                  {/*ariaLabelledby={"label-mo-mw"}/>*/}
-                                        <label htmlFor="mo-mw" id={"label-mo-mw"}>
-                                            MyWay retailers
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
-                                             className={classes.icon}
-                                             aria-hidden="true"/>
-                                        {/*<Checkbox id="mo-pr"*/}
-                                                  {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}*/}
-                                                  {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}*/}
-                                                  {/*ariaLabelledby={"label-mo-pr"}/>*/}
-                                        <label htmlFor="mo-pr" id={"label-mo-pr"}>
-                                            Park & Ride
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")}
-                                             className={classes.icon}
-                                             aria-hidden="true"/>
-                                        <Tooltip
-                                            placement="top"
-                                            overlay={
-                                                <div className={classes.tooltip}>
-                                                    This option displays bike share locations. Check current
-                                                    availability <a href="https://airbike.network/#download"
-                                                                    target="_blank"
-                                                                    className={classes.link}>here</a>.
-                                                </div>
-                                            }
-                                            align={{offset: [0, -10]}}
-                                            overlayClassName={classes.tooltipOverlay}
-                                            mouseEnterDelay={.5}
-                                        >
-                                            <div className={classes.checkboxGroup}>
-                                                {/*<Checkbox id="mo-bs"*/}
-                                                          {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}*/}
-                                                          {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}*/}
-                                                          {/*ariaLabelledby={"label-mo-bs"}/>*/}
-                                                <label htmlFor="mo-bs" id={"label-mo-bs"}>
-                                                    Bike Share
-                                                </label>
-                                                <img src={Constants.absUrl("/images/ic-info-circle.svg")}
-                                                     aria-hidden={true}
-                                                     className={classes.infoIcon}/>
+                    </div>
+                    {false &&   // Disabled for now
+                    <div className={classes.section}>
+                        <div className={classes.sectionTitle} tabIndex={0}>
+                            Map Options
+                        </div>
+                        <div className={classes.sectionBody}>
+                            <div className={classNames(classes.optionRow, classes.specialServices)}>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
+                                    {/*<Checkbox id="mo-mw"*/}
+                                    {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}*/}
+                                    {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}*/}
+                                    {/*ariaLabelledby={"label-mo-mw"}/>*/}
+                                    <label htmlFor="mo-mw" id={"label-mo-mw"}>
+                                        MyWay retailers
+                                    </label>
+                                </div>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
+                                    {/*<Checkbox id="mo-pr"*/}
+                                    {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}*/}
+                                    {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}*/}
+                                    {/*ariaLabelledby={"label-mo-pr"}/>*/}
+                                    <label htmlFor="mo-pr" id={"label-mo-pr"}>
+                                        Park & Ride
+                                    </label>
+                                </div>
+                                <div>
+                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")}
+                                         className={classes.icon}
+                                         aria-hidden="true"/>
+                                    <Tooltip
+                                        placement="top"
+                                        overlay={
+                                            <div className={classes.tooltip}>
+                                                This option displays bike share locations. Check current
+                                                availability <a href="https://airbike.network/#download"
+                                                                target="_blank"
+                                                                className={classes.link}>here</a>.
                                             </div>
-                                        </Tooltip>
-                                    </div>
+                                        }
+                                        align={{offset: [0, -10]}}
+                                        overlayClassName={classes.tooltipOverlay}
+                                        mouseEnterDelay={.5}
+                                    >
+                                        <div className={classes.checkboxGroup}>
+                                            {/*<Checkbox id="mo-bs"*/}
+                                            {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}*/}
+                                            {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}*/}
+                                            {/*ariaLabelledby={"label-mo-bs"}/>*/}
+                                            <label htmlFor="mo-bs" id={"label-mo-bs"}>
+                                                Bike Share
+                                            </label>
+                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")}
+                                                 aria-hidden={true}
+                                                 className={classes.infoIcon}/>
+                                        </div>
+                                    </Tooltip>
                                 </div>
                             </div>
                         </div>
-                        }
-                        <div className={classes.section}>
-                            <div className={classes.sectionTitle}>
-                                {"Appearence"}
-                            </div>
-                            <div className={classes.sectionBody}>
-                                <div className={classNames(classes.optionRow, classes.checkboxRow)}>
-                                    <div>
-                                        {"Dark mode"}
-                                    </div>
-                                    <this.GreenCheckbox
-                                        checked={this.state.update.isDarkMode}
-                                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                            const checked = event.target.checked;
-                                            this.setState((prevState: IState) => ({
-                                                update: Util.iAssign(prevState.update, { isDarkMode: checked })
-                                            }), () => {
-                                                this.applyChanges();
-                                                setTimeout(() => {
-                                                    this.createCheckboxComponent(this.props);
-                                                    this.forceUpdate();
-                                                }, 100);
-                                            });
-                                        }}
-                                        value="primary"
-                                        inputProps={{ 'aria-label': 'primary checkbox' }}
-                                    />
+                    </div>
+                    }
+                    <div className={classes.section}>
+                        <div className={classes.sectionBody}>
+                            <div className={classNames(classes.optionRow, classes.checkboxRow)}>
+                                <div>
+                                    {"Appearence"}
                                 </div>
+                                <TKUISelect
+                                    options={appearenceOptions}
+                                    value={appearenceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
+                                    onChange={(option) => {
+                                        this.setState((prevState: IState) => ({
+                                            update: Util.iAssign(prevState.update, { isDarkMode: option.value })
+                                        }), () => {
+                                            this.applyChanges();
+                                        });
+                                    }}
+                                    className={classes.optionSelect}
+                                    menuStyle={{
+                                        marginTop: '2px',
+                                    }}
+                                    renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                                />
                             </div>
                         </div>
                     </div>

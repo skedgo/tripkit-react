@@ -12,6 +12,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import LocationUtil from "../util/LocationUtil";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -51,7 +52,7 @@ class TKUIFavouriteRow extends React.Component<IProps, {}> {
                     style={{
                         width: '20px',
                         height: '20px',
-                        background: black(1, this.props.theme.isDark)
+                        background: !isRemoteIcon(value.stop.modeInfo) ? black(1) : undefined
                     }}
                     isDarkMode={this.props.theme.isDark}
                 />;
