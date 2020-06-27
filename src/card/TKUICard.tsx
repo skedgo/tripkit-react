@@ -31,6 +31,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     presentation?: CardPresentation;
     presentationFromViewport?: (portrait: boolean) => CardPresentation;
     slideUpOptions?: TKUISlideUpOptions;
+    modalOptions?: any;
     open?: boolean;
     children?: any;
     bodyStyle?: CSS.Properties;
@@ -187,6 +188,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         }}
                         shouldCloseOnEsc={true}
                         onRequestClose={this.props.onRequestClose}
+                        {...this.props.modalOptions}
                     >
                         {body}
                     </Modal> : this.props.open && body

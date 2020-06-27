@@ -36,7 +36,12 @@ class TKUICardContainer extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         return (
-            <TKUICard {...this.state.cardProps}/>
+            <TKUICard
+                modalOptions={{
+                    portalClassName: 'ReactModalPortalOnTop'
+                }}
+                {...this.state.cardProps}
+            />
         )
     }
 }

@@ -20,7 +20,10 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
         },
         menu: {
             marginTop: '1px',
-            background: white(0, theme.isDark)
+            background: white(0, theme.isDark),
+            boxShadow: theme.isLight ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
         },
         option: {
             ...theme.textSizeCaption,

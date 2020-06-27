@@ -2,6 +2,7 @@ import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "./TKUITransportOptionsRow";
 import genStyles from "../css/GenStyle.css";
+import {tKUIProfileViewDefaultStyle} from "./TKUIProfileView.css";
 
 export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowStyle, TKUITransportOptionsRowProps> =
     (theme: TKUITheme) => ({
@@ -87,10 +88,7 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
         prefModeTitle: {
             ...genStyles.grow
         },
-        walkSpeedSelect: {
-            minWidth: '92px',
-            padding: '0 10px',
-            border: '1px solid ' + tKUIColors.black4,
-            borderRadius: '5px'
-        }
+        // Temporary until factor out common style, or define a special component TKUIDropdownBtn, or just make
+        // TKUISelect to default to this style, and adapt other uses (from TKUIRoutingQueryInput and TKUIResultsView)
+        walkSpeedSelect: (tKUIProfileViewDefaultStyle as any)(theme).optionSelect
 });

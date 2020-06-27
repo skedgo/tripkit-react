@@ -16,6 +16,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
     controlStyle?: CSS.Properties;
     menuStyle?: CSS.Properties;
+    renderArrowDown?: () => JSX.Element;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -38,11 +39,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUISelect"
 };
 
+// TODO: Make TKUISelect to default to Dropdown btn style, as used or TKUIProfileView, and adapt other uses
+// (from TKUIRoutingQueryInput and TKUIResultsView).
+
 class TKUISelect extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const injectedStyles = this.props.injectedStyles;
-        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
+        const SelectDownArrow = this.props.renderArrowDown || ((props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>);
         return (
             <div className={this.props.className}>
                 <Select

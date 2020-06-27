@@ -373,6 +373,10 @@ const otherStyles = {
             'zIndex': '1080'
         },
 
+        '.ReactModalPortalOnTop': {
+            'zIndex': '1090'
+        },
+
         '.ReactModal__Overlay': {
             'zIndex': '1080'
         }

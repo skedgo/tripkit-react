@@ -39,7 +39,10 @@ class StopIcon extends React.Component<IProps, {}> {
                 background: transportIconIsRemote ? white(0, transIconOnDark) : transportColor,
                 border: '1px solid ' + (this.props.isDarkMode || transportIconIsRemote ? white(1) : undefined),
                 ...genStyles.borderRadius(transportIconIsRemote ? 0 : 50, "%"),
-                ...this.props.style
+                ...this.props.style,
+                ...genStyles.flex,
+                ...genStyles.center,
+                ...genStyles.alignCenter
             };
         const imgStyle = {
             opacity: getTransIconOpacity(modeInfo, !!this.props.isDarkMode),
