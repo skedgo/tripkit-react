@@ -47,6 +47,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IStyle {
     main: CSSProps<IProps>;
+    input: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
     btnClear: CSSProps<IProps>;
     iconClear: CSSProps<IProps>;
@@ -321,7 +322,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                <input type="text" {...props} style={this.props.inputStyle}/>
+                <input type="text" {...props} style={this.props.inputStyle} className={classes.input}/>
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?

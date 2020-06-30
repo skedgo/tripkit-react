@@ -54,6 +54,7 @@ interface ITKUIGenStyleClasses {
 
 interface ITKUIGenStyleCreators {
     borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
+    borderRadiusString: (value: string) => CSSProps<{}>;
     transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
 }
 
@@ -340,6 +341,12 @@ const genStyleCreators: ITKUIGenStyleCreators = {
         borderRadius: radius + unit,
         WebkitBorderRadius: radius + unit,
         MozBorderRadius: radius + unit
+    }),
+
+    borderRadiusString: (value: string) => ({
+        borderRadius: value,
+        WebkitBorderRadius: value,
+        MozBorderRadius: value
     }),
 
     transformRotate: (angle: number, unit: string = 'deg') => ({

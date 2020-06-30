@@ -64,11 +64,20 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
             GATracker.initialize(Array.isArray(gaConfig.tracker) ? gaConfig.tracker : [gaConfig.tracker],
                 gaConfig.initOptions);
         }
-        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-            this.setState({
-                isOSDark: e.matches
-            })
-        });
+        const mediaQueryList = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        if (mediaQueryList) {
+            const onAppearenceChange = e =>
+                this.setState({
+                    isOSDark: e.matches
+                });
+            if (mediaQueryList.addEventListener) {
+                mediaQueryList.addEventListener('change', onAppearenceChange)
+            } else if (mediaQueryList.addListener) {
+                // Need this for Safari and old browsers
+                // (see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener)
+                mediaQueryList.addListener(onAppearenceChange)
+            }
+        }
     }
 
 }

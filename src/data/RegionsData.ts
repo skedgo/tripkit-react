@@ -23,8 +23,12 @@ export class RegionsData {
     private regionInfosRequests: Map<string, Promise<RegionInfo>> = new Map<string, Promise<RegionInfo>>();
     private regionInfos: Map<string, RegionInfo> = new Map<string, RegionInfo>();
 
+    // Set this to hardcode regions json
+    public static regionsJsonPromise: Promise<any> | undefined = undefined;
+
     constructor() {
-        this.regionsRequest = TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 })
+        this.regionsRequest = (RegionsData.regionsJsonPromise !== undefined ? RegionsData.regionsJsonPromise :
+            TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 }))
             .then((regionResultsJson: any) => {
                 return Util.deserialize(regionResultsJson, RegionResults) as RegionResults;
             });

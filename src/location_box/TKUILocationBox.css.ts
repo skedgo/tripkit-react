@@ -11,22 +11,22 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.grow,
-            '& input': {
-                ...resetStyles.input, /* Style resets */
-                border: 'none!important',
-                outline: '0',
-                background: 'none',
-                ...genStyles.grow,
-                margin: 0, /* Safari puts a margin of 2 */
-                // TODO: according to design in
-                // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
-                // always fontM (16px).
-                ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
-                lineHeight: '30px',
-                color: black(1, theme.isDark),
-                ...DeviceUtil.isIE && {
-                    height: '30px'
-                }
+        },
+        input: {
+            ...resetStyles.input, /* Style resets */
+            border: 'none!important',
+            outline: '0',
+            background: 'none',
+            ...genStyles.grow,
+            margin: 0, /* Safari puts a margin of 2 */
+            // TODO: according to design in
+            // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
+            // always fontM (16px).
+            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+            lineHeight: '30px',
+            color: black(1, theme.isDark),
+            ...DeviceUtil.isIE && {
+                height: '30px'
             }
         },
         iconLoading: {

@@ -50,6 +50,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {}
 interface IStyle {
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
+    mainForSlideUp: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
     subHeader: CSS.Properties & CSSProperties<IProps>;
@@ -110,7 +111,8 @@ class TKUICard extends React.Component<IProps, IState> {
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         const body =
-            <div className={classNames(classes.main, genClassNames.root)}>
+            <div className={classNames(classes.main, genClassNames.root,
+                DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}>
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
                     this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
