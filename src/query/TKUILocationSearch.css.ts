@@ -18,7 +18,8 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             },
             '& input::placeholder': {
                 ...theme.textSizeBody,
-                ...theme.textColorDisabled
+                ...theme.textColorDisabled,
+                lineHeight: undefined // Reset lineHeight for placeholder since it displays un-aligned on firefox. Irrelevant for other browsers.
             }
         },
         sideBarBtn: {

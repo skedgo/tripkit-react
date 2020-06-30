@@ -7,14 +7,21 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
     (theme: TKUITheme) => ({
         main: {
             position: 'absolute',
-            top: '0',
-            width: '100%',
-            height: '100%',
-            ...theme.modalFog,
             zIndex: '1050',
             ...genStyles.flex,
             ...genStyles.center,
             ...genStyles.alignCenter
+        },
+        blocking: {
+            top: '0',
+            width: '100%',
+            height: '100%',
+            ...theme.modalFog
+        },
+        noBlocking: {
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
         },
         waitingBanner: {
             ...theme.cardBackground,
