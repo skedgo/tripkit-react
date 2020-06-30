@@ -488,16 +488,27 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             const shareLinkSplit = shareLinkPath.split("/");
             const region = shareLinkSplit[2];
             const stopCode = shareLinkSplit[3];
+            this.setState({
+                tripUpdateStatus: TKRequestStatus.wait
+            });
             StopsData.instance.getStopFromCode(region, stopCode)
                 .then((stop: StopLocation) =>
                     RegionsData.instance.requireRegions().then(() => {
                         this.props.onQueryUpdate({to: stop});
                         this.props.onStopChange(stop);
                         TKShareHelper.resetToHome();
-                    }));
+                    }))
+                .finally(() => {
+                    this.setState({
+                        tripUpdateStatus: undefined
+                    })
+                });
         }
 
         if (TKShareHelper.isSharedServiceLink()) {
+            this.setState({
+                tripUpdateStatus: TKRequestStatus.wait
+            });
             const shareLinkPath = decodeURIComponent(document.location.pathname);
             const shareLinkSplit = shareLinkPath.split("/");
             const region = shareLinkSplit[2];
@@ -510,6 +521,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.props.onQueryUpdate({to: stop});
                         this.props.onFindAndSelectService(stop, serviceCode, initTime);
                         TKShareHelper.resetToHome();
+                    })
+                })
+                .finally(() => {
+                    this.setState({
+                        tripUpdateStatus: undefined
                     })
                 });
         }

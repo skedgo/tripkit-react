@@ -6,6 +6,7 @@ import {tKUIWaitingDefaultStyle} from "./TKUIWaitingRequest.css";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {ReactComponent as IconTick} from '../images/ic-tick.svg';
 import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
+import classNames from "classnames";
 
 // TODO: refactor it as a more general component that displays messages up-front.
 // Maybe add property blocking?: boolean.
@@ -17,10 +18,13 @@ export enum TKRequestStatus {
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     status?: TKRequestStatus,
     message?: string;
+    blocking?: boolean;
 }
 
 export interface IStyle {
     main: CSSProps<IProps>;
+    blocking: CSSProps<IProps>;
+    noBlocking: CSSProps<IProps>;
     waitingBanner: CSSProps<IProps>;
     waitingMessage: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
@@ -45,10 +49,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUIWaitingRequest extends React.Component<IProps, IState> {
 
+    public static defaultProps: Partial<IProps> = {
+        blocking: true
+    };
+
     public render(): React.ReactNode {
         const classes = this.props.classes;
         return (this.props.status !== undefined &&
-            <div className={classes.main}>
+            <div className={classNames(classes.main, this.props.blocking ? classes.blocking : classes.noBlocking)}>
                 <div className={classes.waitingBanner}>
                     <div className={classes.waitingMessage}>
                         {this.props.message}
