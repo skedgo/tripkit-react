@@ -183,28 +183,36 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public onTimetableForSegment(segment?: Segment) {
-            this.setState({segment: segment},
-                () => {
-                    if (segment) {
-                        RegionsData.instance.getRegionP(segment.from)
-                            .then((fromRegion?: Region) =>
-                                fromRegion && StopsData.instance.getStopFromCode(fromRegion.name, segment.stopCode!)
-                                    .then((startStop: StopLocation) => {
-                                        this.setState({startStop: startStop},
-                                            () => {
-                                                let initialTime = DateTimeUtil.momentFromTimeTZ(
-                                                    (segment.trip.queryTime ? segment.trip.queryTime : segment.startTime) * 1000).add(-30, 'm');
-                                                if (initialTime.isBefore(DateTimeUtil.getNow())) {
-                                                    initialTime = DateTimeUtil.getNow();
-                                                }
-                                                this.onInitTimeChange(initialTime);
-                                            });
-                                        }
-                                    )
-                            )
+            if (segment) {
+                this.setState({segment: segment},
+                    () => {
+                        if (segment) {
+                            RegionsData.instance.getRegionP(segment.from)
+                                .then((fromRegion?: Region) =>
+                                    fromRegion && StopsData.instance.getStopFromCode(fromRegion.name, segment.stopCode!)
+                                        .then((startStop: StopLocation) => {
+                                                this.setState({startStop: startStop},
+                                                    () => {
+                                                        let initialTime = DateTimeUtil.momentFromTimeTZ(
+                                                            (segment.trip.queryTime ? segment.trip.queryTime : segment.startTime) * 1000).add(-30, 'm');
+                                                        if (initialTime.isBefore(DateTimeUtil.getNow())) {
+                                                            initialTime = DateTimeUtil.getNow();
+                                                        }
+                                                        this.onInitTimeChange(initialTime);
+                                                    });
+                                            }
+                                        )
+                                )
 
-                    }
-                });
+                        }
+                    })
+            } else { // Also undefine startStop and selected
+                this.setState({
+                    segment: undefined,
+                    startStop: undefined,
+                    selected: undefined
+                })
+            }
         }
 
         public getSelectedService(): ServiceDeparture | undefined {
