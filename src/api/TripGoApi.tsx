@@ -31,18 +31,18 @@ class TripGoApi {
         return this.apiCallUrl(url, method, body, cache);
     }
 
-    public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
-        const url = this.getSatappUrl(endpoint);
-        return this.apiCallUrlT(url, method, resultClassRef, body);
-    }
-
     public static getSatappUrl(endpoint: string): string {
         const server = this.getServer();
         return server + (endpoint.startsWith("/") ? "" : "/") + endpoint;
     }
 
+    public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
+        return this.apiCall(endpoint, method, body)
+            .then(NetworkUtil.deserializer(resultClassRef));
+    }
+
     public static apiCallUrlT<T>(url: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
-        return this.apiCallUrl(url, method, resultClassRef, body)
+        return this.apiCallUrl(url, method, body)
             .then(NetworkUtil.deserializer(resultClassRef));
     }
 
