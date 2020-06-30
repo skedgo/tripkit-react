@@ -1,7 +1,8 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, cardSpacing, colorWithOpacity, queryWidth, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKUICardCarouselProps> =
     (theme: TKUITheme) => ({
@@ -10,15 +11,15 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             // Warn: in Safari overflow property does not override it's specific variants overflow-x and overflow-y,
             // so need to explicitly set overflowY to hidden to override overflowY value.
             // overflowY: 'hidden!important',
+            left: '0!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                width: '450px',
-                left: '5px!important',
-                padding: '5px 5px 0 5px'
+                width: queryWidth + 2 * cardSpacing() + 'px' // 2 * cardSpacing of left and right padding on pageWrapper class
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
-                width: '100%',
-                left: '0px!important',
-                padding: '5px 5px 0 5px'
+                width: '100%'
+            },
+            '&>*': {
+                paddingBottom: (props: TKUICardCarouselProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
             }
         },
         main: {
@@ -41,7 +42,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             '& .carousel .control-dots .dot': {
                 transition: 'opacity .25s ease-in',
                 opacity: '.5',
-                background: 'black',
+                background: black(0, theme.isDark),
                 borderRadius: '50%',
                 width: '10px',
                 height: '10px',
@@ -62,7 +63,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
                 width: 'initial'
             },
             '& .carousel.carousel-slider .control-arrow': {
-                background: 'rgba(0, 0, 0, .4)',
+                background: colorWithOpacity(black(0, theme.isDark), .4),
                 height: '30px',
                 marginRight: '30px',
                 marginLeft: '30px',
@@ -71,7 +72,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
                 fontSize: '14px'
             },
             '& .carousel.carousel-slider .control-arrow:hover': {
-                background: 'rgba(0, 0, 0, 0.6)'
+                background: black(1, theme.isDark)
             },
             '& .carousel .control-arrow:before, .carousel.carousel-slider .control-arrow:before': {
                 margin: '0 10px',
@@ -87,6 +88,12 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             }
         },
         pageWrapper: {
-            height: '100%'
+            height: '100%',
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                padding: '0 '+ cardSpacing() +'px'
+            },
+            ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
+                padding: '0 '+ cardSpacing(false) +'px'
+            }
         }
     });

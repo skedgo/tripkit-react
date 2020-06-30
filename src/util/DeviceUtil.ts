@@ -1,6 +1,3 @@
-// import browser from "browser-detect";
-// import {detect} from "detect-browser";
-
 export enum Device {
     PHONE = "PHONE",
     TABLET = "TABLET",
@@ -123,6 +120,8 @@ class DeviceUtil {
     public static isIOS = DeviceUtil.os === OS.IOS;
     public static isAndroid = DeviceUtil.os === OS.ANDROID;
 
+    public static isIE = DeviceUtil.findBrowser() === BROWSER.IE;
+
     public static isTouch() {
         return ( 'ontouchstart' in window ) ||
             ( navigator.maxTouchPoints > 0 ) ||
@@ -133,12 +132,6 @@ class DeviceUtil {
         document.getElementsByTagName("body")[0].classList.add("device-" + DeviceUtil.device.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("os-" + DeviceUtil.os.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("browser-" + DeviceUtil.browser.toLowerCase());
-
-        // window.alert(JSON.stringify(detect()) + " " + DeviceUtil.findBrowser());
-        // window.alert(JSON.stringify(browser()) + " " + DeviceUtil.findBrowser());
-        // window.alert(window.navigator.userAgent.toLowerCase() + "      " + DeviceUtil.findBrowser());
-        // window.alert(DeviceUtil.findBrowser());
-        // window.alert(window.navigator.userAgent.toLowerCase());
     }
 }
 

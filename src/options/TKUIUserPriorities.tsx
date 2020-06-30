@@ -9,7 +9,8 @@ import iconMoney from "../images/badges/ic-badge-money.svg";
 import iconCarbon from "../images/badges/ic-badge-leaf.svg";
 import iconTime from "../images/ic-clock.svg";
 import iconHassle from "../images/badges/ic-badge-like.svg";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
+import {CardPresentation} from "../card/TKUICard";
+import TKUICardRemote from "../card/TKUICardRemote";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
@@ -47,7 +48,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
         const priorities = this.props.value;
         const t = this.props.t;
         return (
-            <TKUICard
+            <TKUICardRemote
                 title={t("My.Priorities")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
@@ -70,6 +71,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         // valueLabelDisplay={'on'}
                         // valueLabelFormat={(value: number) => "Money"}
+                        isDarkMode={this.props.theme.isDark}
                     />
                     <TKUISlider
                         value={priorities.time * 100}
@@ -81,6 +83,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         rightLabel={t("KSL-Sc-UHU.text")}
                         min={0}
                         max={200}
+                        isDarkMode={this.props.theme.isDark}
                     />
                     <TKUISlider
                         value={priorities.carbon * 100}
@@ -92,6 +95,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         rightLabel={t("RKH-vV-EU9.text")}
                         min={0}
                         max={200}
+                        isDarkMode={this.props.theme.isDark}
                     />
                     <TKUISlider
                         value={priorities.hassle * 100}
@@ -103,6 +107,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         rightLabel={t("g7e-OY-rPw.text")}
                         min={0}
                         max={200}
+                        isDarkMode={this.props.theme.isDark}
                     />
                     <TKUIButton text={"Reset"}
                                 type={TKUIButtonType.SECONDARY}
@@ -110,7 +115,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                 onClick={() => this.props.onChange(TKWeightingPreferences.create())}
                     />
                 </div>
-            </TKUICard>
+            </TKUICardRemote>
         );
     }
 }

@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUITooltipProps, TKUITooltipStyle} from "./TKUITooltip";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
@@ -12,7 +12,7 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
             zIndex: '1100!important',
             maxWidth: '95%',
             // Just to use currentColor below
-            color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : 'white',
+            color: (props: TKUITooltipProps) => props.arrowColor ? props.arrowColor : white(0, theme.isDark),
             '& .rc-tooltip-inner': {
                 border: 'none',
                 padding: '0 !important',
@@ -61,26 +61,32 @@ export const tKUITooltipDefaultStyle: TKUIStyles<TKUITooltipStyle, TKUITooltipPr
             ...genStyles.alignCenter,
             ...genStyles.fontS,
             ...genStyles.borderRadius(3),
-            background: 'white',
+            background: white(0, theme.isDark),
+            color: black(1, theme.isDark),
             padding: '15px',
             border: 'none',
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
+            boxShadow: theme.isLight ? '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important' :
+                '0 0 4px 0 rgba(128, 128, 128,.4), 0 6px 12px 0 rgba(128, 128, 128,.08)!important',
             fontFamily: theme.fontFamily
         },
         btnClear: {
             ...resetStyles.button,
-            padding: '0',
             height: '18px',
             width: '18px',
+            padding: '4px',
             cursor: 'pointer',
             marginLeft: '15px',
             ...genStyles.noShrink,
-            ...genStyles.alignSelfStart
+            ...genStyles.alignSelfStart,
+            '& svg path': {
+                fill: black(1, theme.isDark)
+            },
+            '&:hover svg path, &:active svg path': {
+                fill: black(0, theme.isDark)
+            }
         },
         iconClear: {
-            color: 'black',
             width: '100%',
             height: '100%',
-            ...genStyles.svgFillCurrColor
-        },
+        }
     });

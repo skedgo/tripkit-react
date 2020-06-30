@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationBoxProps, TKUILocationBoxStyle} from "./TKUILocationBox";
 import genStyles from "../css/GenStyle.css";
@@ -11,18 +11,22 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.grow,
-            '& input': {
-                ...resetStyles.input, /* Style resets */
-                border: 'none!important',
-                outline: '0',
-                background: 'none',
-                ...genStyles.grow,
-                margin: 0, /* Safari puts a margin of 2 */
-                // TODO: according to design in
-                // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
-                // always fontM (16px).
-                ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
-                lineHeight: '30px'
+        },
+        input: {
+            ...resetStyles.input, /* Style resets */
+            border: 'none!important',
+            outline: '0',
+            background: 'none',
+            ...genStyles.grow,
+            margin: 0, /* Safari puts a margin of 2 */
+            // TODO: according to design in
+            // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
+            // always fontM (16px).
+            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+            lineHeight: '30px',
+            color: black(1, theme.isDark),
+            ...DeviceUtil.isIE && {
+                height: '30px'
             }
         },
         iconLoading: {
@@ -30,7 +34,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             width: '16px',
             height: '16px',
             '& path': {
-                fill: '#6d6d6d'
+                fill: black(1, theme.isDark)
             },
             ...genStyles.animateSpin
         },
@@ -44,11 +48,12 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             margin: '0 5px',
             width: '17px',
             height: '17px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            ...genStyles.svgFillCurrColor,
+            color: black(1, theme.isDark)
         },
         menu: {
-            border: '1px solid #cbcbcb',
-            backgroundColor: 'white',
+            ...theme.cardBackground,
             padding: '5px 0',
             zIndex: '10'
         },

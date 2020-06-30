@@ -5,10 +5,11 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import {tKUIPrivacyOptionsViewDefaultStyle} from "./TKUIPrivacyOptionsView.css";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import {CardPresentation} from "../card/TKUICard";
+import TKUICardRemote from "../card/TKUICardRemote";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
-import {tKUIColors, tKUIDeaultTheme} from "../jss/TKUITheme";
+import {black} from "../jss/TKUITheme";
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import {TKUIButton, TKUIButtonType} from "../index";
@@ -49,23 +50,29 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIPrivacyOptionsView"
 };
 
-const GreenCheckbox = withStyles({
-    root: {
-        color: tKUIColors.black1,
-        '&$checked': {
-            color: tKUIDeaultTheme.colorPrimary,    // TODO: avoid hardcoding
-        },
-    },
-    checked: {},
-})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
-
 class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
+
+    private GreenCheckbox;
+
+    constructor(props: IProps) {
+        super(props);
+        this.state = {};
+        this.GreenCheckbox = withStyles({
+            root: {
+                color: black(1, props.theme.isDark),
+                '&$checked': {
+                    color: props.theme.colorPrimary,
+                },
+            },
+            checked: {},
+        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
+    }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
         return (
-            <TKUICard
+            <TKUICardRemote
                 title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
@@ -98,7 +105,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anomymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
                                     </div>
                                 </div>
-                                <GreenCheckbox
+                                <this.GreenCheckbox
                                     checked={this.props.value.trackTripSelections}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                         const checked = event.target.checked;
@@ -114,20 +121,21 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                         <div className={classes.sectionFooter}>
                             {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.forever.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
-                        <div className={classes.section}>
-                            <div className={classes.sectionBody}>
-                                <div className={classes.optionRow}>
-                                    <TKUIButton text={t("Show.our.Privacy.Policy")}
-                                                type={TKUIButtonType.PRIMARY_LINK}
-                                                className={classes.optionLink}
-                                                onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
-                                    />
-                                </div>
+                    </div>
+                    <div style={this.props.theme.divider}/>
+                    <div className={classes.section}>
+                        <div className={classes.sectionBody}>
+                            <div className={classes.optionRow}>
+                                <TKUIButton text={t("Show.our.Privacy.Policy")}
+                                            type={TKUIButtonType.PRIMARY_LINK}
+                                            className={classes.optionLink}
+                                            onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
-            </TKUICard>
+            </TKUICardRemote>
         )
     }
 

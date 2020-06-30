@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import injectSheet, {JssProvider, withTheme} from "react-jss";
 import { Subtract } from "utility-types";
 import { ClassNameMap, Styles, StyleCreator, CSSProperties } from "react-jss";
@@ -24,7 +24,9 @@ export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProperties<Props>) 
 
 export type TKUICustomCSSProperties<Props> = CSSProperties<Props> | CSSPropertiesCreator<Props>;
 
-export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>
+export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
+
+export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
     styles?: TKUIStyles<ST, CP>,
@@ -38,6 +40,7 @@ export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     injectedStyles: Styles<keyof STYLE, PROPS>,
     classes: ClassNameMap<keyof STYLE>;
     refreshStyles: () => void;
+    theme: TKUITheme;
 }
 
 export function mergeStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
@@ -131,6 +134,7 @@ export function withStyleInjection<
                     <this.StyledComponent {...props}
                                           injectedStyles={this.stylesToInject(theme as TKUITheme)}
                                           refreshStyles={() => this.onRefreshStyles(true)}
+                                          theme={theme}
                     />
                 </JssProvider>
             );

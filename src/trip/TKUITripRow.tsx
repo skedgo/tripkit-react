@@ -49,6 +49,7 @@ interface IStyle {
     alternative: CSSProps<IProps>;
     pastAlternative: CSSProps<IProps>;
     selectedAlternative: CSSProps<IProps>;
+    crossOut: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -139,11 +140,11 @@ class TKUITripRow extends React.Component<IProps, {}> {
             (alt.queryIsLeaveAfter ? Math.floor(alt.depart/60) >= Math.floor(alt.queryTime/60) :
                 Math.floor(alt.arrive/60) <= Math.floor(alt.queryTime/60)));
         const selectedAlt = (trip as TripGroup).getSelectedTrip();
+        const visibleAlternativesCount = this.props.visibleAlternatives ? this.props.visibleAlternatives : 2;
         const visiblePastAlternatives = this.props.expanded ? pastAlternatives :
             pastAlternatives.includes(selectedAlt) ? [selectedAlt] : [];
         const visibleFutureAlternatives = this.props.expanded ? futureAlternatives :
-                futureAlternatives.slice(0, Math.min(futureAlternatives.length,
-                    this.props.visibleAlternatives ? this.props.visibleAlternatives : 2));
+                futureAlternatives.slice(0, Math.min(futureAlternatives.length, visibleAlternativesCount));
         if (futureAlternatives.includes(selectedAlt) && !visibleFutureAlternatives.includes(selectedAlt)) {
             visibleFutureAlternatives.push(selectedAlt);
         }
@@ -170,23 +171,28 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 }
                 {visibleAlternatives.map((altTrip: Trip, i: number) =>
                     <div className={classNames(classes.alternative,
-                        visiblePastAlternatives.includes(altTrip) && classes.pastAlternative,
                         this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
                          onClick={() => this.props.onAlternativeClick &&
                              this.props.onAlternativeClick(trip as TripGroup, altTrip)}
                          key={i}
                     >
-                        <TKUITripTime value={altTrip} brief={this.props.brief}/>
-                        <div className={classes.trackAndAction}>
-                            <TripRowTrack value={altTrip}
-                                          className={classes.track}
-                            />
-                            {this.props.onDetailClick &&
-                            <TKUIButton
-                                type={TKUIButtonType.PRIMARY_LINK}
-                                text={"Detail"}
-                                onClick={this.props.onDetailClick}
-                            />}
+                        <div className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
+                            <TKUITripTime value={altTrip} brief={this.props.brief}/>
+                            <div className={classes.trackAndAction}>
+                                <div style={{position: 'relative'}}>
+                                    {trip.isCancelled() &&
+                                    <div className={classes.crossOut}/>}
+                                    <TripRowTrack value={altTrip}
+                                                  className={classes.track}
+                                    />
+                                </div>
+                                {this.props.onDetailClick &&
+                                <TKUIButton
+                                    type={TKUIButtonType.PRIMARY_LINK}
+                                    text={"Detail"}
+                                    onClick={this.props.onDetailClick}
+                                />}
+                            </div>
                         </div>
                     </div>)}
                 <div className={classes.footer}
@@ -195,7 +201,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     <div className={classes.info}>
                         {info}
                     </div>
-                    {alternatives.length > 1 &&
+                    {(this.props.expanded || alternatives.length > visibleAlternatives.length) &&
                         <TKUIButton
                             text={this.props.expanded ? "Less routes" : "More routes"}
                             type={TKUIButtonType.PRIMARY_LINK}

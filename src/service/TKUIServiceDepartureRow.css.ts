@@ -5,25 +5,26 @@ import {
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
 import {DynamicCSSRule, CSSProperties} from "react-jss";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
+import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
 
-export const rowStyle = {
+export const rowStyle = (theme: TKUITheme) => ({
     padding: '16px',
     '&:hover': {
-        backgroundColor: tKUIColors.black5
-    },
+        backgroundColor: black(5, theme.isDark)
+},
     '&:active': {
-        backgroundColor: tKUIColors.black4
-    }
-};
+    backgroundColor: black(4, theme.isDark)
+}
+});
 
 export const rowSelectedStyle = (theme: TKUITheme) => ({
     borderLeft: '4px solid ' + theme.colorPrimary,
     paddingLeft: '12px', // 16px (row padding) - 4px (border width)
-    backgroundColor: theme.colorPrimaryOpacity(.08)
+    backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
 });
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
@@ -33,7 +34,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.spaceBetween
         },
         // Parameterize row and rowSelected classes as suggested in https://redmine.buzzhives.com/issues/12629#note-8
-        row: rowStyle,
+        row: rowStyle(theme),
         rowSelected: rowSelectedStyle(theme),
         clickable: {
             cursor: 'pointer'
@@ -51,7 +52,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             }
         },
         transIcon:{
-            opacity: '.4'
+            opacity: (props: TKUIServiceDepartureRowProps) => !isRemoteIcon(props.value.modeInfo) ? '.4' : undefined
         },
         serviceNumber: {
             color: 'white',
@@ -62,8 +63,9 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.fontSM
         },
         time: {
-            color: tKUIColors.black1,
-            marginRight: '10px'
+            ...theme.textColorGray,
+            marginRight: '10px',
+            ...theme.textSizeBody
         },
         timeAndOccupancy: {
             marginTop: '5px',
@@ -71,9 +73,8 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             ...genStyles.alignCenter
         },
         serviceDescription: {
-            marginTop: '5px',
-            color: tKUIColors.black1,
-            ...genStyles.fontS,
+            ...theme.textSizeCaption,
+            ...theme.textColorGray,
             ...genStyles.overflowEllipsis
         },
         cancelled: {

@@ -5,7 +5,6 @@ import NetworkUtil from "../util/NetworkUtil";
 import GeocodingCache from "./GeocodingCache";
 import LatLng from "../model/LatLng";
 import Util from "../util/Util";
-import GeolocationData from "./GeolocationData";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
 import {Env} from "../env/Environment";
@@ -20,9 +19,13 @@ class PeliasGeocoder implements IGeocoder {
     private options: GeocoderOptions;
     private cache: GeocodingCache;
 
-    constructor(geocodeServer: string, apiKey: string) {
+    // Added as constructor parameter, just for this geocoder, instead of a new option field, general for any geocoder.
+    private restrictToBounds: boolean;
+
+    constructor(geocodeServer: string, apiKey: string, restrictToBounds: boolean = false) {
         this.geocodeServer = geocodeServer;
         this.apiKey = apiKey;
+        this.restrictToBounds = restrictToBounds;
         this.options = new GeocoderOptions();
         this.cache = new GeocodingCache();
     }
@@ -51,7 +54,7 @@ class PeliasGeocoder implements IGeocoder {
         }
         if (autocomplete) {
             const url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
-                + (bounds ?
+                + (bounds && this.restrictToBounds ?
                         "&boundary.rect.min_lat=" + bounds.minLat +
                         "&boundary.rect.max_lat=" + bounds.maxLat +
                         "&boundary.rect.min_lon=" + bounds.minLng +

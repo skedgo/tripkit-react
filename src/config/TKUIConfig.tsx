@@ -52,6 +52,10 @@ import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "../locat
 import {TKUILocationBoxProps, TKUILocationBoxStyle} from "../location_box/TKUILocationBox";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCarousel";
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
+import {Tracker, InitializeOptions} from 'react-ga';
+import {TrackerOptions} from "../analytics/GATracker";
+import IGeocoder from "../geocode/IGeocoder";
+import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -60,9 +64,18 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     userLocationPromise: Promise<LatLng>;
-    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>
-    theme: Partial<TKUITheme>;
+    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>;
+    theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
+    isDarkDefault: boolean,
+    analytics?: {google?: {
+        tracker: TrackerOptions | TrackerOptions[];
+        initOptions?: InitializeOptions;
+    }};
+    geocoding?: {
+        customGeocoders?: IGeocoder[];
+    }
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
@@ -105,9 +118,9 @@ interface ITKUIConfigOptional {
     TKUIAlertsSummary: TKComponentConfig<TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle>;
     TKUIAlertsView: TKComponentConfig<TKUIAlertsViewProps, TKUIAlertsViewStyle>;
     TKUIAlertRow: TKComponentConfig<TKUIAlertRowProps, TKUIAlertRowStyle>;
-    TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
+    TKUIErrorView: TKComponentConfig<TKUIErrorViewProps, TKUIErrorViewStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

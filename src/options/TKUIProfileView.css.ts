@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIProfileViewProps, TKUIProfileViewStyle} from "./TKUIProfileView";
 import genStyles from "../css/GenStyle.css";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, important, TKUITheme} from "../jss/TKUITheme";
 
 export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIProfileViewProps> =
     (theme: TKUITheme) => ({
@@ -28,10 +28,6 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
                 padding: '15px'
             }
         },
-        scrollPanel: {
-            paddingBottom: '20px',
-            ...genStyles.scrollableY
-        },
         section: {
             marginBottom: '20px'
         },
@@ -41,14 +37,15 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
         },
         sectionBody: {
             padding: '0 30px',
-            borderTop: '1px solid ' + tKUIColors.black4,
-            borderBottom: '1px solid ' + tKUIColors.black4
+            borderTop: '1px solid ' + black(4, theme.isDark),
+            ...theme.divider
         },
         optionRow: {
             ...genStyles.flex,
+            ...genStyles.alignCenter,
             padding: '15px 0',
             '&:not(:last-child)': {
-                borderBottom: '1px solid ' + tKUIColors.black4
+                ...theme.divider
             }
         },
         optionLink: {
@@ -115,5 +112,32 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
         },
         link: {
             ...genStyles.link
+        },
+        checkboxRow: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...genStyles.spaceBetween,
+            textTransform: 'capitalize'
+        },
+        optionSelect: {
+            minWidth: '115px',
+            padding: '0 10px',
+            border: '2px solid ' + black(4, theme.isDark),
+            borderRadius: '30px',
+            '& *': {
+                ...theme.textSizeCaption,
+                ...theme.textWeightSemibold,
+                ...important(theme.textColorDefault)
+            },
+            '& path': {
+                fill: black(0, theme.isDark)
+            },
+            '&:hover': {
+                borderColor: black(2, theme.isDark)
+            },
+            '&:active': {
+                borderColor: black(4, theme.isDark),
+                backgroundColor: black(5, theme.isDark)
+            }
         }
     });

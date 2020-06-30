@@ -37,8 +37,6 @@ export const tKUIAlertRowDefaultStyle: TKUIStyles<TKUIAlertRowStyle, TKUIAlertRo
             height: '24px',
             width: '24px',
             '& path': {
-                stroke: tKUIColors.white,
-                strokeWidth: '1px',
                 fill: 'currentColor'
             },
             ...genStyles.noShrink

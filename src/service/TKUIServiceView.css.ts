@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {alertSeverity} from "../model/trip/Segment";
@@ -13,13 +13,12 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             ...genStyles.column
         },
         serviceOverview: {
-            margin: '10px 0',
             ...genStyles.flex,
             ...genStyles.column
         },
         pastStop: {
             '& div': {
-                color: tKUIColors.black2
+                ...theme.textColorDisabled
             }
         },
         currStop: {
@@ -40,7 +39,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             width: '24px',
             height: '24px',
             padding: '7px',
-            background: theme.colorPrimaryOpacity(.12),
+            background: colorWithOpacity(theme.colorPrimary, .12),
             ...genStyles.borderRadius(50, "%"),
             ...genStyles.svgFillCurrColor,
             color: theme.colorPrimary,
@@ -60,7 +59,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             },
         },
         actionsPanel: {
-            marginTop: '15px',
+            margin: '24px 0 16px',
             ...genStyles.flex,
             ...genStyles.spaceAround
         },

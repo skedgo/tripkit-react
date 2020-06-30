@@ -42,11 +42,12 @@ interface IWithRoutingResultsState {
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     regionInfo?: RegionInfo;
-    directionsView: boolean;
+    directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
     sort: TripSort;
     waiting: boolean;
+    routingError?: TKError;
     waitingTripUpdate: boolean;
     tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
 }
@@ -117,19 +118,25 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onQueryChange(query: RoutingQuery) {
             const prevQuery = this.state.query;
+            const alreadyOnDirectionsView = this.state.directionsView;
             this.setState({ query: query }, () => {
                 this.refreshRegion();
                 // TODO: Next logic currently does not depend on this.state.region, although it should (in computeModeSets).
                 // In that execute next code after refreshRegion took effect on state.
                 if (query.isComplete(true)) {
-                    if (!this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
+                    // Just refresh trips if already on directions view when called
+                    // onQueryChange. In that case trips will be computed when
+                    // this.onDirectionsView(true) is called.
+                    if (alreadyOnDirectionsView &&
+                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
                         this.refreshTrips();
                     }
                 } else {
-                    if (this.state.trips !== null) {
+                    if (this.state.trips !== undefined) {
                         this.setState({
                             trips: undefined,
-                            waiting: false
+                            waiting: false,
+                            routingError: undefined
                         });
                     }
                 }
@@ -162,7 +169,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public onDirectionsView(directionsView: boolean) {
-            this.setState({directionsView: directionsView});
+            if (this.state.directionsView !== directionsView) {
+                this.setState({directionsView: directionsView}, () => {
+                    if (this.state.query.isComplete(true) && this.state.directionsView) {
+                        this.refreshTrips();
+                    }
+                });
+            }
         }
 
         public refreshRegion() {
@@ -209,34 +222,37 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             const options = this.props.options;
             this.setState({
                 trips: [],
-                waiting: true
+                waiting: true,
+                routingError: undefined
             });
-            this.computeTrips(query).then((tripPromises: Array<Promise<Trip[]>>) => {
-                if (tripPromises.length === 0) {
-                    this.setState({waiting: false});
-                    return;
-                }
-                const waitingState = {
-                    query: query,
-                    options: options,
-                    remaining: tripPromises.length
-                };
-                tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
-                    if (!this.sameApiQueries(this.state.query, this.props.options, query, options)) {
+            this.computeTrips(query)
+                .then((tripPromises: Array<Promise<Trip[]>>) => {
+                    if (tripPromises.length === 0) {
+                        this.setState({waiting: false});
                         return;
                     }
-                    if (trips !== null && this.state.trips !== null) {
-                        trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
-                    }
-                    this.setState(prevState => {
-                        return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
-                    });
-                    this.checkWaiting(waitingState)
-                }).catch((reason: any) => {
-                    Util.log(reason, Env.PRODUCTION);
-                    this.checkWaiting(waitingState)
-                }))
-            });
+                    const waitingState = {
+                        query: query,
+                        options: options,
+                        remaining: tripPromises.length
+                    };
+                    tripPromises.map((tripsP: Promise<Trip[]>) => tripsP.then((trips: Trip[]) => {
+                        if (!this.sameApiQueries(this.state.query, this.props.options, query, options)) {
+                            return;
+                        }
+                        if (trips !== null && this.state.trips !== null) {
+                            trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
+                        }
+                        this.setState(prevState => {
+                            return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
+                        });
+                        this.checkWaiting(waitingState)
+                    }).catch((error: TKError) => {
+                        Util.log(error, Env.PRODUCTION);
+                        this.checkWaiting(waitingState);
+                        this.setState({routingError: error});
+                    }))
+                });
         }
 
         public checkWaiting(waitingState: any) {
@@ -413,6 +429,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onDirectionsView={this.onDirectionsView}
                 trips={this.state.trips}
                 waiting={this.state.waiting}
+                routingError={this.state.routingError}
                 waitingTripUpdate={this.state.waitingTripUpdate}
                 tripUpdateError={this.state.tripUpdateError}
                 selected={this.state.selected}
@@ -487,7 +504,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
                                   prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
-                this.state.query.isComplete(true) &&
+                this.state.query.isComplete(true) && this.state.directionsView &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
             }
@@ -569,6 +586,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
                     return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
                         .then((routingResultsJson: any) => {
+                            if (routingResultsJson.error) {
+                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString(), routingResultsJson.usererror);
+                            }
                             const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                             routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));
@@ -579,7 +599,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 const routingResults: RoutingResults = Util.deserialize(this.getRoutingResultsJSONTest(), RoutingResults);
                                 return routingResults.groups;
                             }
-                            throw reason;
+                            throw reason.code ? reason : new TKError(reason.message);
                         });
                 });
             });

@@ -1,6 +1,5 @@
 import * as React from "react";
-import TKUILocationBox, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../location_box/TKUILocationBox";
-import MultiGeocoder from "../geocode/MultiGeocoder";
+import TKUILocationBox from "../location_box/TKUILocationBox";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
@@ -14,27 +13,26 @@ import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";
 import DeviceUtil from "../util/DeviceUtil";
-import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
-import Region from "model/region/Region";
+import Region from "../model/region/Region";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
-import TKErrorHelper from "../error/TKErrorHelper";
+import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -43,7 +41,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     isTripPlanner?: boolean;
     resolveCurrLocInFrom?: boolean;
     collapsable?: boolean;
-    geocoderOptions?: MultiGeocoderOptions;
     onClearClicked?: () => void;
 }
 
@@ -60,11 +57,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
-    main: CSSProps<IProps>;
-    header: CSSProps<IProps>;
-    title: CSSProps<IProps>;
-    btnClear: CSSProps<IProps>;
-    iconClear: CSSProps<IProps>;
     btnBack: CSSProps<IProps>;
     fromToPanel: CSSProps<IProps>;
     fromToInputsPanel: CSSProps<IProps>;
@@ -99,8 +91,6 @@ interface IState {
 
 class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
-    private geocodingDataFrom: MultiGeocoder;
-    private geocodingDataTo: MultiGeocoder;
     private fromTooltipRef: any;
     private toTooltipRef: any;
 
@@ -112,14 +102,16 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             toTooltip: false,
             showTransportSwitches: false
         };
-        this.geocodingDataFrom = new MultiGeocoder(this.props.geocoderOptions);
-        this.geocodingDataTo = new MultiGeocoder(this.props.geocoderOptions);
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }
 
     private onPrefChange(timePref: TimePreference) {
-        GATracker.instance.send("query input", "time pref", timePref.toLowerCase());
+        GATracker.event({
+            category: "query input",
+            action: "select time pref",
+            label: timePref.toLowerCase()
+        });
         if (timePref === TimePreference.NOW
             || (this.props.value.timePref === TimePreference.NOW && !this.props.value.isComplete(true))) {
             this.updateQuery({
@@ -204,25 +196,14 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
         return (
-            <div className={classes.main}>
-                {this.props.landscape &&
-                <div className={classes.header}>
-                    {this.props.title &&
-                    <div className={classes.title}>
-                        {this.props.title}
-                    </div>}
-                    {this.props.onClearClicked &&
-                    <button
-                        className={classes.btnClear}
-                        aria-hidden={true}
-                        onClick={this.props.onClearClicked}
-                    >
-                        <IconRemove aria-hidden={true}
-                                    className={classes.iconClear}
-                                    focusable="false"/>
-                    </button>}
-                </div>
-                }
+            <TKUICard
+                presentation={CardPresentation.NONE}
+                title={this.props.landscape ? this.props.title : undefined}
+                onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
+                headerDividerVisible={false}
+                scrollable={false}
+                overflowVisible={true}
+            >
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
                         this.props.onClearClicked &&
@@ -247,8 +228,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             placement={this.props.portrait ? "bottom" : "left"}
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
-                        <TKUILocationBox
-                                geocodingData={this.geocodingDataFrom}
+                            <TKUILocationBox
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
                                 value={routingQuery.from}
@@ -260,8 +240,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(true, undefined);
                                         }
                                         if (value !== null) {
-                                            GATracker.instance.send("query input", "pick location",
-                                                value.isCurrLoc() ? "current location" : "type address");
+                                            GATracker.event({
+                                                category: "query input",
+                                                action: "pick from location",
+                                                label: value.isCurrLoc() ? "current location" : "type address"
+                                            });
                                         }
                                     } else {
                                         if (this.props.onPreChange) {
@@ -279,6 +262,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputId={"input-from"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
                                 onFocus={() => this.showTooltip(true, undefined)}
+                                menuStyle={{
+                                    borderTopLeftRadius: '0',
+                                    borderTopRightRadius: '0'
+                                }}
                             />
                         </TKUITooltip>
                         <div className={classes.divider}/>
@@ -293,7 +280,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             reference={(ref: any) => this.toTooltipRef = ref}
                         >
                             <TKUILocationBox
-                                geocodingData={this.geocodingDataTo}
                                 bounds={this.props.bounds}
                                 focus={this.props.focusLatLng}
                                 value={routingQuery.to}
@@ -305,8 +291,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(false, undefined);
                                         }
                                         if (value !== null) {
-                                            GATracker.instance.send("query input", "pick location",
-                                                value.isCurrLoc() ? "current location" : "type address");
+                                            GATracker.event({
+                                                category: "query input",
+                                                action: "pick to location",
+                                                label: value.isCurrLoc() ? "current location" : "type address"
+                                            });
                                         }
                                     } else {
                                         if (this.props.onPreChange) {
@@ -324,6 +313,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputId={"input-to"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
                                 onFocus={() => this.showTooltip(false, undefined)}
+                                menuStyle={{
+                                    borderTopLeftRadius: '0',
+                                    borderTopRightRadius: '0'
+                                }}
                             />
                         </TKUITooltip>
                     </div>
@@ -333,49 +326,49 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                               onClick={this.onSwapClicked}/>
                 </div>
                 {this.props.landscape &&
-                    <div
-                        className={classes.footer}>
-                        <TKUISelect
-                            options={timePrefOptions}
-                            value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
-                            onChange={(option) => this.onPrefChange(option.value)}
-                            className={classes.timePrefSelect}
-                            menuStyle={{marginTop: '3px'}}
-                        />
-                        {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
-                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                            value={routingQuery.time}
-                            timeZone={this.props.region.timezone}
-                            onChange={(date: Moment) => this.updateQuery({time: date})}
-                            timeFormat={DateTimeUtil.TIME_FORMAT}
-                            dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
-                            disabled={datePickerDisabled}
-                        />
+                <div
+                    className={classes.footer}>
+                    <TKUISelect
+                        options={timePrefOptions}
+                        value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                        onChange={(option) => this.onPrefChange(option.value)}
+                        className={classes.timePrefSelect}
+                        menuStyle={{marginTop: '3px'}}
+                    />
+                    {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
+                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                        value={routingQuery.time}
+                        timeZone={this.props.region.timezone}
+                        onChange={(date: Moment) => this.updateQuery({time: date})}
+                        timeFormat={DateTimeUtil.TIME_FORMAT}
+                        dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                        disabled={datePickerDisabled}
+                    />
+                    }
+                    {this.props.showTransportsBtn !== false &&
+                    <TKUITooltip
+                        placement="right"
+                        overlay={
+                            <TKUITransportSwitchesView
+                                onMoreOptions={this.props.onShowTransportOptions ?
+                                    () => {
+                                        this.setState({showTransportSwitches: false});
+                                        this.props.onShowTransportOptions!();
+                                    } : undefined}
+                            />
                         }
-                        {this.props.showTransportsBtn !== false &&
-                        <TKUITooltip
-                            placement="right"
-                            overlay={
-                                <TKUITransportSwitchesView
-                                    onMoreOptions={this.props.onShowTransportOptions ?
-                                        () => {
-                                            this.setState({showTransportSwitches: false});
-                                            this.props.onShowTransportOptions!();
-                                        } : undefined}
-                                />
-                            }
-                            visible={this.state.showTransportSwitches}
-                            onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                        visible={this.state.showTransportSwitches}
+                        onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                    >
+                        <button className={classes.transportsBtn}
+                                onClick={() => this.setState({showTransportSwitches: true})}
                         >
-                            <button className={classes.transportsBtn}
-                                    onClick={() => this.setState({showTransportSwitches: true})}
-                            >
-                                Transport options
-                            </button>
-                        </TKUITooltip>}
-                    </div>
+                            Transport options
+                        </button>
+                    </TKUITooltip>}
+                </div>
                 }
-            </div>
+            </TKUICard>
         );
     }
 

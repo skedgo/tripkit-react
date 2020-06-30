@@ -1,0 +1,18 @@
+{
+  "presets": [
+    "@babel/react",
+    ["@dr.pogodin/babel-preset-svgr", {
+      "mimicCreateReactApp": true
+    }],
+    "@babel/preset-typescript"
+  ],
+  "ignore": ["**/__snapshots__", "**/*.d.ts", "**/*.test.*", "src/example"],
+  "plugins": [
+    "babel-plugin-transform-typescript-metadata",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }],
+    "babel-plugin-typescript-to-proptypes",
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/proposal-object-rest-spread"
+  ]
+}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport} from "react-leaflet";
+import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport, TileLayerProps} from "react-leaflet";
 import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -44,7 +44,6 @@ import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 import TKUIMapPopup from "./TKUIMapPopup";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
-import {withTheme} from "react-jss";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";
@@ -57,6 +56,10 @@ import {ERROR_GEOLOC_DENIED, TKUserPosition} from "../util/GeolocationUtil";
 import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
+import {TileLayer} from "react-leaflet";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import IGeocoder from "../geocode/IGeocoder";
+import {black} from "../jss/TKUITheme";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -64,7 +67,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideLocations?: boolean;
     bounds?: BBox;
     padding?: TKUIMapPadding
-    children: any;
     // TODO: Put the following props inside config?
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
@@ -108,7 +110,9 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     config: TKUIConfig;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+    tileLayerProps?: TileLayerProps;
+}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -117,6 +121,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props}/>,
     styles: tKUIMapViewDefaultStyle,
     classNamePrefix: "TKUIMapView",
+    props: {
+        tileLayerProps: {
+            attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
+            url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        }
+    }
 };
 
 interface IState {
@@ -310,7 +320,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             };
         let tripSegments;
         if (this.props.trip) {
-            tripSegments = this.props.trip.getSegments(Visibility.ON_MAP).concat([this.props.trip.arrivalSegment]);
+            // Use Visibility.IN_DETAILS instead of Visibility.ON_MAP, since every segment visible in details
+            // should show shapes on map. Then only segments with ON_MAP will show pins (e.g. continuation segments
+            // won't), MapTripSegment will differentiate that.
+            tripSegments = this.props.trip.getSegments(Visibility.IN_DETAILS).concat([this.props.trip.arrivalSegment]);
         }
         const enabledMapLayers = OptionsData.instance.get().mapLayers;
         const classes = this.props.classes;
@@ -364,11 +377,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
         const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
         const service = this.props.service;
+        const viewport = this.props.viewport;
+        const leafletViewport = viewport ?
+            {center: viewport.center ? [viewport.center.lat, viewport.center.lng] as [number, number] : undefined, zoom: viewport.zoom}
+            : undefined;
         return (
             <div className={classes.main}>
                 <RLMap
                     className={classes.leaflet}
-                    viewport={this.props.viewport as Viewport}
+                    viewport={leafletViewport}
                     // TODO: check I don't need to pass boundsOptios to fitBounds anymore
                     boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
@@ -409,6 +426,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
                                // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
+                    <TileLayer
+                        {...this.props.tileLayerProps!}
+                    />
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
                     <Marker position={this.state.userLocation.latLng}
@@ -486,6 +506,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             }}
                             onLocAction={this.props.onLocAction}
                             omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
+                            isDarkMode={this.props.theme.isDark}
                         />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
@@ -525,14 +546,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
                     </Marker>}
                     {menuPopup}
-                    {this.props.children}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => this.onResize()}
                 />
                 <TKUITooltip
                     overlayContent={this.state.userLocationTooltip}
-                    arrowColor={tKUIColors.black2}
+                    arrowColor={this.props.theme.isLight ? tKUIColors.black2 : tKUIColors.black1}
                     visible={false}
                     placement={"right"}
                     reference={(ref: any) => this.userLocTooltipRef = ref}
@@ -674,9 +694,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
 let geocodingData: MultiGeocoder;
 
-function getGeocodingData() {
+function getGeocodingData(customGeocoders?: IGeocoder[]) {
     if (!geocodingData) {
-        geocodingData = new MultiGeocoder();
+        geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(true, customGeocoders));
     }
     return geocodingData;
 }
@@ -707,7 +727,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                             [isFrom ? "from" : "to"]: mapLocation
                                                         }));
                                                         if (mapLocation.isDroppedPin()) {
-                                                            getGeocodingData().reverseGeocode(latLng, loc => {
+                                                            getGeocodingData(config.geocoding && config.geocoding.customGeocoders)
+                                                                .reverseGeocode(latLng, loc => {
                                                                 if (loc !== null) {
                                                                     // Need to use onQueryUpdate instead of onQueryChange since
                                                                     // routingContext.query can be outdated at the time this callback is
@@ -736,8 +757,13 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                                     if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
                                                                         return;
                                                                     }
-                                                                    onMapLocChanged(!from, clickLatLng);
-                                                                    GATracker.instance.send("query input", "pick location", "drop pin");
+                                                                    const isFrom = !from;
+                                                                    onMapLocChanged(isFrom, clickLatLng);
+                                                                    GATracker.event({
+                                                                        category: "query input",
+                                                                        action: isFrom ? "pick from location" : "pick to location",
+                                                                        label: "drop to"
+                                                                    });
                                                                 }
                                                             } else {
                                                                 if (!to || clickLatLng instanceof StopLocation) {

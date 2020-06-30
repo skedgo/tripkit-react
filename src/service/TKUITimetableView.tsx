@@ -1,12 +1,10 @@
-import * as React from "react";
+import React, {ChangeEvent} from "react";
 import {
     IServiceResultsContext,
     ServiceResultsContext
 } from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
 import {ReactComponent as IconClock} from "../images/ic-clock.svg";
-import {ChangeEvent} from "react";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";
@@ -32,6 +30,8 @@ import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
+import TKUIErrorView from "../error/TKUIErrorView";
+import {TKError} from "../error/TKError";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -42,6 +42,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
     actions?: (stop: StopLocation) => JSX.Element[];
+    errorActions?: (error: TKError) => JSX.Element[];
 }
 
 interface IStyle {
@@ -53,12 +54,11 @@ interface IStyle {
     serviceNumber: CSSProps<IProps>;
     actionsPanel: CSSProps<IProps>;
     secondaryBar: CSSProps<IProps>;
-    filterPanel: CSSProps<IProps>;
-    glassIcon: CSSProps<IProps>;
     filterInput: CSSProps<IProps>;
     faceButtonClass: CSSProps<IProps>;
     dapartureRow: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
+    noResults: CSSProps<IProps>;
 }
 
 export type TKUITimetableViewProps = IProps;
@@ -138,6 +138,16 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 <IconClock/>
             </button>
         );
+        let error: JSX.Element | undefined = undefined;
+        if (!this.props.waiting && this.props.serviceError) {
+            const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : "Something went wrong.";
+            error =
+                <TKUIErrorView
+                    error={this.props.serviceError}
+                    message={errorMessage}
+                    actions={this.props.errorActions}
+                />
+        }
         return (
             <TKUICard
                 title={this.props.title}
@@ -166,19 +176,23 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 // for Safari so div below filter can actually get a height and scroll happens there.
                 bodyStyle={{height: '100%'}}
             >
+                {error ? error :
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>
-                        <div className={classes.filterPanel}>
-                            <IconGlass className={classes.glassIcon}/>
-                            <input className={classes.filterInput} placeholder={t("Search")}
-                                   onChange={this.onFilterChange}/>
-                        </div>
+                        <input className={classes.filterInput} placeholder={t("Search")}
+                               onChange={this.onFilterChange}/>
                         <TKUIDateTimePicker
                             value={this.props.initTime}
                             timeZone={stop.timezone}
                             onChange={this.props.onInitTimeChange}
                             renderCustomInput={renderCustomInput}
-                            popperPlacement="top-end"
+                            popperPlacement="bottom-end"
+                            popperModifiers={{
+                                offset: {
+                                    enabled: true,
+                                    offset: "15px, 0px"
+                                }
+                            }}
                         />
                     </div>
                     <div className={classes.listPanel}>
@@ -194,6 +208,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone)}
                                                              key={"day-" + i}
                                                              scrollRef={this.scrollRef}
+                                                             isDark={this.props.theme.isDark}
                                     />)
                                 }
                                 elems.push(
@@ -212,9 +227,11 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             }, [])}
                             {this.props.waiting ?
                                 <IconSpin className={classes.iconLoading} focusable="false"/> : null}
+                            {!this.props.waiting && !this.props.serviceError && this.props.departures.length === 0
+                            && <div className={classes.noResults}>{"No results"}</div>}
                         </TKUIScrollForCard>
                     </div>
-                </div>
+                </div>}
             </TKUICard>
         );
     }

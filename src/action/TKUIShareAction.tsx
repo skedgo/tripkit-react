@@ -8,6 +8,7 @@ import Util from "../util/Util";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import TKUIRendersCard from "../card/TKUIRendersCard";
+import {cardSpacing} from "../jss/TKUITheme";
 
 interface IProps {
     title: string;
@@ -41,7 +42,8 @@ class TKUIShareAction extends React.Component<IProps, {}> {
                                                 open: true,
                                                 slideUpOptions: {
                                                     position: TKUISlideUpPosition.UP,
-                                                    draggable: false
+                                                    draggable: false,
+                                                    modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'},
                                                 },
                                                 onRequestClose: () =>
                                                     renderCard({

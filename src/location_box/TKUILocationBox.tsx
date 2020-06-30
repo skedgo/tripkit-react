@@ -16,12 +16,17 @@ import RegionsData from "../data/RegionsData";
 import {TKError} from "../error/TKError";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
 import {genClassNames} from "../css/GenStyle.css";
+import IGeocoder from "../geocode/IGeocoder";
+import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import {Subtract} from 'utility-types';
+import {TKUIConfigContext} from "../config/TKUIConfigProvider";
+import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    geocodingData: MultiGeocoder,
+    showCurrLoc?: boolean,
     placeholder?: string,
     bounds?: BBox,
     focus?: LatLng,
@@ -42,6 +47,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IStyle {
     main: CSSProps<IProps>;
+    input: CSSProps<IProps>;
     iconLoading: CSSProps<IProps>;
     btnClear: CSSProps<IProps>;
     iconClear: CSSProps<IProps>;
@@ -49,7 +55,11 @@ interface IStyle {
     sideMenu: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps {
+    customGeocoders?: IGeocoder[];
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUILocationBoxProps = IProps;
 export type TKUILocationBoxStyle = IStyle;
@@ -70,8 +80,6 @@ interface IState {
     waiting: boolean;
     waitingResolveFor?: Location;
 }
-
-export const ERROR_UNABLE_TO_RESOLVE_ADDRESS = "ERROR_UNABLE_TO_RESOLVE_ADDRESS";
 
 class TKUILocationBox extends Component<IProps, IState> {
 
@@ -100,7 +108,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             },
             waiting: false
         };
-        this.geocodingData = props.geocodingData;
+        this.geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(this.props.showCurrLoc, this.props.customGeocoders));
         this.handleAutocompleteResults = this.handleAutocompleteResults.bind(this);
         this.renderInput = this.renderInput.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
@@ -314,7 +322,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                <input type="text" {...props} style={this.props.inputStyle}/>
+                <input type="text" {...props} style={this.props.inputStyle} className={classes.input}/>
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?
@@ -497,5 +505,24 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-export default connect((config: TKUIConfig) => config.TKUILocationBox, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
+    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+        return (
+            <TKUIConfigContext.Consumer>
+                {(config: TKUIConfig) =>
+                    props.children!({
+                        customGeocoders: config.geocoding ? config.geocoding.customGeocoders : undefined
+                    })
+                }
+            </TKUIConfigContext.Consumer>
+        );
+    };
+
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <Consumer>
+            {(consumedProps: IConsumedProps) =>
+                children!({...inputProps, ...consumedProps})}
+        </Consumer>;
+
+export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);

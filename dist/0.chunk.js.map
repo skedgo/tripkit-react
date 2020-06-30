@@ -1,1 +1,0 @@
-{"version":3,"sources":["jslib/JQuery.ts"],"names":["Util","global","$","jQuery"],"mappings":"0HAAA,4BAIAA,IAAKC,OAAOC,EAAIA,EAChBF,IAAKC,OAAOE,OAASD","file":"0.chunk.js","sourcesContent":["import * as $ from \"jquery\";\nimport Util from \"../util/Util\";\n\n// Export jquery to global scope\nUtil.global.$ = $;\nUtil.global.jQuery = $;"],"sourceRoot":""}

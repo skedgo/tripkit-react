@@ -1,7 +1,6 @@
 import React, {MouseEvent} from "react";
 import {ReactComponent as IconFeedback} from '../images/ic-feedback.svg';
 import copy from 'copy-to-clipboard';
-import OptionsData from "../data/OptionsData";
 import Util from "../util/Util";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 import {TKState, default as TKStateConsumer} from "../config/TKStateConsumer";
@@ -59,10 +58,19 @@ export function feedbackTextFromState(state: TKState): string {
     feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n";
     feedbackS += "\n";
     feedbackS += "User profile: " + JSON.stringify(Util.serialize(state.userProfile)) + "\n";
+    if (state.routingError) {
+        feedbackS += "\n";
+        // feedbackS += "Routing error: " + state.routingError.toLogString() + "\n";
+        feedbackS += "Routing " + state.routingError + "\n";
+    }
     if (state.selectedTrip) {
         feedbackS += "\n";
         feedbackS += "Selected trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "")+ "\n";
         feedbackS += "Satapp url: " +  (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n";
+    }
+    if (state.tripUpdateError) {
+        feedbackS += "\n";
+        feedbackS += "Trip update " + state.tripUpdateError.toString() + "\n";
     }
     if (state.stop) {
         feedbackS += "\n";
@@ -72,6 +80,10 @@ export function feedbackTextFromState(state: TKState): string {
         if (state.selectedService) {
             feedbackS += "Selected service: " + state.selectedService.serviceTripID + "\n";
             feedbackS += "Share service url: " + TKShareHelper.getShareService(state.selectedService) + "\n";
+        }
+        if (state.serviceError) {
+            feedbackS += "\n";
+            feedbackS += "Service " + state.serviceError.toString() + "\n";
         }
     }
     return feedbackS;

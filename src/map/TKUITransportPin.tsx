@@ -17,6 +17,7 @@ import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     icon: string;
+    iconForDark: boolean;
     label: string;
     rotation?: number;
     firstSegment?: boolean;
@@ -46,14 +47,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUITransportPin extends React.Component<IProps, {}> {
 
-    public static createForSegment(segment: Segment) {
+    public static createForSegment(segment: Segment, isDarkMode: boolean) {
         const modeInfo = segment.modeInfo!;
         const rotation = segment.travelDirection ? segment.travelDirection - 90 : undefined;
-        // On dark background if there is a suitable remote icon for dark background, or there is not
-        // remote icon for light background, so will use a local icon for dark background.
-        const onDark = segment.arrival || (!modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined);
+        const wantIconForDark = isDarkMode;
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
-            TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, onDark);
+            TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark);
+        const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark, false);
+        const isTransIconForDark = segment.arrival || (isInvertedWrtMode ? !wantIconForDark : wantIconForDark);
         const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return <TKUITransportPinConnected
             icon={transIcon}
@@ -61,19 +62,22 @@ class TKUITransportPin extends React.Component<IProps, {}> {
             rotation={rotation}
             firstSegment={segment.isFirst(Visibility.IN_SUMMARY)}
             arriveSegment={segment.arrival}
+            iconForDark={isTransIconForDark}
         />
     }
 
-    public static createForService(serviceDeparture: ServiceDeparture) {
+    public static createForService(serviceDeparture: ServiceDeparture, isDarkMode: boolean) {
         const service = serviceDeparture.serviceDetail!;
         const modeInfo = serviceDeparture.modeInfo;
         const firstTravelledShape = service.shapes && service.shapes.find((shape: ServiceShape) => shape.travelled);
         const startStop = firstTravelledShape && firstTravelledShape.stops && firstTravelledShape.stops[0];
         const rotation = startStop && startStop.bearing;
-        const onDark = !modeInfo.remoteIcon && modeInfo.remoteDarkIcon !== undefined;
-        const transIcon = TransportUtil.getTransportIcon(modeInfo, false, onDark);
+        const wantIconForDark = isDarkMode;
+        const transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);
+        const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
+        const isTransIconForDark = isInvertedWrtMode ? !wantIconForDark : wantIconForDark;
         const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
-        return <TKUITransportPinConnected icon={transIcon} label={timeS} rotation = {rotation}/>
+        return <TKUITransportPinConnected icon={transIcon} iconForDark={isTransIconForDark} label={timeS} rotation = {rotation}/>
     }
 
     public render(): React.ReactNode {

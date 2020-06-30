@@ -1,8 +1,6 @@
 .DaySeparator {
   padding: 8px 16px;
-  background-color: rgb(243, 243, 243);
   z-index: 1;
-  color: grey;
 }
 
 .DaySeparator-rise {

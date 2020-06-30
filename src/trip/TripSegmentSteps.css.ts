@@ -16,9 +16,9 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
         },
         leftLabel: {
             width: '55px',
-            color: tKUIColors.black1,
             margin: '12px 16px',
-            ...genStyles.fontM,
+            ...theme.textSizeCaption,
+            ...theme.textColorGray,
             ...genStyles.flex,
             ...genStyles.noShrink,
             ...genStyles.justifyEnd,
@@ -26,8 +26,8 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
         },
         rightLabel: {
             margin: '12px 16px',
-            color: tKUIColors.black,
-            ...genStyles.fontM
+            ...theme.textSizeBody,
+            ...theme.textColorDefault
         },
         linePanel: {
             backgroundColor: (props: IStyleRelevantProps) => props.borderColor,

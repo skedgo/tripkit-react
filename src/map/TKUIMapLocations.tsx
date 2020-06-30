@@ -12,10 +12,8 @@ import {renderToStaticMarkup} from "react-dom/server";
 import StopIcon from "./StopIcon";
 import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
-import OptionsData from "../data/OptionsData";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
-import TKUserProfile from "../model/options/TKUserProfile";
 import LocationUtil from "../util/LocationUtil";
 
 interface IProps {
@@ -26,6 +24,7 @@ interface IProps {
     onClick?: (type: MapLocationType, loc: Location) => void;
     onLocAction?: (type: MapLocationType, loc: Location) => void;
     omit?: Location[];
+    isDarkMode?: boolean;
 }
 
 class TKUIMapLocations extends React.Component<IProps, {}> {
@@ -58,7 +57,11 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
@@ -70,7 +73,11 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
@@ -82,12 +89,18 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                         iconSize: [20, 20],
                         iconAnchor: [10, 10]
                     })}
-                    onpopupopen={() => GATracker.instance.send('map location', 'click', mapLocationTypeToGALabel(mapLocType))}
+                    onpopupopen={() => GATracker.event({
+                        category: "map location",
+                        action: "click",
+                        label: mapLocationTypeToGALabel(mapLocType)
+                    })}
                     key={key}
                     onclick={clickHandler}
                 />;
             case MapLocationType.STOP:
-                const transIconHTML = renderToStaticMarkup(<StopIcon stop={loc as StopLocation} />);
+                const transIconHTML = renderToStaticMarkup(
+                    <StopIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
+                );
                 const icon = L.divIcon({
                     html: transIconHTML,
                     iconSize: [20, 20],
@@ -136,7 +149,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         return nextProps.zoom !== this.props.zoom
             || (this.props.zoom >= this.ZOOM_PARENT_LOCATIONS && (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
             !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))))
-            || JSON.stringify(nextProps.omit) !== JSON.stringify(this.props.omit);
+            || JSON.stringify(nextProps.omit) !== JSON.stringify(this.props.omit)
+            || nextProps.isDarkMode !== this.props.isDarkMode;
     }
 
     public componentWillUnmount() {

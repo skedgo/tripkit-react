@@ -2,21 +2,39 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIMapViewProps, TKUIMapViewStyle} from "./TKUIMapView";
 import genStyles from "../css/GenStyle.css";
 import {CSSProperties} from "react-jss";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
-import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
             ...genStyles.grow,
+            '& .leaflet-container': {
+                background: theme.isLight ? '#ddd' : black(0)
+            },
             '& .leaflet-popup-content': {
                 margin: '0'
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...genStyles.borderRadius(12)
+                ...theme.cardBackground,
+                ...theme.textColorGray
+            },
+            '& .leaflet-popup-tip': {
+                background: white(0, theme.isDark)
+            },
+            '& .leaflet-bar': {
+                boxShadow: theme.isLight ?
+                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
+            },
+            '& .leaflet-bar a:first-child': {
+                ...theme.divider
+            },
+            '& .leaflet-bar a, .leaflet-bar a:hover': {
+                backgroundColor: white(0, theme.isDark),
+                color: black(1, theme.isDark)
             }
         } as CSSProperties<TKUIMapViewProps>,
         leaflet: {
@@ -35,7 +53,8 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...genStyles.borderRadius(0)
+                ...genStyles.borderRadius(0),
+                background: 'none'
             },
             '& .leaflet-popup-tip-container': {
                 display: 'none'
@@ -57,13 +76,19 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         menuPopupContent: {
             ...genStyles.flex,
             ...genStyles.column,
-            padding: '5px 0'
+            padding: '5px 0',
+            background: white(0, theme.isDark),
+            boxShadow: theme.isLight ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
+            ...genStyles.borderRadius(4)
         },
         menuPopupItem: {
             padding: '5px 10px',
             cursor: 'pointer',
+            color: black(1, theme.isDark),
             '&:hover': {
-                backgroundColor: tKUIColors.black4
+                backgroundColor: black(4, theme.isDark)
             }
         },
         currentLocMarker: {
@@ -75,8 +100,10 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             right: '10px',
             width: '35px',
             height: '35px',
-            backgroundColor: 'white',
-            // opacity: '.5',
+            background: white(0, theme.isDark),
+            boxShadow: theme.isLight ?
+                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
+                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
             cursor: 'pointer',
             zIndex: '1000',
             padding: '3px',

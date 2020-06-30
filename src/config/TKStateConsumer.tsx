@@ -10,6 +10,7 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {Moment} from "moment-timezone";
 import Location from "../model/Location";
+import {TKError} from "../error/TKError";
 
 interface IProps {
     children: (state: TKState) => React.ReactNode;
@@ -25,9 +26,12 @@ export interface TKState {
     userProfile: TKUserProfile;
     trips?: Trip[];
     selectedTrip?: Trip;
+    routingError?: TKError;
+    tripUpdateError?: TKError;
     stop?: StopLocation;
     selectedService?: ServiceDeparture;
     timetableInitTime: Moment;
+    serviceError?: TKError;
 }
 
 class TKStateConsumer extends React.Component<IProps,{}> {
@@ -50,9 +54,12 @@ class TKStateConsumer extends React.Component<IProps,{}> {
                                         userProfile: optionsContext.value,
                                         trips: routingContext.trips,
                                         selectedTrip: routingContext.selected,
+                                        routingError: routingContext.routingError,
+                                        tripUpdateError: routingContext.tripUpdateError,
                                         stop: serviceContext.stop,
                                         timetableInitTime: serviceContext.initTime,
-                                        selectedService: serviceContext.selectedService
+                                        selectedService: serviceContext.selectedService,
+                                        serviceError: serviceContext.serviceError
                                     };
                                     return (this.props.children as ((state: TKState) => React.ReactNode))(state);
                                 }}

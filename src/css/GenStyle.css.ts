@@ -43,8 +43,6 @@ interface ITKUIGenStyleClasses {
 
     fontMImp: CSSProps<{}>;
 
-    textGray: CSSProps<{}>;
-
     link: CSSProps<{}>;
 
     root: CSSProps<{}>;
@@ -56,6 +54,7 @@ interface ITKUIGenStyleClasses {
 
 interface ITKUIGenStyleCreators {
     borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
+    borderRadiusString: (value: string) => CSSProps<{}>;
     transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
 }
 
@@ -269,10 +268,6 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         lineHeight: '16px'
     },
 
-    textGray: {
-        color: '#212a3399'
-    },
-
     // TODO: maybe move to a stylesheet that can be customized on SDK config.
     link: {
         textDecoration: 'underline',
@@ -348,6 +343,12 @@ const genStyleCreators: ITKUIGenStyleCreators = {
         MozBorderRadius: radius + unit
     }),
 
+    borderRadiusString: (value: string) => ({
+        borderRadius: value,
+        WebkitBorderRadius: value,
+        MozBorderRadius: value
+    }),
+
     transformRotate: (angle: number, unit: string = 'deg') => ({
         WebkitTransform: 'rotate(' + angle + unit + ')',
         MsTransform: 'rotate(' + angle + unit + ')',
@@ -360,35 +361,18 @@ const genStyles = {...genStyleClasses, ...genStyleCreators};
 const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyleSheet(genStyleClasses as any).attach().classes;
 
 const otherStyles = {
-    // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
-    '@font-face': [
-        {
-            fontFamily: 'ProximaNova',
-            src: "url('/fonts/269860_3_0.eot'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype')"
-        },
-        {
-            fontFamily: 'ProximaNova',
-            src: "url('/fonts/269860_2_0.eot'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_2_0.woff') format('woff'), url('/fonts/269860_2_0.ttf') format('truetype')",
-            fontWeight: 'bold',
-        }
-    ],
-
     // TODO: check if media queries work, or need to use a jss plugin.
     ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
         /* IE10+ CSS styles go here */
         '@global': {
             ['.' + genClassNames.root]: {
                 '& button': {
-                    background: 'none',
                     fontFamily: 'inherit',
-                    color: 'inherit'
                 }
             },
-            // TODO: check if next rule is still necessary, and works ok on IE. Commented by now
-            /* max-height: 100% does not work on IE, so causes issues with scroll */
-            // 'ReactModal__Content': {
-            //     height: '100%'
-            // }
+            '*': {
+                MsOverflowStyle: 'none'
+            }
         }
     },
     '@global': {
@@ -396,8 +380,12 @@ const otherStyles = {
             'zIndex': '1080'
         },
 
+        '.ReactModalPortalOnTop': {
+            'zIndex': '1090'
+        },
+
         '.ReactModal__Overlay': {
-            'zIndex': '1001'
+            'zIndex': '1080'
         }
     }
 };

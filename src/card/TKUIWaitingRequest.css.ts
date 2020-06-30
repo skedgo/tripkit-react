@@ -1,6 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "./TKUIWaitingRequest";
-import {TKUITheme} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWaitingRequestProps> =
@@ -10,18 +10,16 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
             top: '0',
             width: '100%',
             height: '100%',
-            backgroundColor: 'rgba(255, 255, 255, .5)',
+            ...theme.modalFog,
             zIndex: '1050',
             ...genStyles.flex,
             ...genStyles.center,
             ...genStyles.alignCenter
         },
         waitingBanner: {
-            backgroundColor: 'white',
+            ...theme.cardBackground,
             fontFamily: theme.fontFamily,
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             padding: '10px 20px',
-            ...genStyles.borderRadius(12),
             ...genStyles.flex,
             ...genStyles.column,
             minWidth: '100px',
@@ -35,13 +33,13 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
             fontWeight: 'bold',
             marginBottom: '5px',
             ...genStyles.fontM,
-            color: '#212a33c2'
+            color: black(1, theme.isDark)
         },
         iconLoading: {
             margin: '10px',
             width: '40px',
             height: '40px',
-            color: '#6d6d6d',
+            color: black(1, theme.isDark),
             ...genStyles.alignSelfCenter,
             ...genStyles.animateSpin,
             ...genStyles.svgFillCurrColor

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Segment from "../model/trip/Segment";
+import Segment, {TripAvailability} from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
@@ -27,6 +27,7 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
     actions?: JSX.Element[];
+    onRequestAlternativeRoutes?: (segment: Segment) => void;
 }
 
 interface IConsumedProps {
@@ -57,6 +58,8 @@ interface IStyle {
     notes: CSSProps<IProps>;
     occupancy: CSSProps<IProps>;
     alertsSummary: CSSProps<IProps>;
+    cancelledBanner: CSSProps<IProps>;
+    cancelledMsg: CSSProps<IProps>;
 }
 
 export type TKUISegmentOverviewProps = IProps;
@@ -80,7 +83,6 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         const startTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
             .format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
-        const transportColor = TransportUtil.getTransportColor(modeInfo);
         const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "") + segment.from.address;
         let stops: ServiceStopLocation[] | null = null;
         if (segment.shapes) {
@@ -137,10 +139,11 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     <div className={classes.body}>
                         <div className={classes.track}>
                             <div className={classes.line}/>
-                            <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark)}
+                            {!segment.isContinuation &&
+                            <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark || this.props.theme.isDark)}
                                  className={classes.icon}
                                  aria-hidden={true}
-                            />
+                            />}
                             <div className={classes.line}/>
                         </div>
                         <div className={classes.description}>
@@ -164,6 +167,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                                 type={TKUIButtonType.PRIMARY_LINK}
                                 text={t("Show.timetable")}
                                 onClick={() => this.props.onTimetableForSegment(segment)}
+                                style={{marginTop: '5px', paddingLeft: '0'}}
                             />
                             }
                         </div>
@@ -171,6 +175,17 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     :
                     null
                 }
+                {segment.isPT() && segment.availability === TripAvailability.CANCELLED && !segment.hasContinuation() &&
+                <div className={classes.cancelledBanner}>
+                    <div className={classes.cancelledMsg}>
+                        {t("Service.has.been.cancelled.")}
+                    </div>
+                    <TKUIButton
+                        type={TKUIButtonType.SECONDARY}
+                        text={t("Alternative.routes")}
+                        onClick={() => this.props.onRequestAlternativeRoutes && this.props.onRequestAlternativeRoutes(segment)}
+                    />
+                </div>}
             </div>
         );
     }

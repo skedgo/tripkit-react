@@ -2,6 +2,8 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "./TKUILocationDetailView";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import LocationUtil from "../util/LocationUtil";
+import DeviceUtil from "../util/DeviceUtil";
+import genStyles from "../css/GenStyle.css";
 
 export const tKUILocationDetailViewDefaultStyle: TKUIStyles<TKUILocationDetailViewStyle, TKUILocationDetailViewProps> = {
     main: {
@@ -21,11 +23,14 @@ export const tKUILocationDetailViewDefaultStyle: TKUIStyles<TKUILocationDetailVi
         gridTemplateColumns: 'auto auto auto',
         gridRowGap: '20px',
         ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-            marginTop: '15px'
+            margin: '24px 0 16px'
         },
         ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
-            marginTop: (props: TKUILocationDetailViewProps) => // More margin (30px) to compensate there is no subtitle,
-                LocationUtil.getSecondaryText(props.location) ? '10px' : '30px' // looks better when card is at bottom position.
+            margin: '10px 0 16px'
+        },
+        ...DeviceUtil.isIE && {
+            ...genStyles.flex,
+            ...genStyles.spaceAround
         }
     }
 };

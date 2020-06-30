@@ -1,0 +1,7 @@
+/.idea
+/node_modules
+/public
+/scripts
+/src
+/rollup.config.js
+/tripkit-react.iml

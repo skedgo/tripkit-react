@@ -3,7 +3,6 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUILocationSearchDefaultStyle} from "./TKUILocationSearch.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
@@ -11,9 +10,8 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
 import TKUILocationBox from "../location_box/TKUILocationBox";
-import MultiGeocoder from "../geocode/MultiGeocoder";
 import {ReactComponent as IconMenu} from '../images/ic-menu.svg';
-import {ReactComponent as IconGlass} from "../images/ic-glass.svg";
+import {ReactComponent as IconGlass} from "../images/ic-search.svg";
 import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
 import FavouritesData from "../data/FavouritesData";
 import StopLocation from "../model/StopLocation";
@@ -23,7 +21,6 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
-    geocoderOptions?: MultiGeocoderOptions;
     onDirectionsClicked?: () => void;
 }
 
@@ -62,14 +59,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUILocationSearch extends React.Component<IProps, {}> {
 
-    private geocodingData: MultiGeocoder;
-
-
-    constructor(props: IProps) {
-        super(props);
-        this.geocodingData = new MultiGeocoder(this.props.geocoderOptions || MultiGeocoderOptions.default(false));
-    }
-
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const placeholder = this.props.t("Where.do.you.want.to.go?");
@@ -81,7 +70,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                             <IconMenu className={classes.sideBarIcon}/>
                         </button>
                         <TKUILocationBox
-                            geocodingData={this.geocodingData}
+                            showCurrLoc={false}
                             bounds={this.props.bounds}
                             focus={this.props.focusLatLng}
                             value={this.props.value}

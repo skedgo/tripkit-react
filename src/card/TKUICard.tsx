@@ -1,6 +1,6 @@
 import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
+import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
@@ -8,27 +8,30 @@ import {Subtract} from "utility-types";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
+// TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
     MODAL,
     SLIDE_UP,
-    SLIDE_UP_STYLE,
     NONE
 }
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
     presentation?: CardPresentation;
+    presentationFromViewport?: (portrait: boolean) => CardPresentation;
     slideUpOptions?: TKUISlideUpOptions;
+    modalOptions?: any;
     open?: boolean;
     children?: any;
     bodyStyle?: CSS.Properties;
@@ -37,16 +40,22 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     handleRef?: (ref: any) => void;
     scrollRef?: (instance: HTMLDivElement | null) => void;
     onScroll?: UIEventHandler<HTMLDivElement>;
+    headerDividerVisible?: boolean;
+    scrollable?: boolean;
+    overflowVisible?: boolean;
 }
+
+interface IConsumedProps extends TKUIViewportUtilProps {}
 
 interface IStyle {
     modalContainer: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
+    mainForSlideUp: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
     header: CSS.Properties & CSSProperties<IProps>;
     subHeader: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
-    headerLeft: CSS.Properties & CSSProperties<IProps>;
+    headerTop: CSS.Properties & CSSProperties<IProps>;
     title: CSS.Properties & CSSProperties<IProps>;
     subtitle: CSS.Properties & CSSProperties<IProps>;
     btnClear: CSS.Properties & CSSProperties<IProps>;
@@ -55,7 +64,7 @@ interface IStyle {
     handleLine: CSS.Properties & CSSProperties<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUICardProps = IProps;
 export type TKUICardStyle = IStyle;
@@ -69,7 +78,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 export function hasHandle(props: IProps): boolean {
-    return (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.SLIDE_UP_STYLE)
+    return (props.presentation === CardPresentation.SLIDE_UP || (!!props.slideUpOptions && !!props.slideUpOptions.showHandle))
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
 
@@ -102,7 +111,8 @@ class TKUICard extends React.Component<IProps, IState> {
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         const body =
-            <div className={classNames(classes.main, genClassNames.root)}>
+            <div className={classNames(classes.main, genClassNames.root,
+                DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}>
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
                     this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
@@ -114,16 +124,11 @@ class TKUICard extends React.Component<IProps, IState> {
                     >
                         <div className={classes.handleLine}/>
                     </div>}
+                    {(this.props.title || this.props.subtitle || this.props.onRequestClose) &&
                     <div className={classes.header}>
-                        <div className={classNames(genClassNames.flex, genClassNames.spaceBetween, genClassNames.alignCenter)}>
-                            <div className={classes.headerLeft}>
-                                <div className={classes.title}>
-                                    {this.props.title}
-                                </div>
-                                {this.props.subtitle &&
-                                <div className={classes.subtitle}>
-                                    {this.props.subtitle}
-                                </div>}
+                        <div className={classes.headerTop}>
+                            <div className={classes.title}>
+                                {this.props.title}
                             </div>
                             {this.props.onRequestClose &&
                             <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
@@ -133,22 +138,28 @@ class TKUICard extends React.Component<IProps, IState> {
                                             focusable="false"/>
                             </button>}
                         </div>
-                    </div>
+                        {this.props.subtitle &&
+                        <div className={classes.subtitle}>
+                            {this.props.subtitle}
+                        </div>}
+                    </div>}
                 </div>
                 <div className={classes.subHeader}>
                     {this.props.renderSubHeader && this.props.renderSubHeader()}
                 </div>
-                <TKUIScrollForCard
-                    className={classNames(classes.body, this.props.bodyClassName)}
-                    style={this.props.bodyStyle}
-                    // So dragging the card from its content, instead of scrolling it, will drag the card.
-                    // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
-                    freezeScroll={draggable && !this.state.cardOnTop}
-                    scrollRef={this.props.scrollRef}
-                    onScroll={this.props.onScroll}
-                >
-                    {this.props.children}
-                </TKUIScrollForCard>
+                {this.props.scrollable !== false ?
+                    <TKUIScrollForCard
+                        className={classNames(classes.body, this.props.bodyClassName)}
+                        style={this.props.bodyStyle}
+                        // So dragging the card from its content, instead of scrolling it, will drag the card.
+                        // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
+                        freezeScroll={draggable && !this.state.cardOnTop}
+                        scrollRef={this.props.scrollRef}
+                        onScroll={this.props.onScroll}
+                    >
+                        {this.props.children}
+                    </TKUIScrollForCard> : this.props.children
+                }
             </div>;
         return (
             presentation === CardPresentation.SLIDE_UP ?
@@ -179,6 +190,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         }}
                         shouldCloseOnEsc={true}
                         onRequestClose={this.props.onRequestClose}
+                        {...this.props.modalOptions}
                     >
                         {body}
                     </Modal> : this.props.open && body
@@ -191,9 +203,17 @@ class TKUICard extends React.Component<IProps, IState> {
         //     this.props.refreshStyles();
         // }
     }
-
 }
 
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) => {
+                return children!({...inputProps, ...viewportProps,
+                    presentation: inputProps.presentationFromViewport ? inputProps.presentationFromViewport(viewportProps.portrait) :
+                        inputProps.presentation});
+            }}
+        </TKUIViewportUtil>;
+
 export default connect(
-    (config: TKUIConfig) => config.TKUICard, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+    (config: TKUIConfig) => config.TKUICard, config, Mapper);

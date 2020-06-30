@@ -32,13 +32,18 @@ class TripGoApi {
     }
 
     public static apiCallT<T>(endpoint: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
-        return this.apiCall(endpoint, method, body)
-            .then(NetworkUtil.deserializer(resultClassRef));
+        const url = this.getSatappUrl(endpoint);
+        return this.apiCallUrlT(url, method, resultClassRef, body);
     }
 
     public static getSatappUrl(endpoint: string): string {
         const server = this.getServer();
         return server + (endpoint.startsWith("/") ? "" : "/") + endpoint;
+    }
+
+    public static apiCallUrlT<T>(url: string, method: string, resultClassRef: { new(): T }, body?: any): Promise<T> {
+        return this.apiCallUrl(url, method, resultClassRef, body)
+            .then(NetworkUtil.deserializer(resultClassRef));
     }
 
     public static apiCallUrl(url: string, method: string, body?: any, cache: boolean = false): Promise<any> {
@@ -60,7 +65,7 @@ class TripGoApi {
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
         const updateURL = trip.updateURL;
         return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
-            + "v=11", NetworkUtil.MethodType.GET)
+            + "v=11" + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
                 const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                 routingResults.setQuery(query);

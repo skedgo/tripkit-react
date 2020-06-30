@@ -1,13 +1,13 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUICardStyle, TKUICardProps, CardPresentation, hasHandle} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, cardSpacing, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
-
         modalContainer: {
             // zIndex: '1000!important',
             // top: (props: TKUICardProps) => (props.top ? props.top : 190) + 'px!important',
@@ -17,29 +17,32 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             // so need to explicitly set overflowY to hidden to override overflowY value.
             // overflowY: 'hidden!important',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                width: '450px',
-                left: '10px!important',
+                width: queryWidth + 'px',
+                left: cardSpacing() + 'px!important',
             },
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 width: '100%',
                 left: '0px!important',
-                padding: '0 5px'
+                padding: '0 ' + cardSpacing(false) + 'px'
+            },
+            '&>*': {
+                paddingBottom: (props: TKUICardProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
             }
         },
 
         main: {
             height: '100%',
-            backgroundColor: 'white',
             fontFamily: theme.fontFamily,
-            boxShadow: (props: TKUICardProps) =>
-                (props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.SLIDE_UP_STYLE
-                    || props.presentation === CardPresentation.MODAL) ?
-                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' : 'none',
-            borderRadius: (props: TKUICardProps) => props.presentation === CardPresentation.MODAL ? '12px' :
-                props.presentation === CardPresentation.SLIDE_UP
-                || props.presentation === CardPresentation.SLIDE_UP_STYLE ? '12px 12px 0 0' : '0',
+            ...theme.textColorDefault,
+            ...theme.textSizeBody,
             ...genStyles.flex,
             ...genStyles.column,
+            overflow: (props: TKUICardProps) => props.overflowVisible ? 'visible' : 'hidden',
+            ...theme.cardBackground
+        },
+
+        mainForSlideUp: {
+            ...genStyles.borderRadiusString('12px 12px 0 0')
         },
 
         innerMain: {
@@ -51,24 +54,27 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
 
         header: {
             // If !hasHandle(props) set padding top of 15px to compensate 15px height handle
-            padding: (props: TKUICardProps) => hasHandle(props) ? '0 16px' : '15px 16px 12px',
-            color: 'black',
+            padding: (props: TKUICardProps) => hasHandle(props) ? '0 12px 10px 16px' : '10px 12px 10px 16px',
+            color: black(0, theme.isDark),
+            ...genStyles.flex,
+            ...genStyles.column
         },
 
         subHeader: {
             padding: '0 16px',
-            borderBottom: '1px solid ' + tKUIColors.black4
+            borderBottom: (props: TKUICardProps) => props.headerDividerVisible !== false ?
+                '1px solid ' + black(4, theme.isDark) : undefined
         },
 
         body: {
             ...genStyles.grow
         },
 
-        headerLeft: {
+        headerTop: {
             ...genStyles.flex,
-            ...genStyles.column,
             ...genStyles.grow,
-            ...genStyles.alignStart
+            ...genStyles.spaceBetween,
+            ...genStyles.alignCenter
         },
 
         title: {
@@ -77,23 +83,26 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
 
         subtitle: {
             ...genStyles.fontM,
-            ...genStyles.textGray
+            ...theme.textColorGray
         },
 
         btnClear: {
             ...resetStyles.button,
-            padding: '0',
             height: '24px',
             width: '24px',
+            padding: '6px',
             cursor: 'pointer',
-            ...genStyles.alignSelfStart
+            '& svg path': {
+                fill: black(1, theme.isDark)
+            },
+            '&:hover svg path, &:active svg path': {
+                fill: black(0, theme.isDark)
+            }
         },
 
         iconClear: {
-            color: 'black',
             width: '100%',
-            height: '100%',
-            ...genStyles.svgFillCurrColor
+            height: '100%'
         },
 
         handle: {
@@ -106,7 +115,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             width: '50px',
             height: '4px',
             ...genStyles.borderRadius(2),
-            backgroundColor: tKUIColors.black2,
+            backgroundColor: black(2, theme.isDark),
             marginTop: '6px'
         },
 

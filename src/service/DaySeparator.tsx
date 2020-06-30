@@ -3,10 +3,12 @@ import {Moment} from "moment-timezone";
 import "./DaySeparator.css";
 import DateTimeUtil from "../util/DateTimeUtil";
 import {default as DeviceUtil} from "../util/DeviceUtil";
+import {black} from "../jss/TKUITheme";
 
 interface IProps {
     date: Moment;
     scrollRef?: any;
+    isDark?: boolean;
 }
 
 interface IState {
@@ -36,17 +38,23 @@ class DaySeparator extends React.Component<IProps, IState> {
             lastWeek: 'ddd D',
             sameElse: 'ddd D'
         });
+        const daySeparatorStyle = {
+            backgroundColor: this.props.isDark ? '#353535' : 'rgb(243, 243, 243)',
+            color: black(1, this.props.isDark)
+        };
         return (
             [
                 <div className={"DaySeparator" + (!showOnTop ? " DaySeparator-rise" : "")}
                      key={"DaySeparator-1"}
                      ref={(ref: any) => this.ref = ref}
+                     style={daySeparatorStyle}
                 >
                     {dayText}
                     {/*{dayText + " " + Math.floor(this.props.scrollRef.scrollTop!) + (this.ref ? " " + this.ref.offsetTop : "")}*/}
                 </div>,
                 showOnTop && <div className="DaySeparator DaySeparator-top"
                                   key={"DaySeparator-2"}
+                                  style={daySeparatorStyle}
                 >
                     {dayText}
                     {/*{dayText + " " + Math.floor(this.props.scrollRef.scrollTop!) + (this.ref ? " " + this.ref.offsetTop : "")}*/}

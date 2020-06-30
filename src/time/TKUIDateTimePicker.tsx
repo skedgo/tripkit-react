@@ -21,6 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     reference?: (ref: any) => void;
     renderCustomInput?: (value: any, onClick: any) => JSX.Element;
     popperPlacement?: string;
+    popperModifiers?: any;
 }
 
 export interface IStyle {
@@ -117,7 +118,8 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
                         enabled: true,
                         escapeWithReference: false,
                         boundariesElement: "viewport"
-                    }
+                    },
+                    ...this.props.popperModifiers
                 }}
                 customInput={CustomInput && <CustomInput/>}
                 popperPlacement={this.props.popperPlacement}
