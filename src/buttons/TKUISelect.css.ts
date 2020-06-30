@@ -29,7 +29,10 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
             ...theme.textSizeCaption,
             ...theme.textWeightSemibold,
             ...theme.textColorGray,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            '&:active': {
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .4)
+            }
         },
         optionFocused: {
             backgroundColor: colorWithOpacity(theme.colorPrimary, .2)

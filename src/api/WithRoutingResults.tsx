@@ -42,7 +42,7 @@ interface IWithRoutingResultsState {
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     regionInfo?: RegionInfo;
-    directionsView: boolean;
+    directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
     sort: TripSort;
@@ -118,16 +118,21 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onQueryChange(query: RoutingQuery) {
             const prevQuery = this.state.query;
+            const alreadyOnDirectionsView = this.state.directionsView;
             this.setState({ query: query }, () => {
                 this.refreshRegion();
                 // TODO: Next logic currently does not depend on this.state.region, although it should (in computeModeSets).
                 // In that execute next code after refreshRegion took effect on state.
                 if (query.isComplete(true)) {
-                    if (!this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
+                    // Just refresh trips if already on directions view when called
+                    // onQueryChange. In that case trips will be computed when
+                    // this.onDirectionsView(true) is called.
+                    if (alreadyOnDirectionsView &&
+                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
                         this.refreshTrips();
                     }
                 } else {
-                    if (this.state.trips !== null) {
+                    if (this.state.trips !== undefined) {
                         this.setState({
                             trips: undefined,
                             waiting: false,
@@ -164,7 +169,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public onDirectionsView(directionsView: boolean) {
-            this.setState({directionsView: directionsView});
+            if (this.state.directionsView !== directionsView) {
+                this.setState({directionsView: directionsView}, () => {
+                    if (this.state.query.isComplete(true) && this.state.directionsView) {
+                        this.refreshTrips();
+                    }
+                });
+            }
         }
 
         public refreshRegion() {
@@ -493,7 +504,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
                                   prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
-                this.state.query.isComplete(true) &&
+                this.state.query.isComplete(true) && this.state.directionsView &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
             }

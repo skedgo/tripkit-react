@@ -146,6 +146,7 @@ class SegmentTemplate {
 
     set visibility(value: string | null) {
         this._visibility = value;
+        this._visibilityType = undefined;   // Reset visibility type
     }
 
     get visibilityType(): Visibility {

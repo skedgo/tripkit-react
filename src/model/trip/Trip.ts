@@ -191,6 +191,7 @@ class Trip {
             this._arrivalSegment.action = "Arrive";
             this._arrivalSegment.streets = [];
             this._arrivalSegment.shapes = [];
+            this._arrivalSegment.visibility = "on map";
         }
         return this._arrivalSegment;
     }

@@ -29,7 +29,11 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
         main: {
             ...genStyles.flex,
             ...genStyles.grow,
-            ...genStyles.column
+            ...genStyles.column,
+            ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
+                /* IE10+ CSS styles go here */
+                width: '100%'
+            }
         },
         header: {
             ...genStyles.flex,

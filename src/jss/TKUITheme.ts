@@ -150,4 +150,9 @@ if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
     tKUIColors.black3 = Color.createFromString('#212A33').toRGBA(.18);
     tKUIColors.black4 = Color.createFromString('#212A33').toRGBA(.12);
     tKUIColors.black5 = Color.createFromString('#212A33').toRGBA(.08);
+    tKUIColors.white1 = Color.createFromString('#ffffff').toRGBA(.6);
+    tKUIColors.white2 = Color.createFromString('#ffffff').toRGBA(.3);
+    tKUIColors.white3 = Color.createFromString('#ffffff').toRGBA(.18);
+    tKUIColors.white4 = Color.createFromString('#ffffff').toRGBA(.12);
+    tKUIColors.white5 = Color.createFromString('#ffffff').toRGBA(.08);
 }

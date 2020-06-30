@@ -38,10 +38,11 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             ...genStyles.flex,
             ...genStyles.column,
             overflow: (props: TKUICardProps) => props.overflowVisible ? 'visible' : 'hidden',
-            ...theme.cardBackground,
-            borderRadius: (props: TKUICardProps) => props.presentation === (CardPresentation.SLIDE_UP
-                    || props.slideUpOptions) && DeviceUtil.isTouch() ? '12px 12px 0 0'
-                : undefined
+            ...theme.cardBackground
+        },
+
+        mainForSlideUp: {
+            ...genStyles.borderRadiusString('12px 12px 0 0')
         },
 
         innerMain: {

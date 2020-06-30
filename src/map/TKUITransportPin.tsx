@@ -53,7 +53,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const wantIconForDark = isDarkMode;
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark);
-        const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
+        const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark, false);
         const isTransIconForDark = segment.arrival || (isInvertedWrtMode ? !wantIconForDark : wantIconForDark);
         const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
         return <TKUITransportPinConnected
