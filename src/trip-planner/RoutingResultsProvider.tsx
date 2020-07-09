@@ -46,7 +46,8 @@ export interface IRoutingResultsContext {
 
     // This is general, not routing specific.
     waitingStateLoad: boolean;
-    onWaitingStateLoad: (waiting: boolean) => void;
+    stateLoadError?: Error;
+    onWaitingStateLoad: (waiting: boolean, error?: Error) => void;
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
@@ -70,7 +71,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     inputTextTo:  "",
     onInputTextChange: (from: boolean, text: string) => {},
     waitingStateLoad: false,
-    onWaitingStateLoad: (waiting: boolean) => {}
+    onWaitingStateLoad: (waiting: boolean, error?: Error) => {}
 });
 
 class RoutingResultsProvider extends React.Component<{

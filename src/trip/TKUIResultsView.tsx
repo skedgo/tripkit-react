@@ -27,7 +27,7 @@ import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect from "../buttons/TKUISelect";
 import {TKUIButtonType, TKUITheme, TKUITooltip} from "../index";
-import DeviceUtil from "../util/DeviceUtil";
+import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
@@ -244,6 +244,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 presentation={CardPresentation.SLIDE_UP}
                 renderSubHeader={!error ? renderSubHeader : undefined}
                 slideUpOptions={this.props.slideUpOptions}
+                // Flex grow on body seem not take effect on Safari.
+                bodyStyle={DeviceUtil.browser === BROWSER.SAFARI ? {height: '100%'} : undefined}
             >
                 <div className={classNames(this.props.className, classes.main)}>
                     {!this.props.routingError && this.props.values.length > 0 &&

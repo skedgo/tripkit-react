@@ -45,10 +45,11 @@ class MapService extends React.Component<IProps, {}> {
                     return [
                         <Marker icon={icon} position={startStop!} key={"pin"}/>,
                         service.shapes ?
-                            <ServiceResultsContext.Consumer>
+                            <ServiceResultsContext.Consumer
+                                key={"map-polyline" + serviceDeparture.serviceTripID}
+                            >
                                 {(serviceContext: IServiceResultsContext) =>
-                                    <ShapesPolyline key={"map-polyline" + serviceDeparture.serviceTripID}
-                                                    id={"map-polyline" + serviceDeparture.serviceTripID}
+                                    <ShapesPolyline id={"map-polyline" + serviceDeparture.serviceTripID}
                                                     shapes={service.shapes!}
                                                     polylineOptions={this.props.renderer.polylineOptions}
                                                     renderServiceStop={this.props.renderer.renderServiceStop}

@@ -133,8 +133,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 return elems;
             }, []);
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        const renderCustomInput = (value: any, onClick: any) => (
-            <button className={classes.faceButtonClass} onClick={onClick}>
+        const renderCustomInput = (value: any, onClick: any, ref: any) => (
+            <button className={classes.faceButtonClass} onClick={onClick} ref={ref}>
                 <IconClock/>
             </button>
         );

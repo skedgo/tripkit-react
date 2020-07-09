@@ -19,7 +19,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onBlur?: () => void;
     onClose?: () => void;
     reference?: (ref: any) => void;
-    renderCustomInput?: (value: any, onClick: any) => JSX.Element;
+    renderCustomInput?: (value: any, onClick: any, ref: any) => JSX.Element;
     popperPlacement?: string;
     popperModifiers?: any;
 }
@@ -70,7 +70,7 @@ class TKUIDateTimePicker extends React.Component<IProps, {}> {
         const displayValue = this.props.value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const classes = this.props.classes;
         const CustomInput = this.props.renderCustomInput ?
-            ((props: {value?: any, onClick?: any}) => this.props.renderCustomInput!(props.value, props.onClick)) : undefined;
+            React.forwardRef(((props: {value?: any, onClick?: any}, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, ref))) : undefined;
         return (DeviceUtil.isDesktop || (DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX)) ?
             <DatePicker
                 selected={displayValue}

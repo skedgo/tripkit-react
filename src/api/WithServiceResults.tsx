@@ -472,7 +472,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public requestUntilServiceFound(serviceTripId: string, limit: number = 3): Promise<void> {
             return new Promise((resolve, reject) => {
                 if (limit <= 0) {
-                    return reject(new Error("No service found"));
+                    reject(new Error("No service found"));
+                    return;
                 }
                 this.requestDepartures().then((results: ServiceDeparture[]) => {
                     this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
@@ -487,7 +488,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                                 this.onServiceSelection(targetService);
                                 resolve();
                             } else {
-                                this.requestUntilServiceFound(serviceTripId, limit - 1);
+                                this.requestUntilServiceFound(serviceTripId, limit - 1)
+                                    .then(() => resolve()).catch((reason) => reject(reason));
                             }
                         });
                 }).catch((reason) => {
