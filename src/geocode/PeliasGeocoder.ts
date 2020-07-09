@@ -133,7 +133,7 @@ class PeliasGeocoder implements IGeocoder {
                 callback(geocodedLoc);
                 return
             }
-            callback(null);
+            throw new Error("Unable to reverse geocode the location");
         }).catch(reason => {
             Location.create(coord, "Location", "", "Location", PeliasGeocoder.SOURCE_ID);
         });

@@ -76,20 +76,21 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             borderBottomLeftRadius: '12px',
             borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,
-            padding: '0 5px 0 15px',
+            padding: '0 6px',
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.spaceBetween
         },
         transportsBtn: {
             ...resetStyles.button,
-            padding: '10px',
+            padding: '10px 10px 10px 0',
+            whiteSpace: 'nowrap',
             ...theme.textSizeCaption,
             ...theme.textWeightSemibold,
             ...theme.textColorGray
         },
         timePrefSelect: {
-            minWidth: '92px',
+            minWidth: '97px',
             '& *': {
                 ...theme.textSizeCaption,
                 ...theme.textWeightSemibold,

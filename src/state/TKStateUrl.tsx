@@ -12,6 +12,8 @@ import LatLng from "../model/LatLng";
 import * as queryString from "query-string";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import Util from "../util/Util";
+import {TKError} from "..";
+import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
 
 interface IProps {
     tKState: TKState;
@@ -49,7 +51,9 @@ class TKStateUrl extends React.Component<IProps, {}> {
         if (sharedTripJsonUrl) {
             tKState.onWaitingStateLoad(true);
             tKState.onTripJsonUrl(sharedTripJsonUrl)
-                .finally(() => tKState.onWaitingStateLoad(false));
+                .then(() => tKState.onWaitingStateLoad(false))
+                .catch((error: Error) => tKState.onWaitingStateLoad(false,
+                    new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false)));
         } else if (TKShareHelper.isSharedStopLink()) {
             tKState.onWaitingStateLoad(true);
             const shareLinkPath = decodeURIComponent(document.location.pathname);
@@ -62,7 +66,9 @@ class TKStateUrl extends React.Component<IProps, {}> {
                         this.props.tKState.onQueryUpdate({to: stop});
                         this.props.tKState.onStopChange(stop);
                     }))
-                .finally(() => tKState.onWaitingStateLoad(false));
+                .then(() => tKState.onWaitingStateLoad(false))
+                .catch((error: Error) => tKState.onWaitingStateLoad(false,
+                    new TKError("Error loading timetable", ERROR_LOADING_DEEP_LINK, false)));
         } else if (TKShareHelper.isSharedServiceLink()) {
             tKState.onWaitingStateLoad(true);
             const shareLinkPath = decodeURIComponent(document.location.pathname);
@@ -77,11 +83,14 @@ class TKStateUrl extends React.Component<IProps, {}> {
                         this.props.tKState.onQueryUpdate({to: stop});
                         return this.props.tKState.onFindAndSelectService(stop, serviceCode, initTime);
                     }))
-                .finally(() => tKState.onWaitingStateLoad(false));
+                .then(() => tKState.onWaitingStateLoad(false))
+                .catch((error: Error) => tKState.onWaitingStateLoad(false,
+                    new TKError("Error loading service", ERROR_LOADING_DEEP_LINK, false)));
         } else if (TKShareHelper.isSharedArrivalLink()) {
             const shareLinkS = document.location.search;
             const queryMap = queryString.parse(shareLinkS.startsWith("?") ? shareLinkS.substr(1) : shareLinkS);
             if (queryMap.lat && queryMap.lng) {
+                tKState.onWaitingStateLoad(true);
                 const arrivalLoc = Location.create(LatLng.createLatLng(parseFloat(queryMap.lat), parseFloat(queryMap.lng)), "", "", "");
                 const customGeocoders = tKState.config.geocoding ? tKState.config.geocoding.customGeocoders : undefined;
                 const geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(false, customGeocoders));
@@ -101,6 +110,8 @@ class TKStateUrl extends React.Component<IProps, {}> {
                         }
                         TKShareHelper.resetToHome();
                     }
+                    // reverseGeocode never returns null or an error, but a location with address "Location".
+                    tKState.onWaitingStateLoad(false);
                 });
             }
         } else if (TKShareHelper.isSharedQueryLink()) {

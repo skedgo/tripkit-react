@@ -106,8 +106,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 width: '144px'
             };
             return [
-                <img src={appleStoreLogo} style={storeBtnStyle}/>,
-                <img src={playStoreLogo} style={storeBtnStyle}/>
+                <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}/>,
+                <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}/>
             ]
         }
     })

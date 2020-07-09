@@ -450,7 +450,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {<TKUIWaitingRequest
                             status={this.state.tripUpdateStatus}
                             message={this.props.waitingTripUpdate ? "Updating trip" :
-                                this.props.tripUpdateError ? "Error updating trip" : ""}
+                                this.props.tripUpdateError ? "Error updating trip" :
+                                    this.props.stateLoadError ? this.props.stateLoadError.message : ""}
                         />}
                     </div>
                 }
@@ -533,9 +534,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
 
         if (prevProps.waitingStateLoad !== this.props.waitingStateLoad) {
+            const status = this.props.waitingStateLoad ? TKRequestStatus.wait :
+                this.props.stateLoadError ? TKRequestStatus.error : undefined;
             this.setState({
-                tripUpdateStatus: this.props.waitingStateLoad ? TKRequestStatus.wait : undefined
+                tripUpdateStatus: status
             });
+            if (status === TKRequestStatus.error) {
+                setTimeout(() => this.setState({
+                    tripUpdateStatus: undefined
+                }), 4000);
+            }
         }
 
         // Need to re-inject styles so css properties based on portrait / landscape take effect.

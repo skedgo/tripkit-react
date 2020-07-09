@@ -51,6 +51,7 @@ interface IWithRoutingResultsState {
     waitingTripUpdate: boolean;
     tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
     waitingStateLoad: boolean;
+    stateLoadError?: Error;
 }
 
 export enum TripSort {
@@ -400,9 +401,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 .finally(() => callback && callback());
         };
 
-        public onWaitingStateLoad(waiting: boolean) {
+        public onWaitingStateLoad(waiting: boolean, error?: Error) {
             this.setState({
-                waitingStateLoad: waiting
+                waitingStateLoad: waiting,
+                stateLoadError: error
             });
         }
 
@@ -450,8 +452,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onReqRealtimeFor={this.onReqRealtimeFor}
                 onAlternativeChange={this.onAlternativeChange}
                 onSegmentServiceChange={this.onSegmentServiceChange}
-                onWaitingStateLoad={this.onWaitingStateLoad}
                 waitingStateLoad={this.state.waitingStateLoad}
+                stateLoadError={this.state.stateLoadError}
+                onWaitingStateLoad={this.onWaitingStateLoad}
             />;
         }
 
