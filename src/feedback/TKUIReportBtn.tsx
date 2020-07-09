@@ -53,9 +53,9 @@ interface IState {
 export function feedbackTextFromState(state: TKState): string {
     const location = window.location;
     const plannerUrl = location.protocol + "//" + location.hostname
-        + (location.port ? ":" + location.port : "") + location.pathname;
+        + (location.port ? ":" + location.port : "");
     let feedbackS = "";
-    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.routingQuery, plannerUrl)) + "\n";
+    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.query, plannerUrl)) + "\n";
     feedbackS += "\n";
     feedbackS += "User profile: " + JSON.stringify(Util.serialize(state.userProfile)) + "\n";
     if (state.routingError) {

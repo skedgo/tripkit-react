@@ -28,7 +28,7 @@ export interface IWithServiceResultsProps {
 interface IWithServiceResultsState {
     startStop?: StopLocation;
     segment?: Segment;
-    initTime: Moment;       // Default to now - 30mins(?)
+    timetableInitTime: Moment;       // Default to now - 30mins(?)
     departures: ServiceDeparture[];    // It's sorted.
     noRTDepartures: ServiceDeparture[];    // Sorted according to timetable (shedule) time, not considering realtime.
     selected?: ServiceDeparture;
@@ -60,7 +60,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             super(props);
             // TODO in GWT implementation initialTime has the proper timezone
             this.state = {
-                initTime: DateTimeUtil.getNow(),
+                timetableInitTime: DateTimeUtil.getNow(),
                 departures: [],
                 noRTDepartures: [],
                 filter: "",
@@ -123,7 +123,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             this.requestsWithoutNewResults = 0;
             this.coverDisplayRequestHash = "";
             this.setState({
-                initTime: initTime,
+                timetableInitTime: initTime,
                 departures: [],
                 noRTDepartures: [],
                 departuresFiltered: [],
@@ -245,7 +245,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              serviceError={this.state.serviceError}
                              onFilterChange={this.onFilterChange}
                              title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
-                             initTime={this.state.initTimeChanged ? this.state.initTime : DateTimeUtil.getNow()}
+                             timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}
                              onInitTimeChange={this.onInitTimeChange}
                              selectedService={this.getSelectedService()}
                              onServiceSelection={this.onServiceSelection}
@@ -359,7 +359,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     endStopIDs = [segment.endStopCode!];
                 }
                 const lastDepartureDate = this.getLastDepartureTime();
-                const initialTimeAtRequest = this.state.initTime;
+                const initialTimeAtRequest = this.state.timetableInitTime;
                 const departuresRequest = {
                     region: startRegionCode,
                     embarkationStops: startStopIDs,
@@ -374,7 +374,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return TripGoApi.apiCallT("departures.json", NetworkUtil.MethodType.POST, ServiceDeparturesResult, departuresRequest)
                     .then((departuresResult: ServiceDeparturesResult) => {
                             // Initial time changed, which triggered a clear, so should discard these results
-                            if (!initialTimeAtRequest.isSame(this.state.initTime)) {
+                            if (!initialTimeAtRequest.isSame(this.state.timetableInitTime)) {
                                 throw new TKError("Results from an old request.", ERROR_DEPARTURES_FROM_OLD_REQUEST);
                             }
                             if (departuresResult.error) {
@@ -391,7 +391,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public getLastDepartureTime(): number {
             let lastDepartureDate;
             if (this.state.departures.length === 0) {
-                lastDepartureDate = Math.floor(this.state.initTime.valueOf() / 1000);
+                lastDepartureDate = Math.floor(this.state.timetableInitTime.valueOf() / 1000);
             }  else {
                 lastDepartureDate = Math.floor(this.state.noRTDepartures[this.state.noRTDepartures.length - 1].startTime) + 1;
             }
@@ -469,45 +469,50 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             });
         }
 
-        public requestUntilServiceFound(serviceTripId: string, limit: number = 3) {
-            if (limit <= 0) {
-                return;
-            }
-            this.requestDepartures().then((results: ServiceDeparture[]) => {
-                this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
-                    () => {
-                        // This causes timetable to be populated with departures. Maybe just call at the end of the recursion,
-                        // and avoid displaying the timetable in the meantime.
-                        this.setState((prev: IWithServiceResultsState) => ({
-                            displayLimit: prev.departures.length
-                        }));
-                        const targetService = results.find((result: ServiceDeparture) => result.serviceTripID === serviceTripId);
-                        if (targetService) {
-                            this.onServiceSelection(targetService);
-                        } else {
-                            this.requestUntilServiceFound(serviceTripId, limit - 1);
-                        }
-                    });
-            }).catch((reason) => {
-                console.log(reason);
+        public requestUntilServiceFound(serviceTripId: string, limit: number = 3): Promise<void> {
+            return new Promise((resolve, reject) => {
+                if (limit <= 0) {
+                    return reject(new Error("No service found"));
+                }
+                this.requestDepartures().then((results: ServiceDeparture[]) => {
+                    this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
+                        () => {
+                            // This causes timetable to be populated with departures. Maybe just call at the end of the recursion,
+                            // and avoid displaying the timetable in the meantime.
+                            this.setState((prev: IWithServiceResultsState) => ({
+                                displayLimit: prev.departures.length
+                            }));
+                            const targetService = results.find((result: ServiceDeparture) => result.serviceTripID === serviceTripId);
+                            if (targetService) {
+                                this.onServiceSelection(targetService);
+                                resolve();
+                            } else {
+                                this.requestUntilServiceFound(serviceTripId, limit - 1);
+                            }
+                        });
+                }).catch((reason) => {
+                    console.log(reason);
+                    reject(new Error("No service found"));
+                });
             });
         }
 
-        public onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment) {
-            RegionsData.instance.requireRegions().then(() => {
-                    this.setState({
-                        startStop: stop,
-                        initTime: initTime,
-                        departures: [],
-                        noRTDepartures: [],
-                        departuresFiltered: [],
-                        displayLimit: 0,
-                        initTimeChanged: true
-                    }, () => {
-                        this.requestUntilServiceFound(serviceCode);
-                    });
-                }
-            );
+        public onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment): Promise<void> {
+            return new Promise((resolve, reject) => {
+                RegionsData.instance.requireRegions().then(() => {
+                        this.setState({
+                            startStop: stop,
+                            timetableInitTime: initTime,
+                            departures: [],
+                            noRTDepartures: [],
+                            departuresFiltered: [],
+                            displayLimit: 0,
+                            initTimeChanged: true
+                        }, () => this.requestUntilServiceFound(serviceCode)
+                            .then(() => resolve()).catch((reason) => reject(reason)));
+                    }
+                ).catch((reason) => reject(reason));
+            });
         }
 
         public componentWillUnmount() {

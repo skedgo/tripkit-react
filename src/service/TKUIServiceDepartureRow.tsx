@@ -186,7 +186,7 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
             {(optionsContext: IOptionsContext) =>
                 children!({
                     ...inputProps,
-                    options: optionsContext.value
+                    options: optionsContext.userProfile
                 })
             }
         </OptionsContext.Consumer>;

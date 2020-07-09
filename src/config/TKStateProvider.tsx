@@ -31,7 +31,7 @@ class TKStateProvider extends React.Component<IProps,{}> {
                                     {(i18nProps: TKI18nContextProps) =>
                                         <RoutingResultsProvider
                                             initViewport={this.props.config.initViewport}
-                                            options={optionsContext && optionsContext.value}
+                                            options={optionsContext && optionsContext.userProfile}
                                             locale={i18nProps.locale}
                                         >
                                             <RoutingResultsContext.Consumer>

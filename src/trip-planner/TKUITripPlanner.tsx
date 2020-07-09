@@ -38,7 +38,6 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {MapLocationType} from "../model/location/MapLocationType";
-import StopsData from "../data/StopsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
@@ -177,7 +176,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private isShowTripDetail() {
-        return this.state.showTripDetail && this.props.selected && !this.props.timetableForSegment;
+        return this.state.showTripDetail && this.props.selectedTrip && !this.props.timetableForSegment;
     }
 
     private isShowServiceDetail() {
@@ -247,7 +246,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             />;
         const queryInput = this.props.directionsView &&
-            !(this.state.showTripDetail && this.props.selected) &&
+            !(this.state.showTripDetail && this.props.selectedTrip) &&
             <TKUIRoutingQueryInput
                 title={t("Route")}
                 isTripPlanner={true}
@@ -319,7 +318,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: {top: this.getContainerHeight() - 80, unit: 'px'}
                 }}
             />;
-        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips && !(this.state.showTripDetail && this.props.selected) ?
+        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips && !(this.state.showTripDetail && this.props.selectedTrip) ?
             <TKUIResultsView
                 onDetailsClicked={() => {
                     this.setState({showTripDetail: true});
@@ -341,7 +340,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             if (DeviceUtil.isTouch()) {
                 tripDetailView =
                     <TKUITripOverviewView
-                        value={this.props.selected!}
+                        value={this.props.selectedTrip!}
                         onRequestClose={() => {
                             this.setState({showTripDetail: false})
                         }}
@@ -356,7 +355,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
-                const selected = sortedTrips.indexOf(this.props.selected!);
+                const selected = sortedTrips.indexOf(this.props.selectedTrip!);
                 tripDetailView =
                     <TKUICardCarousel
                         selected={selected}
@@ -463,73 +462,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // TODO: what happens if this.ref is not instantiated yet, or changes since trip planner is re-build?
         // E.g. refresh styles.
         Modal.setAppElement(this.ref);
-
-        if (TKShareHelper.isSharedQueryLink()) {
-            const transports = TKShareHelper.parseTransportsQueryParam();
-            if (transports) {
-                const update = Util.iAssign(this.props.userProfile, {transportOptions: transports});
-                this.props.onUserProfileChange(update);
-            }
-            const query = TKShareHelper.parseSharedQueryLink();
-            const viewport = TKShareHelper.parseViewport();
-            if (viewport) {
-                this.props.onViewportChange(viewport);
-            }
-            if (query) {
-                this.props.onQueryChange(query);
-                this.props.onDirectionsView(true);
-            }
-            // TODO: uncomment
-            // TKShareHelper.resetToHome();
-        }
-
-        if (TKShareHelper.isSharedStopLink()) {
-            const shareLinkPath = decodeURIComponent(document.location.pathname);
-            const shareLinkSplit = shareLinkPath.split("/");
-            const region = shareLinkSplit[2];
-            const stopCode = shareLinkSplit[3];
-            this.setState({
-                tripUpdateStatus: TKRequestStatus.wait
-            });
-            StopsData.instance.getStopFromCode(region, stopCode)
-                .then((stop: StopLocation) =>
-                    RegionsData.instance.requireRegions().then(() => {
-                        this.props.onQueryUpdate({to: stop});
-                        this.props.onStopChange(stop);
-                        TKShareHelper.resetToHome();
-                    }))
-                .finally(() => {
-                    this.setState({
-                        tripUpdateStatus: undefined
-                    })
-                });
-        }
-
-        if (TKShareHelper.isSharedServiceLink()) {
-            this.setState({
-                tripUpdateStatus: TKRequestStatus.wait
-            });
-            const shareLinkPath = decodeURIComponent(document.location.pathname);
-            const shareLinkSplit = shareLinkPath.split("/");
-            const region = shareLinkSplit[2];
-            const stopCode = shareLinkSplit[3];
-            const serviceCode = shareLinkSplit[4];
-            const initTime = DateTimeUtil.momentFromTimeTZ(parseInt(shareLinkSplit[5]) * 1000);
-            StopsData.instance.getStopFromCode(region, stopCode)
-                .then((stop: StopLocation) => {
-                    RegionsData.instance.requireRegions().then(() => {
-                        this.props.onQueryUpdate({to: stop});
-                        this.props.onFindAndSelectService(stop, serviceCode, initTime);
-                        TKShareHelper.resetToHome();
-                    })
-                })
-                .finally(() => {
-                    this.setState({
-                        tripUpdateStatus: undefined
-                    })
-                });
-        }
-
         window.addEventListener('keydown', (e: KeyboardEvent) => {
             if (e.keyCode === 27) { // Close sidebar on escape
                 if (this.state.showSidebar) {
@@ -578,6 +510,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // off (display routing results for new query). Notice it shouldn't be other causes of re-computing trips since
         // we are on trip details view.
         if (this.state.showTripDetail &&
+            prevProps.query.from && prevProps.query.to &&   // if from or to were null, then we have just set them (e.g. share trip link), so don't leave trip details view.
             (prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to)) {
             this.setState({showTripDetail: false});
         }
@@ -597,6 +530,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             setTimeout(() => this.setState({
                 tripUpdateStatus: undefined
             }), 2000);
+        }
+
+        if (prevProps.waitingStateLoad !== this.props.waitingStateLoad) {
+            this.setState({
+                tripUpdateStatus: this.props.waitingStateLoad ? TKRequestStatus.wait : undefined
+            });
         }
 
         // Need to re-inject styles so css properties based on portrait / landscape take effect.
@@ -637,8 +576,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                     ...routingResultsContext,
                                                     ...serviceContext,
                                                     ...viewportProps,
-                                                    userProfile: optionsContext.value,
-                                                    onUserProfileChange: optionsContext.onChange,
+                                                    userProfile: optionsContext.userProfile,
+                                                    onUserProfileChange: optionsContext.onUserProfileChange,
                                                     userLocationPromise: config.userLocationPromise
                                                 })
                                             )}

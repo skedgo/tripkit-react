@@ -134,10 +134,10 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                 <RoutingResultsContext.Consumer>
                     {(routingContext: IRoutingResultsContext) =>
                         props.children!({
-                            value: optionsContext.value.transportOptions,
+                            value: optionsContext.userProfile.transportOptions,
                             onChange: (value: TKTransportOptions) => {
-                                const newValue = Util.iAssign(optionsContext.value, {transportOptions: value});
-                                optionsContext.onChange(newValue);
+                                const newValue = Util.iAssign(optionsContext.userProfile, {transportOptions: value});
+                                optionsContext.onUserProfileChange(newValue);
                             },
                             region: routingContext.region
                         })}

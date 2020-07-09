@@ -14,11 +14,11 @@ export interface IServiceResultsContext {
     onStopChange: (stop?: StopLocation) => void;
     timetableForSegment?: Segment;
     onTimetableForSegment: (segment?: Segment) => void;
-    initTime: Moment;
+    timetableInitTime: Moment;
     onInitTimeChange?: (initTime: Moment) => void;
     onFilterChange?: (filter: string) => void;
     onRequestMore?: () => void;
-    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => void;
+    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => Promise<void>;
 
     departures: ServiceDeparture[];
     waiting: boolean;
@@ -32,13 +32,13 @@ export interface IServiceResultsContext {
 export const ServiceResultsContext = React.createContext<IServiceResultsContext>({
     onStopChange: (stop?: StopLocation) => {},
     onTimetableForSegment: (segment?: Segment) => {},
-    initTime: DateTimeUtil.getNow(),
+    timetableInitTime: DateTimeUtil.getNow(),
     departures: [],
     waiting: true,
     title: "",
     onServiceSelection: (departure?: ServiceDeparture) => {},
     servicesEventBus: new EventEmitter(),
-    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => {}
+    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => Promise.resolve()
 });
 
 class ServiceResultsProvider extends React.Component<IWithServiceResultsProps, {}> {

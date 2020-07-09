@@ -11,12 +11,27 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import * as queryString from "query-string";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import Util from "../util/Util";
+import TripGoApi from "../api/TripGoApi";
 
 class TKShareHelper {
 
     public static isSharedTripLink(): boolean {
         const shareLinkPath = document.location.pathname;
-        return shareLinkPath.startsWith("/trip");
+        const shareLinkQuery = document.location.search;
+        return shareLinkPath.startsWith("/trip") || shareLinkQuery.includes("tripUrl=");
+    }
+
+    public static getSharedTripJsonUrl(): string | undefined {
+        const path = document.location.pathname;
+        if (path.startsWith("/trip/")) {
+            return TripGoApi.getSatappUrl(path);
+        }
+        const searchStr = document.location.search;
+        const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
+        if (queryMap.tripUrl) { // Already decoded (decodeURIComponent) by queryString.parse
+            return queryMap.tripUrl;
+        }
+        return undefined;
     }
 
     public static isSharedArrivalLink(): boolean {
@@ -37,6 +52,10 @@ class TKShareHelper {
     public static isSharedQueryLink(): boolean {
         const shareLinkPath = document.location.pathname;
         return shareLinkPath.startsWith("/go");
+    }
+
+    public static getTempShareTripLink(trip: Trip): string {
+        return Constants.DEPLOY_URL + '?tripUrl=' + encodeURIComponent(trip.temporaryURL);
     }
 
     public static getShareArrival(trip: Trip): string {

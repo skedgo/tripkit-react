@@ -4,8 +4,7 @@ import {black, important, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
-import iconSort from "../images/ic-sort.svg";
-import iconSortDark from "../images/ic-sort-dark.svg";
+import Constants from "../util/Constants";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResultsViewProps> =
     (theme: TKUITheme) => ({
@@ -41,7 +40,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResul
             ...genStyles.grow
         },
         sortSelectControl: {
-            backgroundImage: 'url('+ (theme.isLight ? iconSort : iconSortDark) + ')!important',
+            backgroundImage: 'url('+ Constants.absUrl(theme.isLight ? "/images/ic-sort.svg" : "/images/ic-sort-dark.svg") + ')!important',
             backgroundRepeat: 'no-repeat!important',
             backgroundPosition: '10px 50%!important',
             backgroundSize: '18px',
