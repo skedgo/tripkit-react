@@ -408,7 +408,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                 values: routingContext.trips || [],
                                 waiting: routingContext.waiting,
                                 routingError: routingContext.routingError,
-                                value: routingContext.selected,
+                                value: routingContext.selectedTrip,
                                 onChange: (trip: Trip) => {
                                     routingContext.onChange(trip);
                                     routingContext.onReqRealtimeFor(trip);

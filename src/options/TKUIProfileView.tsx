@@ -83,7 +83,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            update: this.props.value,
+            update: this.props.userProfile,
             pickSchoolError: false,
             showPersonalData: false,
             showTransports: false,
@@ -108,8 +108,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         if (!this.checkValid()) {
             return;
         }
-        if (this.props.onChange) {
-            this.props.onChange(this.state.update);
+        if (this.props.onUserProfileChange) {
+            this.props.onUserProfileChange(this.state.update);
         }
     }
 

@@ -231,8 +231,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
             const fitPoint = this.props.padding && this.props.padding.left && boundsEstablished ?
                 MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
-                this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
-                LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
+                    this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
+                    LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
             this.onViewportChange(Util.iAssign(this.props.viewport || {},
                 {center: fitPoint,
                     zoom: (this.props.viewport && this.props.viewport.zoom && this.props.viewport.zoom >= 10) ?
@@ -420,11 +420,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         this.setState({menuPopupPosition: e});
                     }}
                     tap={true} // It should make a long tap to trigger oncontextmenu on iOS, but it doesn't work.
-                               // Workaround: https://github.com/Leaflet/Leaflet/issues/6865
-                               // Working example: https://www.mappite.org/tap/testTap2.html
-                               // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
-                               // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
-                               // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
+                    // Workaround: https://github.com/Leaflet/Leaflet/issues/6865
+                    // Working example: https://www.mappite.org/tap/testTap2.html
+                    // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
+                    // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
+                    // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
                     <TileLayer
                         {...this.props.tileLayerProps!}
@@ -495,19 +495,19 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         {this.getLocationPopup(this.props.to!)}
                     </Marker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
-                        <TKUIMapLocations
-                            bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
-                            enabledMapLayers={enabledMapLayers}
-                            zoom={this.leafletElement.getZoom()}
-                            onClick={(locType: MapLocationType, loc: Location) => {
-                                if (locType === MapLocationType.STOP && this.props.onClick) {
-                                    this.props.onClick(loc as StopLocation);
-                                }
-                            }}
-                            onLocAction={this.props.onLocAction}
-                            omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
-                            isDarkMode={this.props.theme.isDark}
-                        />
+                    <TKUIMapLocations
+                        bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
+                        enabledMapLayers={enabledMapLayers}
+                        zoom={this.leafletElement.getZoom()}
+                        onClick={(locType: MapLocationType, loc: Location) => {
+                            if (locType === MapLocationType.STOP && this.props.onClick) {
+                                this.props.onClick(loc as StopLocation);
+                            }
+                        }}
+                        onLocAction={this.props.onLocAction}
+                        omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
+                        isDarkMode={this.props.theme.isDark}
+                    />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
@@ -713,89 +713,85 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             <RoutingResultsContext.Consumer>
                                 {(routingContext: IRoutingResultsContext) =>
                                     <ServiceResultsContext.Consumer>
-                                        {(serviceContext: IServiceResultsContext) =>
-                                            <OptionsContext.Consumer>
-                                                {(optionsContext: IOptionsContext) => {
-                                                    const from = routingContext.preFrom ? routingContext.preFrom :
-                                                        (routingContext.query.from ? routingContext.query.from : undefined);
-                                                    const to = routingContext.preTo ? routingContext.preTo :
-                                                        (routingContext.query.to ? routingContext.query.to : undefined);
-                                                    const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
-                                                        const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
-                                                            Location.createDroppedPin(latLng);
-                                                        routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                            [isFrom ? "from" : "to"]: mapLocation
-                                                        }));
-                                                        if (mapLocation.isDroppedPin()) {
-                                                            getGeocodingData(config.geocoding && config.geocoding.customGeocoders)
-                                                                .reverseGeocode(latLng, loc => {
-                                                                if (loc !== null) {
-                                                                    // Need to use onQueryUpdate instead of onQueryChange since
-                                                                    // routingContext.query can be outdated at the time this callback is
-                                                                    // executed. OnQueryUpdate always use the correct query (the one on
-                                                                    // WithRoutingResults state, the source of truth).
-                                                                    routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
-                                                                    // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
-                                                                }
-                                                            })
-                                                        }
-                                                    };
-                                                    const consumerProps: IConsumedProps = {
-                                                        from: routingContext.directionsView ? from : undefined,
-                                                        to: to,
-                                                        trip: routingContext.selected,
-                                                        onDragEnd: onMapLocChanged,
-                                                        onClick: (clickLatLng: LatLng) => {
-                                                            if (routingContext.directionsView) {
-                                                                if (!from || !to || clickLatLng instanceof StopLocation) {
-                                                                    if (!from && !to) {
-                                                                        // Avoid fit bounds when setting first location on
-                                                                        // directions view.
-                                                                        avoidFitLatLng = clickLatLng
-                                                                    }
-                                                                    // Do nothing if the location is already the from or to.
-                                                                    if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
-                                                                        return;
-                                                                    }
-                                                                    const isFrom = !from;
-                                                                    onMapLocChanged(isFrom, clickLatLng);
-                                                                    GATracker.event({
-                                                                        category: "query input",
-                                                                        action: isFrom ? "pick from location" : "pick to location",
-                                                                        label: "drop to"
-                                                                    });
-                                                                }
-                                                            } else {
-                                                                if (!to || clickLatLng instanceof StopLocation) {
-                                                                    onMapLocChanged(false, clickLatLng);
-                                                                }
+                                        {(serviceContext: IServiceResultsContext) => {
+                                            const from = routingContext.preFrom ? routingContext.preFrom :
+                                                (routingContext.query.from ? routingContext.query.from : undefined);
+                                            const to = routingContext.preTo ? routingContext.preTo :
+                                                (routingContext.query.to ? routingContext.query.to : undefined);
+                                            const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
+                                                const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
+                                                    Location.createDroppedPin(latLng);
+                                                routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                    [isFrom ? "from" : "to"]: mapLocation
+                                                }));
+                                                if (mapLocation.isDroppedPin()) {
+                                                    getGeocodingData(config.geocoding && config.geocoding.customGeocoders)
+                                                        .reverseGeocode(latLng, loc => {
+                                                            if (loc !== null) {
+                                                                // Need to use onQueryUpdate instead of onQueryChange since
+                                                                // routingContext.query can be outdated at the time this callback is
+                                                                // executed. OnQueryUpdate always use the correct query (the one on
+                                                                // WithRoutingResults state, the source of truth).
+                                                                routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
+                                                                // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
                                                             }
-                                                        },
-                                                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
-                                                            serviceContext.selectedService : undefined,
-                                                        viewport: routingContext.viewport,
-                                                        onViewportChange: routingContext.onViewportChange,
-                                                        directionsView: routingContext.directionsView,
-                                                        onDirectionsFrom: (latLng: LatLng) => {
-                                                            onMapLocChanged(true, latLng);
-                                                            routingContext.onDirectionsView(true);
-                                                        },
-                                                        onDirectionsTo: (latLng: LatLng) => {
-                                                            onMapLocChanged(false, latLng);
-                                                            routingContext.onDirectionsView(true);
-                                                        },
-                                                        onWhatsHere: (latLng: LatLng) => {
-                                                            onMapLocChanged(false, latLng);
-                                                        },
-                                                        ...viewportProps,
-                                                        config: config
-                                                    };
-                                                    return (
-                                                        props.children!(consumerProps)
-                                                    );
-                                                }}
-                                            </OptionsContext.Consumer>
-                                        }
+                                                        })
+                                                }
+                                            };
+                                            const consumerProps: IConsumedProps = {
+                                                from: routingContext.directionsView ? from : undefined,
+                                                to: to,
+                                                trip: routingContext.selectedTrip,
+                                                onDragEnd: onMapLocChanged,
+                                                onClick: (clickLatLng: LatLng) => {
+                                                    if (routingContext.directionsView) {
+                                                        if (!from || !to || clickLatLng instanceof StopLocation) {
+                                                            if (!from && !to) {
+                                                                // Avoid fit bounds when setting first location on
+                                                                // directions view.
+                                                                avoidFitLatLng = clickLatLng
+                                                            }
+                                                            // Do nothing if the location is already the from or to.
+                                                            if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
+                                                                return;
+                                                            }
+                                                            const isFrom = !from;
+                                                            onMapLocChanged(isFrom, clickLatLng);
+                                                            GATracker.event({
+                                                                category: "query input",
+                                                                action: isFrom ? "pick from location" : "pick to location",
+                                                                label: "drop to"
+                                                            });
+                                                        }
+                                                    } else {
+                                                        if (!to || clickLatLng instanceof StopLocation) {
+                                                            onMapLocChanged(false, clickLatLng);
+                                                        }
+                                                    }
+                                                },
+                                                service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                                                    serviceContext.selectedService : undefined,
+                                                viewport: routingContext.viewport,
+                                                onViewportChange: routingContext.onViewportChange,
+                                                directionsView: routingContext.directionsView,
+                                                onDirectionsFrom: (latLng: LatLng) => {
+                                                    onMapLocChanged(true, latLng);
+                                                    routingContext.onDirectionsView(true);
+                                                },
+                                                onDirectionsTo: (latLng: LatLng) => {
+                                                    onMapLocChanged(false, latLng);
+                                                    routingContext.onDirectionsView(true);
+                                                },
+                                                onWhatsHere: (latLng: LatLng) => {
+                                                    onMapLocChanged(false, latLng);
+                                                },
+                                                ...viewportProps,
+                                                config: config
+                                            };
+                                            return (
+                                                props.children!(consumerProps)
+                                            );
+                                        }}
                                     </ServiceResultsContext.Consumer>
                                 }
                             </RoutingResultsContext.Consumer>

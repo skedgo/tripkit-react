@@ -3,13 +3,13 @@ import OptionsData from "../data/OptionsData";
 import TKUserProfile from "../model/options/TKUserProfile";
 
 export interface IOptionsContext {
-    value: TKUserProfile,
-    onChange: (value: TKUserProfile) => void
+    userProfile: TKUserProfile,
+    onUserProfileChange: (value: TKUserProfile) => void
 }
 
 export const OptionsContext = React.createContext<IOptionsContext>({
-    value: new TKUserProfile(),
-    onChange: (value: TKUserProfile) => {
+    userProfile: new TKUserProfile(),
+    onUserProfileChange: (value: TKUserProfile) => {
         // Not empty
     }
 });
@@ -38,8 +38,8 @@ class OptionsProvider extends React.Component<{}, {value: TKUserProfile}> {
         return (
             <OptionsContext.Provider
                 value={{
-                    value: this.state.value,
-                    onChange: this.onChange
+                    userProfile: this.state.value,
+                    onUserProfileChange: this.onChange
                 }}>
                 {this.props.children}
             </OptionsContext.Provider>

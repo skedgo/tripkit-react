@@ -218,7 +218,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             title: serviceContext.title,
                             departure: serviceContext.selectedService,
                             eventBus: serviceContext.servicesEventBus,
-                            options: optionsContext.value
+                            options: optionsContext.userProfile
                         })
                     )}
                 </ServiceResultsContext.Consumer>

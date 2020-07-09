@@ -17,6 +17,7 @@ export interface IRoutingResultsContext {
     query: RoutingQuery;
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
+    onTripJsonUrl: (tripJsonUrl: string) => Promise<void>;
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -35,19 +36,24 @@ export interface IRoutingResultsContext {
     routingError?: TKError;
     waitingTripUpdate: boolean;
     tripUpdateError?: TKError;
-    selected?: Trip;
+    selectedTrip?: Trip;
     onChange: (select?: Trip) => void;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
+
+    // This is general, not routing specific.
+    waitingStateLoad: boolean;
+    onWaitingStateLoad: (waiting: boolean) => void;
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
     query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
     onQueryUpdate: (update: Partial<RoutingQuery>) => {},
+    onTripJsonUrl: (tripJsonUrl: string) => Promise.resolve(),
     viewport: {center: MapUtil.worldCoords, zoom: 2},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     directionsView: false,
@@ -62,7 +68,9 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => {},
     inputTextFrom: "",
     inputTextTo:  "",
-    onInputTextChange: (from: boolean, text: string) => {}
+    onInputTextChange: (from: boolean, text: string) => {},
+    waitingStateLoad: false,
+    onWaitingStateLoad: (waiting: boolean) => {}
 });
 
 class RoutingResultsProvider extends React.Component<{

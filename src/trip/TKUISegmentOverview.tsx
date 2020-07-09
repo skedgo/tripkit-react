@@ -199,7 +199,7 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                     {(serviceContext: IServiceResultsContext) =>
                         children!({
                             ...inputProps,
-                            options: optionsContext.value,
+                            options: optionsContext.userProfile,
                             onTimetableForSegment: serviceContext.onTimetableForSegment
                         })
                     }

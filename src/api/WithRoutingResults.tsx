@@ -50,6 +50,7 @@ interface IWithRoutingResultsState {
     routingError?: TKError;
     waitingTripUpdate: boolean;
     tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
+    waitingStateLoad: boolean;
 }
 
 export enum TripSort {
@@ -77,11 +78,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waiting: false,
                 waitingTripUpdate: false,
                 viewport: {center: MapUtil.worldCoords, zoom: 2},
-                directionsView: false
+                directionsView: false,
+                waitingStateLoad: false
             };
 
             this.onQueryChange = this.onQueryChange.bind(this);
             this.onQueryUpdate = this.onQueryUpdate.bind(this);
+            this.onTripJsonUrl = this.onTripJsonUrl.bind(this);
             this.onChange = this.onChange.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
@@ -91,6 +94,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.refreshRegionInfo = this.refreshRegionInfo.bind(this);
+            this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
         }
 
         public sortTrips(trips: Trip[], sort: TripSort) {
@@ -396,6 +400,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 .finally(() => callback && callback());
         };
 
+        public onWaitingStateLoad(waiting: boolean) {
+            this.setState({
+                waitingStateLoad: waiting
+            });
+        }
+
         public render(): React.ReactNode {
             const props = this.props as IWithRoutingResultsProps;
             return <Consumer
@@ -403,6 +413,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 query={this.state.query}
                 onQueryChange={this.onQueryChange}
                 onQueryUpdate={this.onQueryUpdate}
+                onTripJsonUrl={this.onTripJsonUrl}
                 preFrom={this.state.preFrom}
                 preTo={this.state.preTo}
                 onPreChange={(from: boolean, location?: Location) => {
@@ -432,13 +443,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 routingError={this.state.routingError}
                 waitingTripUpdate={this.state.waitingTripUpdate}
                 tripUpdateError={this.state.tripUpdateError}
-                selected={this.state.selected}
+                selectedTrip={this.state.selected}
                 onChange={this.onChange}
                 sort={this.state.sort}
                 onSortChange={this.onSortChange}
                 onReqRealtimeFor={this.onReqRealtimeFor}
                 onAlternativeChange={this.onAlternativeChange}
                 onSegmentServiceChange={this.onSegmentServiceChange}
+                onWaitingStateLoad={this.onWaitingStateLoad}
+                waitingStateLoad={this.state.waitingStateLoad}
             />;
         }
 
@@ -448,57 +461,28 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 this.onViewportChange(this.props.initViewport);
             }
             this.refreshRegion();
+        }
 
-            if (TKShareHelper.isSharedTripLink()) {
-                const shareLinkPath = decodeURIComponent(document.location.pathname);
-                TripGoApi.apiCall(shareLinkPath, NetworkUtil.MethodType.GET)
-                    .then((routingResultsJson: any) => {
-                        const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
-                        const firstTrip = routingResults.groups[0].trips[0];
-                        const from = firstTrip.segments[0].from;
-                        const to = firstTrip.segments[firstTrip.segments.length - 1].to;
-                        const query = RoutingQuery.create(from, to,
-                            firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
-                            firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
-                        routingResults.setQuery(query);
-                        const trips = routingResults.groups;
-                        const sortedTrips = this.sortTrips(trips, this.state.sort);
-                        this.setState({
-                            query: query,
-                            trips: sortedTrips,
-                            selected: sortedTrips[0],
-                            directionsView: true
-                        }, () => {
-                            TKShareHelper.resetToHome();
-                        });
+        public onTripJsonUrl(tripUrl: string): Promise<void> {
+            return TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults)
+                .then((routingResults: RoutingResults) => {
+                    const firstTrip = routingResults.groups[0].trips[0];
+                    const from = firstTrip.segments[0].from;
+                    const to = firstTrip.segments[firstTrip.segments.length - 1].to;
+                    const query = RoutingQuery.create(from, to,
+                        firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
+                        firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
+                    routingResults.setQuery(query);
+                    routingResults.setSatappQuery(tripUrl);
+                    const trips = routingResults.groups;
+                    const sortedTrips = this.sortTrips(trips, this.state.sort);
+                    this.setState({
+                        query: query,
+                        trips: sortedTrips,
+                        selected: sortedTrips[0],
+                        directionsView: true
                     });
-            }
-
-            if (TKShareHelper.isSharedArrivalLink()) {
-                const shareLinkS = document.location.search;
-                const queryMap = queryString.parse(shareLinkS.startsWith("?") ? shareLinkS.substr(1) : shareLinkS);
-                if (queryMap.lat && queryMap.lng) {
-                    const arrivalLoc = Location.create(LatLng.createLatLng(parseFloat(queryMap.lat), parseFloat(queryMap.lng)), "", "", "");
-                    const geocodingData = new MultiGeocoder();
-                    geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
-                        if (location !== null) {
-                            const routingQuery = queryMap.at ? RoutingQuery.create(null,
-                                location, TimePreference.ARRIVE,
-                                DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
-                                RoutingQuery.create(null, location);
-                            this.onViewportChange({
-                                center: arrivalLoc,
-                                zoom: 13
-                            });
-                            this.onQueryChange(routingQuery);
-                            if (queryMap.at) {
-                                this.setState({directionsView: true})
-                            }
-                            TKShareHelper.resetToHome();
-                        }
-                    });
-                }
-            }
+                });
         }
 
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
