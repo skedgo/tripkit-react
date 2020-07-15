@@ -29,12 +29,10 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
             textAlign: 'center'
         },
         qrCode: {
-            height: '120px',
-            width: '120px'
-        },
-        qrCodeImg: {
-            height: '100%',
-            width: '100%'
+            '& canvas': {
+                background: 'white',    // Place over white background, this is for dark mode.
+                padding: '5px'
+            }
         },
         copyLinkPanel: {
             ...genStyles.flex,
