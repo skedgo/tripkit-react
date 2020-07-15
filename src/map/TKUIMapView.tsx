@@ -59,7 +59,7 @@ import TKErrorHelper from "../error/TKErrorHelper";
 import {TileLayer} from "react-leaflet";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import IGeocoder from "../geocode/IGeocoder";
-import {black} from "../jss/TKUITheme";
+import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -110,8 +110,15 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     config: TKUIConfig;
 }
 
+interface MapboxGLLayerProps {
+    accessToken: string;
+    style: string;
+    attribution: string;
+}
+
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
     tileLayerProps?: TileLayerProps;
+    mapboxGlLayerProps?: MapboxGLLayerProps;
 }
 
 export type TKUIMapViewProps = IProps;
@@ -134,6 +141,7 @@ interface IState {
     menuPopupPosition?: L.LeafletMouseEvent;
     userLocation?: TKUserPosition;
     userLocationTooltip?: string;
+    refreshTiles?: boolean;
 }
 
 export interface IMapSegmentRenderer {
@@ -426,9 +434,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
-                    <TileLayer
-                        {...this.props.tileLayerProps!}
-                    />
+                    {this.props.mapboxGlLayerProps !== undefined ?
+                        !this.state.refreshTiles && <MapboxGlLayer {...this.props.mapboxGlLayerProps}/> :
+                        <TileLayer {...this.props.tileLayerProps!}/>}
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
                     <Marker position={this.state.userLocation.latLng}
@@ -663,6 +671,14 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // if (prevProps.landscape !== this.props.landscape) {
         //     this.props.refreshStyles()
         // }
+
+        // Need this to force a tiles refresh on mapbox gl style change (e.g. when switching appearance between dark
+        // and light).
+        if (this.props.mapboxGlLayerProps && prevProps.mapboxGlLayerProps &&
+            this.props.mapboxGlLayerProps.style !== prevProps.mapboxGlLayerProps.style) {
+            this.setState({refreshTiles: true});
+            setTimeout(() => this.setState({refreshTiles: undefined}));
+        }
     }
 
     public fitBounds(bounds: BBox) {
