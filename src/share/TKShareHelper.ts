@@ -18,11 +18,15 @@ class TKShareHelper {
     public static isSharedTripLink(): boolean {
         const shareLinkPath = document.location.pathname;
         const shareLinkQuery = document.location.search;
-        return shareLinkPath.startsWith("/trip") || shareLinkQuery.includes("tripUrl=");
+        return shareLinkPath.startsWith("/trip/") || shareLinkQuery.includes("tripUrl=");
     }
 
     public static getSharedTripJsonUrl(): string | undefined {
         const path = document.location.pathname;
+        const tripUrlPattern = "/trip/url/";
+        if (path.startsWith(tripUrlPattern)) {
+            return decodeURIComponent(path.substring(tripUrlPattern.length));
+        }
         if (path.startsWith("/trip/")) {
             return TripGoApi.getSatappUrl(path);
         }
@@ -55,7 +59,7 @@ class TKShareHelper {
     }
 
     public static getTempShareTripLink(trip: Trip): string {
-        return Constants.DEPLOY_URL + '?tripUrl=' + encodeURIComponent(trip.temporaryURL);
+        return Constants.DEPLOY_URL + '/trip/url/' + encodeURIComponent(trip.temporaryURL);
     }
 
     public static getShareArrival(trip: Trip): string {

@@ -20,7 +20,6 @@ export interface IStyle {
     qrSharePanel: CSSProps<IProps>;
     qrLabel: CSSProps<IProps>;
     qrCode: CSSProps<IProps>;
-    qrCodeImg: CSSProps<IProps>;
     copyLinkPanel: CSSProps<IProps>;
     linkBox: CSSProps<IProps>;
     linkIcon: CSSProps<IProps>;
