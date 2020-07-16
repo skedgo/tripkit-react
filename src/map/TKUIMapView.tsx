@@ -60,6 +60,7 @@ import {TileLayer} from "react-leaflet";
 import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import IGeocoder from "../geocode/IGeocoder";
 import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
+import Color from "../model/trip/Color";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -156,6 +157,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     private leafletElement?: L.Map;
     private wasDoubleClick = false;
     private userLocTooltipRef?: any;
+    private mapboxGlMap?: any;
 
     constructor(props: Readonly<IProps>) {
         super(props);
@@ -413,7 +415,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 if (this.props.onClick) {
                                     this.props.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
                                 }
-                            })
+                            });
                         }
                     }}
                     onmoveend={this.onMoveEnd}
@@ -435,7 +437,19 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                 >
                     {this.props.mapboxGlLayerProps !== undefined ?
-                        !this.state.refreshTiles && <MapboxGlLayer {...this.props.mapboxGlLayerProps}/> :
+                        !this.state.refreshTiles &&
+                        <MapboxGlLayer {...this.props.mapboxGlLayerProps}
+                                       ref={(ref: any) => {
+                                           if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
+                                               this.mapboxGlMap = ref.leafletElement.getMapboxMap();
+                                           }
+                                           if (this.mapboxGlMap && !this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
+                                               setTimeout(() => !this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)
+                                                   && this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT)
+                                                   && this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT), 1000);
+
+                                           }
+                                       }}/> :
                         <TileLayer {...this.props.tileLayerProps!}/>}
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
@@ -679,6 +693,17 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.setState({refreshTiles: true});
             setTimeout(() => this.setState({refreshTiles: undefined}));
         }
+
+        // Highlight walk paths for walking only trips.
+        if ((trip !== prevProps.trip)) {
+            const isWalkTrip = trip && trip.isWalkTrip();
+            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility', isWalkTrip ? 'visible' : 'none');
+            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility', isWalkTrip ? 'visible' : 'none');
+
+            // this.mapboxGlMap.setLayoutProperty('road-path', 'visibility', 'none');
+            // this.mapboxGlMap.setPaintProperty('road-path', 'line-color', '#ff0000');
+            // this.mapboxGlMap.setPaintProperty('road-pedestrian', 'line-color', 'rgba(255,0,0,.5)');
+        }
     }
 
     public fitBounds(bounds: BBox) {
@@ -827,3 +852,252 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
 export {TKUIMapView as TKUIMapViewClass};
+
+const WALK_PATH_COLOR = "rgb(0, 220, 0)";
+
+const ROAD_PEDESTRIAN_HIGHLIGHT =
+    {
+        "id": "road-pedestrian-highlight",
+        "type": "line",
+        "source": "composite",
+        "source-layer": "road",
+        "minzoom": 12,
+        "filter": [
+            "all",
+            [
+                "==",
+                [
+                    "get",
+                    "class"
+                ],
+                "pedestrian"
+            ],
+            [
+                "match",
+                [
+                    "get",
+                    "structure"
+                ],
+                [
+                    "none",
+                    "ford"
+                ],
+                true,
+                false
+            ],
+            [
+                "==",
+                [
+                    "geometry-type"
+                ],
+                "LineString"
+            ]
+        ],
+        "layout": {
+            "line-join": [
+                "step",
+                [
+                    "zoom"
+                ],
+                "miter",
+                14,
+                "round"
+            ],
+            "visibility": "none"
+        },
+        "paint": {
+            "line-width": [
+                "interpolate",
+                [
+                    "exponential",
+                    1.5
+                ],
+                [
+                    "zoom"
+                ],
+                14,
+                0.5,
+                18,
+                12
+            ],
+            "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(.5),
+            "line-dasharray": [
+                "step",
+                [
+                    "zoom"
+                ],
+                [
+                    "literal",
+                    [
+                        1,
+                        0
+                    ]
+                ],
+                15,
+                [
+                    "literal",
+                    [
+                        1.5,
+                        0.4
+                    ]
+                ],
+                16,
+                [
+                    "literal",
+                    [
+                        1,
+                        0.2
+                    ]
+                ]
+            ]
+        },
+        "metadata": {
+            "mapbox:featureComponent": "walking-cycling",
+            "mapbox:group": "Walking, cycling, etc., surface"
+        }
+    };
+
+const ROAD_PATH_HIGHLIGHT =
+    {
+        "id": "road-path-highlight",
+        "type": "line",
+        "source": "composite",
+        "source-layer": "road",
+        "minzoom": 12,
+        "filter": [
+            "all",
+            [
+                "==",
+                [
+                    "get",
+                    "class"
+                ],
+                "path"
+            ],
+            [
+                "step",
+                [
+                    "zoom"
+                ],
+                [
+                    "!",
+                    [
+                        "match",
+                        [
+                            "get",
+                            "type"
+                        ],
+                        [
+                            "steps",
+                            "sidewalk",
+                            "crossing"
+                        ],
+                        true,
+                        false
+                    ]
+                ],
+                16,
+                [
+                    "!=",
+                    [
+                        "get",
+                        "type"
+                    ],
+                    "steps"
+                ]
+            ],
+            [
+                "match",
+                [
+                    "get",
+                    "structure"
+                ],
+                [
+                    "none",
+                    "ford"
+                ],
+                true,
+                false
+            ],
+            [
+                "==",
+                [
+                    "geometry-type"
+                ],
+                "LineString"
+            ]
+        ],
+        "layout": {
+            "line-join": [
+                "step",
+                [
+                    "zoom"
+                ],
+                "miter",
+                14,
+                "round"
+            ]
+        },
+        "paint": {
+            "line-width": [
+                "interpolate",
+                [
+                    "exponential",
+                    1.5
+                ],
+                [
+                    "zoom"
+                ],
+                13,
+                0.5,
+                14,
+                1,
+                15,
+                1,
+                18,
+                4
+            ],
+            "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(1),
+            "line-dasharray": [
+                "step",
+                [
+                    "zoom"
+                ],
+                [
+                    "literal",
+                    [
+                        1,
+                        0
+                    ]
+                ],
+                15,
+                [
+                    "literal",
+                    [
+                        1.75,
+                        1
+                    ]
+                ],
+                16,
+                [
+                    "literal",
+                    [
+                        1,
+                        0.75
+                    ]
+                ],
+                17,
+                [
+                    "literal",
+                    [
+                        1,
+                        0.5
+                    ]
+                ]
+            ]
+        },
+        "metadata": {
+            "mapbox:featureComponent": "walking-cycling",
+            "mapbox:group": "Walking, cycling, etc., surface"
+        }
+    };
