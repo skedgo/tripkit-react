@@ -126,6 +126,10 @@ class Trip {
             this.segments.every((segment: Segment) => segment.isBicycle() || segment.isWalking() || segment.type === "stationary");
     }
 
+    public isWalkTrip(): boolean {
+        return this.isSingleSegment() && this.segments[0].isWalking();
+    }
+
     public getWheelchairAccessible(): boolean | null {
         if (!this.hasPublicTransport()) {
             return null;
