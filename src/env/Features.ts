@@ -13,6 +13,8 @@ class Features {
         return this._instance;
     }
 
+    private _modeSpecificMapTilesEnabled = true;
+
     public lightRail() {
         return true;
     }
@@ -21,6 +23,13 @@ class Features {
         return true;
     }
 
+    get modeSpecificMapTilesEnabled(): boolean {
+        return this._modeSpecificMapTilesEnabled;
+    }
+
+    set modeSpecificMapTilesEnabled(value: boolean) {
+        this._modeSpecificMapTilesEnabled = value;
+    }
 }
 
 Features.initialize();

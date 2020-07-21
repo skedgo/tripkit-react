@@ -61,6 +61,7 @@ import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import IGeocoder from "../geocode/IGeocoder";
 import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
 import Color from "../model/trip/Color";
+import Features from "../env/Features";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -443,11 +444,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                            if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
                                                this.mapboxGlMap = ref.leafletElement.getMapboxMap();
                                            }
-                                           if (this.mapboxGlMap && !this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
-                                               setTimeout(() => !this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)
-                                                   && this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT)
-                                                   && this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT), 1000);
-
+                                           if (this.mapboxGlMap) {
+                                               // Since this could be a consequence of a complete style change
+                                               // (switch dark / light appearence). Need to wait 1 sec since an error
+                                               // is triggered if not, telling style wasn't loaded.
+                                               setTimeout(() => this.refreshModeSpecificTiles(), 1000);
                                            }
                                        }}/> :
                         <TileLayer {...this.props.tileLayerProps!}/>}
@@ -695,15 +696,30 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
 
         // Highlight walk paths for walking only trips.
-        if ((trip !== prevProps.trip)) {
-            const isWalkTrip = trip && trip.isWalkTrip();
-            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility', isWalkTrip ? 'visible' : 'none');
-            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility', isWalkTrip ? 'visible' : 'none');
-
-            // this.mapboxGlMap.setLayoutProperty('road-path', 'visibility', 'none');
-            // this.mapboxGlMap.setPaintProperty('road-path', 'line-color', '#ff0000');
-            // this.mapboxGlMap.setPaintProperty('road-pedestrian', 'line-color', 'rgba(255,0,0,.5)');
+        if (trip !== prevProps.trip) {
+            this.refreshModeSpecificTiles();
         }
+    }
+
+    private refreshModeSpecificTiles() {
+        if (!Features.instance.modeSpecificMapTilesEnabled) {
+            return
+        }
+        if (!this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
+            this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
+            this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
+        }
+        const trip = this.props.trip;
+        const isWalkTrip = trip && trip.isWalkTrip();
+        this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
+            isWalkTrip ? 'visible' : 'none');
+        this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility',
+            isWalkTrip ? 'visible' : 'none');
+
+        // Other ways to change style dynamically:
+        // this.mapboxGlMap.setLayoutProperty('road-path', 'visibility', 'none');
+        // this.mapboxGlMap.setPaintProperty('road-path', 'line-color', '#ff0000');
+        // this.mapboxGlMap.setPaintProperty('road-pedestrian', 'line-color', 'rgba(255,0,0,.5)');
     }
 
     public fitBounds(bounds: BBox) {
@@ -1036,7 +1052,8 @@ const ROAD_PATH_HIGHLIGHT =
                 "miter",
                 14,
                 "round"
-            ]
+            ],
+            "visibility": "none"
         },
         "paint": {
             "line-width": [

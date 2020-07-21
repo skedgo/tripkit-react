@@ -52,6 +52,7 @@ export {default as TKPeliasGeocoder} from "./geocode/PeliasGeocoder";
 export {default as TKUICard} from "./card/TKUICard";
 export {TKError} from "./error/TKError";
 export type TKUIResultsViewProps = TKUIResultsViewPropsForExport;
+export {default as TKFeatures} from "./env/Features";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // if (document.getElementById("tripgo-sample-root")) {
