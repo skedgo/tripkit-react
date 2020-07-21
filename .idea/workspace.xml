@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list id="a6984f09-2f94-4638-8765-1d51dbba39e8" name="Example tripgo" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
-      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-    </list>
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #4899: Universal links + Hand-off between iOS and web app&#10;- Bug fixing.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/Trip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Trip.ts" afterDir="false" />
-    </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="">
       <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.module.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/index.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/index.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/regions.json" afterDir="false" />
+    </list>
+    <list id="a6984f09-2f94-4638-8765-1d51dbba39e8" name="Example tripgo" comment="" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" afterDir="false" />
+    </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #13153: Switch from raster to vector tiles&#10;- Dynamically update tyles style, e.g to highlight walk paths for walking only trips.">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/env/Features.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/env/Features.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -49,8 +49,21 @@
       <file leaf-file-name="tripgo-sample.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
+            <state relative-caret-position="-275">
+              <caret line="125" column="2" selection-start-line="125" selection-start-column="2" selection-end-line="125" selection-end-column="2" />
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
+                <element signature="e#345#417#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/index.tsx">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="288">
+              <caret line="60" column="41" lean-forward="true" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -58,12 +71,21 @@
       <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="1059" column="70" lean-forward="true" selection-start-line="1059" selection-start-column="70" selection-end-line="1059" selection-end-column="71" />
+            <state relative-caret-position="190">
+              <caret line="883" column="21" lean-forward="true" selection-start-line="883" selection-start-column="21" selection-end-line="883" selection-end-column="21" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
                 <element signature="e#48688#49701#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Features.ts" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/env/Features.ts">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="6" selection-start-column="6" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -90,7 +112,7 @@
         <entry file="file://$USER_HOME$/Desktop/api.mapbox.com:styles:v1:mgomezlucero:ckbmm6m0w003e1hmy0ksjxflm.json">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="279">
-              <caret line="1297" column="5" lean-forward="true" selection-start-line="1155" selection-start-column="4" selection-end-line="1297" selection-end-column="5" />
+              <caret line="1297" column="5" selection-start-line="1155" selection-start-column="4" selection-end-line="1297" selection-end-column="5" />
               <folding>
                 <element signature="n#!!block;n#mapbox:groups#0;n#!!block;n#metadata#0;n#!!top" />
                 <element signature="n#!!block;n#sources#0;n#!!top" />
@@ -157,12 +179,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>if (</find>
-      <find>RLMap</find>
-      <find>leaflet</find>
-      <find>mapbox-gl</find>
-      <find>resolve</find>
-      <find>mon</find>
       <find>main</find>
       <find>GL</find>
       <find>TileLayer</find>
@@ -181,12 +197,18 @@
       <find>onMap</find>
       <find>mapboxGl</find>
       <find>visibilit</find>
-      <find>mapboxGlMap</find>
       <find>onClick</find>
       <find>addLayer(ROAD_PEDESTRIAN_HIGHLIGHT)</find>
       <find>road-pat</find>
       <find>WALK_PATH_COLOR</find>
       <find>ROAD_PEDESTRIAN_HIGHLIGHT</find>
+      <find>walk</find>
+      <find>modeSpecificMapTilesEnabled</find>
+      <find>Features</find>
+      <find>TKFea</find>
+      <find>refreshModeSpecificTiles</find>
+      <find>mapboxGlMap</find>
+      <find>conseque</find>
     </findStrings>
     <replaceStrings>
       <replace>TKUICardCarousel-modal</replace>
@@ -262,7 +284,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/css/GenStyle.css.ts" />
         <option value="$PROJECT_DIR$/src/card/TKUICard.css.ts" />
         <option value="$PROJECT_DIR$/src/card/TKUICard.tsx" />
         <option value="$PROJECT_DIR$/src/jss/TKUITheme.ts" />
@@ -307,11 +328,12 @@
         <option value="$PROJECT_DIR$/src/share/shareUrlMapperLambda.js" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/example/chym/QueryWidget.tsx" />
-        <option value="$PROJECT_DIR$/src/index.tsx" />
-        <option value="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" />
         <option value="$PROJECT_DIR$/config-overrides.js" />
         <option value="$USER_HOME$/Desktop/api.mapbox.com:styles:v1:mgomezlucero:ckbmm6m0w003e1hmy0ksjxflm.json" />
         <option value="$PROJECT_DIR$/src/model/trip/Trip.ts" />
+        <option value="$PROJECT_DIR$/src/env/Features.ts" />
+        <option value="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" />
+        <option value="$PROJECT_DIR$/src/index.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
       </list>
     </option>
@@ -356,75 +378,6 @@
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet.js" type="620a8d5e:NestingTreeNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@mongodb-js" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="react-mapbox-gl-leaflet" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="@types" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -631,14 +584,7 @@
       <workItem from="1594306936575" duration="19682000" />
       <workItem from="1594644124074" duration="1332000" />
       <workItem from="1594845008167" duration="6132000" />
-      <workItem from="1594907140867" duration="5383000" />
-    </task>
-    <task id="LOCAL-00259" summary="Styles override.">
-      <created>1587933897603</created>
-      <option name="number" value="00259" />
-      <option name="presentableId" value="LOCAL-00259" />
-      <option name="project" value="LOCAL" />
-      <updated>1587933897606</updated>
+      <workItem from="1594907140867" duration="9835000" />
     </task>
     <task id="LOCAL-00260" summary="Links to app stores missing.">
       <created>1587992389945</created>
@@ -976,11 +922,18 @@
       <option name="project" value="LOCAL" />
       <updated>1594852963667</updated>
     </task>
-    <option name="localTasksCounter" value="308" />
+    <task id="LOCAL-00308" summary="Feature #13153: Switch from raster to vector tiles&#10;- Dynamically update tyles style, e.g to highlight walk paths for walking only trips.">
+      <created>1594915790417</created>
+      <option name="number" value="00308" />
+      <option name="presentableId" value="LOCAL-00308" />
+      <option name="project" value="LOCAL" />
+      <updated>1594915790417</updated>
+    </task>
+    <option name="localTasksCounter" value="309" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3179315000" />
+    <option name="totallyTimeSpent" value="3183767000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1014,7 +967,7 @@
       <window_info anchor="bottom" id="Run" order="3" weight="0.32627118" />
       <window_info active="true" anchor="bottom" id="Version Control" order="11" sideWeight="0.49642345" visible="true" weight="0.57588655" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49570817" weight="0.46524823" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49570817" weight="0.44539008" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2081545" />
       <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49713877" weight="0.28794327" />
       <window_info anchor="right" id="Theme Preview" order="7" />
@@ -1069,7 +1022,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Set exact version for react-draggable library since minnor version update breaks my custom implementation for draggable card." />
     <MESSAGE value="v0.1.6&#10;- license MIT" />
     <MESSAGE value="tripkit-react | Feature #12819: TripKit React - Support IE11" />
     <MESSAGE value="tripkit-react | Feature #12819: TripKit React - Support IE11 (2)" />
@@ -1094,14 +1046,15 @@
     <MESSAGE value="Feature #4899: Universal links + Hand-off between iOS and web app&#10;- Lambda function for web-app to share url mapper.&#10;- TKStateUrl component that you can add to make the web-app to reflect it's state on the url, and the url back to the state (deep link)." />
     <MESSAGE value="Feature #4899: Universal links + Hand-off between iOS and web app&#10;- Bug fixing." />
     <MESSAGE value="Feature #13153: Switch from raster to vector tiles" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #13153: Switch from raster to vector tiles" />
+    <MESSAGE value="Feature #13153: Switch from raster to vector tiles&#10;- Dynamically update tyles style, e.g to highlight walk paths for walking only trips." />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #13153: Switch from raster to vector tiles&#10;- Dynamically update tyles style, e.g to highlight walk paths for walking only trips." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/env/Features.ts</url>
-          <line>19</line>
+          <line>21</line>
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/map/MapTripSegment.tsx</url>
@@ -1143,13 +1096,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/service/TKUIServiceView.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="206" column="5" lean-forward="true" selection-start-line="206" selection-start-column="5" selection-end-line="206" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="224">
@@ -1400,13 +1346,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="59" column="1" lean-forward="true" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-831">
@@ -1443,13 +1382,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/trip/Trip.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="298">
@@ -1460,7 +1392,7 @@
     <entry file="file://$USER_HOME$/Desktop/api.mapbox.com:styles:v1:mgomezlucero:ckbmm6m0w003e1hmy0ksjxflm.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="279">
-          <caret line="1297" column="5" lean-forward="true" selection-start-line="1155" selection-start-column="4" selection-end-line="1297" selection-end-column="5" />
+          <caret line="1297" column="5" selection-start-line="1155" selection-start-column="4" selection-end-line="1297" selection-end-column="5" />
           <folding>
             <element signature="n#!!block;n#mapbox:groups#0;n#!!block;n#metadata#0;n#!!top" />
             <element signature="n#!!block;n#sources#0;n#!!top" />
@@ -1520,10 +1452,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/env/Features.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="6" selection-start-column="6" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-275">
+          <caret line="125" column="2" selection-start-line="125" selection-start-column="2" selection-end-line="125" selection-end-column="2" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+            <element signature="e#345#417#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="60" column="41" lean-forward="true" selection-start-line="60" selection-start-column="41" selection-end-line="60" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="1059" column="70" lean-forward="true" selection-start-line="1059" selection-start-column="70" selection-end-line="1059" selection-end-column="71" />
+        <state relative-caret-position="190">
+          <caret line="883" column="21" lean-forward="true" selection-start-line="883" selection-start-column="21" selection-end-line="883" selection-end-column="21" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
             <element signature="e#48688#49701#0" />
