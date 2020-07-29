@@ -188,10 +188,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const fromPlaceholder = t("Where.are.you.going.from?");
         const toPlaceholder = t("Where.do.you.want.to.go?");
         const ariaLabelFrom = routingQuery.from !== null ?
-            "From " + routingQuery.from.address :
+            "From " + routingQuery.from.getDisplayString() :
             fromPlaceholder.substring(0, fromPlaceholder.length - 3);
         const ariaLabelTo = routingQuery.to !== null ?
-            "To " + routingQuery.to.address :
+            "To " + routingQuery.to.getDisplayString() :
             toPlaceholder.substring(0, toPlaceholder.length - 3);
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);

@@ -106,7 +106,7 @@ class MultiGeocoder {
                 return this._options.compare(l1, l2, query);
             });
             jointSuggestions.push(firsts[0]);
-            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address));
+            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address || ""));
             MultiGeocoder.removeFirst(firsts[0], suggestionListsFromSources);
         }
         return jointSuggestions;

@@ -92,15 +92,16 @@ class TKShareHelper {
     public static getShareQuery(query: RoutingQuery, plannerUrl?: string): string {
         let goURL = (plannerUrl ? plannerUrl : Constants.DEPLOY_URL);
         goURL += (goURL.endsWith("/") ? "" : "/") + "go";
-        goURL += (goURL.includes("?") ? "&" : "?");
         if (query.from) {
+            goURL += (goURL.includes("?") ? "&" : "?");
             goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +
                 "&fname=" + (query.from.isCurrLoc() && !query.from.isResolved() ? "My location" : query.from.address) +
                 (query.from.id ? "&fid=" + (query.from.id) : "") +
                 (query.from.source ? "&fsrc=" + (query.from.source) : "");
         }
         if (query.to) {
-            goURL += "&tlat=" + query.to.lat + "&tlng=" + query.to.lng +
+            goURL += (goURL.includes("?") ? "&" : "?");
+            goURL += "tlat=" + query.to.lat + "&tlng=" + query.to.lng +
                 "&tname=" + (query.to.isCurrLoc() && !query.to.isResolved() ? "My location" : query.to.address) +
                 (query.to.id ? "&tid=" + (query.to.id) : "") +
                 (query.to.source ? "&tsrc=" + (query.to.source) : "");
@@ -115,10 +116,16 @@ class TKShareHelper {
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
-            const fromLatLng = queryMap.flat ? LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)) : new LatLng();
-            const from = Location.create(fromLatLng, queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc);
-            const toLatlng = queryMap.tlat ? LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)) : new LatLng();
-            const to = Location.create(toLatlng, queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc);
+            let from: Location | null = null;
+            if (queryMap.flat || queryMap.fname) {
+                const fromLatLng = queryMap.flat ? LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)) : new LatLng();
+                from = Location.create(fromLatLng, queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc);
+            }
+            let to: Location | null = null;
+            if (queryMap.tlat || queryMap.tlng) {
+                const toLatlng = queryMap.tlat ? LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)) : new LatLng();
+                to = Location.create(toLatlng, queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc);
+            }
             routingQuery = RoutingQuery.create(from, to,
                 queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
                 queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000))

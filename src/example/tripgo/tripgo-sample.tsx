@@ -138,4 +138,5 @@ const config: TKUIConfig = {
 ReactDOM.render(
     <TKRoot config={config}>
         <TKUITripPlanner/>
+        <TKStateUrl/>
     </TKRoot>, document.getElementById("tripgo-sample-root"));

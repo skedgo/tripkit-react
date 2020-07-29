@@ -83,7 +83,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         const startTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
             .format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
-        const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "") + segment.from.address;
+        const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "") + segment.from.getDisplayString();
         let stops: ServiceStopLocation[] | null = null;
         if (segment.shapes) {
             stops = [];
