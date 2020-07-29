@@ -10,7 +10,7 @@ class Location extends LatLng {
     @JsonProperty('class', String, true)
     public class: string = 'Location';
     @JsonProperty('address', String, true)
-    private _address: string = '';
+    private _address: string | undefined = undefined;
     @JsonProperty('name', String, true)
     private _name: string = '';
     @JsonProperty('id', String, true)
@@ -63,11 +63,11 @@ class Location extends LatLng {
         return !this.isNull();
     }
 
-    get address(): string {
+    get address(): string | undefined {
         return this._address;
     }
 
-    set address(value: string) {
+    set address(value: string | undefined) {
         this._address = value;
     }
 
@@ -96,7 +96,10 @@ class Location extends LatLng {
     }
 
     public getDisplayString(): string {
-        return this.name ? this.name : (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address);
+        return this.name ? this.name :
+            this.address ?
+            (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address):
+            this.getLatLngDisplayString();
     }
 
     public isCurrLoc(): boolean {

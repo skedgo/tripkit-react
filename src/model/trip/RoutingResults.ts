@@ -63,10 +63,10 @@ class RoutingResults {
                 for (const segment of trip.segments) {
                     Object.assign(segment, this.templatesMap.get(segment.segmentTemplateHashCode));
                     segment.trip = trip;
-                    if (segment.isFirst() && !this.query.isEmpty()) { // Check that this.query is defined to avoid crashing when injecting trips tests.
+                    if (segment.isFirst() && !this.query.isEmpty() && this.query.from!.address) { // Check that this.query is defined to avoid crashing when injecting trips tests.
                         segment.from.address = this.query.from!.address;
                     }
-                    if (segment.isLast() && !this.query.isEmpty()) {
+                    if (segment.isLast() && !this.query.isEmpty() && this.query.to!.address) {
                         segment.to.address = this.query.to!.address;
                     }
                     const segmentAlerts: RealTimeAlert[] = [];

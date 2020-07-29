@@ -102,7 +102,7 @@ class MultiGeocoderOptions {
                 return 1
             }
 
-            const relevanceDiff = LocationUtil.relevance(query, l2.address) - LocationUtil.relevance(query, l1.address);
+            const relevanceDiff = LocationUtil.relevance(query, l2.address || "") - LocationUtil.relevance(query, l1.address || "");
 
             // Prioritize skedgo geocoder result if
             // - query has 3 or more characters, and
@@ -128,7 +128,7 @@ class MultiGeocoderOptions {
         // It's used to remove duplicates from different sources. We assume results returned
         // by each source is free of duplicates (is responsibility of the source to ensure that)
         const analogResults = (r1: Location, r2: Location) => {
-            const relevance = Math.max(LocationUtil.relevance(r1.address, r2.address) , LocationUtil.relevance(r2.address, r1.address));
+            const relevance = Math.max(LocationUtil.relevance(r1.address || "", r2.address || "") , LocationUtil.relevance(r2.address || "", r1.address || ""));
             const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
             if (r1.source !== r2.source) {
                 Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance);

@@ -31,6 +31,9 @@ class TKStateUrl extends React.Component<IProps, {}> {
         if (state.stop) {
             return TKShareHelper.getShareTimetable(state.stop);
         }
+        if (state.query && !state.query.isEmpty()) {
+            return TKShareHelper.getShareQuery(state.query)
+        }
         return '/';
     }
 
@@ -127,9 +130,10 @@ class TKStateUrl extends React.Component<IProps, {}> {
             }
             if (query) {
                 tKState.onQueryChange(query);
-                tKState.onDirectionsView(true);
+                if (query.from) {
+                    tKState.onDirectionsView(true);
+                }
             }
-            TKShareHelper.resetToHome();
         }
     }
 

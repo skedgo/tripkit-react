@@ -41,6 +41,10 @@ class LatLng {
     public isNull(): boolean {
         return !this._lat || !this._lng;
     }
+
+    public getLatLngDisplayString(): string {
+        return this.lat.toFixed(5) + ", " + this.lng.toFixed(5);
+    }
 }
 
 export default LatLng;

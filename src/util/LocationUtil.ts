@@ -8,12 +8,14 @@ class LocationUtil {
             return loc.name;
         }
         const address = loc.address;
-        return address.includes(",") ? address.substr(0, address.indexOf(",")) : address;
+        return address ?
+            (address.includes(",") ? address.substr(0, address.indexOf(",")) : address) :
+            loc.getLatLngDisplayString();
     }
 
     public static getSecondaryText(loc: Location): string | undefined {
         const address = loc.address;
-        return address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : undefined;
+        return address && address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : undefined;
     }
 
     public static equal<T extends LatLng>(loc1: T | null, loc2: T | null) {

@@ -123,7 +123,8 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     public static itemText(location: Location): string {
-        return location instanceof City ? location.name : location.address;
+        return location instanceof City ? location.name :
+            location.address ? location.address : location.getLatLngDisplayString();
     }
 
     private static itemId(location: Location): string {
@@ -147,6 +148,8 @@ class TKUILocationBox extends Component<IProps, IState> {
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
                 (!locationValue.isCurrLoc() || (this.props.resolveCurr && !highlighted))) {
+                this.resolve(locationValue);
+            } else if (locationValue && locationValue.isResolved() && !locationValue.address && !locationValue.name) {
                 this.resolve(locationValue);
             } else if (fireEvents) {
                 this.fireLocationChange(highlighted);
@@ -200,6 +203,9 @@ class TKUILocationBox extends Component<IProps, IState> {
                     });
             } else {
                 const searchAddress = () => {
+                    if (!locationValue.address) {
+                        return;
+                    }
                     this.geocodingData.geocode(locationValue.address, false, this.props.bounds ?
                         this.props.bounds : null, this.props.focus ? this.props.focus : null,
                         (query: string, results: Location[]) => {
@@ -232,8 +238,24 @@ class TKUILocationBox extends Component<IProps, IState> {
                         setTimeout(searchAddress, 100);
                     });
                 }
-
             }
+        } else if (locationValue.isResolved() && !locationValue.address && !locationValue.name) {
+            // Coordinate without address nor name, so reverse geocode it.
+            this.setState({waitingResolveFor: locationValue});
+            this.geocodingData.reverseGeocode(locationValue, location => {
+                if (locationValue === this.state.locationValue) {
+                    if (location) {
+                        this.setValue(location, false, true, () => {
+                            this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), location);
+                        });
+                    }
+                }
+                if (this.state.waitingResolveFor === locationValue) {
+                    this.setState({
+                        waitingResolveFor: undefined
+                    });
+                }
+            });
         }
     }
 
