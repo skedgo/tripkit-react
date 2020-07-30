@@ -38,6 +38,8 @@ export interface IRoutingResultsContext {
     tripUpdateError?: TKError;
     selectedTrip?: Trip;
     onChange: (select?: Trip) => void;
+    tripDetailsView: boolean;
+    onTripDetailsView: (tripDetailsView: boolean) => void;
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
@@ -62,6 +64,8 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     waiting: true,
     waitingTripUpdate: false,
     onChange: (select?: Trip) => {},
+    tripDetailsView: false,
+    onTripDetailsView: (tripDetailsView: boolean) => {},
     sort: TripSort.OVERALL,
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},

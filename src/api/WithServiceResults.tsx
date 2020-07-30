@@ -243,6 +243,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                              departures={this.getDisplayDepartures()}
                              waiting={this.isWaiting(this.state)}
                              serviceError={this.state.serviceError}
+                             timetableFilter={this.state.filter}
                              onFilterChange={this.onFilterChange}
                              title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
                              timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}

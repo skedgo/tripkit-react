@@ -45,6 +45,7 @@ interface IWithRoutingResultsState {
     directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
+    tripDetailsView: boolean;
     sort: TripSort;
     waiting: boolean;
     routingError?: TKError;
@@ -80,6 +81,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waitingTripUpdate: false,
                 viewport: {center: MapUtil.worldCoords, zoom: 2},
                 directionsView: false,
+                tripDetailsView: false,
                 waitingStateLoad: false
             };
 
@@ -90,6 +92,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
             this.onDirectionsView = this.onDirectionsView.bind(this);
+            this.onTripDetailsView = this.onTripDetailsView.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
@@ -180,6 +183,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         this.refreshTrips();
                     }
                 });
+            }
+        }
+
+        public onTripDetailsView(tripDetailsView: boolean) {
+            if (this.state.tripDetailsView !== tripDetailsView) {
+                this.setState({ tripDetailsView: tripDetailsView });
             }
         }
 
@@ -447,6 +456,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 tripUpdateError={this.state.tripUpdateError}
                 selectedTrip={this.state.selected}
                 onChange={this.onChange}
+                tripDetailsView={this.state.tripDetailsView}
+                onTripDetailsView={this.onTripDetailsView}
                 sort={this.state.sort}
                 onSortChange={this.onSortChange}
                 onReqRealtimeFor={this.onReqRealtimeFor}
