@@ -446,9 +446,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                            }
                                            if (this.mapboxGlMap) {
                                                // Since this could be a consequence of a complete style change
-                                               // (switch dark / light appearence). Need to wait 1 sec since an error
-                                               // is triggered if not, telling style wasn't loaded.
-                                               setTimeout(() => this.refreshModeSpecificTiles(), 1000);
+                                               // (switch dark / light appearence).
+                                               this.refreshModeSpecificTiles();
                                            }
                                        }}/> :
                         <TileLayer {...this.props.tileLayerProps!}/>}
@@ -705,16 +704,20 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (!Features.instance.modeSpecificMapTilesEnabled) {
             return
         }
-        if (!this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
-            this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
-            this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
+        try {
+            if (!this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
+                this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
+                this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
+            }
+            const trip = this.props.trip;
+            const isWalkTrip = trip && trip.isWalkTrip();
+            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
+                isWalkTrip ? 'visible' : 'none');
+            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility',
+                isWalkTrip ? 'visible' : 'none');
+        } catch (e) {
+            // To avoid break due to Error: Style is not done loading
         }
-        const trip = this.props.trip;
-        const isWalkTrip = trip && trip.isWalkTrip();
-        this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
-            isWalkTrip ? 'visible' : 'none');
-        this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility',
-            isWalkTrip ? 'visible' : 'none');
 
         // Other ways to change style dynamically:
         // this.mapboxGlMap.setLayoutProperty('road-path', 'visibility', 'none');
