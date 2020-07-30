@@ -16,7 +16,8 @@ export interface IServiceResultsContext {
     onTimetableForSegment: (segment?: Segment) => void;
     timetableInitTime: Moment;
     onInitTimeChange?: (initTime: Moment) => void;
-    onFilterChange?: (filter: string) => void;
+    timetableFilter: string;
+    onFilterChange: (filter: string) => void;
     onRequestMore?: () => void;
     onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => Promise<void>;
 
@@ -38,7 +39,9 @@ export const ServiceResultsContext = React.createContext<IServiceResultsContext>
     title: "",
     onServiceSelection: (departure?: ServiceDeparture) => {},
     servicesEventBus: new EventEmitter(),
-    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => Promise.resolve()
+    onFindAndSelectService: (stop: StopLocation, serviceCode: string, initTime: Moment) => Promise.resolve(),
+    onFilterChange: (filter: string) => {},
+    timetableFilter: ""
 });
 
 class ServiceResultsProvider extends React.Component<IWithServiceResultsProps, {}> {

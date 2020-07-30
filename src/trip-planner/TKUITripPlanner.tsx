@@ -88,7 +88,6 @@ interface IState {
     showSettings: boolean;
     showTransportSettings: boolean;
     showFavourites: boolean;
-    showTripDetail?: boolean;
     cardPosition?: TKUISlideUpPosition;
     tripUpdateStatus?: TKRequestStatus;
 }
@@ -104,8 +103,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSettings: false,
             showTransportSettings: false,
             mapView: false,
-            showFavourites: false,
-            showTripDetail: TKShareHelper.isSharedTripLink()
+            showFavourites: false
         };
 
         (this.props.userLocationPromise ||
@@ -176,7 +174,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private isShowTripDetail() {
-        return this.state.showTripDetail && this.props.selectedTrip && !this.props.timetableForSegment;
+        return this.props.tripDetailsView && this.props.selectedTrip && !this.props.timetableForSegment;
     }
 
     private isShowServiceDetail() {
@@ -198,7 +196,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             from: targetSegment.from,
             time: DateTimeUtil.momentFromTimeTZ(targetSegment.startTime * 1000, segment.from.timezone)
         });
-        this.setState({showTripDetail: false})
+        this.props.onTripDetailsView(false);
     }
 
     public render(): React.ReactNode {
@@ -246,7 +244,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             />;
         const queryInput = this.props.directionsView &&
-            !(this.state.showTripDetail && this.props.selectedTrip) &&
+            !(this.props.tripDetailsView && this.props.selectedTrip) &&
             <TKUIRoutingQueryInput
                 title={t("Route")}
                 isTripPlanner={true}
@@ -318,11 +316,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: {top: this.getContainerHeight() - 80, unit: 'px'}
                 }}
             />;
-        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips && !(this.state.showTripDetail && this.props.selectedTrip) ?
+        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips && !(this.props.tripDetailsView && this.props.selectedTrip) ?
             <TKUIResultsView
-                onDetailsClicked={() => {
-                    this.setState({showTripDetail: true});
-                }}
+                onDetailsClicked={() => this.props.onTripDetailsView(true)}
                 onShowOptions={this.onShowTransportSettings}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
@@ -341,9 +337,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 tripDetailView =
                     <TKUITripOverviewView
                         value={this.props.selectedTrip!}
-                        onRequestClose={() => {
-                            this.setState({showTripDetail: false})
-                        }}
+                        onRequestClose={() => this.props.onTripDetailsView(false)}
                         slideUpOptions={{
                             initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             draggable: true,
@@ -371,9 +365,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 .map((trip: Trip, i: number) =>
                                     <TKUITripOverviewView
                                         value={trip}
-                                        onRequestClose={() => {
-                                            this.setState({showTripDetail: false})
-                                        }}
+                                        onRequestClose={() => this.props.onTripDetailsView(false)}
                                         key={i + "-" + trip.getKey()}
                                         handleRef={(handleRef: any) => registerHandle(i, handleRef)}
                                         cardPresentation={CardPresentation.NONE}
@@ -468,7 +460,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 if (this.state.showSidebar) {
                     this.setState({showSidebar: false});
                 } else if (this.isShowTripDetail()) {
-                    this.setState({showTripDetail: false});
+                    this.props.onTripDetailsView(false);
                 } else if (this.isShowServiceDetail()) {
                     this.props.onServiceSelection(undefined);
                 }
@@ -510,10 +502,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // Showing trip details and query from/to changed (e.g. drag & frop of 'from' or 'to' pin), so set detail view
         // off (display routing results for new query). Notice it shouldn't be other causes of re-computing trips since
         // we are on trip details view.
-        if (this.state.showTripDetail &&
+        if (this.props.tripDetailsView &&
             prevProps.query.from && prevProps.query.to &&   // if from or to were null, then we have just set them (e.g. share trip link), so don't leave trip details view.
             (prevProps.query.from !== this.props.query.from || prevProps.query.to !== this.props.query.to)) {
-            this.setState({showTripDetail: false});
+            this.props.onTripDetailsView(false);
         }
 
         // Start waiting for trip update

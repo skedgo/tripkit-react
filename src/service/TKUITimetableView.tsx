@@ -180,6 +180,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 <div className={classes.main}>
                     <div className={classes.secondaryBar}>
                         <input className={classes.filterInput} placeholder={t("Search")}
+                               value={this.props.timetableFilter}
                                onChange={this.onFilterChange}/>
                         <TKUIDateTimePicker
                             value={this.props.timetableInitTime}
