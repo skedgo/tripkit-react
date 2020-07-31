@@ -161,7 +161,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
     private getServiceFieldValue(stop: StopLocation, filter: string, service?: ServiceDeparture): string {
         return RegionsData.instance.getRegion(stop)!.name
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(stop.code)
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(service && service.startStop? service.startStop.code : stop.code)
             + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(filter)
             + (service ? URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(service.serviceTripID) + URL_VALUE_COMPONENT_SEPARATOR + service.startTime : "");
     }
