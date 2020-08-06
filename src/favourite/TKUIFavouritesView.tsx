@@ -55,7 +55,6 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
     }
 
     public static defaultProps: Partial<IProps> = {
-        title: "Favourites",
         filter: (favouriteList: Favourite[], recentList: Favourite[]) => {
             // Sort favourites based on recent list:
             // - filter (in) those recent that are also favourites.
@@ -67,14 +66,16 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+        const title = this.props.title || t("Favourites");
         return (
             <TKUICard
-                title={this.props.title}
+                title={title}
                 presentation={CardPresentation.SLIDE_UP}
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
-                        <TKUIButton text={this.state.editing ? "Done" : "Edit"}
+                        <TKUIButton text={this.state.editing ? t("Done") : t("edit")}
                                     onClick={() => this.setState((prev: IState) => ({editing: !prev.editing}))}
                                     type={TKUIButtonType.PRIMARY_LINK}
                                     style={this.props.injectedStyles.editBtn}

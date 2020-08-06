@@ -47,7 +47,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUILocationDetailView {...props}/>,
     styles: tKUILocationDetailViewDefaultStyle,
     classNamePrefix: "TKUILocationDetailView",
-    props: {
+    props: (props: IProps) => ({
         actions: (location: Location) => [
             location instanceof StopLocation ?
                 <TKI18nContext.Consumer key={1}>
@@ -70,14 +70,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
             <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
             <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)} vertical={true}/>,
             <TKUIShareAction
-                title={"Share location"}
+                title={props.t("Share")}
                 link={TKShareHelper.getShareLocation(location)}
                 vertical={true}
                 message={""}
                 key={4}
             />
         ]
-    }
+    })
 };
 
 interface IState {
@@ -93,7 +93,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const location = this.props.location;
-        const title = LocationUtil.getMainText(location);
+        const title = LocationUtil.getMainText(location, this.props.t);
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;
         const subHeader = this.props.actions ?

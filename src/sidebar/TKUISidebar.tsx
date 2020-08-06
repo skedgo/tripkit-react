@@ -121,6 +121,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <Drawer
                 open={this.props.open}
@@ -143,7 +144,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                         {this.props.nativeAppLinks &&
                             <div className={classes.nativeAppLinksPanel}>
                                 <div className={classes.nativeAppsTitle}>
-                                    Get mobile app:
+                                    {t("Get.mobile.app") + ":"}
                                 </div>
                                 <div className={classes.nativeAppLinks}>
                                     {this.props.nativeAppLinks()}

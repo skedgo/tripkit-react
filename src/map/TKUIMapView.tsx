@@ -168,6 +168,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.onMoveEnd = this.onMoveEnd.bind(this);
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
+        this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
     }
 
@@ -298,7 +299,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             (segment: Segment) => {
                 const color = segment.getColor();
                 return {
-                    renderPopup: () => <SegmentPopup segment={segment}/>,
+                    renderPopup: () => <SegmentPopup segment={segment} t={this.props.t}/>,
                     polylineOptions: segment.shapes ? this.shapesRenderer(segment.shapes, color) :
                         segment.streets ? this.streetsRenderer(segment.streets, segment.isBicycle() || segment.isWheelchair() ? null : color) : [],
                     renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
@@ -353,7 +354,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 className={classNames(classes.menuPopup,
                     menuPopupAbove ? classes.menuPopupAbove : classes.menuPopupBelow,
                     menuPopupLeft ? classes.menuPopupLeft : classes.menuPopupRight)}
-                // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
+                // TODO: disabled auto pan to fit popup on open since it messes with viewport
+                // (generates infinite (or a lot) setState calls) since it seems the viewport
+                // doesn't stabilizes. Fix it.
                 autoPan={false}
                 onClose={() => this.setState({menuPopupPosition: undefined})}
             >
@@ -392,6 +395,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const leafletViewport = viewport ?
             {center: viewport.center ? [viewport.center.lat, viewport.center.lng] as [number, number] : undefined, zoom: viewport.zoom}
             : undefined;
+        const t = this.props.t;
         return (
             <div className={classes.main}>
                 <RLMap
@@ -446,7 +450,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                            }
                                            if (this.mapboxGlMap) {
                                                // Since this could be a consequence of a complete style change
-                                               // (switch dark / light appearence).
+                                               // (switch dark / light appearance).
                                                this.refreshModeSpecificTiles();
                                            }
                                        }}/> :
@@ -585,9 +589,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
                             onClick={() => this.onTrackUserLocation(true, (error: Error) => {
                                 if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
-                                    this.showUserLocTooltip("Please allow this site to track your location");
+                                    this.showUserLocTooltip(t("You.blocked.this.site.access.to.your.location"));
                                 } else {
-                                    this.showUserLocTooltip("Could not get your location");
+                                    this.showUserLocTooltip(t("Could.not.determine.your.current.location."));
                                 }
                             })}
                     >
@@ -617,7 +621,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
             autoPan={false}
         >
-            <TKUIMapPopup title={location.name || LocationUtil.getMainText(location)}
+            <TKUIMapPopup title={location.name || LocationUtil.getMainText(location, this.props.t)}
                           onAction={location instanceof StopLocation ?
                               () => this.props.onLocAction
                                   && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>

@@ -5,13 +5,18 @@ import {tKUIOccupancyInfoDefaultStyle} from "./TKUIOccupancyInfo.css";
 import {OccupancyStatus} from "../../model/service/VehicleComponent";
 import {ReactComponent as IconPassenger} from '../../images/ic-passenger.svg';
 import classNames from "classnames";
+import {TKI18nContextProps, TKI18nContext, TranslationFunction} from "../../i18n/TKI18nProvider";
 
 export interface ITKUIOccupancyInfoProps {
     status: OccupancyStatus;
     brief?: boolean;
 }
 
-interface IProps extends ITKUIOccupancyInfoProps {
+interface IConsumedProps {
+    t: TranslationFunction;
+}
+
+interface IProps extends ITKUIOccupancyInfoProps, IConsumedProps {
     classes: ClassNameMap<keyof ITKUIOccupancyInfoStyle>
 }
 
@@ -41,21 +46,22 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
         }
     }
 
-    private static getText(status: OccupancyStatus): string {
+    private static getText(status: OccupancyStatus, t: TranslationFunction): string {
         switch (status) {
-            case OccupancyStatus.EMPTY: return "Empty";
-            case OccupancyStatus.MANY_SEATS_AVAILABLE: return "Many seats available";
-            case OccupancyStatus.FEW_SEATS_AVAILABLE: return "Few seats available";
-            case OccupancyStatus.STANDING_ROOM_ONLY: return "Standing room only";
-            case OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY: return "Limited standing room only";
-            case OccupancyStatus.FULL: return "Full";
-            default: return "Not accepting passengers";
+            case OccupancyStatus.EMPTY: return t("Empty");
+            case OccupancyStatus.MANY_SEATS_AVAILABLE: return t("Many.seats.available");
+            case OccupancyStatus.FEW_SEATS_AVAILABLE: return t("Few.seats.available");
+            case OccupancyStatus.STANDING_ROOM_ONLY: return t("Standing.room.only");
+            case OccupancyStatus.CRUSHED_STANDING_ROOM_ONLY: return t("Limited.standing.room.only");
+            case OccupancyStatus.FULL: return t("Full");
+            default: return t("Not.accepting.passengers");
         }
     }
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const brief = this.props.brief;
+        const t = this.props.t;
         return (
             <div className={classes.main}>
                 <div className={classes.passengers}>
@@ -70,7 +76,7 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
                 </div>
                 {!brief ?
                     <div className={classes.text}>
-                        {TKUIOccupancyInfo.getText(this.props.status)}
+                        {TKUIOccupancyInfo.getText(this.props.status, t)}
                     </div> : undefined
                 }
             </div>
@@ -80,9 +86,11 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
 
 export const Connect = (RawComponent: React.ComponentType<IProps>) => {
     const RawComponentStyled = withStyleProp(RawComponent, "TKUIOccupancyInfo");
-    return (props: ITKUIOccupancyInfoProps) => {
-        return <RawComponentStyled {...props} styles={tKUIOccupancyInfoDefaultStyle}/>;
-    };
+    return (props: ITKUIOccupancyInfoProps) =>
+        <TKI18nContext.Consumer>
+            {(i18nProps: TKI18nContextProps) =>
+                <RawComponentStyled {...props} t={i18nProps.t} styles={tKUIOccupancyInfoDefaultStyle}/>}
+        </TKI18nContext.Consumer>
 };
 
 export default Connect(TKUIOccupancyInfo);

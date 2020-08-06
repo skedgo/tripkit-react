@@ -150,6 +150,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
         }
         const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <div className={classNames(classes.main, this.props.className)}
                  onClick={this.props.onClick}
@@ -189,7 +190,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                                 {this.props.onDetailClick &&
                                 <TKUIButton
                                     type={TKUIButtonType.PRIMARY_LINK}
-                                    text={"Detail"}
+                                    text={t("Details")}
                                     onClick={this.props.onDetailClick}
                                 />}
                             </div>
@@ -203,7 +204,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     </div>
                     {(this.props.expanded || alternatives.length > visibleAlternatives.length) &&
                         <TKUIButton
-                            text={this.props.expanded ? "Less routes" : "More routes"}
+                            text={this.props.expanded ? t("Less.routes") : t("More.routes")}
                             type={TKUIButtonType.PRIMARY_LINK}
                             onClick={(e: any) => {
                                 this.props.onExpand && this.props.onExpand(!this.props.expanded);

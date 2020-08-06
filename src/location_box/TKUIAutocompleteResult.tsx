@@ -75,7 +75,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
             addressComponent =
                 <span className={classes.address}>
                     {   (Environment.isDevAnd(this.props.location.source === SkedgoGeocoder.SOURCE_ID  && false) ? "*SG*" : "") +
-                        LocationUtil.getMainText(this.props.location)
+                        LocationUtil.getMainText(this.props.location, this.props.t)
                     }
                     <span key={2} className={classes.secondaryAddress}>{LocationUtil.getSecondaryText(this.props.location)}</span>
                 </span>;

@@ -257,7 +257,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) =>
-                                    this.showTooltip(true, this.getErrorMessage(error))}
+                                    this.showTooltip(true, this.getErrorMessage(error, t))}
                                 inputAriaLabel={ariaLabelFrom}
                                 inputId={"input-from"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
@@ -308,7 +308,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) =>
-                                    this.showTooltip(false, this.getErrorMessage(error))}
+                                    this.showTooltip(false, this.getErrorMessage(error, t))}
                                 inputAriaLabel={ariaLabelTo}
                                 inputId={"input-to"}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
@@ -363,7 +363,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <button className={classes.transportsBtn}
                                 onClick={() => this.setState({showTransportSwitches: true})}
                         >
-                            Transport options
+                            {t("Transport")}
                         </button>
                     </TKUITooltip>}
                 </div>
@@ -372,17 +372,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         );
     }
 
-    private getErrorMessage(error: Error) {
+    private getErrorMessage(error: Error, t: TranslationFunction) {
         let errorMessage: string;
         if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
             errorMessage = "Cannot resolve address, try another search and pick a result from the autocomplete list."
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
             // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
-            errorMessage = "Could not get your location. Please set manually";
+            errorMessage = t("Could.not.determine.your.current.location.");
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
-            errorMessage = "You blocked this site access to your location, please unblock or set it manually";
+            errorMessage = t("You.blocked.this.site.access.to.your.location");
         } else {
-            errorMessage = "Could not get your location. Please set manually";
+            errorMessage = t("Could.not.determine.your.current.location.");
         }
         return errorMessage;
     }

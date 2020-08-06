@@ -1,11 +1,15 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import City from "../model/location/City";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 class LocationUtil {
-    public static getMainText(loc: Location): string {
+    public static getMainText(loc: Location, t: TranslationFunction): string {
         if (loc instanceof City) {
             return loc.name;
+        }
+        if (loc.isCurrLoc()) {
+            return t("Current.Location");
         }
         const address = loc.address;
         return address ?

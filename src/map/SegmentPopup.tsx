@@ -7,9 +7,11 @@ import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import TKUIMapPopup from "./TKUIMapPopup";
 import genStyles from "../css/GenStyle.css";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 export interface IProps {
     segment: Segment;
+    t: TranslationFunction;
 }
 
 interface IState {
@@ -25,12 +27,14 @@ class SegmentPopup extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const segment = this.props.segment;
+        const t = this.props.t;
         const title = segment.arrival ?
-            "Arrive to " + segment.to.getDisplayString() + " at " +
-            DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-            segment.getAction();
+            t("Arrive.X.at.X", {
+                0: segment.to.getDisplayString(),
+                1: DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP)
+            }) : segment.getAction();
         const subtitle = !segment.arrival ?
-            (segment.isFirst() ? "To " + segment.to.getDisplayString() : "From " + segment.from.getDisplayString()) : undefined;
+            (segment.isFirst() ? t("To.X", {0: segment.to.getDisplayString()}) : t("From.X", {0: segment.from.getDisplayString()})) : undefined;
         return (
             <TKUIMapPopup
                 title={title}

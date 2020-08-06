@@ -42,6 +42,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUIFavouriteRow extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         const value = this.props.value;
         let text: string;
         let icon: JSX.Element;
@@ -61,8 +62,8 @@ class TKUIFavouriteRow extends React.Component<IProps, {}> {
             const favTrip = value as FavouriteTrip;
             icon = favTrip.from.isCurrLoc() ? <IconFavLoc/> : <IconFavTrip/>;
             text = favTrip.from.isCurrLoc() ?
-                "To " + LocationUtil.getMainText(favTrip.to) :
-                LocationUtil.getMainText(favTrip.from) + " to " + LocationUtil.getMainText(favTrip.to)
+                "To " + LocationUtil.getMainText(favTrip.to, t) :
+                LocationUtil.getMainText(favTrip.from, t) + " to " + LocationUtil.getMainText(favTrip.to, t);
         }
         const removeBtn = this.props.onRemove &&
             <button className={classes.removeBtn}

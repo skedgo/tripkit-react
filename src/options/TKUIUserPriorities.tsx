@@ -109,7 +109,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                     />
-                    <TKUIButton text={"Reset"}
+                    <TKUIButton text={t("Reset")}
                                 type={TKUIButtonType.SECONDARY}
                                 className={classes.resetBtn}
                                 onClick={() => this.props.onChange(TKWeightingPreferences.create())}

@@ -53,7 +53,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripOverviewView {...props}/>,
     styles: tKUITripOverviewViewDefaultStyle,
     classNamePrefix: "TKUITripOverviewView",
-    props: {
+    props: (props: IProps) => ({
         actions: (trip: Trip) => [
             // <TKI18nContext.Consumer key={"actionGo"}>
             //    {(i18nProps: TKI18nContextProps) =>
@@ -88,7 +88,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 {(renderCard: (props: TKUICardClientProps, id: any) => void) =>
                     <TKUIViewportUtil>
                         {(viewportProps: TKUIViewportUtilProps) =>
-                            <TKUIButton text={"Share arrival"}
+                            <TKUIButton text={props.t("Share.Arrival")}
                                         type={TKUIButtonType.PRIMARY_LINK}
                                         style={{
                                             paddingLeft: 0,
@@ -96,7 +96,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                                         }}
                                         onClick={() => {
                                             const cardProps = {
-                                                title: "Share arrival",
+                                                title: props.t("Share.Arrival"),
                                                 presentation: viewportProps.portrait ? CardPresentation.SLIDE_UP : CardPresentation.MODAL,
                                                 slideUpOptions: {
                                                     position: TKUISlideUpPosition.UP,
@@ -125,7 +125,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 }
             </TKUIRendersCard>
         ] : []
-    }
+    })
 };
 
 class TKUITripOverviewView extends React.Component<IProps, {}> {

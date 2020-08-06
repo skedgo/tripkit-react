@@ -144,7 +144,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
     private getLocationFieldValue(location: Location): string {
         return location.lat + "," + location.lng
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(location.isCurrLoc() && !location.isResolved() ? "My location" : location.address || "")
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(location.address || "")
             + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((location.id ? location.id : ""))
             + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((location.source ? location.source : ""));
     }
