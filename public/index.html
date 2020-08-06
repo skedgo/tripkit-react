@@ -150,29 +150,33 @@
         }
 
         var language = navigator.language;
-        var tKI18nPromise = fetch("./i18n/i18n_" + language + ".json")
-            .then(jsonCallback)
-            .catch(() => {
-                if (language === 'en') {
-                    return Promise.reject(new Error("Use default language"));
-                }
-                if (language.indexOf('-') !== -1) {
-                    language = language.split('-')[0];
-                    if (language === 'en') {
-                        return Promise.reject(new Error("Use default language"));
+        var tKI18nPromise;
+        if (language === 'en') {
+            if (language === 'en') {
+                tKI18nPromise = Promise.reject(new Error("Use default language"));
+            }
+        } else {
+            tKI18nPromise = fetch("/i18n/i18n_" + language + ".json")
+                .then(jsonCallback)
+                .catch(() => {
+                    if (language.indexOf('-') !== -1) {
+                        language = language.split('-')[0];
+                        if (language === 'en') {
+                            return Promise.reject(new Error("Use default language"));
+                        }
+                        return fetch("/i18n/i18n_" + language + ".json")
+                            .then(jsonCallback);
+                    } else {
+                        return Promise.reject(new Error("No matching translations found for " + language))
                     }
-                    return fetch("./i18n/i18n_" + language + ".json")
-                        .then(jsonCallback);
-                } else {
-                    return Promise.reject(new Error("No matching translations found for " + language))
-                }
-            })
-            .then((messagesJson) => {
-                return {
-                    locale: language,
-                    translations: messagesJson
-                }
-            })
+                })
+                .then((messagesJson) => {
+                    return {
+                        locale: language,
+                        translations: messagesJson
+                    }
+                });
+        }
     </script>
 </head>
 <body>

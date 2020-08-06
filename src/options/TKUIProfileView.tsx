@@ -168,12 +168,12 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                     draggable: false
                 }}
             />;
-        const appearenceOptions: any[] = [
-            { value: undefined, label: "Match OS"},
-            { value: false, label: "Light"},
-            { value: true, label: "Dark"}
-        ];
         const t = this.props.t;
+        const appearanceOptions: any[] = [
+            { value: undefined, label: t("Match.OS")},
+            { value: false, label: t("Light")},
+            { value: true, label: t("Dark")}
+        ];
         return (
             <TKUICard
                 title={t("Profile")}
@@ -282,11 +282,11 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                         <div className={classes.sectionBody}>
                             <div className={classNames(classes.optionRow, classes.checkboxRow)}>
                                 <div>
-                                    {"Appearence"}
+                                    {t("Appearance")}
                                 </div>
                                 <TKUISelect
-                                    options={appearenceOptions}
-                                    value={appearenceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
+                                    options={appearanceOptions}
+                                    value={appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
                                     onChange={(option) => {
                                         this.setState((prevState: IState) => ({
                                             update: Util.iAssign(prevState.update, { isDarkMode: option.value })

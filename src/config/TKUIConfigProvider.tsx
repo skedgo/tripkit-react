@@ -66,16 +66,16 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
         }
         const mediaQueryList = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
         if (mediaQueryList) {
-            const onAppearenceChange = e =>
+            const onAppearanceChange = e =>
                 this.setState({
                     isOSDark: e.matches
                 });
             if (mediaQueryList.addEventListener) {
-                mediaQueryList.addEventListener('change', onAppearenceChange)
+                mediaQueryList.addEventListener('change', onAppearanceChange)
             } else if (mediaQueryList.addListener) {
                 // Need this for Safari and old browsers
                 // (see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener)
-                mediaQueryList.addListener(onAppearenceChange)
+                mediaQueryList.addListener(onAppearanceChange)
             }
         }
     }

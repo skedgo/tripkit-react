@@ -63,11 +63,12 @@ class TKUIShareView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <div className={classes.main}>
                 <div className={classNames(classes.qrSharePanel, classes.separation)}>
                     <div className={classes.qrLabel}>
-                        See it on your mobile device
+                        {t("See.it.on.your.mobile.device")}
                     </div>
                     <div className={classes.qrCode}>
                         {this.props.link &&
@@ -75,11 +76,11 @@ class TKUIShareView extends React.Component<IProps, IState> {
                         }
                     </div>
                     <div className={classes.qrLabel}>
-                        Just scan the QR code with your phone or tablet camera
+                        {t("Scan.the.QR.code.with.your.device.camera")}
                     </div>
                 </div>
                 <TKUITooltip
-                    overlayContent={"Link copied to clipboard"}
+                    overlayContent={t("Copied.to.clipboard")}
                     placement={"bottom"}
                     visible={this.state.copiedTooltip}
                     arrowColor={tKUIColors.black2}

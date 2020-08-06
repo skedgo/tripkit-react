@@ -103,7 +103,7 @@ class Location extends LatLng {
     }
 
     public isCurrLoc(): boolean {
-        return this.address === Location.currLocText;
+        return this.source === CurrentLocationGeocoder.SOURCE_ID;
     }
 
     public isDroppedPin(): boolean {

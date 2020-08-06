@@ -71,6 +71,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
         }
         const transOptions = this.props.value;
         const classes = this.props.classes;
+        const t = this.props.t;
         const modes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
         return (
             <div className={classes.main}>
@@ -114,7 +115,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                 </div>
                 {this.props.onMoreOptions &&
                 <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
-                            text={"More options"}
+                            text={t("More.options")}
                             style={{
                                 marginLeft: '10px',
                                 ...genStyles.fontS

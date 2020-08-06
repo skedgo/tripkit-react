@@ -42,6 +42,7 @@ import LocationUtil from "../util/LocationUtil";
 import TKUIButton from "../buttons/TKUIButton";
 import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper";
 import TKUIErrorView from "../error/TKUIErrorView";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -121,15 +122,26 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         this.onKeyDown = this.onKeyDown.bind(this);
     }
 
-    private getSortOptions(): any[] {
+    private getSortOptions(t: TranslationFunction): any[] {
         return Object.values(TripSort)
-            .filter((value: string) => value !== TripSort.CARBON)
-            .map((value: string) => {
-                let label = value;
-                if (value === TripSort.TIME && this.props.query.timePref === TimePreference.ARRIVE) {
-                    label = "Departure";
+            .filter((value: TripSort) => value !== TripSort.CARBON)
+            .map((value: TripSort) => {
+                let label;
+                switch (value) {
+                    case TripSort.OVERALL:
+                        label = t("sorted_by_preferred");
+                        break;
+                    case TripSort.TIME:
+                        label = this.props.query.timePref === TimePreference.ARRIVE ?
+                            t("sorted_by_departure") : t("sorted_by_arrival");
+                        break;
+                    case TripSort.PRICE:
+                        label = t("sorted_by_price");
+                        break;
+                    case TripSort.DURATION:
+                        label = t("sorted_by_duration");
+                        break;
                 }
-                label = "Sort by " + label;
                 return { value: value, label: label};
             });
     }
@@ -174,7 +186,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
-        const sortOptions = this.getSortOptions();
+        const sortOptions = this.getSortOptions(this.props.t);
         const injectedStyles = this.props.injectedStyles;
         const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
         const routingQuery = this.props.query;
@@ -216,7 +228,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     >
                         <button className={classes.transportsBtn}
                                 onClick={() => this.setState({showTransportSwitches: true})}>
-                            Transport options
+                            {t("Transport")}
                         </button>
                     </TKUITooltip>
                     }
@@ -227,8 +239,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         if (!this.props.waiting && this.props.routingError) {
             const errorMessage = TKErrorHelper.hasErrorCode(this.props.routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
-                    {0: LocationUtil.getMainText(this.props.query.from!), 1: LocationUtil.getMainText(this.props.query.to!)}) + "." :
-                this.props.routingError.usererror ? this.props.routingError.message : "Something went wrong.";
+                    {0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t)}) + "." :
+                this.props.routingError.usererror ? this.props.routingError.message : t("Something.went.wrong.");
             error =
                 <TKUIErrorView
                     error={this.props.routingError}
@@ -240,7 +252,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
         return (
             <TKUICard
-                title={this.props.landscape && !error ? "Routing results" : undefined}
+                title={this.props.landscape && !error ? t("Routes") : undefined}
                 presentation={CardPresentation.SLIDE_UP}
                 renderSubHeader={!error ? renderSubHeader : undefined}
                 slideUpOptions={this.props.slideUpOptions}

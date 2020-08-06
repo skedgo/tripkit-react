@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+    <file datatype="plaintext" original="input strategy" source-language="en" target-language="en">
+        <body>
+            <trans-unit id="Appearance">
+                <source>Appearance</source>
+                <target>Appearance</target>
+                <note>Label for appearance setting (dark / light)</note>
+            </trans-unit>
+            <trans-unit id="Match OS">
+                <source>Match OS</source>
+                <target>Match OS</target>
+                <note>Appearance setting value stating to match Operative System appearance</note>
+            </trans-unit>
+            <trans-unit id="Dark">
+                <source>Dark</source>
+                <target>Dark</target>
+                <note>Appearance setting value corresponding to dark appearance</note>
+            </trans-unit>
+            <trans-unit id="Light">
+                <source>Light</source>
+                <target>Light</target>
+                <note>Appearance setting value corresponding to light appearance</note>
+            </trans-unit>
+            <trans-unit id="Get mobile app">
+                <source>Get mobile app</source>
+                <target>Get mobile app</target>
+                <note>Title for app store links</note>
+            </trans-unit>
+            <trans-unit id="Copied to clipboard">
+                <source>Copied to clipboard</source>
+                <target>Copied to clipboard</target>
+                <note>Message indicating text was copied to clipboard</note>
+            </trans-unit>
+            <trans-unit id="See it on your mobile device">
+                <source>See it on your mobile device</source>
+                <target>See it on your mobile device</target>
+                <note>Title for scanning QR code of share link with device camera</note>
+            </trans-unit>
+            <trans-unit id="Scan the QR code with your device camera">
+                <source>Scan the QR code with your device camera</source>
+                <target>Scan the QR code with your device camera</target>
+                <note>Message for scanning QR code of share link with device camera</note>
+            </trans-unit>
+            <trans-unit id="You blocked this site access to your location">
+                <source>You blocked this site access to your location</source>
+                <target>You blocked this site access to your location</target>
+                <note>Message indicating the user has blocked web-app access to her location</note>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -68,14 +68,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITimetableView {...props}/>,
     styles: tKUITimetableDefaultStyle,
     classNamePrefix: "TKUITimetableView",
-    props: {
+    props: (props: IProps) => ({
         actions: (stop: StopLocation) => [
             <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
             <TKI18nContext.Consumer key={"actionShare"}>
                 {(i18nProps: TKI18nContextProps) =>
                     <TKUIShareAction
-                        title={"Share timetable"}
+                        title={props.t("Share")}
                         message={""}
                         link={() => RegionsData.instance.requireRegions()
                             .then(() => TKShareHelper.getShareTimetable(stop))}
@@ -84,7 +84,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                 }
             </TKI18nContext.Consumer>
         ]
-    }
+    })
 };
 
 class TKUITimetableView extends React.Component<IProps, {}> {
@@ -140,7 +140,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         );
         let error: JSX.Element | undefined = undefined;
         if (!this.props.waiting && this.props.serviceError) {
-            const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : "Something went wrong.";
+            const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : t("Something.went.wrong.");
             error =
                 <TKUIErrorView
                     error={this.props.serviceError}

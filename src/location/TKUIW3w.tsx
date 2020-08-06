@@ -34,6 +34,7 @@ class TKUIW3w extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const t = this.props.t;
         return (
             <div className={classes.main}>
                 <img src={iconW3w} className={classes.icon}/>
@@ -45,7 +46,7 @@ class TKUIW3w extends React.Component<IProps, {}> {
                        target="_blank"
                        className={classes.url}
                     >
-                        what3words address
+                        {t("what3words.address")}
                     </a>
                 </div>
             </div>

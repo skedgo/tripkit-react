@@ -78,7 +78,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         let statusClassname: string | undefined;
         const classes = this.props.classes;
         if (departure.realTimeStatus === "CANCELLED") {
-            status = "Cancelled";
+            status = t("Cancelled");
             statusClassname = classes.cancelled;
         } else if (departure.realTimeDeparture === undefined) { // Means realtimeStatus !== "IS_REAL_TIME"
             status = t("No.real-time.available");
@@ -86,17 +86,17 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             // Truncates to minutes before subtract to make diff consistent with displayed actual and original times
             const realtimeDiffInMinutes = getRealtimeDiffInMinutes(departure);
             if (realtimeDiffInMinutes === 0) {
-                status = "On time";
+                status = t("On.time");
                 statusClassname = classes.onTime;
             } else {
                 const diffS = DateTimeUtil.durationToBriefString(Math.abs(realtimeDiffInMinutes));
                 // const origStartS = DateTimeUtil.momentFromTimeTZ(departure.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
                 if (realtimeDiffInMinutes < 0) {
-                    status = "Early";
-                    modifier = diffS + " early";
+                    // status = "Early";    // Comment until localized for iOS
+                    modifier = t("X1$@.early", {0: diffS});
                 } else {
-                    status = "Delayed";
-                    modifier = diffS + " late";
+                    // status = "Delayed";  // Comment until localized for iOS
+                    modifier = t("X1$@.late", {0: diffS});
                     statusClassname = classes.delayed;
                 }
             }
@@ -134,11 +134,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;
         const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;
         const cancelled = departure.realTimeStatus === "CANCELLED";
+        const t = this.props.t;
         let timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
         // Round negative up, so less than a minute in the past from now is considered 'Now'.
         timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
         // const timeToDepart = Math.floor(departureTime.valueOf() / 60000) - Math.ceil(DateTimeUtil.getNow().valueOf() / 60000);
-        const timeToDepartS = cancelled ? "Cancelled" : DateTimeUtil.minutesToDepartToString(timeToDepart);
+        const timeToDepartS = cancelled ? t("Cancelled") : DateTimeUtil.minutesToDepartToString(timeToDepart);
         const time = this.getTime(departure);
         const classes = this.props.classes;
         const detailed = this.props.detailed;

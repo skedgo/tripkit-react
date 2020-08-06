@@ -69,6 +69,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                         >
                             <Popup className={"ServiceStopPopup-popup"}
                                    closeButton={false}
+                                   autoPan={false}
                             >
                                 {this.props.renderServiceStopPopup(stop, shape)}
                             </Popup>

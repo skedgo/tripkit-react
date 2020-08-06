@@ -24,6 +24,8 @@ import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import {Subtract} from 'utility-types';
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
+import LocationUtil from "../util/LocationUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
@@ -122,8 +124,9 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.setValue = this.setValue.bind(this);
     }
 
-    public static itemText(location: Location): string {
+    public static itemText(location: Location, t?: TranslationFunction): string {
         return location instanceof City ? location.name :
+            (location.isCurrLoc() && t) ? t("Current.Location") :
             location.address ? location.address : location.getLatLngDisplayString();
     }
 
@@ -143,7 +146,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
         let inputText = this.state.inputText;
         if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? TKUILocationBox.itemText(locationValue) : '';
+            inputText = locationValue ? TKUILocationBox.itemText(locationValue, this.props.t) : '';
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
@@ -292,7 +295,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
-                const item = {label: TKUILocationBox.itemText(results[i]), id: TKUILocationBox.itemId(results[i])};
+                const item = {label: TKUILocationBox.itemText(results[i], this.props.t), id: TKUILocationBox.itemId(results[i])};
                 items.push(item);
                 this.itemToLocationMap.set(item.id, results[i]);
             }
@@ -453,6 +456,13 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
         if (prevState.inputText !== this.state.inputText) {
             this.props.onInputTextChange && this.props.onInputTextChange(this.state.inputText);
+        }
+        // Refresh inputText (from locationValue) when translation resource arrives after current location was set, so
+        // it gets the localized string.
+        if (prevProps.locale !== this.props.locale && this.state.locationValue && this.state.locationValue.isCurrLoc()) {
+            this.setState({
+                inputText: LocationUtil.getMainText(this.state.locationValue, this.props.t)
+            });
         }
     }
 

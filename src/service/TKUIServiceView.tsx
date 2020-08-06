@@ -67,17 +67,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIServiceView",
     randomizeClassNames: true,  // This needs to be true since multiple instances are rendered,
                                 // each with a different service color.
-    props: {
+    props: (props: IProps) => ({
         actions: (service: ServiceDeparture) => [
             <TKUIShareAction
-                title={"Share service"}
+                title={props.t("Share")}
                 message={""}
                 link={TKShareHelper.getShareService(service)}
                 vertical={true}
                 key={"actionShareService"}
             />
         ]
-    }
+    })
 };
 
 interface IState {

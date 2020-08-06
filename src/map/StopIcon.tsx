@@ -23,7 +23,7 @@ class StopIcon extends React.Component<IProps, {}> {
             transportColor = wantIconForDark ? black(0) : white(1);
         }
         const transportIconIsRemote = isRemoteIcon(modeInfo);
-        // If the obtained icon changes if we don't prefer remote over appearence mode (dark / light), then it means
+        // If the obtained icon changes if we don't prefer remote over appearance mode (dark / light), then it means
         // transIcon is inverted w.r.t. mode.
         const invertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
         const transIconOnDark = invertedWrtMode ? !wantIconForDark : wantIconForDark;

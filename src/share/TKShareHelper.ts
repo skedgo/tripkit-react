@@ -95,14 +95,14 @@ class TKShareHelper {
         if (query.from) {
             goURL += (goURL.includes("?") ? "&" : "?");
             goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +
-                "&fname=" + (query.from.isCurrLoc() && !query.from.isResolved() ? "My location" : query.from.address) +
+                "&fname=" + query.from.address +
                 (query.from.id ? "&fid=" + (query.from.id) : "") +
                 (query.from.source ? "&fsrc=" + (query.from.source) : "");
         }
         if (query.to) {
             goURL += (goURL.includes("?") ? "&" : "?");
             goURL += "tlat=" + query.to.lat + "&tlng=" + query.to.lng +
-                "&tname=" + (query.to.isCurrLoc() && !query.to.isResolved() ? "My location" : query.to.address) +
+                "&tname=" + query.to.address +
                 (query.to.id ? "&tid=" + (query.to.id) : "") +
                 (query.to.source ? "&tsrc=" + (query.to.source) : "");
         }
