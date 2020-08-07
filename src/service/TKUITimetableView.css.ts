@@ -41,7 +41,6 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.wrap
         },
         serviceNumber: {
-            color: 'white',
             borderRadius: '4px',
             padding: '2px 4px',
             marginRight: '4px',

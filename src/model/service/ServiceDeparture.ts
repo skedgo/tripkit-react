@@ -23,6 +23,8 @@ class ServiceDeparture {
     public serviceDirection: string | undefined = undefined;
     @JsonProperty("serviceColor", Color, true)
     public serviceColor: Color | undefined = undefined;
+    @JsonProperty("serviceTextColor", Color, true)
+    public serviceTextColor: Color | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)
     public bicycleAccessible: boolean | undefined = undefined;
     @JsonProperty("wheelchairAccessible", Boolean, true)

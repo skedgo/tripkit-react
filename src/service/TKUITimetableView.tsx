@@ -32,6 +32,7 @@ import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import TKUIErrorView from "../error/TKUIErrorView";
 import {TKError} from "../error/TKError";
+import {serviceTextColor} from "./TKUIServiceDepartureRow.css";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -159,7 +160,10 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             {serviceListSamples.map((service: ServiceDeparture, i: number) => {
                                 return service.serviceNumber &&
                                     <div className={classes.serviceNumber}
-                                         style={{backgroundColor: TransportUtil.getServiceDepartureColor(service)}}
+                                         style={{
+                                             backgroundColor: TransportUtil.getServiceDepartureColor(service),
+                                             color: serviceTextColor(service)
+                                         }}
                                          key={i}
                                     >
                                         {service.serviceNumber}

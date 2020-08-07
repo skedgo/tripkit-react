@@ -207,7 +207,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return {
                 positions: shape.waypoints,
                 weight: 9,
-                color: shape.travelled ? "black" : "lightgray",
+                color: shape.travelled ? (this.props.theme.isDark ? "white" : "black") : "lightgray",
                 opacity: shape.travelled ? 1 : .5,
             } as PolylineProps
         }).concat(shapes.map((shape: ServiceShape) => {

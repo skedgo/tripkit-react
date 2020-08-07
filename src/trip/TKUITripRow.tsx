@@ -204,7 +204,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     </div>
                     {(this.props.expanded || alternatives.length > visibleAlternatives.length) &&
                         <TKUIButton
-                            text={this.props.expanded ? t("Less.routes") : t("More.routes")}
+                            text={this.props.expanded ? t("Less") : t("More")}
                             type={TKUIButtonType.PRIMARY_LINK}
                             onClick={(e: any) => {
                                 this.props.onExpand && this.props.onExpand(!this.props.expanded);
