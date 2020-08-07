@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
-    <file datatype="plaintext" original="input strategy" source-language="en" target-language="en">
+    <file datatype="plaintext" original="Webapp strings" source-language="en" target-language="en">
         <body>
             <trans-unit id="Appearance">
                 <source>Appearance</source>

@@ -10,6 +10,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
+import ServiceDeparture from "../model/service/ServiceDeparture";
 
 export const rowStyle = (theme: TKUITheme) => ({
     padding: '16px',
@@ -26,6 +27,13 @@ export const rowSelectedStyle = (theme: TKUITheme) => ({
     paddingLeft: '12px', // 16px (row padding) - 4px (border width)
     backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
 });
+
+export const serviceTextColor = (service: ServiceDeparture) => {
+    return service.serviceTextColor &&
+        // Avoid setting both background and text colors to black.
+        !(TransportUtil.getServiceDepartureColor(service) === "black" && service.serviceTextColor.toRGB() === 'rgb(0,0,0)')
+        ? service.serviceTextColor.toRGB() : 'white'
+};
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
     (theme: TKUITheme) => ({
@@ -55,7 +63,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
             opacity: (props: TKUIServiceDepartureRowProps) => !isRemoteIcon(props.value.modeInfo) ? '.4' : undefined
         },
         serviceNumber: {
-            color: 'white',
+            color: (props: TKUIServiceDepartureRowProps) => serviceTextColor(props.value),
             borderRadius: '4px',
             padding: '2px 4px',
             backgroundColor: (props: TKUIServiceDepartureRowProps) =>

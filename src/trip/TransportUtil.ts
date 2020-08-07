@@ -73,10 +73,6 @@ class TransportUtil {
             case "publicTransport":
                 // return "#025da8";
                 return "#0042ac";
-            case "train":
-            case "lightRail":
-            case "tram":
-                return "#673ab7";
             case "bicycle":
             case "bicycle-share":
                 return "#592e84";
