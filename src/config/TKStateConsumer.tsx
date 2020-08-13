@@ -8,6 +8,12 @@ import {TKUIConfig} from "./TKUIConfig";
 import {TKUIConfigContext} from "./TKUIConfigProvider";
 
 interface IProps {
+    /**
+     * Need this doc to be displayed by styleguidist
+     * @param {TKState} state
+     * @returns {React.ReactNode}
+     * @public
+     */
     children: (state: TKState) => React.ReactNode;
 }
 

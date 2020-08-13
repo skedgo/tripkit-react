@@ -1,5 +1,6 @@
 import {default as moment} from 'moment-timezone';
 import {Moment} from "moment-timezone";
+import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class DateTimeUtil {
 
@@ -88,6 +89,10 @@ class DateTimeUtil {
             const durationInDays = Math.floor(minutes / (24*60));
             return durationInDays + "d";
         }
+    }
+
+    public static getRealtimeDiffInMinutes(departure: ServiceDeparture) {
+        return Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
     }
 
 }

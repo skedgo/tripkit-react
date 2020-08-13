@@ -50,7 +50,7 @@ interface IState {
     actionMenuTooltip: boolean;
 }
 
-export function feedbackTextFromState(state: TKState): string {
+function feedbackTextFromState(state: TKState): string {
     const location = window.location;
     const plannerUrl = location.protocol + "//" + location.hostname
         + (location.port ? ":" + location.port : "");
@@ -208,3 +208,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIReportBtn, config, Mapper);
+export {feedbackTextFromState};

@@ -1,6 +1,8 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 
-
+/**
+ * General component description in JSDoc format. Markdown is *supported*.
+ */
 @JsonObject
 class LatLng {
     @JsonProperty('lat', Number, true)
@@ -37,6 +39,7 @@ class LatLng {
 
     /**
      * true just for Location instances that represent unresolved locations.
+     * @public
      */
     public isNull(): boolean {
         return !this._lat || !this._lng;

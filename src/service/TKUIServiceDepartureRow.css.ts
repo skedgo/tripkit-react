@@ -1,6 +1,5 @@
 import genStyles from "../css/GenStyle.css";
 import {
-    getRealtimeDiffInMinutes,
     TKUIServiceDepartureRowProps,
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
@@ -11,6 +10,7 @@ import TransportUtil from "../trip/TransportUtil";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 export const rowStyle = (theme: TKUITheme) => ({
     padding: '16px',
@@ -90,7 +90,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         delayed: {
             color: (props: TKUIServiceDepartureRowProps) =>
-                Math.abs(getRealtimeDiffInMinutes(props.value)) > 5 ? theme.colorError : theme.colorWarning
+                Math.abs(DateTimeUtil.getRealtimeDiffInMinutes(props.value)) > 5 ? theme.colorError : theme.colorWarning
         },
         onTime: {
             color: theme.colorSuccess

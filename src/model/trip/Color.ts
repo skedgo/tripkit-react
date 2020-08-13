@@ -96,7 +96,7 @@ class Color {
     }
 
     private static cutHex(h: string): string {
-        return (h.charAt(0) == '#') ? h.substring(1, 7) : h;
+        return (h.charAt(0) === '#') ? h.substring(1, 7) : h;
     }
 }
 

@@ -29,6 +29,11 @@ export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
 export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
+    /**
+     * TODO: Remove since it's not used.
+     *
+     * @ignore
+     */
     styles?: TKUIStyles<ST, CP>,
     randomizeClassNames?: boolean
 }

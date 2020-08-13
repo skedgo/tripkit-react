@@ -1,6 +1,6 @@
 {
   "name": "tripkit-react",
-  "version": "0.1.26",
+  "version": "0.1.27",
   "main": "dist/js/index.js",
   "_module": "dist/esm/index.js",
   "types": "dist/js/index.d.ts",
@@ -47,6 +47,7 @@
     "react-app-rewired": "^2.1.5",
     "react-autocomplete": "^1.8.1",
     "react-datepicker": "^1.5.0",
+    "react-docgen-typescript": "^1.20.1",
     "react-drag-drawer": "^3.3.0",
     "react-draggable": "4.2.0",
     "react-ga": "^2.7.0",
@@ -79,7 +80,9 @@
     "build:svg:esm": "babel --extensions \".svg\" --out-file-extension .svg.js src --out-dir dist/esm",
     "build:svg:umd": "babel --extensions \".svg\" --out-file-extension .svg.js src --out-dir dist/umd",
     "clean": "rimraf dist",
-    "develop": "npm run build:types && npm run build:babel:esm --skip-initial-build --watch --verbose"
+    "develop": "npm run build:types && npm run build:babel:esm --skip-initial-build --watch --verbose",
+    "start:doc": "styleguidist server",
+    "build:doc": "styleguidist build"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -111,6 +114,7 @@
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.4.1",
+    "react-styleguidist": "^11.0.8",
     "svg-react-loader": "^0.4.6",
     "tslib": "^1.9.3",
     "typescript": "^3.7.4"

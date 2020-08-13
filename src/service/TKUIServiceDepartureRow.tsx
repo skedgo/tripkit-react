@@ -65,10 +65,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                               // each with a different service color.
 };
 
-export function getRealtimeDiffInMinutes(departure: ServiceDeparture) {
-    return Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
-}
-
 class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
     private getTime(departure: ServiceDeparture): JSX.Element | undefined {
@@ -84,7 +80,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             status = t("No.real-time.available");
         } else {
             // Truncates to minutes before subtract to make diff consistent with displayed actual and original times
-            const realtimeDiffInMinutes = getRealtimeDiffInMinutes(departure);
+            const realtimeDiffInMinutes = DateTimeUtil.getRealtimeDiffInMinutes(departure);
             if (realtimeDiffInMinutes === 0) {
                 status = t("On.time");
                 statusClassname = classes.onTime;

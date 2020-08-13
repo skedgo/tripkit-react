@@ -6,7 +6,6 @@ import RegionsData from "../data/RegionsData";
 
 @JsonObject
 class Location extends LatLng {
-    // Use this property for serialization / deserialization to proper class. See LocationConverter.
     @JsonProperty('class', String, true)
     public class: string = 'Location';
     @JsonProperty('address', String, true)
@@ -35,8 +34,9 @@ class Location extends LatLng {
         // TODO: timezone is required when coming from tripgo api endpoints. Ensure it's also properly set
         // when created client-side. Now it may be "". Check if it's initialized to avoid requesting regions
         // prematurely, before api key was set.
-        const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
-        instance._timezone = region ? region.timezone : "";
+        // TODO: Refactor
+        // const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
+        // instance._timezone = region ? region.timezone : "";
         return instance;
     }
 

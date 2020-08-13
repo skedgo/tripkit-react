@@ -84,7 +84,7 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
+const Connect = (RawComponent: React.ComponentType<IProps>) => {
     const RawComponentStyled = withStyleProp(RawComponent, "TKUIOccupancyInfo");
     return (props: ITKUIOccupancyInfoProps) =>
         <TKI18nContext.Consumer>
