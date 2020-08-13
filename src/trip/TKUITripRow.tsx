@@ -76,7 +76,7 @@ function badgeIcon(badge: Badges): JSX.Element {
     }
 }
 
-export function badgeColor(badge: Badges): string {
+function badgeColor(badge: Badges): string {
     switch (badge) {
         case Badges.CHEAPEST: return "rgb(255, 141, 27)";
         case Badges.EASIEST: return "rgb(35, 177, 94)";
@@ -220,3 +220,5 @@ class TKUITripRow extends React.Component<IProps, {}> {
 
 export default connect((config: TKUIConfig) => config.TKUITripRow, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export {badgeColor}

@@ -56,7 +56,7 @@ class TKUIWheelchairInfo extends React.Component<IProps, {}> {
     }
 }
 
-export const Connect = (RawComponent: React.ComponentType<IProps>) => {
+const Connect = (RawComponent: React.ComponentType<IProps>) => {
     const RawComponentStyled = withStyleProp(RawComponent, "TKUIWheelchairInfo");
     return (props: ITKUIWheelchairInfoProps) => {
         return <RawComponentStyled {...props} styles={tKUIWheelchairInfoDefaultStyle}/>;

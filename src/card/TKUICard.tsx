@@ -77,7 +77,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUICard"
 };
 
-export function hasHandle(props: IProps): boolean {
+function hasHandle(props: IProps): boolean {
     return (props.presentation === CardPresentation.SLIDE_UP || (!!props.slideUpOptions && !!props.slideUpOptions.showHandle))
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
@@ -217,3 +217,5 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
 
 export default connect(
     (config: TKUIConfig) => config.TKUICard, config, Mapper);
+
+export {hasHandle}
