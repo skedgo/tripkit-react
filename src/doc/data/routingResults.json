@@ -1,0 +1,2965 @@
+{
+  "groups": [
+    {
+      "frequency": 5,
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "name": "Sydney Light Rail"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": 1597799647,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597798903,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "id": "211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799280,
+              "id": "mfRPOlQ5",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597798903
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597799515,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "IFz2Tzs6",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190512",
+              "startTime": 1597799280,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799647,
+              "id": "yYeeBWxB",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597799515
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/211a5f0e-c103-4584-965e-5a0ade8104b7",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/211a5f0e-c103-4584-965e-5a0ade8104b7?hash=-418536935",
+          "weightedScore": 17.3
+        },
+        {
+          "arrive": 1597794847,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597794103,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "id": "9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "mainSegmentHashCode": 235157255,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794480,
+              "id": "Fs1Bd9rd",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597794103
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597794715,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "jHr590Z7",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 235157255,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190496",
+              "startTime": 1597794480,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794847,
+              "id": "EqsqDmam",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597794715
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/9cf647b1-aa11-4c4c-ac3f-0867701288ed",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/9cf647b1-aa11-4c4c-ac3f-0867701288ed?hash=1274743956",
+          "weightedScore": 18.9
+        },
+        {
+          "arrive": 1597794367,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597793623,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "id": "a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "mainSegmentHashCode": 235157255,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794000,
+              "id": "XLLv8Cfx",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597793623
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597794235,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "DUU02biT",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 235157255,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190495",
+              "startTime": 1597794000,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794367,
+              "id": "gMTrLnBY",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597794235
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/a0ee344d-9ade-4b25-b8bc-9a784d74bffe",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/a0ee344d-9ade-4b25-b8bc-9a784d74bffe?hash=-1345894547",
+          "weightedScore": 29.5
+        },
+        {
+          "arrive": 1597796047,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597795303,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/1c712b57-a189-460a-9332-37d6d892cf7f",
+          "id": "1c712b57-a189-460a-9332-37d6d892cf7f",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/1c712b57-a189-460a-9332-37d6d892cf7f",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/1c712b57-a189-460a-9332-37d6d892cf7f",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/1c712b57-a189-460a-9332-37d6d892cf7f",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795680,
+              "id": "xr93CElG",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597795303
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597795915,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "huCJgAcn",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191051",
+              "startTime": 1597795680,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796047,
+              "id": "BaZ4fAxP",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597795915
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/1c712b57-a189-460a-9332-37d6d892cf7f",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/1c712b57-a189-460a-9332-37d6d892cf7f?hash=1466377631",
+          "weightedScore": 9.7
+        },
+        {
+          "arrive": 1597798687,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597797943,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "id": "cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798320,
+              "id": "tr7t8DIq",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597797943
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597798555,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "z0REg7hw",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190509",
+              "startTime": 1597798320,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798687,
+              "id": "esBvH6GC",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597798555
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/cc2ae9bf-555e-4757-b8a0-b8a100bce79c",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/cc2ae9bf-555e-4757-b8a0-b8a100bce79c?hash=855347559",
+          "weightedScore": 15.3
+        },
+        {
+          "arrive": 1597795087,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597794343,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "id": "d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "mainSegmentHashCode": 968485691,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794720,
+              "id": "BjI9fHmN",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597794343
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597794955,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "DUkACmBK",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 968485691,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191047",
+              "startTime": 1597794720,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795087,
+              "id": "g7A4AoEY",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597794955
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/d61e66e5-41d0-4da4-b46c-c80f83f50a95",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/d61e66e5-41d0-4da4-b46c-c80f83f50a95?hash=-1240188850",
+          "weightedScore": 13.5
+        },
+        {
+          "arrive": 1597799887,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597799143,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "id": "247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799520,
+              "id": "0KI35Z0R",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597799143
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597799755,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "DuevFvxu",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190885",
+              "startTime": 1597799520,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799887,
+              "id": "Ajh1BlR7",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597799755
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/247d983d-137b-49c9-9cfc-4c34b2259d32",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/247d983d-137b-49c9-9cfc-4c34b2259d32?hash=1981905747",
+          "weightedScore": 17.8
+        },
+        {
+          "arrive": 1597797967,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597797223,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/79a095cc-dde6-47e8-807e-0322c9a69393",
+          "id": "79a095cc-dde6-47e8-807e-0322c9a69393",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/79a095cc-dde6-47e8-807e-0322c9a69393",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/79a095cc-dde6-47e8-807e-0322c9a69393",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/79a095cc-dde6-47e8-807e-0322c9a69393",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797600,
+              "id": "c4x9Dxfm",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597797223
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597797835,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "bJxhMV5H",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190878",
+              "startTime": 1597797600,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797967,
+              "id": "lK9bbnPA",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597797835
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/79a095cc-dde6-47e8-807e-0322c9a69393",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/79a095cc-dde6-47e8-807e-0322c9a69393?hash=-1167252689",
+          "weightedScore": 13.8
+        },
+        {
+          "arrive": 1597795567,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597794823,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "id": "0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "mainSegmentHashCode": 968485691,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795200,
+              "id": "zu8zIGfT",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597794823
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597795435,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "7wGyhpiu",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 968485691,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191049",
+              "startTime": 1597795200,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795567,
+              "id": "xCongbis",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597795435
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/0c74a7bf-619d-4d9d-a998-47368fc371bf",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/0c74a7bf-619d-4d9d-a998-47368fc371bf?hash=-1002452352",
+          "weightedScore": 9.8
+        },
+        {
+          "arrive": 1597798447,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597797703,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/117b442a-db64-4a0b-ac42-e3346035a698",
+          "id": "117b442a-db64-4a0b-ac42-e3346035a698",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/117b442a-db64-4a0b-ac42-e3346035a698",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/117b442a-db64-4a0b-ac42-e3346035a698",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/117b442a-db64-4a0b-ac42-e3346035a698",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798080,
+              "id": "IhCoFyna",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597797703
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597798315,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "56SvyrEK",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190880",
+              "startTime": 1597798080,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798447,
+              "id": "k9RQo3yq",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597798315
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/117b442a-db64-4a0b-ac42-e3346035a698",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/117b442a-db64-4a0b-ac42-e3346035a698?hash=73576985",
+          "weightedScore": 14.8
+        },
+        {
+          "arrive": 1597797247,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597796503,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "id": "d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796880,
+              "id": "ENsyct4D",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597796503
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597797115,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "5eA4DzPU",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190504",
+              "startTime": 1597796880,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797247,
+              "id": "2dC1KeZN",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597797115
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/d4805822-c1d1-4f8d-a3d8-f5ebc8e3ecbd?hash=1215350469",
+          "weightedScore": 12.2
+        },
+        {
+          "arrive": 1597796767,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597796023,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "id": "0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796400,
+              "id": "gij4dC7S",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597796023
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597796635,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "obw5ppAZ",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190503",
+              "startTime": 1597796400,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796767,
+              "id": "A0bovyLr",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597796635
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/0bfce564-3fe1-408e-b8ac-4b6ee8ef9dc4?hash=-1885428106",
+          "weightedScore": 11.2
+        },
+        {
+          "arrive": 1597799167,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597798423,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/07b50176-bd34-4217-a847-974edb92ca62",
+          "id": "07b50176-bd34-4217-a847-974edb92ca62",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/07b50176-bd34-4217-a847-974edb92ca62",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/07b50176-bd34-4217-a847-974edb92ca62",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/07b50176-bd34-4217-a847-974edb92ca62",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798800,
+              "id": "MtL5yS6b",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597798423
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597799035,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "kaEY962w",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190511",
+              "startTime": 1597798800,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799167,
+              "id": "KLlNugZD",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597799035
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/07b50176-bd34-4217-a847-974edb92ca62",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/07b50176-bd34-4217-a847-974edb92ca62?hash=1613392656",
+          "weightedScore": 16.3
+        },
+        {
+          "arrive": 1597796527,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597795783,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "id": "55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796160,
+              "id": "mkFmCFk6",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597795783
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597796395,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "DSOWw18G",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191053",
+              "startTime": 1597796160,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796527,
+              "id": "veNl16kk",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597796395
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/55ba9b5b-8664-4cbf-9de2-ef603556d2ee",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/55ba9b5b-8664-4cbf-9de2-ef603556d2ee?hash=-716046060",
+          "weightedScore": 10.7
+        },
+        {
+          "arrive": 1597798927,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597798183,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "id": "dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798560,
+              "id": "vkBXDmlj",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597798183
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597798795,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "fh1FJFU8",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190882",
+              "startTime": 1597798560,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798927,
+              "id": "Ju9C8VDY",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597798795
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/dde0bb06-ecc7-453a-bf29-feb4a1fd73c4?hash=-1413906334",
+          "weightedScore": 15.8
+        },
+        {
+          "arrive": 1597797007,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597796263,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "id": "45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796640,
+              "id": "g6S6lslB",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597796263
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597796875,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "V3Opa3nm",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191055",
+              "startTime": 1597796640,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797007,
+              "id": "yoxOfaSf",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597796875
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/45428542-64fc-427b-8e1d-7cf0b798e2ef",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/45428542-64fc-427b-8e1d-7cf0b798e2ef?hash=-1003148460",
+          "weightedScore": 11.7
+        },
+        {
+          "arrive": 1597798207,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597797463,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "id": "91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797840,
+              "id": "kjymCKi5",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597797463
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597798075,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "kMBL4J0i",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190507",
+              "startTime": 1597797840,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597798207,
+              "id": "MvYymhzB",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597798075
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/91025a74-5dde-4a58-a8c2-a606f31a3de5",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/91025a74-5dde-4a58-a8c2-a606f31a3de5?hash=998952740",
+          "weightedScore": 14.3
+        },
+        {
+          "arrive": 1597794607,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597793863,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "id": "1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "mainSegmentHashCode": 968485691,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794240,
+              "id": "EDyY7CXy",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597793863
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597794475,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "0gMFQv7G",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 968485691,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1191046",
+              "startTime": 1597794240,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794607,
+              "id": "vhBdslx4",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597794475
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/1a117539-4874-48ba-8cf7-2137dfb7fb83",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/1a117539-4874-48ba-8cf7-2137dfb7fb83?hash=552927035",
+          "weightedScore": 24.2
+        },
+        {
+          "arrive": 1597796287,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597795543,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/6c83ecda-a507-4864-9d29-65c229f45706",
+          "id": "6c83ecda-a507-4864-9d29-65c229f45706",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/6c83ecda-a507-4864-9d29-65c229f45706",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/6c83ecda-a507-4864-9d29-65c229f45706",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/6c83ecda-a507-4864-9d29-65c229f45706",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795920,
+              "id": "QK0d443H",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597795543
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597796155,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "gcYvDNWW",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190501",
+              "startTime": 1597795920,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597796287,
+              "id": "0xMMg2Za",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597796155
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/6c83ecda-a507-4864-9d29-65c229f45706",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/6c83ecda-a507-4864-9d29-65c229f45706?hash=348191288",
+          "weightedScore": 10.2
+        },
+        {
+          "arrive": 1597799407,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597798663,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/6e119132-767e-4399-a2c1-e6b634489e2d",
+          "id": "6e119132-767e-4399-a2c1-e6b634489e2d",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/6e119132-767e-4399-a2c1-e6b634489e2d",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/6e119132-767e-4399-a2c1-e6b634489e2d",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/6e119132-767e-4399-a2c1-e6b634489e2d",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799040,
+              "id": "7UZW4Xi9",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597798663
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597799275,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "X5QdSmV3",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190884",
+              "startTime": 1597799040,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597799407,
+              "id": "QLTInyhT",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597799275
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/6e119132-767e-4399-a2c1-e6b634489e2d",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/6e119132-767e-4399-a2c1-e6b634489e2d?hash=-894666963",
+          "weightedScore": 16.8
+        },
+        {
+          "arrive": 1597795272,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597794583,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "id": "60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "mainSegmentHashCode": 235157255,
+          "moneyCost": 3.2,
+          "moneyUSDCost": 2.3,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597794960,
+              "id": "b1yAbWVh",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597794583
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597795140,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "0cQnpYR6",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 235157255,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190497",
+              "startTime": 1597794960,
+              "stops": 2,
+              "ticket": {
+                "cost": 3.2,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795272,
+              "id": "kjqa5qB6",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597795140
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/60ac1d05-f4ac-410f-9230-2918a370e65e",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/60ac1d05-f4ac-410f-9230-2918a370e65e?hash=-1356166229",
+          "weightedScore": 9.1
+        },
+        {
+          "arrive": 1597795807,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597795063,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "id": "8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795440,
+              "id": "XkYnWSkJ",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597795063
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597795675,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "MJdwG1n3",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190499",
+              "startTime": 1597795440,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597795807,
+              "id": "fTNw71o9",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597795675
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/8ddb4401-81a0-4b03-9b6c-5f6d360cf057",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/8ddb4401-81a0-4b03-9b6c-5f6d360cf057?hash=-845675475",
+          "weightedScore": 9.2
+        },
+        {
+          "arrive": 1597797487,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597796743,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "id": "d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "mainSegmentHashCode": 2092812025,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797120,
+              "id": "fRE4Xt1L",
+              "segmentTemplateHashCode": -2072920373,
+              "startTime": 1597796743
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597797355,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L3-sj2-1",
+                  "stopId": "2000450"
+                }
+              },
+              "id": "2VT0mVC1",
+              "routeDirection": 0,
+              "routeId": "78-L3-sj2-1",
+              "segmentTemplateHashCode": 2092812025,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Juniors Kingsford Light Rail",
+              "serviceName": "L3 Kingsford Line",
+              "serviceNumber": "L3",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190876",
+              "startTime": 1597797120,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797487,
+              "id": "yhAVh2Ty",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597797355
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/d9a3420e-3d91-4f62-b718-5e61b8cde9e6",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/d9a3420e-3d91-4f62-b718-5e61b8cde9e6?hash=-211419279",
+          "weightedScore": 12.7
+        },
+        {
+          "arrive": 1597797727,
+          "availability": "AVAILABLE",
+          "caloriesCost": 21,
+          "carbonCost": 0.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": 1597796983,
+          "hassleCost": 2,
+          "hookURL": "https://inflationary.buzzhives.com/satapp/trip/hook/c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "id": "c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "logURL": "https://inflationary.buzzhives.com/satapp/trip/log/c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "mainSegmentHashCode": 1359483589,
+          "moneyCost": 1.6,
+          "moneyUSDCost": 1.15,
+          "plannedURL": "https://inflationary.buzzhives.com/satapp/trip/planned/c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": 1597794536,
+          "saveURL": "https://inflationary.buzzhives.com/satapp/trip/save/c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797360,
+              "id": "s72S7ZIZ",
+              "segmentTemplateHashCode": -2072979955,
+              "startTime": 1597796983
+            },
+            {
+              "availability": "AVAILABLE",
+              "bicycleAccessible": true,
+              "endTime": 1597797595,
+              "externalData": {
+                "gtfs": {
+                  "directionId": 0,
+                  "operatorName": "Sydney Light Rail",
+                  "routeId": "78-L2-sj2-1",
+                  "stopId": "2000449"
+                }
+              },
+              "id": "75K9m1kF",
+              "routeDirection": 0,
+              "routeId": "78-L2-sj2-1",
+              "segmentTemplateHashCode": 1359483589,
+              "serviceColor": {
+                "blue": 63,
+                "green": 52,
+                "red": 238
+              },
+              "serviceDirection": "Randwick Light Rail",
+              "serviceName": "L2 Randwick Line",
+              "serviceNumber": "L2",
+              "serviceTextColor": {
+                "blue": 255,
+                "green": 255,
+                "red": 255
+              },
+              "serviceTripID": "1190505",
+              "startTime": 1597797360,
+              "stops": 2,
+              "ticket": {
+                "cost": 1.6,
+                "exchange": 0.72,
+                "name": "Zone 1 Ticket"
+              },
+              "ticketWebsiteURL": "http://transportnsw.info",
+              "wheelchairAccessible": true
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": 1597797727,
+              "id": "BxvZ2Y0B",
+              "segmentTemplateHashCode": 1230077960,
+              "startTime": 1597797595
+            }
+          ],
+          "temporaryURL": "https://inflationary.buzzhives.com/satapp/trip/c09fa145-90f7-40bc-9e72-0f6f63af0358",
+          "updateURL": "https://inflationary.buzzhives.com/satapp/trip/update/c09fa145-90f7-40bc-9e72-0f6f63af0358?hash=401276133",
+          "weightedScore": 13.2
+        }
+      ]
+    }
+  ],
+  "realTimeStamp": 1597794593,
+  "region": "AU_NSW_Sydney",
+  "regions": [
+    "AU_NSW_Sydney"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Near Argyle Street & Harrington Street",
+        "class": "Location",
+        "lat": -33.85923,
+        "lng": 151.2081,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -2072979955,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "currency": "AUD"
+      },
+      "metres": 410,
+      "mini": {
+        "description": "Circular Quay Light Rail",
+        "instruction": "Walk",
+        "mainValue": "450m"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 450m",
+      "streets": [
+        {
+          "encodedWaypoints": "dctmEsy{y[x@\\JgA",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 68,
+          "name": "Harrington Street"
+        },
+        {
+          "encodedWaypoints": "jetmE}z{y[JuA",
+          "instruction": "TURN_LEFT",
+          "metres": 40,
+          "name": "Suez Canal"
+        },
+        {
+          "encodedWaypoints": "vetmEs}{y[z@JvARp@iAH?`@SZQR_@t@HD}@H?@IHwA?@",
+          "instruction": "TURN_RIGHT",
+          "metres": 301,
+          "name": "George Street"
+        }
+      ],
+      "to": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000449",
+        "id": "pt_pub|AU_NSW_Sydney|2000449",
+        "lat": -33.8615,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 490,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000449",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 149,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "2000454",
+      "from": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000449",
+        "id": "pt_pub|AU_NSW_Sydney|2000449",
+        "lat": -33.8615,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 490,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000449",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 1359483589,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 1.6,
+        "costComponents": [
+          {
+            "cost": 1.6,
+            "name": "Zone 1 Ticket",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Tram",
+        "color": {
+          "blue": 49,
+          "green": 17,
+          "red": 220
+        },
+        "identifier": "pt_pub_tram",
+        "localIcon": "tram"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Zone 1 Ticket ($1.60)",
+      "operator": "Sydney Light Rail",
+      "operatorID": "SLR",
+      "serviceOperator": "Sydney Light Rail",
+      "shapes": [
+        {
+          "encodedWaypoints": "jqtmEwe|y[Q|CAh@ANB^@b@AV?R@JDHHJ~BnA\\PPHHDHDp@JH?F@rBFlAAfAL???EnADN@FF^DnCNR?|@HjCD",
+          "stops": [
+            {
+              "bearing": 224,
+              "code": "2000449",
+              "dropOffOnly": false,
+              "lat": -33.8615,
+              "lng": 151.21005,
+              "name": "Circular Quay Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 0
+            },
+            {
+              "bearing": 185,
+              "code": "2000453",
+              "dropOffOnly": false,
+              "lat": -33.86414,
+              "lng": 151.20746,
+              "name": "Bridge Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 175,
+              "relativeDeparture": 180
+            },
+            {
+              "code": "2000454",
+              "dropOffOnly": false,
+              "lat": -33.86666,
+              "lng": 151.20723,
+              "name": "Wynyard Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 235,
+              "relativeDeparture": 240
+            }
+          ],
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "rqumEct{y[AD`BHrId@h@?N@zBAhE?bDK???Fj@?h@CdCAJCv@?JBf@?`DX???A`@DF@N?^FXBnBb@JDx@RF@HDnJvBx@L`@FJDtBX??CGL@RFlAJh@LHDl@JJFL@JBNBFDhAVdCj@VBNIFEHK^kA??BBd@aARi@Ve@NUNYPa@DMXm@P[Ri@P_@\\u@j@qADGJKFE~@OX?JDF@NLf@^HDXP\\\\",
+          "stops": [
+            {
+              "bearing": 183,
+              "code": "2000456",
+              "dropOffOnly": false,
+              "lat": -33.87158,
+              "lng": 151.20702,
+              "name": "QVB Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 360
+            },
+            {
+              "bearing": 196,
+              "code": "2000458",
+              "dropOffOnly": false,
+              "lat": -33.87408,
+              "lng": 151.20687,
+              "name": "Town Hall Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 460,
+              "relativeDeparture": 480
+            },
+            {
+              "bearing": 183,
+              "code": "2000443",
+              "dropOffOnly": false,
+              "lat": -33.87861,
+              "lng": 151.20557,
+              "name": "Chinatown Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 640,
+              "relativeDeparture": 660
+            },
+            {
+              "bearing": 140,
+              "code": "2000445",
+              "dropOffOnly": false,
+              "lat": -33.88144,
+              "lng": 151.20537,
+              "name": "Haymarket Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 835,
+              "relativeDeparture": 840
+            },
+            {
+              "code": "2000447",
+              "dropOffOnly": false,
+              "lat": -33.88423,
+              "lng": 151.20766,
+              "name": "Central Chalmers Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 920,
+              "relativeDeparture": 960
+            }
+          ],
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Sydney Light Rail"
+        }
+      ],
+      "stopCode": "2000449",
+      "to": {
+        "address": "Wynyard Light Rail",
+        "class": "StopLocation",
+        "code": "2000454",
+        "id": "pt_pub|AU_NSW_Sydney|2000454",
+        "lat": -33.86666,
+        "lng": 151.20723,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Wynyard Light Rail",
+        "popularity": 1050,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000454",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 208,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Wynyard Light Rail",
+        "class": "StopLocation",
+        "code": "2000454",
+        "id": "pt_pub|AU_NSW_Sydney|2000454",
+        "lat": -33.86666,
+        "lng": 151.20723,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Wynyard Light Rail",
+        "popularity": 1050,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000454",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 1230077960,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "currency": "AUD"
+      },
+      "metres": 102,
+      "mini": {
+        "description": "Near George Street & Martin Place",
+        "instruction": "Walk",
+        "mainValue": "150m"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 150m",
+      "streets": [
+        {
+          "encodedWaypoints": "rqumEct{y[CC??dAHVR",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 57,
+          "name": "Walk"
+        },
+        {
+          "encodedWaypoints": "ltumEis{y[h@?`@T",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 44,
+          "name": "George Street"
+        }
+      ],
+      "to": {
+        "address": "Near George Street & Martin Place",
+        "class": "Location",
+        "lat": -33.86749,
+        "lng": 151.20699,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 196,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "2000454",
+      "from": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000449",
+        "id": "pt_pub|AU_NSW_Sydney|2000449",
+        "lat": -33.8615,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 490,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000449",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 235157255,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 3.2,
+        "costComponents": [
+          {
+            "cost": 3.2,
+            "name": "Zone 1 Ticket",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Tram",
+        "color": {
+          "blue": 49,
+          "green": 17,
+          "red": 220
+        },
+        "identifier": "pt_pub_tram",
+        "localIcon": "tram"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Zone 1 Ticket ($3.20)",
+      "operator": "Sydney Light Rail",
+      "operatorID": "SLR",
+      "serviceOperator": "Sydney Light Rail",
+      "shapes": [
+        {
+          "encodedWaypoints": "jqtmEwe|y[Q|CAh@ANB^@b@AV?R@JDHHJ~BnA\\PPHHDHDp@JH?F@rBFlAAfAL???EnADN@FF^DnCNR?|@HjCD",
+          "stops": [
+            {
+              "bearing": 224,
+              "code": "2000449",
+              "dropOffOnly": false,
+              "lat": -33.8615,
+              "lng": 151.21005,
+              "name": "Circular Quay Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 0
+            },
+            {
+              "bearing": 185,
+              "code": "2000453",
+              "dropOffOnly": false,
+              "lat": -33.86414,
+              "lng": 151.20746,
+              "name": "Bridge Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 175,
+              "relativeDeparture": 180
+            },
+            {
+              "code": "2000454",
+              "dropOffOnly": false,
+              "lat": -33.86666,
+              "lng": 151.20723,
+              "name": "Wynyard Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 235,
+              "relativeDeparture": 240
+            }
+          ],
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "rqumEct{y[AD`BHrId@h@?N@zBAhE?bDK???Fj@?h@CdCAJCv@?JBf@?`DX???A`@DF@N?^FXBnBb@JDx@RF@HDnJvBx@L`@FJDtBX??CGL@RFlAJh@LHDl@JJFL@JBNBFDhAVdCj@VBNIFEHK^kA??BBd@aARi@Ve@NUNYPa@DMXm@P[Ri@P_@\\u@j@qADGJKFE~@OX?JDF@NLf@^HDXP\\\\",
+          "stops": [
+            {
+              "bearing": 183,
+              "code": "2000456",
+              "dropOffOnly": false,
+              "lat": -33.87158,
+              "lng": 151.20702,
+              "name": "QVB Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 360
+            },
+            {
+              "bearing": 196,
+              "code": "2000458",
+              "dropOffOnly": false,
+              "lat": -33.87408,
+              "lng": 151.20687,
+              "name": "Town Hall Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 460,
+              "relativeDeparture": 480
+            },
+            {
+              "bearing": 183,
+              "code": "2000443",
+              "dropOffOnly": false,
+              "lat": -33.87861,
+              "lng": 151.20557,
+              "name": "Chinatown Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 640,
+              "relativeDeparture": 660
+            },
+            {
+              "bearing": 140,
+              "code": "2000445",
+              "dropOffOnly": false,
+              "lat": -33.88144,
+              "lng": 151.20537,
+              "name": "Haymarket Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 835,
+              "relativeDeparture": 840
+            },
+            {
+              "code": "2000447",
+              "dropOffOnly": false,
+              "lat": -33.88423,
+              "lng": 151.20766,
+              "name": "Central Chalmers Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 920,
+              "relativeDeparture": 960
+            }
+          ],
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Sydney Light Rail"
+        }
+      ],
+      "stopCode": "2000449",
+      "to": {
+        "address": "Wynyard Light Rail",
+        "class": "StopLocation",
+        "code": "2000454",
+        "id": "pt_pub|AU_NSW_Sydney|2000454",
+        "lat": -33.86666,
+        "lng": 151.20723,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Wynyard Light Rail",
+        "popularity": 1050,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000454",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 208,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Walk",
+      "from": {
+        "address": "Near Argyle Street & Harrington Street",
+        "class": "Location",
+        "lat": -33.85923,
+        "lng": 151.2081,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -2072920373,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "currency": "AUD"
+      },
+      "metres": 412,
+      "mini": {
+        "description": "Circular Quay Light Rail",
+        "instruction": "Walk",
+        "mainValue": "450m"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<DURATION> ⋅ 450m",
+      "streets": [
+        {
+          "encodedWaypoints": "dctmEsy{y[x@\\JgA",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 68,
+          "name": "Harrington Street"
+        },
+        {
+          "encodedWaypoints": "jetmE}z{y[JuA",
+          "instruction": "TURN_LEFT",
+          "metres": 40,
+          "name": "Suez Canal"
+        },
+        {
+          "encodedWaypoints": "vetmEs}{y[z@JvARp@iAH?`@SZQR_@t@HD}@H?@IHwAD@",
+          "instruction": "TURN_RIGHT",
+          "metres": 304,
+          "name": "George Street"
+        }
+      ],
+      "to": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000450",
+        "id": "pt_pub|AU_NSW_Sydney|2000450",
+        "lat": -33.86153,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 524,
+        "region": "AU_NSW_Sydney",
+        "services": "L3, L2",
+        "stopCode": "2000450",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 149,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "2000454",
+      "from": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000450",
+        "id": "pt_pub|AU_NSW_Sydney|2000450",
+        "lat": -33.86153,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 524,
+        "region": "AU_NSW_Sydney",
+        "services": "L3, L2",
+        "stopCode": "2000450",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 2092812025,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 1.6,
+        "costComponents": [
+          {
+            "cost": 1.6,
+            "name": "Zone 1 Ticket",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Tram",
+        "color": {
+          "blue": 49,
+          "green": 17,
+          "red": 220
+        },
+        "identifier": "pt_pub_tram",
+        "localIcon": "tram"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Zone 1 Ticket ($1.60)",
+      "operator": "Sydney Light Rail",
+      "operatorID": "SLR",
+      "serviceOperator": "Sydney Light Rail",
+      "shapes": [
+        {
+          "encodedWaypoints": "pqtmEwe|y[GhCCRAh@GrAAV?R@JDJHH~BnA\\PPJH@HFp@JH?F@rBFlAAfAL???EnADN@FF^DnCNR?|@HjCD",
+          "stops": [
+            {
+              "bearing": 224,
+              "code": "2000450",
+              "dropOffOnly": false,
+              "lat": -33.86153,
+              "lng": 151.21005,
+              "name": "Circular Quay Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 0
+            },
+            {
+              "bearing": 185,
+              "code": "2000453",
+              "dropOffOnly": false,
+              "lat": -33.86414,
+              "lng": 151.20746,
+              "name": "Bridge Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 175,
+              "relativeDeparture": 180
+            },
+            {
+              "code": "2000454",
+              "dropOffOnly": false,
+              "lat": -33.86666,
+              "lng": 151.20723,
+              "name": "Wynyard Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 235,
+              "relativeDeparture": 240
+            }
+          ],
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "rqumEct{y[AD`BHrId@h@?N@zBAhE?bDK???Fj@?h@CdCAJCv@?JBf@?`DX???A`@DF@N?^FXBnBb@JDx@RF@HDnJvBx@L`@FJDtBX??CGL@RFlAJh@LHDl@JJFL@JBNBFDhAVdCj@VBNIFEHK^kA??BBd@aARi@Ve@NUNYPa@DMXm@P[Ri@P_@\\u@j@qADGJKFE~@OX?JDF@NLf@^HDXP\\\\",
+          "stops": [
+            {
+              "bearing": 183,
+              "code": "2000456",
+              "dropOffOnly": false,
+              "lat": -33.87158,
+              "lng": 151.20702,
+              "name": "QVB Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 360
+            },
+            {
+              "bearing": 196,
+              "code": "2000458",
+              "dropOffOnly": false,
+              "lat": -33.87408,
+              "lng": 151.20687,
+              "name": "Town Hall Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 460,
+              "relativeDeparture": 480
+            },
+            {
+              "bearing": 183,
+              "code": "2000443",
+              "dropOffOnly": false,
+              "lat": -33.87861,
+              "lng": 151.20557,
+              "name": "Chinatown Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 640,
+              "relativeDeparture": 660
+            },
+            {
+              "bearing": 140,
+              "code": "2000445",
+              "dropOffOnly": false,
+              "lat": -33.88144,
+              "lng": 151.20537,
+              "name": "Haymarket Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 835,
+              "relativeDeparture": 840
+            },
+            {
+              "code": "2000447",
+              "dropOffOnly": false,
+              "lat": -33.88423,
+              "lng": 151.20766,
+              "name": "Central Chalmers Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 920,
+              "relativeDeparture": 960
+            }
+          ],
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Sydney Light Rail"
+        }
+      ],
+      "stopCode": "2000450",
+      "to": {
+        "address": "Wynyard Light Rail",
+        "class": "StopLocation",
+        "code": "2000454",
+        "id": "pt_pub|AU_NSW_Sydney|2000454",
+        "lat": -33.86666,
+        "lng": 151.20723,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Wynyard Light Rail",
+        "popularity": 1050,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000454",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 208,
+      "type": "scheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "<TIME>: Take <NUMBER>",
+      "endStopCode": "2000454",
+      "from": {
+        "address": "Circular Quay Light Rail",
+        "class": "StopLocation",
+        "code": "2000450",
+        "id": "pt_pub|AU_NSW_Sydney|2000450",
+        "lat": -33.86153,
+        "lng": 151.21005,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Circular Quay Light Rail",
+        "popularity": 524,
+        "region": "AU_NSW_Sydney",
+        "services": "L3, L2",
+        "stopCode": "2000450",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 968485691,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 3.2,
+        "costComponents": [
+          {
+            "cost": 3.2,
+            "name": "Zone 1 Ticket",
+            "type": "TICKET"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "mini": {
+        "description": "<DIRECTION>",
+        "instruction": "Take <NUMBER> ⋅ <PLATFORM>"
+      },
+      "modeIdentifier": "pt_pub",
+      "modeInfo": {
+        "alt": "Tram",
+        "color": {
+          "blue": 49,
+          "green": 17,
+          "red": 220
+        },
+        "identifier": "pt_pub_tram",
+        "localIcon": "tram"
+      },
+      "notes": "<LINE_NAME>\n<DIRECTION>\n<PLATFORM>\n<DURATION> ⋅ <STOPS> ⋅\u00a0Zone 1 Ticket ($3.20)",
+      "operator": "Sydney Light Rail",
+      "operatorID": "SLR",
+      "serviceOperator": "Sydney Light Rail",
+      "shapes": [
+        {
+          "encodedWaypoints": "pqtmEwe|y[GhCCRAh@GrAAV?R@JDJHH~BnA\\PPJH@HFp@JH?F@rBFlAAfAL???EnADN@FF^DnCNR?|@HjCD",
+          "stops": [
+            {
+              "bearing": 224,
+              "code": "2000450",
+              "dropOffOnly": false,
+              "lat": -33.86153,
+              "lng": 151.21005,
+              "name": "Circular Quay Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 0
+            },
+            {
+              "bearing": 185,
+              "code": "2000453",
+              "dropOffOnly": false,
+              "lat": -33.86414,
+              "lng": 151.20746,
+              "name": "Bridge Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 175,
+              "relativeDeparture": 180
+            },
+            {
+              "code": "2000454",
+              "dropOffOnly": false,
+              "lat": -33.86666,
+              "lng": 151.20723,
+              "name": "Wynyard Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 235,
+              "relativeDeparture": 240
+            }
+          ],
+          "travelled": true
+        },
+        {
+          "encodedWaypoints": "rqumEct{y[AD`BHrId@h@?N@zBAhE?bDK???Fj@?h@CdCAJCv@?JBf@?`DX???A`@DF@N?^FXBnBb@JDx@RF@HDnJvBx@L`@FJDtBX??CGL@RFlAJh@LHDl@JJFL@JBNBFDhAVdCj@VBNIFEHK^kA??BBd@aARi@Ve@NUNYPa@DMXm@P[Ri@P_@\\u@j@qADGJKFE~@OX?JDF@NLf@^HDXP\\\\",
+          "stops": [
+            {
+              "bearing": 183,
+              "code": "2000456",
+              "dropOffOnly": false,
+              "lat": -33.87158,
+              "lng": 151.20702,
+              "name": "QVB Light Rail",
+              "pickUpOnly": false,
+              "relativeDeparture": 360
+            },
+            {
+              "bearing": 196,
+              "code": "2000458",
+              "dropOffOnly": false,
+              "lat": -33.87408,
+              "lng": 151.20687,
+              "name": "Town Hall Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 460,
+              "relativeDeparture": 480
+            },
+            {
+              "bearing": 183,
+              "code": "2000443",
+              "dropOffOnly": false,
+              "lat": -33.87861,
+              "lng": 151.20557,
+              "name": "Chinatown Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 640,
+              "relativeDeparture": 660
+            },
+            {
+              "bearing": 140,
+              "code": "2000445",
+              "dropOffOnly": false,
+              "lat": -33.88144,
+              "lng": 151.20537,
+              "name": "Haymarket Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 835,
+              "relativeDeparture": 840
+            },
+            {
+              "code": "2000447",
+              "dropOffOnly": false,
+              "lat": -33.88423,
+              "lng": 151.20766,
+              "name": "Central Chalmers Street Light Rail",
+              "pickUpOnly": false,
+              "relativeArrival": 920,
+              "relativeDeparture": 960
+            }
+          ],
+          "travelled": false
+        }
+      ],
+      "sources": [
+        {
+          "provider": "Sydney Light Rail"
+        }
+      ],
+      "stopCode": "2000450",
+      "to": {
+        "address": "Wynyard Light Rail",
+        "class": "StopLocation",
+        "code": "2000454",
+        "id": "pt_pub|AU_NSW_Sydney|2000454",
+        "lat": -33.86666,
+        "lng": 151.20723,
+        "modeInfo": {
+          "alt": "tram",
+          "color": {
+            "blue": 49,
+            "green": 17,
+            "red": 220
+          },
+          "identifier": "pt_pub_tram",
+          "localIcon": "tram"
+        },
+        "name": "Wynyard Light Rail",
+        "popularity": 1050,
+        "region": "AU_NSW_Sydney",
+        "services": "L2, L3",
+        "stopCode": "2000454",
+        "stopType": "tram",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 208,
+      "type": "scheduled",
+      "visibility": "in summary"
+    }
+  ]
+}

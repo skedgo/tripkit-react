@@ -50,19 +50,53 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
     onShowOptions?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
+    cardPresentation?: CardPresentation;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
+    /**
+     * @globaldefault
+     */
     values: Trip[]; // SOT of trips is outside, so assume trips come sorted and picking sorting criteria is handled outside.
+    /**
+     * @globaldefault
+     */
     value?: Trip;
+    /**
+     * @globaldefault
+     */
     onChange?: (value: Trip) => void;
+    /**
+     * @globaldefault
+     */
     waiting?: boolean; // TODO: allow values to be undefined so no need for waiting prop.
+    /**
+     * @globaldefault
+     */
     routingError?: TKError;
+    /**
+     * @globaldefault
+     */
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
+    /**
+     * @globaldefault
+     */
     query: RoutingQuery;
+    /**
+     * @globaldefault
+     */
     sort: TripSort;
+    /**
+     * @globaldefault
+     */
     onSortChange: (sort: TripSort) => void;
+    /**
+     * @globaldefault
+     */
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
+    /**
+     * @globaldefault
+     */
     region?: Region;
 }
 
@@ -253,7 +287,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         return (
             <TKUICard
                 title={this.props.landscape && !error ? t("Routes") : undefined}
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={this.props.cardPresentation || CardPresentation.SLIDE_UP}
                 renderSubHeader={!error ? renderSubHeader : undefined}
                 slideUpOptions={this.props.slideUpOptions}
                 // Flex grow on body seem not take effect on Safari.
@@ -455,14 +489,24 @@ const merger: (clientProps: IClientProps, consumedProps: IConsumedProps) =>
         } else {
             onChangeToPass = clientProps.onChange ? clientProps.onChange : consumedProps.onChange;
         }
-        return {...clientProps, ...consumedProps, onChange: onChangeToPass} as IProps;
+        return {...consumedProps, ...clientProps, onChange: onChangeToPass} as IProps;
     };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+interface IClientConsumed extends IClientProps, Partial<IConsumedProps> {}
+
+const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
                 children!(merger(inputProps, consumedProps))}
         </Consumer>;
+
+/**
+ * Show routing results to a specified location from the user's current location, or between specified locations
+ * - High-level comparison of trips, showing durations, cost, carbon emissions, and calories burnt
+ * - Real-time information, including departure times, traffic, service disruptions, pricing quotes, ETAs
+ * - Let users select what modes should be included
+ * - Let users set the time to depart or the time to arrive
+ */
 
 export default connect((config: TKUIConfig) => config.TKUIRoutingResultsView, config, Mapper);
