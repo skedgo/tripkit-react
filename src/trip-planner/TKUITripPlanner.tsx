@@ -21,7 +21,6 @@ import TKUIProfileView from "../options/TKUIProfileView";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
-import TKShareHelper from "../share/TKShareHelper";
 import TKUILocationSearch from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
@@ -600,5 +599,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;
 
-export default connect(
-    (config: TKUIConfig) => config.TKUITripPlanner, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUITripPlanner, config, Mapper);

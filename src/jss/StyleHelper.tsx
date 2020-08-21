@@ -29,12 +29,7 @@ export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
 export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
-    /**
-     * TODO: Remove since it's not used.
-     *
-     * @ignore
-     */
-    styles?: TKUIStyles<ST, CP>,
+    styles?: TKUICustomStyles<ST, CP>,
     randomizeClassNames?: boolean
 }
 
@@ -48,7 +43,7 @@ export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     theme: TKUITheme;
 }
 
-export function mergeStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
+export function mergeCustomStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
     return (theme: TKUITheme) => {
         const themedStyle1: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(style1) ?
             (style1 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
@@ -80,13 +75,43 @@ export function mergeStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKU
     }
 }
 
+export function overrideStyles<ST,PR>(style: TKUIStyles<ST, PR>, styleOverride: TKUICustomStyles<ST, PR>): StyleCreator<keyof ST, TKUITheme, PR> {
+    return (theme: TKUITheme) => {
+        const themedStyle: Styles<keyof ST, PR> = Util.isFunction(style) ?
+            (style as StyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            style as Styles<keyof ST, PR>;
+        const themedStyleOverride: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(styleOverride) ?
+            (styleOverride as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            styleOverride as Partial<CustomStyles<keyof ST, PR>>;
+        const overrideStyles =
+            Object.keys(themedStyleOverride)
+                .reduce((overrideStylesMerge: Partial<Styles<keyof ST, PR>>, className: string) => {
+                    const cssProps: CSSProperties<PR> = themedStyle[className];
+                    const cssPropsOverride: TKUICustomCSSProperties<PR> = themedStyleOverride[className];
+                    const cssPropsOverridden: CSSProperties<PR> = Util.isFunction(cssPropsOverride) ?
+                        (cssPropsOverride as CSSPropertiesCreator<PR>)(cssProps) :
+                        cssPropsOverride as CSSProperties<PR>;
+                    return {
+                        ...overrideStylesMerge,
+                        [className]: cssPropsOverridden
+                    }
+                }, {});
+        return {...themedStyle, ...overrideStyles};
+    }
+}
+
 export function withStyleInjection<
     STYLE,
     IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>,
     ExtS extends string,
-    P extends Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>
-        & {defaultStyles: TKUIStyles<STYLE, IMPL_PROPS>, configStyles?: TKUICustomStyles<STYLE, IMPL_PROPS>, randomizeClassNames?: boolean, classNamePrefix?: string}>
-(Consumer: React.ComponentType<IMPL_PROPS>, classPrefix?: string) { // TODO: remove classPrefix and make classNamePrefix required
+    P extends Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>> & {
+        defaultStyles: TKUIStyles<STYLE, IMPL_PROPS>,
+        propStyles?: TKUICustomStyles<STYLE, IMPL_PROPS>,
+        configStyles?: TKUICustomStyles<STYLE, IMPL_PROPS>,
+        randomizeClassNames?: boolean,
+        classNamePrefix?: string,
+        verboseClassNames?: boolean}>
+(Consumer: React.ComponentType<IMPL_PROPS>) { // TODO: make classNamePrefix required
 
     return class WithStyleProp extends React.Component<P, {}> {
 
@@ -97,27 +122,8 @@ export function withStyleInjection<
 
         constructor(props: P) {
             super(props);
-            this.stylesToInject = (theme: TKUITheme) => {
-                const defaultStyles = (Util.isFunction(this.props.defaultStyles) ?
-                    (this.props.defaultStyles as StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>)(theme) :
-                    this.props.defaultStyles as Styles<keyof STYLE, IMPL_PROPS>);
-                const customStyles: Partial<CustomStyles<keyof STYLE, IMPL_PROPS>> = (Util.isFunction(this.props.configStyles) ?
-                    (this.props.configStyles as TKUICustomStyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>)(theme) :
-                    this.props.configStyles as Partial<Styles<keyof STYLE, IMPL_PROPS>>);
-                const overrideStyles = customStyles ?
-                    Object.keys(customStyles)
-                        .reduce((overrideStyles: Partial<Styles<keyof STYLE, IMPL_PROPS>>, className: string) => {
-                            const customStyle: TKUICustomCSSProperties<IMPL_PROPS> = customStyles[className];
-                            const customJssStyle: CSSProperties<IMPL_PROPS> = Util.isFunction(customStyle) ?
-                                (customStyle as CSSPropertiesCreator<IMPL_PROPS>)(defaultStyles[className]) :
-                                customStyle as CSSProperties<IMPL_PROPS>;
-                            return {
-                                ...overrideStyles,
-                                [className]: customJssStyle
-                            }
-                        }, {}) : {};
-                return {...defaultStyles, ...overrideStyles};
-            };
+            const merge1 = overrideStyles(this.props.defaultStyles, this.props.propStyles ? this.props.propStyles : {});
+            this.stylesToInject = this.props.configStyles ? overrideStyles(merge1, this.props.configStyles) : merge1;
             this.onRefreshStyles = this.onRefreshStyles.bind(this);
             this.onRefreshStyles();
         }
@@ -132,10 +138,14 @@ export function withStyleInjection<
         public onRefreshStyles(forceUpdate: boolean = false) {
             const props = this.props;
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);
-            this.generateClassName = generateClassNameFactory(classPrefix ? classPrefix : props.classNamePrefix!);
+            const prefix = props.classNamePrefix!;
+            this.generateClassName = generateClassNameFactory(prefix);
             this.WithTheme = withTheme(({theme, ...props}) =>
-                <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
-                    generateClassNameSeed : this.generateClassName}>
+                <JssProvider generateClassName={this.props.randomizeClassNames === false ? this.generateClassName :
+                    this.props.verboseClassNames === true ?
+                    (rule: any, sheet: any) => {
+                        return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
+                    } : generateClassNameSeed}>
                     <this.StyledComponent {...props}
                                           injectedStyles={this.stylesToInject(theme as TKUITheme)}
                                           refreshStyles={() => this.onRefreshStyles(true)}
@@ -176,7 +186,6 @@ function withStyleProp<
 
         public render(): React.ReactNode {
             const props = this.props;
-            // const {...props} = this.props as P;
             return <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
                 generateClassNameSeed : this.generateClassName}>
                 <this.StyledComponent {...props}/>

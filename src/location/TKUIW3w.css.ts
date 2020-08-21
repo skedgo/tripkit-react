@@ -26,6 +26,3 @@ export const tKUIW3wDefaultStyle: TKUIStyles<TKUIW3wStyle, TKUIW3wProps> =
             ...theme.textColorGray
         }
     });
-
-export const TKUIW3wStyleForDoc = (props: TKUIW3wStyle) => null;
-TKUIW3wStyleForDoc.displayName = 'TKUIW3w';

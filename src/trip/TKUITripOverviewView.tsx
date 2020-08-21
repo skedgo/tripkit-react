@@ -34,6 +34,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     slideUpOptions?: TKUISlideUpOptions;
     cardPresentation?: CardPresentation;
     onRequestAlternativeRoutes?: (segment: Segment) => void;
+    actions?: (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[];
+    segmentActions?: (segment: Segment) => JSX.Element[];
 }
 
 export interface IStyle {
@@ -41,48 +43,16 @@ export interface IStyle {
     actionsPanel: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
-    actions?: (trip: Trip) => JSX.Element[];
-    segmentActions?: (segment: Segment) => JSX.Element[];
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUITripOverviewViewProps = IProps;
 export type TKUITripOverviewViewStyle = IStyle;
 
-const config: TKComponentDefaultConfig<IProps, IStyle> = {
+export const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripOverviewView {...props}/>,
     styles: tKUITripOverviewViewDefaultStyle,
     classNamePrefix: "TKUITripOverviewView",
     props: (props: IProps) => ({
-        actions: (trip: Trip) => [
-            // <TKI18nContext.Consumer key={"actionGo"}>
-            //    {(i18nProps: TKI18nContextProps) =>
-            //        <TKUIButton text={i18nProps.t("Go")}
-            //                    icon={<IconDirections/>}
-            //                    type={TKUIButtonType.PRIMARY_VERTICAL}
-            //                    style={{minWidth: '90px'}}
-            //        />
-            //    }
-            //</TKI18nContext.Consumer>,
-            <RoutingResultsContext.Consumer key={"actionFavourite"}>
-                {(routingResultsContext: IRoutingResultsContext) =>
-                    routingResultsContext.query.from && routingResultsContext.query.to &&
-                    <TKUIFavouriteAction
-                        favourite={FavouriteTrip.create(routingResultsContext.query.from, routingResultsContext.query.to)}
-                        vertical={true}
-                    />}
-            </RoutingResultsContext.Consumer>,
-            <TKI18nContext.Consumer key={"actionShare"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <TKUIShareAction
-                        title={i18nProps.t("Share.Trip")}
-                        message={""}
-                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
-                        vertical={true}
-                    />
-                }
-            </TKI18nContext.Consumer>
-        ],
         segmentActions: (segment: Segment) => segment.arrival ? [
             <TKUIRendersCard key={"actionShareArrival"}>
                 {(renderCard: (props: TKUICardClientProps, id: any) => void) =>
@@ -130,6 +100,38 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUITripOverviewView extends React.Component<IProps, {}> {
 
+    private getDefaultActions(trip: Trip) {
+        return [
+            // <TKI18nContext.Consumer key={"actionGo"}>
+            //    {(i18nProps: TKI18nContextProps) =>
+            //        <TKUIButton text={i18nProps.t("Go")}
+            //                    icon={<IconDirections/>}
+            //                    type={TKUIButtonType.PRIMARY_VERTICAL}
+            //                    style={{minWidth: '90px'}}
+            //        />
+            //    }
+            //</TKI18nContext.Consumer>,
+            <RoutingResultsContext.Consumer key={"actionFavourite"}>
+                {(routingResultsContext: IRoutingResultsContext) =>
+                    routingResultsContext.query.from && routingResultsContext.query.to &&
+                    <TKUIFavouriteAction
+                        favourite={FavouriteTrip.create(routingResultsContext.query.from, routingResultsContext.query.to)}
+                        vertical={true}
+                    />}
+            </RoutingResultsContext.Consumer>,
+            <TKI18nContext.Consumer key={"actionShare"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <TKUIShareAction
+                        title={i18nProps.t("Share.Trip")}
+                        message={""}
+                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
+                        vertical={true}
+                    />
+                }
+            </TKI18nContext.Consumer>
+        ];
+    }
+
     public render(): React.ReactNode {
         const segments = this.props.value.getSegments(Visibility.IN_DETAILS)
             .filter((segment: Segment) => !segment.isStationay());
@@ -138,8 +140,10 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;
         const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? "Arrives " + arrivalTime : "Departs " + departureTime);
         const classes = this.props.classes;
-        const subHeader = this.props.actions ?
-            () => <TKUIActionsView actions={this.props.actions!(trip)} className={classes.actionsPanel}/> : undefined;
+        const defaultActions = this.getDefaultActions(trip);
+        const actions = this.props.actions ? this.props.actions(trip, defaultActions) : defaultActions;
+        const subHeader = actions ?
+            () => <TKUIActionsView actions={actions} className={classes.actionsPanel}/> : undefined;
         return (
             <TKUICard
                 title={title}
@@ -169,6 +173,10 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
         )
     }
 }
+
+/**
+ * Show details for a trip as an overview
+ */
 
 export default connect((config: TKUIConfig) => config.TKUITripOverviewView, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));

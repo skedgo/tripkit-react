@@ -96,6 +96,10 @@ interface ITKUIConfigOptional {
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
+    /**
+     * See [style props](/#tkuiw3wcss)  __COMPONENT__
+     * @public
+     */
     TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
@@ -129,6 +133,7 @@ export interface TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
     render: (props: P) => JSX.Element;
     styles: TKUIStyles<S, P>;
     randomizeClassNames?: boolean;
+    verboseClassNames?: boolean;
     classNamePrefix: string;
     props?: TKUIPropsOverride<P, S>;
 }
@@ -137,4 +142,4 @@ export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
     Partial<Subtract<TKComponentDefaultConfig<P, S>,
             {styles: TKUIStyles<S, P>}> & {styles: TKUICustomStyles<S, P>}>;
 
-type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);
+export type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);
