@@ -30,6 +30,7 @@ import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
+    actions?: (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[];
 }
 
 interface IStyle {
@@ -54,9 +55,7 @@ interface IConsumedProps {
     options: TKUserProfile
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-    actions?: (service: ServiceDeparture) => JSX.Element[];
-}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUIServiceViewProps = IProps;
 export type TKUIServiceViewStyle = IStyle;
@@ -67,17 +66,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIServiceView",
     randomizeClassNames: true,  // This needs to be true since multiple instances are rendered,
                                 // each with a different service color.
-    props: (props: IProps) => ({
-        actions: (service: ServiceDeparture) => [
-            <TKUIShareAction
-                title={props.t("Share")}
-                message={""}
-                link={TKShareHelper.getShareService(service)}
-                vertical={true}
-                key={"actionShareService"}
-            />
-        ]
-    })
 };
 
 interface IState {
@@ -92,11 +80,24 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             realtimeOpen: false
-        }
+        };
+        this.getDefaultActions = this.getDefaultActions.bind(this);
     }
 
     private scrollRef: any;
     private scrolledIntoView = false;
+
+    private getDefaultActions(service: ServiceDeparture) {
+        return [
+            <TKUIShareAction
+                title={this.props.t("Share")}
+                message={""}
+                link={TKShareHelper.getShareService(service)}
+                vertical={true}
+                key={"actionShareService"}
+            />
+        ]
+    }
 
     public render(): React.ReactNode {
         const departure = this.props.departure;
@@ -128,9 +129,11 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 <div className={classes.alertsBrief}>
                     {t("X.alerts", {0: departure.alerts.length})}
                 </div>;
-        const actions = this.props.actions ?
+        const defaultActions = this.getDefaultActions(departure);
+        const actions = this.props.actions ? this.props.actions(departure, defaultActions) : defaultActions;
+        const actionElems = actions ?
             <TKUIActionsView
-                actions={this.props.actions!(departure)}
+                actions={actions}
                 className={classes.actionsPanel}
             /> : undefined;
         const realtimePanel = showWheelchair || occupancy || alerts ?
@@ -162,7 +165,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             detailed={true}
                         />
                         {realtimePanel}
-                        {actions}
+                        {actionElems}
                     </div>
                 }
                 presentation={CardPresentation.SLIDE_UP}

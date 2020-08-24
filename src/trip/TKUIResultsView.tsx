@@ -114,7 +114,7 @@ export interface IStyle {
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-    errorActions: (error: TKError) => JSX.Element[];
+    errorActions: (error: TKError, defaultAtions: JSX.Element[]) => JSX.Element[];
 }
 
 export type TKUIResultsViewProps = IProps;
@@ -124,16 +124,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",
-    randomizeClassNames: false,
-    props: (props: IProps) => ({
-        errorActions: (error: TKError) => [
-            <TKUIButton text={props.t("Plan.a.new.trip")}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={() => props.onQueryUpdate({from: null, to: null})}
-                        key={"Plan.a.new.trip"}
-            />
-        ]
-    })
+    randomizeClassNames: false
 };
 
 interface IState {
@@ -153,7 +144,18 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             tripToBadge: new Map<Trip, Badges>(),
             showTransportSwitches: false
         };
+        this.getDefaultErrorActions = this.getDefaultErrorActions.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+    }
+
+    private getDefaultErrorActions(error: TKError) {
+        return [
+            <TKUIButton text={this.props.t("Plan.a.new.trip")}
+                        type={TKUIButtonType.SECONDARY}
+                        onClick={() => this.props.onQueryUpdate({from: null, to: null})}
+                        key={"Plan.a.new.trip"}
+            />
+        ]
     }
 
     private getSortOptions(t: TranslationFunction): any[] {
@@ -270,16 +272,20 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             )
         } : undefined;
         let error: JSX.Element | undefined = undefined;
-        if (!this.props.waiting && this.props.routingError) {
-            const errorMessage = TKErrorHelper.hasErrorCode(this.props.routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
+        const routingError = this.props.routingError;
+        if (!this.props.waiting && routingError) {
+            const errorMessage = TKErrorHelper.hasErrorCode(routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
                     {0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t)}) + "." :
-                this.props.routingError.usererror ? this.props.routingError.message : t("Something.went.wrong.");
+                routingError.usererror ? routingError.message : t("Something.went.wrong.");
+            const defaultErrorActions = this.getDefaultErrorActions(routingError);
+            const errorActions = this.props.errorActions ? this.props.errorActions(routingError, defaultErrorActions) :
+                defaultErrorActions;
             error =
                 <TKUIErrorView
-                    error={this.props.routingError}
+                    error={routingError}
                     message={errorMessage}
-                    actions={this.props.errorActions}
+                    actions={errorActions}
                 />
 
         }
@@ -294,7 +300,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                 bodyStyle={DeviceUtil.browser === BROWSER.SAFARI ? {height: '100%'} : undefined}
             >
                 <div className={classNames(this.props.className, classes.main)}>
-                    {!this.props.routingError && this.props.values.length > 0 &&
+                    {!routingError && this.props.values.length > 0 &&
                     // length > 0 also prevents showing alert before routingError happens, and then so to disappear.
                     this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
                     // TODO: Define a TKUIStyleOverride that encapsulates all the following, i.e.,
@@ -382,7 +388,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         />
                     )}
                     {error}
-                    {!this.props.waiting && !this.props.routingError && this.props.values.length === 0
+                    {!this.props.waiting && !routingError && this.props.values.length === 0
                     && <div className={classes.noResults}>{t("No.routes.found.")}</div>}
                     {this.props.waiting ?
                         <IconSpin className={classes.iconLoading} focusable="false"/> : null}

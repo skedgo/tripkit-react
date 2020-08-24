@@ -22,6 +22,9 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: () => void;
     onShowFavourites?: () => void;
     onShowSettings?: () => void;
+    logo?: () => JSX.Element;
+    menuItems?: (defaultMenuItems: JSX.Element[]) => JSX.Element[];
+    nativeAppLinks?: () => JSX.Element[];
 }
 
 export interface IStyle {
@@ -38,11 +41,7 @@ export interface IStyle {
     nativeAppLinks: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
-    logo?: () => JSX.Element;
-    menuItems?: () => JSX.Element[];
-    nativeAppLinks?: () => JSX.Element[];
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUISidebarProps = IProps;
 export type TKUISidebarStyle = IStyle;
@@ -52,54 +51,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     styles: tKUISidebarDefaultStyle,
     classNamePrefix: "TKUISidebar",
     props: (props: IProps) => ({
-        logo: () => <TripgoLogo style={{height: '24px', width: '120px'}}/>,
-        menuItems: () => {
-            const buttonStylesOverride = (theme: TKUITheme) => ({
-                main: (defaultStyle) => ({
-                    ...defaultStyle,
-                    padding: '8px 16px!important',
-                    '&:hover': {
-                        background: black(5, theme.isDark)
-                    },
-                    ...theme.textWeightRegular,
-                    color: black(1, theme.isDark) + '!important',
-                    border: 'none!important',
-                    width: '100%!important',
-                    ...genStyles.justifyStart
-                })
-            });
-            return [
-                <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={1}>
-                    <TKUIDirectionsAction
-                        text={props.t("Get.directions")}
-                        buttonType={TKUIButtonType.SECONDARY}
-                        onClick={props.onRequestClose}
-                    />
-                </TKStyleOverride>,
-                <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={2}>
-                    <TKUIButton
-                        text={props.t("Favourites")}
-                        icon={<IconFavourite/>}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={() => {
-                            props.onShowFavourites && props.onShowFavourites();
-                            props.onRequestClose();
-                        }}
-                    />
-                </TKStyleOverride>,
-                <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={3}>
-                    <TKUIButton
-                        text={props.t("Settings")}
-                        icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={() => {
-                            props.onShowSettings && props.onShowSettings();
-                            props.onRequestClose();
-                        }}
-                    />
-                </TKStyleOverride>
-            ];
-        },
         nativeAppLinks: () => {
             const storeBtnStyle = {
                 height: '48px',
@@ -119,9 +70,78 @@ class TKUISidebar extends React.Component<IProps, {}> {
         open: true
     };
 
+    constructor(props: IProps) {
+        super(props);
+        this.getDefaultMenuItems = this.getDefaultMenuItems.bind(this);
+    }
+
+    private getDefaultMenuItems() {
+        const buttonStylesOverride = (theme: TKUITheme) => ({
+            main: (defaultStyle) => ({
+                ...defaultStyle,
+                padding: '8px 16px!important',
+                '&:hover': {
+                    background: black(5, theme.isDark)
+                },
+                ...theme.textWeightRegular,
+                color: black(1, theme.isDark) + '!important',
+                border: 'none!important',
+                width: '100%!important',
+                ...genStyles.justifyStart
+            })
+        });
+        const props = this.props;
+        const t = props.t;
+        return [
+            <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={1}>
+                <TKUIDirectionsAction
+                    text={t("Get.directions")}
+                    buttonType={TKUIButtonType.SECONDARY}
+                    onClick={props.onRequestClose}
+                />
+            </TKStyleOverride>,
+            <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={2}>
+                <TKUIButton
+                    text={t("Favourites")}
+                    icon={<IconFavourite/>}
+                    type={TKUIButtonType.SECONDARY}
+                    onClick={() => {
+                        props.onShowFavourites && props.onShowFavourites();
+                        props.onRequestClose();
+                    }}
+                />
+            </TKStyleOverride>,
+            <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={3}>
+                <TKUIButton
+                    text={t("Settings")}
+                    icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
+                    type={TKUIButtonType.SECONDARY}
+                    onClick={() => {
+                        props.onShowSettings && props.onShowSettings();
+                        props.onRequestClose();
+                    }}
+                />
+            </TKStyleOverride>
+        ];
+    }
+
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
+        const defaultMenuItems = this.getDefaultMenuItems();
+        const menuItems = this.props.menuItems ? this.props.menuItems(defaultMenuItems) : defaultMenuItems;
+        const logo = this.props.logo ? this.props.logo() : <TripgoLogo style={{height: '24px', width: '120px'}}/>
+        const nativeAppLinksFc = this.props.nativeAppLinks ? this.props.nativeAppLinks :
+            () => {
+                const storeBtnStyle = {
+                    height: '48px',
+                    width: '144px'
+                };
+                return [
+                    <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}/>,
+                    <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}/>
+                ]
+            };
         return (
             <Drawer
                 open={this.props.open}
@@ -132,14 +152,14 @@ class TKUISidebar extends React.Component<IProps, {}> {
             >
                 <div className={classNames(classes.main, genClassNames.root)}>
                     <div className={classes.header}>
-                        {this.props.logo && this.props.logo()}
+                        {logo}
                         <button className={classes.closeBtn} onClick={this.props.onRequestClose}>
                             <IconCross/>
                         </button>
                     </div>
                     <div className={classes.body}>
                         <div className={classes.menuItems}>
-                            {this.props.menuItems && this.props.menuItems()}
+                            {menuItems}
                         </div>
                         {this.props.nativeAppLinks &&
                             <div className={classes.nativeAppLinksPanel}>
@@ -147,7 +167,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                                     {t("Get.mobile.app") + ":"}
                                 </div>
                                 <div className={classes.nativeAppLinks}>
-                                    {this.props.nativeAppLinks()}
+                                    {nativeAppLinksFc()}
                                 </div>
                             </div>
                         }

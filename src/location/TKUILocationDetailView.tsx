@@ -18,7 +18,6 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
 import TKUIW3w from "./TKUIW3w";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import RealTimeAlert from "../model/service/RealTimeAlert";
@@ -28,6 +27,7 @@ import LocationsData from "../data/LocationsData";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     slideUpOptions?: TKUISlideUpOptions;
+    actions?: (location: Location, defaultActions: (JSX.Element | null)[]) => (JSX.Element | null)[];
 }
 
 export interface IStyle {
@@ -36,9 +36,7 @@ export interface IStyle {
     alertsContainer: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
-    actions?: (location: Location) => (JSX.Element | undefined)[];
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUILocationDetailViewProps = IProps;
 export type TKUILocationDetailViewStyle = IStyle;
@@ -46,38 +44,7 @@ export type TKUILocationDetailViewStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUILocationDetailView {...props}/>,
     styles: tKUILocationDetailViewDefaultStyle,
-    classNamePrefix: "TKUILocationDetailView",
-    props: (props: IProps) => ({
-        actions: (location: Location) => [
-            location instanceof StopLocation ?
-                <TKI18nContext.Consumer key={1}>
-                    {(i18nProps: TKI18nContextProps) =>
-                        <ServiceResultsContext.Consumer>
-                            {(context: IServiceResultsContext) =>
-                                <TKUIButton
-                                    type={TKUIButtonType.PRIMARY_VERTICAL}
-                                    icon={<IconClock/>}
-                                    text={i18nProps.t("Timetable")}
-                                    onClick={() =>
-                                        context.onStopChange(location)
-                                    }
-                                />
-                            }
-                        </ServiceResultsContext.Consumer>
-                    }
-                </TKI18nContext.Consumer>
-                : undefined,
-            <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
-            <TKUIFavouriteAction key={3} favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)} vertical={true}/>,
-            <TKUIShareAction
-                title={props.t("Share")}
-                link={TKShareHelper.getShareLocation(location)}
-                vertical={true}
-                message={""}
-                key={4}
-            />
-        ]
-    })
+    classNamePrefix: "TKUILocationDetailView"
 };
 
 interface IState {
@@ -88,7 +55,39 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {}
+        this.state = {};
+        this.getDefaultActions = this.getDefaultActions.bind(this);
+    }
+
+    private getDefaultActions(location: Location) {
+        const t = this.props.t;
+        return [
+            location instanceof StopLocation ?
+                <ServiceResultsContext.Consumer>
+                    {(context: IServiceResultsContext) =>
+                        <TKUIButton
+                            type={TKUIButtonType.PRIMARY_VERTICAL}
+                            icon={<IconClock/>}
+                            text={t("Timetable")}
+                            onClick={() =>
+                                context.onStopChange(location)
+                            }
+                        />
+                    }
+                </ServiceResultsContext.Consumer>
+                : null,
+            <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
+            <TKUIFavouriteAction key={3}
+                                 favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
+                                 vertical={true}/>,
+            <TKUIShareAction
+                title={t("Share")}
+                link={TKShareHelper.getShareLocation(location)}
+                vertical={true}
+                message={""}
+                key={4}
+            />
+        ]
     }
 
     public render(): React.ReactNode {
@@ -96,15 +95,11 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         const title = LocationUtil.getMainText(location, this.props.t);
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;
-        const subHeader = this.props.actions ?
-            () => <TKUIActionsView actions={this.props.actions!(location)} className={classes.actionsPanel}/> : undefined;
+        const defaultActions = this.getDefaultActions(location);
+        const actions = this.props.actions ? this.props.actions(location, defaultActions) : defaultActions;
+        const subHeader = actions ?
+            () => <TKUIActionsView actions={actions} className={classes.actionsPanel}/> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        // TODO: ideally it's better to define this here, instead on TKUITripPlanner, but calc doesn't work.
-        // if (!slideUpOptions.modalDown) {
-        //     Object.assign(slideUpOptions, {
-        //         modalDown: {top: 'calc(100% - 165px)', unit: ''},
-        //     });
-        // }
         const locationInfo = this.state.locationInfo;
         return (
             <TKUICard

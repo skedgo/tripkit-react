@@ -74,6 +74,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
     onLocAction?: (locType: MapLocationType, loc: Location) => void;
+    tileLayerProps?: TileLayerProps;
+    mapboxGlLayerProps?: MapboxGLLayerProps;
 }
 
 export interface IStyle {
@@ -118,10 +120,7 @@ interface MapboxGLLayerProps {
     attribution: string;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-    tileLayerProps?: TileLayerProps;
-    mapboxGlLayerProps?: MapboxGLLayerProps;
-}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
