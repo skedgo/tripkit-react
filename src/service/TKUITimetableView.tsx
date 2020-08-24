@@ -39,12 +39,11 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     onDirectionsClicked?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
-}
-
-export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {
-    actions?: (stop: StopLocation) => JSX.Element[];
+    actions?: (stop: StopLocation, defaultActions: JSX.Element[]) => JSX.Element[];
     errorActions?: (error: TKError) => JSX.Element[];
 }
+
+export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -68,24 +67,7 @@ export type TKUITimetableViewStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITimetableView {...props}/>,
     styles: tKUITimetableDefaultStyle,
-    classNamePrefix: "TKUITimetableView",
-    props: (props: IProps) => ({
-        actions: (stop: StopLocation) => [
-            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
-            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
-            <TKI18nContext.Consumer key={"actionShare"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <TKUIShareAction
-                        title={props.t("Share")}
-                        message={""}
-                        link={() => RegionsData.instance.requireRegions()
-                            .then(() => TKShareHelper.getShareTimetable(stop))}
-                        vertical={true}
-                    />
-                }
-            </TKI18nContext.Consumer>
-        ]
-    })
+    classNamePrefix: "TKUITimetableView"
 };
 
 class TKUITimetableView extends React.Component<IProps, {}> {
@@ -94,8 +76,27 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
+        this.getDefaultActions = this.getDefaultActions.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.onFilterChange = this.onFilterChange.bind(this);
+    }
+
+    private getDefaultActions(stop: StopLocation) {
+        return [
+            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
+            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
+            <TKI18nContext.Consumer key={"actionShare"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <TKUIShareAction
+                        title={this.props.t("Share")}
+                        message={""}
+                        link={() => RegionsData.instance.requireRegions()
+                            .then(() => TKShareHelper.getShareTimetable(stop))}
+                        vertical={true}
+                    />
+                }
+            </TKI18nContext.Consumer>
+        ];
     }
 
     private onScroll(e: any) {
@@ -121,9 +122,11 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             : undefined;
         const classes = this.props.classes;
         const t = this.props.t;
-        const actions = (stop && this.props.actions) ?
+        const defaultActions = this.getDefaultActions(stop);
+        const actions = this.props.actions ? this.props.actions(stop, defaultActions) : defaultActions;
+        const actionElems = actions ?
             <TKUIActionsView
-                actions={this.props.actions!(stop)}
+                actions={actions}
                 className={classes.actionsPanel}
             /> : undefined;
         const serviceListSamples = this.props.departures
@@ -146,7 +149,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 <TKUIErrorView
                     error={this.props.serviceError}
                     message={errorMessage}
-                    actions={this.props.errorActions}
+                    actions={this.props.errorActions && this.props.errorActions(this.props.serviceError)}
                 />
         }
         return (
@@ -170,7 +173,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     </div>
                             })}
                         </div>
-                        {actions}
+                        {actionElems}
                     </div>
                 }
                 presentation={CardPresentation.SLIDE_UP}

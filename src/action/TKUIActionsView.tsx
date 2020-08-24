@@ -1,7 +1,7 @@
 import * as React from "react";
 
 interface IProps {
-    actions: (JSX.Element | undefined)[];
+    actions: (JSX.Element | null)[];
     className?: string;
 }
 

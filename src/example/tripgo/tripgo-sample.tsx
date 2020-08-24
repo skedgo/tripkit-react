@@ -82,8 +82,8 @@ const config: TKUIConfig = {
     },
     TKUIRoutingResultsView: {
         props: (props: TKUIResultsViewProps) => ({
-            errorActions: (error: TKError) => {
-                let errorActions = props.errorActions(error);
+            errorActions: (error: TKError, defaultActions: JSX.Element[]) => {
+                let errorActions = defaultActions;
                 const query = props.query;
                 if (TKErrorHelper.hasErrorCode(error, ERROR_ROUTING_NOT_SUPPORTED) ||
                     TKErrorHelper.hasErrorCode(error, ERROR_DESTINATION_OUTSIDE_COVERAGE)) {

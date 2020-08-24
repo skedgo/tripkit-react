@@ -9,7 +9,7 @@ import {ReactComponent as ImgConstruction} from "../images/img-construction.svg"
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     error: TKError;
     message?: string;
-    actions?: (error: TKError) => JSX.Element[];
+    actions?: JSX.Element[];
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -35,12 +35,12 @@ class TKUIErrorView extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const message = this.props.message || "Something went wrong.";
-        const actions = this.props.actions ? this.props.actions(this.props.error) : [];
+        const actions = this.props.actions;
         return (
             <div className={classes.main}>
                 <ImgConstruction className={classes.imgConstruction}/>
                 <div className={classes.message}>{message}</div>
-                {actions.length > 0 &&
+                {actions && actions.length > 0 &&
                 <div className={classes.errorActions}>
                     {actions}
                 </div>}
