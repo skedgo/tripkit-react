@@ -20,6 +20,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
         },
         fromToPanel: {
             marginBottom: (props: TKUIRoutingQueryInputProps) => props.landscape ? '20px' : '0',
+            marginTop: (props: TKUIRoutingQueryInputProps) => props.landscape && !props.title ? '10px' : '0',
             ...genStyles.flex,
             ...genStyles.alignCenter
         },

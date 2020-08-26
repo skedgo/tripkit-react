@@ -5,8 +5,12 @@ module.exports = {
     defaultExample: 'src/doc/ComponentDoc.md',
     sections: [
         {
+            name: 'Main SDK component: TKRoot',
+            content: 'docs/MainSDKComponent_TKRoot.md'
+        },
+        {
             name: 'Components API',
-            content: 'doc/ComponentsAPI.md',
+            content: 'docs/ComponentsAPI.md',
             sectionDepth: 2,
             usageMode: 'expand',
             components: [
@@ -23,9 +27,9 @@ module.exports = {
                 // 'src/alerts/**/*.tsx',
                 'src/buttons/**/*.tsx',
                 // 'src/card/**/*.tsx',
-                // 'src/config/TKRoot.tsx',
+                'src/config/TKRoot.tsx',
                 'src/config/TKStateConsumer.tsx',
-                // 'src/config/TKUIConfig.tsx',
+                'src/config/TKUIConfig.tsx',
                 // 'src/favourite/**/*.tsx',
                 // 'src/feedback/**/*.tsx',
                 // 'src/geocode/**/*.tsx',

@@ -53,12 +53,13 @@ import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    userLocationPromise?: Promise<LatLng>;
+}
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {
     userProfile: TKUserProfile;
     onUserProfileChange: (update: TKUserProfile) => void;
-    userLocationPromise?: Promise<LatLng>;
 }
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -70,6 +71,7 @@ export interface IStyle {
     reportBtn: CSSProps<IProps>;
     reportBtnLandscape: CSSProps<IProps>;
     reportBtnPortrait: CSSProps<IProps>;
+    carouselPage: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -362,18 +364,21 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {(registerHandle: (index: number, handle: any) => void) =>
                             sortedTrips
                                 .map((trip: Trip, i: number) =>
-                                    <TKUITripOverviewView
-                                        value={trip}
-                                        onRequestClose={() => this.props.onTripDetailsView(false)}
-                                        key={i + "-" + trip.getKey()}
-                                        handleRef={(handleRef: any) => registerHandle(i, handleRef)}
-                                        cardPresentation={CardPresentation.NONE}
-                                        slideUpOptions={{
-                                            draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
-                                            showHandle: true
-                                        }}
-                                        onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
-                                    />)}
+                                    <div className={classes.carouselPage}>
+                                        <TKUITripOverviewView
+                                            value={trip}
+                                            onRequestClose={() => this.props.onTripDetailsView(false)}
+                                            key={i + "-" + trip.getKey()}
+                                            handleRef={(handleRef: any) => registerHandle(i, handleRef)}
+                                            cardPresentation={CardPresentation.NONE}
+                                            slideUpOptions={{
+                                                draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
+                                                showHandle: true
+                                            }}
+                                            onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
+                                        />
+                                    </div>
+                                )}
                     </TKUICardCarousel>;
             }
         }
@@ -576,8 +581,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                     ...serviceContext,
                                                     ...viewportProps,
                                                     userProfile: optionsContext.userProfile,
-                                                    onUserProfileChange: optionsContext.onUserProfileChange,
-                                                    userLocationPromise: config.userLocationPromise
+                                                    onUserProfileChange: optionsContext.onUserProfileChange
                                                 })
                                             )}
                                         </ServiceResultsContext.Consumer>

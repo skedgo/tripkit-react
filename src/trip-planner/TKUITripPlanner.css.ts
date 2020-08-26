@@ -64,5 +64,11 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             bottom: undefined,
             top: (props: TKUITKUITripPlannerProps) => props.directionsView ? '128px' : '113px',
             zIndex: (props: TKUITKUITripPlannerProps) => '1000'
+        },
+        carouselPage: {
+            height: '100%',
+            '&>*': {
+                height: '100%'
+            }
         }
     });

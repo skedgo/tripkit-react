@@ -16,6 +16,7 @@ import {TKUIReportBtnProps as TKUIReportBtnPropsForExport} from "./feedback/TKUI
 import {TKUIResultsViewProps as TKUIResultsViewPropsForExport} from "./trip/TKUIResultsView";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
+export {default as TKStateController} from "./config/TKStateController";
 export type TKUIConfig = TKUIConfigForExport;
 export {default as TKShareHelper} from "./share/TKShareHelper";
 export {default as TKUIRoutingQueryInput} from "./query/TKUIRoutingQueryInput";
@@ -53,6 +54,8 @@ export {default as TKUICard} from "./card/TKUICard";
 export {TKError} from "./error/TKError";
 export type TKUIResultsViewProps = TKUIResultsViewPropsForExport;
 export {default as TKFeatures} from "./env/Features";
+export {default as TKUIMapView} from "./map/TKUIMapView";
+export {tKRequestCurrentLocation} from "./util/GeolocationUtil";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {

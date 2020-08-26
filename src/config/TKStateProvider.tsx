@@ -21,16 +21,17 @@ class TKStateProvider extends React.Component<IProps,{}> {
     }
 
     public render(): React.ReactNode {
+        const config = this.props.config;
         return (
-            <TKUIConfigProvider config={this.props.config}>
+            <TKUIConfigProvider config={config}>
                 <OptionsProvider>
                     <OptionsContext.Consumer>
                         {(optionsContext: IOptionsContext) =>
-                            <TKI18nProvider dataPromise={this.props.config.i18nPromise}>
+                            <TKI18nProvider dataPromise={config.i18nPromise}>
                                 <TKI18nContext.Consumer>
                                     {(i18nProps: TKI18nContextProps) =>
                                         <RoutingResultsProvider
-                                            initViewport={this.props.config.initViewport}
+                                            initViewport={config.initViewport}
                                             options={optionsContext && optionsContext.userProfile}
                                             locale={i18nProps.locale}
                                         >

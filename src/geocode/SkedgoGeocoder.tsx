@@ -109,7 +109,22 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
-        // Empty
+        const endpoint = "geocode.json?"
+            + "q=" + coord.lat + "," + coord.lng
+            + "&allowGoogle=false"
+            + "&near=" + "(" + coord.lat + "," + coord.lng + ")";
+
+        TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET).then((json: any) => {
+            if (!json.choices || json.choices.length === 0) {
+                callback(null);
+                return;
+            }
+            const jsonConvert = new LocationConverter();
+            callback(jsonConvert.deserialize(json.choices[0]));
+        }).catch(reason => {
+            Util.log(endpoint + " failed. Reason: " + reason);
+            callback(null);
+        });
     }
 
 }
