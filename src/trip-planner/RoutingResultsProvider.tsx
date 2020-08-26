@@ -1,5 +1,5 @@
 import * as React from "react";
-import withRoutingResults, {TripSort} from "../api/WithRoutingResults";
+import withRoutingResults, {IWithRoutingResultsProps, TripSort} from "../api/WithRoutingResults";
 import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
@@ -78,11 +78,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onWaitingStateLoad: (waiting: boolean, error?: Error) => {}
 });
 
-class RoutingResultsProvider extends React.Component<{
-    initViewport?: {center?: LatLng, zoom?: number},
-    options: TKUserProfile,
-    testTrips?: Trip[],
-    locale?: string}, {}> {
+class RoutingResultsProvider extends React.Component<IWithRoutingResultsProps, {}> {
     private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
         props = {...props};
         return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
@@ -90,10 +86,7 @@ class RoutingResultsProvider extends React.Component<{
 
     public render(): React.ReactNode {
         return (
-            <this.ContextWithValue initViewport={this.props.initViewport}
-                                   options={this.props.options}
-                                   locale={this.props.locale}
-            />
+            <this.ContextWithValue {...this.props}/>
         );
     }
 

@@ -31,7 +31,8 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         main: {
-            height: '100%',
+            height: (props: TKUICardProps) =>
+                props.presentation === CardPresentation.SLIDE_UP || props.presentation === CardPresentation.MODAL ? '100%' : undefined,
             fontFamily: theme.fontFamily,
             ...theme.textColorDefault,
             ...theme.textSizeBody,

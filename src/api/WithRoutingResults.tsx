@@ -15,9 +15,6 @@ import LatLng from "../model/LatLng";
 import Features from "../env/Features";
 import Util from "../util/Util";
 import DateTimeUtil from "../util/DateTimeUtil";
-import TKShareHelper from "../share/TKShareHelper";
-import * as queryString from "query-string";
-import MultiGeocoder from "../geocode/MultiGeocoder";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
@@ -26,7 +23,7 @@ import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
 
-interface IWithRoutingResultsProps {
+export interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];

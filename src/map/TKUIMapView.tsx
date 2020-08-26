@@ -869,7 +869,7 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
+                children!({...consumedProps, ...inputProps})}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);

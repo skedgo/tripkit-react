@@ -8,6 +8,9 @@ import {resetStyles} from "../css/ResetStyle.css";
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
         main: {
+            position: 'relative',
+            zIndex: '0',
+            height: '100%',
             ...genStyles.flex,
             ...genStyles.grow,
             '& .leaflet-container': {

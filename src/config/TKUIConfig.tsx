@@ -56,14 +56,16 @@ import {Tracker, InitializeOptions} from 'react-ga';
 import {TrackerOptions} from "../analytics/GATracker";
 import IGeocoder from "../geocode/IGeocoder";
 import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
+import {TKState} from "./TKStateConsumer";
 
 interface ITKUIConfigRequired {
     apiKey: string;
 }
 
 interface ITKUIConfigOptional {
+    onInitState: (state: TKState) => void;
+    onUpdateState: (state: TKState, prevState: TKState) => void;
     initViewport: {center?: LatLng, zoom?: number};
-    userLocationPromise: Promise<LatLng>;
     i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>;
     theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
     isDarkDefault: boolean,

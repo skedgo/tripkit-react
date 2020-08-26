@@ -42,9 +42,6 @@ const config: TKUIConfig = {
     },
     // isDarkDefault: true,
     analytics: analyticsConfig,
-    userLocationPromise: (window as any).tKUserLocationPromise ?
-        (window as any).tKUserLocationPromise
-            .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined,
     i18nPromise: (window as any).tKI18nPromise,
     geocoding: {
         customGeocoders: [peliasGeocoder]
@@ -135,9 +132,12 @@ const config: TKUIConfig = {
     }
 };
 
+const userLocationPromise = (window as any).tKUserLocationPromise ?
+    (window as any).tKUserLocationPromise
+        .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
 
 ReactDOM.render(
     <TKRoot config={config}>
-        <TKUITripPlanner/>
+        <TKUITripPlanner userLocationPromise={userLocationPromise}/>
         <TKStateUrl/>
     </TKRoot>, document.getElementById("tripgo-sample-root"));
