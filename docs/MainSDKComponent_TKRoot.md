@@ -105,6 +105,6 @@ results, then it will also automatically display trip selection (see [TripGo tri
 initialization and update, respectively. Both functions receive the state, which includes state values and update 
 callbacks, allowing to read and write the state.
 - In our example, on state init we calculate user position and set map viewport (state value) accordingly, and also
-set behaviour mode to 'directions' (further explained [here]()). On state update we detect that the first routing 
-results (for the current query) have arrived, and set it as the selected one.
+set behaviour mode to 'directions' (further explained [here]()). On state update we detect that routing 
+results (for the current query) have arrived, and set the first as the selected one.
 

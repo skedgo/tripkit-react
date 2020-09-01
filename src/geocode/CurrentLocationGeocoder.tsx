@@ -12,8 +12,6 @@ import {TKError} from "../error/TKError";
 
 class CurrentLocationGeocoder implements IGeocoder {
 
-    public static readonly SOURCE_ID = "CURRENT";
-
     private options: GeocoderOptions;
 
 
@@ -32,10 +30,6 @@ class CurrentLocationGeocoder implements IGeocoder {
 
     getOptions(): GeocoderOptions {
         return this.options;
-    }
-
-    getSourceId(): string {
-        return CurrentLocationGeocoder.SOURCE_ID;
     }
 
     resolve(unresolvedLocation: Location): Promise<Location> {

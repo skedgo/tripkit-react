@@ -27,7 +27,7 @@ class TKStateProvider extends React.Component<IProps,{}> {
                 <OptionsProvider>
                     <OptionsContext.Consumer>
                         {(optionsContext: IOptionsContext) =>
-                            <TKI18nProvider dataPromise={config.i18nPromise}>
+                            <TKI18nProvider dataPromise={config.i18n}>
                                 <TKI18nContext.Consumer>
                                     {(i18nProps: TKI18nContextProps) =>
                                         <RoutingResultsProvider

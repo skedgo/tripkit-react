@@ -32,8 +32,8 @@ const analyticsConfig = Environment.isProd() ? {
     }
 } : undefined;
 
-const peliasGeocoder = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
-peliasGeocoder.getOptions().resultsLimit = 5;
+const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
+geocodeEarth.getOptions().resultsLimit = 5;
 
 const config: TKUIConfig = {
     apiKey: '790892d5eae024712cfd8616496d7317',
@@ -42,10 +42,13 @@ const config: TKUIConfig = {
     },
     // isDarkDefault: true,
     analytics: analyticsConfig,
-    i18nPromise: (window as any).tKI18nPromise,
-    geocoding: {
-        customGeocoders: [peliasGeocoder]
-    },
+    i18n: (window as any).tKI18nPromise,
+    geocoding: (defaultOptions: TKGeocodingOptions) => ({
+        geocoders: {
+            ...defaultOptions.geocoders,
+            'geocodeEarth': geocodeEarth
+        }
+    }),
     TKUIReportBtn: {
         // Good example of element replacement.
         // render: (props: TKUIReportBtnProps) =>
@@ -59,7 +62,7 @@ const config: TKUIConfig = {
         // Other alternative, preserve all features on TKUIReportBtn
         // (viz. copy to clipboard on right click).
         props: {
-            renderIcon: () => <IconReport style={{height: '100%', width: '100%'}}/>,
+            renderIcon: () => <IconReport/>,
             onClick: (state: TKState) => {
                 Usersnap.setFeedbackData(state);
                 Usersnap.openReportWindow();

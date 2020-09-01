@@ -4,12 +4,12 @@ import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
 import {ReactComponent as IconCurrLoc} from '../images/location/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
-import SkedgoGeocoder from "../geocode/SkedgoGeocoder";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIAutocompleteResultDefaultStyle} from "./TKUIAutocompleteResult.css";
 import classNames from "classnames";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -74,9 +74,8 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
         } else {
             addressComponent =
                 <span className={classes.address}>
-                    {   (Environment.isDevAnd(this.props.location.source === SkedgoGeocoder.SOURCE_ID  && false) ? "*SG*" : "") +
-                        LocationUtil.getMainText(this.props.location, this.props.t)
-                    }
+                    {(Environment.isDevAnd(this.props.location.source === TKDefaultGeocoderNames.skedgo && false) ? "*SG*" : "") +
+                        LocationUtil.getMainText(this.props.location, this.props.t)}
                     <span key={2} className={classes.secondaryAddress}>{LocationUtil.getSecondaryText(this.props.location)}</span>
                 </span>;
         }

@@ -15,7 +15,8 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             },
             '& input[type=text]': {
                 fontFamily: theme.fontFamily
-            }
+            },
+            position: 'relative'
         },
         queryPanel: {
             position: 'absolute',

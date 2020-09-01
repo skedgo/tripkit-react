@@ -21,22 +21,21 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...theme.cardBackground,
                 ...theme.textColorGray
             },
             '& .leaflet-popup-tip': {
                 background: white(0, theme.isDark)
             },
             '& .leaflet-bar': {
-                boxShadow: theme.isLight ?
-                    '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
-                    '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
+                boxShadow: 'none',
+                ...theme.cardBackground,
+                ...genStyles.borderRadius(4)
             },
             '& .leaflet-bar a:first-child': {
                 ...theme.divider
             },
             '& .leaflet-bar a, .leaflet-bar a:hover': {
-                backgroundColor: white(0, theme.isDark),
+                background: 'none',
                 color: black(1, theme.isDark)
             }
         } as CSSProperties<TKUIMapViewProps>,
@@ -56,8 +55,8 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             },
             '& .leaflet-popup-content-wrapper': {
                 padding: '0',
-                ...genStyles.borderRadius(0),
-                background: 'none'
+                ...theme.cardBackground,
+                ...genStyles.borderRadius(4),
             },
             '& .leaflet-popup-tip-container': {
                 display: 'none'
@@ -79,12 +78,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         menuPopupContent: {
             ...genStyles.flex,
             ...genStyles.column,
-            padding: '5px 0',
-            background: white(0, theme.isDark),
-            boxShadow: theme.isLight ?
-                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
-                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
-            ...genStyles.borderRadius(4)
+            padding: '5px 0'
         },
         menuPopupItem: {
             padding: '5px 10px',
@@ -103,14 +97,11 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             right: '10px',
             width: '35px',
             height: '35px',
-            background: white(0, theme.isDark),
-            boxShadow: theme.isLight ?
-                '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
-                '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
+            ...theme.cardBackground,
+            ...genStyles.borderRadius(4),
             cursor: 'pointer',
             zIndex: '1000',
             padding: '3px',
-            ...genStyles.borderRadius(4),
             ...genStyles.svgFillCurrColor,
             '& svg': {
                 color: theme.colorPrimary,

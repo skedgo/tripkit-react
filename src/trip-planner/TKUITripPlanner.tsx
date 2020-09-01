@@ -222,6 +222,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
                 onShowSettings={this.onShowSettings}
                 onShowFavourites={() => this.setState({showFavourites: true})}
+                parentElement={this.ref}
             />;
         const settings = this.state.showSettings &&
             <TKUIProfileView

@@ -10,17 +10,11 @@ class StaticGeocoder implements IGeocoder {
     private options: GeocoderOptions;
     private values: Location[] = [];
 
-    public sourceId = "";
     emptyMatchAll: boolean;
 
-    constructor(sourceId: string, emptyMatchAll: boolean = false) {
-        this.sourceId = sourceId;
+    constructor(emptyMatchAll: boolean = false) {
         this.emptyMatchAll = emptyMatchAll;
         this.options = new GeocoderOptions();
-    }
-
-    public getSourceId(): string {
-        return this.sourceId;
     }
 
     public setValues(values: Location[]) {

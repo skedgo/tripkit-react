@@ -1,33 +1,34 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import BBox from "../model/BBox";
-import IGeocoder from "./IGeocoder";
 import LocationUtil from "../util/LocationUtil";
 import Environment from "../env/Environment";
-import MultiGeocoderOptions from "./MultiGeocoderOptions";
+import TKGeocodingOptions from "./TKGeocodingOptions";
 import Util from "../util/Util";
-import PeliasGeocoder from "./PeliasGeocoder";
-import SkedgoGeocoder from "./SkedgoGeocoder";
+import TKDefaultGeocoderNames from "./TKDefaultGeocoderNames";
 
 class MultiGeocoder {
 
-    private _options: MultiGeocoderOptions;
+    private _options: TKGeocodingOptions;
 
-    constructor(options: MultiGeocoderOptions = MultiGeocoderOptions.default()) {
+    constructor(options: TKGeocodingOptions) {
         this._options = options;
     }
 
-    get options(): MultiGeocoderOptions {
+    get options(): TKGeocodingOptions {
         return this._options;
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (query: string, results: Location[]) => void): void {
-        const geocoderResults = new Map<IGeocoder, Location[]>();
-        for (const geocoder of this._options.geocoders) {
+        const geocoderResults = new Map<string, Location[]>();
+        for (const geocoderId of Object.keys(this._options.geocoders)) {
+            const geocoder = this._options.geocoders[geocoderId];
             geocoder.geocode(query, autocomplete, bounds, focus, (results: Location[]) => {
-                geocoderResults.set(geocoder, results);
-                for (const geocoder1 of this._options.geocoders) {
-                    if (geocoder1.getOptions().blockAutocompleteResults && geocoderResults.get(geocoder1) === undefined) {
+                results.forEach(((result: Location) => result.source = geocoderId));
+                geocoderResults.set(geocoderId, results);
+                for (const geocoderId1 of Object.keys(this._options.geocoders)) {
+                    const geocoder1 = this._options.geocoders[geocoderId1];
+                    if (geocoder1.getOptions().blockAutocompleteResults && geocoderResults.get(geocoderId1) === undefined) {
                         return;
                     }
                 }
@@ -39,9 +40,12 @@ class MultiGeocoder {
 
     public resolveLocation(unresolvedLocation: Location): Promise<Location> {
         return unresolvedLocation.source ?
-            this._options.getGeocoderById(unresolvedLocation.source)!.resolve(unresolvedLocation) :
+            this._options.geocoders[unresolvedLocation.source]!.resolve(unresolvedLocation)
+                .then((resLoc: Location) => {
+                    resLoc.source = unresolvedLocation.source;
+                    return resLoc;
+                }) :
             Promise.reject(new Error('Unable to resolve location with unknown source'));
-
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
@@ -49,18 +53,21 @@ class MultiGeocoder {
         // Also reverseGeocode on SkedgoGeocoder is not implemented. Maybe can implement it
         // and use SkedGo geocoder as callback, but create an instance on MultiGeocoder since it may not
         // be included on this._options.geocoders.
-        let reverseGeocoder = this._options.getGeocoderById(PeliasGeocoder.SOURCE_ID);
-        if (!reverseGeocoder) {
-            reverseGeocoder = this._options.getGeocoderById(SkedgoGeocoder.SOURCE_ID);
-        }
-        reverseGeocoder!.reverseGeocode(coord, callback);
+        let reverseGeocoderId = this._options.geocoders["geocodeEarth"] ? "geocodeEarth" : // TODO: remove hardcoding
+            TKDefaultGeocoderNames.skedgo;
+        this._options.geocoders[reverseGeocoderId]!.reverseGeocode(coord, (location: Location | null) => {
+            if (location) {
+                location.source = reverseGeocoderId;
+            }
+            callback(location);
+        });
     }
 
-    private merge(query: string, results: Map<IGeocoder, Location[]>): Location[] {
+    private merge(query: string, results: Map<string, Location[]>): Location[] {
         // let mergedResults: Location[] = [];
         const suggestionListsFromSources: Location[][] = [];
         for (const geocoder of Array.from(results.keys())
-            .sort((g1: IGeocoder, g2: IGeocoder) => g1.getSourceId().toString().localeCompare(g2.getSourceId().toString()))) {
+            .sort((g1: string, g2: string) => g1.localeCompare(g2))) {
             const geocoderResults = results.get(geocoder);
             if (geocoderResults) {
                 // mergedResults = mergedResults.concat(geocoderResults)

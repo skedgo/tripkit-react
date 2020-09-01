@@ -8,6 +8,10 @@ import JsDoc from 'react-styleguidist/lib/client/rsg-components/JsDoc';
 import Arguments from 'react-styleguidist/lib/client/rsg-components/Arguments';
 import Argument from 'react-styleguidist/lib/client/rsg-components/Argument';
 
+function isPrimitiveType(type: string) {
+    return type === 'boolean' || type === 'string' || type === 'number';
+}
+
 export function TKDocPropsRenderer({props}) {
     return (
         <TKDocTable
@@ -16,7 +20,28 @@ export function TKDocPropsRenderer({props}) {
                         <div style={{fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace', color: 'rgb(102, 153, 0)',}}>
                             {value.name}
                         </div>},
-                { title: 'Type', renderer: (value: any) => value.type.name},
+                { title: 'Type', renderer: (value: any) => {
+                    console.log(value);
+                        let type = value.type.name;
+                        if (isPrimitiveType(type)) {
+                            return type;
+                        }
+                        if (value.tags && value.tags.ctype && value.tags.ctype.length > 0) {
+                            if (value.tags.ctype[0].description) {
+                                return value.tags.ctype[0].description;
+                            } else {
+                                return type;
+                            }
+                        }
+                        if (type.includes('=>')) {
+                            type = 'function'
+                        } else if (type.startsWith("Properties<string | 0>")) {
+                            type = 'HTML DOM Style Object'
+                        } else {
+                            type = 'object'
+                        }
+                        return type;
+                    }},
                 { title: 'Default', renderer: (value: any) => {
                         let defaultText = value.defaultValue && value.defaultValue.value ? value.defaultValue.value : (value.required ? 'Required' : '');
                         if (value.tags && value.tags.globaldefault) {

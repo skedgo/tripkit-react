@@ -31,7 +31,7 @@ const messages_en = require("./i18n_en.json");
 const untranslated = require("./untranslated.json");
 
 interface IProps {
-    dataPromise?: Promise<{locale: string, translations: TKI18nMessages}>
+    dataPromise?: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>
 }
 
 interface IState {
@@ -79,7 +79,7 @@ class TKI18nProvider extends React.Component<IProps, IState> {
 
     public componentDidMount() {
         if (this.props.dataPromise) {
-            this.props.dataPromise
+            Promise.resolve(this.props.dataPromise)
                 .then((data: {locale: string, translations: TKI18nMessages}) => {
                     // Compose messages by overriding untranslated, with messages_en, and then with data.translations
                     // TODO: maybe it makes sense to compose also language-only resource when language+country is

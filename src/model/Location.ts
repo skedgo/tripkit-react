@@ -1,8 +1,7 @@
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
-import CurrentLocationGeocoder from "../geocode/CurrentLocationGeocoder";
-import RegionsData from "../data/RegionsData";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 @JsonObject
 class Location extends LatLng {
@@ -43,7 +42,7 @@ class Location extends LatLng {
     private static readonly currLocText = "My location";
 
     public static createCurrLoc() {
-        return this.create(new LatLng(), this.currLocText, "", "", CurrentLocationGeocoder.SOURCE_ID);
+        return this.create(new LatLng(), this.currLocText, "", "", TKDefaultGeocoderNames.geolocation);
     }
 
     private static readonly droppedPinText = "Location";
@@ -103,7 +102,7 @@ class Location extends LatLng {
     }
 
     public isCurrLoc(): boolean {
-        return this.source === CurrentLocationGeocoder.SOURCE_ID;
+        return this.source === TKDefaultGeocoderNames.geolocation;
     }
 
     public isDroppedPin(): boolean {

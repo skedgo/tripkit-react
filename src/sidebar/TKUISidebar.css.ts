@@ -1,4 +1,4 @@
-import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUISidebarProps, TKUISidebarStyle} from "./TKUISidebar";
 import genStyles from "../css/GenStyle.css";
@@ -14,16 +14,16 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
             justifyContent: 'flex-start!important',
             WebkitJustifyContent: 'flex-start!important',
             background: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)) + '!important',
+            position: 'absolute'
         },
         modalClosed: {  // Workaround to react-drag-drawer issue: modalContainer takes a while to dissapear
             background: 'none!important',
         },
         modal: {
-            backgroundColor: white(0, theme.isDark),
+            ...theme.cardBackground,
+            ...genStyles.borderRadius(0),
             width: '300px',
             height: '100%',
-            boxShadow: theme.isLight ? '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important' :
-                '0 0 4px 0 rgba(128, 128, 128,.4), 0 6px 12px 0 rgba(128, 128, 128,.08)!important',
             ...genStyles.flex
         },
         main: {

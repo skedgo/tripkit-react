@@ -1,7 +1,7 @@
 import * as React from "react";
 import TKUIW3w from "../location/TKUIW3w";
 import TKUIButton from "../buttons/TKUIButton";
-import {genClassNames, TKUIButtonType} from "../index";
+import {genClassNames, TKUIButtonType, TKUIRoutingQueryInput} from "../index";
 import {tKUIW3wDefaultStyle} from "../location/TKUIW3w.css";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
@@ -17,6 +17,7 @@ import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
 import TKUITripRow from "../trip/TKUITripRow";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import {tKUITripOverviewViewDefaultStyle} from "../trip/TKUITripOverviewView.css";
+import {tKUIRoutingQueryInputDefaultStyle} from "../query/TKUIRoutingQueryInput.css";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);
@@ -30,6 +31,10 @@ export function getMockRoutingResults(): Trip[] {
 }
 
 const tKDocConfig = {
+    TKUIRoutingQueryInput: {
+        showcase: () => <TKUIRoutingQueryInput/>,
+        style: classNamesOf(tKUIRoutingQueryInputDefaultStyle)
+    },
     TKUIW3w: {
         showcase: () => <TKUIW3w w3w={"hola"} w3wInfoURL={"chau"}/>,
         style: classNamesOf(tKUIW3wDefaultStyle)
