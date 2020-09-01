@@ -5,8 +5,6 @@ import GeocoderOptions from "./GeocoderOptions";
 
 interface IGeocoder {
 
-    getSourceId(): string;
-
     getOptions(): GeocoderOptions;
 
     geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void;

@@ -10,6 +10,10 @@ export const tKUIReportBtnDefaultStyle: TKUIStyles<TKUIReportBtnStyle, TKUIRepor
             ...resetStyles.button,
             '& path': {
                 fill: black(0, theme.isDark)
+            },
+            '&>*': {
+                maxHeight: '100%',
+                maxWidth: '100%'
             }
         },
         actionMenu: {

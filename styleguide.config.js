@@ -3,10 +3,43 @@ const path = require('path');
 module.exports = {
     title: 'TripKit React Components API',
     defaultExample: 'src/doc/ComponentDoc.md',
+    sortProps: props => props,
     sections: [
         {
             name: 'Main SDK component: TKRoot',
             content: 'docs/MainSDKComponent_TKRoot.md'
+        },
+        {
+            name: 'Customization',
+            content: 'docs/Customization.md',
+            sectionDepth: 1,
+            usageMode: 'expand',
+            sections: [
+                {
+                    name: 'Theme',
+                    content: 'docs/Theme.md',
+                    exampleMode: 'expand',
+                    components: [
+                        'src/jss/TKUITheme.ts'
+                    ]
+                },
+                {
+                    name: 'I18n',
+                    content: 'docs/I18n.md',
+                    exampleMode: 'expand',
+                },
+                {
+                    name: 'Geocoding',
+                    content: 'docs/Geocoding.md',
+                    exampleMode: 'expand',
+                    components: [
+                        'src/geocode/TKGeocodingOptions.tsx'
+                    ]
+                },
+            ],
+            components: [
+                'src/config/TKUIConfig.tsx'
+            ]
         },
         {
             name: 'Components API',
@@ -29,7 +62,6 @@ module.exports = {
                 // 'src/card/**/*.tsx',
                 'src/config/TKRoot.tsx',
                 'src/config/TKStateConsumer.tsx',
-                'src/config/TKUIConfig.tsx',
                 // 'src/favourite/**/*.tsx',
                 // 'src/feedback/**/*.tsx',
                 // 'src/geocode/**/*.tsx',
@@ -37,7 +69,7 @@ module.exports = {
                 // 'src/location_box/**/*.tsx',
                 // 'src/map/**/*.tsx',
                 // 'src/options/**/*.tsx',
-                // 'src/query/**/*.tsx',
+                'src/query/**/*.tsx',
                 // 'src/service/**/*.tsx',
                 // 'src/share/**/*.tsx',
                 // 'src/sidebar/**/*.tsx',

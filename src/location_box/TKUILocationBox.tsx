@@ -19,13 +19,13 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
 import {genClassNames} from "../css/GenStyle.css";
-import IGeocoder from "../geocode/IGeocoder";
-import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
+import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
 import {Subtract} from 'utility-types';
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import LocationUtil from "../util/LocationUtil";
+import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
@@ -58,7 +58,7 @@ interface IStyle {
 }
 
 interface IConsumedProps {
-    customGeocoders?: IGeocoder[];
+    geocodingOptions: TKGeocodingOptions;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -110,7 +110,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             },
             waiting: false
         };
-        this.geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(this.props.showCurrLoc, this.props.customGeocoders));
+        this.geocodingData = new MultiGeocoder(this.props.geocodingOptions);
         this.handleAutocompleteResults = this.handleAutocompleteResults.bind(this);
         this.renderInput = this.renderInput.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
@@ -426,7 +426,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             this.highlightedItem = item.id;
         }
         const location = this.itemToLocationMap.get(item.id)!;
-        const geocoder = this.geocodingData.options.getGeocoderById(location.source!);
+        const geocoder = this.geocodingData.options.geocoders[location.source!];
         return (
             <TKUIAutocompleteResult
                 id={"item-" + this.state.items.indexOf(item)}
@@ -543,7 +543,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
                     props.children!({
-                        customGeocoders: config.geocoding ? config.geocoding.customGeocoders : undefined
+                        geocodingOptions: getGeocodingOptions(config.geocoding)
                     })
                 }
             </TKUIConfigContext.Consumer>

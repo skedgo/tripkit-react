@@ -4,6 +4,9 @@ import DeviceUtil from "../util/DeviceUtil";
 import Color from "../model/trip/Color";
 import genStyles from "../css/GenStyle.css";
 
+export const TKUIThemeForDoc = (props: Partial<TKUITheme>) => null;
+TKUIThemeForDoc.displayName = 'Theme object';
+
 export const tKUIColors = {
     black: '#212A33',
     black1: '#20293199',
@@ -24,7 +27,7 @@ export function colorWithOpacity(colorS: string, opacity: number): string {
 }
 
 export const queryWidth = 384;
-export function cardSpacing(landscape: boolean = true) {
+function cardSpacing(landscape: boolean = true) {
     return landscape ? 16 : 5;
 }
 
@@ -36,7 +39,7 @@ export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): stri
     return dual ? black(n) : tKUIColors[Object.keys(tKUIColors)[n + 6]];
 }
 
-export function important(style: CSS.Properties): CSS.Properties {
+function important(style: CSS.Properties): CSS.Properties {
     const styleImportant = {...style};
     for (const key of Object.keys(style)) {
         if (styleImportant[key].includes('!important')) {
@@ -78,7 +81,7 @@ export interface TKUITheme {
 
 }
 
-export const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
+const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
     (isDark: boolean) => {
         const isLight = !isDark;
         return {
@@ -91,7 +94,13 @@ export const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
 
             fontFamily: 'sans-serif',
 
+            /**
+             * @ignore
+             */
             isDark: isDark,
+            /**
+             * @ignore
+             */
             isLight: isLight,
 
             textColorDefault: {
@@ -156,3 +165,5 @@ if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
     tKUIColors.white4 = Color.createFromString('#ffffff').toRGBA(.12);
     tKUIColors.white5 = Color.createFromString('#ffffff').toRGBA(.08);
 }
+
+export {cardSpacing, important, tKUIDeaultTheme};

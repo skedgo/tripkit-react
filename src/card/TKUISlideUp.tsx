@@ -15,7 +15,8 @@ const styles = {
         position: 'absolute',
         top: 0,
         zIndex: (props: IProps) => props.zIndex !== undefined ? props.zIndex : '1002',
-        height: '100%'
+        // TODO!: test if this cause an issue on mobile.
+        // height: '100%'
     }
 };
 

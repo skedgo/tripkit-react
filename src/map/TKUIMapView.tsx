@@ -24,7 +24,6 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
 import TransportUtil from "../trip/TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";
@@ -57,8 +56,7 @@ import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
 import {TileLayer} from "react-leaflet";
-import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
-import IGeocoder from "../geocode/IGeocoder";
+import TKGeocodingOptions, {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
 import Color from "../model/trip/Color";
 import Features from "../env/Features";
@@ -757,9 +755,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
 let geocodingData: MultiGeocoder;
 
-function getGeocodingData(customGeocoders?: IGeocoder[]) {
+function getGeocodingData(geocodingConfig?: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>)) {
     if (!geocodingData) {
-        geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(true, customGeocoders));
+        geocodingData = new MultiGeocoder(getGeocodingOptions(geocodingConfig));
     }
     return geocodingData;
 }
@@ -788,7 +786,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                     [isFrom ? "from" : "to"]: mapLocation
                                                 }));
                                                 if (mapLocation.isDroppedPin()) {
-                                                    getGeocodingData(config.geocoding && config.geocoding.customGeocoders)
+                                                    getGeocodingData(config.geocoding)
                                                         .reverseGeocode(latLng, loc => {
                                                             if (loc !== null) {
                                                                 // Need to use onQueryUpdate instead of onQueryChange since

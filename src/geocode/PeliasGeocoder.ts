@@ -11,8 +11,6 @@ import {Env} from "../env/Environment";
 
 class PeliasGeocoder implements IGeocoder {
 
-    public static readonly SOURCE_ID = "PELIAS";
-
     private geocodeServer: string;
     private apiKey: string;
 
@@ -28,10 +26,6 @@ class PeliasGeocoder implements IGeocoder {
         this.restrictToBounds = restrictToBounds;
         this.options = new GeocoderOptions();
         this.cache = new GeocodingCache();
-    }
-
-    public getSourceId(): string {
-        return PeliasGeocoder.SOURCE_ID;
     }
 
     public getOptions(): GeocoderOptions {
@@ -147,7 +141,7 @@ class PeliasGeocoder implements IGeocoder {
             (result.properties.label ? result.properties.label :
                 (result.properties.name ? result.properties.name : "")) : "";
         const name = '';
-        const location = Location.create(latLng, address, id, name, this.SOURCE_ID);
+        const location = Location.create(latLng, address, id, name);
         location.suggestion = result;
         // TODO: enable to make LocaitonBox resolve the location to get details.
         // location.hasDetail = false;

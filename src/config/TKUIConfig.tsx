@@ -54,28 +54,38 @@ import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCaro
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
 import {Tracker, InitializeOptions} from 'react-ga';
 import {TrackerOptions} from "../analytics/GATracker";
-import IGeocoder from "../geocode/IGeocoder";
 import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
 import {TKState} from "./TKStateConsumer";
+import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
+
+export const TKUIConfigForDoc = (props: TKUIConfig) => null;
+TKUIConfigForDoc.displayName = 'Config object';
 
 interface ITKUIConfigRequired {
     apiKey: string;
 }
 
 interface ITKUIConfigOptional {
+    /**
+     * Override for [default theme object]()
+     */
+    theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
     onInitState: (state: TKState) => void;
     onUpdateState: (state: TKState, prevState: TKState) => void;
     initViewport: {center?: LatLng, zoom?: number};
-    i18nPromise: Promise<{locale: string, translations: TKI18nMessages}>;
-    theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
+    /**
+     * @ctype
+     */
+    i18n: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>;
     isDarkDefault: boolean,
     analytics?: {google?: {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;
     }};
-    geocoding?: {
-        customGeocoders?: IGeocoder[];
-    }
+    /**
+     * @ctype
+     */
+    geocoding?: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>);
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;

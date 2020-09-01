@@ -10,12 +10,12 @@ import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import LatLng from "../model/LatLng";
 import * as queryString from "query-string";
-import MultiGeocoderOptions from "../geocode/MultiGeocoderOptions";
 import Util from "../util/Util";
 import {TKError} from "..";
 import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Trip from "../model/trip/Trip";
+import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 
 interface IProps {
     tKState: TKState;
@@ -221,8 +221,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             if (queryMap.lat && queryMap.lng) {
                 tKState.onWaitingStateLoad(true);
                 const arrivalLoc = Location.create(LatLng.createLatLng(parseFloat(queryMap.lat), parseFloat(queryMap.lng)), "", "", "");
-                const customGeocoders = tKState.config.geocoding ? tKState.config.geocoding.customGeocoders : undefined;
-                const geocodingData = new MultiGeocoder(MultiGeocoderOptions.default(false, customGeocoders));
+                const geocodingData = new MultiGeocoder(getGeocodingOptions(tKState.config.geocoding));
                 geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
                     if (location !== null) {
                         const routingQuery = queryMap.at ? RoutingQuery.create(null,
