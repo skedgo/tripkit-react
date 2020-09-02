@@ -8,7 +8,7 @@ import {CardPresentation} from "../card/TKUICard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {Subtract} from "utility-types";
 import TKUIAlertRow from "./TKUIAlertRow";
-import TKUICardRemote from "../card/TKUICardRemote";
+import {TKUICard} from "../index";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alerts: RealTimeAlert[];
@@ -38,7 +38,7 @@ class TKUIAlertsView extends React.Component<IProps, {}> {
         const t = this.props.t;
         const alerts = this.props.alerts;
         return (
-            <TKUICardRemote
+            <TKUICard
                 title={t("Alerts")}
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={this.props.slideUpOptions}
@@ -48,7 +48,7 @@ class TKUIAlertsView extends React.Component<IProps, {}> {
                     {alerts.map((alert: RealTimeAlert, i: number) =>
                         <TKUIAlertRow alert={alert} key={i}/>)}
                 </div>
-            </TKUICardRemote>
+            </TKUICard>
         );
     }
 

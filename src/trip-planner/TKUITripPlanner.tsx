@@ -47,7 +47,6 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import {TKUserPosition} from "../util/GeolocationUtil";
 import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
-import TKUICardContainer from "../card/TKUICardContainer";
 import {CardPresentation} from "../card/TKUICard";
 import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
@@ -443,7 +442,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         {serviceDetailView}
                         {transportSettings}
                         {favouritesView}
-                        <TKUICardContainer/>
                         {<TKUIWaitingRequest
                             status={this.state.tripUpdateStatus}
                             message={this.props.waitingTripUpdate ? "Updating trip" :

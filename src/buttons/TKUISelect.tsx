@@ -17,6 +17,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     controlStyle?: CSS.Properties;
     menuStyle?: CSS.Properties;
     renderArrowDown?: () => JSX.Element;
+    isDisabled?: boolean,
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -70,6 +71,7 @@ class TKUISelect extends React.Component<IProps, {}> {
                             ...(state.isSelected && injectedStyles.optionSelected)
                         })
                     }}
+                    isDisabled={this.props.isDisabled}
                 />
             </div>
         );

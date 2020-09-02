@@ -27,7 +27,8 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             },
             '&>*': {
                 paddingBottom: (props: TKUICardProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
-            }
+            },
+            boxSizing: 'border-box'
         },
 
         main: {

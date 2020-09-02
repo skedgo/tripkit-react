@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
 import {MapLocationType, MapLocationTypeConverter} from "../location/MapLocationType";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
@@ -51,6 +51,8 @@ class TKUserProfile {
     public trackTripSelections: boolean = false;
     @JsonProperty('isDarkMode', Boolean, true)
     public isDarkMode?: boolean = undefined;
+    @JsonProperty('customData', Any, true)
+    public customData?: any = undefined;
 
     get modesDisabled(): string[] {
         return this._modesDisabled.concat(TKUserProfile.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));

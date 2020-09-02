@@ -5,8 +5,7 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import {tKUIPrivacyOptionsViewDefaultStyle} from "./TKUIPrivacyOptionsView.css";
-import {CardPresentation} from "../card/TKUICard";
-import TKUICardRemote from "../card/TKUICardRemote";
+import {CardPresentation, default as TKUICard} from "../card/TKUICard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
 import {black} from "../jss/TKUITheme";
@@ -72,7 +71,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const t = this.props.t;
         return (
-            <TKUICardRemote
+            <TKUICard
                 title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                 onRequestClose={this.props.onRequestClose}
@@ -135,7 +134,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                         </div>
                     </div>
                 </div>
-            </TKUICardRemote>
+            </TKUICard>
         )
     }
 

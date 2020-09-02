@@ -31,6 +31,8 @@ import TKUISelect from "../buttons/TKUISelect";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
+    customSettings?: (userProfile: TKUserProfile,
+                      onUserProfileChange: (value: TKUserProfile) => void) => React.ReactNode;
 }
 
 interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
@@ -74,6 +76,7 @@ interface IState {
     showPersonalData: boolean;
     showTransports: boolean;
     showPriorities: boolean;
+    showDevSettings: boolean;
 }
 
 class TKUIProfileView extends React.Component<IProps, IState> {
@@ -87,7 +90,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             pickSchoolError: false,
             showPersonalData: false,
             showTransports: false,
-            showPriorities: false
+            showPriorities: false,
+            showDevSettings: false
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
@@ -174,6 +178,9 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             { value: false, label: t("Light")},
             { value: true, label: t("Dark")}
         ];
+        const customSettings = this.props.customSettings &&
+            this.props.customSettings(this.state.update,
+                (profileUpdate: TKUserProfile) => this.setState((prevState: IState) => ({update: profileUpdate}), () => this.applyChanges()));
         return (
             <TKUICard
                 title={t("Profile")}
@@ -303,6 +310,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             </div>
                         </div>
                     </div>
+                    {customSettings}
                 </div>
                 {personalDataSettings}
                 {transportSettings}

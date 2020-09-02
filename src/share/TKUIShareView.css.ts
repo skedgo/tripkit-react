@@ -29,6 +29,8 @@ export const tKUIShareViewDefaultStyle: TKUIStyles<TKUIShareViewStyle, TKUIShare
             textAlign: 'center'
         },
         qrCode: {
+            height: '128px',
+            width: '128px',
             '& canvas': {
                 background: 'white',    // Place over white background, this is for dark mode.
                 padding: '5px'

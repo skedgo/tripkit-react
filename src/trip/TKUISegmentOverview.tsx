@@ -23,6 +23,8 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import {cardSpacing} from "../jss/TKUITheme";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
@@ -30,7 +32,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestAlternativeRoutes?: (segment: Segment) => void;
 }
 
-interface IConsumedProps {
+interface IConsumedProps extends TKUIViewportUtilProps {
     options: TKUserProfile;
     onTimetableForSegment: (segment?: Segment) => void,
 }
@@ -160,7 +162,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                             </div>
                             {segment.hasAlerts &&
                             <div className={classes.alertsSummary}>
-                                <TKUIAlertsSummary alerts={segment.alerts}/>
+                                <TKUIAlertsSummary
+                                    alerts={segment.alerts}
+                                    slideUpOptions={{
+                                        modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
+                                    }}
+                                />
                             </div>}
                             {segment.isPT() && !segment.isContinuation &&
                             <TKUIButton
@@ -193,18 +200,23 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <ServiceResultsContext.Consumer>
-                    {(serviceContext: IServiceResultsContext) =>
-                        children!({
-                            ...inputProps,
-                            options: optionsContext.userProfile,
-                            onTimetableForSegment: serviceContext.onTimetableForSegment
-                        })
+        <TKUIViewportUtil>
+            {(viewportProps: TKUIViewportUtilProps) =>
+                <OptionsContext.Consumer>
+                    {(optionsContext: IOptionsContext) =>
+                        <ServiceResultsContext.Consumer>
+                            {(serviceContext: IServiceResultsContext) =>
+                                children!({
+                                    ...inputProps,
+                                    options: optionsContext.userProfile,
+                                    onTimetableForSegment: serviceContext.onTimetableForSegment,
+                                    ...viewportProps
+                                })
+                            }
+                        </ServiceResultsContext.Consumer>
                     }
-                </ServiceResultsContext.Consumer>
+                </OptionsContext.Consumer>
             }
-        </OptionsContext.Consumer>;
+        </TKUIViewportUtil>;
 
 export default connect((config: TKUIConfig) => config.TKUISegmentOverview, config, Mapper);

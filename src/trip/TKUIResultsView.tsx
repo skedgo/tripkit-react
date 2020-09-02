@@ -43,6 +43,7 @@ import TKUIButton from "../buttons/TKUIButton";
 import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper";
 import TKUIErrorView from "../error/TKUIErrorView";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import {cardSpacing} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -342,7 +343,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                                     alerts={this.state.toLocInfo!.alerts}
                                     slideUpOptions={{
                                         draggable: false,
-                                        zIndex: 1006    // To be above query input. TODO: define constants for all these z-index(s).
+                                        modalUp: this.props.landscape ? {top: 176 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                                     }}
                                 />
                             </TKUIConfigProvider>);

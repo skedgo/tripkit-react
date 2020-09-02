@@ -43,6 +43,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     headerDividerVisible?: boolean;
     scrollable?: boolean;
     overflowVisible?: boolean;
+    parentElement?: any;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -89,6 +90,9 @@ interface IState {
 }
 
 class TKUICard extends React.Component<IProps, IState> {
+
+    private static COUNT = 0;
+    private zIndex = 1002;
 
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
@@ -170,6 +174,8 @@ class TKUICard extends React.Component<IProps, IState> {
                     open={this.props.open}
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                     cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
+                    parentElement={this.props.parentElement}
+                    zIndex={this.zIndex}
                 >
                     {body}
                 </TKUISlideUp>
@@ -190,6 +196,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         }}
                         shouldCloseOnEsc={true}
                         onRequestClose={this.props.onRequestClose}
+                        appElement={this.props.parentElement}
                         {...this.props.modalOptions}
                     >
                         {body}
@@ -202,6 +209,17 @@ class TKUICard extends React.Component<IProps, IState> {
         // if (this.props.top !== prevProps.top) {
         //     this.props.refreshStyles();
         // }
+    }
+
+    public componentDidMount() {
+        // Just count floating cards (all but NONE). Notice I also count MODAL(s) since they may change to SLIDE_UP(s)
+        // on landscape / portrait switch.
+        this.props.presentation !== CardPresentation.NONE && TKUICard.COUNT++;
+        this.zIndex = 1001 + TKUICard.COUNT;
+    }
+
+    public componentWillUnmount() {
+        this.props.presentation !== CardPresentation.NONE && TKUICard.COUNT--;
     }
 }
 

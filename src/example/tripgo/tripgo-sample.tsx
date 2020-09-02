@@ -132,6 +132,13 @@ const config: TKUIConfig = {
                 </TKStateConsumer>
             ].concat(props.errorActions ? props.errorActions(error) : []))
         })
+    },
+    TKUIProfileView: {
+        props: {
+            customSettings: (userProfile: TKUserProfile,
+                             onUserProfileChange: (value: TKUserProfile) => void) =>
+                <TGUIDevSettings value={userProfile} onChange={onUserProfileChange}/>
+        }
     }
 };
 
@@ -140,7 +147,13 @@ const userLocationPromise = (window as any).tKUserLocationPromise ?
         .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
 
 ReactDOM.render(
-    <TKRoot config={config}>
-        <TKUITripPlanner userLocationPromise={userLocationPromise}/>
-        <TKStateUrl/>
-    </TKRoot>, document.getElementById("tripgo-sample-root"));
+    <OptionsProvider>
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                <TKRoot config={{...config, apiKey: getApiKey(optionsContext.userProfile)}}>
+                    <TKUITripPlanner userLocationPromise={userLocationPromise}/>
+                    <TKStateUrl/>
+                </TKRoot>
+            }
+        </OptionsContext.Consumer>
+    </OptionsProvider>, document.getElementById("tripgo-sample-root"));
