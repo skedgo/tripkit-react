@@ -15,6 +15,7 @@ import TKUITooltip from "../card/TKUITooltip";
 import ContextMenuHandler from "../util/ContextMenuHandler";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKRequestStatus, default as TKUIWaitingRequest} from "../card/TKUIWaitingRequest";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     className?: string;
@@ -57,7 +58,13 @@ function feedbackTextFromState(state: TKState): string {
     let feedbackS = "";
     feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.query, plannerUrl)) + "\n";
     feedbackS += "\n";
-    feedbackS += "User profile: " + JSON.stringify(Util.serialize(state.userProfile)) + "\n";
+    // Remove sensible data from userProfile for feedback. Probably should remove customData (the sdk is not aware of
+    // apiKeys field).
+    const userProfile = Util.deserialize(JSON.parse(JSON.stringify(Util.serialize(state.userProfile))), TKUserProfile);
+    if (userProfile.customData && userProfile.customData.apiKeys) {
+        userProfile.customData.apiKeys = undefined;
+    }
+    feedbackS += "User profile: " + JSON.stringify(Util.serialize(userProfile)) + "\n";
     if (state.routingError) {
         feedbackS += "\n";
         // feedbackS += "Routing error: " + state.routingError.toLogString() + "\n";

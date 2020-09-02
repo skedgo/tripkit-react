@@ -1,7 +1,7 @@
 import React, {CSSProperties} from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
-import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
@@ -10,11 +10,10 @@ import TripUtil from "./TripUtil";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import {TKUIButtonType} from "../buttons/TKUIButton";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import TKUIShareView from "../share/TKUIShareView";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import TKShareHelper from "../share/TKShareHelper";
@@ -22,10 +21,7 @@ import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
-import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import TKUIRendersCard from "../card/TKUIRendersCard";
-import {cardSpacing} from "../jss/TKUITheme";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
@@ -96,46 +92,15 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
     private getDefaultSegmentActions(segment: Segment) {
         const props = this.props;
         return segment.arrival ? [
-            <TKUIRendersCard key={"actionShareArrival"}>
-                {(renderCard: (props: TKUICardClientProps, id: any) => void) =>
-                    <TKUIViewportUtil>
-                        {(viewportProps: TKUIViewportUtilProps) =>
-                            <TKUIButton text={props.t("Share.Arrival")}
-                                        type={TKUIButtonType.PRIMARY_LINK}
-                                        style={{
-                                            paddingLeft: 0,
-                                            ...genStyles.justifyStart
-                                        }}
-                                        onClick={() => {
-                                            const cardProps = {
-                                                title: props.t("Share.Arrival"),
-                                                presentation: viewportProps.portrait ? CardPresentation.SLIDE_UP : CardPresentation.MODAL,
-                                                slideUpOptions: {
-                                                    position: TKUISlideUpPosition.UP,
-                                                    draggable: false,
-                                                    modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'}
-                                                },
-                                                children:
-                                                    <TKUIShareView
-                                                        link={TKShareHelper.getShareSegmentArrival(segment)}
-                                                        customMsg={""}
-                                                    />,
-                                                open: true,
-                                                onRequestClose: () => {
-                                                    renderCard({
-                                                        ...cardProps,
-                                                        open: false
-                                                    }, segment)
-                                                }
-                                            };
-                                            renderCard(cardProps, segment);
-                                        }}
-                                        key={"shareArrivalBtn"}
-                            />
-                        }
-                    </TKUIViewportUtil>
-                }
-            </TKUIRendersCard>
+            <TKUIShareAction title={props.t("Share.Arrival")}
+                             link={TKShareHelper.getShareSegmentArrival(segment)}
+                             message={""}
+                             buttonType={TKUIButtonType.PRIMARY_LINK}
+                             style={{
+                                 paddingLeft: 0,
+                                 ...genStyles.justifyStart
+                             }}
+            />
         ] : []
     }
 

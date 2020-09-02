@@ -3,6 +3,7 @@ import injectSheet, {ClassNameMap} from "react-jss";
 import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
 import {cardSpacing} from "../jss/TKUITheme";
+import ReactDOM from 'react-dom';
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -29,6 +30,7 @@ interface IProps extends TKUISlideUpOptions {
     handleRef?: any;
     draggable?: boolean;
     cardOnTop?: (onTop: boolean) => void;
+    parentElement?: any;
 }
 
 interface IState {
@@ -173,7 +175,9 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         if (!this.props.open) {
             return null;
         }
+        const parentElement = this.props.parentElement ? this.props.parentElement : document.getElementsByTagName("BODY")[0];
         return (
+            ReactDOM.createPortal(
             <Draggable
                 axis="y"
                 bounds={{
@@ -206,7 +210,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                     {this.props.children}
                     </div>
                 </div>
-            </Draggable>
+            </Draggable>, parentElement)
         );
     }
 
