@@ -474,7 +474,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.refreshRegion();
         }
 
-        public onTripJsonUrl(tripUrl: string): Promise<void> {
+        public onTripJsonUrl(tripUrl: string): Promise<Trip[]> {
             return TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults)
                 .then((routingResults: RoutingResults) => {
                     const firstTrip = routingResults.groups[0].trips[0];
@@ -493,6 +493,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         selected: sortedTrips[0],
                         directionsView: true
                     });
+                    return trips;
                 });
         }
 

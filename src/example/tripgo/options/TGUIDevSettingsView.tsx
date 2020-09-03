@@ -18,12 +18,14 @@ import {useState} from 'react';
 import {OptionProps} from "react-select";
 import TGUIEditApiKeyView, {EditResult} from "./TGUIEditApiKeyView";
 import TKUISettingSection from "../../../options/TKUISettingSection";
+import TKUISettingLink from "../../../options/TKUISettingLink";
+import TGUILoadTripsView from "./TGUILoadTripsView";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,
     onChange: (value: TKUserProfile) => void;
-    onRequestClose?: () => void;
+    onRequestClose?: (closeAll?: boolean) => void;
     slideUpOptions?: TKUISlideUpOptions;
     parentElement?: any;
 }
@@ -71,6 +73,7 @@ export function getApiKey(userProfile: TKUserProfile): string {
 
 const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     const [editingKey, setEditingKey] = useState<string | undefined>(undefined);
+    const [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
     const classes = props.classes;
     const userProfile = props.value;
     const customData = userProfile.customData;
@@ -195,6 +198,20 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         />
                     </div>
                     {editAPIKey}
+                </TKUISettingSection>
+                <TKUISettingSection>
+                    <TKUISettingLink
+                        text={"Load trips from url"}
+                        onClick={() => setShowLoadTrips(true)}
+                    />
+                    {showLoadTrips &&
+                    <TGUILoadTripsView
+                        onRequestClose={(closeAll?: boolean) => {
+                            setShowLoadTrips(false);
+                            if (closeAll) {
+                                props.onRequestClose && props.onRequestClose(true);
+                            }
+                        }}/>}
                 </TKUISettingSection>
             </div>
         </TKUICard>

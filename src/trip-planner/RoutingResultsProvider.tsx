@@ -17,7 +17,7 @@ export interface IRoutingResultsContext {
     query: RoutingQuery;
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
-    onTripJsonUrl: (tripJsonUrl: string) => Promise<void>;
+    onTripJsonUrl: (tripJsonUrl: string) => Promise<Trip[] | undefined>;
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -56,7 +56,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
     onQueryUpdate: (update: Partial<RoutingQuery>) => {},
-    onTripJsonUrl: (tripJsonUrl: string) => Promise.resolve(),
+    onTripJsonUrl: (tripJsonUrl: string) => Promise.resolve(undefined),
     viewport: {center: MapUtil.worldCoords, zoom: 2},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     directionsView: false,
