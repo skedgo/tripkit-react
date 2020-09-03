@@ -35,8 +35,11 @@ const analyticsConfig = Environment.isProd() ? {
 const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
 geocodeEarth.getOptions().resultsLimit = 5;
 
-const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUserProfile) => void;}> =
-    (props: {value: TKUserProfile, onChange: (value: TKUserProfile) => void;}) => {
+const hostname = window.location.hostname;
+const devSettings = hostname.includes("tripkit.") || hostname.includes("localhost");
+
+const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUserProfile) => void, onRequestClose?: () => void;}> =
+    (props: {value: TKUserProfile, onChange: (value: TKUserProfile) => void, onRequestClose?: () => void;}) => {
         const [show, setShow] = useState<boolean>(false);
         const devSettingsView = show &&
             <TKUIViewportUtil>
@@ -44,7 +47,12 @@ const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUser
                     <TGUIDevSettingsView
                         value={props.value}
                         onChange={props.onChange}
-                        onRequestClose={() => setShow(false)}
+                        onRequestClose={(closeAll?: boolean) => {
+                            setShow(false);
+                            if (closeAll) {
+                                props.onRequestClose && props.onRequestClose();
+                            }
+                        }}
                         slideUpOptions={{
                             position: TKUISlideUpPosition.UP,
                             modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'},
@@ -61,8 +69,6 @@ const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUser
             </React.Fragment>
         );
     };
-
-
 
 const config: TKUIConfig = {
     apiKey: '790892d5eae024712cfd8616496d7317',
@@ -163,11 +169,12 @@ const config: TKUIConfig = {
         })
     },
     TKUIProfileView: {
-        props: {
+        props: devSettings ? {
             customSettings: (userProfile: TKUserProfile,
-                             onUserProfileChange: (value: TKUserProfile) => void) =>
-                <TGUIDevSettings value={userProfile} onChange={onUserProfileChange}/>
-        }
+                             onUserProfileChange: (value: TKUserProfile) => void,
+                             onRequestClose?: () => void) =>
+                <TGUIDevSettings value={userProfile} onChange={onUserProfileChange} onRequestClose={onRequestClose}/>
+        } : undefined
     }
 };
 

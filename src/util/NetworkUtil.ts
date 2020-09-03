@@ -1,5 +1,6 @@
 import Util from "./Util";
 import {Env} from "../env/Environment";
+import {TKError} from "../error/TKError";
 
 enum MethodType {
     GET = "GET",
@@ -16,7 +17,18 @@ class NetworkUtil {
         if (response.status >= 200 && response.status < 300) {
             return Promise.resolve(response)
         } else {
-            return Promise.reject(new Error(response.statusText))
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                return response.json().then(jsonData => {
+                    if (jsonData.error) {
+                        throw new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+                    } else {
+                        return Promise.reject(new Error(response.statusText));
+                    }
+                });
+            } else {
+                return Promise.reject(new Error(response.statusText));
+            }
         }
     }
 

@@ -32,7 +32,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
     customSettings?: (userProfile: TKUserProfile,
-                      onUserProfileChange: (value: TKUserProfile) => void) => React.ReactNode;
+                      onUserProfileChange: (value: TKUserProfile) => void,
+                      onRequestClose?: () => void) => React.ReactNode;
 }
 
 interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
@@ -175,7 +176,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         ];
         const customSettings = this.props.customSettings &&
             this.props.customSettings(this.state.update,
-                (profileUpdate: TKUserProfile) => this.setState((prevState: IState) => ({update: profileUpdate}), () => this.applyChanges()));
+                (profileUpdate: TKUserProfile) => this.setState((prevState: IState) => ({update: profileUpdate}), () => this.applyChanges()),
+                this.props.onRequestClose);
         return (
             <TKUICard
                 title={t("Profile")}

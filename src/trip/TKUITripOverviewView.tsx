@@ -100,6 +100,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                                  paddingLeft: 0,
                                  ...genStyles.justifyStart
                              }}
+                             key={"actionShareArrival"}
             />
         ] : []
     }

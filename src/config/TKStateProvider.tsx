@@ -56,9 +56,9 @@ class TKStateProvider extends React.Component<IProps,{}> {
         )
     }
 
-    public componentDidUpdate(prevProps: IProps) {
-        if (TripGoApi.apiKey !== prevProps.config.apiKey) {
-            TripGoApi.apiKey = prevProps.config.apiKey
+    public componentDidUpdate() {
+        if (TripGoApi.apiKey !== this.props.config.apiKey) {
+            TripGoApi.apiKey = this.props.config.apiKey
         }
     }
 
