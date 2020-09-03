@@ -1,4 +1,4 @@
-import React, {MouseEvent} from 'react';
+import React, {MouseEvent, useState} from 'react';
 import ReactDOM from 'react-dom';
 import {
     TKUITripPlanner,
@@ -34,6 +34,35 @@ const analyticsConfig = Environment.isProd() ? {
 
 const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
 geocodeEarth.getOptions().resultsLimit = 5;
+
+const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUserProfile) => void;}> =
+    (props: {value: TKUserProfile, onChange: (value: TKUserProfile) => void;}) => {
+        const [show, setShow] = useState<boolean>(false);
+        const devSettingsView = show &&
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    <TGUIDevSettingsView
+                        value={props.value}
+                        onChange={props.onChange}
+                        onRequestClose={() => setShow(false)}
+                        slideUpOptions={{
+                            position: TKUISlideUpPosition.UP,
+                            modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'},
+                            draggable: false
+                        }}
+                    />}
+            </TKUIViewportUtil>;
+        return(
+            <React.Fragment>
+                <TKUISettingSection>
+                    <TKUISettingLink text={"Beta Testing"} onClick={() => setShow(true)}/>
+                </TKUISettingSection>
+                {devSettingsView}
+            </React.Fragment>
+        );
+    };
+
+
 
 const config: TKUIConfig = {
     apiKey: '790892d5eae024712cfd8616496d7317',

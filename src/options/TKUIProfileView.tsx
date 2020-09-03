@@ -18,14 +18,14 @@ import TKUIUserPriorities from "./TKUIUserPriorities";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKWeightingPreferences from "../model/options/TKWeightingPreferences";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import classNames from "classnames";
 import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {cardSpacing} from "../jss/TKUITheme";
 import TKUISelect from "../buttons/TKUISelect";
+import TKUISettingSection from "./TKUISettingSection";
+import TKUISettingLink from "./TKUISettingLink";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -41,11 +41,6 @@ interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
 
 export interface IStyle {
     main: CSSProps<IProps>;
-    section: CSSProps<IProps>;
-    sectionTitle: CSSProps<IProps>;
-    sectionBody: CSSProps<IProps>;
-    optionRow: CSSProps<IProps>;
-    optionLink: CSSProps<IProps>;
     checkboxRow: CSSProps<IProps>;
     specialServices: CSSProps<IProps>;
     icon: CSSProps<IProps>;
@@ -189,127 +184,105 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 slideUpOptions={this.props.slideUpOptions}
             >
                 <div className={classes.main}>
-                    <div className={classes.section}>
-                        <div className={classes.sectionBody}>
-                            <div className={classNames(classes.optionRow, classes.optionLink)}
-                                 onClick={() => this.setState({showPersonalData: true})}
-                            >
-                                {t("My.Personal.Data")}
-                                <IconRightArrow/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={classes.section}>
-                        <div className={classes.sectionTitle}>
-                            {t("My.Transport")}
-                        </div>
-                        <div className={classes.sectionBody}>
-                            <div className={classNames(classes.optionRow, classes.optionLink)}
-                                 onClick={() => this.setState({showTransports: true})}
-                            >
-                                {t("Transport")}
-                                <IconRightArrow/>
-                            </div>
-                            <div className={classNames(classes.optionRow, classes.optionLink)}
-                                 onClick={() => this.setState({showPriorities: true})}
-                            >
-                                {t("Priorities")}
-                                <IconRightArrow/>
-                            </div>
-                        </div>
-                    </div>
+                    <TKUISettingSection>
+                        <TKUISettingLink
+                            text={t("My.Personal.Data")}
+                            onClick={() => this.setState({showPersonalData: true})}/>
+                    </TKUISettingSection>
+                    <TKUISettingSection title={t("My.Transport")}>
+                        <TKUISettingLink
+                            text={t("Transport")}
+                            onClick={() => this.setState({showTransports: true})}
+                        />
+                        <TKUISettingLink
+                            text={t("Priorities")}
+                            onClick={() => this.setState({showPriorities: true})}
+                        />
+                    </TKUISettingSection>
                     {false &&   // Disabled for now
-                    <div className={classes.section}>
-                        <div className={classes.sectionTitle} tabIndex={0}>
-                            Map Options
-                        </div>
-                        <div className={classes.sectionBody}>
-                            <div className={classNames(classes.optionRow, classes.specialServices)}>
-                                <div>
-                                    <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
-                                         className={classes.icon}
-                                         aria-hidden="true"/>
-                                    {/*<Checkbox id="mo-mw"*/}
-                                    {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}*/}
-                                    {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}*/}
-                                    {/*ariaLabelledby={"label-mo-mw"}/>*/}
-                                    <label htmlFor="mo-mw" id={"label-mo-mw"}>
-                                        MyWay retailers
-                                    </label>
-                                </div>
-                                <div>
-                                    <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
-                                         className={classes.icon}
-                                         aria-hidden="true"/>
-                                    {/*<Checkbox id="mo-pr"*/}
-                                    {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}*/}
-                                    {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}*/}
-                                    {/*ariaLabelledby={"label-mo-pr"}/>*/}
-                                    <label htmlFor="mo-pr" id={"label-mo-pr"}>
-                                        Park & Ride
-                                    </label>
-                                </div>
-                                <div>
-                                    <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")}
-                                         className={classes.icon}
-                                         aria-hidden="true"/>
-                                    <Tooltip
-                                        placement="top"
-                                        overlay={
-                                            <div className={classes.tooltip}>
-                                                This option displays bike share locations. Check current
-                                                availability <a href="https://airbike.network/#download"
-                                                                target="_blank"
-                                                                className={classes.link}>here</a>.
-                                            </div>
-                                        }
-                                        align={{offset: [0, -10]}}
-                                        overlayClassName={classes.tooltipOverlay}
-                                        mouseEnterDelay={.5}
-                                    >
-                                        <div className={classes.checkboxGroup}>
-                                            {/*<Checkbox id="mo-bs"*/}
-                                            {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}*/}
-                                            {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}*/}
-                                            {/*ariaLabelledby={"label-mo-bs"}/>*/}
-                                            <label htmlFor="mo-bs" id={"label-mo-bs"}>
-                                                Bike Share
-                                            </label>
-                                            <img src={Constants.absUrl("/images/ic-info-circle.svg")}
-                                                 aria-hidden={true}
-                                                 className={classes.infoIcon}/>
+                    <TKUISettingSection>
+                        <div className={classes.specialServices}>
+                            <div>
+                                <img src={Constants.absUrl("/images/modeicons/ic-myway.svg")}
+                                     className={classes.icon}
+                                     aria-hidden="true"/>
+                                {/*<Checkbox id="mo-mw"*/}
+                                {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.MY_WAY_FACILITY) !== -1}*/}
+                                {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.MY_WAY_FACILITY, checked)}*/}
+                                {/*ariaLabelledby={"label-mo-mw"}/>*/}
+                                <label htmlFor="mo-mw" id={"label-mo-mw"}>
+                                    MyWay retailers
+                                </label>
+                            </div>
+                            <div>
+                                <img src={Constants.absUrl("/images/modeicons/ic-parkAndRide.svg")}
+                                     className={classes.icon}
+                                     aria-hidden="true"/>
+                                {/*<Checkbox id="mo-pr"*/}
+                                {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.PARK_AND_RIDE_FACILITY) !== -1}*/}
+                                {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.PARK_AND_RIDE_FACILITY, checked)}*/}
+                                {/*ariaLabelledby={"label-mo-pr"}/>*/}
+                                <label htmlFor="mo-pr" id={"label-mo-pr"}>
+                                    Park & Ride
+                                </label>
+                            </div>
+                            <div>
+                                <img src={Constants.absUrl("/images/modeicons/ic-bikeShare.svg")}
+                                     className={classes.icon}
+                                     aria-hidden="true"/>
+                                <Tooltip
+                                    placement="top"
+                                    overlay={
+                                        <div className={classes.tooltip}>
+                                            This option displays bike share locations. Check current
+                                            availability <a href="https://airbike.network/#download"
+                                                            target="_blank"
+                                                            className={classes.link}>here</a>.
                                         </div>
-                                    </Tooltip>
-                                </div>
+                                    }
+                                    align={{offset: [0, -10]}}
+                                    overlayClassName={classes.tooltipOverlay}
+                                    mouseEnterDelay={.5}
+                                >
+                                    <div className={classes.checkboxGroup}>
+                                        {/*<Checkbox id="mo-bs"*/}
+                                        {/*checked={this.state.update.mapLayers.indexOf(MapLocationType.BIKE_POD) !== -1}*/}
+                                        {/*onChange={(checked: boolean) => this.onMapOptionChange(MapLocationType.BIKE_POD, checked)}*/}
+                                        {/*ariaLabelledby={"label-mo-bs"}/>*/}
+                                        <label htmlFor="mo-bs" id={"label-mo-bs"}>
+                                            Bike Share
+                                        </label>
+                                        <img src={Constants.absUrl("/images/ic-info-circle.svg")}
+                                             aria-hidden={true}
+                                             className={classes.infoIcon}/>
+                                    </div>
+                                </Tooltip>
                             </div>
                         </div>
-                    </div>
-                    }
-                    <div className={classes.section}>
-                        <div className={classes.sectionBody}>
-                            <div className={classNames(classes.optionRow, classes.checkboxRow)}>
-                                <div>
-                                    {t("Appearance")}
-                                </div>
-                                <TKUISelect
-                                    options={appearanceOptions}
-                                    value={appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
-                                    onChange={(option) => {
-                                        this.setState((prevState: IState) => ({
-                                            update: Util.iAssign(prevState.update, { isDarkMode: option.value })
-                                        }), () => {
-                                            this.applyChanges();
-                                        });
-                                    }}
-                                    className={classes.optionSelect}
-                                    menuStyle={{
-                                        marginTop: '2px',
-                                    }}
-                                    renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
-                                />
+                    </TKUISettingSection>}
+                    <TKUISettingSection>
+                        <div className={classes.checkboxRow}>
+                            <div>
+                                {t("Appearance")}
                             </div>
+                            <TKUISelect
+                                options={appearanceOptions}
+                                value={appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
+                                onChange={(option) => {
+                                    this.setState((prevState: IState) => ({
+                                        update: Util.iAssign(prevState.update, { isDarkMode: option.value })
+                                    }), () => {
+                                        this.applyChanges();
+                                    });
+                                }}
+                                className={classes.optionSelect}
+                                menuStyle={{
+                                    marginTop: '2px',
+                                }}
+                                renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                            />
                         </div>
-                    </div>
+                    </TKUISettingSection>
                     {customSettings}
                 </div>
                 {personalDataSettings}
