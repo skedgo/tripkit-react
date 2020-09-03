@@ -28,34 +28,6 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
                 padding: '15px'
             }
         },
-        section: {
-            marginBottom: '20px'
-        },
-        sectionTitle: {
-            ...genStyles.fontM,
-            padding: '15px 30px'
-        },
-        sectionBody: {
-            padding: '0 30px',
-            borderTop: '1px solid ' + black(4, theme.isDark),
-            ...theme.divider
-        },
-        optionRow: {
-            ...genStyles.flex,
-            ...genStyles.alignCenter,
-            padding: '15px 0',
-            '&:not(:last-child)': {
-                ...theme.divider
-            }
-        },
-        optionLink: {
-            ...genStyles.spaceBetween,
-            cursor: 'pointer',
-            '& svg': {
-                ...genStyles.svgFillCurrColor,
-                color: theme.colorPrimary
-            }
-        },
         specialServices: {
             ...genStyles.flex,
             ...genStyles.justifyStart,

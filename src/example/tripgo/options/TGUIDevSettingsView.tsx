@@ -17,6 +17,7 @@ import {TKUIProfileViewStyle} from "../../../options/TKUIProfileView";
 import {useState} from 'react';
 import {OptionProps} from "react-select";
 import TGUIEditApiKeyView, {EditResult} from "./TGUIEditApiKeyView";
+import TKUISettingSection from "../../../options/TKUISettingSection";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -100,9 +101,9 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
         const editable = data.value !== 'add' && !Object.keys(getPredefinedApiKeys()).includes(data.label);
         return (
             <div ref={innerRef}
-                {...innerProps}
-                className={classNames(classes.apiKeyOption, isSelected && classes.apiKeyOptionSelected,
-                    isFocused && classes.apiKeyOptionFocused)}
+                 {...innerProps}
+                 className={classNames(classes.apiKeyOption, isSelected && classes.apiKeyOptionSelected,
+                     isFocused && classes.apiKeyOptionFocused)}
             >
                 {children}
                 {editable &&
@@ -161,42 +162,40 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
             slideUpOptions={props.slideUpOptions}
         >
             <div className={classes.main}>
-                <div className={classes.section}>
-                    <div className={classes.sectionBody}>
-                        <div className={classNames(classes.optionRow, classes.checkboxRow)}>
-                            <div>
-                                API key
-                            </div>
-                            <TKUISelect
-                                options={apiKeyOptions}
-                                value={apiKeyOptions.find((option: any) =>
-                                    editingKey === '' ? option.value === 'add' : option.label === apiKeyName)}
-                                onChange={(option) => {
-                                    if (option.value === 'add') {
-                                        setEditingKey('');
-                                        return;
-                                    }
-                                    const customDataUpdate = {
-                                        ...customData,
-                                        apiKey: option.label
-                                    };
-                                    const update = Util.iAssign(props.value, { customData: customDataUpdate });
-                                    props.onChange(update);
-                                }}
-                                isDisabled={editingKey !== undefined}
-                                className={classes.optionSelect}
-                                menuStyle={{
-                                    marginTop: '2px',
-                                }}
-                                renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
-                                components={{
-                                    Option: ApiKeyOption
-                                }}
-                            />
+                <TKUISettingSection>
+                    <div className={classes.checkboxRow}>
+                        <div>
+                            API key
                         </div>
-                        {editAPIKey}
+                        <TKUISelect
+                            options={apiKeyOptions}
+                            value={apiKeyOptions.find((option: any) =>
+                                editingKey === '' ? option.value === 'add' : option.label === apiKeyName)}
+                            onChange={(option) => {
+                                if (option.value === 'add') {
+                                    setEditingKey('');
+                                    return;
+                                }
+                                const customDataUpdate = {
+                                    ...customData,
+                                    apiKey: option.label
+                                };
+                                const update = Util.iAssign(props.value, { customData: customDataUpdate });
+                                props.onChange(update);
+                            }}
+                            isDisabled={editingKey !== undefined}
+                            className={classes.optionSelect}
+                            menuStyle={{
+                                marginTop: '2px',
+                            }}
+                            renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                            components={{
+                                Option: ApiKeyOption
+                            }}
+                        />
                     </div>
-                </div>
+                    {editAPIKey}
+                </TKUISettingSection>
             </div>
         </TKUICard>
     );
