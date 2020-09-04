@@ -25,7 +25,7 @@ import TGUILoadTripsView from "./TGUILoadTripsView";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,
     onChange: (value: TKUserProfile) => void;
-    onRequestClose?: (closeAll?: boolean) => void;
+    onRequestClose?: (closeAll: boolean) => void;
     slideUpOptions?: TKUISlideUpOptions;
     parentElement?: any;
 }
@@ -161,7 +161,7 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
         <TKUICard
             title={"Beta Testing"}
             presentation={props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
-            onRequestClose={props.onRequestClose}
+            onRequestClose={() => props.onRequestClose && props.onRequestClose(false)}
             slideUpOptions={props.slideUpOptions}
         >
             <div className={classes.main}>
@@ -206,12 +206,14 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                     />
                     {showLoadTrips &&
                     <TGUILoadTripsView
-                        onRequestClose={(closeAll?: boolean) => {
+                        onRequestClose={(closeAll: boolean) => {
                             setShowLoadTrips(false);
                             if (closeAll) {
                                 props.onRequestClose && props.onRequestClose(true);
                             }
-                        }}/>}
+                        }}
+                        slideUpOptions={props.slideUpOptions}
+                    />}
                 </TKUISettingSection>
             </div>
         </TKUICard>

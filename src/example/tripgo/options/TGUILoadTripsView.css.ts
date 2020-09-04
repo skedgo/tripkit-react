@@ -3,6 +3,7 @@ import {TKUIStyles} from "../../../jss/StyleHelper";
 import genStyles from "../../../css/GenStyle.css";
 import {tGUIFeedbackFormDefaultStyle} from "../feedback/TGUIFeedbackForm.css";
 import {TGUILoadTripsViewProps, TGUILoadTripsViewStyle} from "./TGUILoadTripsView";
+import DeviceUtil from "../../../util/DeviceUtil";
 
 export const tGUILoadTripsViewDefaultStyle: TKUIStyles<TGUILoadTripsViewStyle, TGUILoadTripsViewProps> =
     (theme: TKUITheme) => ({
@@ -21,14 +22,16 @@ export const tGUILoadTripsViewDefaultStyle: TKUIStyles<TGUILoadTripsViewStyle, T
         },
         msgTextArea: {
             border: 'none',
-            ...genStyles.fontSM,
             marginRight: '-15px',
             marginLeft: '-15px',
-            borderBottom: '1px solid ' + tKUIColors.black4,
             padding: '15px',
             marginBottom: '30px',
             resize: 'none',
-            ...genStyles.grow
+            background: 'none',
+            ...genStyles.grow,
+            ...theme.divider,
+            ...theme.textColorDefault,
+            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
         },
         row: {
             ...genStyles.flex,

@@ -91,8 +91,10 @@ interface IState {
 
 class TKUICard extends React.Component<IProps, IState> {
 
-    private static COUNT = 0;
+    public static SLIDE_UP_COUNT = 0;
+    private static MODAL_COUNT = 0;
     private zIndex = 1002;
+    private firstModal = false;
 
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
@@ -107,7 +109,20 @@ class TKUICard extends React.Component<IProps, IState> {
         this.state = {
             slideUpPosition: slideUpPosition,
             cardOnTop: slideUpPosition === TKUISlideUpPosition.UP
+        };
+
+        if (this.props.presentation === CardPresentation.MODAL) {
+            TKUICard.MODAL_COUNT++;
+        } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
+            TKUICard.SLIDE_UP_COUNT++;
         }
+        // First modal at the moment of creation, so will show fog. Assume a dialogs close in reverse order they were
+        // opened, so the first opened (showing fog) is the last closed.
+        this.firstModal = TKUICard.MODAL_COUNT === 1;
+        // Z-index is asigned on card construction, contemplating slide-us and modals (since presentation can switch
+        // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
+        // created.
+        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
     }
 
     public render(): React.ReactNode {
@@ -192,10 +207,11 @@ class TKUICard extends React.Component<IProps, IState> {
                                 transform: 'translate(-55%, 0)',
                                 left: '55%',
                                 minWidth: '500px'
-                            }
+                            },
+                            ...(!this.firstModal ? { overlay: {background: 'none'} } : undefined)
                         }}
                         shouldCloseOnEsc={true}
-                        onRequestClose={this.props.onRequestClose}
+                        onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
                         appElement={this.props.parentElement}
                         {...this.props.modalOptions}
                     >
@@ -209,17 +225,26 @@ class TKUICard extends React.Component<IProps, IState> {
         // if (this.props.top !== prevProps.top) {
         //     this.props.refreshStyles();
         // }
-    }
-
-    public componentDidMount() {
-        // Just count floating cards (all but NONE). Notice I also count MODAL(s) since they may change to SLIDE_UP(s)
-        // on landscape / portrait switch.
-        this.props.presentation !== CardPresentation.NONE && TKUICard.COUNT++;
-        this.zIndex = 1001 + TKUICard.COUNT;
+        if (this.props.presentation !== prevProps.presentation) {
+            if (this.props.presentation === CardPresentation.MODAL) {
+                TKUICard.MODAL_COUNT++;
+            } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
+                TKUICard.SLIDE_UP_COUNT++;
+            }
+            if (prevProps.presentation === CardPresentation.MODAL) {
+                TKUICard.MODAL_COUNT--;
+            } else if (prevProps.presentation === CardPresentation.SLIDE_UP) {
+                TKUICard.SLIDE_UP_COUNT--;
+            }
+        }
     }
 
     public componentWillUnmount() {
-        this.props.presentation !== CardPresentation.NONE && TKUICard.COUNT--;
+        if (this.props.presentation === CardPresentation.MODAL) {
+            TKUICard.MODAL_COUNT--;
+        } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
+            TKUICard.SLIDE_UP_COUNT--;
+        }
     }
 }
 
