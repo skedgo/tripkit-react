@@ -347,7 +347,12 @@ class TKUILocationBox extends Component<IProps, IState> {
         const classes = this.props.classes;
         return (
             <div className={classes.main}>
-                <input type="text" {...props} style={this.props.inputStyle} className={classes.input}/>
+                <input type="text"
+                       spellCheck="false"
+                       autoComplete="off"
+                       autoCorrect="off"
+                       autoCapitalize="off"
+                       {...props} style={this.props.inputStyle} className={classes.input}/>
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?
