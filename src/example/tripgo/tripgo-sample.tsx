@@ -47,7 +47,7 @@ const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUser
                     <TGUIDevSettingsView
                         value={props.value}
                         onChange={props.onChange}
-                        onRequestClose={(closeAll?: boolean) => {
+                        onRequestClose={(closeAll: boolean) => {
                             setShow(false);
                             if (closeAll) {
                                 props.onRequestClose && props.onRequestClose();

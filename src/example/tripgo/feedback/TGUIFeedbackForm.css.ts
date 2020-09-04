@@ -3,6 +3,7 @@ import {tKUIColors, TKUITheme} from "../../../jss/TKUITheme";
 import {TGUIFeedbackFormProps, TGUIFeedbackFormStyle} from "./TGUIFeedbackForm";
 import genStyles from "../../../css/GenStyle.css";
 import {resetStyles} from "../../../css/ResetStyle.css";
+import DeviceUtil from "../../../util/DeviceUtil";
 
 export const tGUIFeedbackFormDefaultStyle: TKUIStyles<TGUIFeedbackFormStyle, TGUIFeedbackFormProps> =
     (theme: TKUITheme) => ({
@@ -25,8 +26,9 @@ export const tGUIFeedbackFormDefaultStyle: TKUIStyles<TGUIFeedbackFormStyle, TGU
         },
         input: {
             ...resetStyles.input,
-            ...genStyles.fontS,
-            ...genStyles.grow
+            ...genStyles.grow,
+            ...theme.textColorDefault,
+            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
         },
         msgTextArea: {
             border: 'none',

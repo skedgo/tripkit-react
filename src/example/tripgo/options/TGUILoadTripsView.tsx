@@ -17,7 +17,7 @@ import Trip from "../../../model/trip/Trip";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    onRequestClose: (closeAll?: boolean) => void;
+    onRequestClose: (closeAll: boolean) => void;
     slideUpOptions?: TKUISlideUpOptions;
 }
 
@@ -89,7 +89,7 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
             title={"Load trips from url"}
             presentation={props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={props.slideUpOptions}
-            onRequestClose={() => props.onRequestClose()}
+            onRequestClose={() => props.onRequestClose && props.onRequestClose(false)}
         >
             <div className={classes.main}>
                 <div className={classes.content}>
