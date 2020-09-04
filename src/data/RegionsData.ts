@@ -38,9 +38,11 @@ export class RegionsData {
                     const userProfile = OptionsData.instance.get();
                     const invalidDevKey = userProfile.customData && userProfile.customData.apiKey;
                     if (invalidDevKey) {
-                        delete userProfile.customData.apiKey;
-                        OptionsData.instance.save(userProfile);
-                        window.alert("Invalid API key: " + invalidDevKey + ". Will reset to production key on reload.")
+                        if (window.confirm("Invalid API key: " + invalidDevKey + ". Will reset to production key and reload.")) {
+                            delete userProfile.customData.apiKey;
+                            OptionsData.instance.save(userProfile);
+                            window.location.reload();
+                        }
                     }
                 }
                 throw error;

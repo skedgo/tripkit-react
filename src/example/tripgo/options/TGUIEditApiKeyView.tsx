@@ -91,6 +91,11 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                                }
                            }}
                            placeholder={"(required)"}
+                           type="text"
+                           spellCheck="false"
+                           autoComplete="off"
+                           autoCorrect="off"
+                           autoCapitalize="off"
                     />
                     {keyNameError&&
                     <div className={classes.fieldError}>
@@ -110,6 +115,11 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                                setKeyValue(e.target.value);
                            }}
                            placeholder={"(required)"}
+                           type="text"
+                           spellCheck="false"
+                           autoComplete="off"
+                           autoCorrect="off"
+                           autoCapitalize="off"
                     />
                     {keyValueError &&
                     <div className={classes.fieldError}>
@@ -136,7 +146,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                                 }}
                     />
                 </div>
-            </div>;
+            </div>
         </TKUICard>
     )
 };

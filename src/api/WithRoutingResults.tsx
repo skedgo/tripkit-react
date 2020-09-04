@@ -580,12 +580,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public computeTrips(query: RoutingQuery): Promise<Array<Promise<Trip[]>>> {
             const routingPromises: Promise<Array<Promise<Trip[]>>> = this.getQueryUrlsWaitRegions(query).then((queryUrls: string[]) => {
                 return queryUrls.length === 0 ? [] : queryUrls.map((endpoint: string) => {
-                    return TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET, undefined, false)
-                        .then((routingResultsJson: any) => {
-                            if (routingResultsJson.error) {
-                                throw new TKError(routingResultsJson.error, routingResultsJson.errorCode.toString(), routingResultsJson.usererror);
-                            }
-                            const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
+                    return TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, RoutingResults)
+                        .then((routingResults: RoutingResults) => {
                             routingResults.setQuery(query);
                             routingResults.setSatappQuery(TripGoApi.getSatappUrl(endpoint));
                             return routingResults.groups;

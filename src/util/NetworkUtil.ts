@@ -36,7 +36,12 @@ class NetworkUtil {
         if (response.status === 204) {  // No content (so, no response.json()).
             return Promise.resolve({});
         }
-        return response.json();
+        return response.json().then(jsonData => {
+            if (jsonData.error) {
+                throw new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+            }
+            return jsonData;
+        });
     }
 
     public static jsonCallback(response: any): Promise<any> {

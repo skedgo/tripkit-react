@@ -81,7 +81,8 @@ class TripGoApi {
                     return undefined;
                 }
                 Util.log(reason, Env.PRODUCTION);
-                throw reason;
+                // Don't re-throw exception since we are not showing any message to user for now.
+                return undefined;
             })
     }
 

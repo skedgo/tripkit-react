@@ -60,8 +60,10 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                     tKState.onTripDetailsView(true);
                 }
             })
-            .catch((error: Error) => tKState.onWaitingStateLoad(false,
-                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false)));
+            .catch((error: Error) => {
+                tKState.onWaitingStateLoad(false,
+                    new TKError(error.message, ERROR_LOADING_DEEP_LINK, false));
+            });
     };
 
     const validateForm = () => {

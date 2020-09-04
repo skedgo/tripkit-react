@@ -139,6 +139,11 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                            }
                                        })}
                                placeholder={"(required)"}
+                               type="text"
+                               spellCheck="false"
+                               autoComplete="off"
+                               autoCorrect="off"
+                               autoCapitalize="off"
                         />
                         {this.state.titleError &&
                         <div className={classes.fieldError}>
@@ -157,6 +162,10 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                                this.setState({emailError: undefined});
                                            }
                                        })}
+                               spellCheck="false"
+                               autoComplete="off"
+                               autoCorrect="off"
+                               autoCapitalize="off"
                         />
                         {this.state.emailError &&
                         <div className={classes.fieldError}>
@@ -169,6 +178,11 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                placeholder={"Anonymous"}
                                value={this.state.name}
                                onChange={(e: any) => this.setState({name: e.target.value})}
+                               type="text"
+                               spellCheck="false"
+                               autoComplete="off"
+                               autoCorrect="off"
+                               autoCapitalize="off"
                         />
                     </div>
                     <textarea
