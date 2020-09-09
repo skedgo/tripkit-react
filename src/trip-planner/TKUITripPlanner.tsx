@@ -146,7 +146,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             category: "query input",
             action: "display transport switches"
         });
-        RegionsData.instance.requireRegions().then(() => this.setState({showSettings: true}));
+        this.setState({showSettings: true});
     }
 
     private onShowTransportSettings() {

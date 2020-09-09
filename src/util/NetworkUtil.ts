@@ -162,6 +162,10 @@ class NetworkUtil {
         }
         return Promise.resolve(NetworkUtil.getCache().get(cacheKey));
     }
+
+    public static delayPromise<T>(duration: number): ((data: T) => Promise<T>) {
+        return (data) => new Promise(resolve => setTimeout(() => resolve(data), duration));
+    }
 }
 
 // Exports to gwt
