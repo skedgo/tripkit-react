@@ -203,10 +203,9 @@ class TKUICard extends React.Component<IProps, IState> {
                                 background: 'none',
                                 border: 'none',
                                 padding: '5px',
-                                // maxWidth: '600px',
-                                transform: 'translate(-55%, 0)',
-                                left: '55%',
-                                minWidth: '500px'
+                                transform: 'translate(-50%, 0)',
+                                left: '50%',
+                                width: '500px'
                             },
                             ...(!this.firstModal ? { overlay: {background: 'none'} } : undefined)
                         }}

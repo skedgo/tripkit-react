@@ -17,6 +17,9 @@ class TKStateProvider extends React.Component<IProps,{}> {
     constructor(props: IProps) {
         super(props);
         TripGoApi.apiKey = props.config.apiKey;
+        if (props.config.server) {
+            TripGoApi.server = props.config.server;
+        }
     }
 
     public render(): React.ReactNode {
@@ -59,6 +62,13 @@ class TKStateProvider extends React.Component<IProps,{}> {
     public componentDidUpdate() {
         if (TripGoApi.apiKey !== this.props.config.apiKey) {
             TripGoApi.apiKey = this.props.config.apiKey
+        }
+        if (TripGoApi.server !== this.props.config.server) {
+            if (this.props.config.server) {
+                TripGoApi.server = this.props.config.server
+            } else {
+                this.props.config.server = TripGoApi.SATAPP;
+            }
         }
     }
 

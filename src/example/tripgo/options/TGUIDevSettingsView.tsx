@@ -20,6 +20,8 @@ import TGUIEditApiKeyView, {EditResult} from "./TGUIEditApiKeyView";
 import TKUISettingSection from "../../../options/TKUISettingSection";
 import TKUISettingLink from "../../../options/TKUISettingLink";
 import TGUILoadTripsView from "./TGUILoadTripsView";
+import TripGoApi from "../../../api/TripGoApi";
+import Trip from "../../../model/trip/Trip";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -58,6 +60,13 @@ function getPredefinedApiKeys(): object {
     });
 }
 
+function getPredefinedServers(): object {
+    return ({
+        'production': TripGoApi.SATAPP,
+        'beta': TripGoApi.SATAPP_BETA
+    });
+}
+
 export function getApiKey(userProfile: TKUserProfile): string {
     const customData = userProfile.customData;
     const customApiKeys = customData && customData.apiKeys ? customData.apiKeys : undefined;
@@ -67,16 +76,72 @@ export function getApiKey(userProfile: TKUserProfile): string {
     };
     const apiKeyName = customData && customData.apiKey ? customData.apiKey :
         Object.keys(getPredefinedApiKeys())[0];
-    console.log(apiKeyName);
     return apiKeys[apiKeyName];
+}
+
+export function getServer(userProfile: TKUserProfile): string {
+    const customData = userProfile.customData;
+    const customServers = customData && customData.servers ? customData.servers : undefined;
+    const servers = {
+        ...getPredefinedServers(),
+        ...customServers
+    };
+    const serverName = customData && customData.server ? customData.server :
+        Object.keys(getPredefinedServers())[0];
+    return servers[serverName];
 }
 
 const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     const [editingKey, setEditingKey] = useState<string | undefined>(undefined);
+    const [editingServer, setEditingServer] = useState<string | undefined>(undefined);
     const [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
+
     const classes = props.classes;
     const userProfile = props.value;
     const customData = userProfile.customData;
+
+    const customServers = customData && customData.servers ? customData.servers : undefined;
+    const servers = {
+        ...getPredefinedServers(),
+        ...customServers
+    };
+    const serverName = customData && customData.server ? customData.server :
+        Object.keys(getPredefinedServers())[0];
+    const serverOptions = Object.keys(servers)
+        .map((serverName: string) => ({ value: servers[serverName], label: serverName}))
+        .concat([{ value: 'add', label: 'Add...'}]);
+
+    const ServerOption = (props: any) => {
+        const {
+            children,
+            className,
+            cx,
+            getStyles,
+            isDisabled,
+            isFocused,
+            isSelected,
+            innerRef,
+            innerProps,
+            data
+        } = props;
+        const editable = data.value !== 'add' && !Object.keys(getPredefinedServers()).includes(data.label);
+        return (
+            <div ref={innerRef}
+                 {...innerProps}
+                 className={classNames(classes.apiKeyOption, isSelected && classes.apiKeyOptionSelected,
+                     isFocused && classes.apiKeyOptionFocused)}
+            >
+                {children}
+                {editable &&
+                <button className={classes.apiKeyEditBtn}
+                        onClick={() => setEditingServer(data.label)}
+                >
+                    Edit
+                </button>}
+            </div>
+        );
+    };
+
     const customApiKeys = customData && customData.apiKeys ? customData.apiKeys : undefined;
     const apiKeys = {
         ...getPredefinedApiKeys(),
@@ -119,10 +184,64 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
         );
     };
 
+    const editServer = editingServer !== undefined &&
+        <TGUIEditApiKeyView
+            title={editingServer === '' ? "New server" : "Edit server"}
+            apiKeys={servers}
+            editingKey={editingServer}
+            nameLabel={"Name"}
+            namePlaceholder={"(required)"}
+            valueLabel={"Url"}
+            valueType={"url"}
+            valuePlaceholder={"e.g. http://localhost:8080/satapp-debug (required)"}
+            onRequestClose={(result: EditResult, keyUpdate?: {keyName: string, keyValue: string}) => {
+                if (result === EditResult.SAVE) {
+                    const serversUpdate = {
+                        ...customServers
+                    };
+                    if (editingServer !== '') {
+                        delete serversUpdate[editingServer];
+                    }
+                    let updateValue = keyUpdate!.keyValue;
+                    if (updateValue.endsWith("/")) {
+                        updateValue = updateValue.slice(0, -1);
+                    }
+                    serversUpdate[keyUpdate!.keyName] = updateValue;
+                    const customDataUpdate = {
+                        ...customData,
+                        servers: serversUpdate,
+                        server: keyUpdate!.keyName
+                    };
+                    const update = Util.iAssign(props.value, { customData: customDataUpdate });
+                    props.onChange(update);
+                    setEditingServer(undefined);
+                } else if (result === EditResult.DELETE) {
+                    const serversUpdate = {
+                        ...customServers
+                    };
+                    delete serversUpdate[editingServer];
+                    const customDataUpdate = {
+                        ...customData,
+                        servers: serversUpdate,
+                        server: getPredefinedServers()[0]
+                    };
+                    const profileUpdate = Util.iAssign(props.value, { customData: customDataUpdate });
+                    props.onChange(profileUpdate);
+                }
+                setEditingServer(undefined);
+            }}
+            slideUpOptions={props.slideUpOptions}
+        />;
+
     const editAPIKey = editingKey !== undefined &&
         <TGUIEditApiKeyView
+            title={editingServer === '' ? "New API key" : "Edit API key"}
             apiKeys={apiKeys}
             editingKey={editingKey}
+            nameLabel={"Name"}
+            namePlaceholder={"(required)"}
+            valueLabel={"Key"}
+            valuePlaceholder={"(required)"}
             onRequestClose={(result: EditResult, keyUpdate?: {keyName: string, keyValue: string}) => {
                 if (result === EditResult.SAVE) {
                     const apiKeysUpdate = {
@@ -166,6 +285,38 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
         >
             <div className={classes.main}>
                 <TKUISettingSection>
+                    <div className={classes.checkboxRow}>
+                        <div>
+                            Server
+                        </div>
+                        <TKUISelect
+                            options={serverOptions}
+                            value={serverOptions.find((option: any) =>
+                                editingServer === '' ? option.value === 'add' : option.label === serverName)}
+                            onChange={(option) => {
+                                if (option.value === 'add') {
+                                    setEditingServer('');
+                                    return;
+                                }
+                                const customDataUpdate = {
+                                    ...customData,
+                                    server: option.label
+                                };
+                                const update = Util.iAssign(props.value, { customData: customDataUpdate });
+                                props.onChange(update);
+                            }}
+                            isDisabled={editingServer !== undefined}
+                            className={classes.optionSelect}
+                            menuStyle={{
+                                marginTop: '2px',
+                            }}
+                            renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                            components={{
+                                Option: ServerOption
+                            }}
+                        />
+                    </div>
+                    {editServer}
                     <div className={classes.checkboxRow}>
                         <div>
                             API key

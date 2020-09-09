@@ -1,6 +1,7 @@
 import * as React from "react";
 import OptionsData from "../data/OptionsData";
 import TKUserProfile from "../model/options/TKUserProfile";
+import {EventSubscription} from "fbemitter";
 
 export interface IOptionsContext {
     userProfile: TKUserProfile,
@@ -16,6 +17,8 @@ export const OptionsContext = React.createContext<IOptionsContext>({
 
 class OptionsProvider extends React.Component<{}, {value: TKUserProfile}> {
 
+    eventSubscription: EventSubscription;
+
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -23,7 +26,7 @@ class OptionsProvider extends React.Component<{}, {value: TKUserProfile}> {
         };
         // In case options are changed directly through OptionsData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
-        OptionsData.instance.addChangeListener((update: TKUserProfile) => this.setState({value: update}));
+        this.eventSubscription = OptionsData.instance.addChangeListener((update: TKUserProfile) => this.setState({value: update}));
         this.onChange = this.onChange.bind(this);
     }
 
@@ -44,6 +47,10 @@ class OptionsProvider extends React.Component<{}, {value: TKUserProfile}> {
                 {this.props.children}
             </OptionsContext.Provider>
         );
+    }
+
+    public componentWillUnmount() {
+        this.eventSubscription.remove();
     }
 }
 

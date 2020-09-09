@@ -50,7 +50,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const {thumbIcon, label, leftLabel, rightLabel, ...sliderProps} = this.props;
+        const {thumbIcon, label, leftLabel, rightLabel, isDarkMode, ...sliderProps} = this.props;
         return (
             <div style={genStyles.fontS}>
                 <this.WithStyle {...sliderProps}/>

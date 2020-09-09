@@ -15,15 +15,10 @@ class TripGoApi {
 
     public static isBetaServer = false;
     public static apiKey = "";
+    public static server = TripGoApi.SATAPP;
 
     public static getServer(): string {
-        if (Environment.isStaging()) {
-            return this.SATAPP_STAGING;
-        }
-        if (Environment.isBeta()) {
-            return this.SATAPP_BETA;
-        }
-        return this.SATAPP;
+        return this.server;
     }
 
     public static apiCall(endpoint: string, method: string, body?: any, cache: boolean = false): Promise<any> {

@@ -66,6 +66,7 @@ interface ITKUIConfigRequired {
 }
 
 interface ITKUIConfigOptional {
+    server: string;
     /**
      * Override for [default theme object]()
      */

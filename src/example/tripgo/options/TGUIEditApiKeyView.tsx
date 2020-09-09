@@ -11,6 +11,7 @@ import {Subtract} from "utility-types";
 import {TKUISlideUpOptions} from "../../../card/TKUISlideUp";
 import {tGUIEditApiKeyViewDefaultStyle} from "./TGUIEditApiKeyView.css";
 import {TGUIFeedbackFormStyle} from "../feedback/TGUIFeedbackForm";
+import {validUrl} from "./TGUILoadTripsView";
 
 export enum EditResult {
     SAVE,
@@ -19,8 +20,14 @@ export enum EditResult {
 }
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    title: string;
     editingKey: string;
     apiKeys: object;
+    nameLabel?: string;
+    namePlaceholder?: string;
+    valueLabel?: string;
+    valueType?: 'url';
+    valuePlaceholder?: string;
     onRequestClose: (result: EditResult, update?: {keyName: string, keyValue: string}) => void;
     slideUpOptions?: TKUISlideUpOptions;
 }
@@ -66,13 +73,17 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
         if (keyValue === "") {
             setKeyValueError("Required.");
             validKeyValue = false;
+        } else if (props.valueType === 'url' && !validUrl(keyValue)) {
+            setKeyValueError("Invalid url.");
+            validKeyValue = false;
         }
+
         return validKeyName && validKeyValue;
     };
     const classes = props.classes;
     return (
         <TKUICard
-            title={editingKey === '' ? "New API key" : "Edit API key"}
+            title={props.title}
             presentation={props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={props.slideUpOptions}
             onRequestClose={() => props.onRequestClose(EditResult.CANCEL)}
@@ -80,7 +91,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
             <div className={classes.newApiKey}>
                 <div className={classes.row}>
                     <div className={classes.label}>
-                        Name:
+                        {(props.nameLabel ? props.nameLabel : "Name") + ":"}
                     </div>
                     <input className={classes.input}
                            value={keyName}
@@ -90,7 +101,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                                    setKeyNameError(undefined);
                                }
                            }}
-                           placeholder={"(required)"}
+                           placeholder={props.namePlaceholder}
                            type="text"
                            spellCheck="false"
                            autoComplete="off"
@@ -104,7 +115,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                 </div>
                 <div className={classes.row}>
                     <div className={classes.label}>
-                        Key:
+                        {(props.valueLabel ? props.valueLabel : "Value") + ":"}
                     </div>
                     <input className={classes.input}
                            value={keyValue}
@@ -114,7 +125,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                                }
                                setKeyValue(e.target.value);
                            }}
-                           placeholder={"(required)"}
+                           placeholder={props.valuePlaceholder}
                            type="text"
                            spellCheck="false"
                            autoComplete="off"

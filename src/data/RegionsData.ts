@@ -32,20 +32,6 @@ export class RegionsData {
             TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 }))
             .then((regionResultsJson: any) => {
                 return Util.deserialize(regionResultsJson, RegionResults) as RegionResults;
-            })
-            .catch(error => {
-                if (error.message.includes("Invalid API key")) {
-                    const userProfile = OptionsData.instance.get();
-                    const invalidDevKey = userProfile.customData && userProfile.customData.apiKey;
-                    if (invalidDevKey) {
-                        if (window.confirm("Invalid API key: " + invalidDevKey + ". Will reset to production key and reload.")) {
-                            delete userProfile.customData.apiKey;
-                            OptionsData.instance.save(userProfile);
-                            window.location.reload();
-                        }
-                    }
-                }
-                throw error;
             });
         this.regionsPromise = this.regionsRequest.then((regionResults: RegionResults) => {
             this.regions = new Map<string, Region>();
