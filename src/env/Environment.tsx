@@ -11,7 +11,7 @@ class Environment {
     private static environment = Env.PRODUCTION;
 
     public static initialize() {
-        if (Constants.DEPLOY_URL.includes("-beta")) {
+        if (Constants.DEPLOY_URL.includes("-beta") || Constants.DEPLOY_URL.includes("tripkit.")) {
             this.environment = Env.BETA;
         } else if (Constants.DEPLOY_URL.startsWith("http://localhost")) {
             this.environment = Env.DEVELOPMENT;

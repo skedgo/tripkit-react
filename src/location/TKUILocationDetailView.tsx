@@ -127,7 +127,8 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
         LocationsData.instance.getLocationInfo(this.props.location)
-            .then((result: TKLocationInfo) => this.setState({locationInfo: result}));
+            .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
+            .catch((e) => console.log(e));
     }
 
 }

@@ -69,7 +69,8 @@ class LocationsData {
                         result.add(group);
                     }
                     this.fireChangeEvent(result);
-                });
+                })
+                .catch((e) => console.log(e));
         }
         return cachedResults;
     }

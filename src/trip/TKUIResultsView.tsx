@@ -44,6 +44,7 @@ import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper
 import TKUIErrorView from "../error/TKUIErrorView";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {cardSpacing} from "../jss/TKUITheme";
+import Environment from "../env/Environment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -278,7 +279,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             const errorMessage = TKErrorHelper.hasErrorCode(routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
                     {0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t)}) + "." :
-                routingError.usererror ? routingError.message : t("Something.went.wrong.");
+                routingError.usererror || Environment.isDev() || Environment.isBeta() ? routingError.message : t("Something.went.wrong.");
             const defaultErrorActions = this.getDefaultErrorActions(routingError);
             const errorActions = this.props.errorActions ? this.props.errorActions(routingError, defaultErrorActions) :
                 defaultErrorActions;
@@ -441,7 +442,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
     private refreshAlert() {
         this.props.query.to && LocationsData.instance.getLocationInfo(this.props.query.to)
-            .then((locInfo: TKLocationInfo) => this.setState({toLocInfo: locInfo}));
+            .then((locInfo: TKLocationInfo) => this.setState({toLocInfo: locInfo}))
+            .catch((e) => console.log(e));
     }
 
     public componentWillUnmount() {
