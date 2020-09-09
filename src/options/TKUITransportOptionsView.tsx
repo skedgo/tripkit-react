@@ -14,6 +14,7 @@ import RegionInfo from "../model/region/RegionInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -31,6 +32,8 @@ interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, I
 
 interface IStyle {
     main: CSSProps<IProps>;
+    loadingPanel: CSSProps<IProps>;
+    iconLoading: CSSProps<IProps>;
 }
 
 export type TKUITransportOptionsViewProps = IProps;
@@ -73,11 +76,8 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const region = this.props.region;
-        if (!region) {
-            return null;
-        }
+        const regionModes = region ? region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]) : undefined;
         const classes = this.props.classes;
-        const regionModes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
         const t = this.props.t;
         return (
             <TKUICard
@@ -86,22 +86,28 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
                 onRequestClose={this.onRequestClose}
                 slideUpOptions={this.props.slideUpOptions}
             >
-                <div className={classes.main}>
-                    {regionModes.map((mode: string, i: number) => {
-                        // Show wheelchair row just if region includes wheelchair accessibility information.
-                        if (mode === ModeIdentifier.WHEELCHAIR_ID &&
-                            (!this.props.regionInfo || !this.props.regionInfo.transitWheelchairAccessibility)) {
-                            return null;
-                        }
-                        const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                        return <TKUITransportOptionsRow
-                            mode={modeIdentifier}
-                            value={this.state.update}
-                            onChange={this.onChange}
-                            key={i}
-                        />
-                    })}
-                </div>
+                {!regionModes ?
+                    <div className={classes.loadingPanel}>
+                        <IconSpin className={classes.iconLoading} focusable="false"/>
+                    </div>
+                    :
+                    <div className={classes.main}>
+                        {regionModes.map((mode: string, i: number) => {
+                            // Show wheelchair row just if region includes wheelchair accessibility information.
+                            if (mode === ModeIdentifier.WHEELCHAIR_ID &&
+                                (!this.props.regionInfo || !this.props.regionInfo.transitWheelchairAccessibility)) {
+                                return null;
+                            }
+                            const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
+                            return <TKUITransportOptionsRow
+                                mode={modeIdentifier}
+                                value={this.state.update}
+                                onChange={this.onChange}
+                                key={i}
+                            />
+                        })}
+                    </div>
+                }
             </TKUICard>
         );
     }
