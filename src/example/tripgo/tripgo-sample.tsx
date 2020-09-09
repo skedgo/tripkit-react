@@ -182,14 +182,4 @@ const userLocationPromise = (window as any).tKUserLocationPromise ?
     (window as any).tKUserLocationPromise
         .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
 
-ReactDOM.render(
-    <OptionsProvider>
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <TKRoot config={{...config, apiKey: getApiKey(optionsContext.userProfile)}}>
-                    <TKUITripPlanner userLocationPromise={userLocationPromise}/>
-                    <TKStateUrl/>
-                </TKRoot>
-            }
-        </OptionsContext.Consumer>
-    </OptionsProvider>, document.getElementById("tripgo-sample-root"));
+ReactDOM.render(<TGApp/>, document.getElementById("tripgo-sample-root"));

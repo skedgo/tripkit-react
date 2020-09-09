@@ -42,6 +42,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TGUILoadTripsView"
 };
 
+export const validUrl = (text: string) => {
+    const url_pattern = "^https?:\\/\\/[^\\s$.?#].[^\\s]*$";
+    const urlRegex = RegExp(url_pattern);
+    return urlRegex.test(text);
+};
+
 const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
     const [tripsUrl, setTripsUrl] = useState<string>("");
     const [tripsUrlError, setTripsUrlError] = useState<string | undefined>(undefined);
@@ -59,10 +65,6 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                 if (trips && trips.length === 1) {
                     tKState.onTripDetailsView(true);
                 }
-            })
-            .catch((error: Error) => {
-                tKState.onWaitingStateLoad(false,
-                    new TKError(error.message, ERROR_LOADING_DEEP_LINK, false));
             });
     };
 
@@ -76,12 +78,6 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
             validTripsUrl = false;
         }
         return validTripsUrl;
-    };
-
-    const validUrl = (text: string) => {
-        const url_pattern = "^https?:\\/\\/[^\\s$.?#].[^\\s]*$";
-        const urlRegex = RegExp(url_pattern);
-        return urlRegex.test(text);
     };
 
     const classes = props.classes;
@@ -114,9 +110,12 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                 <TKUIButton type={TKUIButtonType.PRIMARY} text={"Load"}
                             onClick={() => {
                                 if (validateForm()) {
-                                    loadTripState(tripsUrl);
-                                        // .then(() => props.onRequestClose(true));
-                                    props.onRequestClose(true);
+                                    loadTripState(tripsUrl)
+                                        .then(() => props.onRequestClose(true))
+                                        .catch((error: Error) => {
+                                            props.tKState.onWaitingStateLoad(false,
+                                                new TKError(error.message, ERROR_LOADING_DEEP_LINK, false));
+                                        });
                                 }
                             }}
                 />

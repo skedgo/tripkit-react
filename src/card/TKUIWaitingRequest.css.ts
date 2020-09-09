@@ -7,7 +7,7 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
     (theme: TKUITheme) => ({
         main: {
             position: 'absolute',
-            zIndex: '1050',
+            zIndex: '1090',
             ...genStyles.flex,
             ...genStyles.center,
             ...genStyles.alignCenter
