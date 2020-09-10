@@ -14,8 +14,6 @@ import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconFavourite} from "../images/ic-favorite-outline.svg";
 import {ReactComponent as IconSettings} from "../images/ic-settings-gear.svg";
 import {TKUITheme} from "../index";
-import appleStoreLogo from "../images/logo/apple-store-logo.png";
-import playStoreLogo from "../images/logo/apple-store-logo.png";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     open?: boolean;
@@ -50,19 +48,7 @@ export type TKUISidebarStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISidebar {...props}/>,
     styles: tKUISidebarDefaultStyle,
-    classNamePrefix: "TKUISidebar",
-    props: (props: IProps) => ({
-        nativeAppLinks: () => {
-            const storeBtnStyle = {
-                height: '48px',
-                width: '144px'
-            };
-            return [
-                <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}/>,
-                <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}/>
-            ]
-        }
-    })
+    classNamePrefix: "TKUISidebar"
 };
 
 class TKUISidebar extends React.Component<IProps, {}> {
@@ -132,17 +118,6 @@ class TKUISidebar extends React.Component<IProps, {}> {
         const defaultMenuItems = this.getDefaultMenuItems();
         const menuItems = this.props.menuItems ? this.props.menuItems(defaultMenuItems) : defaultMenuItems;
         const logo = this.props.logo ? this.props.logo() : <TripgoLogo style={{height: '24px', width: '120px'}}/>
-        const nativeAppLinksFc = this.props.nativeAppLinks ? this.props.nativeAppLinks :
-            () => {
-                const storeBtnStyle = {
-                    height: '48px',
-                    width: '144px'
-                };
-                return [
-                    <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}/>,
-                    <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}/>
-                ]
-            };
         return (
             <Drawer
                 open={this.props.open}
@@ -169,7 +144,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                                     {t("Get.mobile.app") + ":"}
                                 </div>
                                 <div className={classes.nativeAppLinks}>
-                                    {nativeAppLinksFc()}
+                                    {this.props.nativeAppLinks()}
                                 </div>
                             </div>
                         }

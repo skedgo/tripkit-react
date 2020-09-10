@@ -30,6 +30,8 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../../util/TKUIResponsive
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
+import appleStoreLogo from "../../images/logo/apple-store-logo.png";
+import playStoreLogo from "../../images/logo/play-store-logo.png";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
@@ -205,6 +207,23 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                                  onRequestClose?: () => void) =>
                     <TGUIDevSettings value={userProfile} onChange={onUserProfileChange} onRequestClose={onRequestClose}/>
             } : undefined
+        },
+        TKUISidebar: {
+            props: {
+                nativeAppLinks: () => {
+                    const storeBtnStyle = {
+                        height: '48px',
+                        width: '144px',
+                        cursor: 'pointer'
+                    };
+                    return [
+                        <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}
+                             onClick={() => window.open( 'https://apps.apple.com/au/app/tripgo/id533630842', '_blank')}/>,
+                        <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}
+                             onClick={() => window.open( 'https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner', '_blank')}/>
+                    ]
+                }
+            }
         },
         onInitState: () => {
             RegionsData.instance.requireRegions().catch(error => {
