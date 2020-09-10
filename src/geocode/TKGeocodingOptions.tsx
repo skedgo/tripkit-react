@@ -23,7 +23,10 @@ TKGeocodingOptionsForDoc.displayName = 'Geocoding options';
 
 interface TKGeocodingOptions {
     /**
+     * Keys for default geocoders are: 'skedgo', 'cities', 'favourites', 'recent' and 'geolocation'
+     *
      * @ctype
+     * @default {skedgo, cities, favourites, recent, geolocation}
      */
     geocoders: {
         [key: string]: IGeocoder;

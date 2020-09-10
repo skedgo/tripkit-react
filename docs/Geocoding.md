@@ -1,7 +1,7 @@
 Location search component (TKUILocationBox, used by TKUIRoutingQueryInput and TKUILocationSearch) provides 
 autocompletion of addresses and POIs based on a customizable set of data sources. 
 The [geocoding config property] allows the specification of the set of geocoding sources to consider, as well as
-a compare function to sort and prioritize results coming from different sources, and analogResults function 
+a custom compare function to sort and prioritize results coming from different sources, and a function 
 to detect analog (duplicate) results between different data sources. 
 
 Data sources included by default are: 
@@ -12,21 +12,34 @@ Data sources included by default are:
 - Recent, with locations recently referenced by the user.
 - User geolocation, autocompleating with 'Current Location'.
 
-SEGUIR ACÁ:
 
-- customization (adding, removing) of data sources.
-- available geocoder implementations: Pelias, and Static.
-- implement your own: extend IGeocoder (warn: not typescript).
+You can add other data sources by providing [geocoder connector objects](), specifying 
+the interface between the SDK and the geocoder services (autocompletion, search, reverse search, and getting place 
+details). In particular, the SDK already provides a connector object builder for 
+[Pelias geocoder](https://www.mapzen.com/products/search/geocoding/).
 
-
-Geocoding data sources used by location search component 
-(TKUILocationBox, building block for TKUIRoutingQueryInput and TKUILocationSearch) 
-
-provides 
-autocompletion of addresses and POIs based on a customizable set of data sources.
+Next code illustrates how to specify the desired set of geocoders to consider, through ```geocoding``` config property.
+Notice you can provide a function receiving the default value for geocoding property, so you can return a new 
+configuration object based on that default. In this case we include just geolocation and skedgo geocoders from the 
+default set, plus a connector for Pelias geocoder service provided by Geocode.earth.
 
 
-- TKSkedGoGeocoder for public transport stops and stations. This is included by default.
-- TKPeliasGeocoder for use with any Pelias-powered geocoder.
-- TKStaticGeocoder to define a custom set of locations, known client-side, to be surfaced in autocompletion. Instances 
-of this type of source are included for user favourites, user recent searches, and supported cities. 
+```js static
+import {TKPeliasGeocoder} from "../src/index";
+
+const myPelias = new TKPeliasGeocoder("https://api.geocode.earth/v1", "MY_GEOCODE_EARTH_KEY");
+
+const config = {
+    apiKey: 'MY_TRIPGO_API_KEY',
+    geocoding: (defaultOptions) => {
+        const {geolocation, skedgo} = defaultOptions.geocoders;
+        return {
+            geocoders: {
+                geolocation,
+                skedgo,
+                myPelias
+            }
+        }
+    }
+};
+```
