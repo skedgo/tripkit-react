@@ -33,7 +33,8 @@ module.exports = {
                     content: 'docs/Geocoding.md',
                     exampleMode: 'expand',
                     components: [
-                        'src/geocode/TKGeocodingOptions.tsx'
+                        'src/geocode/TKGeocodingOptions.tsx',
+                        'src/geocode/IGeocoder.ts'
                     ]
                 },
             ],
