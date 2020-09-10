@@ -38,7 +38,7 @@ just by putting them somewhere below TKRoot, and so they become automatically co
 
 ```jsx static
 import {TKRoot, TKUIRoutingQueryInput, TKUIMapView, LatLng, RoutingQuery, TKLocation, 
-        TKStateController, tKRequestCurrentLocation} from '../src/index.tsx';
+        TKStateController, tKRequestCurrentLocation} from 'tripkit-react';
         
 const config = {
     apiKey: '790892d5eae024712cfd8616496d7317', 
@@ -66,7 +66,7 @@ const config = {
 
 ```jsx noeditor
 import {TKRoot, TKUIRoutingQueryInput, TKUIMapView, LatLng, RoutingQuery, TKLocation, 
-        TKStateController, tKRequestCurrentLocation} from '../src/index.tsx';
+        TKStateController, tKRequestCurrentLocation} from 'tripkit-react';
         
 const config = {
     apiKey: '790892d5eae024712cfd8616496d7317', 

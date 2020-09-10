@@ -30,8 +30,8 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../../util/TKUIResponsive
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
-import appleStoreLogo from "../../images/logo/apple-store-logo.png";
-import playStoreLogo from "../../images/logo/play-store-logo.png";
+import appleStoreLogo from "tripkit-react/dist/js/images/logo/apple-store-logo.png";
+import playStoreLogo from "images/logo/play-store-logo.png";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 

@@ -1,5 +1,4 @@
-import * as React from "react";
-import {useState, ChangeEvent, useContext} from 'react';
+import React, {useState, ChangeEvent, useContext} from 'react';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";

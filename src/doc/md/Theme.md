@@ -10,7 +10,7 @@ see [theme object spec below](/#/Customization?id=tkuitheme).
 Next is an example customizing some theme properties:
 
 ```jsx
-import {TKRoot, TKUITripPlanner} from '../src/index.tsx';
+import {TKRoot, TKUITripPlanner} from 'tripkit-react';
         
 const config = {
     apiKey: '790892d5eae024712cfd8616496d7317', 
