@@ -1,23 +1,24 @@
 const path = require('path');
 
 module.exports = {
+    styleguideDir: 'docs/site/reference',
     title: 'TripKit React Components API',
-    defaultExample: 'src/doc/ComponentDoc.md',
+    defaultExample: 'src/doc/md/ComponentDoc.md',
     sortProps: props => props,
     sections: [
         {
             name: 'Main SDK component: TKRoot',
-            content: 'docs/MainSDKComponent_TKRoot.md'
+            content: 'src/doc/md/MainSDKComponent_TKRoot.md'
         },
         {
             name: 'Customization',
-            content: 'docs/Customization.md',
+            content: 'src/doc/md/Customization.md',
             sectionDepth: 1,
             usageMode: 'expand',
             sections: [
                 {
                     name: 'Theme',
-                    content: 'docs/Theme.md',
+                    content: 'src/doc/md/Theme.md',
                     exampleMode: 'expand',
                     components: [
                         'src/jss/TKUITheme.ts'
@@ -25,12 +26,12 @@ module.exports = {
                 },
                 {
                     name: 'I18n',
-                    content: 'docs/I18n.md',
+                    content: 'src/doc/md/I18n.md',
                     exampleMode: 'expand',
                 },
                 {
                     name: 'Geocoding',
-                    content: 'docs/Geocoding.md',
+                    content: 'src/doc/md/Geocoding.md',
                     exampleMode: 'expand',
                     components: [
                         'src/geocode/TKGeocodingOptions.tsx',
@@ -44,7 +45,7 @@ module.exports = {
         },
         {
             name: 'Components API',
-            content: 'docs/ComponentsAPI.md',
+            content: 'src/doc/md/ComponentsAPI.md',
             sectionDepth: 2,
             usageMode: 'expand',
             components: [
@@ -106,6 +107,10 @@ module.exports = {
         './tsconfig.json', {
             shouldRemoveUndefinedFromOptional: true
         }
-    ).parse
+    ).parse,
+
+    moduleAliases: {
+        'tripkit-react': path.resolve(__dirname, 'src')
+    }
 
 };

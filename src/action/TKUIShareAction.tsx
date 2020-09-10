@@ -1,5 +1,4 @@
-import * as React from "react";
-import {useState} from 'react';
+import React, {useState} from 'react';
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import * as CSS from 'csstype';
 import {CardPresentation, default as TKUICard, TKUICardClientProps} from "../card/TKUICard";

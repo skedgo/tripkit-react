@@ -1,5 +1,4 @@
-import * as React from "react";
-import {useState} from 'react';
+import React, {useState} from 'react';
 import TKRoot from "../../config/TKRoot";
 import TKDocStyle from "./TKDocStyle";
 import {tKDocComponentStyle} from "./TKDocComponent.css";
