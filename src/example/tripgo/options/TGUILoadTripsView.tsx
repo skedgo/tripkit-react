@@ -13,6 +13,7 @@ import {tGUILoadTripsViewDefaultStyle} from "./TGUILoadTripsView.css";
 import {ERROR_LOADING_DEEP_LINK} from "../../../error/TKErrorHelper";
 import {TKState, default as TKStateConsumer} from "../../../config/TKStateConsumer";
 import Trip from "../../../model/trip/Trip";
+import DeviceUtil, {BROWSER} from "../../../util/DeviceUtil";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -82,10 +83,14 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
     };
 
     useEffect(() => {
-        navigator.clipboard.readText().then(t => {
-            setTripsUrl(t);
-            inputRef && inputRef.select();
-        }).catch((e) => console.log(e));
+        if (!navigator.clipboard.readText || DeviceUtil.browser === BROWSER.SAFARI) {
+            setTimeout(() => inputRef && inputRef.focus(), 200);
+        } else {
+            navigator.clipboard.readText().then(t => {
+                setTripsUrl(t);
+                inputRef && inputRef.select();
+            }).catch((e) => console.log(e));
+        }
     }, []);
 
 
