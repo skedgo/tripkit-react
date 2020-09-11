@@ -18,7 +18,7 @@ class TKRoot extends React.Component<IProps,{}> {
     }
 
     private addRootStyleToChildren(children: React.ReactNode) {
-        return React.Children.map(children, (child: any) => this.addRootStyleToChild(child));
+        return React.Children.map(children, (child: any) => child && this.addRootStyleToChild(child));
     }
 
     public render(): React.ReactNode {
