@@ -58,8 +58,8 @@ export {default as TKUIMapView} from "./map/TKUIMapView";
 export {tKRequestCurrentLocation} from "./util/GeolocationUtil";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-// if (document.getElementById("tripgo-sample-root")) {
-//     import("./example/tripgo/tripgo-sample");
+if (document.getElementById("tripgo-sample-root")) {
+    import("./example/tripgo/tripgo-sample");
 //     import("./example/chym/index");
 //     import("./example/client-sample");
-// }
+}

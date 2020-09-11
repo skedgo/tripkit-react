@@ -1,4 +1,4 @@
-import React, {MouseEvent, useState} from 'react';
+import React, {MouseEvent, useState, useEffect} from 'react';
 import {CSSProps, TKUIWithStyle} from "../../jss/StyleHelper";
 import {
     TKUITripPlanner,
@@ -24,14 +24,12 @@ import TKUserProfile from "../../model/options/TKUserProfile";
 import TKUISettingLink from "../../options/TKUISettingLink";
 import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../../options/OptionsProvider";
 import {getApiKey, default as TGUIDevSettingsView, getServer} from "./options/TGUIDevSettingsView";
-import {TKUISlideUpPosition} from "../../card/TKUISlideUp";
-import {cardSpacing} from "../../jss/TKUITheme";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../../util/TKUIResponsiveUtil";
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
-import appleStoreLogo from "tripkit-react/dist/js/images/logo/apple-store-logo.png";
+import appleStoreLogo from "images/logo/apple-store-logo.png";
 import playStoreLogo from "images/logo/play-store-logo.png";
+import {loadTripState} from "./options/TGUILoadTripsView";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
@@ -63,37 +61,16 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
     const hostname = window.location.hostname;
     const devSettings = hostname.includes("tripkit.") || hostname.includes("localhost");
 
-    const TGUIDevSettings: React.SFC<{value: TKUserProfile, onChange: (value: TKUserProfile) => void, onRequestClose?: () => void;}> =
-        (props: {value: TKUserProfile, onChange: (value: TKUserProfile) => void, onRequestClose?: () => void;}) => {
-            const [show, setShow] = useState<boolean>(false);
-            const devSettingsView = show &&
-                <TKUIViewportUtil>
-                    {(viewportProps: TKUIViewportUtilProps) =>
-                        <TGUIDevSettingsView
-                            value={props.value}
-                            onChange={props.onChange}
-                            onRequestClose={(closeAll: boolean) => {
-                                setShow(false);
-                                if (closeAll) {
-                                    props.onRequestClose && props.onRequestClose();
-                                }
-                            }}
-                            slideUpOptions={{
-                                position: TKUISlideUpPosition.UP,
-                                modalUp: {top: cardSpacing(viewportProps.landscape), unit: 'px'},
-                                draggable: false
-                            }}
-                        />}
-                </TKUIViewportUtil>;
-            return(
-                <React.Fragment>
-                    <TKUISettingSection>
-                        <TKUISettingLink text={"Beta Testing"} onClick={() => setShow(true)}/>
-                    </TKUISettingSection>
-                    {devSettingsView}
-                </React.Fragment>
-            );
-        };
+    const [showDevSettings, setShowDevSettings] = useState<boolean>(false);
+    const [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
+    const devSettingsView = showDevSettings &&
+        <TGUIDevSettingsView
+            showLoadTrips={showLoadTrips}
+            setShowLoadTrips={setShowLoadTrips}
+            onRequestClose={() => {
+                setShowDevSettings(false);
+            }}
+        />;
 
     const config: TKUIConfig = {
         apiKey: '790892d5eae024712cfd8616496d7317',
@@ -205,7 +182,10 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                 customSettings: (userProfile: TKUserProfile,
                                  onUserProfileChange: (value: TKUserProfile) => void,
                                  onRequestClose?: () => void) =>
-                    <TGUIDevSettings value={userProfile} onChange={onUserProfileChange} onRequestClose={onRequestClose}/>
+                    <TKUISettingSection>
+                        <TKUISettingLink text={"Beta Testing"} onClick={() => setShowDevSettings(true)}/>
+                    </TKUISettingSection>
+
             } : undefined
         },
         TKUISidebar: {
@@ -225,7 +205,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                 }
             }
         },
-        onInitState: () => {
+        onInitState: (tKState: TKState) => {
             RegionsData.instance.requireRegions().catch(error => {
                 const userProfile = OptionsData.instance.get();
                 if (error.message.includes("Invalid API key")) {
@@ -249,12 +229,38 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                 }
                 throw error;
             });
+            document.addEventListener("keydown", (zEvent) => {
+                if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "v") {
+                    navigator.clipboard.readText().then(t => {
+                        loadTripState(t, tKState);
+                        console.log("Compute trips for: " + t);
+                    }).catch((e) => console.log(e));
+                    zEvent.preventDefault();
+                }
+            });
         }
     };
 
     const userLocationPromise = (window as any).tKUserLocationPromise ?
         (window as any).tKUserLocationPromise
             .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
+
+    useEffect(() => {
+        const keyEventListener = (zEvent) => {
+            if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "d" || zEvent.key === "s")) {
+                setShowDevSettings(true);
+                zEvent.preventDefault();
+            } else if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "p") {
+                setShowLoadTrips(true);
+                setShowDevSettings(true);
+                zEvent.preventDefault();
+            }
+        };
+        document.addEventListener("keydown", keyEventListener);
+        return () => {
+            document.removeEventListener("keydown", keyEventListener);
+        };
+    });
 
     return (
         <OptionsProvider>
@@ -263,6 +269,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                     <TKRoot config={{...config, apiKey: getApiKey(optionsContext.userProfile), server: getServer(optionsContext.userProfile)}}>
                         <TKUITripPlanner userLocationPromise={userLocationPromise}/>
                         <TKStateUrl/>
+                        {devSettingsView}
                     </TKRoot>
                 }
             </OptionsContext.Consumer>

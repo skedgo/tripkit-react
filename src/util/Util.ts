@@ -117,6 +117,15 @@ class Util {
         return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
     }
 
+    public static isJsonString(str: string) {
+        try {
+            JSON.parse(str);
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
+
 }
 
 export default Util;

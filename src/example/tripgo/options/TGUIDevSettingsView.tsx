@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
 import {ChangeEvent} from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
@@ -7,7 +7,7 @@ import {Subtract} from "utility-types";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../../../util/TKUIResponsiveUtil";
 import {tGUIDevSettingsViewDefaultStyle} from "./TGUIDevSettingsView.css";
 import {CardPresentation} from "../../../card/TKUICard";
-import {TKUISlideUpOptions} from "../../../card/TKUISlideUp";
+import {TKUISlideUpOptions, TKUISlideUpPosition} from "../../../card/TKUISlideUp";
 import {TKUICard, TKUserProfile} from "../../../index";
 import TKUISelect from "../../../buttons/TKUISelect";
 import classNames from "classnames";
@@ -20,18 +20,19 @@ import TKUISettingSection from "../../../options/TKUISettingSection";
 import TKUISettingLink from "../../../options/TKUISettingLink";
 import TGUILoadTripsView from "./TGUILoadTripsView";
 import TripGoApi from "../../../api/TripGoApi";
-import Trip from "../../../model/trip/Trip";
+import {IOptionsContext, OptionsContext} from "../../../options/OptionsProvider";
+import {cardSpacing} from "../../../jss/TKUITheme";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    value: TKUserProfile,
-    onChange: (value: TKUserProfile) => void;
-    onRequestClose?: (closeAll: boolean) => void;
+    showLoadTrips?: boolean;
+    setShowLoadTrips?: Dispatch<SetStateAction<boolean>>;
+    onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
     parentElement?: any;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {}
+interface IConsumedProps extends TKUIViewportUtilProps, IOptionsContext {}
 
 export interface IStyle extends TKUIProfileViewStyle {
     apiKeyOption: CSSProps<IProps>;
@@ -93,10 +94,13 @@ export function getServer(userProfile: TKUserProfile): string {
 const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     const [editingKey, setEditingKey] = useState<string | undefined>(undefined);
     const [editingServer, setEditingServer] = useState<string | undefined>(undefined);
-    const [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
+    let [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
+    if (props.showLoadTrips !== undefined && props.setShowLoadTrips !== undefined) {
+        [showLoadTrips, setShowLoadTrips] = [props.showLoadTrips, props.setShowLoadTrips]
+    }
 
     const classes = props.classes;
-    const userProfile = props.value;
+    const userProfile = props.userProfile;
     const customData = userProfile.customData;
 
     const customServers = customData && customData.servers ? customData.servers : undefined;
@@ -211,8 +215,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         servers: serversUpdate,
                         server: keyUpdate!.keyName
                     };
-                    const update = Util.iAssign(props.value, { customData: customDataUpdate });
-                    props.onChange(update);
+                    const update = Util.iAssign(userProfile, { customData: customDataUpdate });
+                    props.onUserProfileChange(update);
                     setEditingServer(undefined);
                 } else if (result === EditResult.DELETE) {
                     const serversUpdate = {
@@ -224,8 +228,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         servers: serversUpdate,
                         server: getPredefinedServers()[0]
                     };
-                    const profileUpdate = Util.iAssign(props.value, { customData: customDataUpdate });
-                    props.onChange(profileUpdate);
+                    const profileUpdate = Util.iAssign(userProfile, { customData: customDataUpdate });
+                    props.onUserProfileChange(profileUpdate);
                 }
                 setEditingServer(undefined);
             }}
@@ -255,8 +259,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         apiKeys: apiKeysUpdate,
                         apiKey: keyUpdate!.keyName
                     };
-                    const update = Util.iAssign(props.value, { customData: customDataUpdate });
-                    props.onChange(update);
+                    const update = Util.iAssign(userProfile, { customData: customDataUpdate });
+                    props.onUserProfileChange(update);
                     setEditingKey(undefined);
                 } else if (result === EditResult.DELETE) {
                     const apiKeysUpdate = {
@@ -268,19 +272,37 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         apiKeys: apiKeysUpdate,
                         apiKey: getPredefinedApiKeys()[0]
                     };
-                    const profileUpdate = Util.iAssign(props.value, { customData: customDataUpdate });
-                    props.onChange(profileUpdate);
+                    const profileUpdate = Util.iAssign(props.userProfile, { customData: customDataUpdate });
+                    props.onUserProfileChange(profileUpdate);
                 }
                 setEditingKey(undefined);
             }}
             slideUpOptions={props.slideUpOptions}
         />;
+
+    useEffect(() => {
+        const keyEventListener = (zEvent) => {
+            if (zEvent.keyCode === 27 && !showLoadTrips) { // Close on escape
+                props.onRequestClose && props.onRequestClose();
+            }
+        };
+        document.addEventListener("keydown", keyEventListener);
+        return () => {
+            document.removeEventListener("keydown", keyEventListener);
+        };
+    });
+
     return (
         <TKUICard
             title={"Beta Testing"}
             presentation={props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
-            onRequestClose={() => props.onRequestClose && props.onRequestClose(false)}
-            slideUpOptions={props.slideUpOptions}
+            onRequestClose={() => props.onRequestClose && props.onRequestClose()}
+            slideUpOptions={{
+                position: TKUISlideUpPosition.UP,
+                modalUp: {top: cardSpacing(props.landscape), unit: 'px'},
+                draggable: false,
+                ...props.slideUpOptions
+            }}
         >
             <div className={classes.main}>
                 <TKUISettingSection>
@@ -301,8 +323,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                                     ...customData,
                                     server: option.label
                                 };
-                                const update = Util.iAssign(props.value, { customData: customDataUpdate });
-                                props.onChange(update);
+                                const update = Util.iAssign(userProfile, {customData: customDataUpdate});
+                                props.onUserProfileChange(update);
                             }}
                             isDisabled={editingServer !== undefined}
                             className={classes.optionSelect}
@@ -333,8 +355,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                                     ...customData,
                                     apiKey: option.label
                                 };
-                                const update = Util.iAssign(props.value, { customData: customDataUpdate });
-                                props.onChange(update);
+                                const update = Util.iAssign(userProfile, {customData: customDataUpdate});
+                                props.onUserProfileChange(update);
                             }}
                             isDisabled={editingKey !== undefined}
                             className={classes.optionSelect}
@@ -359,7 +381,7 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         onRequestClose={(closeAll: boolean) => {
                             setShowLoadTrips(false);
                             if (closeAll) {
-                                props.onRequestClose && props.onRequestClose(true);
+                                props.onRequestClose && props.onRequestClose();
                             }
                         }}
                         slideUpOptions={props.slideUpOptions}
@@ -373,8 +395,12 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
-        <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) => children!({...inputProps, ...viewportProps})}
-        </TKUIViewportUtil>;
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) => children!({...inputProps, ...viewportProps, ...optionsContext})}
+                </TKUIViewportUtil>
+            }
+        </OptionsContext.Consumer>;
 
 export default connect(() => undefined, config, Mapper);

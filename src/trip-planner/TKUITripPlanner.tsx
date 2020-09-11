@@ -56,10 +56,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     userLocationPromise?: Promise<LatLng>;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps {
-    userProfile: TKUserProfile;
-    onUserProfileChange: (update: TKUserProfile) => void;
-}
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext {}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -85,7 +82,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     mapView: boolean;
     showSidebar: boolean;
-    showSettings: boolean;
     showTransportSettings: boolean;
     showFavourites: boolean;
     cardPosition?: TKUISlideUpPosition;
@@ -100,7 +96,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             showSidebar: false,
-            showSettings: false,
             showTransportSettings: false,
             mapView: false,
             showFavourites: false
@@ -146,7 +141,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             category: "query input",
             action: "display transport switches"
         });
-        this.setState({showSettings: true});
+        this.props.setShowUserProfile(true);
     }
 
     private onShowTransportSettings() {
@@ -223,9 +218,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowFavourites={() => this.setState({showFavourites: true})}
                 parentElement={this.ref}
             />;
-        const settings = this.state.showSettings &&
+        const settings = this.props.showUserProfile &&
             <TKUIProfileView
-                onRequestClose={() => this.setState({showSettings: false})}
+                onRequestClose={() => this.props.setShowUserProfile(false)}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
@@ -259,7 +254,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const toLocation = this.props.query.to;
         const locationDetailView = TKUITripPlanner.isLocationDetailView(this.props) && !this.state.showFavourites &&
-            !(this.state.showSettings && this.props.portrait) &&    // TODO: all of this interactions will not be needed anymore after using RemoteCards, which will stack properly (need to extend it to support multiple cards at once).
+            !(this.props.showUserProfile && this.props.portrait) &&    // TODO: all of this interactions will not be needed anymore after using RemoteCards, which will stack properly (need to extend it to support multiple cards at once).
             <TKUILocationDetailView
                 location={toLocation!}
                 slideUpOptions={{
@@ -579,8 +574,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                     ...routingResultsContext,
                                                     ...serviceContext,
                                                     ...viewportProps,
-                                                    userProfile: optionsContext.userProfile,
-                                                    onUserProfileChange: optionsContext.onUserProfileChange
+                                                    ...optionsContext
                                                 })
                                             )}
                                         </ServiceResultsContext.Consumer>

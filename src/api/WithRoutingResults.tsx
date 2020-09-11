@@ -475,26 +475,30 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public onTripJsonUrl(tripUrl: string): Promise<Trip[]> {
-            return TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults)
-                .then((routingResults: RoutingResults) => {
-                    const firstTrip = routingResults.groups[0].trips[0];
-                    const from = firstTrip.segments[0].from;
-                    const to = firstTrip.segments[firstTrip.segments.length - 1].to;
-                    const query = RoutingQuery.create(from, to,
-                        firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
-                        firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
-                    routingResults.setQuery(query);
-                    routingResults.setSatappQuery(tripUrl);
-                    const trips = routingResults.groups;
-                    const sortedTrips = this.sortTrips(trips, this.state.sort);
-                    this.setState({
-                        query: query,
-                        trips: sortedTrips,
-                        selected: sortedTrips[0],
-                        directionsView: true
-                    });
-                    return trips;
+            const routingResultsPromise = Util.isJsonString(tripUrl) ?
+                Promise.resolve(Util.deserialize(JSON.parse(tripUrl), RoutingResults)) :
+                (tripUrl.startsWith("http") ?
+                    TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults) :
+                    TripGoApi.apiCallT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults));
+            return routingResultsPromise.then((routingResults: RoutingResults) => {
+                const firstTrip = routingResults.groups[0].trips[0];
+                const from = firstTrip.segments[0].from;
+                const to = firstTrip.segments[firstTrip.segments.length - 1].to;
+                const query = RoutingQuery.create(from, to,
+                    firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
+                    firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
+                routingResults.setQuery(query);
+                routingResults.setSatappQuery(tripUrl);
+                const trips = routingResults.groups;
+                const sortedTrips = this.sortTrips(trips, this.state.sort);
+                this.setState({
+                    query: query,
+                    trips: sortedTrips,
+                    selected: sortedTrips[0],
+                    directionsView: true
                 });
+                return trips;
+            });
         }
 
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,

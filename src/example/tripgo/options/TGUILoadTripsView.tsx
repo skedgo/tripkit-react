@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent, useContext} from 'react';
+import React, {useState, ChangeEvent, useContext, useEffect} from 'react';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";
@@ -47,40 +47,50 @@ export const validUrl = (text: string) => {
     return urlRegex.test(text);
 };
 
+export const loadTripState = (sharedTripJsonUrl, tKState): Promise<void> => {
+    tKState.onWaitingStateLoad(true);
+    return tKState.onTripJsonUrl(sharedTripJsonUrl)
+        .then((trips?: Trip[]) => {
+            // Need to use trips from promise since
+            // - tKState is old at callback execution, and so also tKState.trips (workaround: useContext hook)
+            // - I need to close TGUILoadTripsView right after user clicked load button, and so life cycle is
+            //   stopped, not receiving props updates anymore (useContext hook does not resolve this).
+            tKState.onWaitingStateLoad(false);
+            if (trips && trips.length === 1) {
+                tKState.onTripDetailsView(true);
+            }
+        });
+};
+
+let inputRef: any = undefined;
+
 const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
     const [tripsUrl, setTripsUrl] = useState<string>("");
     const [tripsUrlError, setTripsUrlError] = useState<string | undefined>(undefined);
-
-    const loadTripState = (sharedTripJsonUrl): Promise<void> => {
-        const tKState = props.tKState;
-        tKState.onWaitingStateLoad(true);
-        return tKState.onTripJsonUrl(sharedTripJsonUrl)
-            .then((trips?: Trip[]) => {
-                // Need to use trips from promise since
-                // - tKState is old at callback execution, and so also tKState.trips (workaround: useContext hook)
-                // - I need to close TGUILoadTripsView right after user clicked load button, and so life cycle is
-                //   stopped, not receiving props updates anymore (useContext hook does not resolve this).
-                tKState.onWaitingStateLoad(false);
-                if (trips && trips.length === 1) {
-                    tKState.onTripDetailsView(true);
-                }
-            });
-    };
-
     const validateForm = () => {
         let validTripsUrl = true;
         if (tripsUrl === "") {
             setTripsUrlError("Required.");
             validTripsUrl = false;
-        } else if (!validUrl(tripsUrl)) {
-            setTripsUrlError("Invalid url.");
-            validTripsUrl = false;
         }
+        // Comment for now since can paste other things now.
+        // else if (!validUrl(tripsUrl)) {
+        //     setTripsUrlError("Invalid url.");
+        //     validTripsUrl = false;
+        // }
         return validTripsUrl;
     };
 
+    useEffect(() => {
+        navigator.clipboard.readText().then(t => {
+            setTripsUrl(t);
+            inputRef && inputRef.select();
+        }).catch((e) => console.log(e));
+    }, []);
+
+
     const classes = props.classes;
-    const placeholder = "Paste a url returning trips in JSON format";
+    const placeholder = "Paste trips in JSON format or a url returning trips (either absolute or relative, e.g. starting with routing.json)";
     return (
         <TKUICard
             title={"Load trips from url"}
@@ -100,6 +110,7 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                             setTripsUrlError(undefined);
                         }
                     }}
+                    ref={(ref: any) => inputRef = ref}
                 />
                     {tripsUrlError &&
                     <div className={classes.fieldError}>
@@ -109,8 +120,11 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                 <TKUIButton type={TKUIButtonType.PRIMARY} text={"Load"}
                             onClick={() => {
                                 if (validateForm()) {
-                                    loadTripState(tripsUrl)
-                                        .then(() => props.onRequestClose(true))
+                                    loadTripState(tripsUrl, props.tKState)
+                                        .then(() => {
+                                            props.onRequestClose(true);
+                                            props.tKState.setShowUserProfile(false);
+                                        })
                                         .catch((error: Error) => {
                                             props.tKState.onWaitingStateLoad(false,
                                                 new TKError(error.message, ERROR_LOADING_DEEP_LINK, false));
