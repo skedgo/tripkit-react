@@ -231,7 +231,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             });
             document.addEventListener("keydown", (zEvent) => {
                 if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "v") {
-                    navigator.clipboard.readText().then(t => {
+                    navigator.clipboard.readText && navigator.clipboard.readText().then(t => {
                         loadTripState(t, tKState);
                         console.log("Compute trips for: " + t);
                     }).catch((e) => console.log(e));
@@ -250,7 +250,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "d" || zEvent.key === "s")) {
                 setShowDevSettings(true);
                 zEvent.preventDefault();
-            } else if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "p") {
+            } else if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "p" || zEvent.key === "t")) {
                 setShowLoadTrips(true);
                 setShowDevSettings(true);
                 zEvent.preventDefault();
