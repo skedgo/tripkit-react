@@ -447,7 +447,9 @@ class TKUILocationBox extends Component<IProps, IState> {
 
     private onKeyDown(e: any) {
         if (e.keyCode === 38 || e.keyCode === 40) {
-            setTimeout(this.refreshHighlight, 50);
+            // Should set timeout to wait for this.highlightedItem to be set by renderItem. Don't wait longer since
+            // screen reader reads de-selection of item (besides selection of new one).
+            setTimeout(this.refreshHighlight, 1);
         }
     }
 
@@ -521,9 +523,10 @@ class TKUILocationBox extends Component<IProps, IState> {
                             "aria-label": this.props.inputAriaLabel,
                             id: this.props.inputId,
                             "aria-owns": this.state.ddopen() ? popupId : undefined,
-                            "aria-controls": this.state.ddopen() ? popupId : undefined
+                            "aria-controls": this.state.ddopen() ? popupId : undefined,
                             // "aria-owns": popupId,
                             // "aria-controls": popupId
+                            tabIndex: 1
                         }
                     }
                     wrapperStyle = {{

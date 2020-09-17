@@ -112,6 +112,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     icon={icon}
                     onclick={clickHandler}
                     key={key}
+                    keyboard={false}
                 />;
             default:
                 return <Marker position={loc} key={key}/>;

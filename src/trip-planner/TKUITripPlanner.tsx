@@ -1,5 +1,4 @@
 import * as React from "react";
-import RegionsData from "../data/RegionsData";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
@@ -43,7 +42,6 @@ import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import TKUIReportBtn from "../feedback/TKUIReportBtn";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
-import TKUserProfile from "../model/options/TKUserProfile";
 import {TKUserPosition} from "../util/GeolocationUtil";
 import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
@@ -84,6 +82,7 @@ interface IState {
     showSidebar: boolean;
     showTransportSettings: boolean;
     showFavourites: boolean;
+    showLocationDetails: boolean;
     cardPosition?: TKUISlideUpPosition;
     tripUpdateStatus?: TKRequestStatus;
 }
@@ -98,16 +97,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSidebar: false,
             showTransportSettings: false,
             mapView: false,
-            showFavourites: false
+            showFavourites: false,
+            showLocationDetails: false
         };
 
         (this.props.userLocationPromise ||
             GeolocationData.instance.requestCurrentLocation(true, true)
                 .then((userPosition: TKUserPosition) => userPosition.latLng))
             .then((userLocation: LatLng) => {
-                // Don't fit map to user position if query from / to was already set. Avoids jumping to user location
-                // on shared links.
-                if (!this.props.query.isEmpty()) {
+                // Don't fit map to user position if query from or to were already set (and are not unresolved current).
+                // Avoids jumping to user location on shared links.
+                const queryFrom = this.props.query.from;
+                const queryTo = this.props.query.to;
+                if (queryFrom !== null && !(queryFrom.isCurrLoc() && !queryFrom.isResolved()) ||
+                    queryTo !== null && !(queryTo.isCurrLoc() && !queryTo.isResolved())) {
                     return;
                 }
                 const initViewport = {center: userLocation, zoom: 13};
@@ -162,7 +165,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         FavouritesData.recInstance.add(favourite);
     }
 
-    private static isLocationDetailView(props: IProps): boolean {
+    private static ableToShowLocationDetailView(props: IProps): boolean {
         const toLocation = props.query.to;
         return !props.directionsView && !!toLocation && toLocation.isResolved() &&
             !toLocation.isDroppedPin() && !(toLocation instanceof StopLocation);
@@ -253,8 +256,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             />;
         const toLocation = this.props.query.to;
-        const locationDetailView = TKUITripPlanner.isLocationDetailView(this.props) && !this.state.showFavourites &&
-            !(this.props.showUserProfile && this.props.portrait) &&    // TODO: all of this interactions will not be needed anymore after using RemoteCards, which will stack properly (need to extend it to support multiple cards at once).
+        const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
             <TKUILocationDetailView
                 location={toLocation!}
                 slideUpOptions={{
@@ -266,6 +268,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalUp: this.props.landscape ? {top: 48 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
+                onRequestClose={() => this.setState({showLocationDetails: false})}
             />;
         const timetableView = this.isShowTimetable() ?
             <TKUITimetableView
@@ -420,10 +423,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             <TKUIMapView
                                 hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                                 padding={mapPadding}
-                                onLocAction={(locType: MapLocationType, loc: Location) => {
+                                onLocAction={(locType: MapLocationType | undefined, loc: Location) => {
                                     if (locType === MapLocationType.STOP) {
                                         this.showTimetableFor(loc as StopLocation);
                                         FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                    } else {
+                                        TKUITripPlanner.ableToShowLocationDetailView(this.props) && this.setState({showLocationDetails: true});
                                     }
                                 }}/>
                         </div>
@@ -454,14 +459,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // E.g. refresh styles.
         Modal.setAppElement(this.ref);
         window.addEventListener('keydown', (e: KeyboardEvent) => {
-            if (e.keyCode === 27) { // Close sidebar on escape
-                if (this.state.showSidebar) {
-                    this.setState({showSidebar: false});
-                } else if (this.isShowTripDetail()) {
-                    this.props.onTripDetailsView(false);
-                } else if (this.isShowServiceDetail()) {
-                    this.props.onServiceSelection(undefined);
-                }
+            if (e.shiftKey && e.metaKey && e.key === "m") {
+                this.setState({showTransportSettings: true});
+                e.preventDefault();
             }
         });
 
@@ -469,6 +469,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
+        if (TKUITripPlanner.ableToShowLocationDetailView(this.props) !== TKUITripPlanner.ableToShowLocationDetailView(prevProps)) {
+            this.setState({showLocationDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props)});
+        }
         // If on search view and a stop is set as query from, then show timetable for the stop
         if (prevProps.query.from !== this.props.query.from && this.props.query.from && this.props.query.from instanceof StopLocation
             && !this.props.directionsView) {
@@ -489,9 +492,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
         if (!this.isShowTimetable(prevProps) && this.isShowTimetable() // Start displaying timetable
             || (this.isShowTimetable() && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
-            || !TKUITripPlanner.isLocationDetailView(prevProps) && TKUITripPlanner.isLocationDetailView(this.props) // Start displaying location details
+            || !prevState.showLocationDetails && this.state.showLocationDetails // Start displaying location details
         ) {
             this.setState({showFavourites: false});
+        }
+        // Switched to directions view, so close location detail
+        if (!prevProps.directionsView && this.props.directionsView && this.state.showLocationDetails) {
+            this.setState({showLocationDetails: false});
         }
         // Switched to directions view, so close timetable
         if (!prevProps.directionsView && this.props.directionsView && this.isShowTimetable()) {

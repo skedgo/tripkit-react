@@ -30,6 +30,7 @@ import OptionsData from "../../data/OptionsData";
 import appleStoreLogo from "images/logo/apple-store-logo.png";
 import playStoreLogo from "images/logo/play-store-logo.png";
 import {loadTripState} from "./options/TGUILoadTripsView";
+import {resetStyles} from "../../css/ResetStyle.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
@@ -120,7 +121,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                     style: props.theme.isLight ?
                         "mapbox://styles/mgomezlucero/cjvp9zm9114591cn8cictke9e" :
                         "mapbox://styles/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm",
-                    attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
+                    attribution: "&copy <a href='http://osm.org/copyright' tabindex='-1'>OpenStreetMap</a> contributors"
                 }
             })
         },
@@ -192,16 +193,29 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             props: {
                 nativeAppLinks: () => {
                     const storeBtnStyle = {
+                        ...resetStyles.button,
                         height: '48px',
                         width: '144px',
                         cursor: 'pointer'
                     };
-                    return [
-                        <img src={appleStoreLogo} style={storeBtnStyle} key={'appleStoreLogo'}
-                             onClick={() => window.open( 'https://apps.apple.com/au/app/tripgo/id533630842', '_blank')}/>,
-                        <img src={playStoreLogo} style={storeBtnStyle} key={'playStoreLogo'}
-                             onClick={() => window.open( 'https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner', '_blank')}/>
-                    ]
+                    return (
+                        <React.Fragment>
+                            <button onClick={() => window.open( 'https://apps.apple.com/au/app/tripgo/id533630842', '_blank')}
+                                    style={storeBtnStyle}
+                                    aria-label="Download on the App Store"
+                                    role="link"
+                            >
+                                <img src={appleStoreLogo} key={'appleStoreLogo'} style={{width: '100%', height: '100%'}}/>
+                            </button>,
+                            <button onClick={() => window.open('https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner', '_blank')}
+                                    style={storeBtnStyle}
+                                    aria-label="Download on Google Play"
+                                    role="link"
+                            >
+                                <img src={playStoreLogo} key={'playStoreLogo'} style={{width: '100%', height: '100%'}}/>
+                            </button>
+                        </React.Fragment>
+                    )
                 }
             }
         },

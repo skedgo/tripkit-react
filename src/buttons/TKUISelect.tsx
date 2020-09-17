@@ -6,6 +6,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Select from 'react-select';
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 import * as CSS from 'csstype';
+import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     options: any[];
@@ -18,11 +19,13 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     menuStyle?: CSS.Properties;
     renderArrowDown?: () => JSX.Element;
     isDisabled?: boolean,
+    ariaLabel?: string
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
 interface IStyle {
+    main: CSSProps<IProps>;
     container: CSSProps<IProps>;
     menu: CSSProps<IProps>;
     control: CSSProps<IProps>;
@@ -49,7 +52,7 @@ class TKUISelect extends React.Component<IProps, {}> {
         const injectedStyles = this.props.injectedStyles;
         const SelectDownArrow = this.props.renderArrowDown || ((props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>);
         return (
-            <div className={this.props.className}>
+            <div className={classNames(this.props.className, this.props.classes.main)}>
                 <Select
                     options={this.props.options}
                     value={this.props.value}
@@ -72,6 +75,7 @@ class TKUISelect extends React.Component<IProps, {}> {
                         })
                     }}
                     isDisabled={this.props.isDisabled}
+                    aria-label={this.props.ariaLabel}
                 />
             </div>
         );

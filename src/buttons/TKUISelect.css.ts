@@ -6,6 +6,15 @@ import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps> =
     (theme: TKUITheme) => ({
+        main: {
+            '& input': {    // Make input visible so it's highlighted on focus for accessibility.
+                left: '0',
+                transform: 'none',
+                ...genStyles.grow,
+                opacity: '1',
+                cursor: 'pointer'
+            }
+        },
         container: {
             ...genStyles.fontS
         },

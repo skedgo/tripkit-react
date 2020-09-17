@@ -36,8 +36,8 @@ class TKUIW3w extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const t = this.props.t;
         return (
-            <div className={classes.main}>
-                <img src={iconW3w} className={classes.icon}/>
+            <div className={classes.main} tabIndex={0}>
+                <img src={iconW3w} className={classes.icon} role="img" aria-hidden="true"/>
                 <div className={classes.details}>
                     <div className={classes.value}>
                         {this.props.w3w}
@@ -45,6 +45,7 @@ class TKUIW3w extends React.Component<IProps, {}> {
                     <a href={this.props.w3wInfoURL}
                        target="_blank"
                        className={classes.url}
+                       tabIndex={-1}
                     >
                         {t("what3words.address")}
                     </a>

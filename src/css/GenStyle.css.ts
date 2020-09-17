@@ -94,6 +94,22 @@ const keyframesStyle = {
             transform: 'rotate(360deg)'
         }
     },
+    '@keyframes leftSlideIn': {
+        from: {
+            transform: 'translate3d(-100%, 0, 0)'
+        },
+        to: {
+            transform: 'translate3d(0, 0, 0)'
+        }
+    },
+    '@keyframes leftSlideOut': {
+        from: {
+            transform: 'translate3d(0, 0, 0)'
+        },
+        to: {
+            transform: 'translate3d(-100%, 0, 0)'
+        }
+    },
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [
     //     {
@@ -108,7 +124,7 @@ const keyframesStyle = {
     // ]
 };
 
-const keyFramesStyles = jss.createStyleSheet(keyframesStyle as any).attach();
+export const keyFramesStyles = jss.createStyleSheet(keyframesStyle as any).attach();
 
 const genStyleClasses: ITKUIGenStyleClasses = {
 
@@ -303,7 +319,7 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         lineHeight: 'normal',
         '& *': {
             boxShadow: 'none',     // To avoid glow effect on focus
-            outline: 'none!important',  // To avoid glow effet on focus
+            outline: 'none!important',  // To avoid glow effect on focus
             WebkitBoxSizing: 'border-box',
             MozBoxSizing: 'border-box',
             boxSizing: 'border-box',
@@ -318,12 +334,13 @@ const genStyleClasses: ITKUIGenStyleClasses = {
 
     userIsTabbing: {
         ['& $root input[type=text]:focus,' +
+        '& $root input[aria-autocomplete=list]:focus,' +
         '& $root button:focus,' +
         '& $root a:focus,' +
         '& $root select:focus,' +
         '& $root textarea:focus,' +
         '& $root div:focus,'
-        // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, do doesn't match the style.
+        // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, so doesn't match the style.
         // '& $focusTarget:focus'
             ]: {
             // outline: '2px solid #024dff',

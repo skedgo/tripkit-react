@@ -119,7 +119,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 />
             </div>;
         const preferredTransportOption = mode.identifier === 'pt_pub' &&
-            <div className={classes.section}>
+            <div className={classes.section} tabIndex={0} aria-label="Preferred transport">
                 <div className={classes.sectionTitle}>
                     {t("Preferred.transport")}
                 </div>
@@ -128,6 +128,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         <div className={classes.checkboxRow} key={i}>
                             <img src={TransportUtil.getTransportIcon(transMode, false, this.props.theme.isDark)}
                                  className={classes.transIcon}
+                                 aria-hidden={true}
                             />
                             <div className={classes.prefModeTitle}>
                                 {transMode.alt}
@@ -142,8 +143,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                                 }}
                                 onClick={event => event.stopPropagation()}
                                 onFocus={event => event.stopPropagation()}
-                                value="primary"
-                                inputProps={{'aria-label': 'primary checkbox'}}
+                                inputProps={{ 'aria-label': transMode.alt }}
                             />
                         </div>
                     )}
@@ -169,6 +169,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     min={0}
                     max={100}
                     isDarkMode={this.props.theme.isDark}
+                    aria-label={t("Min.transfer.time")}
                 />
             </div>;
         const concessionPricingOption = mode.isPT() && regionInfo && regionInfo.transitConcessionPricing &&
@@ -184,8 +185,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         userProfileUpdate.transitConcessionPricing = checked;
                         this.props.onChange(userProfileUpdate);
                     }}
-                    value="primary"
-                    inputProps={{'aria-label': 'primary checkbox'}}
+                    inputProps={{'aria-label': "Concession pricing"}}
                 />
             </div>;
         const wheelchairOption = mode.isPT() &&
@@ -201,8 +201,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         userProfileUpdate.wheelchair = checked;
                         this.props.onChange(userProfileUpdate);
                     }}
-                    value="primary"
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                    inputProps={{ 'aria-label': t("Wheelchair.information") }}
                 />
             </div>;
         let walkSpeedSelect: any = undefined;
@@ -248,6 +247,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         this.props.onChange(userProfileUpdate);
                     }}
                     className={classes.walkSpeedSelect}
+                    ariaLabel={t("Cycle.speed")}
                 />
         }
         const cycleSpeedOption = cycleSpeedSelect &&
@@ -276,6 +276,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     expandIcon={displayValue !== DisplayConf.HIDDEN && hasContent ? <IconAngleDown className={classes.iconExpand}/> : undefined}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
+                    {...(displayValue === DisplayConf.HIDDEN || !hasContent) ? {role: undefined, tabIndex: -1} : undefined}
                 >
                     <div className={classes.main}>
                         <this.GreenCheckbox
@@ -289,11 +290,11 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             }}
                             onClick={event => event.stopPropagation()}
                             onFocus={event => event.stopPropagation()}
-                            value="primary"
-                            inputProps={{ 'aria-label': 'primary checkbox' }}
+                            inputProps={{ 'aria-label': mode.title }}
                         />
                         <img src={TransportUtil.getTransportIconModeId(mode, false, this.props.theme.isDark)}
                              className={classes.transIcon}
+                             aria-hidden="true"
                         />
                         {mode.title}
                     </div>

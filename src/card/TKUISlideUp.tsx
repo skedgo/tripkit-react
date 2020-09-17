@@ -4,6 +4,7 @@ import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
 import {cardSpacing} from "../jss/TKUITheme";
 import ReactDOM from 'react-dom';
+import {markForFocusLater, returnFocus, setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -31,6 +32,7 @@ interface IProps extends TKUISlideUpOptions {
     draggable?: boolean;
     cardOnTop?: (onTop: boolean) => void;
     parentElement?: any;
+    ariaLabel?: string;
 }
 
 interface IState {
@@ -59,6 +61,7 @@ export interface TKUISlideUpOptions {
 
 class TKUISlideUp extends React.Component<IProps, IState> {
 
+    private elem?: any;
     // To get its height, allows to calculate percent units (TODO), and to properly set card height for scroll.
     private containerElem?: any;
 
@@ -194,11 +197,16 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             >
                 <div className={classNames(classes.container, this.props.containerClass)}
                      ref={(ref: any) => {
+                         if (ref) {
+                             this.elem = ref;
+                         }
                          if (ref && ref.parentElement !== this.containerElem) {
                              this.containerElem = ref.parentElement;
                              this.onPositionChange(this.getPosition());
                          }
                      }}
+                     aria-label={this.props.ariaLabel ? this.props.ariaLabel + " Card" : undefined}
+                     tabIndex={0}
                 >
                     <div style={{
                         height: this.containerElem ?
@@ -213,6 +221,19 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             </Draggable>, parentElement)
         );
     }
+
+    /**
+     * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
+     */
+    contentHasFocus = () =>
+        document.activeElement === this.elem ||
+        this.elem.contains(document.activeElement);
+
+    // Don't steal focus from inner elements
+    focusContent = () =>
+        this.elem &&
+        !this.contentHasFocus() &&
+        this.elem.focus({ preventScroll: true });
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
         if (prevProps.handleRef !== this.props.handleRef) {
@@ -238,6 +259,21 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             this.state.top !== this.getTopFromPosition(this.state.position)) {
             this.onPositionChange(this.getPosition());
         }
+        if (this.props.open && !prevProps.open) {
+            this.focusContent();
+        }
+    }
+
+    componentDidMount() {
+        console.log(this.elem);
+        setupScopedFocus(this.elem);
+        markForFocusLater();
+        this.focusContent();
+    }
+
+    componentWillUnmount() {
+        teardownScopedFocus();
+        returnFocus();
     }
 }
 

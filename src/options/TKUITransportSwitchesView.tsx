@@ -21,6 +21,7 @@ import ModeIdentifier from "../model/region/ModeIdentifier";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMoreOptions?: () => void;
+    startElemRef?: (el: any) => void;
 }
 
 interface IConsumedProps {
@@ -90,14 +91,18 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                                         </div>
                                     </div>
                                 </div>;
-                            const transBtn = <button
-                                className={classNames(classes.modeIcon,
-                                    modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                onClick={() => this.onChange(mode)}
-                                {...DeviceUtil.isTouch() && {key: index}}
-                            >
-                                <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
-                            </button>;
+                            const transBtn =
+                                <button
+                                    className={classNames(classes.modeIcon,
+                                        modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
+                                    onClick={() => this.onChange(mode)}
+                                    {...DeviceUtil.isTouch() && {key: index}}
+                                    {...index === 0 && {ref: this.props.startElemRef}}
+                                    aria-pressed={modeOption !== DisplayConf.HIDDEN}
+                                >
+                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}
+                                         aria-label={modeIdentifier.title}/>
+                                </button>;
                             return ( DeviceUtil.isTouch() ?
                                     transBtn :
                                     <TKUITooltip placement="top"

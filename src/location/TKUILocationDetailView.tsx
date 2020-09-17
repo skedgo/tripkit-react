@@ -27,6 +27,7 @@ import LocationsData from "../data/LocationsData";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     slideUpOptions?: TKUISlideUpOptions;
+    onRequestClose?: () => void;
     actions?: (location: Location, defaultActions: (JSX.Element | null)[]) => (JSX.Element | null)[];
 }
 
@@ -108,6 +109,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 renderSubHeader={subHeader}
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
+                onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>
                     {locationInfo && locationInfo.alerts && locationInfo.alerts.length > 0 &&

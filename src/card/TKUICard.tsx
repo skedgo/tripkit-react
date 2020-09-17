@@ -28,6 +28,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
+    closeAriaLabel?: string;
     presentation?: CardPresentation;
     presentationFromViewport?: (portrait: boolean) => CardPresentation;
     slideUpOptions?: TKUISlideUpOptions;
@@ -50,6 +51,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {}
 
 interface IStyle {
     modalContainer: CSS.Properties & CSSProperties<IProps>;
+    modalOverlay: CSS.Properties & CSSProperties<IProps>;
     main: CSS.Properties & CSSProperties<IProps>;
     mainForSlideUp: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
@@ -95,6 +97,7 @@ class TKUICard extends React.Component<IProps, IState> {
     private static MODAL_COUNT = 0;
     private zIndex = 1002;
     private firstModal = false;
+    public static cardStack: any[] = [];
 
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
@@ -123,6 +126,7 @@ class TKUICard extends React.Component<IProps, IState> {
         // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
         // created.
         this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
+        TKUICard.cardStack.push(this);
     }
 
     public render(): React.ReactNode {
@@ -151,7 +155,7 @@ class TKUICard extends React.Component<IProps, IState> {
                             </div>
                             {this.props.onRequestClose &&
                             <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
-                                    aria-hidden={true}>
+                                    aria-label={this.props.closeAriaLabel || "Close"}>
                                 <IconRemove aria-hidden={true}
                                             className={classes.iconClear}
                                             focusable="false"/>
@@ -180,6 +184,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     </TKUIScrollForCard> : this.props.children
                 }
             </div>;
+        const cardAriaLabel = this.props.title + (this.props.subtitle ? ". " + this.props.subtitle : "");
         return (
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
@@ -191,6 +196,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
                     parentElement={this.props.parentElement}
                     zIndex={this.zIndex}
+                    ariaLabel={cardAriaLabel}
                 >
                     {body}
                 </TKUISlideUp>
@@ -207,12 +213,16 @@ class TKUICard extends React.Component<IProps, IState> {
                                 left: '50%',
                                 width: '500px'
                             },
-                            ...(!this.firstModal ? { overlay: {background: 'none'} } : undefined)
+                            ...(!this.firstModal ?
+                                { overlay: {background: 'none'} } :
+                                { overlay: this.props.injectedStyles.modalOverlay }
+                            )
                         }}
                         shouldCloseOnEsc={true}
                         onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
                         appElement={this.props.parentElement}
                         {...this.props.modalOptions}
+                        contentLabel={cardAriaLabel}
                     >
                         {body}
                     </Modal> : this.props.open && body
@@ -244,8 +254,19 @@ class TKUICard extends React.Component<IProps, IState> {
         } else if (this.props.presentation === CardPresentation.SLIDE_UP) {
             TKUICard.SLIDE_UP_COUNT--;
         }
+        const thisIndex = TKUICard.cardStack.indexOf(this);
+        if (thisIndex !== -1) {
+            TKUICard.cardStack.splice(thisIndex, 1);
+        }
     }
 }
+
+window.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.keyCode === 27 && TKUICard.cardStack.length > 0) {
+        const topCard = TKUICard.cardStack[TKUICard.cardStack.length - 1];
+        topCard.props.presentation !== CardPresentation.MODAL && topCard.props.onRequestClose && topCard.props.onRequestClose();
+    }
+});
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>

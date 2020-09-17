@@ -53,6 +53,7 @@ class StopIcon extends React.Component<IProps, {}> {
             <div style={style}>
             <img src={transIcon}
                  style={imgStyle}
+                 aria-hidden={true}
             />
             </div>
         );

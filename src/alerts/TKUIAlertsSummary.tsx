@@ -54,18 +54,21 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
         return (
             <div className={classes.main}>
                 {alerts.length === 1 ?
-                    <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
+                    <button className={classes.header}
+                         onClick={() => this.setState({showAlertsView: true})}
+                         role="link"
+                         tabIndex={0}>
                         <AlertIcon className={classes.alertIcon}/>
                         <span className={classes.numOfAlerts}>{alerts[0].title}</span>
                         <IconRightArrow className={classes.rightArrowIcon}/>
-                    </div>
+                    </button>
                     :
                     <div>
-                        <div className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
+                        <button className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
                             <AlertIcon className={classes.alertIcon}/>
                             <span className={classes.numOfAlerts}>{t("X.alerts", {0: alerts.length})}</span>
                             <IconRightArrow className={classes.rightArrowIcon}/>
-                        </div>
+                        </button>
                         {alerts.map((alert: RealTimeAlert, i: number) =>
                             <div className={classes.alertTitle} key={i}>
                                 {alert.title}

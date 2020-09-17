@@ -137,8 +137,8 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
         this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(onShowActionsMenu);
         const feedbackBtn = <button className={classNames(this.props.className, classes.main)}
                                     onClick={() => onClick(this.props.tKState)}
-                                    aria-hidden={true}
                                     tabIndex={0}
+                                    aria-label="Report issue"
                                     onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
                                         onShowActionsMenu}
                                     onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
