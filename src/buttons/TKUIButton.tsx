@@ -75,6 +75,7 @@ class TKUIButton extends React.Component<IProps, {}> {
                 >
                     <button className={classNames(classes.main,
                         secondary ? classes.secondary : classes.primary)}
+                            aria-label={this.props.text}
                     >
                         {this.props.icon &&
                         <div className={classes.iconContainer}>

@@ -7,6 +7,7 @@ import {RCTooltip} from "rc-tooltip";
 import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
 import classNames from "classnames";
 import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
+import {genClassNames} from "../css/GenStyle.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;
@@ -100,7 +101,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
                 overlay={overlay}
                 // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
                 {...this.isVisible() ? {visible: this.isVisible()} : undefined}
-                overlayClassName={classNames(classes.main, this.props.className)}
+                overlayClassName={classNames(classes.main, this.props.className, genClassNames.root)}
                 arrowContent={this.props.arrowContent}
             >
                 {this.props.children}

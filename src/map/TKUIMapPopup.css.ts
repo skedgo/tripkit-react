@@ -13,14 +13,15 @@ export const tKUIMapPopupStyle: TKUIStyles<TKUIMapPopupStyle, TKUIMapPopupProps>
             ...genStyles.fontS
         },
         icon: {
-            ...genStyles.svgFillCurrColor,
-            color: theme.colorPrimary
+            padding: '1px'
         },
         button: {
             ...resetStyles.button,
             marginRight: '10px',
             borderRight: '1px solid #23b15e',
-            paddingRight: '10px'
+            paddingRight: '10px',
+            ...genStyles.svgFillCurrColor,
+            color: theme.colorPrimary
         },
         rightPanel: {
             ...genStyles.flex,

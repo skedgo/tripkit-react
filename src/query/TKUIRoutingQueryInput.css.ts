@@ -65,8 +65,10 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             borderBottom: '1px solid ' + black(4, theme.isDark)
         },
         swap: {
+            ...resetStyles.button,
             cursor: 'pointer',
-            padding: '10px',
+            padding: '0',
+            margin: '10px',
             boxSizing: 'content-box!important',
             '& path': {
                 fill: black(1, theme.isDark)

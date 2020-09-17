@@ -6,6 +6,7 @@ import {alertSeverity} from "../model/trip/Segment";
 import genStyles from "../css/GenStyle.css";
 import Color from "../model/trip/Color";
 import {AlertSeverity} from "../model/service/RealTimeAlert";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIAlertsSummaryDefaultStyle: TKUIStyles<TKUIAlertsSummaryStyle, TKUIAlertsSummaryProps> =
     (theme: TKUITheme) => ({
@@ -16,9 +17,12 @@ export const tKUIAlertsSummaryDefaultStyle: TKUIStyles<TKUIAlertsSummaryStyle, T
             ...genStyles.borderRadius(12)
         },
         header: {
+            ...resetStyles.button,
             ...genStyles.flex,
             ...genStyles.alignCenter,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            width: '100%',
+            textAlign: 'left'
         },
         alertIcon: {
             color: (props: TKUIAlertsSummaryProps) => severityColor(alertSeverity(props.alerts), theme),

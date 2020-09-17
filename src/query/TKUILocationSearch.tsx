@@ -66,7 +66,9 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
             <TKUIViewportUtil>
                 {(viewportProps: TKUIViewportUtilProps) =>
                     <div className={classes.main}>
-                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}>
+                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}
+                                aria-label="Menu"
+                        >
                             <IconMenu className={classes.sideBarIcon}/>
                         </button>
                         <TKUILocationBox
@@ -101,7 +103,9 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                         {viewportProps.landscape &&
                         <div className={classes.divider}/>}
                         {viewportProps.landscape &&
-                        <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}>
+                        <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
+                                aria-label="Get directions"
+                        >
                             <IconDirections className={classes.directionsIcon}/>
                         </button>}
                     </div>

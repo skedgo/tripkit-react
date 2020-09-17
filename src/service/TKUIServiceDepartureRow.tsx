@@ -15,6 +15,7 @@ import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
+import WaiAriaUtil from "../util/WaiAriaUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -148,7 +149,10 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,
                 !detailed && classes.row, this.props.selected && classes.rowSelected)}
-                 onClick={this.props.onClick}>
+                 onClick={this.props.onClick}
+                 onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
+                 tabIndex={0}
+            >
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
                         {departure.serviceNumber &&

@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUICardStyle, TKUICardProps, CardPresentation, hasHandle} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {black, cardSpacing, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, cardSpacing, colorWithOpacity, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import DeviceUtil from "../util/DeviceUtil";
@@ -29,6 +29,10 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
                 paddingBottom: (props: TKUICardProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
             },
             boxSizing: 'border-box'
+        },
+
+        modalOverlay: {
+            backgroundColor: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),
         },
 
         main: {

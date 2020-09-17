@@ -93,6 +93,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private fromTooltipRef: any;
     private toTooltipRef: any;
+    private transportsRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -104,6 +105,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         };
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
+        this.transportsRef = React.createRef();
     }
 
     private onPrefChange(timePref: TimePreference) {
@@ -175,10 +177,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     }
 
     public static getTimePrefOptions(t: TranslationFunction): any[] {
-        return (Object.values(TimePreference))
-            .map((value) => {
-                return { value: value, label: this.timePrefString(value, t)};
-            });
+        return Object.values(TimePreference).map((value) => ({value: value, label: this.timePrefString(value, t)}));
     }
 
     public render(): React.ReactNode {
@@ -188,11 +187,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const fromPlaceholder = t("Where.are.you.going.from?");
         const toPlaceholder = t("Where.do.you.want.to.go?");
         const ariaLabelFrom = routingQuery.from !== null ?
-            "From " + routingQuery.from.getDisplayString() :
-            fromPlaceholder.substring(0, fromPlaceholder.length - 3);
+            "From " + routingQuery.from.getDisplayString() : fromPlaceholder;
         const ariaLabelTo = routingQuery.to !== null ?
-            "To " + routingQuery.to.getDisplayString() :
-            toPlaceholder.substring(0, toPlaceholder.length - 3);
+            "To " + routingQuery.to.getDisplayString() : toPlaceholder;
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
         return (
@@ -200,6 +197,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 presentation={CardPresentation.NONE}
                 title={this.props.landscape ? this.props.title : undefined}
                 onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
+                closeAriaLabel={"close query input"}
                 headerDividerVisible={false}
                 scrollable={false}
                 overflowVisible={true}
@@ -320,10 +318,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             />
                         </TKUITooltip>
                     </div>
-                    <IconSwap className={classes.swap}
-                              aria-hidden={true}
-                              focusable="false"
-                              onClick={this.onSwapClicked}/>
+                    <button className={classes.swap} onClick={this.onSwapClicked} aria-label={"swap from and to"}>
+                        <IconSwap aria-hidden={true} focusable="false"/>
+                    </button>
                 </div>
                 {this.props.landscape &&
                 <div
@@ -350,6 +347,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         placement="right"
                         overlay={
                             <TKUITransportSwitchesView
+                                startElemRef={this.transportsRef}
                                 onMoreOptions={this.props.onShowTransportOptions ?
                                     () => {
                                         this.setState({showTransportSwitches: false});
@@ -387,12 +385,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         return errorMessage;
     }
 
-    public componentDidUpdate(prevProps: Readonly<IProps>): void {
+    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
         if (!prevProps.value.from && this.props.value.from) {
             this.showTooltip(true,undefined);
         }
         if (!prevProps.value.to && this.props.value.to) {
             this.showTooltip(false,undefined);
+        }
+        if (this.state.showTransportSwitches && !prevState.showTransportSwitches) {
+            // Set focus to transport switches' first button when start showing.
+            setTimeout(() => {  // Need this delay to wait for tooltip containing transport switches to show.
+                if (this.transportsRef) {
+                    this.transportsRef.current.focus();
+                }
+            }, 100);
+
         }
     }
 

@@ -15,6 +15,8 @@ export const tKUISettingSectionDefaultStyle: TKUIStyles<TKUISettingSectionStyle,
         sectionBody: {
             padding: '0 30px',
             borderTop: '1px solid ' + black(4, theme.isDark),
+            ...genStyles.flex,
+            ...genStyles.column,
             ...theme.divider,
             '&>*': {    // Style for option row
                 ...genStyles.flex,

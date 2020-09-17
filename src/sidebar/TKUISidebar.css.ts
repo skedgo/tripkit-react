@@ -1,31 +1,35 @@
 import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUISidebarProps, TKUISidebarStyle} from "./TKUISidebar";
-import genStyles from "../css/GenStyle.css";
+import genStyles, {keyFramesStyles} from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarProps> =
     (theme: TKUITheme) => ({
         modalContainer: {
-            zIndex: '1005!important',
-            fontFamily: theme.fontFamily,
-            paddingRight: '5px',
-            ...genStyles.flex,
-            justifyContent: 'flex-start!important',
-            WebkitJustifyContent: 'flex-start!important',
-            background: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)) + '!important',
-            position: 'absolute'
-        },
-        modalClosed: {  // Workaround to react-drag-drawer issue: modalContainer takes a while to dissapear
-            background: 'none!important',
+            backgroundColor: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),
         },
         modal: {
             ...theme.cardBackground,
             ...genStyles.borderRadius(0),
+            fontFamily: theme.fontFamily,
             width: '300px',
             height: '100%',
-            ...genStyles.flex
+            ...genStyles.flex,
+            border: 'none',
+            padding: '0',
+            top: '0',
+            bottom: '0',
+            left: '0',
+            outline: 'none'
         },
+        slideIn: {
+            animation: keyFramesStyles.keyframes.leftSlideIn + ' .1s linear'
+        },
+        slideOut: {
+            animation: keyFramesStyles.keyframes.leftSlideOut+ ' .1s linear',
+            animationFillMode: 'forwards'
+},
         main: {
             ...genStyles.flex,
             ...genStyles.grow,

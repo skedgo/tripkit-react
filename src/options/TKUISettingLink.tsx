@@ -1,7 +1,6 @@
 import * as React from "react";
 import {ClassNameMap} from "react-jss";
 import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
-import classNames from "classnames";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig} from "../config/TKUIConfig";
@@ -14,7 +13,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 export interface IStyle {
-    optionRow: CSSProps<IProps>;
     optionLink: CSSProps<IProps>;
 }
 
@@ -32,12 +30,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUISettingLink: React.SFC<IProps> = (props: IProps) => {
     const classes = props.classes;
     return (
-        <div className={classNames(classes.optionRow, classes.optionLink)}
+        <button className={classes.optionLink}
              onClick={props.onClick}
         >
             {props.text}
             <IconRightArrow/>
-        </div>
+        </button>
     );
 };
 

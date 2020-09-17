@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
+import {ReactComponent as IconInfo} from '../images/ic-info.svg';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
@@ -10,6 +10,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     subtitle?: string;
     onAction?: () => void;
     renderMoreInfo?: () => JSX.Element;
+    renderActionIcon?: () => React.ReactElement;
 }
 
 interface IStyle {
@@ -42,7 +43,7 @@ class TKUIMapPopup extends React.Component<IProps, {}> {
                 <button onClick={this.props.onAction}
                         className={classes.button}
                 >
-                    <IconTimes className={classes.icon}/>
+                    {this.props.renderActionIcon ? this.props.renderActionIcon(): <IconInfo className={classes.icon}/>}
                 </button>}
                 <div className={classes.rightPanel}>
                     {this.props.title &&

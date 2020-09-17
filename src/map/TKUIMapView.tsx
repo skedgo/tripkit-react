@@ -60,6 +60,8 @@ import TKGeocodingOptions, {getGeocodingOptions} from "../geocode/TKGeocodingOpt
 import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
 import Color from "../model/trip/Color";
 import Features from "../env/Features";
+import WaiAriaUtil from "../util/WaiAriaUtil";
+import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -71,7 +73,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     attributionControl?: boolean;
     segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
     serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
-    onLocAction?: (locType: MapLocationType, loc: Location) => void;
+    onLocAction?: (locType: MapLocationType | undefined, loc: Location) => void;
     tileLayerProps?: TileLayerProps;
     mapboxGlLayerProps?: MapboxGLLayerProps;
 }
@@ -129,7 +131,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMapView",
     props: {
         tileLayerProps: {
-            attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
+            attribution: "&copy <a href='http://osm.org/copyright' tabindex='-1'>OpenStreetMap</a> contributors",
             url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
         }
     }
@@ -394,7 +396,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             : undefined;
         const t = this.props.t;
         return (
-            <div className={classes.main}>
+            <div className={classes.main} aria-hidden="true">
                 <RLMap
                     className={classes.leaflet}
                     viewport={leafletViewport}
@@ -437,6 +439,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // Leafet doc: https://leafletjs.com/reference-1.6.0.html#map-taptolerance
                     // To make this work with Pointer events experimental feature need to use leaflet > 1.6.0:
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
+                    keyboard={false}
                 >
                     {this.props.mapboxGlLayerProps !== undefined ?
                         !this.state.refreshTiles &&
@@ -450,7 +453,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                                // (switch dark / light appearance).
                                                this.refreshModeSpecificTiles();
                                            }
-                                       }}/> :
+                                       }}
+                        /> :
                         <TileLayer {...this.props.tileLayerProps!}/>}
                     {this.props.landscape && <ZoomControl position={"topright"}/>}
                     {this.state.userLocation &&
@@ -591,6 +595,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     this.showUserLocTooltip(t("Could.not.determine.your.current.location."));
                                 }
                             })}
+                            tabIndex={-1}
                     >
                         <IconCurrentLocation/>
                     </button>
@@ -619,9 +624,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             autoPan={false}
         >
             <TKUIMapPopup title={location.name || LocationUtil.getMainText(location, this.props.t)}
-                          onAction={location instanceof StopLocation ?
-                              () => this.props.onLocAction
-                                  && this.props.onLocAction(MapLocationType.STOP, location) : undefined}/>
+                          onAction={() => this.props.onLocAction
+                                  && this.props.onLocAction(location instanceof StopLocation ? MapLocationType.STOP : undefined, location)}
+                          renderActionIcon={location instanceof StopLocation ? () => <IconTimes/> : undefined}
+            />
         </Popup>;
     }
 
@@ -632,6 +638,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
         // TODO Delete: Can actually delete this? It causes an exception sometimes
         // setTimeout(() => this.onResize(), 5000);
+        setTimeout(() => {
+            WaiAriaUtil.apply(".mapboxgl-canvas", -1, true);
+            WaiAriaUtil.apply(".mapboxgl-ctrl-logo", -1, true);
+            WaiAriaUtil.apply(".leaflet-control-zoom-in", -1, true);
+            WaiAriaUtil.apply(".leaflet-control-zoom-out", -1, true);
+            const leafletControlAttribution = WaiAriaUtil.getElementByQuerySelector(".leaflet-control-attribution");
+            leafletControlAttribution && leafletControlAttribution.children.length > 0 &&
+            leafletControlAttribution.children[0].setAttribute("tabindex", "-1");
+        }, 1000);
     }
 
     public componentDidUpdate(prevProps: IProps): void {

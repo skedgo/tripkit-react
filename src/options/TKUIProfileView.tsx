@@ -282,6 +282,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                     marginTop: '2px',
                                 }}
                                 renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                                ariaLabel={t("Appearance")}
                             />
                         </div>
                     </TKUISettingSection>
