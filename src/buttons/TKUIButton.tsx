@@ -22,6 +22,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClick?: (e: any) => void;
     disabled?: boolean;
     className?: string;
+    'aria-hidden'?: boolean;
+    tabIndex?: number;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -62,6 +64,8 @@ class TKUIButton extends React.Component<IProps, {}> {
                         style={this.props.style}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
+                        aria-hidden={this.props['aria-hidden']}
+                        tabIndex={this.props.tabIndex}
                 >
                     {this.props.text}
                 </button>
@@ -76,6 +80,8 @@ class TKUIButton extends React.Component<IProps, {}> {
                     <button className={classNames(classes.main,
                         secondary ? classes.secondary : classes.primary)}
                             aria-label={this.props.text}
+                            aria-hidden={this.props['aria-hidden']}
+                            tabIndex={this.props.tabIndex}
                     >
                         {this.props.icon &&
                         <div className={classes.iconContainer}>
@@ -90,6 +96,8 @@ class TKUIButton extends React.Component<IProps, {}> {
                         style={this.props.style}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
+                        aria-hidden={this.props['aria-hidden']}
+                        tabIndex={this.props.tabIndex}
                 >
                     {this.props.icon &&
                     <div className={classes.iconContainer}>

@@ -39,9 +39,9 @@ class TKUITripTime extends React.Component<IProps, {}> {
         const t = this.props.t;
         return (
             <div className={classes.main}>
-                {(hasPT ?
+                    {(hasPT ?
                     [
-                        <span className={classes.timePrimary} key={0}><span>{departureTime}</span> <span>-</span> <span>{arrivalTime}</span></span>,
+                        <span className={classes.timePrimary} key={0}><span>{departureTime}</span> <span aria-label="to">-</span> <span>{arrivalTime}</span></span>,
                         <span className={classes.timeSecondary} key={1}>{duration}</span>
                     ]
                     :

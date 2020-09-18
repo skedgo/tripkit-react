@@ -12,6 +12,7 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUICardCarouselDefaultStyle} from "./TKUICardCarousel.css";
 import {Subtract} from "utility-types";
+import WaiAriaUtil from "../util/WaiAriaUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: number;
@@ -27,6 +28,7 @@ interface IStyle {
     main: CSSProps<IProps>;
     lotOfPages: CSSProps<IProps>;
     pageWrapper: CSSProps<IProps>;
+    hidden: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedPros, TKUIWithClasses<IStyle, IProps> {}
@@ -43,6 +45,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 interface IState {
     freezeCarousel: boolean;
     handles: Map<number, any>;
+    hideOtherPages: boolean;    // This is to avoid browser to give focus to elements on the other pages on keyboard navigation.
 }
 
 class TKUICardCarousel extends React.Component<IProps, IState> {
@@ -51,7 +54,8 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             freezeCarousel: false,
-            handles: new Map<number, any>()
+            handles: new Map<number, any>(),
+            hideOtherPages: true
         };
         this.registerHandle = this.registerHandle.bind(this);
     }
@@ -92,13 +96,18 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                         // showIndicators={!DeviceUtil.isTouch()}
                         transitionTime={500}
                         selectedItem={this.props.selected}
-                        onChange={this.props.onChange}
+                        onChange={(selected: number) => {
+                            this.props.onChange && this.props.onChange(selected);
+                            this.setState({hideOtherPages: false});
+                            setTimeout(() => this.setState({hideOtherPages: true}), 1000);
+                        }}
                         // emulateTouch={true}
                         swipeable={!this.state.freezeCarousel}
                         useKeyboardArrows={DeviceUtil.isDesktop}
                     >
                         {React.Children.map(children, (child: any, i: number) =>
-                            <div className={classes.pageWrapper} key={i}>
+                            <div className={classNames(classes.pageWrapper,
+                                i !== this.props.selected && this.state.hideOtherPages && classes.hidden)} key={i}>
                                 {child}
                             </div>
                         )}
@@ -106,6 +115,12 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                 </div>
             </TKUISlideUp>
         );
+    }
+
+    componentDidMount() {
+        WaiAriaUtil.apply(".carousel-root", -1);
+        WaiAriaUtil.applyToAll(".control-arrow", -1, true);
+        WaiAriaUtil.applyToAll(".dot", -1, true);
     }
 
 }

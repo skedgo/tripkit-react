@@ -2,10 +2,16 @@ import {JsonObject, JsonProperty} from "json2typescript";
 import Segment, {TripAvailability} from "./Segment";
 import Util from "../../util/Util";
 import {Visibility} from "./SegmentTemplate";
+import DateTimeUtil from "../../util/DateTimeUtil";
+import TransportUtil from "../../trip/TransportUtil";
+import {TranslationFunction} from "../../i18n/TKI18nProvider";
+import TripUtil from "../../trip/TripUtil";
 
 @JsonObject
 class Trip {
 
+    @JsonProperty("id", String, true)
+    public id?: string = undefined;
     @JsonProperty("depart", Number, true)
     private _depart: number = 0;
     @JsonProperty("arrive", Number, true)
@@ -22,11 +28,11 @@ class Trip {
     private _moneyCost: number | null = null;
     @JsonProperty("moneyUSDCost", Number, true)
     private _moneyUSDCost: number | null = 0;
-    @JsonProperty("carbonCost", Number, true)   // Required according to spec, but sometimes don't come.
+    @JsonProperty("carbonCost", Number, true)   // Required according to spec. See comment for mainSegmentHashCode.
     private _carbonCost: number = 0;
-    @JsonProperty("hassleCost", Number, true)   // Required according to spec, but sometimes don't come.
+    @JsonProperty("hassleCost", Number, true)   // Required according to spec. See comment for mainSegmentHashCode.
     private _hassleCost: number = 0;
-    @JsonProperty("caloriesCost", Number, true) // Required according to spec, but sometimes don't come.
+    @JsonProperty("caloriesCost", Number, true) // Required according to spec. See comment for mainSegmentHashCode.
     private _caloriesCost: number = 0;
     @JsonProperty("saveURL", String, true)
     private _saveURL: string = "";
@@ -38,6 +44,8 @@ class Trip {
     private _plannedURL: string = "";
     @JsonProperty("segments", [Segment], true)
     private _segments: Segment[] = [];
+    @JsonProperty("mainSegmentHashCode", Number, true)  // Required according to spec, need to mark as optional since
+    public mainSegmentHashCode: number = 0;             // TripGroup extends Trip, but it should always be present.
 
     private _satappQuery: string = "";
     private _arrivalSegment: Segment | undefined;
@@ -170,8 +178,14 @@ class Trip {
         return this.getSegments(visibility).length === 1;
     }
 
-    public getKey(): string {
-        return (this.saveURL ? this.saveURL : String(this.weightedScore));
+    /**
+     *  Fallback can be removed when id or saveURL becomes required.
+     *  It's important to have a unique id for each trip, and that is maintained across real-time updates.
+     *  See comment on TKUIResultsView.
+     */
+    public getKey(fallback?: string): string {
+        return (this.id ? this.id :
+            this.saveURL ? this.saveURL : String(this.weightedScore) + (fallback ? "-" + fallback : ""));
     }
 
     get satappQuery(): string {
@@ -206,6 +220,51 @@ class Trip {
 
     public isCancelled(): boolean {
         return this.segments.find((value: Segment) => value.availability === TripAvailability.CANCELLED) !== undefined;
+    }
+
+    get mainSegment(): Segment {
+        return this.segments.find((segment: Segment) => segment.segmentTemplateHashCode === this.mainSegmentHashCode)!;
+    }
+
+    public getAriaDescription(t: TranslationFunction): string {
+        let description = "";
+        const summarySegments = this.getSegments(Visibility.IN_SUMMARY);
+        for (const segment of summarySegments) {
+            let infoTitle: string | undefined;
+            let infoSubtitle: string | undefined;
+            if (segment.isPT()) {
+                infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
+                // infoSubtitle = t("At.X", {0: DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP)});
+            } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && (segment.isBicycle() || segment.isWheelchair())) {
+                const mainInfo = segment.metres !== undefined ?
+                    TransportUtil.distanceToBriefString(segment.metres) :
+                    DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+                const friendlinessPct = (segment.metresSafe !== undefined && segment.metres !== undefined) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
+                if (friendlinessPct) {
+                    infoTitle = mainInfo;
+                    infoSubtitle = segment.isBicycle() ? t("X.cycle.friendly", {0: friendlinessPct + "%"}) : t("X.wheelchair.friendly", {0: friendlinessPct + "%"});
+                } else {
+                    infoSubtitle = mainInfo;
+                }
+            } else {
+                if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
+                    infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
+                } else {
+                    infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+                }
+                if (segment.realTime) {
+                    infoTitle = infoSubtitle;
+                    infoSubtitle = t("Live.traffic");
+                }
+            }
+            description += segment.modeInfo!.alt + (infoTitle ? " " + infoTitle : "") + (infoSubtitle ? " " + infoSubtitle : "")
+                + (segment !== summarySegments[summarySegments.length - 1] ? ", then " : ". ");
+        }
+        const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(this);
+        description += hasPT ?
+            t("departs.X", {0: departureTime}) + ", " + t("arrives.X", {0: arrivalTime}) :
+            this.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime});
+        return description;
     }
 }
 

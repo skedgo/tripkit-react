@@ -366,7 +366,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         <TKUITripOverviewView
                                             value={trip}
                                             onRequestClose={() => this.props.onTripDetailsView(false)}
-                                            key={i + "-" + trip.getKey()}
+                                            key={trip.getKey(String(i))}
                                             handleRef={(handleRef: any) => registerHandle(i, handleRef)}
                                             cardPresentation={CardPresentation.NONE}
                                             slideUpOptions={{

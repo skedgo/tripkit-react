@@ -165,6 +165,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                 {this.props.badge &&
                 <div className={classes.badge}
                      key={"badge"}
+                     aria-label={badgeLabel(this.props.badge, this.props.t) + " result."}
                 >
                     {badgeIcon(this.props.badge)}
                     {badgeLabel(this.props.badge, this.props.t)}
@@ -176,6 +177,8 @@ class TKUITripRow extends React.Component<IProps, {}> {
                          onClick={() => this.props.onAlternativeClick &&
                              this.props.onAlternativeClick(trip as TripGroup, altTrip)}
                          key={i}
+                         aria-label={altTrip.getAriaDescription(t)}
+                         aria-hidden={i !== 0}
                     >
                         <div className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
                             <TKUITripTime value={altTrip} brief={this.props.brief}/>
@@ -192,12 +195,15 @@ class TKUITripRow extends React.Component<IProps, {}> {
                                     type={TKUIButtonType.PRIMARY_LINK}
                                     text={t("Details")}
                                     onClick={this.props.onDetailClick}
+                                    aria-hidden={i !== 0}
+                                    tabIndex={i !== 0 ? -1 : undefined}
                                 />}
                             </div>
                         </div>
                     </div>)}
                 <div className={classes.footer}
                      key={"footer"}
+                     aria-label={info.replace(/ · /gi, ". ")}
                 >
                     <div className={classes.info}>
                         {info}
@@ -210,6 +216,8 @@ class TKUITripRow extends React.Component<IProps, {}> {
                                 this.props.onExpand && this.props.onExpand(!this.props.expanded);
                                 e.stopPropagation();
                             }}
+                            aria-hidden={true}
+                            tabIndex={-1}
                         />
                     }
                 </div>

@@ -29,10 +29,23 @@ class WaiAriaUtil {
         return querySearchResult && querySearchResult.length > 0 ? querySearchResult[0] : undefined;
     }
 
+    public static getElementsByQuerySelector(query: string): Element[] {
+        const querySearchResult = document.querySelectorAll(query);
+        return Array.from(querySearchResult.values());
+    }
+
     public static apply(query: string, tabIndex?: 0 | -1, ariaHidden?: boolean) {
         const element = this.getElementByQuerySelector(query);
         tabIndex !== undefined && element && element.setAttribute("tabindex", tabIndex.toString());
         ariaHidden !== undefined && element && element.setAttribute("aria-hidden", ariaHidden.toString());
+    }
+
+    public static applyToAll(query: string, tabIndex?: 0 | -1, ariaHidden?: boolean) {
+        const elements = this.getElementsByQuerySelector(query);
+        elements.forEach((element: Element) => {
+            tabIndex !== undefined && element && element.setAttribute("tabindex", tabIndex.toString());
+            ariaHidden !== undefined && element && element.setAttribute("aria-hidden", ariaHidden.toString());
+        });
     }
 
     public static keyDownToClick(clickListener: () => void) {
@@ -41,6 +54,11 @@ class WaiAriaUtil {
                 clickListener();
             }
         }
+    }
+
+    public static isUserTabbing(): boolean {
+        console.log(document.body.classList.contains(genClassNames.userIsTabbing));
+        return document.body.classList.contains(genClassNames.userIsTabbing);
     }
 
 }

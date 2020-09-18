@@ -379,7 +379,14 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                             onAlternativeClick={this.props.onAlternativeChange}
                             onDetailClick={!DeviceUtil.isPhone ? this.props.onDetailsClicked : undefined}
                             onKeyDown={this.onKeyDown}
-                            key={index + trip.getKey()}
+                            // Use unique id for trip, when available, or index + weighting score if not.
+                            // Using just index as key causes problems with focus: if i-th trip is focused, and then
+                            // if more trips arrive and the i-th trip is now other trip, then react interpreats that the
+                            // node with key = i has changed the value (trip) property, so it shows in that node the new
+                            // i-th trip, but focus remains on the i-th node (which is other trip), instead of remaining
+                            // attached to the trip. Using the index + weighting score as fallback cause sometimes that
+                            // the focus is lost, but at least avoids it to be re-assigned to the wrong trip.
+                            key={trip.getKey(String(index))}
                             reference={(el: any) => this.rowRefs[index] = el}
                             badge={this.state.tripToBadge.get(trip)}
                             expanded={trip === this.state.expanded}
@@ -406,6 +413,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     private automaticSelectionTimeout: any;
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
+        // Focus first selected trip row.
         if (!prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
             this.rowRefs[this.props.values.indexOf(this.props.value)].focus();
         }

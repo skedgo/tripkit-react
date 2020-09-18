@@ -28,6 +28,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     subtitle?: string;
     renderSubHeader?: () => JSX.Element;
     onRequestClose?: () => void;
+    ariaLabel?: string;
     closeAriaLabel?: string;
     presentation?: CardPresentation;
     presentationFromViewport?: (portrait: boolean) => CardPresentation;
@@ -133,9 +134,13 @@ class TKUICard extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
+        const cardAriaLabel = this.props.ariaLabel ? this.props.ariaLabel :
+            this.props.title + (this.props.subtitle ? ". " + this.props.subtitle : "");
         const body =
             <div className={classNames(classes.main, genClassNames.root,
-                DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}>
+                DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
+                 aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
+            >
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
                     this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
@@ -184,13 +189,12 @@ class TKUICard extends React.Component<IProps, IState> {
                     </TKUIScrollForCard> : this.props.children
                 }
             </div>;
-        const cardAriaLabel = this.props.title + (this.props.subtitle ? ". " + this.props.subtitle : "");
         return (
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
                     {...this.props.slideUpOptions}
                     handleRef={this.state.handleRef}
-                    containerClass={classes.modalContainer}
+                    containerClass={classNames(classes.modalContainer, genClassNames.root)}
                     open={this.props.open}
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                     cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}

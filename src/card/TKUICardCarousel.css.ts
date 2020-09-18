@@ -95,5 +95,10 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
             ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
                 padding: '0 '+ cardSpacing(false) +'px'
             }
+        },
+        hidden: {
+            '&>*': {
+                display: 'none'
+            }
         }
     });
