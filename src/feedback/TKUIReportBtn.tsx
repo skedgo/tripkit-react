@@ -70,6 +70,11 @@ function feedbackTextFromState(state: TKState): string {
         // feedbackS += "Routing error: " + state.routingError.toLogString() + "\n";
         feedbackS += "Routing " + state.routingError + "\n";
     }
+    if (state.stateLoadError) {
+        feedbackS += "\n";
+        feedbackS += "State load error " + state.stateLoadError + "\n";
+        feedbackS += state.stateLoadError.stack + "\n";
+    }
     if (state.selectedTrip) {
         feedbackS += "\n";
         feedbackS += "Selected trip url: " +  (state.selectedTrip ? state.selectedTrip.temporaryURL : "")+ "\n";

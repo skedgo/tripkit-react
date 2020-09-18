@@ -3,10 +3,13 @@ class TKError extends Error {
     public code?: string;
     public usererror?: boolean;
 
-    constructor(message: string, code?: string, usererror?: boolean) {
+    constructor(message: string, code?: string, usererror?: boolean, stack?: string) {
         super(message);
         this.code = code;
         this.usererror = usererror;
+        if (stack) {
+            this.stack = stack;
+        }
     }
 
     public toString(): string {

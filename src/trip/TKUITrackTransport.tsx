@@ -75,6 +75,8 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         }
         const modeInfo = segment.modeInfo!;
         const classes = this.props.classes;
+            const ariaLabel = modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + (infoSubtitle ? " " + infoSubtitle : "") +
+                (!segment.isLast(Visibility.IN_SUMMARY) ? ", then " : "");
         return (
             <div className={classes.main}>
                 <div className={classes.compositeIcon}>
@@ -82,7 +84,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                          alt={modeInfo.alt}
                          role="img" // Needed to be read by iOS VoiceOver
                          className={classes.icon}
-                         aria-label={modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + infoSubtitle}
+                         aria-label={ariaLabel}
                     />
                     {segment.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
                 </div>

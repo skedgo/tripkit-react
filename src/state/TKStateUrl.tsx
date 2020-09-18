@@ -273,7 +273,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 tKState.onTripDetailsView(true);
             })
             .catch((error: Error) => tKState.onWaitingStateLoad(false,
-                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false)));
+                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
     }
 
     private loadTimetableState(regionCode: string, stopCode: string, filter: string, serviceID?: string, timeInSecs?: number) {

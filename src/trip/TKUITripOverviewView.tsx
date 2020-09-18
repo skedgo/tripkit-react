@@ -127,6 +127,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
                 handleRef={this.props.handleRef}
                 slideUpOptions={this.props.slideUpOptions}
+                ariaLabel={trip.mainSegment.modeInfo ? trip.mainSegment.modeInfo.alt + " trip details." : undefined}
             >
                 <div className={classes.main}>
                     {segmentsAndArrival.map((segment: Segment, index: number) => {

@@ -317,6 +317,8 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         MozBoxSizing: 'border-box',
         boxSizing: 'border-box',
         lineHeight: 'normal',
+        boxShadow: 'none',     // To avoid glow effect on focus
+        outline: 'none!important',  // To avoid glow effect on focus
         '& *': {
             boxShadow: 'none',     // To avoid glow effect on focus
             outline: 'none!important',  // To avoid glow effect on focus
@@ -339,7 +341,8 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         '& $root a:focus,' +
         '& $root select:focus,' +
         '& $root textarea:focus,' +
-        '& $root div:focus,'
+        '& $root div:focus,' +
+        '& $root:focus'
         // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, so doesn't match the style.
         // '& $focusTarget:focus'
             ]: {

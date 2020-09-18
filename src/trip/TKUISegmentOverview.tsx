@@ -120,18 +120,18 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         return (
             <div className={classes.main} tabIndex={0}>
                 <div className={classes.header}>
-                    <div className={classes.track} aria-label="at">
+                    <div className={classes.track}>
                         <div className={classes.preLine}/>
                         {showPin ? <IconPinStart className={classes.iconPin}/> : <div className={classes.circle}/>}
                         <div className={classes.posLine}/>
                     </div>
-                    <div className={classes.title}>
+                    <div className={classes.title} aria-label={from}>
                         {from}
                         {previousWaitingSegment &&
                         <span className={classes.subtitle}>{previousWaitingSegment.getAction()}</span>}
                         {this.props.actions}
                     </div>
-                    <div className={classes.time}>
+                    <div className={classes.time} aria-label={"at " + startTime + "."}>
                         {prevWaitingSegmentTime &&
                         <span className={classes.preTime}>{prevWaitingSegmentTime}</span>}
                         <span>{startTime}</span>
