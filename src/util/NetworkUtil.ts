@@ -23,11 +23,11 @@ class NetworkUtil {
                     if (jsonData.error) {
                         throw new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
                     } else {
-                        return Promise.reject(new Error(response.statusText));
+                        return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
                     }
                 });
             } else {
-                return Promise.reject(new Error(response.statusText));
+                return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
             }
         }
     }

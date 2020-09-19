@@ -78,7 +78,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         super(props);
         const position = this.props.position !== undefined ? this.props.position : props.initPosition!;
         this.state = {
-            position: position,
+            position: props.initPosition!,
             touching: false,
             top: this.getTopFromPosition(position),
             deltaTop: 0
@@ -93,10 +93,13 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 
     private onPositionChange(position: TKUISlideUpPosition) {
         this.setState({
-            position: position,
-            top: this.getTopFromPosition(position)
-        });
+            position: position
+        }, () => this.refreshTop());
         this.props.onPositionChange && this.props.onPositionChange(position);
+    }
+
+    private refreshTop() {
+        this.setState({top: this.getTopFromPosition(this.getPosition())});
     }
 
     private getTopFromPosition(position: TKUISlideUpPosition): number {
@@ -245,7 +248,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             }
         }
         if (prevProps.position !== this.props.position) {
-            this.onPositionChange(this.getPosition());
+            this.refreshTop();
         }
         if (this.props.cardOnTop &&
             (prevProps.position !== this.props.position || prevState.position !== this.state.position
@@ -256,8 +259,8 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         // (this.props.modalXXX.top). E.g. this.props.modalUp.top may have changed due to
         // a switch between landscape / portrait orientation.
         if (prevProps.position === this.props.position && prevState.position === this.state.position &&
-            this.state.top !== this.getTopFromPosition(this.state.position)) {
-            this.onPositionChange(this.getPosition());
+            this.state.top !== this.getTopFromPosition(this.getPosition())) {
+            this.refreshTop();
         }
         if (this.props.open && !prevProps.open) {
             this.focusContent();

@@ -295,6 +295,12 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         );
     }
 
+    componentDidUpdate(prevProps: Readonly<IProps>) {
+        if (this.props.userProfile !== prevProps.userProfile) {
+            this.setState({update: this.props.userProfile})
+        }
+    }
+
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
