@@ -19,6 +19,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (selected: number) => void;
     slideUpOptions?: TKUISlideUpOptions;
     children?: any;
+    showControls?: boolean;
 }
 
 interface IConsumedPros extends TKUIViewportUtilProps {}
@@ -92,8 +93,8 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                     <Carousel
                         showStatus={false}
                         showThumbs={false}
-                        showArrows={!DeviceUtil.isTouch()}
-                        // showIndicators={!DeviceUtil.isTouch()}
+                        showArrows={this.props.showControls !== undefined ? this.props.showControls : !DeviceUtil.isTouch()}
+                        showIndicators={this.props.showControls}
                         transitionTime={500}
                         selectedItem={this.props.selected}
                         onChange={(selected: number) => {

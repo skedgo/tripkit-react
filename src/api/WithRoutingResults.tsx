@@ -476,7 +476,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onTripJsonUrl(tripUrl: string): Promise<Trip[]> {
             const routingResultsPromise = Util.isJsonString(tripUrl) ?
-                Promise.resolve(Util.deserialize(JSON.parse(tripUrl), RoutingResults)) :
+                this.resultsFromJsonString(tripUrl) :
                 (tripUrl.startsWith("http") ?
                     TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults) :
                     TripGoApi.apiCallT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults));
@@ -499,6 +499,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
                 return trips;
             });
+        }
+
+        public resultsFromJsonString(tripUrl: string): Promise<RoutingResults> {
+            try {
+                return Promise.resolve(Util.deserialize(JSON.parse(tripUrl), RoutingResults));
+            } catch (e) {
+                return Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false));
+            }
         }
 
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,

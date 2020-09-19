@@ -60,6 +60,9 @@ export const loadTripState = (sharedTripJsonUrl, tKState): Promise<void> => {
             if (trips && trips.length === 1) {
                 tKState.onTripDetailsView(true);
             }
+        }).catch((error: Error) => {
+            tKState.onWaitingStateLoad(false,
+                new TKError("Error loading trips" + (error.message ? ": " + error.message : ""), error.name, false));
         });
 };
 
@@ -98,7 +101,7 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
     const placeholder = "Paste trips in JSON format or a url returning trips (either absolute or relative, e.g. starting with routing.json)";
     return (
         <TKUICard
-            title={"Load trips from url"}
+            title={"Load trips"}
             presentation={props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={props.slideUpOptions}
             onRequestClose={() => props.onRequestClose && props.onRequestClose(false)}
@@ -129,10 +132,6 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
                                         .then(() => {
                                             props.onRequestClose(true);
                                             props.tKState.setShowUserProfile(false);
-                                        })
-                                        .catch((error: Error) => {
-                                            props.tKState.onWaitingStateLoad(false,
-                                                new TKError(error.message, ERROR_LOADING_DEEP_LINK, false));
                                         });
                                 }
                             }}
