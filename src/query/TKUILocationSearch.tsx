@@ -18,6 +18,7 @@ import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import TKUICard from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowSideBar?: () => void;
@@ -62,55 +63,62 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const placeholder = this.props.t("Where.do.you.want.to.go?");
+        const inputId = "input-search";
+        const ariaLabel = this.props.value ?
+            "To " + this.props.value.getDisplayString() : placeholder;
         return (
-            <TKUIViewportUtil>
-                {(viewportProps: TKUIViewportUtilProps) =>
-                    <div className={classes.main}>
-                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}
-                                aria-label="Menu"
-                        >
-                            <IconMenu className={classes.sideBarIcon}/>
-                        </button>
-                        <TKUILocationBox
-                            showCurrLoc={false}
-                            bounds={this.props.bounds}
-                            focus={this.props.focusLatLng}
-                            value={this.props.value}
-                            placeholder={placeholder}
-                            onChange={(value: Location | null, highlighted: boolean) => {
-                                if (!highlighted) {
-                                    this.props.onChange && this.props.onChange(value);
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(undefined);
+            <TKUICard overflowVisible={true} scrollable={false} mainFocusElemId={inputId}>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) =>
+                        <div className={classes.main}>
+                            <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}
+                                    aria-label="Menu"
+                            >
+                                <IconMenu className={classes.sideBarIcon}/>
+                            </button>
+                            <TKUILocationBox
+                                showCurrLoc={false}
+                                bounds={this.props.bounds}
+                                focus={this.props.focusLatLng}
+                                value={this.props.value}
+                                placeholder={placeholder}
+                                onChange={(value: Location | null, highlighted: boolean) => {
+                                    if (!highlighted) {
+                                        this.props.onChange && this.props.onChange(value);
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(undefined);
+                                        }
+                                    } else {
+                                        if (this.props.onPreChange) {
+                                            this.props.onPreChange(value ? value : undefined);
+                                        }
                                     }
-                                } else {
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(value ? value : undefined);
-                                    }
-                                }
-                            }}
-                            onInputTextChange={(text: string) => {
-                                this.props.onInputTextChange && this.props.onInputTextChange(text);
-                            }}
-                            iconEmpty={<IconGlass className={classes.glassIcon}/>}
-                            style={this.props.injectedStyles.locationBox}
-                            inputStyle={this.props.injectedStyles.locationBoxInput}
-                            menuStyle={{
-                                ...this.props.injectedStyles.resultsMenu,
-                                width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
-                            }}
-                        />
-                        {viewportProps.landscape &&
-                        <div className={classes.divider}/>}
-                        {viewportProps.landscape &&
-                        <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
-                                aria-label="Get directions"
-                        >
-                            <IconDirections className={classes.directionsIcon}/>
-                        </button>}
-                    </div>
-                }
-            </TKUIViewportUtil>
+                                }}
+                                onInputTextChange={(text: string) => {
+                                    this.props.onInputTextChange && this.props.onInputTextChange(text);
+                                }}
+                                iconEmpty={<IconGlass className={classes.glassIcon}/>}
+                                style={this.props.injectedStyles.locationBox}
+                                inputStyle={this.props.injectedStyles.locationBoxInput}
+                                menuStyle={{
+                                    ...this.props.injectedStyles.resultsMenu,
+                                    width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
+                                }}
+                                inputId={inputId}
+                                inputAriaLabel={ariaLabel}
+                            />
+                            {viewportProps.landscape &&
+                            <div className={classes.divider}/>}
+                            {viewportProps.landscape &&
+                            <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
+                                    aria-label="Get directions"
+                            >
+                                <IconDirections className={classes.directionsIcon}/>
+                            </button>}
+                        </div>
+                    }
+                </TKUIViewportUtil>
+            </TKUICard>
         );
     }
 

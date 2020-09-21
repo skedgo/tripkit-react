@@ -105,10 +105,11 @@ class Util {
         return JSON.stringify(json).replace(/"([^(")"]+)":/g,"$1:")
     }
 
-    public static log(obj: any, level: Environment = Env.DEVELOPMENT) {
-        if (Environment.isDev()
+    public static log(obj: any, level: Environment | null = Env.DEVELOPMENT) {
+        if (level !== null &&
+            (Environment.isDev()
             || (Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION))
-            || (Environment.isProd() && level === Env.PRODUCTION)) {
+            || (Environment.isProd() && level === Env.PRODUCTION))) {
             console.log(obj);
         }
     }

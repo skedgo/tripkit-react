@@ -25,6 +25,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onVisibleChange?: (visible?: boolean) => void;
     reference?: (ref: TKUITooltip) => void;
     onRequestClose?: () => void;
+    destroyTooltipOnHide?: boolean;
 }
 
 export interface IStyle {
@@ -103,6 +104,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
                 {...this.isVisible() ? {visible: this.isVisible()} : undefined}
                 overlayClassName={classNames(classes.main, this.props.className, genClassNames.root)}
                 arrowContent={this.props.arrowContent}
+                destroyTooltipOnHide={this.props.destroyTooltipOnHide}
             >
                 {this.props.children}
             </Tooltip>

@@ -45,7 +45,7 @@ export function returnFocus(preventScroll = false) {
         }
         return;
     } catch (e) {
-        console.warn(
+        console.log(
             [
                 "You tried to return focus to",
                 toFocus,

@@ -253,6 +253,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onQueryChange(RoutingQuery.create());
                     this.props.onDirectionsView(false);
                 }}
+                // To avoid capturing focus when returning from trip details view (where query input renders again),
+                // since focus should be returned to 'Detail' btn on trip row.
+                shouldFocusAfterRender={!this.props.trips}
             />;
         const toLocation = this.props.query.to;
         const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
@@ -367,10 +370,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                             value={trip}
                                             onRequestClose={() => {
                                                 this.props.onTripDetailsView(false);
-                                                if (this.focusReturn) {
-                                                    this.focusReturn.focus();
-                                                    this.focusReturn = undefined;
-                                                }
                                             }}
                                             key={trip.getKey(String(i))}
                                             handleRef={(handleRef: any) => registerHandle(i, handleRef)}
@@ -421,7 +420,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             {searchBar}
                             {queryInput}
                         </div>
-                        <div id="map-main" className={classes.mapMain}>
+                        <div id="map-main" className={classes.mapMain} aria-hidden="true">
                             <TKUIMapView
                                 hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                                 padding={mapPadding}
@@ -470,15 +469,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         setTimeout(() => GATracker.pageview(window.location.pathname + window.location.search), 1000);
     }
 
-    private focusReturn: any;
-
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
         if (TKUITripPlanner.ableToShowLocationDetailView(this.props) !== TKUITripPlanner.ableToShowLocationDetailView(prevProps)) {
             this.setState({showLocationDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props)});
-        }
-
-        if (this.isShowTripDetail() && !this.isShowTripDetail(prevProps)) {
-            this.focusReturn = document.activeElement;
         }
 
         // If on search view and a stop is set as query from, then show timetable for the stop

@@ -18,10 +18,12 @@ import Region from "../model/region/Region";
 import {Subtract} from "utility-types";
 import DeviceUtil from "../util/DeviceUtil";
 import ModeIdentifier from "../model/region/ModeIdentifier";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMoreOptions?: () => void;
     startElemRef?: (el: any) => void;
+    onRequestClose?: () => void;
 }
 
 interface IConsumedProps {
@@ -74,60 +76,78 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const t = this.props.t;
         const modes = region.modes.concat([ModeIdentifier.WHEELCHAIR_ID]);
+        const firstModeId = "first-mode-id";
         return (
-            <div className={classes.main}>
-                <div className={classes.modeSelector}>
-                    {modes.map((mode: string, index: number) => {
-                            const modeOption = transOptions.getTransportOption(mode);
-                            const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
-                            const tooltip =
-                                <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
-                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
-                                    <div className={classes.tooltipRight}>
-                                        <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
-                                        <div className={modeOption === DisplayConf.HIDDEN ?
-                                            classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
-                                            {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
+            <TKUICard presentation={CardPresentation.NONE}
+                      onRequestClose={this.props.onRequestClose}
+                      mainFocusElemId={firstModeId}
+                      styles={{
+                          btnClear: (defaultStyle) => ({
+                              ...defaultStyle,
+                              position: 'absolute',
+                              right: '12px',
+                              top: '10px'
+                          }),
+                          header: (defaultStyle) => ({
+                              ...defaultStyle,
+                              padding: '0'
+                          })
+                      }}
+            >
+                <div className={classes.main}>
+                    <div className={classes.modeSelector}>
+                        {modes.map((mode: string, index: number) => {
+                                const modeOption = transOptions.getTransportOption(mode);
+                                const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
+                                const tooltip =
+                                    <div className={classNames(classes.tooltipContent, modeOption === DisplayConf.HIDDEN && classes.tooltipDisabled)}>
+                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}/>
+                                        <div className={classes.tooltipRight}>
+                                            <div className={classes.tooltipTitle}>{modeIdentifier.title}</div>
+                                            <div className={modeOption === DisplayConf.HIDDEN ?
+                                                classes.tooltipStateDisabled : classes.tooltipStateEnabled}>
+                                                {modeOption === DisplayConf.HIDDEN ? "Disabled" : "Enabled"}
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>;
-                            const transBtn =
-                                <button
-                                    className={classNames(classes.modeIcon,
-                                        modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
-                                    onClick={() => this.onChange(mode)}
-                                    {...DeviceUtil.isTouch() && {key: index}}
-                                    {...index === 0 && {ref: this.props.startElemRef}}
-                                    aria-pressed={modeOption !== DisplayConf.HIDDEN}
-                                >
-                                    <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}
-                                         aria-label={modeIdentifier.title}/>
-                                </button>;
-                            return ( DeviceUtil.isTouch() ?
-                                    transBtn :
-                                    <TKUITooltip placement="top"
-                                                 overlay={tooltip}
-                                                 className={classes.tooltip}
-                                                 mouseEnterDelay={.5}
-                                                 arrowContent={null}
-                                                 key={index}
+                                    </div>;
+                                const transBtn =
+                                    <button
+                                        className={classNames(classes.modeIcon,
+                                            modeOption === DisplayConf.HIDDEN && classes.modeIconDisabled)}
+                                        onClick={() => this.onChange(mode)}
+                                        {...DeviceUtil.isTouch() && {key: index}}
+                                        {...index === 0 && {id: firstModeId}}
+                                        aria-pressed={modeOption !== DisplayConf.HIDDEN}
                                     >
-                                        {transBtn}
-                                    </TKUITooltip>
-                            );
-                        }
-                    )}
+                                        <img src={TransportUtil.getTransportIconModeId(modeIdentifier, false, this.props.theme.isDark)}
+                                             aria-label={modeIdentifier.title}/>
+                                    </button>;
+                                return ( DeviceUtil.isTouch() ?
+                                        transBtn :
+                                        <TKUITooltip placement="top"
+                                                     overlay={tooltip}
+                                                     className={classes.tooltip}
+                                                     mouseEnterDelay={.5}
+                                                     arrowContent={null}
+                                                     key={index}
+                                        >
+                                            {transBtn}
+                                        </TKUITooltip>
+                                );
+                            }
+                        )}
+                    </div>
+                    {this.props.onMoreOptions &&
+                    <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
+                                text={t("More.options")}
+                                style={{
+                                    marginLeft: '10px',
+                                    ...genStyles.fontS
+                                }}
+                                onClick={this.props.onMoreOptions}
+                    />}
                 </div>
-                {this.props.onMoreOptions &&
-                <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
-                            text={t("More.options")}
-                            style={{
-                                marginLeft: '10px',
-                                ...genStyles.fontS
-                            }}
-                            onClick={this.props.onMoreOptions}
-                />}
-            </div>
+            </TKUICard>
         )
     }
 

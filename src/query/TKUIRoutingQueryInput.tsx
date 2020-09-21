@@ -42,6 +42,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     resolveCurrLocInFrom?: boolean;
     collapsable?: boolean;
     onClearClicked?: () => void;
+    shouldFocusAfterRender?: boolean;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -105,7 +106,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         };
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
-        this.transportsRef = React.createRef();
     }
 
     private onPrefChange(timePref: TimePreference) {
@@ -187,11 +187,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const fromPlaceholder = t("Where.are.you.going.from?");
         const toPlaceholder = t("Where.do.you.want.to.go?");
         const ariaLabelFrom = routingQuery.from !== null ?
-            "From " + routingQuery.from.getDisplayString() : fromPlaceholder;
+            "From " + routingQuery.from.getDisplayString() :
+            this.state.fromTooltipText ? this.state.fromTooltipText + " " + fromPlaceholder :
+            fromPlaceholder;
         const ariaLabelTo = routingQuery.to !== null ?
-            "To " + routingQuery.to.getDisplayString() : toPlaceholder;
+            "To " + routingQuery.to.getDisplayString() :
+            this.state.toTooltipText ? this.state.toTooltipText + " " + toPlaceholder :
+            toPlaceholder;
         const classes = this.props.classes;
         const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
+        const inputToId = "input-to";
+        const inputFromId = "input-from";
         return (
             <TKUICard
                 presentation={CardPresentation.NONE}
@@ -201,6 +207,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 headerDividerVisible={false}
                 scrollable={false}
                 overflowVisible={true}
+                mainFocusElemId={!routingQuery.from ? inputFromId : !routingQuery.to ? inputToId : undefined}
+                shouldFocusAfterRender={this.props.shouldFocusAfterRender}
             >
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
@@ -254,12 +262,15 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     this.props.onInputTextChange && this.props.onInputTextChange(true, text);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
-                                onFailedToResolve={(highlighted: boolean, error: Error) =>
-                                    this.showTooltip(true, this.getErrorMessage(error, t))}
+                                onFailedToResolve={(highlighted: boolean, error: Error) => {
+                                    this.showTooltip(true, this.getErrorMessage(error, t));
+                                    const fromInput = document.getElementById(inputFromId);
+                                    // Need to use a timeout since if not location box autocomplete popup don't show.
+                                    setTimeout(() => fromInput && fromInput.focus(), 1);
+                                }}
                                 inputAriaLabel={ariaLabelFrom}
-                                inputId={"input-from"}
+                                inputId={inputFromId}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                                onFocus={() => this.showTooltip(true, undefined)}
                                 menuStyle={{
                                     borderTopLeftRadius: '0',
                                     borderTopRightRadius: '0'
@@ -305,12 +316,15 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     this.props.onInputTextChange && this.props.onInputTextChange(false, text);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
-                                onFailedToResolve={(highlighted: boolean, error: Error) =>
-                                    this.showTooltip(false, this.getErrorMessage(error, t))}
+                                onFailedToResolve={(highlighted: boolean, error: Error) => {
+                                    this.showTooltip(false, this.getErrorMessage(error, t));
+                                    const toInput = document.getElementById(inputToId);
+                                    // Need to use a timeout since if not location box autocomplete popup don't show.
+                                    setTimeout(() => toInput && toInput.focus(), 1);
+                                }}
                                 inputAriaLabel={ariaLabelTo}
-                                inputId={"input-to"}
+                                inputId={inputToId}
                                 sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
-                                onFocus={() => this.showTooltip(false, undefined)}
                                 menuStyle={{
                                     borderTopLeftRadius: '0',
                                     borderTopRightRadius: '0'
@@ -347,16 +361,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         placement="right"
                         overlay={
                             <TKUITransportSwitchesView
-                                startElemRef={this.transportsRef}
                                 onMoreOptions={this.props.onShowTransportOptions ?
                                     () => {
                                         this.setState({showTransportSwitches: false});
                                         this.props.onShowTransportOptions!();
                                     } : undefined}
+                                onRequestClose={() => this.setState({showTransportSwitches: false})}
                             />
                         }
                         visible={this.state.showTransportSwitches}
                         onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                        destroyTooltipOnHide={true} // Needed so TKUICard unmounts and focus is returned to transports btn.
                     >
                         <button className={classes.transportsBtn}
                                 onClick={() => this.setState({showTransportSwitches: true})}
@@ -391,15 +406,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
         if (!prevProps.value.to && this.props.value.to) {
             this.showTooltip(false,undefined);
-        }
-        if (this.state.showTransportSwitches && !prevState.showTransportSwitches) {
-            // Set focus to transport switches' first button when start showing.
-            setTimeout(() => {  // Need this delay to wait for tooltip containing transport switches to show.
-                if (this.transportsRef) {
-                    this.transportsRef.current.focus();
-                }
-            }, 100);
-
         }
     }
 

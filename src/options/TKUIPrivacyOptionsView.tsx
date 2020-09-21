@@ -80,7 +80,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                 <div className={classes.main}>
                     <div className={classes.section}>
                         <div className={classes.sectionBody}>
-                            <div className={classes.optionRow}>
+                            <div className={classes.optionRow} tabIndex={0}>
                                 <div>
                                     <div className={classes.optionTitle}>
                                         {t("Real-time.information.for.transport.options")}
@@ -95,7 +95,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                     />
                                 </div>
                             </div>
-                            <div className={classNames(classes.optionRow, classes.checkboxRow)}>
+                            <div className={classNames(classes.optionRow, classes.checkboxRow)} tabIndex={0}>
                                 <div>
                                     <div className={classes.optionTitle}>
                                         {t("Trip.selections")}
@@ -112,12 +112,11 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         update.trackTripSelections = checked;
                                         this.props.onChange(update);
                                     }}
-                                    value="primary"
-                                    inputProps={{'aria-label': 'primary checkbox'}}
+                                    inputProps={{'aria-label': 'Trip selections'}}
                                 />
                             </div>
                         </div>
-                        <div className={classes.sectionFooter}>
+                        <div className={classes.sectionFooter} tabIndex={0}>
                             {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.forever.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
                     </div>

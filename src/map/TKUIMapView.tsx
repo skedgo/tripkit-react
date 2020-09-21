@@ -470,6 +470,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 className: classes.currentLocMarker
                             })}
                             riseOnHover={true}
+                            keyboard={false}
                     >
                         {this.getLocationPopup(this.currentLocation)}
                     </Marker>}
@@ -495,6 +496,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 }
                             }}
                             onpopupclose={() => console.log("close")}
+                            keyboard={false}
                     >
                         {this.getLocationPopup(this.props.from!)}
                     </Marker>}
@@ -518,6 +520,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     this.props.onDragEnd(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                                 }
                             }}
+                            keyboard={false}
                     >
                         {this.getLocationPopup(this.props.to!)}
                     </Marker>}
@@ -569,6 +572,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 className: classes.vehicle
                             })}
                             riseOnHover={true}
+                            keyboard={false}
                     >
                         {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
                     </Marker>}

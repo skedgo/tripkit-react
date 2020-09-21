@@ -526,7 +526,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                             "aria-controls": this.state.ddopen() ? popupId : undefined,
                             // "aria-owns": popupId,
                             // "aria-controls": popupId
-                            tabIndex: 1
+                            tabIndex: 0
                         }
                     }
                     wrapperStyle = {{

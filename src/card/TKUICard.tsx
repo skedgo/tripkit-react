@@ -15,6 +15,7 @@ import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -30,6 +31,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     ariaLabel?: string;
     closeAriaLabel?: string;
+    mainFocusElemId?: string;
+    shouldFocusAfterRender?: boolean;
     presentation?: CardPresentation;
     presentationFromViewport?: (portrait: boolean) => CardPresentation;
     slideUpOptions?: TKUISlideUpOptions;
@@ -100,6 +103,8 @@ class TKUICard extends React.Component<IProps, IState> {
     private firstModal = false;
     public static cardStack: any[] = [];
 
+    private bodyRef?: any;
+
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
         open: true
@@ -134,12 +139,25 @@ class TKUICard extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
-        const cardAriaLabel = this.props.ariaLabel ? this.props.ariaLabel :
-            this.props.title + (this.props.subtitle ? ". " + this.props.subtitle : "");
+        let cardAriaLabel = this.props.ariaLabel;
+        if (!cardAriaLabel) {
+            if (this.props.title) {
+                cardAriaLabel = this.props.title;
+            }
+            if (this.props.subtitle) {
+                cardAriaLabel = cardAriaLabel ? cardAriaLabel + ". " : "";
+                cardAriaLabel += this.props.subtitle;
+            }
+        }
+        if (cardAriaLabel && presentation !== CardPresentation.MODAL) {
+            cardAriaLabel += "  Card";
+        }
         const body =
             <div className={classNames(classes.main, genClassNames.root,
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
                  aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
+                 ref={(ref: any) => this.bodyRef = ref}
+                 tabIndex={presentation === CardPresentation.NONE ? 0 : undefined}
             >
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
@@ -252,6 +270,39 @@ class TKUICard extends React.Component<IProps, IState> {
         }
     }
 
+    /**
+     * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
+     */
+    contentHasFocus = () =>
+        document.activeElement === this.bodyRef ||
+        this.bodyRef.contains(document.activeElement);
+
+    // Don't steal focus from inner elements
+    focusContent = () => {
+        if (this.props.shouldFocusAfterRender === false) {
+            return;
+        }
+        const mainFocusElem = this.props.mainFocusElemId && document.getElementById(this.props.mainFocusElemId);
+        if (mainFocusElem && !this.contentHasFocus()) {
+            console.log("focused!!");
+            mainFocusElem.focus();
+        } else {
+            this.bodyRef &&
+            !this.contentHasFocus() &&
+            this.bodyRef.focus({preventScroll: true});
+        }
+    };
+
+    componentDidMount() {
+        if (this.props.presentation === CardPresentation.NONE) {
+            console.log("Card body ref");
+            console.log(this.bodyRef);
+            // setupScopedFocus(this.bodyRef);
+            markForFocusLater();
+            this.focusContent();
+        }
+    }
+
     public componentWillUnmount() {
         if (this.props.presentation === CardPresentation.MODAL) {
             TKUICard.MODAL_COUNT--;
@@ -261,6 +312,11 @@ class TKUICard extends React.Component<IProps, IState> {
         const thisIndex = TKUICard.cardStack.indexOf(this);
         if (thisIndex !== -1) {
             TKUICard.cardStack.splice(thisIndex, 1);
+        }
+
+        if (this.props.presentation === CardPresentation.NONE) {
+            // teardownScopedFocus();
+            returnFocus();
         }
     }
 }
