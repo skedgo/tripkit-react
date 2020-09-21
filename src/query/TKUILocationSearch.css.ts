@@ -7,7 +7,6 @@ import {resetStyles} from "../css/ResetStyle.css";
 export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle, TKUILocationSearchProps> =
     (theme: TKUITheme) => ({
         main: {
-            ...theme.cardBackground,
             padding: '6px 8px',
             fontFamily: theme.fontFamily,
             ...genStyles.flex,

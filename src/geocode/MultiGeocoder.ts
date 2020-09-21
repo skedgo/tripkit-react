@@ -76,18 +76,16 @@ class MultiGeocoder {
         }
         // return mergedResults;
         const mergedResults = this.mergeSorted(query, suggestionListsFromSources);
-        Util.log("------------------------ \n");
-        Util.log("Remove repeated results: \n");
-        Util.log("------------------------ \n");
+        Util.log("------------------------ \n", null);
+        Util.log("Remove repeated results: \n", null);
+        Util.log("------------------------ \n", null);
         const depuratedResults: Location[] = [];
         for (const result of mergedResults) {
             let relevant = true;
             for (const depuratedResult of depuratedResults) {
                 if (this._options.analogResults(result, depuratedResult)) {
                     relevant = false;
-                    if (Environment.isDev()) {
-                        Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".");
-                    }
+                    Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".", null);
                     break;
                 }
             }
@@ -104,16 +102,16 @@ class MultiGeocoder {
             suggestionListsFromSources.push(listFromSource.slice());
         }
         const jointSuggestions: Location[] = [];
-        Util.log("\n\n ************************************************************************************************ \n\n");
-        Util.log("------------------------ \n");
-        Util.log("Relevance to query: " + query + "\n");
-        Util.log("------------------------ \n");
+        Util.log("\n\n ************************************************************************************************ \n\n", null);
+        Util.log("------------------------ \n", null);
+        Util.log("Relevance to query: " + query + "\n", null);
+        Util.log("------------------------ \n", null);
         for (let firsts = MultiGeocoder.getFirsts(suggestionListsFromSources) ; firsts.length !== 0 ; firsts = MultiGeocoder.getFirsts(suggestionListsFromSources)) {
             firsts.sort((l1: Location, l2: Location) => {
                 return this._options.compare(l1, l2, query);
             });
             jointSuggestions.push(firsts[0]);
-            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address || ""));
+            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address || ""), null);
             MultiGeocoder.removeFirst(firsts[0], suggestionListsFromSources);
         }
         return jointSuggestions;

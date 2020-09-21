@@ -106,6 +106,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
             <TKUICard
                 title={title}
                 subtitle={subtitle}
+                ariaLabel={title + " " + subtitle + " location detail"}
                 renderSubHeader={subHeader}
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}

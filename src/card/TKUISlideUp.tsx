@@ -208,7 +208,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                              this.onPositionChange(this.getPosition());
                          }
                      }}
-                     aria-label={this.props.ariaLabel ? this.props.ariaLabel + " Card" : undefined}
+                     aria-label={this.props.ariaLabel}
                      tabIndex={0}
                 >
                     <div style={{

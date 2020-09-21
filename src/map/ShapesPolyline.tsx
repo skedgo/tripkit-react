@@ -66,6 +66,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                                                this.stopToMarker.set(stop, elem.leafletElement);
                                            }
                                        }}
+                                       keyboard={false}
                         >
                             <Popup className={"ServiceStopPopup-popup"}
                                    closeButton={false}

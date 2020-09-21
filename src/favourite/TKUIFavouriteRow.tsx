@@ -13,6 +13,7 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import LocationUtil from "../util/LocationUtil";
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
 import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
+import WaiAriaUtil from "../util/WaiAriaUtil";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -75,7 +76,11 @@ class TKUIFavouriteRow extends React.Component<IProps, {}> {
                 <IconRemove/>
             </button>;
         return (
-            <div className={classes.main} onClick={this.props.onClick}>
+            <div className={classes.main}
+                 onClick={this.props.onClick}
+                 onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
+                 tabIndex={0}
+            >
                 <span className={classes.iconPanel}>
                 {icon}
                 </span>

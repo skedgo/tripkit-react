@@ -43,7 +43,7 @@ class MapService extends React.Component<IProps, {}> {
                         iconAnchor: [20, 62]
                     });
                     return [
-                        <Marker icon={icon} position={startStop!} key={"pin"}/>,
+                        <Marker icon={icon} position={startStop!} key={"pin"} keyboard={false}/>,
                         service.shapes ?
                             <ServiceResultsContext.Consumer
                                 key={"map-polyline" + serviceDeparture.serviceTripID}

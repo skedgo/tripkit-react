@@ -64,6 +64,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     key={key}
                     onclick={clickHandler}
+                    keyboard={false}
                 />;
             case MapLocationType.MY_WAY_FACILITY:
                 return <Marker
@@ -80,6 +81,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     key={key}
                     onclick={clickHandler}
+                    keyboard={false}
                 />;
             case MapLocationType.PARK_AND_RIDE_FACILITY:
                 return <Marker
@@ -96,6 +98,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     })}
                     key={key}
                     onclick={clickHandler}
+                    keyboard={false}
                 />;
             case MapLocationType.STOP:
                 const transIconHTML = renderToStaticMarkup(
@@ -115,7 +118,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                     keyboard={false}
                 />;
             default:
-                return <Marker position={loc} key={key}/>;
+                return <Marker position={loc} key={key} keyboard={false}/>;
         }
     }
 

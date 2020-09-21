@@ -145,7 +145,7 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         const relevance = Math.max(LocationUtil.relevance(r1.address || "", r2.address || "") , LocationUtil.relevance(r2.address || "", r1.address || ""));
         const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
         if (r1.source !== r2.source) {
-            Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance);
+            Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);
         }
         if (r1.source !== r2.source &&
             ((r1 instanceof StopLocation && r2 instanceof StopLocation) ? r1.equals(r2) :

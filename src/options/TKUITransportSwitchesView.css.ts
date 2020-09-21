@@ -13,9 +13,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
         main: {
             padding: '10px',
             backgroundColor: theme.isLight ? '#f5f6f7' : '#384450',
-            ...genStyles.borderRadius(12),
-            boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
-            maxWidth: '255px',
+            maxWidth: '275px',
             fontFamily: theme.fontFamily,
             ...genStyles.flex,
             ...genStyles.column,
@@ -25,7 +23,7 @@ export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwit
             ...genStyles.flex,
             ...genStyles.wrap,
             ...DeviceUtil.isIE && {
-                maxWidth: '255px'   // Need this since flex-wrap is not supported on IE (or set display: block on main)
+                maxWidth: '270px'   // Need this since flex-wrap is not supported on IE (or set display: block on main)
             }
         },
         modeIcon: {

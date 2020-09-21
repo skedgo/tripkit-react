@@ -53,6 +53,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                                 this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
                                             }
                                         }}
+                                        keyboard={false}
                                 >
                                     {this.props.renderer.renderPopup &&
                                     <Popup offset={[0, -46]}
@@ -102,6 +103,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                             className: this.props.vehicleClassName
                                         })}
                                         riseOnHover={true}
+                                        keyboard={false}
                                 >
                                     {segment.modeInfo && segment.serviceNumber &&
                                     TKUIMapViewClass.getPopup(segment.realtimeVehicle, segment.modeInfo.alt + " " + segment.serviceNumber)}
