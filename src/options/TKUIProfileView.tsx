@@ -23,7 +23,7 @@ import TKUITransportOptionsView from "./TKUITransportOptionsView";
 import TKUIPrivacyOptionsView from "./TKUIPrivacyOptionsView";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {cardSpacing} from "../jss/TKUITheme";
-import TKUISelect from "../buttons/TKUISelect";
+import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import TKUISettingSection from "./TKUISettingSection";
 import TKUISettingLink from "./TKUISettingLink";
 
@@ -78,6 +78,7 @@ interface IState {
 class TKUIProfileView extends React.Component<IProps, IState> {
 
     private GreenCheckbox;
+    private appearanceOptions: SelectOption[];
 
     constructor(props: IProps) {
         super(props);
@@ -91,6 +92,12 @@ class TKUIProfileView extends React.Component<IProps, IState> {
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));
+        const t = this.props.t;
+        this.appearanceOptions = [
+            { value: undefined, label: t("Match.OS")},
+            { value: false, label: t("Light")},
+            { value: true, label: t("Dark")}
+        ];
         this.onMapOptionChange = this.onMapOptionChange.bind(this);
     }
 
@@ -169,11 +176,6 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 }}
             />;
         const t = this.props.t;
-        const appearanceOptions: any[] = [
-            { value: undefined, label: t("Match.OS")},
-            { value: false, label: t("Light")},
-            { value: true, label: t("Dark")}
-        ];
         const customSettings = this.props.customSettings &&
             this.props.customSettings(this.state.update,
                 (profileUpdate: TKUserProfile) => this.setState((prevState: IState) => ({update: profileUpdate}), () => this.applyChanges()),
@@ -268,8 +270,8 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                 {t("Appearance")}
                             </div>
                             <TKUISelect
-                                options={appearanceOptions}
-                                value={appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
+                                options={this.appearanceOptions}
+                                value={this.appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
                                 onChange={(option) => {
                                     this.setState((prevState: IState) => ({
                                         update: Util.iAssign(prevState.update, { isDarkMode: option.value })

@@ -284,7 +284,6 @@ class TKUICard extends React.Component<IProps, IState> {
         }
         const mainFocusElem = this.props.mainFocusElemId && document.getElementById(this.props.mainFocusElemId);
         if (mainFocusElem && !this.contentHasFocus()) {
-            console.log("focused!!");
             mainFocusElem.focus();
         } else {
             this.bodyRef &&
@@ -295,8 +294,6 @@ class TKUICard extends React.Component<IProps, IState> {
 
     componentDidMount() {
         if (this.props.presentation === CardPresentation.NONE) {
-            console.log("Card body ref");
-            console.log(this.bodyRef);
             // setupScopedFocus(this.bodyRef);
             markForFocusLater();
             this.focusContent();

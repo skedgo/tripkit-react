@@ -20,7 +20,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TKUserProfile, {WalkingSpeed} from "../model/options/TKUserProfile";
 import TKUISlider from "./TKUISlider";
 import RegionInfo from "../model/region/RegionInfo";
-import TKUISelect from "../buttons/TKUISelect";
+import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -67,6 +67,8 @@ interface IState {
 class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
     private GreenCheckbox;
+    private walkSpeedOptions: SelectOption[];
+    private cycleSpeedOptions: SelectOption[];
 
     constructor(props: IProps) {
         super(props);
@@ -81,7 +83,17 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 },
             },
             checked: {},
-        })((props: CheckboxProps) => <Checkbox color="default" {...props} />)
+        })((props: CheckboxProps) => <Checkbox color="default" {...props} />);
+
+        const t = this.props.t;
+        this.walkSpeedOptions = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
+            .map((value) => {
+                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
+            });
+        this.cycleSpeedOptions = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
+            .map((value) => {
+                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
+            });
     }
 
     private static walkingSpeedString(walkingSpeed: WalkingSpeed, t: TranslationFunction) {
@@ -206,14 +218,10 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             </div>;
         let walkSpeedSelect: any = undefined;
         if (mode.isWalk() || mode.isWheelchair()) {
-            const walkSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
-                .map((value) => {
-                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
-                });
             walkSpeedSelect =
                 <TKUISelect
-                    options={walkSpeedOptions}
-                    value={walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
+                    options={this.walkSpeedOptions}
+                    value={this.walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
                     onChange={(option) => {
                         const walkSpeed = option.value;
                         const userProfileUpdate = Util.deepClone(value);
@@ -232,14 +240,10 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
             </div>;
         let cycleSpeedSelect: any = undefined;
         if (mode.isBicycle()) {
-            const cycleSpeedOptions: any[] = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
-                .map((value) => {
-                    return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
-                });
             cycleSpeedSelect =
                 <TKUISelect
-                    options={cycleSpeedOptions}
-                    value={cycleSpeedOptions.find((option: any) => option.value === value.cyclingSpeed)}
+                    options={this.cycleSpeedOptions}
+                    value={this.cycleSpeedOptions.find((option: any) => option.value === value.cyclingSpeed)}
                     onChange={(option) => {
                         const cycleSpeed = option.value;
                         const userProfileUpdate = Util.deepClone(value);

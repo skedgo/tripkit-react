@@ -9,7 +9,7 @@ import * as CSS from 'csstype';
 import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    options: any[];
+    options: SelectOption[];
     value: any;
     onChange: (value: any) => void;
     menuIsOpen?: boolean;
@@ -45,6 +45,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 // TODO: Make TKUISelect to default to Dropdown btn style, as used or TKUIProfileView, and adapt other uses
 // (from TKUIRoutingQueryInput and TKUIResultsView).
+
+export interface SelectOption {
+    value: any;
+    label: string;
+}
 
 class TKUISelect extends React.Component<IProps, {}> {
 

@@ -1,5 +1,6 @@
 import {JsonConvert} from "json2typescript";
 import Environment, {Env} from "../env/Environment";
+import {useMemo} from "react";
 
 type Update<T> = {
     [P in keyof T]?: T[P]
@@ -125,6 +126,13 @@ class Util {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Hook to run func only once before component mounts: https://stackoverflow.com/a/56818036
+     */
+    public static useComponentWillMount = (func) => {
+        useMemo(func, []);
     }
 
 }
