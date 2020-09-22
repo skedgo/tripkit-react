@@ -25,7 +25,7 @@ import {Moment} from "moment-timezone";
 import Region from "../model/region/Region";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import TKUISelect from "../buttons/TKUISelect";
+import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {TKUIButtonType, TKUITheme, TKUITooltip} from "../index";
 import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
@@ -139,6 +139,8 @@ interface IState {
 class TKUIResultsView extends React.Component<IProps, IState> {
 
     private rowRefs: any[] = [];
+    private timePrefOptions: SelectOption[];
+    private sortOptions: SelectOption[];
 
     constructor(props: IProps) {
         super(props);
@@ -146,6 +148,9 @@ class TKUIResultsView extends React.Component<IProps, IState> {
             tripToBadge: new Map<Trip, Badges>(),
             showTransportSwitches: false
         };
+        // Create options on constructor so it happens just once, doing it on render causes issues.
+        this.timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
+        this.sortOptions = this.getSortOptions(this.props.t);
         this.getDefaultErrorActions = this.getDefaultErrorActions.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
     }
@@ -160,7 +165,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
         ]
     }
 
-    private getSortOptions(t: TranslationFunction): any[] {
+    private getSortOptions(t: TranslationFunction): SelectOption[] {
         return Object.values(TripSort)
             .filter((value: TripSort) => value !== TripSort.CARBON)
             .map((value: TripSort) => {
@@ -224,17 +229,15 @@ class TKUIResultsView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
-        const sortOptions = this.getSortOptions(this.props.t);
         const injectedStyles = this.props.injectedStyles;
-        const timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
         const routingQuery = this.props.query;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
         const renderSubHeader = this.props.portrait ? () => {
             return (
                 <div className={classes.footer}>
                     <TKUISelect
-                        options={timePrefOptions}
-                        value={timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
+                        options={this.timePrefOptions}
+                        value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
                         className={classes.timePrefSelect}
                         menuStyle={{marginTop: '3px'}}
@@ -354,8 +357,8 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                     {!error &&
                     <div className={classes.sortBar}>
                         <TKUISelect
-                            options={sortOptions}
-                            value={sortOptions.find((option: any) => option.value === this.props.sort)}
+                            options={this.sortOptions}
+                            value={this.sortOptions.find((option: any) => option.value === this.props.sort)}
                             onChange={(option) => this.props.onSortChange(option.value as TripSort)}
                             className={classes.sortSelect}
                             controlStyle={injectedStyles.sortSelectControl}

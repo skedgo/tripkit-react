@@ -27,7 +27,7 @@ import {Subtract} from "utility-types";
 import Region from "../model/region/Region";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
-import TKUISelect from "../buttons/TKUISelect";
+import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
@@ -94,7 +94,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private fromTooltipRef: any;
     private toTooltipRef: any;
-    private transportsRef: any;
+    private timePrefOptions: SelectOption[];
 
     constructor(props: IProps) {
         super(props);
@@ -104,6 +104,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             toTooltip: false,
             showTransportSwitches: false
         };
+        // Create options on constructor so it happens just once, doing it on render causes issues.
+        this.timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(this.props.t);
         this.onPrefChange = this.onPrefChange.bind(this);
         this.onSwapClicked = this.onSwapClicked.bind(this);
     }
@@ -176,7 +178,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
     }
 
-    public static getTimePrefOptions(t: TranslationFunction): any[] {
+    public static getTimePrefOptions(t: TranslationFunction): SelectOption[] {
         return Object.values(TimePreference).map((value) => ({value: value, label: this.timePrefString(value, t)}));
     }
 
@@ -195,7 +197,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             this.state.toTooltipText ? this.state.toTooltipText + " " + toPlaceholder :
             toPlaceholder;
         const classes = this.props.classes;
-        const timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(t);
         const inputToId = "input-to";
         const inputFromId = "input-from";
         return (
@@ -340,8 +341,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 <div
                     className={classes.footer}>
                     <TKUISelect
-                        options={timePrefOptions}
-                        value={timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                        options={this.timePrefOptions}
+                        value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
                         className={classes.timePrefSelect}
                         menuStyle={{marginTop: '3px'}}

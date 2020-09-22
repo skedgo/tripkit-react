@@ -9,7 +9,7 @@ import {tGUIDevSettingsViewDefaultStyle} from "./TGUIDevSettingsView.css";
 import {CardPresentation} from "../../../card/TKUICard";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../../../card/TKUISlideUp";
 import {TKUICard, TKUserProfile} from "../../../index";
-import TKUISelect from "../../../buttons/TKUISelect";
+import TKUISelect, {SelectOption} from "../../../buttons/TKUISelect";
 import classNames from "classnames";
 import Util from "../../../util/Util";
 import {ReactComponent as IconAngleDown} from "../../../images/ic-angle-down.svg";
@@ -91,6 +91,8 @@ export function getServer(userProfile: TKUserProfile): string {
     return servers[serverName];
 }
 
+let serverOptions: SelectOption[] = [];
+
 const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     const [editingKey, setEditingKey] = useState<string | undefined>(undefined);
     const [editingServer, setEditingServer] = useState<string | undefined>(undefined);
@@ -110,9 +112,12 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     };
     const serverName = customData && customData.server ? customData.server :
         Object.keys(getPredefinedServers())[0];
-    const serverOptions = Object.keys(servers)
-        .map((serverName: string) => ({ value: servers[serverName], label: serverName}))
-        .concat([{ value: 'add', label: 'Add...'}]);
+
+    Util.useComponentWillMount(() => {
+        serverOptions = Object.keys(servers)
+            .map((serverName: string) => ({ value: servers[serverName], label: serverName}))
+            .concat([{ value: 'add', label: 'Add...'}]);
+    });
 
     const ServerOption = (props: any) => {
         const {
