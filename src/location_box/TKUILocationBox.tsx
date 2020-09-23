@@ -352,7 +352,12 @@ class TKUILocationBox extends Component<IProps, IState> {
                        autoComplete="off"
                        autoCorrect="off"
                        autoCapitalize="off"
-                       {...props} style={this.props.inputStyle} className={classes.input}/>
+                       {...props}
+                       style={this.props.inputStyle}
+                       className={classes.input}
+                       role="textbox"
+                       aria-expanded={undefined}
+                />
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?
@@ -505,30 +510,33 @@ class TKUILocationBox extends Component<IProps, IState> {
                         }
                     }}
                     open={this.state.ddopen()}
-                    // open={true}
-                    inputProps={
-                        {
-                            placeholder: this.props.placeholder,
-                            onKeyDown: this.onKeyDown,
-                            onFocus: () => { // Remove current location on focus.
-                                if (this.state.locationValue && this.state.locationValue.isCurrLoc()) {
-                                 this.setValue(null, false, true,
-                                     () => this.refreshResults(this.state.inputText))
-                                } else {
-                                    this.refreshResults(this.state.inputText);
-                                }
-                                this.props.onFocus && this.props.onFocus();
-                            },
-                            "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.id).indexOf(this.highlightedItem) : undefined,
-                            "aria-label": this.props.inputAriaLabel,
-                            id: this.props.inputId,
-                            "aria-owns": this.state.ddopen() ? popupId : undefined,
-                            "aria-controls": this.state.ddopen() ? popupId : undefined,
-                            // "aria-owns": popupId,
-                            // "aria-controls": popupId
-                            tabIndex: 0
-                        }
-                    }
+                    // Re-distribute combobox attributes set on react-autocomplete to container, input and menu to match
+                    // WAI-ARIA spec example: https://www.w3.org/TR/wai-aria-1.1/#combobox. With this VoiceOver started
+                    // reading options ok.
+                    wrapperProps={{
+                        role: "combobox",
+                        "aria-owns": this.state.ddopen() ? popupId : undefined,
+                        "aria-haspopup": "listbox",
+                        "aria-expanded": this.state.ddopen()
+                    }}
+                    inputProps={{
+                        placeholder: this.props.placeholder,
+                        onKeyDown: this.onKeyDown,
+                        onFocus: () => { // Remove current location on focus.
+                            if (this.state.locationValue && this.state.locationValue.isCurrLoc()) {
+                                this.setValue(null, false, true,
+                                    () => this.refreshResults(this.state.inputText))
+                            } else {
+                                this.refreshResults(this.state.inputText);
+                            }
+                            this.props.onFocus && this.props.onFocus();
+                        },
+                        "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.id).indexOf(this.highlightedItem) : undefined,
+                        "aria-label": this.props.inputAriaLabel,
+                        id: this.props.inputId,
+                        "aria-controls": this.state.ddopen() ? popupId : undefined,
+                        tabIndex: 0
+                    }}
                     wrapperStyle = {{
                         position: "relative",
                         ...this.props.style

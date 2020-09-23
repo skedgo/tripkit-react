@@ -33,6 +33,7 @@ interface IProps extends TKUISlideUpOptions {
     cardOnTop?: (onTop: boolean) => void;
     parentElement?: any;
     ariaLabel?: string;
+    role?: string;
 }
 
 interface IState {
@@ -210,6 +211,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                      }}
                      aria-label={this.props.ariaLabel}
                      tabIndex={0}
+                     role={this.props.role}
                 >
                     <div style={{
                         height: this.containerElem ?
