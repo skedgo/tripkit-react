@@ -93,6 +93,7 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                               padding: '0'
                           })
                       }}
+                      ariaLabel={"Transport Switches"}
             >
                 <div className={classes.main}>
                     <div className={classes.modeSelector}>

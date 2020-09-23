@@ -67,7 +67,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
         const ariaLabel = this.props.value ?
             "To " + this.props.value.getDisplayString() : placeholder;
         return (
-            <TKUICard overflowVisible={true} scrollable={false} mainFocusElemId={inputId}>
+            <TKUICard overflowVisible={true} scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}>
                 <TKUIViewportUtil>
                     {(viewportProps: TKUIViewportUtilProps) =>
                         <div className={classes.main}>
