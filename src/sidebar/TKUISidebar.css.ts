@@ -8,6 +8,7 @@ export const tKUISidebarDefaultStyle: TKUIStyles<TKUISidebarStyle, TKUISidebarPr
     (theme: TKUITheme) => ({
         modalContainer: {
             backgroundColor: (theme.isLight ? 'rgba(255, 255, 255, 0.75)' : colorWithOpacity(tKUIColors.black, .75)),
+            position: 'absolute'    // Override position: 'fixed', doesn't work as expected when embedded.
         },
         modal: {
             ...theme.cardBackground,

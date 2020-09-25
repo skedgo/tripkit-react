@@ -1,5 +1,6 @@
 import * as React from "react";
-import {TKState, default as TKStateConsumer} from "../config/TKStateConsumer";
+import TKStateConsumer from "../config/TKStateConsumer";
+import {TKState} from "../config/TKState";
 import TKShareHelper from "../share/TKShareHelper";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";

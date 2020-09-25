@@ -55,11 +55,14 @@ import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
 import {Tracker, InitializeOptions} from 'react-ga';
 import {TrackerOptions} from "../analytics/GATracker";
 import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
-import {TKState} from "./TKStateConsumer";
+import {TKState} from "./TKState";
 import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
 
+/**
+ * SDK configuration
+ */
 export const TKUIConfigForDoc = (props: TKUIConfig) => null;
-TKUIConfigForDoc.displayName = 'Config object';
+TKUIConfigForDoc.displayName = 'TKUIConfig';
 
 interface ITKUIConfigRequired {
     apiKey: string;
@@ -68,11 +71,15 @@ interface ITKUIConfigRequired {
 interface ITKUIConfigOptional {
     server: string;
     /**
-     * Override for [default theme object]()
+     * Override for [default theme object]().
+     * @ctype
      */
     theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
+    /** @ctype */
     onInitState: (state: TKState) => void;
+    /** @ctype */
     onUpdateState: (state: TKState, prevState: TKState) => void;
+    /** @ctype */
     initViewport: {center?: LatLng, zoom?: number};
     /**
      * @ctype
@@ -109,10 +116,6 @@ interface ITKUIConfigOptional {
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
-    /**
-     * See [style props](/#tkuiw3wcss)  __COMPONENT__
-     * @public
-     */
     TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;

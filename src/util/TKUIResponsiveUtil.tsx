@@ -10,7 +10,13 @@ class TKUIResponsiveUtil {
 }
 
 export interface TKUIViewportUtilProps {
+    /**
+     * @globaldefault
+     */
     portrait: boolean;
+    /**
+     * @globaldefault
+     */
     landscape: boolean;
 }
 

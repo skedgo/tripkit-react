@@ -99,18 +99,31 @@ export interface IStyle {
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
+    /** @globaldefault */
     from?: Location;
+    /** @globaldefault */
     to?: Location;
+    /** @globaldefault */
     trip?: Trip;
+    /** @globaldefault */
     service?: ServiceDeparture;
+    /** @globaldefault */
     onClick?: (latLng: LatLng) => void;
+    /** @globaldefault */
     onDragEnd?: (from: boolean, latLng: LatLng) => void;
+    /** @globaldefault */
     viewport?: {center?: LatLng, zoom?: number};
+    /** @globaldefault */
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
+    /** @globaldefault */
     directionsView?: boolean;
+    /** @globaldefault */
     onDirectionsFrom: (latLng: LatLng) => void;
+    /** @globaldefault */
     onDirectionsTo: (latLng: LatLng) => void;
+    /** @globaldefault */
     onWhatsHere: (latLng: LatLng) => void;
+    /** @globaldefault */
     config: TKUIConfig;
 }
 
@@ -882,7 +895,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
         );
     };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>

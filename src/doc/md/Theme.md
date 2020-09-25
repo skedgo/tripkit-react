@@ -1,11 +1,11 @@
-Theme can be customized through ```theme``` property of [SDK config](/#/Customization?id=tkuiconfig), by passing a
-[theme object](/#/Customization?id=tkuitheme). This object is used to override the default theme, so you should just 
+Theme can be customized through ```theme``` property of [SDK config](TKUIConfig), by passing a
+[theme object](TKUITheme). This object is used to override the default theme, so you should just 
 specify the theme properties you want to override.
 
 Theme includes properties related to colors (primary, success, info, warning and error) and font type. 
 It also includes style objects related to types of text (e.g. 'textColorDisabled' and 'textSizeCaption'),
 and other general styles like card background, divider, etc. For more details 
-see [theme object spec below](/#/Customization?id=tkuitheme).
+see [theme object spec](TKUITheme).
 
 Next is an example customizing some theme properties:
 

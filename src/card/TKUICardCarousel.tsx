@@ -20,6 +20,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     slideUpOptions?: TKUISlideUpOptions;
     children?: any;
     showControls?: boolean;
+    parentElement?: any;
 }
 
 interface IConsumedPros extends TKUIViewportUtilProps {}
@@ -87,6 +88,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                     this.setState({freezeCarousel: false});
                 }}
                 handleRef={this.props.selected !== undefined && this.state.handles.get(this.props.selected)}
+                parentElement={this.props.parentElement}
             >
                 <div className={classNames(classes.main,
                     children && Array.isArray(children) && children.length > 12 && classes.lotOfPages)}>

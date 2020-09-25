@@ -29,7 +29,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     setShowLoadTrips?: Dispatch<SetStateAction<boolean>>;
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
-    parentElement?: any;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps, IOptionsContext {}

@@ -1,5 +1,6 @@
 import * as React from "react";
-import {TKState, default as TKStateConsumer} from "./TKStateConsumer";
+import TKStateConsumer from "./TKStateConsumer";
+import {TKState} from "./TKState";
 
 interface IClientProps {
     onInit?: (state: TKState) => void;

@@ -10,8 +10,8 @@ import {Subtract} from "utility-types";
 import {TKUISlideUpOptions} from "../../../card/TKUISlideUp";
 import {TGUIFeedbackFormStyle} from "../feedback/TGUIFeedbackForm";
 import {tGUILoadTripsViewDefaultStyle} from "./TGUILoadTripsView.css";
-import {ERROR_LOADING_DEEP_LINK} from "../../../error/TKErrorHelper";
-import {TKState, default as TKStateConsumer} from "../../../config/TKStateConsumer";
+import TKStateConsumer from "../../../config/TKStateConsumer";
+import {TKState} from "../../../config/TKState";
 import Trip from "../../../model/trip/Trip";
 import DeviceUtil, {BROWSER} from "../../../util/DeviceUtil";
 

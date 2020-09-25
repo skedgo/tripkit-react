@@ -56,5 +56,8 @@ class TKUIW3w extends React.Component<IProps, {}> {
 
 }
 
+/**
+ * Displays [what3words](https://what3words.com/about-us/) address.
+ */
 export default connect((config: TKUIConfig) => config.TKUIW3w, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));

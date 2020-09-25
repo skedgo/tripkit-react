@@ -46,12 +46,19 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
+    /** @globaldefault */
     value: RoutingQuery;
+    /** @globaldefault */
     onChange?: (routingQuery: RoutingQuery) => void;
+    /** @globaldefault */
     onPreChange?: (from: boolean, location?: Location) => void;
+    /** @globaldefault */
     onInputTextChange?: (from: boolean, text: string) => void;
+    /** @globaldefault */
     bounds?: BBox;
+    /** @globaldefault */
     focusLatLng?: LatLng;
+    /** @globaldefault */
     region?: Region;
 }
 
@@ -439,7 +446,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     );
 };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>

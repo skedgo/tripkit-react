@@ -45,6 +45,7 @@ import TKUIErrorView from "../error/TKUIErrorView";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import {cardSpacing} from "../jss/TKUITheme";
 import Environment from "../env/Environment";
+import WaiAriaUtil from "../util/WaiAriaUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: Trip) => void;
@@ -417,7 +418,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
         // Focus first selected trip row.
-        if (!prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
+        if (WaiAriaUtil.isUserTabbing() && !prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
             this.rowRefs[this.props.values.indexOf(this.props.value)].focus();
         }
 
@@ -522,7 +523,7 @@ const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<ISty
         </Consumer>;
 
 /**
- * Show routing results to a specified location from the user's current location, or between specified locations
+ * Show routing results to a specified location from the user's current location, or between specified locations.
  * - High-level comparison of trips, showing durations, cost, carbon emissions, and calories burnt
  * - Real-time information, including departure times, traffic, service disruptions, pricing quotes, ETAs
  * - Let users select what modes should be included
