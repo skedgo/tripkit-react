@@ -1,15 +1,25 @@
 import * as React from "react";
 import {TKUIConfig} from "./TKUIConfig";
 import Util from "../util/Util";
-import TKStateConsumer, {TKState} from "./TKStateConsumer";
+import TKStateConsumer from "./TKStateConsumer";
+import {TKState} from "./TKState";
 import TKStateProvider from "./TKStateProvider";
 import {genClassNames, TKStateController} from "../index";
 import classNames from "classnames";
 
 interface IProps {
+    /**
+     * @ctype
+     */
     config: TKUIConfig;
     children: ((state: TKState) => React.ReactNode) | React.ReactNode;
 }
+
+/**
+ * Component to be used as root of (the sub-tree of the app using) the SDK components.
+ * It handles the global state of the SDK ([](TKState)), the TripGo API traffic, and the injection of general and
+ * component-specific configs to the system.
+ */
 
 class TKRoot extends React.Component<IProps,{}> {
 

@@ -16,6 +16,8 @@ import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
+import {mainContainerId, modalContainerId} from "../trip-planner/TKUITripPlanner";
+import WaiAriaUtil from "../util/WaiAriaUtil";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -48,7 +50,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     headerDividerVisible?: boolean;
     scrollable?: boolean;
     overflowVisible?: boolean;
-    parentElement?: any;
+    parentElementId?: string;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -104,6 +106,8 @@ class TKUICard extends React.Component<IProps, IState> {
     public static cardStack: any[] = [];
 
     private bodyRef?: any;
+    private parentElement?: any;
+    private appMainElement?: any;
 
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
@@ -133,6 +137,9 @@ class TKUICard extends React.Component<IProps, IState> {
         // created.
         this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
         TKUICard.cardStack.push(this);
+        const parentElementId = props.parentElementId || modalContainerId;
+        this.parentElement = document.getElementById(parentElementId);
+        this.appMainElement = document.getElementById(mainContainerId);
     }
 
     public render(): React.ReactNode {
@@ -217,7 +224,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     open={this.props.open}
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                     cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
-                    parentElement={this.props.parentElement}
+                    parentElement={this.parentElement}
                     zIndex={this.zIndex}
                     ariaLabel={cardAriaLabel}
                     role={"group"}
@@ -244,7 +251,8 @@ class TKUICard extends React.Component<IProps, IState> {
                         }}
                         shouldCloseOnEsc={true}
                         onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
-                        appElement={this.props.parentElement}
+                        appElement={this.appMainElement}
+                        parentSelector={() => this.parentElement}
                         {...this.props.modalOptions}
                         contentLabel={cardAriaLabel}
                     >
@@ -281,7 +289,9 @@ class TKUICard extends React.Component<IProps, IState> {
 
     // Don't steal focus from inner elements
     focusContent = () => {
-        if (this.props.shouldFocusAfterRender === false) {
+        const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
+            this.props.shouldFocusAfterRender : WaiAriaUtil.isUserTabbing();
+        if (!shouldFocusAfterRender) {
             return;
         }
         const mainFocusElem = this.props.mainFocusElemId && document.getElementById(this.props.mainFocusElemId);

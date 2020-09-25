@@ -1,24 +1,14 @@
 import * as React from "react";
-import TKUserProfile from "../model/options/TKUserProfile";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {Moment} from "moment-timezone";
 import {TKUIConfig} from "./TKUIConfig";
 import {TKUIConfigContext} from "./TKUIConfigProvider";
+import {TKState} from "./TKState";
 
 interface IProps {
-    /**
-     * Need this doc to be displayed by styleguidist
-     * @param {TKState} state
-     * @returns {React.ReactNode}
-     * @public
-     */
     children: (state: TKState) => React.ReactNode;
-}
-
-export interface TKState extends IRoutingResultsContext, IServiceResultsContext, IOptionsContext {
-    config: TKUIConfig;
 }
 
 class TKStateConsumer extends React.Component<IProps,{}> {

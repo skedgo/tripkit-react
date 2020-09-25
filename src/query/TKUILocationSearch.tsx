@@ -26,11 +26,17 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
+    /** @globaldefault */
     value: Location | null;
+    /** @globaldefault */
     onChange?: (value: Location | null) => void;
+    /** @globaldefault */
     onPreChange?: (location?: Location) => void;
+    /** @globaldefault */
     onInputTextChange?: (text: string) => void;
+    /** @globaldefault */
     bounds?: BBox;
+    /** @globaldefault */
     focusLatLng?: LatLng;
 }
 
@@ -158,7 +164,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     );
 };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>

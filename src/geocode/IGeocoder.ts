@@ -4,7 +4,7 @@ import LatLng from "../model/LatLng";
 import GeocoderOptions from "./GeocoderOptions";
 
 export const TKGeocoderForDoc = (props: Partial<IGeocoder>) => null;
-TKGeocoderForDoc.displayName = 'Geocoder connector';
+TKGeocoderForDoc.displayName = 'IGeocoder';
 
 interface IGeocoder {
 

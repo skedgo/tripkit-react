@@ -6,7 +6,7 @@ import genStyles from "../css/GenStyle.css";
 
 export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, TKUITKUITripPlannerProps> =
     (theme: TKUITheme) => ({
-        main: {
+        modalMain: {
             ...genStyles.flex,
             width: '100%',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
@@ -16,6 +16,11 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             '& input[type=text]': {
                 fontFamily: theme.fontFamily
             },
+            position: 'relative'
+        },
+        main: {
+            ...genStyles.flex,
+            width: '100%',
             position: 'relative'
         },
         queryPanel: {

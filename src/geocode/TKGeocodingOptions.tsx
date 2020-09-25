@@ -19,25 +19,21 @@ import CurrentLocationGeocoder from "./CurrentLocationGeocoder";
 import TKDefaultGeocoderNames from "./TKDefaultGeocoderNames";
 
 export const TKGeocodingOptionsForDoc = (props: Partial<TKGeocodingOptions>) => null;
-TKGeocodingOptionsForDoc.displayName = 'Geocoding options';
+TKGeocodingOptionsForDoc.displayName = 'TKGeocodingOptions';
 
 interface TKGeocodingOptions {
     /**
-     * Keys for default geocoders are: 'skedgo', 'cities', 'favourites', 'recent' and 'geolocation'
+     * Keys for default geocoders are: 'skedgo', 'cities', 'favourites', 'recent' and 'geolocation'.
      *
-     * @ctype
+     * @ctype \[key: string\]: IGeocoder;
      * @default {skedgo, cities, favourites, recent, geolocation}
      */
     geocoders: {
         [key: string]: IGeocoder;
     };
-    /**
-     * @ctype
-     */
+    /** @ctype */
     compare: (l1: Location, l2: Location, query: string) => number;
-    /**
-     * @ctype
-     */
+    /** @ctype */
     analogResults: (r1: Location, r2: Location) => boolean;
 }
 

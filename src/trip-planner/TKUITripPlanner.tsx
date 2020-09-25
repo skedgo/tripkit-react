@@ -59,6 +59,7 @@ interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext,
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export interface IStyle {
+    modalMain: CSSProps<IProps>;
     main: CSSProps<IProps>;
     queryPanel: CSSProps<IProps>;
     mapMain: CSSProps<IProps>;
@@ -86,9 +87,13 @@ interface IState {
     tripUpdateStatus?: TKRequestStatus;
 }
 
+export const modalContainerId = "mv-modal-panel";
+export const mainContainerId = "mv-main-panel";
+
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private ref: any;
+    private appMainRef: any;
 
     constructor(props: IProps) {
         super(props);
@@ -219,6 +224,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowSettings={this.onShowSettings}
                 onShowFavourites={() => this.setState({showFavourites: true})}
                 parentElement={this.ref}
+                appMainElement={this.appMainRef}
             />;
         const settings = this.props.showUserProfile &&
             <TKUIProfileView
@@ -255,7 +261,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
                 // To avoid capturing focus when returning from trip details view (where query input renders again),
                 // since focus should be returned to 'Detail' btn on trip row.
-                shouldFocusAfterRender={!this.props.trips}
+                shouldFocusAfterRender={!this.props.trips && WaiAriaUtil.isUserTabbing()}
             />;
         const toLocation = this.props.query.to;
         const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
@@ -361,6 +367,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             draggable: false
                         }}
                         showControls={!this.props.timetableForSegment}
+                        parentElement={this.ref}
                     >
                         {(registerHandle: (index: number, handle: any) => void) =>
                             sortedTrips
@@ -408,47 +415,44 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
-                    <div id="mv-main-panel"
-                         className={classNames(classes.main, genClassNames.root)}
-                         ref={el => {
-                             if(el) {   // since el comes null intermittently
-                                 this.ref = el;
-                             }
-                         }}
+                    <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root)}
+                         ref={el => el && (this.ref = el)}
                     >
-                        <div className={classes.queryPanel}>
-                            {searchBar}
-                            {queryInput}
+                        <div id={mainContainerId} className={classes.modalMain} ref={el => el && (this.appMainRef = el)}>
+                            <div className={classes.queryPanel}>
+                                {searchBar}
+                                {queryInput}
+                            </div>
+                            <div id="map-main" className={classes.mapMain} aria-hidden="true">
+                                <TKUIMapView
+                                    hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                    padding={mapPadding}
+                                    onLocAction={(locType: MapLocationType | undefined, loc: Location) => {
+                                        if (locType === MapLocationType.STOP) {
+                                            this.showTimetableFor(loc as StopLocation);
+                                            FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                        } else {
+                                            TKUITripPlanner.ableToShowLocationDetailView(this.props) && this.setState({showLocationDetails: true});
+                                        }
+                                    }}/>
+                            </div>
+                            <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>
+                            {sideBar}
+                            {settings}
+                            {locationDetailView}
+                            {routingResultsView}
+                            {tripDetailView}
+                            {timetableView}
+                            {serviceDetailView}
+                            {transportSettings}
+                            {favouritesView}
+                            {<TKUIWaitingRequest
+                                status={this.state.tripUpdateStatus}
+                                message={this.props.waitingTripUpdate ? "Updating trip" :
+                                    this.props.tripUpdateError ? "Error updating trip" :
+                                        this.props.stateLoadError ? this.props.stateLoadError.message : ""}
+                            />}
                         </div>
-                        <div id="map-main" className={classes.mapMain} aria-hidden="true">
-                            <TKUIMapView
-                                hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                padding={mapPadding}
-                                onLocAction={(locType: MapLocationType | undefined, loc: Location) => {
-                                    if (locType === MapLocationType.STOP) {
-                                        this.showTimetableFor(loc as StopLocation);
-                                        FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                    } else {
-                                        TKUITripPlanner.ableToShowLocationDetailView(this.props) && this.setState({showLocationDetails: true});
-                                    }
-                                }}/>
-                        </div>
-                        <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>
-                        {sideBar}
-                        {settings}
-                        {locationDetailView}
-                        {routingResultsView}
-                        {tripDetailView}
-                        {timetableView}
-                        {serviceDetailView}
-                        {transportSettings}
-                        {favouritesView}
-                        {<TKUIWaitingRequest
-                            status={this.state.tripUpdateStatus}
-                            message={this.props.waitingTripUpdate ? "Updating trip" :
-                                this.props.tripUpdateError ? "Error updating trip" :
-                                    this.props.stateLoadError ? this.props.stateLoadError.message : ""}
-                        />}
                     </div>
                 }
             </TKUIConfigContext.Consumer>

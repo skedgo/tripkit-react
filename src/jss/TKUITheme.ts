@@ -5,7 +5,7 @@ import Color from "../model/trip/Color";
 import genStyles from "../css/GenStyle.css";
 
 export const TKUIThemeForDoc = (props: Partial<TKUITheme>) => null;
-TKUIThemeForDoc.displayName = 'Theme object';
+TKUIThemeForDoc.displayName = 'TKUITheme';
 
 export const tKUIColors = {
     black: '#212A33',

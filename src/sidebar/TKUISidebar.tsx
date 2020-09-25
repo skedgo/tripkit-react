@@ -24,6 +24,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     menuItems?: (defaultMenuItems: JSX.Element[]) => React.ReactNode;
     nativeAppLinks?: () => React.ReactNode;
     parentElement?: any;
+    appMainElement?: any;
 }
 
 export interface IStyle {
@@ -128,7 +129,8 @@ class TKUISidebar extends React.Component<IProps, {}> {
                 shouldCloseOnEsc={true}
                 shouldReturnFocusAfterClose={false}
                 onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
-                appElement={this.props.parentElement}
+                appElement={this.props.appMainElement}
+                parentSelector={this.props.parentElement ? () => this.props.parentElement : undefined}
                 className={{
                     base: classNames(classes.modal, genClassNames.root),
                     afterOpen: classes.slideIn,

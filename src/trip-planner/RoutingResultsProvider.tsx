@@ -6,7 +6,6 @@ import TripGroup from "../model/trip/TripGroup";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
 import LatLng from "../model/LatLng";
-import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
 import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
@@ -14,7 +13,9 @@ import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 
 export interface IRoutingResultsContext {
+    /** @ctype */
     query: RoutingQuery;
+    /** @ctype */
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
     onTripJsonUrl: (tripJsonUrl: string) => Promise<Trip[] | undefined>;
