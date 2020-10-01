@@ -16,6 +16,9 @@ function isPrimitiveType(type: string) {
 }
 
 export function TKDocPropsRenderer({props}) {
+    if (!props) {
+        return null;
+    }
     return (
         <TKDocTable
             colConfigs={[

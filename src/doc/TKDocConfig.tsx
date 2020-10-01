@@ -18,9 +18,19 @@ import TKUITripRow from "../trip/TKUITripRow";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import {tKUITripOverviewViewDefaultStyle} from "../trip/TKUITripOverviewView.css";
 import {tKUIRoutingQueryInputDefaultStyle} from "../query/TKUIRoutingQueryInput.css";
+import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
+import {tKUITripRowDefaultStyle} from "../trip/TKUITripRow.css";
+import Location from "../model/Location";
+import LatLng from "../model/LatLng";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);
+}
+
+export function getMockQuery(): RoutingQuery {
+    const from = Location.create(LatLng.createLatLng(-33.899487,151.119347), "Ashbury, NSW, Australia", "", "");
+    const to = Location.create(LatLng.createLatLng(-33.859555,151.207844), "The Rocks, NSW, Australia", "", "");
+    return RoutingQuery.create(from, to);
 }
 
 export function getMockRoutingResults(): Trip[] {
@@ -57,10 +67,12 @@ const tKDocConfig = {
         style: classNamesOf(tKUIButtonDefaultStyle)
     },
     TKUIResultsView: {
-        showcase: () => <TKUIResultsView cardPresentation={CardPresentation.NONE} values={getMockRoutingResults()}/>
+        showcase: () => <TKUIResultsView cardPresentation={CardPresentation.NONE} values={getMockRoutingResults()}/>,
+        style: classNamesOf(tKUIResultsDefaultStyle)
     },
     TKUITripRow: {
-        showcase: () => <TKUITripRow value={getMockRoutingResults()[0]}/>
+        showcase: () => <TKUITripRow value={getMockRoutingResults()[0]}/>,
+        style: classNamesOf(tKUITripRowDefaultStyle)
     },
     TKUITripOverviewView: {
         style: classNamesOf(tKUITripOverviewViewDefaultStyle),

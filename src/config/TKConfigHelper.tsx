@@ -5,7 +5,8 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import {TKUIConfig, TKComponentDefaultConfig, TKComponentConfig, TKUIPropsOverride} from "./TKUIConfig";
+import {TKUIConfig, TKComponentDefaultConfig} from "./TKUIConfig";
+import {TKComponentConfig, TKUIPropsOverride} from "./TKComponentConfig";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "./TKUIConfigProvider";
 import {Subtract} from "utility-types";
 import { Styles, StyleCreator, CSSProperties} from "react-jss";

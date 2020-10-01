@@ -6,7 +6,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {ClassNameMap, CSSProperties, StyleCreator, Styles} from "react-jss";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {TripSort} from "../api/WithRoutingResults";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
@@ -127,7 +127,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIResultsView",
-    randomizeClassNames: false
+    // randomizeClassNames: false
 };
 
 interface IState {
@@ -374,7 +374,7 @@ class TKUIResultsView extends React.Component<IProps, IState> {
                         <TKUITripRow
                             value={trip}
                             selected={trip === this.props.value}
-                            className={classNames(classes.row)}
+                            styles={{ main: overrideClass(injectedStyles.row) }}
                             onClick={() => {
                                 this.props.onChange && this.props.onChange(trip);
                                 DeviceUtil.isPhone && this.props.onDetailsClicked && this.props.onDetailsClicked();

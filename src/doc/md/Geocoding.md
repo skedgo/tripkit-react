@@ -25,7 +25,7 @@ service provided by [Geocode.earth](https://geocode.earth/).
 
 
 ```js static
-import {TKPeliasGeocoder} from "../src/index";
+import {TKPeliasGeocoder} from 'tripkit-react';
 
 const myPelias = new TKPeliasGeocoder("https://api.geocode.earth/v1", "MY_GEOCODE_EARTH_KEY");
 

@@ -24,7 +24,7 @@ This connection happens through the component's (well-specified) props: by
 
 For instance, the query input component ([](TKUIRoutingQueryInput)) has optional properties
 
-```static
+```js static
 value: RoutingQuery;
 onChange: (routingQuery: RoutingQuery) => void;
 ```
@@ -33,38 +33,10 @@ that if not provided when calling the component they default to the query and qu
 state.
 
 This feature makes really easy to integrate different SDK components to get the most typical interactions between them.
-As an example, the code below integrates [](TKUIRoutingQueryInput) (query input component) and [](TKUIMapView) (map component) 
-just by putting them somewhere below TKRoot, and so they become automatically connected to the global state.
+For instance, the example below integrates [](TKUIRoutingQueryInput) (query input component) and [](TKUIMapView) (map component) 
+just by putting them somewhere below [](TKRoot), and so they become automatically connected to the global state.
 
-```jsx static
-import {TKRoot, TKUIRoutingQueryInput, TKUIMapView, LatLng, RoutingQuery, TKLocation, 
-        TKStateController, tKRequestCurrentLocation} from 'tripkit-react';
-        
-const config = {
-    apiKey: '790892d5eae024712cfd8616496d7317', 
-    isDarkDefault: false,
-    onInitState: state => {
-                    tKRequestCurrentLocation(true, true)    // Set map viewport according to user position
-                        .then(userPos => state.onViewportChange({center: userPos.latLng, zoom: 13}));
-                    state.onDirectionsView(true);           // Enable directions view flag    
-                },
-    onUpdateState: (state, prevState) =>
-                (!prevState.trips || prevState.trips.length === 0) 
-                && state.trips && state.trips.length > 0 
-                && state.onChange(state.trips[0]) // Select first trip by default
-};
-
-<TKRoot config={config}>
-    <div style={{height: '500px'}}>
-        <div style={{position: 'absolute', zIndex: '1', margin: '10px', width: '300px'}}>
-            <TKUIRoutingQueryInput/>
-        </div>
-        <TKUIMapView/>
-    </div>
-</TKRoot>
-```
-
-```jsx noeditor
+```jsx
 import {TKRoot, TKUIRoutingQueryInput, TKUIMapView, LatLng, RoutingQuery, TKLocation, 
         TKStateController, tKRequestCurrentLocation} from 'tripkit-react';
         

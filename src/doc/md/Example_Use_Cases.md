@@ -1,0 +1,6 @@
+- Full trip planner, basic and with customizations. Use <TKUITripPlanner/>. E.g. tripgo-web > index.tsx
+- Display just details of a particular trip, so use <TKUITripOverviewView/>.
+- Query widget. Use <TKUIRoutingQueryInput/>. E.g. LCC: chym-web > QueryWidget.tsx
+- Query widget + favourites. Use <TKUIRoutingQuery/> and <TKUIFavouritesView/>. E.g. TCCS like widget.
+- Just map, pick from / to by dropping (or dragging) pins, and render trips on map. Use <TKUIMapView/>.
+- Map with stop locations, stop timetable on map stop click, and service path on map on timetable row selection. Use <TKUIMapView/>, <TKUITimetableView/> and <TKUIServiceView/>.

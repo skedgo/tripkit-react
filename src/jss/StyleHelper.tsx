@@ -202,4 +202,11 @@ function emptyValues<T>(sample: T): T {
     return emptyValues as T;
 }
 
+export function overrideClass(propsOverride: CSSProperties<any>) {
+    return (defaultStyle) => ({
+        ...defaultStyle,
+        ...propsOverride
+    });
+}
+
 export {withStyleProp, emptyValues};
