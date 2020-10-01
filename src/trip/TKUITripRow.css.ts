@@ -4,7 +4,7 @@ import {black, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {rowSelectedStyle, rowStyle} from "../service/TKUIServiceDepartureRow.css";
 
-export const tTKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
+export const tKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
     (theme: TKUITheme) => ({
         main: {
             background: white(0, theme.isDark),

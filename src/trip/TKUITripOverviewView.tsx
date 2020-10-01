@@ -30,7 +30,19 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     slideUpOptions?: TKUISlideUpOptions;
     cardPresentation?: CardPresentation;
     onRequestAlternativeRoutes?: (segment: Segment) => void;
+    /**
+     * Allows to specify a list action buttons (JSX.Elements) associated with the trip, to be rendered on card header.
+     * It receives the trip and the default list of buttons.
+     * @ctype (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[]
+     * @default _Share Trip_ and _Add to favourites_ actions.
+     */
     actions?: (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[];
+    /**
+     * Allows to specify a list action buttons (JSX.Elements) associated with a segment, to be rendered on segment
+     * detail. It receives the segment and the default list of buttons.
+     * @ctype (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[]
+     * @default _Share Arrival_, if segment is the last one.
+     */
     segmentActions?: (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[];
 }
 

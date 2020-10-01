@@ -1,15 +1,18 @@
+const styleguideConfig = require('./data/sections.json');
+const componentsApiSection = styleguideConfig.sections.find((section: any) => section.content === "src/doc/md/ComponentsAPI.md");
+const modelSection = styleguideConfig.sections.find((section: any) => section.content === "src/doc/md/Model.md");
+
 export function getDocUrl(fileName: string): string | undefined {
-    const styleguideConfig = require('./data/sections.json');
     let path: string | undefined = undefined;
-    for (const docComponentPath of styleguideConfig.sections[2].components) {
+    for (const docComponentPath of componentsApiSection.components) {
         if (docComponentPath.endsWith(fileName + ".tsx") || docComponentPath.endsWith(fileName + ".ts")) {
-            path = "/#/Components%20API/" + fileName;
+            path = "#/Components%20API/" + fileName;
             break;
         }
     }
-    for (const docComponentPath of styleguideConfig.sections[3].components) {
+    for (const docComponentPath of modelSection.components) {
         if (docComponentPath.endsWith(fileName + ".tsx") || docComponentPath.endsWith(fileName + ".ts")) {
-            path = "/#/Model/" + fileName;
+            path = "#/Model/" + fileName;
             break;
         }
     }
@@ -46,4 +49,9 @@ export function typeReferencesToLinks(typeText: string): string {
         const url = getDocUrl(match);
         return url ? "[" + match + "](" + url + ")" : match;
     });
+}
+
+export function forDoc<T>(classRef: { new(): T }) {
+    // return ((props: T) => null) as any;
+    return (props: T) => null;
 }

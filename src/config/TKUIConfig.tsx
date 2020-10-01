@@ -1,5 +1,4 @@
 import {TKUITripRowStyle, TKUITripRowProps} from "../trip/TKUITripRow";
-import {TKUICustomStyles, TKUIStyles, TKUIWithClasses} from "../jss/StyleHelper";
 import {TKUIResultsViewProps, TKUIResultsViewStyle} from "../trip/TKUIResultsView";
 import {TKUITheme} from "../jss/TKUITheme";
 import {TKUICardProps, TKUICardStyle} from "../card/TKUICard";
@@ -7,7 +6,6 @@ import {
     TKUITripOverviewViewProps,
     TKUITripOverviewViewStyle
 } from "../trip/TKUITripOverviewView";
-import {Subtract} from "utility-types";
 import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "../trip/TKUISegmentOverview";
 import {TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle} from "../trip/TKUIWCSegmentInfo";
 import {TKUITimetableViewProps, TKUITimetableViewStyle} from "../service/TKUITimetableView";
@@ -57,6 +55,11 @@ import {TrackerOptions} from "../analytics/GATracker";
 import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
 import {TKState} from "./TKState";
 import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
+import {TKComponentConfig} from "./TKComponentConfig";
+import {TKComponentDefaultConfig as TKComponentDefaultConfigForExport} from "./TKComponentConfig";
+import {TKUIWithClasses} from "../jss/StyleHelper";
+import RoutingQuery from "../model/RoutingQuery";
+import Trip from "../model/trip/Trip";
 
 /**
  * SDK configuration
@@ -145,17 +148,5 @@ interface ITKUIConfigOptional {
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
 
-export interface TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
-    render: (props: P) => JSX.Element;
-    styles: TKUIStyles<S, P>;
-    randomizeClassNames?: boolean;
-    verboseClassNames?: boolean;
-    classNamePrefix: string;
-    props?: TKUIPropsOverride<P, S>;
-}
-
-export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
-    Partial<Subtract<TKComponentDefaultConfig<P, S>,
-            {styles: TKUIStyles<S, P>}> & {styles: TKUICustomStyles<S, P>}>;
-
-export type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);
+// Did this to avoid refactor affecting all components after re-locating TKComponentDefaultConfig for documentation.
+export type TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>,S> = TKComponentDefaultConfigForExport<P,S>;

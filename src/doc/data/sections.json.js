@@ -3,7 +3,8 @@ module.exports = {
         [
             {
                 name: 'Main SDK component: TKRoot',
-                content: 'src/doc/md/MainSDKComponent_TKRoot.md'
+                content: 'src/doc/md/MainSDKComponent_TKRoot.md',
+                exampleMode: 'expand'
             },
             {
                 name: 'Customization',
@@ -27,6 +28,33 @@ module.exports = {
                         exampleMode: 'expand'
                     },
                 ]
+            },
+            {
+                name: 'Component-level Customization',
+                content: 'src/doc/md/Component-level_Customization.md',
+                sectionDepth: 1,
+                usageMode: 'expand',
+                sections: [
+                    {
+                        name: 'Styles',
+                        content: 'src/doc/md/Styles.md',
+                        exampleMode: 'expand'
+                    },
+                    {
+                        name: 'Render',
+                        content: 'src/doc/md/Render.md',
+                        exampleMode: 'expand'
+                    },
+                    {
+                        name: 'Props Overrides',
+                        content: 'src/doc/md/Props.md',
+                        exampleMode: 'expand'
+                    }
+                ]
+            },
+            {
+                name: 'Example Use Cases',
+                content: 'src/doc/md/Example_Use_Cases.md'
             },
             {
                 name: 'Components API',
@@ -83,6 +111,7 @@ module.exports = {
             },
             {
                 name: 'Model',
+                content: 'src/doc/md/Model.md',
                 sectionDepth: 2,
                 usageMode: 'expand',
                 components: [
@@ -90,7 +119,9 @@ module.exports = {
                     'src/model/LatLng.ts',
                     'src/model/Location.ts',
                     'src/model/BBox.ts',
+                    'src/model/trip/Trip.ts',
                     'src/config/TKUIConfig.tsx',
+                    'src/config/TKComponentConfig.ts',
                     'src/jss/TKUITheme.ts',
                     'src/geocode/TKGeocodingOptions.tsx',
                     'src/geocode/IGeocoder.ts',

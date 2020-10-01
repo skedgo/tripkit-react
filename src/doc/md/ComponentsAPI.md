@@ -1,1 +1,1 @@
-This section list components and their API. 
+This section lists components and their API. 

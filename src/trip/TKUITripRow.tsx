@@ -6,7 +6,7 @@ import Trip from "../model/trip/Trip";
 import {EventEmitter} from "fbemitter";
 import {ClassNameMap} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tTKUITripRowDefaultStyle} from "./TKUITripRow.css";
+import {tKUITripRowDefaultStyle} from "./TKUITripRow.css";
 import {ReactComponent as IconBadgeCheapest} from '../images/badges/ic-badge-money.svg';
 import {ReactComponent as IconBadgeEasiest} from '../images/badges/ic-badge-like.svg';
 import {ReactComponent as IconBadgeFastest} from '../images/badges/ic-badge-lightning.svg';
@@ -24,7 +24,6 @@ import {TranslationFunction} from "../i18n/TKI18nProvider";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Trip;
     selected?: boolean;
-    className?: string;
     brief?: boolean;
     onClick?: () => void;
     onFocus?: () => void;
@@ -59,7 +58,7 @@ export type TKUITripRowStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripRow {...props}/>,
-    styles: tTKUITripRowDefaultStyle,
+    styles: tKUITripRowDefaultStyle,
     classNamePrefix: "TKUITripRow",
     randomizeClassNames: true // This needs to be true since multiple instances are rendered,
                               // each with a different badge color.
@@ -152,7 +151,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const t = this.props.t;
         return (
-            <div className={classNames(classes.main, this.props.className)}
+            <div className={classes.main}
                  onClick={this.props.onClick}
                  tabIndex={0}
                  onFocus={this.props.onFocus}
