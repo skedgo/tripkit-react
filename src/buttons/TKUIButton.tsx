@@ -3,7 +3,6 @@ import {ClassNameMap} from 'react-jss';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {tKUIButtonDefaultStyle} from "./TKUIButton.css";
-import * as CSS from 'csstype';
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 
@@ -18,14 +17,19 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      *  @default TKUIButtonType.PRIMARY
      */
     type?: TKUIButtonType;
+    /**
+     * Button text.
+     */
     text?: string;
-    /** @ctype JSX.Element */
+    /**
+     * Button icon.
+     * @ctype JSX.Element
+     */
     icon?: JSX.Element;
-    style?: CSS.Properties;
+    // style?: CSS.Properties;
     /** @ctype (e) => void; */
     onClick?: (e: any) => void;
     disabled?: boolean;
-    className?: string;
     'aria-hidden'?: boolean;
     tabIndex?: number;
 }
@@ -64,8 +68,7 @@ class TKUIButton extends React.Component<IProps, {}> {
         const link = type === TKUIButtonType.PRIMARY_LINK;
         if (link) {
             return (
-                <button className={classNames(classes.main, classes.link, this.props.className)}
-                        style={this.props.style}
+                <button className={classNames(classes.main, classes.link)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
                         aria-hidden={this.props['aria-hidden']}
@@ -77,12 +80,10 @@ class TKUIButton extends React.Component<IProps, {}> {
         }
         return (
             vertical ?
-                <div className={classNames(classes.verticalPanel, this.props.className)}
-                     style={this.props.style}
+                <button className={classNames(classes.main, classes.verticalPanel)}
                      onClick={this.props.onClick}
                 >
-                    <button className={classNames(classes.main,
-                        secondary ? classes.secondary : classes.primary)}
+                    <div className={classNames(secondary ? classes.secondary : classes.primary)}
                             aria-label={this.props.text}
                             aria-hidden={this.props['aria-hidden']}
                             tabIndex={this.props.tabIndex}
@@ -91,13 +92,11 @@ class TKUIButton extends React.Component<IProps, {}> {
                         <div className={classes.iconContainer}>
                             {this.props.icon}
                         </div>}
-                    </button>
+                    </div>
                     {this.props.text}
-                </div>
+                </button>
                 :
-                <button className={classNames(classes.main,
-                    secondary ? classes.secondary : classes.primary, this.props.className)}
-                        style={this.props.style}
+                <button className={classNames(classes.main, secondary ? classes.secondary : classes.primary)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
                         aria-hidden={this.props['aria-hidden']}
@@ -111,6 +110,15 @@ class TKUIButton extends React.Component<IProps, {}> {
                     {this.props.text}
                 </button>
         );
+    }
+
+
+    componentDidUpdate(prevProps: Readonly<IProps>) {
+        // Manually refresh styles if they changed. Temporal workaround until discover how to make dynamic update of
+        // sheets work. Needed for TKUIFavouriteAction, for instance.
+        if (this.props.styles !== prevProps.styles) {
+            this.props.refreshStyles()
+        }
     }
 
 }

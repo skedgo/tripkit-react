@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIFavouritesViewDefaultStyle} from "./TKUIFavouritesView.css";
 import Favourite from "../model/favourite/Favourite";
@@ -78,7 +78,9 @@ class TKUIFavouritesView extends React.Component<IProps, IState> {
                         <TKUIButton text={this.state.editing ? t("Done") : t("edit")}
                                     onClick={() => this.setState((prev: IState) => ({editing: !prev.editing}))}
                                     type={TKUIButtonType.PRIMARY_LINK}
-                                    style={this.props.injectedStyles.editBtn}
+                                    styles={{
+                                        main: overrideClass(this.props.injectedStyles.editBtn)
+                                    }}
                         />
                     </div>}
                 onRequestClose={this.props.onRequestClose}

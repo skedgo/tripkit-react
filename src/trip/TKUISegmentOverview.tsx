@@ -4,7 +4,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
 import {
     isIconOnDark,
     isUnconnected,
@@ -174,7 +174,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                                 type={TKUIButtonType.PRIMARY_LINK}
                                 text={t("Show.timetable")}
                                 onClick={() => this.props.onTimetableForSegment(segment)}
-                                style={{marginTop: '5px', paddingLeft: '0'}}
+                                styles={{
+                                    main: overrideClass({
+                                        marginTop: '5px',
+                                        paddingLeft: '0'
+                                    })
+                                }}
                             />
                             }
                         </div>

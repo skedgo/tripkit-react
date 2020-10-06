@@ -97,7 +97,16 @@ module.exports = {
                     'src/trip/TKUITripOverviewView.tsx',
                     // 'src/trip-planner/**/*.tsx'
                     'src/trip-planner/TKUITripPlanner.tsx',
-                    'src/service/TKUITimetableView.tsx'
+                    'src/service/TKUITimetableView.tsx',
+                    'src/alert/TKUIAlertsView.tsx',
+                    'src/favourite/TKUIFavouritesView.tsx',
+                    'src/options/TKUIPrivacyOptionsView.tsx',
+                    'src/options/TKUIProfileView.tsx',
+                    'src/service/TKUIServiceView.tsx',
+                    'src/options/TKUITransportOptionsView.tsx',
+                    'src/options/TKUITransportSwitchesView.tsx',
+                    'src/options/TKUIUserPriorities.tsx'
+
                 ],
                 ignore: [
                     'src/service/ServiceResultsProvider.tsx',

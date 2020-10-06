@@ -4,16 +4,14 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import Location from "../model/Location";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import Util from "../util/Util";
-import * as CSS from 'csstype';
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import {overrideClass} from "../jss/StyleHelper";
 
 interface IProps {
     location?: Location;
     text?: string;
     buttonType?: TKUIButtonType;
-    style?: CSS.Properties;
     onClick?: () => void;
-    className?: string;
 }
 
 class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
@@ -28,8 +26,11 @@ class TKUIRouteToLocationAction extends React.Component<IProps, {}> {
                                 type={this.props.buttonType ? this.props.buttonType : TKUIButtonType.PRIMARY}
                                 icon={<IconDirections/>}
                                 text={this.props.text ? this.props.text : i18nProps.t("Direction")}
-                                style={{minWidth: '90px', ...this.props.style}}
-                                className={this.props.className}
+                                styles={{
+                                    main: overrideClass({
+                                        minWidth: '90px'
+                                    })
+                                }}
                                 onClick={() => {
                                     this.props.location &&
                                     context.onQueryChange(Util.iAssign(context.query,
