@@ -30,6 +30,26 @@ export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
 export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
+    /**
+     * Where:
+     *
+     * - StylesOverride is defined as:
+     *
+     * ```
+     * type StylesOverride = {
+     *      [class: string]:
+     *          CSSProps |
+     *          (defaultStyle: CSSProps) => CSSProps
+     * }
+     * ```
+     *
+     * - CSSProps is an object with camelCased properties like that passed to
+     * [```style``` attribute](https://reactjs.org/docs/dom-elements.html#style) of React components.
+     *
+     * For more information see [here](#/Component-level%20Customization/Styles?id=pass-styles-directly-to-component).
+     *
+     * @ctype StylesOverride | (theme: TKUITheme) => StylesOverride
+     */
     styles?: TKUICustomStyles<ST, CP>,
     /**
      * @ignore
