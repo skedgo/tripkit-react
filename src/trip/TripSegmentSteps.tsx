@@ -2,13 +2,14 @@ import * as React from "react";
 import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
 import {tKUITripSergmentStepsDefaultStyle} from "./TripSegmentSteps.css";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import Street from "../model/trip/Street";
 import classNames from "classnames";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 
-interface ITKUITripSergmentStepsProps<T> extends IStyleRelevantProps,
-    TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
+export interface IClientProps<T> extends TKUIWithStyle<IStyle<T>, IProps<T>> {
     steps: T[];
     toggleLabel?: (open: boolean) => string;
     leftLabel?: (step: T) => string | JSX.Element;
@@ -16,43 +17,32 @@ interface ITKUITripSergmentStepsProps<T> extends IStyleRelevantProps,
     stepMarker?: (step: T) => JSX.Element | undefined;
     stepClassName?: (step: T) => string | undefined;
     onStepClicked?: (step: T) => void;
-}
-
-export interface IStyleRelevantProps {
     borderColor: string;
     dashed?: boolean;
 }
 
-interface IProps<T> extends ITKUITripSergmentStepsProps<T> {
-    classes: ClassNameMap<keyof ITKUITripSergmentStepsStyle>
+export interface IStyle<T> {
+    step: CSSProps<T>;
+    stepClickable: CSSProps<T>;
+    leftLabel: CSSProps<T>;
+    rightLabel: CSSProps<T>;
+    linePanel: CSSProps<T>;
+    line: CSSProps<T>;
+    linePanelFirst: CSSProps<T>;
+    linePanelLast: CSSProps<T>;
+    circle: CSSProps<T>;
+    circleFirstLast: CSSProps<T>;
+    iconPanel: CSSProps<T>;
+    iconAngleDown: CSSProps<T>;
+    iconAngleRotate: CSSProps<T>;
+    toggle: CSSProps<T>;
+    toggleButton: CSSProps<T>;
 }
 
-export interface ITKUITripSergmentStepsStyle {
-    step: CSSProps<IStyleRelevantProps>;
-    stepClickable: CSSProps<IStyleRelevantProps>;
-    leftLabel: CSSProps<IStyleRelevantProps>;
-    rightLabel: CSSProps<IStyleRelevantProps>;
-    linePanel: CSSProps<IStyleRelevantProps>;
-    line: CSSProps<IStyleRelevantProps>;
-    linePanelFirst: CSSProps<IStyleRelevantProps>;
-    linePanelLast: CSSProps<IStyleRelevantProps>;
-    circle: CSSProps<IStyleRelevantProps>;
-    circleFirstLast: CSSProps<IStyleRelevantProps>;
-    iconPanel: CSSProps<IStyleRelevantProps>;
-    iconAngleDown: CSSProps<IStyleRelevantProps>;
-    iconAngleRotate: CSSProps<IStyleRelevantProps>;
-    toggle: CSSProps<IStyleRelevantProps>;
-    toggleButton: CSSProps<IStyleRelevantProps>;
-}
+interface IProps<T> extends IClientProps<T>, TKUIWithClasses<IStyle<T>, IClientProps<T>> {}
 
-export class ITKUITripSergmentStepsConfig implements TKUIWithStyle<ITKUITripSergmentStepsStyle, IStyleRelevantProps> {
-    public styles = tKUITripSergmentStepsDefaultStyle;
-    public randomizeClassNames?: boolean = true; // Default should be undefined in general, meaning to inherit ancestor's
-                                              // JssProvider, but in this case is true since multiple instances are
-                                              // rendered, each with a different service color.
-
-    public static instance = new ITKUITripSergmentStepsConfig();
-}
+export type TKUITripSergmentStepsProps<T> = IProps<T>;
+export type TKUITripSergmentStepsStyle<T> = IStyle<T>;
 
 interface IState {
     open: boolean;
@@ -133,19 +123,18 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
     }
 }
 
-function applyStyleFc<T>(RawComponent: React.ComponentType<IProps<T>>, classPrefix: string): React.ComponentType<ITKUITripSergmentStepsProps<T>> {
-    const RawComponentStyled = withStyleProp(RawComponent, classPrefix);
-    return (props: ITKUITripSergmentStepsProps<T>) => {
-        const stylesToPass = props.styles || ITKUITripSergmentStepsConfig.instance.styles;
-        const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-            ITKUITripSergmentStepsConfig.instance.randomizeClassNames;
-        return <RawComponentStyled {...props} styles={stylesToPass} randomizeClassNames={randomizeClassNamesToPass}/>;
-    };
-}
-
-// TODO: make applyStyleFc to return a generic component, as the original TripSegmentSteps
 class StopSteps extends TripSegmentSteps<ServiceStopLocation> {}
-class StreetSteps extends TripSegmentSteps<Street> {}
+export type TKUIStopStepsProps = IProps<ServiceStopLocation>;
+export type TKUIStopStepsStyle = IStyle<ServiceStopLocation>;
 
-export const TKUIStopSteps = applyStyleFc(StopSteps, "TKUIStopSteps");
-export const TKUIStreetSteps = applyStyleFc(StreetSteps, "TKUIStreetSteps");
+export const stopStepsConfig: TKComponentDefaultConfig<TKUIStopStepsProps, TKUIStopStepsStyle> = {
+    render: props => <StopSteps {...props}/>,
+    styles: tKUITripSergmentStepsDefaultStyle,
+    classNamePrefix: "TKUIStopSteps"
+};
+
+export const TKUIStopSteps = connect((config: TKUIConfig) => config.TKUIStopSteps, stopStepsConfig,
+        mapperFromFunction((clientProps: IClientProps<ServiceStopLocation>) => clientProps));
+
+// Do for StreetSteps the same than for StopSteps.
+class StreetSteps extends TripSegmentSteps<Street> {}

@@ -1,6 +1,5 @@
-[](TKRoot) is a component to be used as root of (the sub-tree of the app using) the SDK components. 
-
-It handles the global state of the SDK ([](TKState)), the TripGo API traffic, and the injection of general and component-specific configs 
+[](TKRoot) is a component to be used as root of (the sub-tree of the app using) the SDK components, and provides the
+environment necessary for the SDK components to work: it handles the global state of the SDK ([](TKState)), the TripGo API traffic, and the injection of general and component-specific configs 
 to the system.
 
 ### Config property
@@ -20,9 +19,10 @@ possibly partially specified), and the corresponding *routing results*
 Some of the SDK components (specially high-level ones) become, by default, **automatically connected to the part** of the 
 global state **relevant to the component** when placing it anywhere below TKRoot in the components hierarchy.
 This connection happens through the component's (well-specified) props: by 
-**injecting state values (and update callbacks) as deault values** for some props. 
+**injecting state values (and update callbacks) as deault values** for some (optional) props that we call 
+_connection props_. 
 
-For instance, the query input component ([](TKUIRoutingQueryInput)) has optional properties
+For instance, the query input component ([](TKUIRoutingQueryInput)) has the following optional (connection) props:
 
 ```js static
 value: RoutingQuery;

@@ -13,12 +13,16 @@ export enum TKUIButtonType {
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
-     *  Values: ```PRIMARY, SECONDARY, PRIMARY_VERTICAL, SECONDARY_VERTICAL, PRIMARY_LINK```
+     *  Values: ```TKUIButtonType.PRIMARY, TKUIButtonType.SECONDARY, TKUIButtonType.PRIMARY_VERTICAL, TKUIButtonType.SECONDARY_VERTICAL, TKUIButtonType.PRIMARY_LINK```
+     *  @ctype
+     *  @default TKUIButtonType.PRIMARY
      */
     type?: TKUIButtonType;
     text?: string;
+    /** @ctype JSX.Element */
     icon?: JSX.Element;
     style?: CSS.Properties;
+    /** @ctype (e) => void; */
     onClick?: (e: any) => void;
     disabled?: boolean;
     className?: string;

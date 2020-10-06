@@ -31,7 +31,7 @@ class WaiAriaUtil {
 
     public static getElementsByQuerySelector(query: string): Element[] {
         const querySearchResult = document.querySelectorAll(query);
-        return Array.from(querySearchResult.values());
+        return Array.from((querySearchResult as any).values());
     }
 
     public static apply(query: string, tabIndex?: 0 | -1, ariaHidden?: boolean) {

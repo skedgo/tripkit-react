@@ -58,8 +58,7 @@ import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
 import {TKComponentConfig} from "./TKComponentConfig";
 import {TKComponentDefaultConfig as TKComponentDefaultConfigForExport} from "./TKComponentConfig";
 import {TKUIWithClasses} from "../jss/StyleHelper";
-import RoutingQuery from "../model/RoutingQuery";
-import Trip from "../model/trip/Trip";
+import {TKUIStopStepsProps, TKUIStopStepsStyle} from "../trip/TripSegmentSteps";
 
 /**
  * SDK configuration
@@ -144,6 +143,7 @@ interface ITKUIConfigOptional {
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
     TKUIErrorView: TKComponentConfig<TKUIErrorViewProps, TKUIErrorViewStyle>;
+    TKUIStopSteps: TKComponentConfig<TKUIStopStepsProps, TKUIStopStepsStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

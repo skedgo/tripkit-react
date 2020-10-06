@@ -66,6 +66,16 @@ export function mapperFromFunction<INPUT_PROPS, OUTPUT_PROPS>(mapperFc: (inputPr
         </>
 }
 
+/**
+ * Props override order (from less to more priority):
+ * 1. default config props
+ * 2. consumed props (from global state)
+ * 3. client props (from direct client call)
+ * 4. config props
+ *
+ * Order of 2 and 3 is controlled by props mapper defined on each component.
+ */
+
 export function connect<
     IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS> & TKI18nContextProps,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,

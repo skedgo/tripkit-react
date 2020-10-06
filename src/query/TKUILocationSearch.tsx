@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUILocationSearchDefaultStyle} from "./TKUILocationSearch.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
@@ -73,7 +73,12 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
         const ariaLabel = this.props.value ?
             "To " + this.props.value.getDisplayString() : placeholder;
         return (
-            <TKUICard overflowVisible={true} scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}>
+            <TKUICard scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}
+                      styles={{
+                          main: overrideClass({overflow: 'visible'}),
+                          subHeader: overrideClass({borderBottom: 'none'})
+                      }}
+            >
                 <TKUIViewportUtil>
                     {(viewportProps: TKUIViewportUtilProps) =>
                         <div className={classes.main}>

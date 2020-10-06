@@ -9,7 +9,6 @@ import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 
-
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
     MISSED_PREBOOKING_WINDOW = "MISSED_PREBOOKING_WINDOW",
@@ -310,7 +309,7 @@ class Segment extends SegmentTemplate {
     }
 }
 
-export function alertSeverity(alerts: RealTimeAlert[]): AlertSeverity {
+function alertSeverity(alerts: RealTimeAlert[]): AlertSeverity {
     let alertSeverity = AlertSeverity.info;
     for (const alert of alerts) {
         if (alert.severity < alertSeverity) { // '<' means 'more severe' according to the order of values of enum.
@@ -320,4 +319,8 @@ export function alertSeverity(alerts: RealTimeAlert[]): AlertSeverity {
     return alertSeverity;
 }
 
+export const SegmentForDoc = (props: Segment) => null;
+SegmentForDoc.displayName = "Segment";
+
 export default Segment;
+export {alertSeverity};

@@ -43,7 +43,7 @@ selectors) and [jss-plugin-global](https://cssinjs.org/jss-plugin-global/?v=v10.
 
 
 There are also other three style related config properties controlling the css class names that are actually generated 
-and used in run-time: randomizeClassNames, verboseClassNames and classNamePrefix. 
+and used in run-time: ```randomizeClassNames```, ```verboseClassNames``` and ```classNamePrefix```. 
 See [TKComponentConfig reference](TKComponentConfig) for more information. 
 
 [//]: # "- randomizeClassNames: allows to specify if class names should be randomized, and it's true by default. 

@@ -251,10 +251,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             !(this.props.tripDetailsView && this.props.selectedTrip) &&
             <TKUIRoutingQueryInput
                 title={t("Route")}
-                isTripPlanner={true}
+                showTransportsBtn={this.props.landscape}
+                showTimeSelect={this.props.landscape}
+                sideDropdown={DeviceUtil.isTablet}
                 onShowTransportOptions={this.onShowTransportSettings}
-                resolveCurrLocInFrom={this.props.query.from !== null && this.props.query.to !== null}
-                collapsable={true}
+                resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
                     this.props.onDirectionsView(false);
@@ -336,6 +337,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalMiddle: {top: 55, unit: '%'},
                     modalDown: {top: 90, unit: '%'}
                 }}
+                showTimeSelect={this.props.portrait}
+                showTransportsBtn={this.props.portrait}
             /> : null;
 
         let tripDetailView: any;

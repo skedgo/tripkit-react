@@ -1,9 +1,9 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
-import {IStyleRelevantProps, ITKUITripSergmentStepsStyle} from "./TripSegmentSteps";
+import {TKUITripSergmentStepsProps, TKUITripSergmentStepsStyle} from "./TripSegmentSteps";
 import genStyles from "../css/GenStyle.css";
 
-export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStepsStyle, IStyleRelevantProps> =
+export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<TKUITripSergmentStepsStyle<any>, TKUITripSergmentStepsProps<any>> =
     (theme: TKUITheme) => ({
         step: {
             ...genStyles.flex,
@@ -30,7 +30,7 @@ export const tKUITripSergmentStepsDefaultStyle: TKUIStyles<ITKUITripSergmentStep
             ...theme.textColorDefault
         },
         linePanel: {
-            backgroundColor: (props: IStyleRelevantProps) => props.borderColor,
+            backgroundColor: (props: TKUITripSergmentStepsProps<any>) => props.borderColor,
             width: '16px',
             ...genStyles.flex,
             ...genStyles.column,

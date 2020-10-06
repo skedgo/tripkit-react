@@ -21,7 +21,13 @@ import ModeIdentifier from "../model/region/ModeIdentifier";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+
+    /**
+     * Function that will be run when the user clicks on button to show full transport options.
+     * @ctype
+     */
     onMoreOptions?: () => void;
+
     startElemRef?: (el: any) => void;
     onRequestClose?: () => void;
 }

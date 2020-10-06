@@ -5,6 +5,8 @@ import classNames from "classnames";
 import {cardSpacing} from "../jss/TKUITheme";
 import ReactDOM from 'react-dom';
 import {markForFocusLater, returnFocus, setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
+import DeviceUtil from "../util/DeviceUtil";
+import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -21,6 +23,9 @@ const styles = {
         // height: '100%'
     }
 };
+
+// Did this to avoid refactor after moving TKUISlideUpOptions to a separate file.
+export type TKUISlideUpOptions = TKUISlideUpOptionsForExport;
 
 interface IProps extends TKUISlideUpOptions {
     containerClass?: string;
@@ -45,19 +50,6 @@ interface IState {
 
 export enum TKUISlideUpPosition {
     UP, MIDDLE, DOWN, HIDDEN
-}
-
-export interface TKUISlideUpOptions {
-    initPosition?: TKUISlideUpPosition;
-    modalUp?: {top: number, unit: string};
-    modalMiddle?: {top: number, unit: string};
-    modalDown?: {top: number, unit: string};
-    // For controlled positioning. If set (not undefined), it takes precedence over this.state.position.
-    position?: TKUISlideUpPosition;
-    onPositionChange?: (position: TKUISlideUpPosition) => void;
-    draggable?: boolean;
-    zIndex?: number;
-    showHandle?: boolean;
 }
 
 class TKUISlideUp extends React.Component<IProps, IState> {
@@ -218,7 +210,10 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                             (this.props.draggable !== false ?
                                 this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
                                 this.containerElem.offsetHeight - this.state.top + "px") :
-                            "100%"
+                            "100%",
+                        // Moved from TKUICard.css to here since needs to consider position which changes dinamically
+                        // (until I implement refresh of styles on props change).
+                        paddingBottom: !DeviceUtil.isTouch() && this.props.position !== TKUISlideUpPosition.HIDDEN ? '16px' : 0
                     }}>
                     {this.props.children}
                     </div>
@@ -270,7 +265,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        console.log(this.elem);
         setupScopedFocus(this.elem);
         markForFocusLater();
         this.focusContent();
