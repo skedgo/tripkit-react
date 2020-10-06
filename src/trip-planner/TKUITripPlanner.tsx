@@ -5,7 +5,7 @@ import Util from "../util/Util";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
 import TKUITimetableView from "../service/TKUITimetableView";
-import TKUIResultsView from "../trip/TKUIResultsView";
+import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
@@ -324,7 +324,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             />;
         const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips ?
-            <TKUIResultsView
+            <TKUIRoutingResultsView
                 onDetailsClicked={() => this.props.onTripDetailsView(true)}
                 onShowOptions={this.onShowTransportSettings}
                 slideUpOptions={{

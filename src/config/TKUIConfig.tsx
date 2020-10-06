@@ -1,5 +1,5 @@
 import {TKUITripRowStyle, TKUITripRowProps} from "../trip/TKUITripRow";
-import {TKUIResultsViewProps, TKUIResultsViewStyle} from "../trip/TKUIResultsView";
+import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "../trip/TKUIRoutingResultsView";
 import {TKUITheme} from "../jss/TKUITheme";
 import {TKUICardProps, TKUICardStyle} from "../card/TKUICard";
 import {
@@ -108,7 +108,7 @@ interface ITKUIConfigOptional {
     TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
     TKUITripTime: TKComponentConfig<TKUITripTimeProps, TKUITripTimeStyle>;
     TKUITrackTransport: TKComponentConfig<TKUITrackTransportProps, TKUITrackTransportStyle>;
-    TKUIRoutingResultsView: TKComponentConfig<TKUIResultsViewProps, TKUIResultsViewStyle>;
+    TKUIRoutingResultsView: TKComponentConfig<TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle>;
     TKUITripOverviewView: TKComponentConfig<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
     TKUISegmentOverview: TKComponentConfig<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
     TKUIWCSegmentInfo: TKComponentConfig<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;

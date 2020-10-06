@@ -1,6 +1,6 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import {tKUIResultsDefaultStyle} from "./TKUIResultsView.css";
+import {tKUIResultsDefaultStyle} from "./TKUIRoutingResultsView.css";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TripGroup from "../model/trip/TripGroup";
@@ -182,13 +182,13 @@ export interface IStyle {
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
-export type TKUIResultsViewProps = IProps;
-export type TKUIResultsViewStyle = IStyle;
+export type TKUIRoutingResultsViewProps = IProps;
+export type TKUIRoutingResultsViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIResultsView {...props}/>,
+    render: props => <TKUIRoutingResultsView {...props}/>,
     styles: tKUIResultsDefaultStyle,
-    classNamePrefix: "TKUIResultsView"
+    classNamePrefix: "TKUIRoutingResultsView"
 };
 
 interface IState {
@@ -198,7 +198,7 @@ interface IState {
     toLocInfo?: TKLocationInfo;
 }
 
-class TKUIResultsView extends React.Component<IProps, IState> {
+class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
     private rowRefs: any[] = [];
     private timePrefOptions: SelectOption[];

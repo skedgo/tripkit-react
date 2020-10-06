@@ -69,7 +69,7 @@ dropping a pin on map will set the corresponding location as *from* or *to* on q
 
 Also notice that after setting both *from* and *to* locations, computation of routing results via TripGo API is 
 automatically triggered, and when the first result arrives we set it as the selected trip (global state value) and so
-it becomes displayed on the map. If we also include the [](TKUIResultsView) component to show the list of all routing 
+it becomes displayed on the map. If we also include the [](TKUIRoutingResultsView) component to show the list of all routing 
 results, then it will automatically display trip selection too (see [TripGo trip planner](https://tripgo.com)).
 
 **Code highlights:**

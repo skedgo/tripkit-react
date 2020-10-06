@@ -89,6 +89,6 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
             ...genStyles.grow
         },
         // Temporary until factor out common style, or define a special component TKUIDropdownBtn, or just make
-        // TKUISelect to default to this style, and adapt other uses (from TKUIRoutingQueryInput and TKUIResultsView)
+        // TKUISelect to default to this style, and adapt other uses (from TKUIRoutingQueryInput and TKUIRoutingResultsView)
         walkSpeedSelect: (tKUIProfileViewDefaultStyle as any)(theme).optionSelect
 });

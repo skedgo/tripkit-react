@@ -181,7 +181,7 @@ class Trip {
     /**
      *  Fallback can be removed when id or saveURL becomes required.
      *  It's important to have a unique id for each trip, and that is maintained across real-time updates.
-     *  See comment on TKUIResultsView.
+     *  See comment on TKUIRoutingResultsView.
      */
     public getKey(fallback?: string): string {
         return (this.id ? this.id :
