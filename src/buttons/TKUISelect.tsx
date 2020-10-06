@@ -44,7 +44,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 // TODO: Make TKUISelect to default to Dropdown btn style, as used or TKUIProfileView, and adapt other uses
-// (from TKUIRoutingQueryInput and TKUIResultsView).
+// (from TKUIRoutingQueryInput and TKUIRoutingResultsView).
 
 export interface SelectOption {
     value: any;

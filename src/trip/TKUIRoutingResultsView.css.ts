@@ -1,12 +1,12 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUIResultsViewProps, TKUIResultsViewStyle} from "./TKUIResultsView";
+import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "./TKUIRoutingResultsView";
 import {black, important, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
 import Constants from "../util/Constants";
 
-export const tKUIResultsDefaultStyle: TKUIStyles<TKUIResultsViewStyle, TKUIResultsViewProps> =
+export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TKUIRoutingResultsViewProps> =
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,

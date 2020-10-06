@@ -6,7 +6,7 @@ import {
     TKUIConfig,
     LatLng,
     Environment,
-    TKPeliasGeocoder, TKError, TKUIResultsViewProps,
+    TKPeliasGeocoder, TKError, TKUIRoutingResultsViewProps,
     TKUIButton}
     from '../../index';
 // from 'tripkit-react';
@@ -127,7 +127,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             })
         },
         TKUIRoutingResultsView: {
-            props: (props: TKUIResultsViewProps) => ({
+            props: (props: TKUIRoutingResultsViewProps) => ({
                 errorActions: (error: TKError, defaultActions: JSX.Element[]) => {
                     let errorActions = defaultActions;
                     const query = props.query;

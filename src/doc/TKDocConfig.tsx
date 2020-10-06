@@ -5,7 +5,7 @@ import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUIRoutingQu
 import {tKUIW3wDefaultStyle} from "../location/TKUIW3w.css";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
-import TKUIResultsView from "../trip/TKUIResultsView";
+import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
 import {CardPresentation} from "../card/TKUICard";
 import Util from "../util/Util";
 import RoutingResults from "../model/trip/RoutingResults";
@@ -18,7 +18,7 @@ import TKUITripRow from "../trip/TKUITripRow";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import {tKUITripOverviewViewDefaultStyle} from "../trip/TKUITripOverviewView.css";
 import {tKUIRoutingQueryInputDefaultStyle} from "../query/TKUIRoutingQueryInput.css";
-import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
+import {tKUIResultsDefaultStyle} from "../trip/TKUIRoutingResultsView.css";
 import {tKUITripRowDefaultStyle} from "../trip/TKUITripRow.css";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
@@ -81,10 +81,10 @@ const tKDocConfig = {
             </div>,
         style: classNamesOf(tKUIButtonDefaultStyle)
     },
-    TKUIResultsView: {
+    TKUIRoutingResultsView: {
         showcase: () =>
         <React.Fragment>
-            <TKUIResultsView cardPresentation={CardPresentation.NONE}/>
+            <TKUIRoutingResultsView cardPresentation={CardPresentation.NONE}/>
             <TKStateController
                 onInit={(tKState: TKState) => {
                     const routingResultsJson = require("./data/routingResults.json");

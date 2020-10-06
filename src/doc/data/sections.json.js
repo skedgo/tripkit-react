@@ -92,7 +92,7 @@ module.exports = {
                     // 'src/sidebar/**/*.tsx',
                     // 'src/time/**/*.tsx',
                     // 'src/trip/**/*.tsx',
-                    'src/trip/TKUIResultsView.tsx',
+                    'src/trip/TKUIRoutingResultsView.tsx',
                     'src/trip/TKUITripRow.tsx',
                     'src/trip/TKUITripOverviewView.tsx',
                     // 'src/trip-planner/**/*.tsx'

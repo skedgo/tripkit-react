@@ -39,7 +39,7 @@ considering we also use these JSS syntax extension plugins:
 case syntax), [jss-plugin-nested](https://cssinjs.org/jss-plugin-nested/?v=v10.4.0) (allowing to use pseudo and nested 
 selectors) and [jss-plugin-global](https://cssinjs.org/jss-plugin-global/?v=v10.4.0) (allowing to specify global selectors).  
 - You can find the list of style classes of a component on the CSS section of the component API spec (e.g. see 
-[](TKUIResultsView)). In our example we override just 'main' and 'row' classes of TKUIResultsView.
+[](TKUIRoutingResultsView)). In our example we override just 'main' and 'row' classes of TKUIRoutingResultsView.
 
 
 There are also other three style related config properties controlling the css class names that are actually generated 
