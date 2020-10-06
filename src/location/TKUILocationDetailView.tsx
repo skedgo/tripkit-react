@@ -25,8 +25,11 @@ import LocationsData from "../data/LocationsData";
 import HasCard, {HasCardKeys} from "../card/HasCard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
-    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.slideUpOptions> {
-    /** @ctype **/
+    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
+
+    /**
+     * @ctype
+     */
     location: Location;
 
     /**
@@ -36,9 +39,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * @default _Direction_, _Add to favourites_ actions, and _Share_, which are instances of [](TKUIButton).
      */
     actions?: (location: Location, defaultActions: JSX.Element[]) => JSX.Element[];
-
-    /** @ignore **/
-    cardPresentation?: CardPresentation;
 }
 
 export interface IStyle {
