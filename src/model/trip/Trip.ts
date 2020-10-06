@@ -6,7 +6,6 @@ import DateTimeUtil from "../../util/DateTimeUtil";
 import TransportUtil from "../../trip/TransportUtil";
 import {TranslationFunction} from "../../i18n/TKI18nProvider";
 import TripUtil from "../../trip/TripUtil";
-import {forDoc} from "../../doc/TKDocUtil";
 
 @JsonObject
 class Trip {
@@ -271,8 +270,8 @@ class Trip {
 
 /**
  * Doc for Trip
- * @visibleName TKTrip
  */
-export const TKTripForDoc = forDoc(Trip);
-// TKTripForDoc.displayName = "Trip";
+export const TripForDoc = (props: Trip) => null;
+TripForDoc.displayName = "Trip";
+
 export default Trip;

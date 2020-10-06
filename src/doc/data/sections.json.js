@@ -68,6 +68,7 @@ module.exports = {
                     // 'src/model/trip/ModeInfo.ts',
                     // 'src/config/TKUIConfig.tsx',
                     // 'src/options/TKUISlider.tsx',
+                    'src/location/TKUILocationDetailView.tsx',
                     'src/location/TKUIW3w.tsx',
                     // 'src/**/*.tsx',  // doesn't work
 
@@ -76,7 +77,7 @@ module.exports = {
                     // 'src/buttons/**/*.tsx',
                     'src/buttons/TKUIButton.tsx',
                     'src/buttons/TKUISelect.tsx',
-                    // 'src/card/**/*.tsx',
+                    'src/card/TKUICard.tsx',
                     'src/config/TKRoot.tsx',
                     // 'src/favourite/**/*.tsx',
                     // 'src/feedback/**/*.tsx',
@@ -85,10 +86,8 @@ module.exports = {
                     // 'src/location_box/**/*.tsx',
                     'src/map/TKUIMapView.tsx',
                     // 'src/options/**/*.tsx',
-                    // 'src/query/**/*.tsx',
                     'src/query/TKUIRoutingQueryInput.tsx',
                     'src/query/TKUILocationSearch.tsx',
-                    // 'src/service/**/*.tsx',
                     // 'src/share/**/*.tsx',
                     // 'src/sidebar/**/*.tsx',
                     // 'src/time/**/*.tsx',
@@ -97,7 +96,8 @@ module.exports = {
                     'src/trip/TKUITripRow.tsx',
                     'src/trip/TKUITripOverviewView.tsx',
                     // 'src/trip-planner/**/*.tsx'
-                    'src/trip-planner/TKUITripPlanner.tsx'
+                    'src/trip-planner/TKUITripPlanner.tsx',
+                    'src/service/TKUITimetableView.tsx'
                 ],
                 ignore: [
                     'src/service/ServiceResultsProvider.tsx',
@@ -116,15 +116,18 @@ module.exports = {
                 usageMode: 'expand',
                 components: [
                     'src/config/TKState.ts',
+                    'src/model/RoutingQuery.ts',
                     'src/model/LatLng.ts',
                     'src/model/Location.ts',
                     'src/model/BBox.ts',
                     'src/model/trip/Trip.ts',
+                    'src/model/trip/Segment.ts',
                     'src/config/TKUIConfig.tsx',
                     'src/config/TKComponentConfig.ts',
                     'src/jss/TKUITheme.ts',
                     'src/geocode/TKGeocodingOptions.tsx',
                     'src/geocode/IGeocoder.ts',
+                    'src/card/TKUISlideUpOptions.ts',
                 ]
             }
         ]

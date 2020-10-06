@@ -115,4 +115,7 @@ class RoutingQuery {
     }
 }
 
+export const RoutingQueryForDoc = (props: RoutingQuery) => null;
+RoutingQueryForDoc.displayName = 'RoutingQuery';
+
 export default RoutingQuery;

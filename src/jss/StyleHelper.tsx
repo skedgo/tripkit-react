@@ -6,6 +6,7 @@ import * as CSS from 'csstype';
 import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKUITheme";
 import Util from "../util/Util";
 import {TKI18nContextProps} from "../i18n/TKI18nProvider";
+import Environment from "../env/Environment";
 
 export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;
 
@@ -30,6 +31,9 @@ export type TKCSSProperties<Props> = CSSProperties<Props>;
 
 export interface TKUIWithStyle<ST, CP> {
     styles?: TKUICustomStyles<ST, CP>,
+    /**
+     * @ignore
+     */
     randomizeClassNames?: boolean
 }
 
@@ -141,11 +145,13 @@ export function withStyleInjection<
             const prefix = props.classNamePrefix!;
             this.generateClassName = generateClassNameFactory(prefix);
             this.WithTheme = withTheme(({theme, ...props}) =>
-                <JssProvider generateClassName={this.props.randomizeClassNames === false ? this.generateClassName :
-                    this.props.verboseClassNames === true ?
-                    (rule: any, sheet: any) => {
-                        return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
-                    } : generateClassNameSeed}>
+                <JssProvider
+                    classNamePrefix={Environment.isDev() ? prefix : undefined}
+                    generateClassName={this.props.randomizeClassNames === false ? this.generateClassName :
+                        this.props.verboseClassNames === true ?
+                            (rule: any, sheet: any) => {
+                                return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
+                            } : generateClassNameSeed}>
                     <this.StyledComponent {...props}
                                           injectedStyles={this.stylesToInject(theme as TKUITheme)}
                                           refreshStyles={() => this.onRefreshStyles(true)}

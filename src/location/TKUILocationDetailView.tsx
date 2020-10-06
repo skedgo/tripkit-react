@@ -17,18 +17,28 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TKUIW3w from "./TKUIW3w";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import RealTimeAlert from "../model/service/RealTimeAlert";
 import TKUIAlertRow from "../alerts/TKUIAlertRow";
 import LocationsData from "../data/LocationsData";
+import HasCard, {HasCardKeys} from "../card/HasCard";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
+    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.slideUpOptions> {
+    /** @ctype **/
     location: Location;
-    slideUpOptions?: TKUISlideUpOptions;
-    onRequestClose?: () => void;
-    actions?: (location: Location, defaultActions: (JSX.Element | null)[]) => (JSX.Element | null)[];
+
+    /**
+     * Allows to specify a list of action buttons (JSX.Elements) associated with the location, to be rendered on card header.
+     * It receives the location and the default list of buttons.
+     * @ctype @ctype (location: Location, defaultActions: JSX.Element[]) => JSX.Element[]
+     * @default _Direction_, _Add to favourites_ actions, and _Share_, which are instances of [](TKUIButton).
+     */
+    actions?: (location: Location, defaultActions: JSX.Element[]) => JSX.Element[];
+
+    /** @ignore **/
+    cardPresentation?: CardPresentation;
 }
 
 export interface IStyle {
@@ -62,8 +72,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
 
     private getDefaultActions(location: Location) {
         const t = this.props.t;
-        return [
-            location instanceof StopLocation ?
+        return (location instanceof StopLocation ? [
                 <ServiceResultsContext.Consumer>
                     {(context: IServiceResultsContext) =>
                         <TKUIButton
@@ -76,19 +85,20 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                         />
                     }
                 </ServiceResultsContext.Consumer>
-                : null,
-            <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
-            <TKUIFavouriteAction key={3}
-                                 favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
-                                 vertical={true}/>,
-            <TKUIShareAction
-                title={t("Share")}
-                link={TKShareHelper.getShareLocation(location)}
-                vertical={true}
-                message={""}
-                key={4}
-            />
-        ]
+                ] :  [])
+            .concat([
+                <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
+                <TKUIFavouriteAction key={3}
+                                     favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
+                                     vertical={true}/>,
+                <TKUIShareAction
+                    title={t("Share")}
+                    link={TKShareHelper.getShareLocation(location)}
+                    vertical={true}
+                    message={""}
+                    key={4}
+                />
+            ]);
     }
 
     public render(): React.ReactNode {
@@ -108,7 +118,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 subtitle={subtitle}
                 ariaLabel={title + " " + subtitle + " location detail"}
                 renderSubHeader={subHeader}
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
                 onRequestClose={this.props.onRequestClose}
             >

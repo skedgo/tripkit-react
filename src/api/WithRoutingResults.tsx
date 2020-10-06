@@ -496,7 +496,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     trips: sortedTrips,
                     selected: sortedTrips[0],
                     directionsView: true
-                });
+                }, () => this.refreshRegion());
                 return trips;
             });
         }

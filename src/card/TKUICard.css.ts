@@ -4,7 +4,6 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {black, cardSpacing, colorWithOpacity, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
-import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
     (theme: TKUITheme) => ({
@@ -25,9 +24,6 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
                 left: '0px!important',
                 padding: '0 ' + cardSpacing(false) + 'px'
             },
-            '&>*': {
-                paddingBottom: (props: TKUICardProps) => !DeviceUtil.isTouch() ? cardSpacing(props.landscape) + 'px' : '0'
-            },
             boxSizing: 'border-box'
         },
 
@@ -43,7 +39,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
             ...theme.textSizeBody,
             ...genStyles.flex,
             ...genStyles.column,
-            overflow: (props: TKUICardProps) => props.overflowVisible ? 'visible' : 'hidden',
+            overflow: 'hidden',
             ...theme.cardBackground
         },
 
@@ -68,8 +64,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
 
         subHeader: {
             padding: '0 16px',
-            borderBottom: (props: TKUICardProps) => props.headerDividerVisible !== false ?
-                '1px solid ' + black(4, theme.isDark) : undefined
+            borderBottom: '1px solid ' + black(4, theme.isDark)
         },
 
         body: {

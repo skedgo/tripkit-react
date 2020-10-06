@@ -50,8 +50,3 @@ export function typeReferencesToLinks(typeText: string): string {
         return url ? "[" + match + "](" + url + ")" : match;
     });
 }
-
-export function forDoc<T>(classRef: { new(): T }) {
-    // return ((props: T) => null) as any;
-    return (props: T) => null;
-}

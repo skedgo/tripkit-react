@@ -1,7 +1,7 @@
 import * as React from "react";
 import TKUIW3w from "../location/TKUIW3w";
 import TKUIButton from "../buttons/TKUIButton";
-import {genClassNames, TKUIButtonType, TKUIRoutingQueryInput} from "../index";
+import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUIRoutingQueryInput} from "../index";
 import {tKUIW3wDefaultStyle} from "../location/TKUIW3w.css";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
@@ -22,6 +22,12 @@ import {tKUIResultsDefaultStyle} from "../trip/TKUIResultsView.css";
 import {tKUITripRowDefaultStyle} from "../trip/TKUITripRow.css";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
+import {tKUILocationDetailViewDefaultStyle} from "../location/TKUILocationDetailView.css";
+import TKUILocationDetailView from "../location/TKUILocationDetailView";
+import {tKUITimetableDefaultStyle} from "../service/TKUITimetableView.css";
+import TKUITimetableView from "../service/TKUITimetableView";
+import {loadTimetableState, loadTripState} from "../state/TKStateUrl";
+import TKStateConsumer from "../config/TKStateConsumer";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);
@@ -40,10 +46,19 @@ export function getMockRoutingResults(): Trip[] {
     return routingResults.groups;
 }
 
+function getMockLocation(): Location {
+    const locationJson = require("./data/location.json");
+    return Util.deserialize(locationJson, Location);
+}
+
 const tKDocConfig = {
     TKUIRoutingQueryInput: {
         showcase: () => <TKUIRoutingQueryInput/>,
         style: classNamesOf(tKUIRoutingQueryInputDefaultStyle)
+    },
+    TKUILocationDetailView: {
+        showcase: () => <TKUILocationDetailView location={getMockLocation()} cardPresentation={CardPresentation.NONE}/>,
+        style: classNamesOf(tKUILocationDetailViewDefaultStyle)
     },
     TKUIW3w: {
         showcase: () => <TKUIW3w w3w={"hola"} w3wInfoURL={"chau"}/>,
@@ -67,7 +82,16 @@ const tKDocConfig = {
         style: classNamesOf(tKUIButtonDefaultStyle)
     },
     TKUIResultsView: {
-        showcase: () => <TKUIResultsView cardPresentation={CardPresentation.NONE} values={getMockRoutingResults()}/>,
+        showcase: () =>
+        <React.Fragment>
+            <TKUIResultsView cardPresentation={CardPresentation.NONE}/>
+            <TKStateController
+                onInit={(tKState: TKState) => {
+                    const routingResultsJson = require("./data/routingResults.json");
+                    loadTripState(tKState, JSON.stringify(routingResultsJson));
+                }}
+            />
+        </React.Fragment>,
         style: classNamesOf(tKUIResultsDefaultStyle)
     },
     TKUITripRow: {
@@ -77,21 +101,25 @@ const tKDocConfig = {
     TKUITripOverviewView: {
         style: classNamesOf(tKUITripOverviewViewDefaultStyle),
         showcase: () =>
-            //<TKPropsOverride componentKey={"TKUITripOverviewView"}
-            //                 propsOverride={(props: TKUITripOverviewViewProps) => ({
-                                 // actions: (trip: Trip, defaultActions: JSX.Element[]) => defaultActions.concat([<button>Mostrame a mi mejor!!</button>])
-                                 // actions: (trip: Trip, defaultActions: JSX.Element[]) =>
-                                 //     (props.actions ? props.actions(trip, defaultActions) : defaultActions)
-                                 //         .concat([<button>Mostrame también!!</button>])
-            //                 })}>
-                <TKUITripOverviewView
-                    value={getMockRoutingResults()[0]}
-                    cardPresentation={CardPresentation.NONE}
-                    // actions={(trip: Trip, defaultActions: JSX.Element[]) => [<button>Mostrame a mi solo!!!</button>]}
-                    // actions={(trip: Trip, defaultActions: JSX.Element[]) => defaultActions.concat([<button>Mostrame!!!</button>])}
-                />
-           // </TKPropsOverride>
-    }
+            <TKUITripOverviewView
+                value={getMockRoutingResults()[0]}
+                cardPresentation={CardPresentation.NONE}
+            />
+    },
+    TKUITimetableView: {
+        showcase: () =>
+            <TKStateConsumer>
+                {(tKState: TKState) =>
+                    <div style={{height: '800px', width: '400px', display: 'flex', flexDirection: 'column'}}>
+                        {tKState.stop && <TKUITimetableView cardPresentation={CardPresentation.NONE}/>}
+                        <TKStateController
+                            onInit={(tKState: TKState) => loadTimetableState(tKState, "AU_NSW_Sydney", "200050")}
+                        />
+                    </div>
+                }
+            </TKStateConsumer>,
+        style: classNamesOf(tKUITimetableDefaultStyle)
+    },
 };
 
 const styles = {

@@ -36,6 +36,37 @@ const URL_FIELD_VALUE_SEPARATOR = ":";
 const URL_VALUE_COMPONENT_SEPARATOR = "+";
 
 
+export function loadTripState(tKState: TKState, sharedTripJsonUrl: any) {
+    tKState.onWaitingStateLoad(true);
+    tKState.onTripJsonUrl(sharedTripJsonUrl)
+        .then(() => {
+            tKState.onWaitingStateLoad(false);
+            tKState.onTripDetailsView(true);
+        })
+        .catch((error: Error) => tKState.onWaitingStateLoad(false,
+            new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+}
+
+export function loadTimetableState(tKState: TKState, regionCode: string, stopCode: string, filter?: string, serviceID?: string, timeInSecs?: number) {
+    tKState.onWaitingStateLoad(true);
+    StopsData.instance.getStopFromCode(regionCode, stopCode)
+        .then((stop: StopLocation) =>
+            RegionsData.instance.requireRegions().then(() => {
+                tKState.onQueryUpdate({to: stop});
+                if (!serviceID || !timeInSecs) {
+                    filter && tKState.onFilterChange(filter);
+                    tKState.onStopChange(stop);
+                } else {
+                    filter && tKState.onFilterChange(filter);
+                    const initTime = DateTimeUtil.momentFromTimeTZ(timeInSecs * 1000);
+                    return tKState.onFindAndSelectService(stop, serviceID, initTime);
+                }
+            }))
+        .then(() => tKState.onWaitingStateLoad(false))
+        .catch((error: Error) => tKState.onWaitingStateLoad(false,
+            new TKError(!serviceID || !timeInSecs ? "Error loading timetable" : "Error loading service",
+                ERROR_LOADING_DEEP_LINK, false)));
+}
 
 
 class TKStateUrl extends React.Component<IProps, {}> {
@@ -266,37 +297,11 @@ class TKStateUrl extends React.Component<IProps, {}> {
     }
 
     private loadTripState(sharedTripJsonUrl) {
-        const tKState = this.props.tKState;
-        tKState.onWaitingStateLoad(true);
-        tKState.onTripJsonUrl(sharedTripJsonUrl)
-            .then(() => {
-                tKState.onWaitingStateLoad(false);
-                tKState.onTripDetailsView(true);
-            })
-            .catch((error: Error) => tKState.onWaitingStateLoad(false,
-                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+        loadTripState(this.props.tKState, sharedTripJsonUrl);
     }
 
-    private loadTimetableState(regionCode: string, stopCode: string, filter: string, serviceID?: string, timeInSecs?: number) {
-        const tKState = this.props.tKState;
-        tKState.onWaitingStateLoad(true);
-        StopsData.instance.getStopFromCode(regionCode, stopCode)
-            .then((stop: StopLocation) =>
-                RegionsData.instance.requireRegions().then(() => {
-                    this.props.tKState.onQueryUpdate({to: stop});
-                    if (!serviceID || !timeInSecs) {
-                        filter && this.props.tKState.onFilterChange(filter);
-                        return this.props.tKState.onStopChange(stop);
-                    } else {
-                        filter && this.props.tKState.onFilterChange(filter);
-                        const initTime = DateTimeUtil.momentFromTimeTZ(timeInSecs * 1000);
-                        return this.props.tKState.onFindAndSelectService(stop, serviceID, initTime);
-                    }
-                }))
-            .then(() => tKState.onWaitingStateLoad(false))
-            .catch((error: Error) => tKState.onWaitingStateLoad(false,
-                new TKError(!serviceID || !timeInSecs ? "Error loading timetable" : "Error loading service",
-                    ERROR_LOADING_DEEP_LINK, false)));
+    private loadTimetableState(regionCode: string, stopCode: string, filter?: string, serviceID?: string, timeInSecs?: number) {
+        loadTimetableState(this.props.tKState, regionCode, stopCode, filter, serviceID, timeInSecs);
     }
 
     public render(): React.ReactNode {

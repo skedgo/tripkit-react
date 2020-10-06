@@ -11,10 +11,13 @@ class TKUIResponsiveUtil {
 
 export interface TKUIViewportUtilProps {
     /**
+     * Stating if the screen orientation is portrait. In desktop it's related to screen dimensions.
      * @globaldefault
      */
     portrait: boolean;
+
     /**
+     * Stating if the screen orientation is landscape. In desktop it's related to screen dimensions.
      * @globaldefault
      */
     landscape: boolean;

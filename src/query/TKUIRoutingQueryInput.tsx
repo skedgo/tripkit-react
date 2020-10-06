@@ -16,7 +16,7 @@ import DeviceUtil from "../util/DeviceUtil";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
 import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
@@ -24,7 +24,6 @@ import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
-import Region from "../model/region/Region";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
@@ -35,31 +34,91 @@ import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHe
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * Corresponds to ```title``` property of [card component](TKUICard), used on this component implementation.
+     */
     title?: string;
+
+    /**
+     * Stating if time select component should be displayed or not.
+     * @default true
+     */
+    showTimeSelect?: boolean;
+
+    /**
+     * Stating if the _transports_ button should be displayed or not.
+     * @default true
+     */
     showTransportsBtn?: boolean;
+
+    /**
+     * Function that will be run when the user clicks on button to show full transport options.
+     * @ctype
+     */
     onShowTransportOptions?: () => void;
-    isTripPlanner?: boolean;
-    resolveCurrLocInFrom?: boolean;
-    collapsable?: boolean;
+
+    /**
+     * Stating if the _from_ and _to_ location input dropdowns should be displayed to the side of the input element,
+     * instead of below it.
+     * @default false
+     */
+    sideDropdown?: boolean;
+
+    /**
+     * Stating if should resolve current location in from / to inputs.
+     * @default true
+     */
+    resolveCurrLocation?: boolean;
+
+    /**
+     * Function that will be run when the user clicks the close (cross) button (landscape) or the back (arrow) button
+     * (portrait).
+     * @ctype
+     */
     onClearClicked?: () => void;
     shouldFocusAfterRender?: boolean;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
-    /** @globaldefault */
+    /**
+     * Routing query
+     * @ctype
+     * @globaldefault
+     */
     value: RoutingQuery;
-    /** @globaldefault */
+
+    /**
+     * Routing query change callback.
+     * @ctype
+     * @globaldefault
+     */
     onChange?: (routingQuery: RoutingQuery) => void;
+
     /** @globaldefault */
     onPreChange?: (from: boolean, location?: Location) => void;
+
     /** @globaldefault */
     onInputTextChange?: (from: boolean, text: string) => void;
-    /** @globaldefault */
+
+    /**
+     * Bounding box to restrict from / to location search.
+     * @ctype
+     * @globaldefault
+     */
     bounds?: BBox;
-    /** @globaldefault */
+
+    /**
+     * Coordinates to focus from / to location search.
+     * @ctype
+     * @globaldefault
+     */
     focusLatLng?: LatLng;
-    /** @globaldefault */
-    region?: Region;
+
+    /**
+     * Id of timezone to consider for time display / input.
+     * @globaldefault
+     */
+    timezone?: string;
 }
 
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -206,17 +265,21 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const inputToId = "input-to";
         const inputFromId = "input-from";
+        const showTimeSelect = this.props.showTimeSelect !== undefined ? this.props.showTimeSelect : true;
+        const showTransportsBtn = this.props.showTransportsBtn !== undefined ? this.props.showTransportsBtn : true;
         return (
             <TKUICard
                 presentation={CardPresentation.NONE}
                 title={this.props.landscape ? this.props.title : undefined}
                 onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
                 closeAriaLabel={"close query input"}
-                headerDividerVisible={false}
                 scrollable={false}
-                overflowVisible={true}
                 mainFocusElemId={!routingQuery.from ? inputFromId : !routingQuery.to ? inputToId : undefined}
                 shouldFocusAfterRender={this.props.shouldFocusAfterRender}
+                styles={{
+                    main: overrideClass({overflow: 'visible'}),
+                    subHeader: overrideClass({borderBottom: 'none'})
+                }}
             >
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
@@ -269,7 +332,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(true, text);
                                 }}
-                                resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
+                                resolveCurr={this.props.resolveCurrLocation} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) => {
                                     this.showTooltip(true, this.getErrorMessage(error, t));
                                     const fromInput = document.getElementById(inputFromId);
@@ -278,7 +341,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 inputAriaLabel={ariaLabelFrom}
                                 inputId={inputFromId}
-                                sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                                sideDropdown={this.props.sideDropdown}
                                 menuStyle={{
                                     borderTopLeftRadius: '0',
                                     borderTopRightRadius: '0'
@@ -323,7 +386,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(false, text);
                                 }}
-                                resolveCurr={this.props.resolveCurrLocInFrom} // Resolve curr loc on 'from' when 'to' is already set
+                                resolveCurr={this.props.resolveCurrLocation} // Resolve curr loc on 'from' when 'to' is already set
                                 onFailedToResolve={(highlighted: boolean, error: Error) => {
                                     this.showTooltip(false, this.getErrorMessage(error, t));
                                     const toInput = document.getElementById(inputToId);
@@ -332,7 +395,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                                 inputAriaLabel={ariaLabelTo}
                                 inputId={inputToId}
-                                sideDropdown={DeviceUtil.isTablet && this.props.isTripPlanner}
+                                sideDropdown={this.props.sideDropdown}
                                 menuStyle={{
                                     borderTopLeftRadius: '0',
                                     borderTopRightRadius: '0'
@@ -344,27 +407,31 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <IconSwap aria-hidden={true} focusable="false"/>
                     </button>
                 </div>
-                {this.props.landscape &&
-                <div
-                    className={classes.footer}>
+                {(showTimeSelect || showTransportsBtn) &&
+                <div className={classes.footer}
+                     style={!showTimeSelect && showTransportsBtn ? {
+                         justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
+                     } : undefined}
+                >
+                    {showTimeSelect &&
                     <TKUISelect
                         options={this.timePrefOptions}
                         value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
                         className={classes.timePrefSelect}
                         menuStyle={{marginTop: '3px'}}
-                    />
-                    {routingQuery.timePref !== TimePreference.NOW && this.props.region &&
+                    />}
+                    {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                         value={routingQuery.time}
-                        timeZone={this.props.region.timezone}
+                        timeZone={this.props.timezone}
                         onChange={(date: Moment) => this.updateQuery({time: date})}
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                         disabled={datePickerDisabled}
                     />
                     }
-                    {this.props.showTransportsBtn !== false &&
+                    {showTransportsBtn &&
                     <TKUITooltip
                         placement="right"
                         overlay={
@@ -428,6 +495,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                         const region = routingContext.region;
                         const bounds = region ? region.bounds : undefined;
                         const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
+                        const timezone = region ? region.timezone : undefined;
                         const consumerProps: IConsumedProps = {
                             value: routingContext.query,
                             onChange: routingContext.onQueryChange,
@@ -435,7 +503,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             onInputTextChange: routingContext.onInputTextChange,
                             bounds: bounds,
                             focusLatLng: focusLatLng,
-                            region: routingContext.region,
+                            timezone: timezone,
                             ...viewportProps
                         };
                         return props.children!(consumerProps);
@@ -453,5 +521,16 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;
 
+/**
+ *  Allows the user to enter _depart_ and _arrive_ locations through address and place autocompletion, set the
+ *  _time to depart_ or the _time to arrive_, and select what _transport modes_ should be considered.
+ *
+ *  It can be seen as building or updating a [routing query object]() in an uncontrolled way, through
+ *  ```query``` and ```onChange``` properties. Both of them are _connection properties_, as explained in
+ *  [this section](#/Main%20SDK%20component%3A%20TKRoot), which means that if no value is explicitly provided when using the
+ *  component, then values from SDK state are passed by default, i.e., TKUIRoutingQueryInput gets connected to the SDK
+ *  state.
+ */
 export default connect((config: TKUIConfig) => config.TKUIRoutingQueryInput, config, Mapper);
+
 export {TKUIRoutingQueryInput as TKUIRoutingQueryInputClass}

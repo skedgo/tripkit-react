@@ -27,30 +27,83 @@ export enum CardPresentation {
 }
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * The title for the card, to be displayed on card header.
+     */
     title?: string;
+
+    /**
+     * The subtitle for the card, to be displayed on card header.
+     */
     subtitle?: string;
+
+    /** @ctype */
     renderSubHeader?: () => JSX.Element;
+
+    /**
+     * Describing if the card should be shown or not.
+     * @default true
+     */
+    open?: boolean;
+
+    /**
+     * Function that will be run when the card is requested to be closed (either by clicking close button, pressing ESC,
+     * or clicking on overlay for CardPresentation.MODAL).
+     * @ctype
+     */
     onRequestClose?: () => void;
+
+    /**
+     * Values: CardPresentation.MODAL, CardPresentation.SLIDE_UP, CardPresentation.NONE.
+     * @ctype
+     * @default CardPresentation.NONE
+     */
+    presentation?: CardPresentation;
+
+    /**
+     * Options specific for slide up card (with presentation CardPresentation.SLIDE_UP).
+     * @ctype
+     */
+    slideUpOptions?: TKUISlideUpOptions;
+
+    /**
+     * Options specific for modal card (with presentation CardPresentation.MODAL).
+     */
+    modalOptions?: any;
+
+    /**
+     * @ignore
+     */
+    handleRef?: (ref: any) => void;
+
+    /**
+     * @ignore
+     */
+    scrollRef?: (instance: HTMLDivElement | null) => void;
+
+    /**
+     * @ignore
+     */
+    onScroll?: UIEventHandler<HTMLDivElement>;
+
+    /**
+     * Describing if the card body should be scrollable.
+     * @default true
+     */
+    scrollable?: boolean;
+
+    /**
+     * The id of the HTML element to which the card will be attached to in case of
+     * CardPresentation.MODAL or CardPresentation.SLIDE_UP presentations.
+     */
+    parentElementId?: string;
+
     ariaLabel?: string;
     closeAriaLabel?: string;
     mainFocusElemId?: string;
     shouldFocusAfterRender?: boolean;
-    presentation?: CardPresentation;
-    presentationFromViewport?: (portrait: boolean) => CardPresentation;
-    slideUpOptions?: TKUISlideUpOptions;
-    modalOptions?: any;
-    open?: boolean;
-    children?: any;
-    bodyStyle?: CSS.Properties;
-    bodyClassName?: string;
-    touchEventsOnChildren?: boolean; // false by default.
-    handleRef?: (ref: any) => void;
-    scrollRef?: (instance: HTMLDivElement | null) => void;
-    onScroll?: UIEventHandler<HTMLDivElement>;
-    headerDividerVisible?: boolean;
-    scrollable?: boolean;
-    overflowVisible?: boolean;
-    parentElementId?: string;
+
+    children?: React.ReactNode;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -203,8 +256,7 @@ class TKUICard extends React.Component<IProps, IState> {
                 </div>
                 {this.props.scrollable !== false ?
                     <TKUIScrollForCard
-                        className={classNames(classes.body, this.props.bodyClassName)}
-                        style={this.props.bodyStyle}
+                        className={classes.body}
                         // So dragging the card from its content, instead of scrolling it, will drag the card.
                         // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
                         freezeScroll={draggable && !this.state.cardOnTop}
@@ -252,7 +304,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         shouldCloseOnEsc={true}
                         onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
                         appElement={this.appMainElement}
-                        parentSelector={() => this.parentElement}
+                        parentSelector={() => this.parentElement ? this.parentElement : document.getElementsByTagName("BODY")[0]}
                         {...this.props.modalOptions}
                         contentLabel={cardAriaLabel}
                     >
@@ -341,13 +393,10 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
     ({inputProps, children}) =>
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) => {
-                return children!({...inputProps, ...viewportProps,
-                    presentation: inputProps.presentationFromViewport ? inputProps.presentationFromViewport(viewportProps.portrait) :
-                        inputProps.presentation});
+                return children!({...viewportProps, ...inputProps});
             }}
         </TKUIViewportUtil>;
 
-export default connect(
-    (config: TKUIConfig) => config.TKUICard, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUICard, config, Mapper);
 
 export {hasHandle}

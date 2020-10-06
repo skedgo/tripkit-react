@@ -21,27 +21,30 @@ import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import HasCard, {HasCardKeys} from "../card/HasCard";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
+    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
+
+    /** @ctype **/
     value: Trip;
-    onRequestClose?: () => void;
+
     handleRef?: (ref: any) => void;
-    slideUpOptions?: TKUISlideUpOptions;
-    cardPresentation?: CardPresentation;
+
+    /** @ctype **/
     onRequestAlternativeRoutes?: (segment: Segment) => void;
     /**
      * Allows to specify a list action buttons (JSX.Elements) associated with the trip, to be rendered on card header.
      * It receives the trip and the default list of buttons.
      * @ctype (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[]
-     * @default _Share Trip_ and _Add to favourites_ actions.
+     * @default _Share Trip_ and _Add to favourites_ actions, which are instances of [](TKUIButton).
      */
     actions?: (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[];
     /**
-     * Allows to specify a list action buttons (JSX.Elements) associated with a segment, to be rendered on segment
+     * Allows to specify a list of action buttons (JSX.Elements) associated with a segment, to be rendered on segment
      * detail. It receives the segment and the default list of buttons.
      * @ctype (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[]
-     * @default _Share Arrival_, if segment is the last one.
+     * @default _Share Arrival_, if segment is the last one, which is an instance of [](TKUIButton).
      */
     segmentActions?: (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[];
 }
