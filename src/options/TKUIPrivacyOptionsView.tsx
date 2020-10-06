@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
@@ -90,7 +90,9 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                     </div>
                                     <TKUIButton text={t("Edit.transport.modes")}
                                                 type={TKUIButtonType.PRIMARY_LINK}
-                                                className={classes.optionLink}
+                                                styles={{
+                                                    main: overrideClass(this.props.injectedStyles.optionLink)
+                                                }}
                                                 onClick={this.props.onShowTransportOptions}
                                     />
                                 </div>
@@ -126,7 +128,9 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             <div className={classes.optionRow}>
                                 <TKUIButton text={t("Show.our.Privacy.Policy")}
                                             type={TKUIButtonType.PRIMARY_LINK}
-                                            className={classes.optionLink}
+                                            styles={{
+                                                main: overrideClass(this.props.injectedStyles.optionLink)
+                                            }}
                                             onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
                                 />
                             </div>

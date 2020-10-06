@@ -146,8 +146,8 @@ export function withStyleInjection<
 
         constructor(props: P) {
             super(props);
-            const merge1 = overrideStyles(this.props.defaultStyles, this.props.propStyles ? this.props.propStyles : {});
-            this.stylesToInject = this.props.configStyles ? overrideStyles(merge1, this.props.configStyles) : merge1;
+            const merge1 = overrideStyles(this.props.defaultStyles, this.props.configStyles ? this.props.configStyles : {});
+            this.stylesToInject = this.props.propStyles ? overrideStyles(merge1, this.props.propStyles) : merge1;
             this.onRefreshStyles = this.onRefreshStyles.bind(this);
             this.onRefreshStyles();
         }

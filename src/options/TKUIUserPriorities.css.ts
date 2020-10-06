@@ -13,8 +13,5 @@ export const tKUIUserPrioritiesDefaultStyle: TKUIStyles<TKUIUserPrioritiesStyle,
                 marginBottom: '15px'
             },
             color: theme.colorPrimary
-        },
-        resetBtn: {
-            marginTop: '20px'
         }
     });

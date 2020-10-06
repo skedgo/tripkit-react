@@ -6,8 +6,11 @@ import {tKUIW3wDefaultStyle} from "./TKUIW3w.css";
 import iconW3w from "../images/location/ic-what3words.png";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    w3w: string,
-    w3wInfoURL?: string
+    /**
+     * What3words address.
+     */
+    w3w: string;
+    w3wInfoURL?: string;
 }
 
 export interface IStyle {

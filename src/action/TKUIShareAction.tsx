@@ -8,6 +8,7 @@ import Util from "../util/Util";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
 import {cardSpacing} from "../jss/TKUITheme";
+import {overrideClass} from "../jss/StyleHelper";
 
 interface IProps {
     title: string;
@@ -35,7 +36,9 @@ const TKUIShareAction: React.SFC<IProps> = (props: IProps) => {
                                     setLink(link));
                             }}
                             key={"shareActionBtn"}
-                            style={props.style}
+                            styles={{
+                                main: overrideClass(props.style as any)
+                            }}
                 />,
                 show &&
                 <TKUICard

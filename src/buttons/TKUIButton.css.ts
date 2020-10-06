@@ -14,18 +14,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...theme.textSizeBody,
             ...theme.textWeightSemibold,
             fontFamily: theme.fontFamily,
-            padding: (props: TKUIButtonProps) =>
-                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' :
-                    props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '6px 20px',
-            ...genStyles.borderRadius(20),
             '& svg': {
                 width: '100%',
                 height: '100%'
-            },
-            height: (props: TKUIButtonProps) =>
-                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
-            width: (props: TKUIButtonProps) =>
-                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial'
+            }
         },
 
         primary: {
@@ -34,6 +26,11 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL) ? '8px' :
                     props.type === TKUIButtonType.PRIMARY_LINK ? undefined : '8px 20px',
+            ...genStyles.borderRadius(20),
+            height: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
+            width: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
             '&:hover': {
                 backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
             },
@@ -51,6 +48,11 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...theme.textColorDefault,
             padding: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '6px' : '6px 20px',
+            ...genStyles.borderRadius(20),
+            height: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
+            width: (props: TKUIButtonProps) =>
+                (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
             border: '2px solid ' + black(4, theme.isDark),
             '&:hover': {
                 borderColor: black(2, theme.isDark),

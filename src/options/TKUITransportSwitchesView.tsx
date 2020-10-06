@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {ClassNameMap} from "react-jss";
 import {tKUITransportSwitchesViewDefaultStyle} from "./TKUITransportSwitchesView.css";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
@@ -147,9 +147,11 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                     {this.props.onMoreOptions &&
                     <TKUIButton type={TKUIButtonType.PRIMARY_LINK}
                                 text={t("More.options")}
-                                style={{
-                                    marginLeft: '10px',
-                                    ...genStyles.fontS
+                                styles={{
+                                    main: overrideClass({
+                                        marginLeft: '10px',
+                                        ...genStyles.fontS
+                                    })
                                 }}
                                 onClick={this.props.onMoreOptions}
                     />}

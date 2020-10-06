@@ -6,16 +6,14 @@ import FavouritesData from "../data/FavouritesData";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import Favourite from "../model/favourite/Favourite";
-import * as CSS from 'csstype';
 import TKUserProfile from "../model/options/TKUserProfile";
 import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
-import {TKStyleOverride} from "../config/TKConfigHelper";
 import {colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
+import {overrideClass} from "../jss/StyleHelper";
 
 interface IProps {
     favourite: Favourite;
     vertical?: boolean;
-    style?: CSS.Properties;
 }
 
 class TKUIFavouriteAction extends React.Component<IProps, {}> {
@@ -44,35 +42,35 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
     }
 
     public render(): JSX.Element {
-        const stylesOverride = this.exists() ?
-            (theme: TKUITheme) => ({
-                secondary: (defaultStyle) => ({
-                    ...defaultStyle,
-                    background: colorWithOpacity(theme.colorPrimary, .08),
-                    border: '2px solid ' + theme.colorPrimary,
-                    '& svg': {
-                        color: theme.colorPrimary
-                    },
-                    '&:hover': {
-                        borderColor: colorWithOpacity(theme.colorPrimary, .3)
-                    },
-                    '&:active': {
-                        borderColor: colorWithOpacity(theme.colorPrimary, .12),
-                        backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
-                    },
-                })
-            }) : {};
         return <TKI18nContext.Consumer>
             {(i18nProps: TKI18nContextProps) =>
-                <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={stylesOverride}>
-                    <TKUIButton
-                        type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
-                        icon={this.renderIcon()}
-                        text={this.exists() ? i18nProps.t("Remove.from.favourites") : i18nProps.t("Add.to.favourites")}
-                        style={{minWidth: '90px', ...this.props.style}}
-                        onClick={this.onClick}
-                    />
-                </TKStyleOverride>
+                <TKUIButton
+                    type={this.props.vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
+                    icon={this.renderIcon()}
+                    text={this.exists() ? i18nProps.t("Remove.from.favourites") : i18nProps.t("Add.to.favourites")}
+                    styles={(theme: TKUITheme) => ({
+                        main: overrideClass({
+                            minWidth: '90px'
+                        }),
+                        ...this.exists() && {
+                            secondary: overrideClass({
+                                background: colorWithOpacity(theme.colorPrimary, .08),
+                                border: '2px solid ' + theme.colorPrimary,
+                                '& svg': {
+                                    color: theme.colorPrimary
+                                },
+                                '&:hover': {
+                                    borderColor: colorWithOpacity(theme.colorPrimary, .3)
+                                },
+                                '&:active': {
+                                    borderColor: colorWithOpacity(theme.colorPrimary, .12),
+                                    backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
+                                }
+                            })
+                        }
+                    })}
+                    onClick={this.onClick}
+                />
             }
         </TKI18nContext.Consumer>
     }

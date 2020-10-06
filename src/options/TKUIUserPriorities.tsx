@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIUserPrioritiesDefaultStyle} from "./TKUIUserPriorities.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
@@ -26,7 +26,6 @@ export interface IConsumedProps extends TKUIViewportUtilProps {}
 
 export interface IStyle {
     main: CSSProps<IProps>;
-    resetBtn: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -114,7 +113,11 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     />
                     <TKUIButton text={t("Reset")}
                                 type={TKUIButtonType.SECONDARY}
-                                className={classes.resetBtn}
+                                styles={{
+                                    main: overrideClass({
+                                        marginTop: '20px'
+                                    })
+                                }}
                                 onClick={() => this.props.onChange(TKWeightingPreferences.create())}
                     />
                 </div>
