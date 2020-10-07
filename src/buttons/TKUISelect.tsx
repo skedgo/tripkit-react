@@ -5,20 +5,53 @@ import {tKUISelectDefaultStyle} from "./TKUISelect.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Select from 'react-select';
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
-import * as CSS from 'csstype';
-import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * Where:
+     *
+     * ```
+     * type SelectOption = {
+     *      value: any;
+     *      label: string;
+     * }
+     * ```
+     *
+     * @ctype
+     */
     options: SelectOption[];
-    value: any;
-    onChange: (value: any) => void;
+
+    /**
+     * The selected option.
+     * @ctype
+     */
+    value?: SelectOption;
+
+    /**
+     * Option selection change callback.
+     */
+    onChange?: (value: SelectOption) => void;
+
+    /**
+     * State if menu is shown. Specify this property to manage menu visibility on a controlled way.
+     * @ignore Since probably need to expose an onBlur callback prop.
+     */
     menuIsOpen?: boolean;
+
+    /**
+     * Forwarded to 'react-select' base component. For more details see
+     * [Replacing Components](https://react-select.com/props#replacing-components).
+     */
     components?: any;
-    className?: string;
-    controlStyle?: CSS.Properties;
-    menuStyle?: CSS.Properties;
-    renderArrowDown?: () => JSX.Element;
+
+    /**
+     * Stating if select control is disabled.
+     */
     isDisabled?: boolean,
+
+    /**
+     * Forwarded to 'react-select' base component.
+     */
     ariaLabel?: string
 }
 
@@ -55,13 +88,14 @@ class TKUISelect extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const injectedStyles = this.props.injectedStyles;
-        const SelectDownArrow = this.props.renderArrowDown || ((props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>);
+        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
+        const classes = this.props.classes;
         return (
-            <div className={classNames(this.props.className, this.props.classes.main)}>
+            <div className={classes.main}>
                 <Select
                     options={this.props.options}
                     value={this.props.value}
-                    onChange={this.props.onChange}
+                    onChange={this.props.onChange as any}
                     components={{
                         IndicatorsContainer: SelectDownArrow,
                         ...this.props.components
@@ -70,9 +104,9 @@ class TKUISelect extends React.Component<IProps, {}> {
                     menuIsOpen={this.props.menuIsOpen}
                     styles={{
                         container: (styles: any) => ({...styles, ...injectedStyles.container}),
-                        control: (styles: any) => ({...styles, ...injectedStyles.control, ...this.props.controlStyle}),
+                        control: (styles: any) => ({...styles, ...injectedStyles.control}),
                         indicatorsContainer: (styles: any) => ({...styles, display: 'none'}),
-                        menu: (styles: any) => ({...styles, ...injectedStyles.menu, ...this.props.menuStyle}),
+                        menu: (styles: any) => ({...styles, ...injectedStyles.menu}),
                         option: (styles: any, state: any) => ({
                             ...styles, ...injectedStyles.option,
                             ...(state.isFocused && injectedStyles.optionFocused),
@@ -87,6 +121,10 @@ class TKUISelect extends React.Component<IProps, {}> {
     }
 
 }
+
+/**
+ * Select input control based on [react-select](https://react-select.com/).
+ */
 
 export default connect((config: TKUIConfig) => config.TKUISelect, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));

@@ -99,30 +99,77 @@ export interface IStyle {
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
-    /** @globaldefault */
+    /**
+     * Depart location.
+     * @ctype
+     * @default {@link TKState#query}.from
+     */
     from?: Location;
-    /** @globaldefault */
+
+    /**
+     * Arrive location.
+     * @ctype
+     * @default {@link TKState#query}.to
+     */
     to?: Location;
-    /** @globaldefault */
+
+    /**
+     * A trip.
+     * @ctype
+     * @default {@link TKState#selectedTrip}
+     */
     trip?: Trip;
-    /** @globaldefault */
+
+    /**
+     * A public transport service.
+     * @ctype
+     * @default {@link TKState#selectedService}
+     */
     service?: ServiceDeparture;
-    /** @globaldefault */
+
+    /**
+     * @ctype
+     * @globaldefault
+     */
     onClick?: (latLng: LatLng) => void;
-    /** @globaldefault */
+
+    /**
+     * @ctype
+     * @globaldefault
+     */
     onDragEnd?: (from: boolean, latLng: LatLng) => void;
-    /** @globaldefault */
+
+    /**
+     * Map viewport expressed as center coordinates and zoom level.
+     * @ctype
+     * @default {@link TKState#viewport}
+     */
     viewport?: {center?: LatLng, zoom?: number};
-    /** @globaldefault */
+
+    /**
+     * Map viewport change callback.
+     * @ctype
+     * @default {@link TKState#onViewportChange}
+     */
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
-    /** @globaldefault */
+
+    /**
+     * States if the environment is in _directions mode_, which implies that it should compute trips for current query
+     * whenever it is complete.
+     * @ctype
+     * @default {@link TKState#directionsView}
+     */
     directionsView?: boolean;
+
     /** @globaldefault */
     onDirectionsFrom: (latLng: LatLng) => void;
+
     /** @globaldefault */
     onDirectionsTo: (latLng: LatLng) => void;
+
     /** @globaldefault */
     onWhatsHere: (latLng: LatLng) => void;
+
     /** @globaldefault */
     config: TKUIConfig;
 }

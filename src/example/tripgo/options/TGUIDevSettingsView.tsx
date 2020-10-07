@@ -1,6 +1,6 @@
 import React, {useState, Dispatch, SetStateAction, useEffect} from 'react';
 import {ChangeEvent} from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";
 import {Subtract} from "utility-types";
@@ -316,8 +316,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         </div>
                         <TKUISelect
                             options={serverOptions}
-                            value={serverOptions.find((option: any) =>
-                                editingServer === '' ? option.value === 'add' : option.label === serverName)}
+                            value={serverOptions.find((option: SelectOption) =>
+                                editingServer === '' ? option.value === 'add' : option.label === serverName)!}
                             onChange={(option) => {
                                 if (option.value === 'add') {
                                     setEditingServer('');
@@ -331,12 +331,12 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                                 props.onUserProfileChange(update);
                             }}
                             isDisabled={editingServer !== undefined}
-                            className={classes.optionSelect}
-                            menuStyle={{
-                                marginTop: '2px',
+                            styles={{
+                                main: overrideClass(props.injectedStyles.optionSelect),
+                                menu: overrideClass({ marginTop: '2px' })
                             }}
-                            renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
                             components={{
+                                IndicatorsContainer: () => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>,
                                 Option: ServerOption
                             }}
                         />
@@ -348,8 +348,8 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                         </div>
                         <TKUISelect
                             options={apiKeyOptions}
-                            value={apiKeyOptions.find((option: any) =>
-                                editingKey === '' ? option.value === 'add' : option.label === apiKeyName)}
+                            value={apiKeyOptions.find((option: SelectOption) =>
+                                editingKey === '' ? option.value === 'add' : option.label === apiKeyName)!}
                             onChange={(option) => {
                                 if (option.value === 'add') {
                                     setEditingKey('');
@@ -363,12 +363,12 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                                 props.onUserProfileChange(update);
                             }}
                             isDisabled={editingKey !== undefined}
-                            className={classes.optionSelect}
-                            menuStyle={{
-                                marginTop: '2px',
+                            styles={{
+                                main: overrideClass(props.injectedStyles.optionSelect),
+                                menu: overrideClass({ marginTop: '2px' })
                             }}
-                            renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
                             components={{
+                                IndicatorsContainer: () => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>,
                                 Option: ApiKeyOption
                             }}
                         />

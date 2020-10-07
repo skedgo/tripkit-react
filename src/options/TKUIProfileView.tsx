@@ -11,7 +11,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIProfileViewDefaultStyle} from "./TKUIProfileView.css";
 import {Subtract} from "utility-types";
 import TKUIUserPriorities from "./TKUIUserPriorities";
@@ -271,7 +271,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             </div>
                             <TKUISelect
                                 options={this.appearanceOptions}
-                                value={this.appearanceOptions.find((option: any) => option.value === this.state.update.isDarkMode)}
+                                value={this.appearanceOptions.find((option: SelectOption) => option.value === this.state.update.isDarkMode)!}
                                 onChange={(option) => {
                                     this.setState((prevState: IState) => ({
                                         update: Util.iAssign(prevState.update, { isDarkMode: option.value })
@@ -279,11 +279,13 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         this.applyChanges();
                                     });
                                 }}
-                                className={classes.optionSelect}
-                                menuStyle={{
-                                    marginTop: '2px',
+                                styles={{
+                                    main: overrideClass(this.props.injectedStyles.optionSelect),
+                                    menu: overrideClass({ marginTop: '2px' })
                                 }}
-                                renderArrowDown={() => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>}
+                                components={{
+                                    IndicatorsContainer: () => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>
+                                }}
                                 ariaLabel={t("Appearance")}
                             />
                         </div>
