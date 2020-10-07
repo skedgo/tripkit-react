@@ -106,7 +106,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     onChange?: (value: Trip) => void;
 
     /**
-     * Function to be run when user picks an alternative trip from a trip group.
+     * Function that will run when user picks an alternative trip from a trip group.
      * @ctype
      * @globaldefault
      */
@@ -328,8 +328,10 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                         options={this.timePrefOptions}
                         value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
-                        className={classes.timePrefSelect}
-                        menuStyle={{marginTop: '3px'}}
+                        styles={{
+                            main: overrideClass(this.props.injectedStyles.timePrefSelect),
+                            menu: overrideClass({ marginTop: '3px' })
+                        }}
                     />}
                     {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
@@ -430,9 +432,11 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                             options={this.sortOptions}
                             value={this.sortOptions.find((option: any) => option.value === this.props.sort)}
                             onChange={(option) => this.props.onSortChange(option.value as TripSort)}
-                            className={classes.sortSelect}
-                            controlStyle={injectedStyles.sortSelectControl}
-                            menuStyle={{marginTop: '3px'}}
+                            styles={{
+                                main: overrideClass(injectedStyles.sortSelect),
+                                control: overrideClass(injectedStyles.sortSelectControl),
+                                menu: overrideClass({ marginTop: '3px' })
+                            }}
                             components={{
                                 IndicatorsContainer: (props: any) => null
                             }}

@@ -1,7 +1,8 @@
 import * as React from "react";
+import {useState} from 'react';
 import TKUIW3w from "../location/TKUIW3w";
 import TKUIButton from "../buttons/TKUIButton";
-import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUIRoutingQueryInput} from "../index";
+import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUICard, TKUIRoutingQueryInput} from "../index";
 import {tKUIW3wDefaultStyle} from "../location/TKUIW3w.css";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
@@ -28,6 +29,10 @@ import {tKUITimetableDefaultStyle} from "../service/TKUITimetableView.css";
 import TKUITimetableView from "../service/TKUITimetableView";
 import {loadTimetableState, loadTripState} from "../state/TKStateUrl";
 import TKStateConsumer from "../config/TKStateConsumer";
+import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
+import {tKUISelectDefaultStyle} from "../buttons/TKUISelect.css";
+import {overrideClass} from "../jss/StyleHelper";
+import {tKUICardDefaultStyle} from "../card/TKUICard.css";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);
@@ -51,7 +56,41 @@ function getMockLocation(): Location {
     return Util.deserialize(locationJson, Location);
 }
 
+const TKUISelectShowcase = () => {
+    const options = [
+        { value: 0, label: 'Item 1'},
+        { value: 1, label: 'Item 2'},
+        { value: 2, label: 'Item 3'}
+    ];
+    const [option, setOption] = useState<SelectOption>(options[0]);
+    return (
+        <TKUISelect
+            options={options}
+            value={option}
+            onChange={(option: SelectOption) => setOption(option)}
+            styles={{
+                main: overrideClass({ width: '80px' })
+            }}
+        />
+    )
+};
+
 const tKDocConfig = {
+    TKUICard: {
+        showcase: () =>
+            <TKUICard
+                title={"Title"}
+                subtitle={"Subtitle"}
+                // renderSubHeader={() => <div>Subheader</div>}
+                onRequestClose={() => {}}
+            >
+                <div style={{
+                    padding: '16px',
+                    height: '200px'
+                }}/>
+            </TKUICard>,
+        style: classNamesOf(tKUICardDefaultStyle)
+    },
     TKUIRoutingQueryInput: {
         showcase: () => <TKUIRoutingQueryInput/>,
         style: classNamesOf(tKUIRoutingQueryInputDefaultStyle)
@@ -80,6 +119,10 @@ const tKDocConfig = {
                 </div>
             </div>,
         style: classNamesOf(tKUIButtonDefaultStyle)
+    },
+    TKUISelect: {
+        showcase: () => <TKUISelectShowcase/>,
+        style: classNamesOf(tKUISelectDefaultStyle)
     },
     TKUIRoutingResultsView: {
         showcase: () =>

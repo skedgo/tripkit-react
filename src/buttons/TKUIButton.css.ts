@@ -71,6 +71,15 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             }
         },
 
+        vertical: {
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.alignCenter,
+            ...theme.textSizeBody,
+            ...theme.textWeightSemibold,
+            textAlign: 'center'
+        },
+
         link: {
             color: theme.colorPrimary
         },
@@ -86,15 +95,6 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...genStyles.flex,
             ...genStyles.center,
             ...genStyles.alignCenter
-        },
-
-        verticalPanel: {
-            ...genStyles.flex,
-            ...genStyles.column,
-            ...genStyles.alignCenter,
-            ...theme.textSizeBody,
-            ...theme.textWeightSemibold,
-            textAlign: 'center'
         }
 
     });

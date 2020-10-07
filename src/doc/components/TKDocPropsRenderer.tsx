@@ -7,7 +7,7 @@ import Para from 'react-styleguidist/lib/client/rsg-components/Para';
 import JsDoc from 'react-styleguidist/lib/client/rsg-components/JsDoc';
 import Arguments from 'react-styleguidist/lib/client/rsg-components/Arguments';
 import Argument from 'react-styleguidist/lib/client/rsg-components/Argument';
-import {resolveRelativeLinks, typeReferencesToLinks} from "../TKDocUtil";
+import {jSDocLinksToMD, resolveRelativeLinks, typeReferencesToLinks} from "../TKDocUtil";
 
 import { useStyleGuideContext } from 'react-styleguidist/lib/client/rsg-components/Context/Context';
 
@@ -16,6 +16,7 @@ function isPrimitiveType(type: string) {
 }
 
 export function TKDocPropsRenderer({props}) {
+    console.log(props);
     if (!props) {
         return null;
     }
@@ -23,7 +24,7 @@ export function TKDocPropsRenderer({props}) {
         <TKDocTable
             colConfigs={[
                 { title: 'Prop name', renderer: (value: any) =>
-                        <div style={{fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace', color: 'rgb(102, 153, 0)',}}>
+                        <div id={value.name} style={{fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace', color: 'rgb(102, 153, 0)',}}>
                             {value.name}
                         </div>},
                 { title: 'Type', renderer: (value: any) => {
@@ -49,10 +50,10 @@ export function TKDocPropsRenderer({props}) {
                     }},
                 { title: 'Default', renderer: (value: any) => {
                         let defaultText = value.defaultValue && value.defaultValue.value ? value.defaultValue.value : (value.required ? 'Required' : '');
-                        if (value.tags && value.tags.globaldefault) {
-                            defaultText += (defaultText ? " " : "") + "Provided by SDK [global state](TKState)."
+                        if (value.tags && value.tags.globaldefault && !defaultText) {
+                            defaultText = "Provided by SDK [global state](TKState)."
                         }
-                        return <Markdown text={defaultText}/>;
+                        return <Markdown text={jSDocLinksToMD(defaultText)}/>;
                     }},
                 { title: 'Description', renderer: (value: any) => renderDescription(value)}
             ]}

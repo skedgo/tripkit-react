@@ -50,3 +50,20 @@ export function typeReferencesToLinks(typeText: string): string {
         return url ? "[" + match + "](" + url + ")" : match;
     });
 }
+
+export function jSDocLinksToMD(typeText: string): string {
+    const regexJSDocLinks = /(?:\[([^\[]*)\])?\{@link\s([^\}#]*)(?:#([^\}]*))?\}/gm;
+    return typeText.replace(regexJSDocLinks, (match) => {
+        const singleMatch = /(?:\[([^\[]*)\])?\{@link\s([^\}#]*)(?:#([^\}]*))?\}/;
+        let text = singleMatch.exec(match);
+        console.log(text);
+        console.log(match);
+        const label = text![1];
+        const component = text![2];
+        const property = text![3];
+        const componentUrl = getDocUrl(component);
+        const url = componentUrl ? componentUrl + (property ? "?id=" + property : "") : undefined;
+        const anchorText = label ? label : component + (property ? "." + property : "");
+        return url ? "[" + anchorText + "](" + url + ")" : anchorText;
+    });
+}

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUITransportOptionsRowStyle} from "./TKUITransportOptionsRow.css";
@@ -228,7 +228,9 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         userProfileUpdate.walkingSpeed = walkSpeed;
                         this.props.onChange(userProfileUpdate);
                     }}
-                    className={classes.walkSpeedSelect}
+                    styles={{
+                        main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
+                    }}
                 />
         }
         const walkSpeedOption = walkSpeedSelect &&
@@ -250,7 +252,9 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         userProfileUpdate.cyclingSpeed = cycleSpeed;
                         this.props.onChange(userProfileUpdate);
                     }}
-                    className={classes.walkSpeedSelect}
+                    styles={{
+                        main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
+                    }}
                     ariaLabel={t("Cycle.speed")}
                 />
         }

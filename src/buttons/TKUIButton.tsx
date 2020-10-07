@@ -1,4 +1,5 @@
 import * as React from "react";
+import {MouseEvent} from "react";
 import {ClassNameMap} from 'react-jss';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
@@ -26,11 +27,26 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype JSX.Element
      */
     icon?: JSX.Element;
-    // style?: CSS.Properties;
-    /** @ctype (e) => void; */
-    onClick?: (e: any) => void;
+
+    /**
+     * Button click handler.
+     * @ctype (e: React.MouseEvent) => void
+     */
+    onClick?: (e: MouseEvent) => void;
+
+    /**
+     * Stating if button is disabled.
+     */
     disabled?: boolean;
+
+    /**
+     * Forwarded to button element.
+     */
     'aria-hidden'?: boolean;
+
+    /**
+     * Forwarded to button element.
+     */
     tabIndex?: number;
 }
 
@@ -40,9 +56,9 @@ interface IStyle {
     main: CSSProps<IProps>;
     primary: CSSProps<IProps>;
     secondary: CSSProps<IProps>;
+    vertical: CSSProps<IProps>;
     link: CSSProps<IProps>;
     iconContainer: CSSProps<IProps>;
-    verticalPanel: CSSProps<IProps>;
 }
 
 export type TKUIButtonProps = IProps;
@@ -80,8 +96,9 @@ class TKUIButton extends React.Component<IProps, {}> {
         }
         return (
             vertical ?
-                <button className={classNames(classes.main, classes.verticalPanel)}
-                     onClick={this.props.onClick}
+                <button className={classNames(classes.main, classes.vertical)}
+                        onClick={this.props.onClick}
+                        disabled={this.props.disabled}
                 >
                     <div className={classNames(secondary ? classes.secondary : classes.primary)}
                             aria-label={this.props.text}

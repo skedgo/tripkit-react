@@ -27,6 +27,7 @@ export enum CardPresentation {
 }
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+
     /**
      * The title for the card, to be displayed on card header.
      */
@@ -37,11 +38,17 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     subtitle?: string;
 
-    /** @ctype */
+    /**
+     * Function to render content on header below subtitle and above head-body divider.
+     * @ctype () => JSX.Element
+     */
     renderSubHeader?: () => JSX.Element;
+    // TODO improvement(?):
+    // - create component <TKUIDivider/>, and allow to hide divider from Card, so you can render sub-header + divider as
+    // content.
 
     /**
-     * Describing if the card should be shown or not.
+     * Stating if the card should be shown or not.
      * @default true
      */
     open?: boolean;
@@ -68,6 +75,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     /**
      * Options specific for modal card (with presentation CardPresentation.MODAL).
+     * @ignore
      */
     modalOptions?: any;
 
@@ -94,14 +102,32 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     /**
      * The id of the HTML element to which the card will be attached to in case of
-     * CardPresentation.MODAL or CardPresentation.SLIDE_UP presentations.
+     * CardPresentation.MODAL or CardPresentation.SLIDE_UP presentations. If not specified document body element will be
+     * used as parent.
      */
     parentElementId?: string;
 
+    /**
+     * Forwarded to root HTML element of card.
+     */
     ariaLabel?: string;
+
+    /**
+     * @ignore
+     */
     closeAriaLabel?: string;
-    mainFocusElemId?: string;
+
+    /**
+     * States if card should get focus right after shown.
+     * @default ```true``` if detected that user is navigating through keyboard, '''false''' otherwise.
+     */
     shouldFocusAfterRender?: boolean;
+
+    /**
+     * The id of the HTML element that will get focus when the card is shown. If not specified the main HTML element of
+     * the card will get focus. It's ignored if ```shouldFocusAfterRender``` is ```false```.
+     */
+    mainFocusElemId?: string;
 
     children?: React.ReactNode;
 }
@@ -305,8 +331,8 @@ class TKUICard extends React.Component<IProps, IState> {
                         onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
                         appElement={this.appMainElement}
                         parentSelector={() => this.parentElement ? this.parentElement : document.getElementsByTagName("BODY")[0]}
-                        {...this.props.modalOptions}
                         contentLabel={cardAriaLabel}
+                        {...this.props.modalOptions}
                     >
                         {body}
                     </Modal> : this.props.open && body
