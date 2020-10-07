@@ -106,12 +106,16 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     from?: Location;
 
+    onFromChange?: (location: Location) => void;
+
     /**
      * Arrive location.
      * @ctype
      * @default {@link TKState#query}.to
      */
     to?: Location;
+
+    onToChange?: (location: Location) => void;
 
     /**
      * A trip.
@@ -126,18 +130,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default {@link TKState#selectedService}
      */
     service?: ServiceDeparture;
-
-    /**
-     * @ctype
-     * @globaldefault
-     */
-    onClick?: (latLng: LatLng) => void;
-
-    /**
-     * @ctype
-     * @globaldefault
-     */
-    onDragEnd?: (from: boolean, latLng: LatLng) => void;
 
     /**
      * Map viewport expressed as center coordinates and zoom level.
@@ -161,14 +153,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     directionsView?: boolean;
 
-    /** @globaldefault */
-    onDirectionsFrom: (latLng: LatLng) => void;
-
-    /** @globaldefault */
-    onDirectionsTo: (latLng: LatLng) => void;
-
-    /** @globaldefault */
-    onWhatsHere: (latLng: LatLng) => void;
+    onDirectionsView: (directionsView: boolean) => void;
 
     /** @globaldefault */
     config: TKUIConfig;
@@ -229,6 +214,65 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
+    }
+
+    private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
+        const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
+            Location.createDroppedPin(latLng);
+        if (isFrom) {
+            this.props.onFromChange && this.props.onFromChange(mapLocation);
+        } else {
+            this.props.onToChange && this.props.onToChange(mapLocation);
+        }
+        // routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+        //     [isFrom ? "from" : "to"]: mapLocation
+        // }));
+        if (mapLocation.isDroppedPin()) {
+            getGeocodingData(this.props.config.geocoding)
+                .reverseGeocode(latLng, loc => {
+                    if (loc !== null) {
+                        // Need to use onQueryUpdate instead of onQueryChange since
+                        // routingContext.query can be outdated at the time this callback is
+                        // executed. OnQueryUpdate always use the correct query (the one on
+                        // WithRoutingResults state, the source of truth).
+                        if (isFrom) {
+                            this.props.onFromChange && this.props.onFromChange(loc);
+                        } else {
+                            this.props.onToChange && this.props.onToChange(loc);
+                        }
+                        // routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
+                    }
+                })
+        }
+    };
+
+    private onClick(clickLatLng: LatLng) {
+        const from = this.props.from;
+        const to = this.props.to;
+        if (this.props.directionsView) {
+            if (!from || !to || clickLatLng instanceof StopLocation) {
+                if (!from && !to) {
+                    // Avoid fit bounds when setting first location on
+                    // directions view.
+                    avoidFitLatLng = clickLatLng
+                }
+                // Do nothing if the location is already the from or to.
+                if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
+                    return;
+                }
+                const isFrom = !from;
+                this.onMapLocChanged(isFrom, clickLatLng);
+                GATracker.event({
+                    category: "query input",
+                    action: isFrom ? "pick from location" : "pick to location",
+                    label: "drop to"
+                });
+            }
+        } else {
+            if (!to || clickLatLng instanceof StopLocation) {
+                this.onMapLocChanged(false, clickLatLng);
+            }
+        }
     }
 
     private onMoveEnd() {
@@ -422,7 +466,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <div className={classes.menuPopupContent}>
                     <div className={classes.menuPopupItem}
                          onClick={() => {
-                             this.props.onDirectionsFrom(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.onMapLocChanged(true, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.props.onDirectionsView(true);
                              this.setState({menuPopupPosition: undefined});
                          }}
                     >
@@ -430,7 +475,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     </div>
                     <div className={classes.menuPopupItem}
                          onClick={() => {
-                             this.props.onDirectionsTo(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.props.onDirectionsView(true);
                              this.setState({menuPopupPosition: undefined});
                          }}
                     >
@@ -439,7 +485,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     {!this.props.directionsView &&
                     <div className={classes.menuPopupItem}
                          onClick={() => {
-                             this.props.onWhatsHere(LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                             this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
                              this.setState({menuPopupPosition: undefined});
                          }}
                     >
@@ -470,17 +516,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         });
                     }}
                     onclick={(event: L.LeafletMouseEvent) => {
-                        if (this.props.onClick) {
                             setTimeout(() => {
                                 if (this.wasDoubleClick) {
                                     this.wasDoubleClick = false;
                                     return;
                                 }
-                                if (this.props.onClick) {
-                                    this.props.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
-                                }
+                                this.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
                             });
-                        }
                     }}
                     onmoveend={this.onMoveEnd}
                     ref={(ref: any) => {
@@ -550,10 +592,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             draggable={true}
                             riseOnHover={true}
                             ondragend={(event: L.DragEndEvent) => {
-                                if (this.props.onDragEnd) {
-                                    const latLng = event.target.getLatLng();
-                                    this.props.onDragEnd(true, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                }
+                                const latLng = event.target.getLatLng();
+                                this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                             onpopupclose={() => console.log("close")}
                             keyboard={false}
@@ -575,10 +615,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             draggable={true}
                             riseOnHover={true}
                             ondragend={(event: L.DragEndEvent) => {
-                                if (this.props.onDragEnd) {
-                                    const latLng = event.target.getLatLng();
-                                    this.props.onDragEnd(false, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                }
+                                const latLng = event.target.getLatLng();
+                                this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                             keyboard={false}
                     >
@@ -590,8 +628,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         enabledMapLayers={enabledMapLayers}
                         zoom={this.leafletElement.getZoom()}
                         onClick={(locType: MapLocationType, loc: Location) => {
-                            if (locType === MapLocationType.STOP && this.props.onClick) {
-                                this.props.onClick(loc as StopLocation);
+                            if (locType === MapLocationType.STOP) {
+                                this.onClick(loc as StopLocation);
                             }
                         }}
                         onLocAction={this.props.onLocAction}
@@ -601,8 +639,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
-                                               ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) && this.props.onDragEnd ?
-                                                   (latLng: LatLng) => this.props.onDragEnd!(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
+                                               ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
+                                                   (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                                                renderer={segmentRenderer(segment)}
                                                segmentIconClassName={classes.segmentIconClassName}
                                                vehicleClassName={classes.vehicleClassName}
@@ -858,73 +896,25 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                 (routingContext.query.from ? routingContext.query.from : undefined);
                                             const to = routingContext.preTo ? routingContext.preTo :
                                                 (routingContext.query.to ? routingContext.query.to : undefined);
-                                            const onMapLocChanged = (isFrom: boolean, latLng: LatLng) => {
-                                                const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
-                                                    Location.createDroppedPin(latLng);
-                                                routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                    [isFrom ? "from" : "to"]: mapLocation
-                                                }));
-                                                if (mapLocation.isDroppedPin()) {
-                                                    getGeocodingData(config.geocoding)
-                                                        .reverseGeocode(latLng, loc => {
-                                                            if (loc !== null) {
-                                                                // Need to use onQueryUpdate instead of onQueryChange since
-                                                                // routingContext.query can be outdated at the time this callback is
-                                                                // executed. OnQueryUpdate always use the correct query (the one on
-                                                                // WithRoutingResults state, the source of truth).
-                                                                routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
-                                                                // setTimeout(() => routingContext.onQueryUpdate( {[isFrom ? "from" : "to"]: loc}), 3000);
-                                                            }
-                                                        })
-                                                }
-                                            };
+
                                             const consumerProps: IConsumedProps = {
                                                 from: routingContext.directionsView ? from : undefined,
+                                                onFromChange: (location: Location) =>
+                                                    routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                        from: location
+                                                    })),
                                                 to: to,
+                                                onToChange: (location: Location) =>
+                                                    routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                        to: location
+                                                    })),
                                                 trip: routingContext.selectedTrip,
-                                                onDragEnd: onMapLocChanged,
-                                                onClick: (clickLatLng: LatLng) => {
-                                                    if (routingContext.directionsView) {
-                                                        if (!from || !to || clickLatLng instanceof StopLocation) {
-                                                            if (!from && !to) {
-                                                                // Avoid fit bounds when setting first location on
-                                                                // directions view.
-                                                                avoidFitLatLng = clickLatLng
-                                                            }
-                                                            // Do nothing if the location is already the from or to.
-                                                            if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
-                                                                return;
-                                                            }
-                                                            const isFrom = !from;
-                                                            onMapLocChanged(isFrom, clickLatLng);
-                                                            GATracker.event({
-                                                                category: "query input",
-                                                                action: isFrom ? "pick from location" : "pick to location",
-                                                                label: "drop to"
-                                                            });
-                                                        }
-                                                    } else {
-                                                        if (!to || clickLatLng instanceof StopLocation) {
-                                                            onMapLocChanged(false, clickLatLng);
-                                                        }
-                                                    }
-                                                },
                                                 service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
                                                     serviceContext.selectedService : undefined,
                                                 viewport: routingContext.viewport,
                                                 onViewportChange: routingContext.onViewportChange,
                                                 directionsView: routingContext.directionsView,
-                                                onDirectionsFrom: (latLng: LatLng) => {
-                                                    onMapLocChanged(true, latLng);
-                                                    routingContext.onDirectionsView(true);
-                                                },
-                                                onDirectionsTo: (latLng: LatLng) => {
-                                                    onMapLocChanged(false, latLng);
-                                                    routingContext.onDirectionsView(true);
-                                                },
-                                                onWhatsHere: (latLng: LatLng) => {
-                                                    onMapLocChanged(false, latLng);
-                                                },
+                                                onDirectionsView: routingContext.onDirectionsView,
                                                 ...viewportProps,
                                                 config: config
                                             };
