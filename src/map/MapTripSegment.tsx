@@ -5,21 +5,23 @@ import {Visibility} from "../model/trip/SegmentTemplate";
 import L from "leaflet";
 import LatLng from "../model/LatLng";
 import {renderToStaticMarkup} from "react-dom/server";
-import StreetsPolyline from "./StreetsPolyline";
-import ShapesPolyline from "./ShapesPolyline";
-import {IMapSegmentRenderer, TKUIMapViewClass} from "./TKUIMapView";
+import TKUIMapStreets from "./TKUIMapStreets";
+import TKUIMapShapes from "./TKUIMapShapes";
+import {TKUIMapViewClass} from "./TKUIMapView";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
 import {TKUITheme} from "../jss/TKUITheme";
+import SegmentPopup from "./SegmentPopup";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IProps {
     segment: Segment;
     ondragend?: (latLng: LatLng) => void;
-    renderer: IMapSegmentRenderer;
     segmentIconClassName?: string;
     vehicleClassName?: string;
+    t: TranslationFunction;
 }
 
 class MapTripSegment extends React.Component<IProps, {}> {
@@ -55,33 +57,28 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                         }}
                                         keyboard={false}
                                 >
-                                    {this.props.renderer.renderPopup &&
                                     <Popup offset={[0, -46]}
                                            closeButton={false}
-                                           // TODO: disabled auto pan to fit popup on open since it messes with viewport
-                                           // (generates infinite (or a lot) setState calls) since it seems the viewport
-                                           // doesn't stabilizes. Fix it.
+                                        // TODO: disabled auto pan to fit popup on open since it messes with viewport
+                                        // (generates infinite (or a lot) setState calls) since it seems the viewport
+                                        // doesn't stabilizes. Fix it.
                                            autoPan={false}
                                     >
-                                        {this.props.renderer.renderPopup()}
+                                        {<SegmentPopup segment={segment} t={this.props.t}/>}
                                     </Popup>
-                                    }
                                 </Marker>,
                                 segment.shapes ?
-                                    <ShapesPolyline key={"map-polyline" + segment.trip.getKey() + segment.id}
-                                                    id={"map-polyline" + segment.trip.getKey() + segment.id}
-                                                    shapes={segment.shapes}
-                                                    polylineOptions={this.props.renderer.polylineOptions}
-                                                    renderServiceStop={this.props.renderer.renderServiceStop}
-                                                    renderServiceStopPopup={this.props.renderer.renderServiceStopPopup}
+                                    <TKUIMapShapes key={"map-polyline" + segment.trip.getKey() + segment.id}
+                                                   id={"map-polyline" + segment.trip.getKey() + segment.id}
+                                                   shapes={segment.shapes}
+                                                   color={segment.getColor()}
                                     /> :
                                     segment.streets ?
-                                        <StreetsPolyline key={"map-polyline" + segment.trip.getKey() + segment.id}
-                                                         id={"map-polyline" + segment.trip.getKey() + segment.id}
-                                                         color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
-                                                         modeInfo={segment.modeInfo}
-                                                         streets={segment.streets}
-                                                         polylineOptions={this.props.renderer.polylineOptions}
+                                        <TKUIMapStreets key={"map-polyline" + segment.trip.getKey() + segment.id}
+                                                        id={"map-polyline" + segment.trip.getKey() + segment.id}
+                                                        color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
+                                                        modeInfo={segment.modeInfo}
+                                                        streets={segment.streets}
 
                                         /> : undefined,
                                 segment.realtimeVehicle &&

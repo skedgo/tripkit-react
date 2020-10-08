@@ -6,22 +6,34 @@ import {renderToStaticMarkup} from "react-dom/server";
 import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import {STOP_CLICKED_EVENT} from "../service/TKUIServiceView";
+import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import ServiceStopPopup from "./ServiceStopPopup";
+import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
 
-interface IProps {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     shapes: ServiceShape[];
-    polylineOptions: PolylineProps | PolylineProps[];
-    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;
-    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element;
+    color: string;
+    toPolylineProps?: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
     id: string; // Since cannot pass key prop. See https://reactjs.org/warnings/special-props.html
     eventBus?: EventEmitter;
 }
 
-export interface IServiceStopProps {
-    stop: ServiceStopLocation;
-    shape: ServiceShape;
-}
+export interface IStyle {}
 
-class ShapesPolyline extends React.Component<IProps, {}> {
+export type TKUIMapShapesProps = IProps;
+export type TKUIMapShapesStyle = IStyle;
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIMapShapes {...props}/>,
+    styles: {},
+    classNamePrefix: "TKUIMapShapes"
+};
+
+class TKUIMapShapes extends React.Component<IProps, {}> {
 
     private stopToMarker: Map<ServiceStopLocation, L.Marker> = new Map<ServiceStopLocation, L.Marker>();
 
@@ -40,8 +52,30 @@ class ShapesPolyline extends React.Component<IProps, {}> {
         }
     }
 
+    /**
+     * Shapes to polylineProps
+     */
+    private toPolylineProps(shapes: ServiceShape[], color: string): PolylineProps | PolylineProps[] {
+        return shapes.map((shape: ServiceShape) => {
+            return {
+                positions: shape.waypoints,
+                weight: 9,
+                color: shape.travelled ? (this.props.theme.isDark ? "white" : "black") : "lightgray",
+                opacity: shape.travelled ? 1 : .5,
+            } as PolylineProps
+        }).concat(shapes.map((shape: ServiceShape) => {
+            return {
+                positions: shape.waypoints,
+                weight: 7,
+                color: shape.travelled ? color : "grey",
+                opacity: shape.travelled ? 1 : .5,
+            } as PolylineProps
+        }));
+    }
+
     public render(): React.ReactNode {
-        const polylineOptions = this.props.polylineOptions;
+        const polylineOptions = this.props.toPolylineProps ? this.props.toPolylineProps(this.props.shapes, this.props.color) :
+            this.toPolylineProps(this.props.shapes, this.props.color);
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         const polylineArray = polylineOptionsArray
             .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
@@ -51,11 +85,12 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                 if (shape.stops) {
                     const stops = shape.stops.slice(1, shape.stops.length - 1);
                     stopMarkers.push(stops.map((stop: ServiceStopLocation, iStop: number) => {
-                        const element = this.props.renderServiceStop(stop, shape);
-                        const iconHTML = element ? renderToStaticMarkup(element) : undefined;
-                        if (!iconHTML) {
-                            return undefined;
-                        }
+                        const element =
+                            <IconServiceStop style={{
+                                color: shape.travelled ? this.props.color : "grey",
+                                opacity: shape.travelled ? 1 : .5
+                            }}/>;
+                        const iconHTML = renderToStaticMarkup(element);
                         const stopIcon = L.divIcon({
                             html: iconHTML,
                             className: "MapPolyline-stop"
@@ -72,7 +107,7 @@ class ShapesPolyline extends React.Component<IProps, {}> {
                                    closeButton={false}
                                    autoPan={false}
                             >
-                                {this.props.renderServiceStopPopup(stop, shape)}
+                                <ServiceStopPopup stop={stop} shape={shape}/>
                             </Popup>
                         </Marker>
                     }));
@@ -83,4 +118,5 @@ class ShapesPolyline extends React.Component<IProps, {}> {
     }
 }
 
-export default ShapesPolyline;
+export default connect((config: TKUIConfig) => config.TKUIMapShapes, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));
