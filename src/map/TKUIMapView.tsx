@@ -15,14 +15,9 @@ import OptionsData from "../data/OptionsData";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
 import {Visibility} from "../model/trip/SegmentTemplate";
-import {default as SegmentPopup} from "./SegmentPopup";
-import Street from "../model/trip/Street";
 import ServiceShape from "../model/trip/ServiceShape";
-import {default as ServiceStopPopup} from "./ServiceStopPopup";
-import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
-import TransportUtil from "../trip/TransportUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
@@ -32,7 +27,6 @@ import MapUtil from "../util/MapUtil";
 import StopLocation from "../model/StopLocation";
 import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
-import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
@@ -66,15 +60,45 @@ import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * State if should hide map locations layer.
+     * @default false
+     */
     hideLocations?: boolean;
-    bounds?: BBox;
+
+    /**
+     * Map padding to be considered when fit map to a given set of locations or bounding box.
+     * @default {top: 20, right: 20, bottom: 20, left: 20}
+     */
     padding?: TKUIMapPadding
-    // TODO: Put the following props inside config?
+
+    /**
+     * State if attribution banner should be displayed or not.
+     * @deafult true
+     */
     attributionControl?: boolean;
-    segmentRenderer?: (segment: Segment) => IMapSegmentRenderer;
-    serviceRenderer?: (service: ServiceDeparture) => IMapSegmentRenderer;
+
+    /**
+     * locType values: ```MapLocationType.BIKE_POD, MapLocationType.CAR_PARK, MapLocationType.CAR_POD, MapLocationType.CAR_RENTAL,
+     * MapLocationType.STOP, MapLocationType.MY_WAY_FACILITY, MapLocationType.PARK_AND_RIDE_FACILITY```
+     *
+     * Function that will run when a map location is clicked.
+     * @ctype
+     */
     onLocAction?: (locType: MapLocationType | undefined, loc: Location) => void;
+
+    /**
+     * Properties to be passed to react-leaflet [TileLayer component](https://react-leaflet.js.org/docs/en/components#tilelayer),
+     * e.g. to specify raster tiles server url.
+     * @ctype [TileLayerProps](https://react-leaflet.js.org/docs/en/components#tilelayer)
+     */
     tileLayerProps?: TileLayerProps;
+
+    /**
+     * Properties to be passed to [react-mapbox-gl-leaflet](https://github.com/mongodb-js/react-mapbox-gl-leaflet)
+     * MapboxGlLayer component, e.g. to specify a Mapbox vector tiles server url.
+     * @ctype [MapboxGLLayerProps](https://github.com/mongodb-js/react-mapbox-gl-leaflet#usage)
+     */
     mapboxGlLayerProps?: MapboxGLLayerProps;
 }
 
@@ -106,6 +130,11 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     from?: Location;
 
+    /**
+     * Depart location change callback.
+     * @ctype
+     * @default Callback updating {@link TKState#query}.from
+     */
     onFromChange?: (location: Location) => void;
 
     /**
@@ -115,17 +144,22 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     to?: Location;
 
+    /**
+     * Arrive location change callback.
+     * @ctype
+     * @default Callback updating {@link TKState#query}.to
+     */
     onToChange?: (location: Location) => void;
 
     /**
-     * A trip.
+     * Trip to be displayed on map.
      * @ctype
      * @default {@link TKState#selectedTrip}
      */
     trip?: Trip;
 
     /**
-     * A public transport service.
+     * Public transport service to be displayed on map.
      * @ctype
      * @default {@link TKState#selectedService}
      */
@@ -146,16 +180,25 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
 
     /**
-     * States if the environment is in _directions mode_, which implies that it should compute trips for current query
-     * whenever it is complete.
+     * States if the environment is in _directions mode_, which implies that it automatically compute trips for
+     * current query whenever from and to become specified (and refresh trips when from or to change.
      * @ctype
      * @default {@link TKState#directionsView}
      */
     directionsView?: boolean;
 
+    /**
+     * Directions view change callback.
+     * @ctype
+     * @default {@link TKState#onDirectionsView}
+     */
     onDirectionsView: (directionsView: boolean) => void;
 
-    /** @globaldefault */
+    /**
+     * SDK config
+     * @ctype
+     * @default {@link TKState#config}
+     */
     config: TKUIConfig;
 }
 
@@ -282,47 +325,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
     }
 
-    /**
-     * if color === null show friendliness (which makes sense for bicycle and wheelchair segments)
-     */
-    private streetsRenderer(streets: Street[], color: string | null) {
-        return streets.map((street: Street) => {
-            return {
-                positions: street.waypoints,
-                weight: 9,
-                color: "black",
-                opacity: 1  // Disable safe distinction for now
-            } as PolylineProps
-        }).concat(streets.map((street: Street) => {
-            return {
-                positions: street.waypoints,
-                weight: 7,
-                color: color ? color : street.safe ? tKUIFriendlinessColors.safe :
-                    street.safe === false ? tKUIFriendlinessColors.unsafe :
-                        street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
-                opacity: 1  // Disable safe distinction for now
-            } as PolylineProps
-        }));
-    }
-
-    private shapesRenderer(shapes: ServiceShape[], color: string): PolylineProps | PolylineProps[] {
-        return shapes.map((shape: ServiceShape) => {
-            return {
-                positions: shape.waypoints,
-                weight: 9,
-                color: shape.travelled ? (this.props.theme.isDark ? "white" : "black") : "lightgray",
-                opacity: shape.travelled ? 1 : .5,
-            } as PolylineProps
-        }).concat(shapes.map((shape: ServiceShape) => {
-            return {
-                positions: shape.waypoints,
-                weight: 7,
-                color: shape.travelled ? color : "grey",
-                opacity: shape.travelled ? 1 : .5,
-            } as PolylineProps
-        }));
-    }
-
     private checkFitLocation(oldLoc?: Location | null, loc?: Location | null): boolean {
         return !!(oldLoc !== loc && loc && loc.isResolved()) && JSON.stringify(Util.transerialize(loc, LatLng)) !== JSON.stringify(avoidFitLatLng);
     }
@@ -398,41 +400,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
     private currentLocation = Location.createCurrLoc();
 
     public render(): React.ReactNode {
-        const segmentRenderer = this.props.segmentRenderer ? this.props.segmentRenderer :
-            (segment: Segment) => {
-                const color = segment.getColor();
-                return {
-                    renderPopup: () => <SegmentPopup segment={segment} t={this.props.t}/>,
-                    polylineOptions: segment.shapes ? this.shapesRenderer(segment.shapes, color) :
-                        segment.streets ? this.streetsRenderer(segment.streets, segment.isBicycle() || segment.isWheelchair() ? null : color) : [],
-                    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
-                        <IconServiceStop style={{
-                            color: shape.travelled ? color : "grey",
-                            opacity: shape.travelled ? 1 : .5
-                        }}/>,
-                    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) =>
-                        <ServiceStopPopup stop={stop} shape={shape}/>
-
-                }
-            };
-        const serviceRenderer = this.props.serviceRenderer ? this.props.serviceRenderer :
-            (service: ServiceDeparture) => {
-                let color = TransportUtil.getServiceDepartureColor(service);
-                if (!color) {
-                    color = "black";
-                }
-                return {
-                    polylineOptions: service.serviceDetail && service.serviceDetail.shapes ?
-                        this.shapesRenderer(service.serviceDetail.shapes, color) : [],
-                    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) =>
-                        <IconServiceStop style={{
-                            color: shape.travelled ? color! : "grey",
-                            opacity: shape.travelled ? 1 : .5
-                        }}/>,
-                    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) =>
-                        <ServiceStopPopup stop={stop} shape={shape}/>
-                }
-            };
         let tripSegments;
         if (this.props.trip) {
             // Use Visibility.IN_DETAILS instead of Visibility.ON_MAP, since every segment visible in details
@@ -641,15 +608,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         return <MapTripSegment segment={segment}
                                                ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
                                                    (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
-                                               renderer={segmentRenderer(segment)}
                                                segmentIconClassName={classes.segmentIconClassName}
                                                vehicleClassName={classes.vehicleClassName}
-                                               key={i}/>;
+                                               key={i}
+                                               t={this.props.t}
+                        />;
                     })}
                     {service &&
                     <MapService
                         serviceDeparture={service}
-                        renderer={serviceRenderer(service)}
                         segmentIconClassName={classes.segmentIconClassName}
                     />}
                     {service && service.realtimeVehicle &&
@@ -938,6 +905,13 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
             {(consumedProps: IConsumedProps) =>
                 children!({...consumedProps, ...inputProps})}
         </Consumer>;
+
+/**
+ * Leaflet-based map to display TripGo api related elements: e.g. depart and arrive locations, trips,
+ * public transport services, transport-related locations, user's current location, etc.
+ * It supports both raster tiles, and vector tiles through the
+ * [react-mapbox-gl-leaflet library](https://github.com/mongodb-js/react-mapbox-gl-leaflet).
+ */
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
 export {TKUIMapView as TKUIMapViewClass};

@@ -59,6 +59,8 @@ import {TKComponentConfig} from "./TKComponentConfig";
 import {TKComponentDefaultConfig as TKComponentDefaultConfigForExport} from "./TKComponentConfig";
 import {TKUIWithClasses} from "../jss/StyleHelper";
 import {TKUIStopStepsProps, TKUIStopStepsStyle} from "../trip/TripSegmentSteps";
+import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
+import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
 
 /**
  * SDK configuration
@@ -121,15 +123,17 @@ interface ITKUIConfigOptional {
     TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
+    TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
+    TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
+    TKUIMapPopup: TKComponentConfig<TKUIMapPopupProps, TKUIMapPopupStyle>;
+    TKUIMapShapes: TKComponentConfig<TKUIMapShapesProps, TKUIMapShapesStyle>;
+    TKUIMapStreets: TKComponentConfig<TKUIMapStreetsProps, TKUIMapStreetsStyle>;
     TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
     TKUIProfileView: TKComponentConfig<TKUIProfileViewProps, TKUIProfileViewStyle>;
     TKUIUserPriorities: TKComponentConfig<TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle>;
-    TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
     TKUIMyLocationMapIcon: TKComponentConfig<TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle>;
-    TKUIMapPopup: TKComponentConfig<TKUIMapPopupProps, TKUIMapPopupStyle>;
     TKUIRealtimeVehicle: TKComponentConfig<TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle>;
     TKUIDateTimePicker: TKComponentConfig<TKUIDateTimePickerProps, TKUIDateTimePickerStyle>;
-    TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
     TKUITooltip: TKComponentConfig<TKUITooltipProps, TKUITooltipStyle>;
     TKUIWaitingRequest: TKComponentConfig<TKUIWaitingRequestProps, TKUIWaitingRequestStyle>;
     TKUIReportBtn: TKComponentConfig<TKUIReportBtnProps, TKUIReportBtnStyle>;

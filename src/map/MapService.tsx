@@ -1,20 +1,19 @@
 import React from "react";
 import {Marker} from "react-leaflet";
 import ServiceShape from "../model/trip/ServiceShape";
-import {default as ShapesPolyline} from "./ShapesPolyline";
+import TKUIMapShapes from "./TKUIMapShapes";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {renderToStaticMarkup} from "react-dom/server";
 import L from "leaflet";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {IMapSegmentRenderer} from "./TKUIMapView";
 import {TKUIConfig} from "../config/TKUIConfig";
 import {TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer} from "../config/TKUIConfigProvider";
 import {TKUITransportPin} from "./TKUITransportPin";
 import {TKUITheme} from "../jss/TKUITheme";
+import TransportUtil from "../trip/TransportUtil";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;
-    renderer: IMapSegmentRenderer;
     segmentIconClassName?: string;
 }
 
@@ -42,6 +41,10 @@ class MapService extends React.Component<IProps, {}> {
                         iconSize: [40, 62],
                         iconAnchor: [20, 62]
                     });
+                    let color = TransportUtil.getServiceDepartureColor(serviceDeparture);
+                    if (!color) {
+                        color = "black";
+                    }
                     return [
                         <Marker icon={icon} position={startStop!} key={"pin"} keyboard={false}/>,
                         service.shapes ?
@@ -49,12 +52,10 @@ class MapService extends React.Component<IProps, {}> {
                                 key={"map-polyline" + serviceDeparture.serviceTripID}
                             >
                                 {(serviceContext: IServiceResultsContext) =>
-                                    <ShapesPolyline id={"map-polyline" + serviceDeparture.serviceTripID}
-                                                    shapes={service.shapes!}
-                                                    polylineOptions={this.props.renderer.polylineOptions}
-                                                    renderServiceStop={this.props.renderer.renderServiceStop}
-                                                    renderServiceStopPopup={this.props.renderer.renderServiceStopPopup}
-                                                    eventBus={serviceContext.servicesEventBus}
+                                    <TKUIMapShapes id={"map-polyline" + serviceDeparture.serviceTripID}
+                                                   color={color}
+                                                   shapes={service.shapes!}
+                                                   eventBus={serviceContext.servicesEventBus}
                                     />
                                 }
                             </ServiceResultsContext.Consumer> : undefined
