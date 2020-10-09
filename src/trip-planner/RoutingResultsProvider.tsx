@@ -12,6 +12,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 
+// TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
     /** @ctype */
     query: RoutingQuery;

@@ -26,13 +26,22 @@ import HasCard, {HasCardKeys} from "../card/HasCard";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
 
-    /** @ctype **/
+    /**
+     * @ctype
+     */
     value: Trip;
 
+    /**
+     * @ignore
+     */
     handleRef?: (ref: any) => void;
 
-    /** @ctype **/
+    /**
+     * Function that will run when user hits the 'Alternative routes' button on a cancelled segment.
+     * @ctype
+     */
     onRequestAlternativeRoutes?: (segment: Segment) => void;
+
     /**
      * Allows to specify a list action buttons (JSX.Elements) associated with the trip, to be rendered on card header.
      * It receives the trip and the default list of buttons.
@@ -40,6 +49,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * @default _Share Trip_ and _Add to favourites_ actions, which are instances of [](TKUIButton).
      */
     actions?: (trip: Trip, defaultActions: JSX.Element[]) => JSX.Element[];
+
     /**
      * Allows to specify a list of action buttons (JSX.Elements) associated with a segment, to be rendered on segment
      * detail. It receives the segment and the default list of buttons.

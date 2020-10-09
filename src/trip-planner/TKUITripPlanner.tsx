@@ -51,6 +51,9 @@ import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * @ignore
+     */
     userLocationPromise?: Promise<LatLng>;
 }
 

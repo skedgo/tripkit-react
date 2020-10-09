@@ -571,6 +571,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
             </TKUIViewportUtil>
         );
     };
+
 interface IClientConsumed extends IClientProps, Partial<IConsumedProps> {}
 
 const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
