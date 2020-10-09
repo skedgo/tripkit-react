@@ -32,11 +32,11 @@ import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
 import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
+import HasCard, {HasCardKeys} from "../card/HasCard";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    /**
-     * Corresponds to ```title``` property of [card component](TKUICard), used on this component implementation.
-     */
+interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
+
+    // Included and documented in HasCard, but put here to force it to be at the top.
     title?: string;
 
     /**
@@ -83,40 +83,46 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     /**
      * Routing query
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#query}
      */
     value: RoutingQuery;
 
     /**
      * Routing query change callback.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#onQueryChange}
      */
     onChange?: (routingQuery: RoutingQuery) => void;
 
-    /** @globaldefault */
+    /**
+     * @ctype
+     * @default {@link TKState#onPreChange}
+     */
     onPreChange?: (from: boolean, location?: Location) => void;
 
-    /** @globaldefault */
+    /**
+     * @ctype
+     * @default {@link TKState#onInputTextChange}
+     */
     onInputTextChange?: (from: boolean, text: string) => void;
 
     /**
      * Bounding box to restrict from / to location search.
      * @ctype
-     * @globaldefault
+     * @default Bounds of the current region: {@link TKState#region}.bounds
      */
     bounds?: BBox;
 
     /**
      * Coordinates to focus from / to location search.
      * @ctype
-     * @globaldefault
+     * @default The center of the main city of current region ({@link TKState#region})
      */
     focusLatLng?: LatLng;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @globaldefault
+     * @default Timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
 }

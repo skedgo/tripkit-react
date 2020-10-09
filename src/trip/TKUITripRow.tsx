@@ -22,19 +22,87 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    /**
+     * @ctype
+     */
     value: Trip;
+
+    /**
+     * States if the trip is selected.
+     * @ctype
+     */
     selected?: boolean;
-    brief?: boolean;
+
+    /**
+     * Function that will be called on main element click.
+     * @ctype
+     */
     onClick?: () => void;
+
+    /**
+     * @ignore
+     */
+    brief?: boolean;
+
+    /**
+     * Function that will be called when main element gets focus.
+     * @ctype
+     */
     onFocus?: () => void;
+
+    /**
+     * Function that will be called on trip alternative click.
+     * @ctype
+     */
     onAlternativeClick?: (group: TripGroup, alt: Trip) => void;
+
+    /**
+     * Function that will be called on detail button click.
+     * @ctype
+     */
     onDetailClick?: () => void;
-    onKeyDown?: (e: any) => void;
-    eventBus?: EventEmitter;
+
+    /**
+     * Function that will be forwarded to the main element. It can be useful to implement support for keyboard navigation.
+     * @ctype
+     */
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+
+    /**
+     * Callback reference to be passed to main element.
+     * @ctype
+     */
     reference?: (ref: any) => void;
+
+    /**
+     * Badge assigned to this trip. <br>
+     * Values: Badges.CHEAPEST, Badges.EASIEST, Badges.FASTEST, Badges.GREENEST, Badges.HEALTHIEST, Badges.RECOMMENDED
+     * @ctype
+     */
     badge?: Badges;
+
+    /**
+     * Number of trip alternatives that should be displayed when not expanded.
+     * @default 2
+     */
     visibleAlternatives?: number;
-    expanded?: boolean;
+
+    /**
+     * States if trip alternatives list should be displayed expanded or not.
+     * Together with [```onExpand```]{@link TKUITripRow#onExpand} allows a controlled handling of alternatives expansion,
+     * for instance, to force that just the selected trip is expanded.
+     *
+     * @default false
+     */
+    expanded?: boolean; // TODO: An alternative is to define it in the state, and onComponentDidUpdate detect unselection
+                        // (!this.props.selected && prevProps.selected) and update expanded in state to false.
+                        // Advantage: get rid of expanded / onExpand properties, that don't make much sense, and give an
+                        // additional purpose to selected property.
+
+    /**
+     * Function that will be run when 'More' / 'Less' button is clicked.
+     * @ctype
+     */
     onExpand?: (expand: boolean) => void;
 }
 
@@ -100,10 +168,6 @@ function badgeLabel(badge: Badges, t: TranslationFunction): string {
 class TKUITripRow extends React.Component<IProps, {}> {
 
     private ref: any;
-
-    public focus() {
-        this.ref.focus();
-    }
 
     private formatCost(cost: number): string {
         return cost.toFixed(2);

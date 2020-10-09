@@ -21,22 +21,58 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import TKUICard from "../card/TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    onShowSideBar?: () => void;
+    /**
+     * Function that will run when side bar button is clicked.
+     * @ctype
+     */
+    onShowSideBarClicked?: () => void;
+
+    /**
+     * Function that will run when directions button is clicked.
+     * @ctype
+     */
     onDirectionsClicked?: () => void;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
-    /** @globaldefault */
+    /**
+     * Destination location.
+     * @default {@link TKState#query}.to
+     * @ctype
+     */
     value: Location | null;
-    /** @globaldefault */
+
+    /**
+     * Destination location change callback.
+     * @ctype
+     * @default Callback updating {@link TKState#query}.to
+     */
     onChange?: (value: Location | null) => void;
-    /** @globaldefault */
+
+    /**
+     * @ctype
+     * @default {@link TKState#onPreChange}
+     */
     onPreChange?: (location?: Location) => void;
-    /** @globaldefault */
+
+    /**
+     * @ctype
+     * @default {@link TKState#onInputTextChange}
+     */
     onInputTextChange?: (text: string) => void;
-    /** @globaldefault */
+
+    /**
+     * Bounding box to restrict from / to location search.
+     * @ctype
+     * @default Bounds of the current region: {@link TKState#region}.bounds
+     */
     bounds?: BBox;
-    /** @globaldefault */
+
+    /**
+     * Coordinates to focus location search.
+     * @ctype
+     * @default The center of the main city of current region ({@link TKState#region})
+     */
     focusLatLng?: LatLng;
 }
 
@@ -82,7 +118,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                 <TKUIViewportUtil>
                     {(viewportProps: TKUIViewportUtilProps) =>
                         <div className={classes.main}>
-                            <button className={classes.sideBarBtn} onClick={this.props.onShowSideBar}
+                            <button className={classes.sideBarBtn} onClick={this.props.onShowSideBarClicked}
                                     aria-label="Menu"
                             >
                                 <IconMenu className={classes.sideBarIcon}/>

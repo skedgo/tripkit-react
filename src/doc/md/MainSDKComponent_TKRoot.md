@@ -72,11 +72,17 @@ automatically triggered, and when the first result arrives we set it as the sele
 it becomes displayed on the map. If we also include the [](TKUIRoutingResultsView) component to show the list of all routing 
 results, then it will automatically display trip selection too (see [TripGo trip planner](https://tripgo.com)).
 
-**Code highlights:**
+**Code highlights**
 - onInitState and onUpdateState are functions that can be provided through SDK config to do actions on state 
 initialization and update, respectively. Both functions receive the state, which includes state values and update 
 callbacks, allowing to read and write the state.
 - In our example, on state init we calculate user position and set map viewport (state value) accordingly, and also
 set behaviour mode to 'directions' (further explained [here]()). On state update we detect that routing 
 results (for the current query) have arrived, and set the first as the selected one.
+
+**Disconnection from the state**
+
+By explicitly passing a value for a connection property will avoid that property to connect to the state.
+If you want to avoid the connection but don't want to provide any specific value to the property,
+then you can explicitly pass _undefined_ as property value.
 

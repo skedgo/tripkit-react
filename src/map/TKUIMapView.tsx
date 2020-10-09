@@ -61,7 +61,7 @@ export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, lef
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
-     * State if should hide map locations layer.
+     * States if should hide map locations layer.
      * @default false
      */
     hideLocations?: boolean;
@@ -73,7 +73,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     padding?: TKUIMapPadding
 
     /**
-     * State if attribution banner should be displayed or not.
+     * States if attribution banner should be displayed or not.
      * @deafult true
      */
     attributionControl?: boolean;
