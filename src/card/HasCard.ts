@@ -2,6 +2,7 @@ import {CardPresentation} from "./TKUICard";
 import {TKUISlideUpOptions} from "./TKUISlideUp";
 
 export enum HasCardKeys {
+    title = "title",
     onRequestClose = "onRequestClose",
     cardPresentation = "cardPresentation",
     slideUpOptions = "slideUpOptions"
@@ -10,13 +11,19 @@ export enum HasCardKeys {
 interface HasCard {
 
     /**
-     * Corresponds to ```onRequestClose``` property of [](TKUICard), used on this component implementation.
+     * Corresponds to [```title```]{@link TKUICard#title} property of [](TKUICard), used on this component implementation.
+     */
+
+    [HasCardKeys.title]?: string;
+
+    /**
+     * Corresponds to [```onRequestClose```]{@link TKUICard#onRequestClose} property of [](TKUICard), used on this component implementation.
      * @ctype
      */
     [HasCardKeys.onRequestClose]?: () => void;
 
     /**
-     * Corresponds to ```presentation``` property of [](TKUICard), used on this component implementation.
+     * Corresponds to [```presentation```]{@link TKUICard#presentation} property of [](TKUICard), used on this component implementation.
      * @ctype
      * @default CardPresentation.SLIDE_UP
      */

@@ -211,7 +211,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
                     this.props.onDirectionsView(true);
                 }}
-                onShowSideBar={() => {
+                onShowSideBarClicked={() => {
                     this.setState({showSidebar: true});
                 }}
             />;

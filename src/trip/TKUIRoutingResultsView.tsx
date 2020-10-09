@@ -87,34 +87,34 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * Array of routing results to be displayed. It's assumed that trips come already sorted according to selected sort
      * criterion (which is handled through ```sort``` and ```onSortChange``` properties in a controlled way).
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#trips}
      */
     values: Trip[];
 
     /**
      * Stating the trip in ```values``` that is currently selected.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#selectedTrip}
      */
     value?: Trip;
 
     /**
      * Trip selection change callback
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#onChange}
      */
     onChange?: (value: Trip) => void;
 
     /**
      * Function that will run when user picks an alternative trip from a trip group.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#onAlternativeChange}
      */
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
 
     /**
      * Stating if we are waiting for routing results to arrive from TripGo api request.
-     * @globaldefault
+     * @default {@link TKState#waiting}
      */
     waiting: boolean;
 
@@ -122,27 +122,27 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * Criterion by which routing results passed through ```values``` prop are sorted. <br/>
      * Values: TripSort.OVERALL, TripSort.TIME, TripSort.DURATION, TripSort.PRICE, TripSort.CARBON.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#sort}
      */
     sort: TripSort;
 
     /**
      * Sort criterion change callback.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#onSortChange}
      */
     onSortChange: (sort: TripSort) => void;
 
     /**
      * Specifying an error object describing a routing error, if such an error happened.
-     * @globaldefault
+     * @default {@link TKState#routingError}
      */
     routingError?: TKError;
 
     /**
      * Routing query to which ```values``` trips correspond.
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#query}
      */
     query: RoutingQuery;
 
@@ -150,19 +150,19 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * Routing query change callback, since this component allows the user to set the time to depart or the time to
      * arrive (part of the routing query).
      * @ctype
-     * @globaldefault
+     * @default {@link TKState#onQueryChange}
      */
     onQueryChange: (query: RoutingQuery) => void;
 
     /**
-     * @globaldefault
+     * @default {@link TKState#onQueryUpdate}
      * @ignore
      */
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @globaldefault
+     * @default Timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
 }

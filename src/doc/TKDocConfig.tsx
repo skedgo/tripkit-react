@@ -33,6 +33,10 @@ import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {tKUISelectDefaultStyle} from "../buttons/TKUISelect.css";
 import {overrideClass} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "../card/TKUICard.css";
+import TKUILocationSearch from "../query/TKUILocationSearch";
+import {tKUILocationSearchDefaultStyle} from "../query/TKUILocationSearch.css";
+import TKUIMapView from "../map/TKUIMapView";
+import {tKUIMapViewDefaultStyle} from "../map/TKUIMapView.css";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);
@@ -90,6 +94,10 @@ const tKDocConfig = {
                 }}/>
             </TKUICard>,
         style: classNamesOf(tKUICardDefaultStyle)
+    },
+    TKUILocationSearch: {
+        showcase: () => <TKUILocationSearch/>,
+        style: classNamesOf(tKUILocationSearchDefaultStyle)
     },
     TKUIRoutingQueryInput: {
         showcase: () => <TKUIRoutingQueryInput/>,
@@ -163,6 +171,13 @@ const tKDocConfig = {
             </TKStateConsumer>,
         style: classNamesOf(tKUITimetableDefaultStyle)
     },
+    TKUIMapView: {
+        showcase: () =>
+            <div style={{height: '500px'}}>
+                <TKUIMapView/>
+            </div>,
+        style: classNamesOf(tKUIMapViewDefaultStyle)
+    }
 };
 
 const styles = {

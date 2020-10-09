@@ -33,7 +33,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange?: (value: SelectOption) => void;
 
     /**
-     * State if menu is shown. Specify this property to manage menu visibility on a controlled way.
+     * States if menu is shown. Specify this property to manage menu visibility on a controlled way.
      * @ignore Since probably need to expose an onBlur callback prop.
      */
     menuIsOpen?: boolean;

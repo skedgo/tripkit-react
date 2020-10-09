@@ -6,6 +6,8 @@ import injectSheet from "react-jss";
 import {ClassNameMap} from "react-jss";
 import {TKRandomizeClassNamesOverride} from "../../config/TKConfigHelper";
 import TKDocTabButton from "./TKDocTabButton";
+import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
+import {TKPeliasGeocoder} from "../../index";
 
 export interface TKDocComponentProps {
     compName: string;
@@ -18,8 +20,20 @@ function TKDocComponent(props: TKDocComponentProps & {classes: ClassNameMap<keyo
     const classes = props.classes;
     const [cssExpanded, setCssExpanded] = useState(true);
     const [demoExpanded, setDemoExpanded] = useState(true);
+    const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
+    geocodeEarth.getOptions().resultsLimit = 5;
+    const config = {
+        apiKey: '790892d5eae024712cfd8616496d7317',
+        isDarkDefault: false,
+        geocoding: (defaultOptions: TKGeocodingOptions) => ({
+            geocoders: {
+                ...defaultOptions.geocoders,
+                'geocodeEarth': geocodeEarth
+            }
+        }),
+    };
     return (
-        <TKRoot config={{apiKey: '790892d5eae024712cfd8616496d7317', isDarkDefault: false}}>
+        <TKRoot config={config}>
             <div>
                 {style &&
                 <div className={classes.section}>
