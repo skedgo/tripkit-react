@@ -11,7 +11,6 @@ import RegionInfo from "../model/region/RegionInfo";
 import RegionInfoResults from "../model/region/RegionInfoResults";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
-import OptionsData from "./OptionsData";
 
 export class RegionsData {
 

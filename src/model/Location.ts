@@ -2,6 +2,7 @@ import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import RegionsData from "../data/RegionsData";
 
 @JsonObject
 class Location extends LatLng {
@@ -33,9 +34,11 @@ class Location extends LatLng {
         // TODO: timezone is required when coming from tripgo api endpoints. Ensure it's also properly set
         // when created client-side. Now it may be "". Check if it's initialized to avoid requesting regions
         // prematurely, before api key was set.
-        // TODO!: Refactor
-        // const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
-        // instance._timezone = region ? region.timezone : "";
+        // TODO!: Refactor to avoid circular dependency. Add (preferably required) timezone paramenter to Location.create
+        // and add a method LocationUtil.create that calculates timezone and returns Location.create.
+        // It caused issues with styleguidist, but issues don't happen anymore.
+        const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
+        instance._timezone = region ? region.timezone : "";
         return instance;
     }
 

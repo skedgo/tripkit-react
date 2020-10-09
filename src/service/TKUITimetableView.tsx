@@ -34,6 +34,7 @@ import {TKError} from "../error/TKError";
 import {serviceTextColor} from "./TKUIServiceDepartureRow.css";
 import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 import HasCard, {HasCardKeys} from "../card/HasCard";
+import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -42,7 +43,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * Allows to specify a list of action buttons (JSX.Elements) associated with the stop, to be rendered on card header.
      * It receives the stop and the default list of buttons.
      * @ctype (stop: StopLocation, defaultActions: JSX.Element[]) => JSX.Element[]
-     * @default _Direction_, _Add to favourites_ actions, and _Share_, which are instances of [](TKUIButton).
+     * @default _Direction_, _Add to favourites_, and _Share_ actions, which are instances of [](TKUIButton).
      */
     actions?: (stop: StopLocation, defaultActions: JSX.Element[]) => JSX.Element[];
 
@@ -50,7 +51,89 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     errorActions?: (error: TKError) => JSX.Element[];
 }
 
-export interface IProps extends IClientProps, IServiceResultsContext, TKUIWithClasses<IStyle, IProps> {}
+interface IConsumedProps extends Pick<IServiceResultsContext, "stop" | "timetableForSegment" | "timetableInitTime" |
+    "onInitTimeChange" | "timetableFilter" | "onFilterChange" | "onRequestMore" | "departures" | "waiting" |
+    "serviceError" | "title" | "selectedService" | "onServiceSelection"> {
+
+    /**
+     * @ctype
+     * @default {@link TKState#stop}
+     */
+    stop?: StopLocation;
+
+    /**
+     * @ctype
+     * @default {@link TKState#timetableForSegment}
+     */
+    timetableForSegment?: Segment;
+
+    /**
+     * @ctype
+     * @default {@link TKState#timetableInitTime}
+     */
+    timetableInitTime: Moment;
+
+    /**
+     * @ctype
+     * @default {@link TKState#onInitTimeChange}
+     */
+    onInitTimeChange?: (initTime: Moment) => void;
+
+    /**
+     * @ctype
+     * @default {@link TKState#timetableFilter}
+     */
+    timetableFilter: string;
+
+    /**
+     * @ctype
+     * @default {@link TKState#onFilterChange}
+     */
+    onFilterChange: (filter: string) => void;
+
+    /**
+     * @ctype
+     * @default {@link TKState#onRequestMore}
+     */
+    onRequestMore?: () => void;
+
+    /**
+     * @ctype
+     * @default {@link TKState#departures}
+     */
+    departures: ServiceDeparture[];
+
+    /**
+     * @ctype
+     * @default {@link TKState#waiting}
+     */
+    waiting: boolean;
+
+    /**
+     * @ctype
+     * @default {@link TKState#serviceError}
+     */
+    serviceError?: TKError;
+
+    /**
+     * @ctype
+     * @default {@link TKState#title}
+     */
+    title: string;
+
+    /**
+     * @ctype
+     * @default {@link TKState#selectedService}
+     */
+    selectedService?: ServiceDeparture;
+
+    /**
+     * @ctype
+     * @default {@link TKState#onServiceSelection}
+     */
+    onServiceSelection: (departure?: ServiceDeparture) => void;
+
+}
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -67,6 +150,8 @@ interface IStyle {
     iconLoading: CSSProps<IProps>;
     noResults: CSSProps<IProps>;
 }
+
+export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
 export type TKUITimetableViewProps = IProps;
 export type TKUITimetableViewStyle = IStyle;
@@ -289,7 +374,7 @@ const Consumer: React.SFC<{children: (props: IServiceResultsContext) => React.Re
     );
 };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IServiceResultsContext) =>
