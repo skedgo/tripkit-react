@@ -9,10 +9,15 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
         modalMain: {
             ...genStyles.flex,
             width: '100%',
-            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-                height: '100%',
-                overflowY: 'hidden!important'
-            },
+            // TODO!: Check this change for a while. Applied it also to portrait view to avoid unwanted scroll after
+            // adding position: relative (caused slide-up to behave bad on mobile.
+            // ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+            //     height: '100%',
+            //     overflowY: 'hidden!important'
+            // },
+            height: '100%',
+            overflowY: 'hidden!important',
+            // -----------------------------------------------------------------------------------------------------
             '& input[type=text]': {
                 fontFamily: theme.fontFamily
             },
