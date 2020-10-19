@@ -424,7 +424,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root)}
                          ref={el => el && (this.ref = el)}
                     >
-                        <div id={mainContainerId} className={classes.modalMain} ref={el => el && (this.appMainRef = el)}>
+                        <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)}>
                             <div className={classes.queryPanel}>
                                 {searchBar}
                                 {queryInput}

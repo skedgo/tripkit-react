@@ -1,6 +1,6 @@
 import * as CSS from 'csstype';
 import {CSSProps} from "../jss/StyleHelper";
-// TODO: switch to react-jss v10 that provides createUseStyles. Fix issue with hooks first, since v10 uses hooks. Allow
+// TODO!: switch to react-jss v10 that provides createUseStyles, now that issue with hooks is fixed. Allow
 // to get rid of @types/react-jss
 // import {createUseStyles} from 'react-jss';
 import jss from 'jss';
