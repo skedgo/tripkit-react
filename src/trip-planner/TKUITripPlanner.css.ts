@@ -13,19 +13,19 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             // TODO!: Check this change for a while. Applied it also to portrait view to avoid unwanted scroll after
             // adding position: relative (caused slide-up to behave bad on mobile: the part of the slide up that is
             // hidden past the bottom of the screen (overflow) makes the whole screen to scroll until it becomes visible)
-            // ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-            //     height: '100%',
-            //     overflowY: 'hidden!important'
-            // },
-            height: '100%',
-            overflowY: 'hidden!important',
+            ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+                height: '100%',
+                overflowY: 'hidden!important'
+            },
+            // height: '100%',
+            // overflowY: 'hidden!important',
             // -----------------------------------------------------------------------------------------------------
             '& input[type=text]': {
                 fontFamily: theme.fontFamily
             },
             // This is so when the trip planner is embedded modals (including slide-ups) are positioned relative to
             // this panel, and not to embedding app panel.
-            position: 'relative'
+            // position: 'relative'
         },
         main: {
             ...genStyles.flex,
