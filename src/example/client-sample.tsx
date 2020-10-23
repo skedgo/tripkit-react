@@ -53,11 +53,16 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                     background: 'red'
                 }
             }
-        }
-        // theme: {
-        //     colorPrimary: 'rgba(2, 66, 172)',
-        //     colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
-        // },
+        },
+        theme: (isDark: boolean) => ({
+            // colorPrimary: 'rgba(2, 66, 172)',
+            // colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
+            fontFamily: 'ProximaNova, sans-serif',
+            textColorDisabled: {
+                color: isDark ? 'yellow' : 'red'
+            }
+        }),
+        // isDarkDefault: false,
         // TKUIRoutingResultsView: {
         //     styles: (theme: TKUITheme) => ({
         //         main: (defaultStyle) => ({
