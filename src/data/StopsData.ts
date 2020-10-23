@@ -17,7 +17,7 @@ class StopsData {
 
     public getStopFromCode(regionCode: string, stopCode: string): Promise<StopLocation> {
         const id = "pt_pub|" + regionCode + "|" + stopCode;
-        return LocationsData.instance.getLocationInfo(id)
+        return LocationsData.instance.getLocationInfo(id, regionCode)
             .then((locInfo: TKLocationInfo) => {
                 if (locInfo.stop) {
                     return locInfo.stop;
