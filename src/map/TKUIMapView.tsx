@@ -56,6 +56,9 @@ import Color from "../model/trip/Color";
 import Features from "../env/Features";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
+import ModeLocation from "../model/location/ModeLocation";
+import TKTransportOptions from "../model/options/TKTransportOptions";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -200,6 +203,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default {@link TKState#config}
      */
     config: TKUIConfig;
+
+    transportOptions: TKTransportOptions;
 }
 
 interface MapboxGLLayerProps {
@@ -260,7 +265,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
-        const mapLocation = latLng instanceof StopLocation ? latLng as StopLocation :
+        const mapLocation = latLng instanceof ModeLocation ? latLng as ModeLocation :
             Location.createDroppedPin(latLng);
         if (isFrom) {
             this.props.onFromChange && this.props.onFromChange(mapLocation);
@@ -312,7 +317,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 });
             }
         } else {
-            if (!to || clickLatLng instanceof StopLocation) {
+            if (!to || clickLatLng instanceof ModeLocation) {
                 this.onMapLocChanged(false, clickLatLng);
             }
         }
@@ -407,7 +412,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // won't), MapTripSegment will differentiate that.
             tripSegments = this.props.trip.getSegments(Visibility.IN_DETAILS).concat([this.props.trip.arrivalSegment]);
         }
-        const enabledMapLayers = OptionsData.instance.get().mapLayers;
         const classes = this.props.classes;
         const popupHeight = 130; // Hardcoded for now
         const popupWidth = 88; // Hardcoded for now
@@ -483,13 +487,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         });
                     }}
                     onclick={(event: L.LeafletMouseEvent) => {
-                            setTimeout(() => {
-                                if (this.wasDoubleClick) {
-                                    this.wasDoubleClick = false;
-                                    return;
-                                }
-                                this.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
-                            });
+                        setTimeout(() => {
+                            if (this.wasDoubleClick) {
+                                this.wasDoubleClick = false;
+                                return;
+                            }
+                            this.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
+                        });
                     }}
                     onmoveend={this.onMoveEnd}
                     ref={(ref: any) => {
@@ -592,16 +596,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     {this.leafletElement && this.props.hideLocations !== true &&
                     <TKUIMapLocations
                         bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
-                        enabledMapLayers={enabledMapLayers}
                         zoom={this.leafletElement.getZoom()}
-                        onClick={(locType: MapLocationType, loc: Location) => {
-                            if (locType === MapLocationType.STOP) {
-                                this.onClick(loc as StopLocation);
-                            }
+                        onClick={(loc: Location) => {
+                            this.onClick(loc);
                         }}
                         onLocAction={this.props.onLocAction}
                         omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
                         isDarkMode={this.props.theme.isDark}
+                        config={this.props.config}
+                        transportOptions={this.props.transportOptions}
                     />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
@@ -692,9 +695,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
             autoPan={false}
         >
-            <TKUIMapPopup title={location.name || LocationUtil.getMainText(location, this.props.t)}
+            <TKUIMapPopup title={LocationUtil.getMainText(location, this.props.t)}
+                          subtitle={LocationUtil.getSecondaryText(location)}
                           onAction={() => this.props.onLocAction
-                                  && this.props.onLocAction(location instanceof StopLocation ? MapLocationType.STOP : undefined, location)}
+                              && this.props.onLocAction(location instanceof StopLocation ? MapLocationType.STOP : undefined, location)}
                           renderActionIcon={location instanceof StopLocation ? () => <IconTimes/> : undefined}
             />
         </Popup>;
@@ -853,47 +857,52 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
-                    <TKUIViewportUtil>
-                        {(viewportProps: TKUIViewportUtilProps) =>
-                            <RoutingResultsContext.Consumer>
-                                {(routingContext: IRoutingResultsContext) =>
-                                    <ServiceResultsContext.Consumer>
-                                        {(serviceContext: IServiceResultsContext) => {
-                                            const from = routingContext.preFrom ? routingContext.preFrom :
-                                                (routingContext.query.from ? routingContext.query.from : undefined);
-                                            const to = routingContext.preTo ? routingContext.preTo :
-                                                (routingContext.query.to ? routingContext.query.to : undefined);
+                    <OptionsContext.Consumer>
+                        {(optionsContext: IOptionsContext) =>
+                            <TKUIViewportUtil>
+                                {(viewportProps: TKUIViewportUtilProps) =>
+                                    <RoutingResultsContext.Consumer>
+                                        {(routingContext: IRoutingResultsContext) =>
+                                            <ServiceResultsContext.Consumer>
+                                                {(serviceContext: IServiceResultsContext) => {
+                                                    const from = routingContext.preFrom ? routingContext.preFrom :
+                                                        (routingContext.query.from ? routingContext.query.from : undefined);
+                                                    const to = routingContext.preTo ? routingContext.preTo :
+                                                        (routingContext.query.to ? routingContext.query.to : undefined);
 
-                                            const consumerProps: IConsumedProps = {
-                                                from: routingContext.directionsView ? from : undefined,
-                                                onFromChange: (location: Location) =>
-                                                    routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                        from: location
-                                                    })),
-                                                to: to,
-                                                onToChange: (location: Location) =>
-                                                    routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                        to: location
-                                                    })),
-                                                trip: routingContext.selectedTrip,
-                                                service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
-                                                    serviceContext.selectedService : undefined,
-                                                viewport: routingContext.viewport,
-                                                onViewportChange: routingContext.onViewportChange,
-                                                directionsView: routingContext.directionsView,
-                                                onDirectionsView: routingContext.onDirectionsView,
-                                                ...viewportProps,
-                                                config: config
-                                            };
-                                            return (
-                                                props.children!(consumerProps)
-                                            );
-                                        }}
-                                    </ServiceResultsContext.Consumer>
+                                                    const consumerProps: IConsumedProps = {
+                                                        from: routingContext.directionsView ? from : undefined,
+                                                        onFromChange: (location: Location) =>
+                                                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                                from: location
+                                                            })),
+                                                        to: to,
+                                                        onToChange: (location: Location) =>
+                                                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                                                to: location
+                                                            })),
+                                                        trip: routingContext.selectedTrip,
+                                                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                                                            serviceContext.selectedService : undefined,
+                                                        viewport: routingContext.viewport,
+                                                        onViewportChange: routingContext.onViewportChange,
+                                                        directionsView: routingContext.directionsView,
+                                                        onDirectionsView: routingContext.onDirectionsView,
+                                                        ...viewportProps,
+                                                        config: config,
+                                                        transportOptions: optionsContext.userProfile.transportOptions
+                                                    };
+                                                    return (
+                                                        props.children!(consumerProps)
+                                                    );
+                                                }}
+                                            </ServiceResultsContext.Consumer>
+                                        }
+                                    </RoutingResultsContext.Consumer>
                                 }
-                            </RoutingResultsContext.Consumer>
+                            </TKUIViewportUtil>
                         }
-                    </TKUIViewportUtil>
+                    </OptionsContext.Consumer>
                 }
             </TKUIConfigContext.Consumer>
         );

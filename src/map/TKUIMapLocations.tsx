@@ -2,10 +2,8 @@ import * as React from "react";
 import BBox from "../model/BBox";
 import LocationsData from "../data/LocationsData";
 import Location from "../model/Location";
-import {MapLocationType, mapLocationTypeToGALabel} from "../model/location/MapLocationType";
-import GATracker from "../analytics/GATracker";
+import {MapLocationType} from "../model/location/MapLocationType";
 import StopLocation from "../model/StopLocation";
-import Constants from "../util/Constants";
 import {Marker, Popup} from "react-leaflet";
 import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";
@@ -15,16 +13,19 @@ import LocationsResult from "../model/location/LocationsResult";
 import RegionsData from "../data/RegionsData";
 import {EventSubscription} from "fbemitter";
 import LocationUtil from "../util/LocationUtil";
+import {TKUIConfig} from "../config/TKUIConfig";
+import TKTransportOptions from "../model/options/TKTransportOptions";
 
 interface IProps {
     zoom: number,
     bounds: BBox,
     prefetchFactor?: number,
-    enabledMapLayers: MapLocationType[],
-    onClick?: (type: MapLocationType, loc: Location) => void;
+    onClick?: (loc: Location) => void;
     onLocAction?: (type: MapLocationType, loc: Location) => void;
     omit?: Location[];
     isDarkMode?: boolean;
+    config: TKUIConfig;
+    transportOptions: TKTransportOptions;
 }
 
 class TKUIMapLocations extends React.Component<IProps, {}> {
@@ -43,116 +44,64 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         this.locListenerSubscription = LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
     }
 
-    private getLocMarker(mapLocType: MapLocationType, loc: Location): React.ReactNode {
-        const clickHandler = () => this.props.onClick && this.props.onClick(mapLocType, loc);
-        const actionHandler = mapLocType === MapLocationType.STOP ?
-            () => this.props.onLocAction && this.props.onLocAction(mapLocType, loc) : undefined;
+    private getLocMarker(loc: Location): React.ReactNode {
+        const clickHandler = () => this.props.onClick && this.props.onClick(loc);
         const key = loc.getKey();
-        switch (mapLocType) {
-            case MapLocationType.BIKE_POD:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-bikeShare.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.event({
-                        category: "map location",
-                        action: "click",
-                        label: mapLocationTypeToGALabel(mapLocType)
-                    })}
-                    key={key}
-                    onclick={clickHandler}
-                    keyboard={false}
-                />;
-            case MapLocationType.MY_WAY_FACILITY:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-myway.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.event({
-                        category: "map location",
-                        action: "click",
-                        label: mapLocationTypeToGALabel(mapLocType)
-                    })}
-                    key={key}
-                    onclick={clickHandler}
-                    keyboard={false}
-                />;
-            case MapLocationType.PARK_AND_RIDE_FACILITY:
-                return <Marker
-                    position={loc}
-                    icon={L.icon({
-                        iconUrl: Constants.absUrl("/images/modeicons/ic-parkAndRide.svg"),
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })}
-                    onpopupopen={() => GATracker.event({
-                        category: "map location",
-                        action: "click",
-                        label: mapLocationTypeToGALabel(mapLocType)
-                    })}
-                    key={key}
-                    onclick={clickHandler}
-                    keyboard={false}
-                />;
-            case MapLocationType.STOP:
-                const transIconHTML = renderToStaticMarkup(
-                    <StopIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
-                );
-                const icon = L.divIcon({
-                    html: transIconHTML,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10],
-                    className: ""
-                });
-                return <Marker
-                    position={loc}
-                    icon={icon}
-                    onclick={clickHandler}
-                    key={key}
-                    keyboard={false}
-                />;
-            default:
-                return <Marker position={loc} key={key} keyboard={false}/>;
-        }
+        const transIconHTML = renderToStaticMarkup(
+            <StopIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
+        );
+        const icon = L.divIcon({
+            html: transIconHTML,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            className: ""
+        });
+        return <Marker
+            position={loc}
+            icon={icon}
+            onclick={clickHandler}
+            key={key}
+            keyboard={false}
+        />;
     }
 
+    private enabledModes(props: IProps = this.props): string[] {
+        const region = RegionsData.instance.getRegion(props.bounds.getCenter());
+        if (!region) {
+            return [];
+        }
+        const modes = region.modes;
+        return modes.filter((mode: string) => props.transportOptions.isModeEnabled(mode) && LocationsResult.isModeRelevant(mode));
+    }
 
     public render(): React.ReactNode {
         const region = RegionsData.instance.getRegion(this.props.bounds.getCenter());
-        let locMarkers: React.ReactNode[] = [];
-        const enabledMapLayers = this.props.enabledMapLayers;
+        if (!region) {
+            return null;
+        }
+        let locations: Location[] = [];
         const omit = this.props.omit || [];
-        if (region && enabledMapLayers.length > 0) {
+        const enabledModes = this.enabledModes();
+        if (enabledModes.length > 0) {
             const bounds = MapUtil.expand(this.props.bounds, .5);
             const zoom = this.props.zoom;
             if (zoom >= this.ZOOM_PARENT_LOCATIONS) {
-                const level1Result = LocationsData.instance.getRequestLocations(region.name, 1);
-                for (const locType of enabledMapLayers) {
-                    locMarkers.push(...level1Result.getByType(locType)
-                        .map((loc: Location) => !omit.find((omitLoc) => LocationUtil.equal(omitLoc, loc)) && this.getLocMarker(locType, loc)));
-                }
+                locations = LocationsData.instance.getRequestLocations(region.name, 1, enabledModes).getLocations();
             }
             if (zoom >= this.ZOOM_ALL_LOCATIONS) {
-                const level2Result = LocationsData.instance.getRequestLocations(region.name, 2, bounds);
-                for (const locType of enabledMapLayers) {
-                    locMarkers.push(...level2Result.getByType(locType)
-                        .map((loc: Location) => !omit.includes(loc) && this.getLocMarker(locType, loc)));
-                }
+                locations.push(...LocationsData.instance.getRequestLocations(region.name, 2, enabledModes, bounds).getLocations());
             }
         }
-        return locMarkers;
+        return locations.filter((loc: Location) => !omit.find((omitLoc) => LocationUtil.equal(omitLoc, loc)))
+            .map((loc: Location) => this.getLocMarker(loc));
     }
 
     public shouldComponentUpdate(nextProps: IProps): boolean {
         return nextProps.zoom !== this.props.zoom
-            || (this.props.zoom >= this.ZOOM_PARENT_LOCATIONS && (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
-            !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))))
+            || JSON.stringify(this.enabledModes()) !== JSON.stringify(this.enabledModes(nextProps))
+            || (this.props.zoom >= this.ZOOM_PARENT_LOCATIONS && RegionsData.instance.getRegion(nextProps.bounds.getCenter()) !== RegionsData.instance.getRegion(this.props.bounds.getCenter()))
+            || (this.props.zoom >= this.ZOOM_ALL_LOCATIONS && (JSON.stringify(MapUtil.cellsForBounds(nextProps.bounds, LocationsData.cellsPerDegree))
+                !== JSON.stringify(MapUtil.cellsForBounds(this.props.bounds, LocationsData.cellsPerDegree))))
             || JSON.stringify(nextProps.omit) !== JSON.stringify(this.props.omit)
             || nextProps.isDarkMode !== this.props.isDarkMode;
     }

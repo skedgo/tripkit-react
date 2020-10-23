@@ -17,6 +17,7 @@ import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Trip from "../model/trip/Trip";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 interface IProps {
     tKState: TKState;
@@ -188,7 +189,13 @@ class TKStateUrl extends React.Component<IProps, {}> {
         const address = decodeURIComponent(locationValues[1]);
         const id = decodeURIComponent(locationValues[2]);
         const source = decodeURIComponent(locationValues[3]);
-        return Location.create(latLng, address, id, "", source);
+        const location = Location.create(latLng, address, id, "", source);
+        // This indicates that the location currently lacks of details, and so it can be resolved (by TKUILocationBox)
+        // to get them.
+        if (source === TKDefaultGeocoderNames.skedgo) {
+            location.hasDetail = false;
+        }
+        return location;
     }
 
     private getServiceFieldValue(stop: StopLocation, filter: string, service?: ServiceDeparture): string {
@@ -220,11 +227,13 @@ class TKStateUrl extends React.Component<IProps, {}> {
         if (this.props.tKState.waitingStateLoad) {
             return;
         }
-        const prevUrl = this.getUrlFromState(prevProps.tKState);
-        const url = this.getUrlFromState(this.props.tKState);
-        if (url !== prevUrl) {
-            window.history.replaceState(null, '', url)
-        }
+        RegionsData.instance.requireRegions().then(() => {
+            const prevUrl = this.getUrlFromState(prevProps.tKState);
+            const url = this.getUrlFromState(this.props.tKState);
+            if (url !== prevUrl) {
+                window.history.replaceState(null, '', url)
+            }
+        });
     }
 
     public componentDidMount(): void {

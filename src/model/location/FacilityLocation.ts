@@ -1,14 +1,12 @@
 import {JsonObject, JsonProperty} from "json2typescript";
-import Location from "../Location";
+import ModeLocation from "./ModeLocation";
 
 @JsonObject
-class FacilityLocation extends Location {
-    @JsonProperty("facilityType", String)
-    private _facilityType: string = "";
+class FacilityLocation extends ModeLocation {
 
-    get facilityType(): string {
-        return this._facilityType;
-    }
+    @JsonProperty("facilityType", String)
+    public facilityType: string = "";
+
 }
 
 export default FacilityLocation;

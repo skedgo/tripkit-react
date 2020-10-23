@@ -5,15 +5,15 @@ import {JsonConvert} from "json2typescript";
 import {EventEmitter, EventSubscription} from "fbemitter";
 import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
-import ModeIdentifier from "../model/region/ModeIdentifier";
 import Util from "../util/Util";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import LatLng from "../model/LatLng";
+import {default as LocationsCache} from "./RegionLocationsCache";
 
 class LocationsData {
 
     public static cellsPerDegree = 75;
-    private cellToLocResult: Map<string, LocationsResult> = new Map<string, LocationsResult>();
+    private cache: LocationsCache = new LocationsCache();
 
     private static _instance: LocationsData;
 
@@ -35,40 +35,63 @@ class LocationsData {
     }
 
     /*
-     * Return locations for cells found in cache, and requests locations for the other cells.
+     * Return locations for cells found in cache, and requests locations for the other cells + cells found but that do
+     * not cover requested modes + cells found that are not fresh (the latter are requested specifying the hashcodes).
      */
-    public getRequestLocations(region: string, level: 1 | 2, bounds?: BBox): LocationsResult {
-        const cachedResults = new LocationsResult(level);
+    public getRequestLocations(region: string, level: 1 | 2, modes: string[], bounds?: BBox): LocationsResult {
+        const cachedResults = new LocationsResult(level, modes);
         const cellIDs = level === 1 ? [region] : MapUtil.cellsForBounds(bounds!, LocationsData.cellsPerDegree);
         const requestCells: any[] = [];
+        const refreshCells: {[key: string]: number} = {};
         for (const cellID of cellIDs) {
-            const cellResults = this.cellToLocResult.get(cellID);
+            const cellResults = this.cache.get(region, cellID);
             if (cellResults) {
                 cachedResults.add(cellResults);
-            } else {
-                requestCells.push(cellID);
-                // To register we are awaiting for cellID stops, avoiding requesting again the same cellID in the meanwhile.
-                this.cellToLocResult.set(cellID, new LocationsResult(level));
+            }
+            if (!cellResults ||
+                (!modes.every((mode: string) => cellResults.modes.includes(mode)) || !cellResults.fresh) && !cellResults.requesting){
+                if (!cellResults || !modes.every((mode: string) => cellResults.modes.includes(mode))) {
+                    requestCells.push(cellID);
+                } else { // !cellResults.fresh
+                    refreshCells[cellID] = cellResults.hashCode;
+                }
+                // To register we are awaiting for cellIDs, avoiding requesting again the same cellID in the meanwhile.
+                const waitingCellResults = cellResults || new LocationsResult(level);
+                waitingCellResults.requesting = true;
+                this.cache.set(region, cellID, waitingCellResults);
             }
         }
-        if (requestCells.length !== 0) {
+        if (requestCells.length !== 0 || !Util.isEmpty(refreshCells)) {
             const locationsReq = {
                 region: region,
                 level: level,
-                cellIDs: level === 2 ? requestCells : undefined,
+                cellIDs: level === 2 && requestCells.length !== 0 ? requestCells : undefined,
+                cellIDHashCodes: !Util.isEmpty(refreshCells) ? refreshCells : undefined,
                 cellsPerDegree: level === 2 ? 75 : undefined,
-                modes: [ModeIdentifier.BICYCLE_ID, "cy_bic-s_ACT", ModeIdentifier.BICYCLE_SHARE_ID, ModeIdentifier.CAR_ID, ModeIdentifier.PUBLIC_TRANSPORT_ID]
+                modes: modes
             };
 
             TripGoApi.apiCall("locations.json", NetworkUtil.MethodType.POST, locationsReq)
                 .then((groupsJson: any) => {
                     const groups: LocationsResult[] = groupsJson.groups.map((group: any) => Util.deserialize(group, LocationsResult));
-                    const result = new LocationsResult(level);
+                    const result = new LocationsResult(level, modes);
                     for (const group of groups) {
-                        this.cellToLocResult.set(group.key, group);
+                        group.modes = modes;
+                        group.fresh = true;
+                        this.cache.set(region, group.key, group);
                         result.add(group);
                     }
-                    this.fireChangeEvent(result);
+                    for (const refreshed of Object.keys(refreshCells)) {
+                        // Mark as refreshed all results in caché for which we requested a refresh (if they changend,
+                        // and so came in the response, then they would be already marked as fresh by previous iteration,
+                        // but this is necessary to mark as fresh the results that didn't change, and so didn't come in
+                        // the response.
+                        this.cache.get(region, refreshed)!.fresh = true;
+                    }
+                    // Refresh just if results came.
+                    if (groups.length > 0) {
+                        this.fireChangeEvent(result);
+                    }
                 })
                 .catch((e) => console.log(e));
         }

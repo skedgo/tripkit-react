@@ -1,5 +1,4 @@
-import * as React from "react";
-import {useState} from 'react';
+import React, {useState} from 'react';
 import TKUIW3w from "../location/TKUIW3w";
 import TKUIButton from "../buttons/TKUIButton";
 import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUICard, TKUIRoutingQueryInput} from "../index";

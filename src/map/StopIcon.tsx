@@ -1,13 +1,13 @@
 import * as React from "react";
-import StopLocation from "../model/StopLocation";
 import TransportUtil from "../trip/TransportUtil";
 import genStyles from "../css/GenStyle.css";
 import * as CSS from 'csstype';
 import {black, white} from "../jss/TKUITheme";
 import {getTransIconOpacity, isRemoteIcon} from "./TKUIMapLocationIcon.css";
+import ModeLocation from "../model/location/ModeLocation";
 
 interface IProps {
-    stop: StopLocation;
+    stop: ModeLocation;
     style?: CSS.Properties;
     isDarkMode?: boolean;
 }

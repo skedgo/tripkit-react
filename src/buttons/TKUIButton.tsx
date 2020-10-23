@@ -1,5 +1,4 @@
-import * as React from "react";
-import {MouseEvent} from "react";
+import React, {MouseEvent} from "react";
 import {ClassNameMap} from 'react-jss';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
