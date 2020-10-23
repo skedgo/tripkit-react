@@ -102,7 +102,6 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location): Promise<Location> {
-        // TODO: complete with the other kind of locations.
         return LocationsData.instance.getLocationInfo(unresolvedLocation.id).then((locInfo: TKLocationInfo) => {
             let resolvedLocation;
             console.log(locInfo);
@@ -118,10 +117,20 @@ class SkedgoGeocoder implements IGeocoder {
                 // Need this to force TKUILocationBox to resolve the location.
                 resolvedLocation.hasDetail = true;
                 console.log(resolvedLocation);
+            } else if (unresolvedLocation.isResolved()) { // TODO: implement resolution for the other kind of locations.
+                resolvedLocation = unresolvedLocation;
+                resolvedLocation.hasDetail = true;
             } else {
                 return Promise.reject('SkedgoGeocoder was unable to resolve the location.')
             }
             return resolvedLocation;
+        }).catch((e) => {
+            if (unresolvedLocation.isResolved()) {
+                unresolvedLocation.hasDetail = true;
+                return unresolvedLocation;
+            } else {
+                throw e;
+            }
         });
     }
 

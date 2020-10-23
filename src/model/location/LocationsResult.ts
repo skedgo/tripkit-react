@@ -7,11 +7,16 @@ import Location from "../Location";
 import StopLocation from "../StopLocation";
 import ModeIdentifier from "../region/ModeIdentifier";
 import ModeLocation from "./ModeLocation";
+import FreeFloatingVehicleLocation from "./FreeFloatingVehicleLocation";
+import CarRentalLocation from "./CarRentalLocation";
 
 enum ModeFields {
     bikePods = "bikePods",
     facilities = "facilities",
     carParks = "carParks",
+    carPods = "carPods", // For car share (e.g. CND, GoGet)
+    carRentals = "carRentals",
+    freeFloating = "freeFloating",
     stops = "stops",
 }
 
@@ -24,8 +29,11 @@ class LocationsResult {
 
     private static isFieldIncludedByMode(field: ModeFields, mode: string): boolean {
         switch (field) {
-            case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
             case ModeFields.carParks: return mode.startsWith(ModeIdentifier.CAR_ID);
+            case ModeFields.carPods: return mode.startsWith(ModeIdentifier.CAR_SHARE_ID);
+            case ModeFields.carRentals: return mode.startsWith(ModeIdentifier.CAR_RENTAL_ID);
+            case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
+            case ModeFields.freeFloating: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
             case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
             default: return false;
         }
@@ -67,16 +75,22 @@ class LocationsResult {
     private _hashCode: number = 0;
 
     @JsonProperty(ModeFields.bikePods, [BikePodLocation], true)
-    private _bikePods: BikePodLocation[] | undefined = undefined;
+    public bikePods: BikePodLocation[] | undefined = undefined;
+
+    @JsonProperty(ModeFields.freeFloating, [FreeFloatingVehicleLocation], true)
+    public freeFloating: FreeFloatingVehicleLocation[] | undefined = undefined;
 
     @JsonProperty(ModeFields.facilities, [FacilityLocation], true)
-    private _facilities: FacilityLocation[] | undefined = undefined;
+    public facilities: FacilityLocation[] | undefined = undefined;
 
     @JsonProperty(ModeFields.carParks, [CarParkLocation], true)
-    private _carParks: CarParkLocation[] | undefined = undefined;
+    public carParks: CarParkLocation[] | undefined = undefined;
+
+    @JsonProperty(ModeFields.carRentals, [CarRentalLocation], true)
+    public carRentals: CarRentalLocation[] | undefined = undefined;
 
     @JsonProperty(ModeFields.stops, [StopLocation], true)
-    private _stops: StopLocation[] | undefined = undefined;
+    public stops: StopLocation[] | undefined = undefined;
 
     private _level: 1 | 2;
 
@@ -94,38 +108,6 @@ class LocationsResult {
 
     set hashCode(value: number) {
         this._hashCode = value;
-    }
-
-    get bikePods(): BikePodLocation[] | undefined {
-        return this._bikePods;
-    }
-
-    set bikePods(value: BikePodLocation[] | undefined) {
-        this._bikePods = value;
-    }
-
-    get facilities(): FacilityLocation[] | undefined {
-        return this._facilities;
-    }
-
-    set facilities(value: FacilityLocation[] | undefined) {
-        this._facilities = value;
-    }
-
-    get carParks(): CarParkLocation[] | undefined {
-        return this._carParks;
-    }
-
-    set carParks(value: CarParkLocation[] | undefined) {
-        this._carParks = value;
-    }
-
-    get stops(): StopLocation[] | undefined {
-        return this._stops;
-    }
-
-    set stops(value: StopLocation[] | undefined) {
-        this._stops = value;
     }
 
     get level(): 1 | 2 {

@@ -5,6 +5,7 @@ import * as CSS from 'csstype';
 import {black, white} from "../jss/TKUITheme";
 import {getTransIconOpacity, isRemoteIcon} from "./TKUIMapLocationIcon.css";
 import ModeLocation from "../model/location/ModeLocation";
+import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
 
 interface IProps {
     stop: ModeLocation;
@@ -15,6 +16,15 @@ interface IProps {
 class StopIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
+        if (this.props.stop instanceof FreeFloatingVehicleLocation) {
+            return <div style={{
+                width: '8px',
+                height: '8px',
+                ...genStyles.borderRadius(50, '%'),
+                background: white(0, this.props.isDarkMode),
+                border: '1px solid ' + black(0, this.props.isDarkMode)
+            }}/>
+        }
         const modeInfo = this.props.stop.modeInfo;
         const wantIconForDark = true;
         const transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);
@@ -51,10 +61,10 @@ class StopIcon extends React.Component<IProps, {}> {
         };
         return (
             <div style={style}>
-            <img src={transIcon}
-                 style={imgStyle}
-                 aria-hidden={true}
-            />
+                <img src={transIcon}
+                     style={imgStyle}
+                     aria-hidden={true}
+                />
             </div>
         );
     }
