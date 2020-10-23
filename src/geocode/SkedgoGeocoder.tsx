@@ -13,6 +13,10 @@ import {tKUIColors} from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import StopIcon from "../map/StopIcon";
 import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
+import LocationsData from "../data/LocationsData";
+import TKLocationInfo from "../model/location/TKLocationInfo";
+import CarParkLocation from "../model/location/CarParkLocation";
+import ModeInfo from "../model/trip/ModeInfo";
 
 class SkedgoGeocoder implements IGeocoder {
 
@@ -98,8 +102,27 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location): Promise<Location> {
-        // Empty
-        return Promise.reject('SkedgoGeocoder does not support location resolution')
+        // TODO: complete with the other kind of locations.
+        return LocationsData.instance.getLocationInfo(unresolvedLocation.id).then((locInfo: TKLocationInfo) => {
+            let resolvedLocation;
+            console.log(locInfo);
+            if (locInfo.stop) {
+                resolvedLocation = locInfo.stop;
+            } else if (locInfo.carPark) {
+                // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
+                // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
+                resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
+                resolvedLocation.name = locInfo.carPark.name;
+                resolvedLocation.carPark = locInfo.carPark;
+                resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "parking"});
+                // Need this to force TKUILocationBox to resolve the location.
+                resolvedLocation.hasDetail = true;
+                console.log(resolvedLocation);
+            } else {
+                return Promise.reject('SkedgoGeocoder was unable to resolve the location.')
+            }
+            return resolvedLocation;
+        });
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {

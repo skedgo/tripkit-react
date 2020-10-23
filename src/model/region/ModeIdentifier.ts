@@ -17,6 +17,7 @@ class ModeIdentifier {
     public static readonly SCHOOLBUS_ID = "pt_ltd_SCHOOLBUS";
     public static readonly UBER_ID = "ps_tnc_UBER";
     public static readonly CAR_ID = "me_car";
+    public static readonly CAR_RENTAL_ID = "me_car-r";
     public static readonly CAR_RENTAL_SW_ID = "me_car-r_SwiftFleet";
     public static readonly TAXI_ID = "ps_tax";
     public static readonly TRAM_ID = "pt_pub_tram";

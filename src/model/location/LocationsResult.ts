@@ -5,13 +5,60 @@ import CarParkLocation from "./CarParkLocation";
 import {MapLocationType} from "./MapLocationType";
 import Location from "../Location";
 import StopLocation from "../StopLocation";
+import ModeIdentifier from "../region/ModeIdentifier";
+import ModeLocation from "./ModeLocation";
+
+enum ModeFields {
+    bikePods = "bikePods",
+    facilities = "facilities",
+    carParks = "carParks",
+    stops = "stops",
+}
 
 @JsonObject
 class LocationsResult {
 
-    constructor(level: 1 | 2 = 1) {
-        this._level = level;
+    private static isFieldIncluded(field: ModeFields, modes: string[]): boolean {
+        return modes.some((mode: string) => this.isFieldIncludedByMode(field, mode));
     }
+
+    private static isFieldIncludedByMode(field: ModeFields, mode: string): boolean {
+        switch (field) {
+            case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
+            case ModeFields.carParks: return mode.startsWith(ModeIdentifier.CAR_ID);
+            case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+            default: return false;
+        }
+    }
+
+    public static isModeRelevant(mode: string): boolean {
+        return Object.values(ModeFields).some((field: ModeFields) => this.isFieldIncludedByMode(field, mode));
+    }
+
+    constructor(level: 1 | 2 = 1, modes?: string[]) {
+        this._level = level;
+        this.modes = modes || [];
+    }
+
+    /**
+     * Cache related field. Indicates if it's a result that was obtained or refreshed in the current session, or otherwise came from caché
+     * and was not yet refreshed.
+     */
+    public fresh: boolean = false;
+
+    /**
+     * Cache related field. Indicates we requested results (or a refresh) for this level + key and we are still awaiting, so to avoid asking
+     * for it in the meanwhile.
+     * @type {boolean}
+     */
+    public requesting: boolean = false;
+
+    /**
+     * Requested modes. Fill this when building. Need to declare as JsonProperty so it's serialized / deserialized when
+     * parsisting on caché on LS.
+     */
+    @JsonProperty("modes", [String], true)
+    public modes: string[] = [];
 
     @JsonProperty("key", String)
     private _key: string = "";
@@ -19,16 +66,16 @@ class LocationsResult {
     @JsonProperty("hashCode", Number)
     private _hashCode: number = 0;
 
-    @JsonProperty("bikePods", [BikePodLocation], true)
+    @JsonProperty(ModeFields.bikePods, [BikePodLocation], true)
     private _bikePods: BikePodLocation[] | undefined = undefined;
 
-    @JsonProperty("facilities", [FacilityLocation], true)
+    @JsonProperty(ModeFields.facilities, [FacilityLocation], true)
     private _facilities: FacilityLocation[] | undefined = undefined;
 
-    @JsonProperty("carParks", [CarParkLocation], true)
+    @JsonProperty(ModeFields.carParks, [CarParkLocation], true)
     private _carParks: CarParkLocation[] | undefined = undefined;
 
-    @JsonProperty("stops", [StopLocation], true)
+    @JsonProperty(ModeFields.stops, [StopLocation], true)
     private _stops: StopLocation[] | undefined = undefined;
 
     private _level: 1 | 2;
@@ -90,30 +137,19 @@ class LocationsResult {
     }
 
     public add(other: LocationsResult): void {
-        if (other.bikePods) {
-            if (!this.bikePods) {
-                this.bikePods = [];
+        for (const modeField of Object.values(ModeFields)) {
+            if (other[modeField] && LocationsResult.isFieldIncluded(modeField, this.modes)) {
+                if (!this[modeField]) {
+                    this[modeField] = [];
+                }
+                this[modeField] = (this[modeField] as any[])!.concat(other[modeField]);
             }
-            this.bikePods = this.bikePods.concat(other.bikePods);
         }
-        if (other.facilities) {
-            if (!this.facilities) {
-                this.facilities = [];
-            }
-            this.facilities = this.facilities.concat(other.facilities);
-        }
-        if (other.carParks) {
-            if (!this.carParks) {
-                this.carParks = [];
-            }
-            this.carParks = this.carParks.concat(other.carParks);
-        }
-        if (other.stops) {
-            if (!this.stops) {
-                this.stops = [];
-            }
-            this.stops = this.stops.concat(other.stops);
-        }
+    }
+
+    public getLocations(): ModeLocation[] {
+        return Object.values(ModeFields).reduce((accum: ModeLocation[], current: ModeFields) =>
+                this[current] ? accum.concat(this[current] as ModeLocation[]) : accum, []);
     }
 
     public isEmpty(): boolean {

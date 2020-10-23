@@ -1,13 +1,13 @@
 import React from "react";
 import {ReactComponent as IconPin} from '../images/map/ic-map-pin.svg';
 import Location from "../model/Location";
-import StopLocation from "../model/StopLocation";
 import TransportUtil from "../trip/TransportUtil";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import classNames from "classnames";
+import ModeLocation from "../model/location/ModeLocation";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -36,7 +36,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMapLocationIcon",
 };
 
-class TKUIMapLocationIcon extends React.Component<IProps, {}> {
+class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
 
     private static idCount: number = 0;
     private id: string = "tripkit-map-pin" + TKUIMapLocationIcon.idCount++;
@@ -68,7 +68,7 @@ class TKUIMapLocationIcon extends React.Component<IProps, {}> {
         const location = this.props.location;
         let transIcon: string | undefined;
         let invertedWrtMode = false;
-        if (location instanceof StopLocation) {
+        if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
             transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);

@@ -58,8 +58,7 @@ class TransportUtil {
         if (modeInfo !== null && modeInfo.identifier && modeInfo.color) {
             return modeInfo.color.toRGB();
         }
-        return this.getTransportColorByIconS(modeInfo.identifier && modeInfo.identifier.includes(ModeIdentifier.SCHOOLBUS_ID) ?
-            "school-bus" : modeInfo.localIcon); // TODO: hardcoded for TC
+        return this.getTransportColorByIconS(modeInfo.localIcon);
     }
 
     public static getServiceDepartureColor(departure: ServiceDeparture): string {
@@ -83,8 +82,6 @@ class TransportUtil {
             case "car-ride-share":
             case "car-share":
                 return "#0c9588";
-            case "parking":
-                return "#ed8e01";
             default:
                 return null;
         }

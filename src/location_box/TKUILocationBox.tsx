@@ -26,6 +26,7 @@ import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import LocationUtil from "../util/LocationUtil";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
+import ModeLocation from "../model/location/ModeLocation";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
@@ -124,14 +125,8 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.setValue = this.setValue.bind(this);
     }
 
-    public static itemText(location: Location, t?: TranslationFunction): string {
-        return location instanceof City ? location.name :
-            (location.isCurrLoc() && t) ? t("Current.Location") :
-            location.address ? location.address : location.getLatLngDisplayString();
-    }
-
     private static itemId(location: Location): string {
-        return TKUILocationBox.itemText(location) + (location.id ? "-" + location.id : "");
+        return LocationUtil.getMainText(location) + LocationUtil.getSecondaryText(location) + (location.id ? "-" + location.id : "");
     }
 
     /**
@@ -146,7 +141,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
         let inputText = this.state.inputText;
         if (!highlighted) {   // Set location address as input text
-            inputText = locationValue ? TKUILocationBox.itemText(locationValue, this.props.t) : '';
+            inputText = locationValue ? LocationUtil.getMainText(locationValue, this.props.t) : '';
         }
         const setStateCallback = () => {
             if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
@@ -295,7 +290,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
-                const item = {label: TKUILocationBox.itemText(results[i], this.props.t), id: TKUILocationBox.itemId(results[i])};
+                const item = {label: LocationUtil.getMainText(results[i], this.props.t), id: TKUILocationBox.itemId(results[i])};
                 items.push(item);
                 this.itemToLocationMap.set(item.id, results[i]);
             }

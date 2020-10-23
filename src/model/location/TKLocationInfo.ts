@@ -2,6 +2,7 @@ import {JsonObject, JsonProperty} from "json2typescript";
 import LocationInfoDetails from "./LocationInfoDetails";
 import RealTimeAlert from "../service/RealTimeAlert";
 import StopLocation from "../StopLocation";
+import CarParkInfo from "./CarParkInfo";
 
 @JsonObject
 class TKLocationInfo {
@@ -16,6 +17,8 @@ class TKLocationInfo {
     public alerts: RealTimeAlert[] = [];
     @JsonProperty("stop", StopLocation, true)
     public readonly stop?: StopLocation = undefined;
+    @JsonProperty("carPark", CarParkInfo, true)
+    public readonly carPark?: CarParkInfo = undefined;
 
 }
 

@@ -28,60 +28,6 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
                 padding: '15px'
             }
         },
-        specialServices: {
-            ...genStyles.flex,
-            ...genStyles.justifyStart,
-            '& > div': {
-                ...genStyles.flex,
-                ...genStyles.alignCenter
-            },
-            ['@media (min-width: 741px)']: {
-                '& > div:not(:first-child)': {
-                    marginLeft: '30px'
-                }
-            },
-            ['@media (max-width: 740px)']: {
-                ...genStyles.column,
-                '& > div': {
-                    marginBottom: '10px',
-                    marginLeft: '0'
-                }
-            },
-        },
-        icon: {
-            width: '24px',
-            height: '24px',
-            marginRight: '3px',
-            ...genStyles.borderRadius(50, "%"),
-            ...genStyles.noShrink
-        },
-        infoIcon: {
-            width: '18px',
-            height: '18px',
-            marginLeft: '10px',
-            ...genStyles.noShrink
-        },
-        tooltip: {
-            maxWidth: '250px'
-        },
-        tooltipOverlay: {
-            zIndex: '1100!important',
-            '& .rc-tooltip-inner': {
-                ...genStyles.flex,
-                ...genStyles.alignCenter,
-                fontFamily: theme.fontFamily,
-                fontSize: '13px'
-            }
-        },
-        checkboxGroup: {
-            ...genStyles.flex,
-            ...genStyles.alignCenter
-        },
-        closeBtn: {
-            width: '200px!important',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
         link: {
             ...genStyles.link
         },

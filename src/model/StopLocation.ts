@@ -1,15 +1,12 @@
-import Location from "./Location";
 import {JsonObject, JsonProperty} from "json2typescript";
-import ModeInfo from "./trip/ModeInfo";
+import ModeLocation from "./location/ModeLocation";
 
 @JsonObject
-class StopLocation extends Location {
+class StopLocation extends ModeLocation {
     @JsonProperty('code', String)
     private _code: string = '';
     @JsonProperty('popularity', Number)
     private _popularity: number = 0;
-    @JsonProperty('modeInfo', ModeInfo)
-    private _modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty('wheelchairAccessible', Boolean, true)
     public readonly wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty('url', String, true)
@@ -23,10 +20,6 @@ class StopLocation extends Location {
 
     get popularity(): number {
         return this._popularity;
-    }
-
-    get modeInfo(): ModeInfo {
-        return this._modeInfo;
     }
 
     get url(): string | undefined {

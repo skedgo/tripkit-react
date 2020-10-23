@@ -23,6 +23,7 @@ import RealTimeAlert from "../model/service/RealTimeAlert";
 import TKUIAlertRow from "../alerts/TKUIAlertRow";
 import LocationsData from "../data/LocationsData";
 import HasCard, {HasCardKeys} from "../card/HasCard";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -139,7 +140,8 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
     public componentDidMount() {
         // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
-        LocationsData.instance.getLocationInfo(this.props.location)
+        const location = this.props.location;
+        LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ? location.id : location)
             .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
             .catch((e) => console.log(e));
     }

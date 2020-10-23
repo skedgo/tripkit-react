@@ -1,14 +1,13 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import City from "../model/location/City";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 class LocationUtil {
-    public static getMainText(loc: Location, t: TranslationFunction): string {
-        if (loc instanceof City) {
+    public static getMainText(loc: Location, t?: TranslationFunction): string {
+        if (loc.name) {
             return loc.name;
         }
-        if (loc.isCurrLoc()) {
+        if (loc.isCurrLoc() && t) {
             return t("Current.Location");
         }
         const address = loc.address;
@@ -19,6 +18,9 @@ class LocationUtil {
 
     public static getSecondaryText(loc: Location): string | undefined {
         const address = loc.address;
+        if (loc.name && address && !address.includes(loc.name)) {
+            return address;
+        }
         return address && address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : undefined;
     }
 

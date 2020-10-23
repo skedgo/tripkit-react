@@ -17,7 +17,7 @@ class ModeInfo {
     /**
      * Part of icon file name that should be shipped with app. Required.
      */
-    @JsonProperty("localIcon", String) private _localIcon: string = "";
+    @JsonProperty("localIcon", String) public localIcon: string = "";
 
     /**
      * Part of icon file name that can be fetched from server.
@@ -38,10 +38,6 @@ class ModeInfo {
 
     get alt(): string {
         return this._alt;
-    }
-
-    get localIcon(): string {
-        return this._localIcon;
     }
 
     get remoteIcon(): string | undefined {

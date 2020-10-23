@@ -39,8 +39,6 @@ class TKUserProfile {
     public transportOptions: TKTransportOptions = new TKTransportOptions();
     @JsonProperty('transitConcessionPricing', Boolean, true)
     public transitConcessionPricing: boolean = false;
-    @JsonProperty('mapLayers', MapLocationTypeConverter, true)
-    private _mapLayers: MapLocationType[] = [];
     @JsonProperty('minimumTransferTime', Number, true)
     public minimumTransferTime: number = 0;
     @JsonProperty('walkingSpeed', WalkingSpeedConverter, true)
@@ -71,15 +69,6 @@ class TKUserProfile {
         if (value === false) { // Re-enable walk if wheelchair is disabled through this setter (e.g. from Wheelchi
             this.transportOptions.setTransportOption(ModeIdentifier.WALK_ID, DisplayConf.NORMAL);
         }
-    }
-
-    // TODO: Harcoded STOP layer as enabled.
-    get mapLayers(): MapLocationType[] {
-        return this._mapLayers.concat([MapLocationType.STOP].filter((locType: MapLocationType) => !this._mapLayers.includes(locType)));
-    }
-
-    set mapLayers(value: MapLocationType[]) {
-        this._mapLayers = value;
     }
 
     get bikeRacks(): boolean {
