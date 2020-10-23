@@ -7,7 +7,7 @@ import {tKUIFavouriteRowDefaultStyle} from "./TKUIFavouriteRow.css";
 import {ReactComponent as IconFavLoc} from "../images/favourite/ic-favourite-location.svg";
 import {ReactComponent as IconFavTrip} from "../images/favourite/ic-favourite-trip.svg";
 import {black} from "../jss/TKUITheme";
-import StopIcon from "../map/StopIcon";
+import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import LocationUtil from "../util/LocationUtil";
@@ -49,7 +49,7 @@ class TKUIFavouriteRow extends React.Component<IProps, {}> {
         let icon: JSX.Element;
         if (value instanceof FavouriteStop) {
             icon =
-                <StopIcon
+                <TKUIModeLocationIcon
                     stop={value.stop}
                     style={{
                         width: '20px',

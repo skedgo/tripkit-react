@@ -13,7 +13,7 @@ interface IProps {
     isDarkMode?: boolean;
 }
 
-class StopIcon extends React.Component<IProps, {}> {
+class TKUIModeLocationIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         if (this.props.stop instanceof FreeFloatingVehicleLocation) {
@@ -71,4 +71,4 @@ class StopIcon extends React.Component<IProps, {}> {
 
 }
 
-export default StopIcon;
+export default TKUIModeLocationIcon;

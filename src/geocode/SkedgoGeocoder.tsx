@@ -11,7 +11,7 @@ import {LocationConverter} from "../model/location/LocationConverter";
 import Util from "../util/Util";
 import {tKUIColors} from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
-import StopIcon from "../map/StopIcon";
+import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
@@ -27,7 +27,7 @@ class SkedgoGeocoder implements IGeocoder {
         this.options = new GeocoderOptions();
         this.options.renderIcon =
             (location: Location) => location instanceof StopLocation ?
-                <StopIcon
+                <TKUIModeLocationIcon
                     stop={location as StopLocation}
                     style={{
                         width: undefined,

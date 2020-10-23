@@ -7,7 +7,7 @@ import StopLocation from "../model/StopLocation";
 import {Marker, Popup} from "react-leaflet";
 import L from "leaflet";
 import {renderToStaticMarkup} from "react-dom/server";
-import StopIcon from "./StopIcon";
+import TKUIModeLocationIcon from "./TKUIModeLocationIcon";
 import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
 import RegionsData from "../data/RegionsData";
@@ -48,7 +48,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         const clickHandler = () => this.props.onClick && this.props.onClick(loc);
         const key = loc.getKey();
         const transIconHTML = renderToStaticMarkup(
-            <StopIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
+            <TKUIModeLocationIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
         );
         const icon = L.divIcon({
             html: transIconHTML,
