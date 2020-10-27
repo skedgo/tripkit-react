@@ -21,7 +21,6 @@ interface IProps {
     bounds: BBox,
     prefetchFactor?: number,
     onClick?: (loc: Location) => void;
-    onLocAction?: (type: MapLocationType, loc: Location) => void;
     omit?: Location[];
     isDarkMode?: boolean;
     config: TKUIConfig;

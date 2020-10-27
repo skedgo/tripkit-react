@@ -5,8 +5,8 @@ import CarRentalInfo from "./CarRentalInfo";
 @JsonObject
 class CarRentalLocation extends ModeLocation {
 
-    @JsonProperty("carPark", CarRentalInfo)
-    public carPark: CarRentalInfo = new CarRentalInfo();
+    @JsonProperty("carRental", CarRentalInfo)
+    public carRental: CarRentalInfo = new CarRentalInfo();
 
 }
 

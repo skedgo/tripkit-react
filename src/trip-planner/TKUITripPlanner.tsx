@@ -433,8 +433,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 <TKUIMapView
                                     hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                                     padding={mapPadding}
-                                    onLocAction={(locType: MapLocationType | undefined, loc: Location) => {
-                                        if (locType === MapLocationType.STOP) {
+                                    onLocAction={(loc: Location) => {
+                                        if (loc instanceof StopLocation) {
                                             this.showTimetableFor(loc as StopLocation);
                                             FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
                                         } else {
