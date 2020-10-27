@@ -11,7 +11,6 @@ import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import {MapLocationType} from "../model/location/MapLocationType";
-import OptionsData from "../data/OptionsData";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
 import {Visibility} from "../model/trip/SegmentTemplate";
@@ -35,7 +34,6 @@ import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import classNames from "classnames";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
-import TKUIMapPopup from "./TKUIMapPopup";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
@@ -55,10 +53,10 @@ import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbo
 import Color from "../model/trip/Color";
 import Features from "../env/Features";
 import WaiAriaUtil from "../util/WaiAriaUtil";
-import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
 import ModeLocation from "../model/location/ModeLocation";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -82,13 +80,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     attributionControl?: boolean;
 
     /**
-     * locType values: ```MapLocationType.BIKE_POD, MapLocationType.CAR_PARK, MapLocationType.CAR_POD, MapLocationType.CAR_RENTAL,
-     * MapLocationType.STOP, MapLocationType.MY_WAY_FACILITY, MapLocationType.PARK_AND_RIDE_FACILITY```
-     *
      * Function that will run when a map location is clicked.
      * @ctype
      */
-    onLocAction?: (locType: MapLocationType | undefined, loc: Location) => void;
+    onLocAction?: (loc: Location) => void;
 
     /**
      * Properties to be passed to react-leaflet [TileLayer component](https://react-leaflet.js.org/docs/en/components#tilelayer),
@@ -600,7 +595,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         onClick={(loc: Location) => {
                             this.onClick(loc);
                         }}
-                        onLocAction={this.props.onLocAction}
                         omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
                         isDarkMode={this.props.theme.isDark}
                         config={this.props.config}
@@ -695,11 +689,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // TODO: disabled auto pan to fit popup on open since it messes with viewport. Fix it.
             autoPan={false}
         >
-            <TKUIMapPopup title={LocationUtil.getMainText(location, this.props.t)}
-                          subtitle={LocationUtil.getSecondaryText(location)}
-                          onAction={() => this.props.onLocAction
-                              && this.props.onLocAction(location instanceof StopLocation ? MapLocationType.STOP : undefined, location)}
-                          renderActionIcon={location instanceof StopLocation ? () => <IconTimes/> : undefined}
+            <TKUIMapLocationPopup
+                location={location}
+                onAction={() => this.props.onLocAction && this.props.onLocAction(location)}
             />
         </Popup>;
     }

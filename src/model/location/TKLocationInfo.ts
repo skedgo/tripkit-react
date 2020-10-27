@@ -3,6 +3,7 @@ import LocationInfoDetails from "./LocationInfoDetails";
 import RealTimeAlert from "../service/RealTimeAlert";
 import StopLocation from "../StopLocation";
 import CarParkInfo from "./CarParkInfo";
+import BikePodInfo from "./BikePodInfo";
 
 @JsonObject
 class TKLocationInfo {
@@ -19,6 +20,8 @@ class TKLocationInfo {
     public readonly stop?: StopLocation = undefined;
     @JsonProperty("carPark", CarParkInfo, true)
     public readonly carPark?: CarParkInfo = undefined;
+    @JsonProperty("bikePod", BikePodInfo, true)
+    public readonly bikePod?: BikePodInfo = undefined;
 
 }
 

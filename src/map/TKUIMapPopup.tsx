@@ -9,8 +9,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title?: string;
     subtitle?: string;
     onAction?: () => void;
-    renderMoreInfo?: () => JSX.Element;
-    renderActionIcon?: () => React.ReactElement;
+    renderMoreInfo?: () => React.ReactNode;
+    renderActionIcon?: () => React.ReactNode;
 }
 
 interface IStyle {
@@ -18,6 +18,7 @@ interface IStyle {
     icon: CSSProps<IProps>;
     button: CSSProps<IProps>;
     rightPanel: CSSProps<IProps>;
+    separator: CSSProps<IProps>;
     title: CSSProps<IProps>;
     subtitle: CSSProps<IProps>;
 }
@@ -40,11 +41,14 @@ class TKUIMapPopup extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 {this.props.onAction &&
-                <button onClick={this.props.onAction}
-                        className={classes.button}
-                >
-                    {this.props.renderActionIcon ? this.props.renderActionIcon(): <IconInfo className={classes.icon}/>}
-                </button>}
+                <React.Fragment>
+                    <button onClick={this.props.onAction}
+                            className={classes.button}
+                    >
+                        {this.props.renderActionIcon ? this.props.renderActionIcon(): <IconInfo className={classes.icon}/>}
+                    </button>
+                    <div className={classes.separator}/>
+                </React.Fragment>}
                 <div className={classes.rightPanel}>
                     {this.props.title &&
                     <div className={classes.title}>

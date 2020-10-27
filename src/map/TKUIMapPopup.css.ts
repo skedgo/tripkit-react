@@ -17,15 +17,18 @@ export const tKUIMapPopupStyle: TKUIStyles<TKUIMapPopupStyle, TKUIMapPopupProps>
         },
         button: {
             ...resetStyles.button,
-            marginRight: '10px',
-            borderRight: '1px solid #23b15e',
-            paddingRight: '10px',
             ...genStyles.svgFillCurrColor,
             color: theme.colorPrimary
         },
         rightPanel: {
             ...genStyles.flex,
             ...genStyles.column
+        },
+        separator: {
+            marginRight: '10px',
+            borderRight: '1px solid #23b15e',
+            paddingRight: '10px',
+            ...genStyles.alignSelfStretch
         },
         title: {
             ...genStyles.fontS

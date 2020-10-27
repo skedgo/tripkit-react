@@ -61,6 +61,7 @@ import {TKUIWithClasses} from "../jss/StyleHelper";
 import {TKUIStopStepsProps, TKUIStopStepsStyle} from "../trip/TripSegmentSteps";
 import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
 import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
+import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIMapLocationPopup";
 
 /**
  * SDK configuration
@@ -126,6 +127,7 @@ interface ITKUIConfigOptional {
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
     TKUITransportPin: TKComponentConfig<TKUITransportPinProps, TKUITransportPinStyle>;
     TKUIMapPopup: TKComponentConfig<TKUIMapPopupProps, TKUIMapPopupStyle>;
+    TKUIMapLocationPopup: TKComponentConfig<TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle>;
     TKUIMapShapes: TKComponentConfig<TKUIMapShapesProps, TKUIMapShapesStyle>;
     TKUIMapStreets: TKComponentConfig<TKUIMapStreetsProps, TKUIMapStreetsStyle>;
     TKUISidebar: TKComponentConfig<TKUISidebarProps, TKUISidebarStyle>;
