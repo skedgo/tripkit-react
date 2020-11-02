@@ -17,6 +17,25 @@ class TransportUtil {
      * @returns {string}
      */
     public static getTransportIcon(modeInfo: ModeInfo, isRealtime = false, onDark = false, remoteOverOnDark = true): string {
+        return this.getTransIcon(modeInfo, {isRealtime, onDark, remoteOverOnDark});
+    }
+
+    public static getTransIcon(modeInfo: ModeInfo,
+                               options: {
+                                   isRealtime?: boolean;
+                                   onDark?: boolean;
+                                   useLocal?: boolean;
+                                   remoteOverOnDark?: boolean;
+                               } = {}): string {
+        const isRealtime = options.isRealtime !== undefined ? options.isRealtime : false;
+        const onDark = options.onDark !== undefined ? options.onDark : false;
+        const useLocal = options.useLocal ? options.useLocal : false;
+        const remoteOverOnDark = options.remoteOverOnDark !== undefined ? options.remoteOverOnDark : true;
+
+        if (useLocal) {
+            return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
+        }
+
         const iconRemote = this.getTransportIconRemote(modeInfo, onDark);
         if (iconRemote) {
             return iconRemote;

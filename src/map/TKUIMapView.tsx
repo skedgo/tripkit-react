@@ -701,8 +701,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.wasDoubleClick = true;
         });
 
-        // TODO Delete: Can actually delete this? It causes an exception sometimes
-        // setTimeout(() => this.onResize(), 5000);
+        // TODO Delete: Can actually delete this? It causes an exception sometimes.
+        setTimeout(() => this.onResize(), 5000);
         setTimeout(() => {
             WaiAriaUtil.apply(".mapboxgl-canvas", -1, true);
             WaiAriaUtil.apply(".mapboxgl-ctrl-logo", -1, true);

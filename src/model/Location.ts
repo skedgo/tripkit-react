@@ -37,8 +37,6 @@ class Location extends LatLng {
         // TODO!: Refactor to avoid circular dependency. Add (preferably required) timezone paramenter to Location.create
         // and add a method LocationUtil.create that calculates timezone and returns Location.create.
         // It caused issues with styleguidist, but issues don't happen anymore.
-        const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(latlng) : undefined;
-        instance._timezone = region ? region.timezone : "";
         return instance;
     }
 
@@ -90,6 +88,10 @@ class Location extends LatLng {
     }
 
     get timezone(): string {
+        if (!this.timeZone && !this._timezone) {
+            const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(this) : undefined;
+            this._timezone = region ? region.timezone : "";
+        }
         return this.timeZone || this._timezone;
     }
 

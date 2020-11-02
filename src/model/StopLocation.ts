@@ -33,13 +33,6 @@ class StopLocation extends ModeLocation {
     set shortName(value: string | undefined) {
         this._shortName = value;
     }
-
-    public getKey(): string {
-        // TODO: check this: lat + lng is not good as key since it may differ for the same stop comming from two sources
-        // (e.g. locations.json vs. stopFinder.json)
-        return this.id;
-        // return super.getKey() + this.code;
-    }
 }
 
 export default StopLocation;

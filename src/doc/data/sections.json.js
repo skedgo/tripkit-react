@@ -69,7 +69,7 @@ module.exports = {
                     // 'src/config/TKUIConfig.tsx',
                     // 'src/options/TKUISlider.tsx',
                     'src/location/TKUILocationDetailView.tsx',
-                    'src/location/TKUIW3w.tsx',
+                    'src/location/TKUILocationDetailField.tsx',
                     // 'src/**/*.tsx',  // doesn't work
 
                     // 'src/action/**/*.tsx',

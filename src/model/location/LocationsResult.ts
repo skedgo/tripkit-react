@@ -9,6 +9,7 @@ import ModeIdentifier from "../region/ModeIdentifier";
 import ModeLocation from "./ModeLocation";
 import FreeFloatingVehicleLocation from "./FreeFloatingVehicleLocation";
 import CarRentalLocation from "./CarRentalLocation";
+import CarPodLocation from "./CarPodLocation";
 
 enum ModeFields {
     bikePods = "bikePods",
@@ -80,17 +81,20 @@ class LocationsResult {
     @JsonProperty(ModeFields.freeFloating, [FreeFloatingVehicleLocation], true)
     public freeFloating: FreeFloatingVehicleLocation[] | undefined = undefined;
 
-    @JsonProperty(ModeFields.facilities, [FacilityLocation], true)
-    public facilities: FacilityLocation[] | undefined = undefined;
-
     @JsonProperty(ModeFields.carParks, [CarParkLocation], true)
     public carParks: CarParkLocation[] | undefined = undefined;
 
     @JsonProperty(ModeFields.carRentals, [CarRentalLocation], true)
     public carRentals: CarRentalLocation[] | undefined = undefined;
 
+    @JsonProperty(ModeFields.carPods, [CarPodLocation], true)
+    public carPods: CarPodLocation[] | undefined = undefined;
+
     @JsonProperty(ModeFields.stops, [StopLocation], true)
     public stops: StopLocation[] | undefined = undefined;
+
+    @JsonProperty(ModeFields.facilities, [FacilityLocation], true)
+    public facilities: FacilityLocation[] | undefined = undefined;
 
     private _level: 1 | 2;
 
