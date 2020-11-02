@@ -10,7 +10,6 @@ import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
 import {resetStyles} from "../css/ResetStyle.css";
-import City from "../model/location/City";
 import * as CSS from 'csstype';
 import RegionsData from "../data/RegionsData";
 import {TKError} from "../error/TKError";
@@ -23,10 +22,9 @@ import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
 import {Subtract} from 'utility-types';
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
 import LocationUtil from "../util/LocationUtil";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
-import ModeLocation from "../model/location/ModeLocation";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
@@ -111,7 +109,11 @@ class TKUILocationBox extends Component<IProps, IState> {
             },
             waiting: false
         };
-        this.geocodingData = new MultiGeocoder(this.props.geocodingOptions);
+        const geocodingOptions = this.props.geocodingOptions;
+        if (this.props.showCurrLoc === false) {
+            delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
+        }
+        this.geocodingData = new MultiGeocoder(geocodingOptions);
         this.handleAutocompleteResults = this.handleAutocompleteResults.bind(this);
         this.renderInput = this.renderInput.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
