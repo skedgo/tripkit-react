@@ -11,6 +11,10 @@ class ModeLocation extends Location {
     @JsonProperty('source', String, true)
     public source: string | undefined = TKDefaultGeocoderNames.skedgo;
 
+    public getKey(): string {
+        return this.id;
+    }
+
 }
 
 export default ModeLocation;

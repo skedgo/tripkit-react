@@ -10,6 +10,8 @@ import {ReactComponent as IconTimes} from '../images/ic-clock.svg';
 import {tKUIMapLocationPopupDefaultStyle} from './TKUIMapLocationPopup.css';
 import TransportUtil from "../trip/TransportUtil";
 import BikePodLocation from "../model/location/BikePodLocation";
+import CarParkLocation from "../model/location/CarParkLocation";
+import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -34,25 +36,65 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
     const t = props.t;
     const classes = props.classes;
     const info = () => {
+        if (location instanceof CarParkLocation) {
+            return (
+                <div className={classes.info}>
+                    {location.carPark.availableSpaces !== undefined &&
+                    <div className={classes.infoRow}>
+                        <img src={TransportUtil.getTransportIconLocal("car")} className={classes.infoRowImage}/>
+                        <div className={classes.infoRowLabel}>
+                            {t("Available.spots")}
+                        </div>
+                        <div className={classes.infoRowValue}>
+                            {location.carPark.availableSpaces}
+                        </div>
+                    </div>}
+                    {location.carPark.totalSpaces !== undefined &&
+                    <div className={classes.infoRow}>
+                        <img src={TransportUtil.getTransportIconLocal("parking")} className={classes.infoRowImage}/>
+                        <div className={classes.infoRowLabel}>
+                            {t("Total.spaces")}
+                        </div>
+                        <div className={classes.infoRowValue}>
+                            {location.carPark.totalSpaces}
+                        </div>
+                    </div>}
+                </div>
+            );
+        }
         if (location instanceof BikePodLocation) {
             return (
                 <div className={classes.info}>
+                    {location.bikePod.availableBikes !== undefined &&
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIcon(location.modeInfo)} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Available.bikes")}
                         </div>
                         <div className={classes.infoRowValue}>
-                            {location.bikePod.availableBikes !== undefined ? location.bikePod.availableBikes : "?"}
+                            {location.bikePod.availableBikes}
                         </div>
-                    </div>
+                    </div>}
+                    {location.bikePod.availableSpaces !== undefined &&
                     <div className={classes.infoRow}>
                         <img src={TransportUtil.getTransportIconLocal("bicycle-share")} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Empty.docks")}
                         </div>
                         <div className={classes.infoRowValue}>
-                            {location.bikePod.totalSpaces !== undefined ? location.bikePod.totalSpaces : "?"}
+                            {location.bikePod.availableSpaces}
+                        </div>
+                    </div>}
+                </div>
+            );
+        }
+        if (location instanceof FreeFloatingVehicleLocation) {
+            return (
+                <div className={classes.info}>
+                    <div className={classes.infoRow}>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.infoRowImage}/>
+                        <div className={classes.infoRowLabel}>
+                            {t("Bicycle")}
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, Any} from "json2typescript";
 import LatLng from "../LatLng";
 import DataSourceAttribution from "./DataSourceAttribution";
 import CompanyInfo from "./CompanyInfo";
@@ -22,7 +22,7 @@ class OpeningDay {
 }
 
 @JsonObject
-class OpeningHours {
+export class OpeningHours {
     @JsonProperty("timeZone", String)
     public timezone: string = "";
 
@@ -43,7 +43,7 @@ class PricingEntry {
 }
 
 @JsonObject
-class PricingTable {
+export class PricingTable {
     @JsonProperty("title", String)
     public title: string = "";
 
@@ -68,8 +68,10 @@ class Restrictions {
     @JsonProperty("noRestrictionWhenClosed", Boolean, true)
     public noRestrictionWhenClosed?: boolean = undefined;
 
-    @JsonProperty("allowedOnly", [String], true)
-    public allowedOnly?: string[] = undefined;
+    // Changed to Any to avoid exception since sometimes it comes [{}]
+    // @JsonProperty("allowedOnly", [String], true)
+    @JsonProperty("allowedOnly", [Any], true)
+    public allowedOnly?: any[] = undefined;
 
     @JsonProperty("notAllowed", [String], true)
     public notAllowed?: string[] = undefined;
@@ -92,7 +94,8 @@ class CarParkInfo {
     @JsonProperty('name', String)
     public name: string = "";
 
-    @JsonProperty("address", String)
+    // API specs says it's required, but sometimes it didn't come.
+    @JsonProperty("address", String, true)
     public address: string = "";
 
     @JsonProperty("operator", CompanyInfo)
@@ -101,11 +104,11 @@ class CarParkInfo {
     @JsonProperty("totalSpaces", Number, true)
     public totalSpaces?: number = undefined;
 
-    @JsonProperty("availableBikes", Number, true)
-    public availableBikes?: number = undefined;
+    @JsonProperty("availableSpaces", Number, true)
+    public availableSpaces?: number = undefined;
 
-    @JsonProperty("lastUpdated", Number, true)
-    public lastUpdated?: number = undefined;
+    @JsonProperty("lastUpdate", Number, true)
+    public lastUpdate?: number = undefined;
 
     @JsonProperty("onStreetParking", Boolean, true)
     public onStreetParking?: boolean = undefined;

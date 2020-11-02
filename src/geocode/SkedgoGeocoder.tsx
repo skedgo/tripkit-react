@@ -18,6 +18,9 @@ import TKLocationInfo from "../model/location/TKLocationInfo";
 import CarParkLocation from "../model/location/CarParkLocation";
 import ModeInfo from "../model/trip/ModeInfo";
 import BikePodLocation from "../model/location/BikePodLocation";
+import RegionsData from "../data/RegionsData";
+import Region from "../model/region/Region";
+import CarPodLocation from "../model/location/CarPodLocation";
 
 class SkedgoGeocoder implements IGeocoder {
 
@@ -103,41 +106,61 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location): Promise<Location> {
-        return LocationsData.instance.getLocationInfo(unresolvedLocation.id).then((locInfo: TKLocationInfo) => {
-            let resolvedLocation;
-            if (locInfo.stop) {
-                resolvedLocation = locInfo.stop;
-            } else if (locInfo.carPark) {
-                // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
-                // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
-                resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
-                resolvedLocation.name = locInfo.carPark.name;
-                resolvedLocation.carPark = locInfo.carPark;
-                resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "parking"});
-                // Need this to force TKUILocationBox to resolve the location.
-                resolvedLocation.hasDetail = true;
-            } else if (locInfo.bikePod) {
-                resolvedLocation = Util.iAssign(new BikePodLocation(), unresolvedLocation);
-                resolvedLocation.name = locInfo.bikePod.operator.name;
-                resolvedLocation.bikePod = locInfo.bikePod;
-                resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "bicycle-share"});
-                // Need this to force TKUILocationBox to resolve the location.
-                resolvedLocation.hasDetail = true;
-            } else if (unresolvedLocation.isResolved()) { // TODO: implement resolution for the other kind of locations.
-                resolvedLocation = unresolvedLocation;
-                resolvedLocation.hasDetail = true;
-            } else {
-                return Promise.reject('SkedgoGeocoder was unable to resolve the location.')
-            }
-            return resolvedLocation;
-        }).catch((e) => {
-            if (unresolvedLocation.isResolved()) {
-                unresolvedLocation.hasDetail = true;
-                return unresolvedLocation;
-            } else {
-                throw e;
-            }
-        });
+        return RegionsData.instance.getRegionP(unresolvedLocation).then((region?: Region) =>
+            LocationsData.instance.getLocationInfo(unresolvedLocation.id, region && region.name)
+                .then((locInfo: TKLocationInfo) => {
+                    let resolvedLocation;
+                    if (locInfo.stop) {
+                        resolvedLocation = locInfo.stop;
+                    } else if (locInfo.carPark) {
+                        // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
+                        // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
+                        resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
+                        resolvedLocation.name = locInfo.carPark.name;
+                        resolvedLocation.carPark = locInfo.carPark;
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "parking"});
+                        // Need this to force TKUILocationBox to resolve the location.
+                        resolvedLocation.hasDetail = true;
+                    } else if (locInfo.carRental) {
+                        // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
+                        // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
+                        resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
+                        resolvedLocation.name = locInfo.carRental.company.name;
+                        resolvedLocation.carRental = locInfo.carRental;
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "car-share"});
+                        // Need this to force TKUILocationBox to resolve the location.
+                        resolvedLocation.hasDetail = true;
+                    } else if (locInfo.carPod) {
+                        // Need to do this since locInfo.carPark is not a CarParkLocation, but a CarParkInfo, which is
+                        // inconsistent with locations.json endpoint, returning a list of CarParkLocation.
+                        resolvedLocation = Util.iAssign(new CarPodLocation(), unresolvedLocation);
+                        resolvedLocation.name = locInfo.carPod.operator.name;
+                        resolvedLocation.carPod = locInfo.carPod;
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "car-share"});
+                        // Need this to force TKUILocationBox to resolve the location.
+                        resolvedLocation.hasDetail = true;
+                    } else if (locInfo.bikePod) {
+                        resolvedLocation = Util.iAssign(new BikePodLocation(), unresolvedLocation);
+                        resolvedLocation.name = locInfo.bikePod.operator.name;
+                        resolvedLocation.bikePod = locInfo.bikePod;
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "bicycle-share"});
+                        // Need this to force TKUILocationBox to resolve the location.
+                        resolvedLocation.hasDetail = true;
+                    } else if (unresolvedLocation.isResolved()) { // TODO: implement resolution for the other kind of locations.
+                        resolvedLocation = unresolvedLocation;
+                        resolvedLocation.hasDetail = true;
+                    } else {
+                        return Promise.reject('SkedgoGeocoder was unable to resolve the location.')
+                    }
+                    return resolvedLocation;
+                }).catch((e) => {
+                if (unresolvedLocation.isResolved()) {
+                    unresolvedLocation.hasDetail = true;
+                    return unresolvedLocation;
+                } else {
+                    throw e;
+                }
+            }));
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {

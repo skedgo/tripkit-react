@@ -20,14 +20,19 @@ class BikePodInfo {
     @JsonProperty("availableBikes", Number, true)
     public availableBikes?: number = undefined;
 
-    @JsonProperty("lastUpdated", Number, true)
-    public lastUpdated?: number = undefined;
+    @JsonProperty("lastUpdate", Number, true)
+    public lastUpdate?: number = undefined;
 
     @JsonProperty("source", DataSourceAttribution, true)
     public source: DataSourceAttribution = new DataSourceAttribution();
 
     @JsonProperty("deepLink", String, true)
     public deepLink?: string = undefined;
+
+    get availableSpaces(): number | undefined {
+        return this.availableBikes !== undefined && this.totalSpaces !== undefined ?
+            Math.max(this.totalSpaces - this.availableBikes, 0) : undefined;
+    }
 }
 
 export default BikePodInfo;

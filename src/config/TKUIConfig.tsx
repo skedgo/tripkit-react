@@ -40,7 +40,7 @@ import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../optio
 import {TKI18nMessages} from "../i18n/TKI18nProvider";
 import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
 import {TKUITrackTransportProps, TKUITrackTransportStyle} from "../trip/TKUITrackTransport";
-import {TKUIW3wProps, TKUIW3wStyle} from "../location/TKUIW3w";
+import {TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle} from "../location/TKUILocationDetailField";
 import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICookiesBanner";
 import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "../alerts/TKUIAlertsSummary";
 import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView";
@@ -121,7 +121,7 @@ interface ITKUIConfigOptional {
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
-    TKUIW3w: TKComponentConfig<TKUIW3wProps, TKUIW3wStyle>;
+    TKUILocationDetailField: TKComponentConfig<TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;

@@ -4,6 +4,8 @@ import RealTimeAlert from "../service/RealTimeAlert";
 import StopLocation from "../StopLocation";
 import CarParkInfo from "./CarParkInfo";
 import BikePodInfo from "./BikePodInfo";
+import CarRentalInfo from "./CarRentalInfo";
+import CarPodInfo from "./CarPodInfo";
 
 @JsonObject
 class TKLocationInfo {
@@ -20,6 +22,10 @@ class TKLocationInfo {
     public readonly stop?: StopLocation = undefined;
     @JsonProperty("carPark", CarParkInfo, true)
     public readonly carPark?: CarParkInfo = undefined;
+    @JsonProperty("carRental", CarRentalInfo, true)
+    public readonly carRental?: CarRentalInfo = undefined;
+    @JsonProperty("carPod", CarPodInfo, true)
+    public readonly carPod?: CarPodInfo = undefined;
     @JsonProperty("bikePod", BikePodInfo, true)
     public readonly bikePod?: BikePodInfo = undefined;
 

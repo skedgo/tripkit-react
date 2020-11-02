@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import Location from "../model/Location";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
@@ -17,13 +17,27 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconClock} from '../images/ic-clock.svg';
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import TKUIW3w from "./TKUIW3w";
+import TKUILocationDetailField from "./TKUILocationDetailField";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import RealTimeAlert from "../model/service/RealTimeAlert";
 import TKUIAlertRow from "../alerts/TKUIAlertRow";
 import LocationsData from "../data/LocationsData";
 import HasCard, {HasCardKeys} from "../card/HasCard";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import RegionsData from "../data/RegionsData";
+import Region from "../model/region/Region";
+import BikePodLocation from "../model/location/BikePodLocation";
+import TransportUtil from "../trip/TransportUtil";
+import DateTimeUtil from "../util/DateTimeUtil";
+import iconW3w from "../images/location/ic-what3words.png";
+import {ReactComponent as IconPhone} from "../images/location/ic-phone.svg";
+import {ReactComponent as IconWebsite} from "../images/location/ic-website.svg";
+import CarParkLocation from "../model/location/CarParkLocation";
+import CompanyInfo from "../model/location/CompanyInfo";
+import {withStyles} from '@material-ui/core';
+import {ToggleButtonGroup, ToggleButton} from '@material-ui/lab';
+import {OpeningHours, PricingTable} from "../model/location/CarParkInfo";
+
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -42,11 +56,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     actions?: (location: Location, defaultActions: JSX.Element[]) => JSX.Element[];
 }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    actionsPanel: CSSProps<IProps>;
-    alertsContainer: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUILocationDetailViewDefaultStyle>;
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -60,33 +70,42 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 interface IState {
-    locationInfo?: TKLocationInfo
+    locationInfo?: TKLocationInfo,
+    section: string;
+}
+
+enum Sections {
+    Details = "Details",
+    OpeningHours = "Opening.Hours",
+    Pricing = "Pricing"
 }
 
 class TKUILocationDetailView extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            section: Sections.Details
+        };
         this.getDefaultActions = this.getDefaultActions.bind(this);
     }
 
     private getDefaultActions(location: Location) {
         const t = this.props.t;
         return (location instanceof StopLocation ? [
-                <ServiceResultsContext.Consumer>
-                    {(context: IServiceResultsContext) =>
-                        <TKUIButton
-                            type={TKUIButtonType.PRIMARY_VERTICAL}
-                            icon={<IconClock/>}
-                            text={t("Timetable")}
-                            onClick={() =>
-                                context.onStopChange(location)
-                            }
-                        />
-                    }
-                </ServiceResultsContext.Consumer>
-                ] :  [])
+            <ServiceResultsContext.Consumer>
+                {(context: IServiceResultsContext) =>
+                    <TKUIButton
+                        type={TKUIButtonType.PRIMARY_VERTICAL}
+                        icon={<IconClock/>}
+                        text={t("Timetable")}
+                        onClick={() =>
+                            context.onStopChange(location)
+                        }
+                    />
+                }
+            </ServiceResultsContext.Consumer>
+        ] :  [])
             .concat([
                 <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2}/>,
                 <TKUIFavouriteAction key={3}
@@ -113,6 +132,123 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
             () => <TKUIActionsView actions={actions} className={classes.actionsPanel}/> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         const locationInfo = this.state.locationInfo;
+        const t = this.props.t;
+        let moreInfoItems: React.ReactElement[] = [];
+        let operator: CompanyInfo | undefined = undefined;
+        let openingHours: OpeningHours | undefined = undefined;
+        let pricingTable: PricingTable | undefined = undefined;
+        if (location instanceof BikePodLocation) {
+            moreInfoItems.push(
+                <div className={classes.availabilityInfo}>
+                    <div className={classes.availabilityInfoBody}>
+                        <div className={classes.availabilitySection}>
+                            <div className={classes.availabilityLabel}>
+                                {t("Available.bikes")}
+                            </div>
+                            <div className={classes.availabilityValueCont}>
+                                <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.availabilityImage}/>
+                                <div className={classes.availabilityValue}>
+                                    {location.bikePod.availableBikes !== undefined ? location.bikePod.availableBikes : "?"}
+                                </div>
+                            </div>
+                        </div>
+                        <div className={classes.availabilityDivider} />
+                        <div className={classes.availabilitySection}>
+                            <div className={classes.availabilityLabel}>
+                                {t("Empty.docks")}
+                            </div>
+                            <div className={classes.availabilityValueCont}>
+                                <img src={TransportUtil.getTransportIconLocal("bicycle-share")} className={classes.availabilityImage}/>
+                                <div className={classes.availabilityValue}>
+                                    {location.bikePod.availableSpaces!== undefined ? location.bikePod.availableSpaces : "?"}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {location.bikePod.lastUpdate &&
+                    <div className={classes.availabilityUpdated}>
+                        {"Updated: " +
+                        DateTimeUtil.momentFromTimeTZ(location.bikePod.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                    </div>}
+                </div>);
+            operator = location.bikePod.operator;
+        } else if (location instanceof CarParkLocation) {
+            moreInfoItems.push(
+                <div className={classes.availabilityInfo}>
+                    <div className={classes.availabilityInfoBody}>
+                        <div className={classes.availabilitySection}>
+                            <div className={classes.availabilityLabel}>
+                                {t("Available.spots")}
+                            </div>
+                            <div className={classes.availabilityValueCont}>
+                                <img src={TransportUtil.getTransportIconLocal("car")} className={classes.availabilityImage}/>
+                                <div className={classes.availabilityValue}>
+                                    {location.carPark.availableSpaces}
+                                </div>
+                            </div>
+                        </div>
+                        <div className={classes.availabilityDivider} />
+                        <div className={classes.availabilitySection}>
+                            <div className={classes.availabilityLabel}>
+                                {t("Total.spaces")}
+                            </div>
+                            <div className={classes.availabilityValueCont}>
+                                <img src={TransportUtil.getTransportIconLocal("parking")} className={classes.availabilityImage}/>
+                                <div className={classes.availabilityValue}>
+                                    {location.carPark.totalSpaces}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {location.carPark.lastUpdate &&
+                    <div className={classes.availabilityUpdated}>
+                        {"Updated: " +
+                        DateTimeUtil.momentFromTimeTZ(location.carPark.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                    </div>}
+                </div>);
+            operator = location.carPark.operator;
+        }
+        if (operator) {
+            operator.phone &&
+            moreInfoItems.push(
+                <TKUILocationDetailField title={'tel:' + operator.phone}
+                                         icon={<IconPhone/>}
+                />
+            );
+            operator.website &&
+            moreInfoItems.push(
+                <TKUILocationDetailField title={operator.website}
+                                         icon={<IconWebsite/>}
+                />)
+        }
+        if (locationInfo && locationInfo.details && locationInfo.details.w3w) {
+            moreInfoItems.push(
+                <TKUILocationDetailField title={locationInfo.details.w3w}
+                                         subtitle={
+                                             <a href={locationInfo.details.w3wInfoURL} target="_blank" tabIndex={-1}>
+                                                 {t("what3words.address")}
+                                             </a>}
+                                         icon={iconW3w}
+                />);
+        }
+
+        const onSectionChange = (event, newSection) => {
+            this.setState({section: newSection});
+        };
+
+        const tabs =
+        <ToggleButtonGroup value={this.state.section} exclusive onChange={onSectionChange} aria-label="text formatting">
+            <ToggleButton value={Sections.Details}>
+                {t(Sections.Details)}
+            </ToggleButton>
+            <ToggleButton value={Sections.OpeningHours}>
+                {t(Sections.OpeningHours)}
+            </ToggleButton>
+            <ToggleButton value={Sections.Pricing}>
+                {t(Sections.Pricing)}
+            </ToggleButton>
+        </ToggleButtonGroup>;
+
         return (
             <TKUICard
                 title={title}
@@ -123,6 +259,8 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 slideUpOptions={slideUpOptions}
                 onRequestClose={this.props.onRequestClose}
             >
+                {/*{tabs}*/}
+                {this.state.section === Sections.Details &&
                 <div className={classes.main}>
                     {locationInfo && locationInfo.alerts && locationInfo.alerts.length > 0 &&
                     <div className={classes.alertsContainer}>
@@ -130,9 +268,11 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                             <TKUIAlertRow alert={alert} key={i} asCard={true}/>
                         )}
                     </div>}
-                    {locationInfo && locationInfo.details && locationInfo.details.w3w &&
-                    <TKUIW3w w3w={locationInfo.details.w3w} w3wInfoURL={locationInfo.details.w3wInfoURL}/>}
-                </div>
+                    {/*{typeSpecificInfo}*/}
+                    <div className={classes.fields}>
+                        {moreInfoItems}
+                    </div>
+                </div>}
             </TKUICard>
         );
     }
@@ -141,9 +281,13 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
         const location = this.props.location;
-        LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ? location.id : location)
-            .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
-            .catch((e) => console.log(e));
+        console.log(location);
+        RegionsData.instance.getRegionP(location).then((region?: Region) =>
+            LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ?
+                location.id : location, location.source === TKDefaultGeocoderNames.skedgo && location.id && region ?
+                region.name : undefined)
+                .then((result: TKLocationInfo) => this.setState({locationInfo: result}))
+                .catch((e) => console.log(e)));
     }
 
 }

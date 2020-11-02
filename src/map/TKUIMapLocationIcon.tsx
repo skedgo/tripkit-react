@@ -71,8 +71,21 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
         if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
+            const wantLocalIcon = !!modeInfo.identifier && modeInfo.identifier.startsWith("me_car-s");
             transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);
-            invertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
+            transIcon = TransportUtil.getTransIcon(modeInfo,
+                {
+                    isRealtime: false,
+                    onDark: wantIconForDark,
+                    useLocal: wantLocalIcon
+                });
+            invertedWrtMode = transIcon !== TransportUtil.getTransIcon(modeInfo,
+                {
+                    isRealtime: false,
+                    onDark: wantIconForDark,
+                    useLocal: wantLocalIcon,
+                    remoteOverOnDark: false
+                });
         }
         const classes = this.props.classes;
         const icon = transIcon &&

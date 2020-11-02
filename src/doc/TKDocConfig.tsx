@@ -1,8 +1,6 @@
 import React, {useState} from 'react';
-import TKUIW3w from "../location/TKUIW3w";
 import TKUIButton from "../buttons/TKUIButton";
 import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUICard, TKUIRoutingQueryInput} from "../index";
-import {tKUIW3wDefaultStyle} from "../location/TKUIW3w.css";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
 import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
@@ -105,10 +103,6 @@ const tKDocConfig = {
     TKUILocationDetailView: {
         showcase: () => <TKUILocationDetailView location={getMockLocation()} cardPresentation={CardPresentation.NONE}/>,
         style: classNamesOf(tKUILocationDetailViewDefaultStyle)
-    },
-    TKUIW3w: {
-        showcase: () => <TKUIW3w w3w={"hola"} w3wInfoURL={"chau"}/>,
-        style: classNamesOf(tKUIW3wDefaultStyle)
     },
     TKUIButton: {
         showcase: () =>
