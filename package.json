@@ -1,6 +1,6 @@
 {
   "name": "tripkit-react",
-  "version": "0.1.27",
+  "version": "0.1.28",
   "main": "dist/js/index.js",
   "_module": "dist/esm/index.js",
   "types": "dist/js/index.d.ts",

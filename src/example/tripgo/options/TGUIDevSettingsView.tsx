@@ -14,7 +14,6 @@ import classNames from "classnames";
 import Util from "../../../util/Util";
 import {ReactComponent as IconAngleDown} from "../../../images/ic-angle-down.svg";
 import {TKUIProfileViewStyle} from "../../../options/TKUIProfileView";
-import {OptionProps} from "react-select";
 import TGUIEditApiKeyView, {EditResult} from "./TGUIEditApiKeyView";
 import TKUISettingSection from "../../../options/TKUISettingSection";
 import TKUISettingLink from "../../../options/TKUISettingLink";
@@ -230,7 +229,7 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                     const customDataUpdate = {
                         ...customData,
                         servers: serversUpdate,
-                        server: getPredefinedServers()[0]
+                        server: Object.keys(getPredefinedServers())[0]
                     };
                     const profileUpdate = Util.iAssign(userProfile, { customData: customDataUpdate });
                     props.onUserProfileChange(profileUpdate);
@@ -274,7 +273,7 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                     const customDataUpdate = {
                         ...customData,
                         apiKeys: apiKeysUpdate,
-                        apiKey: getPredefinedApiKeys()[0]
+                        apiKey: Object.keys(getPredefinedApiKeys())[0]
                     };
                     const profileUpdate = Util.iAssign(props.userProfile, { customData: customDataUpdate });
                     props.onUserProfileChange(profileUpdate);
@@ -285,7 +284,7 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
         />;
 
     useEffect(() => {
-        const keyEventListener = (zEvent) => {
+        const keyEventListener = (zEvent: any) => {
             if (zEvent.keyCode === 27 && !showLoadTrips) { // Close on escape
                 props.onRequestClose && props.onRequestClose();
             }

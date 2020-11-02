@@ -52,8 +52,7 @@ export const tGUIFeedbackFormDefaultStyle: TKUIStyles<TGUIFeedbackFormStyle, TGU
             paddingTop: '10px',
             marginTop: '10px',
             ...genStyles.fontSM
-        }
-        ,
+        },
         fieldError: {
             position: 'absolute',
             color: theme.colorError,

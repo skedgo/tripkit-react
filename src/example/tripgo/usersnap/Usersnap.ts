@@ -1,5 +1,4 @@
-import {TKState} from '../../../index';
-import {feedbackTextFromState} from "../../../index";
+import {TKState, feedbackTextFromState} from '../../../index';
 
 class Usersnap {
 
