@@ -48,7 +48,7 @@ export const validUrl = (text: string) => {
     return urlRegex.test(text);
 };
 
-export const loadTripState = (sharedTripJsonUrl, tKState): Promise<void> => {
+export const loadTripState = (sharedTripJsonUrl: any, tKState: any): Promise<void> => {
     tKState.onWaitingStateLoad(true);
     return tKState.onTripJsonUrl(sharedTripJsonUrl)
         .then((trips?: Trip[]) => {

@@ -28,8 +28,8 @@ import {getApiKey, default as TGUIDevSettingsView, getServer} from "./options/TG
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
-import appleStoreLogo from "images/logo/apple-store-logo.png";
-import playStoreLogo from "images/logo/play-store-logo.png";
+import appleStoreLogo from "./images/logo/apple-store-logo.png";
+import playStoreLogo from "./images/logo/play-store-logo.png";
 import {loadTripState} from "./options/TGUILoadTripsView";
 import {resetStyles} from "../../css/ResetStyle.css";
 
@@ -194,7 +194,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             props: {
                 nativeAppLinks: () => {
                     const storeBtnStyle = {
-                        ...resetStyles.button,
+                        ...resetStyles.button as any,
                         height: '48px',
                         width: '144px',
                         cursor: 'pointer'
@@ -244,7 +244,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                 }
                 throw error;
             });
-            document.addEventListener("keydown", (zEvent) => {
+            document.addEventListener("keydown", (zEvent: any) => {
                 if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "v") {
                     navigator.clipboard.readText && navigator.clipboard.readText().then(t => {
                         loadTripState(t, tKState);
@@ -261,7 +261,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
 
     useEffect(() => {
-        const keyEventListener = (zEvent) => {
+        const keyEventListener = (zEvent: any) => {
             if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "d" || zEvent.key === "s")) {
                 setShowDevSettings(true);
                 zEvent.preventDefault();

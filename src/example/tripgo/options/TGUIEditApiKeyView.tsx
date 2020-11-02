@@ -21,7 +21,7 @@ export enum EditResult {
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title: string;
     editingKey: string;
-    apiKeys: object;
+    apiKeys: any;
     nameLabel?: string;
     namePlaceholder?: string;
     valueLabel?: string;
