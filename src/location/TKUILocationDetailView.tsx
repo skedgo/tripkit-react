@@ -93,7 +93,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
     private getDefaultActions(location: Location) {
         const t = this.props.t;
         return (location instanceof StopLocation ? [
-            <ServiceResultsContext.Consumer>
+            <ServiceResultsContext.Consumer key={1}>
                 {(context: IServiceResultsContext) =>
                     <TKUIButton
                         type={TKUIButtonType.PRIMARY_VERTICAL}
@@ -139,26 +139,29 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         let pricingTable: PricingTable | undefined = undefined;
         if (location instanceof BikePodLocation) {
             moreInfoItems.push(
-                <div className={classes.availabilityInfo}>
+                <div className={classes.availabilityInfo} key={"availability"}>
                     <div className={classes.availabilityInfoBody}>
-                        <div className={classes.availabilitySection}>
-                            <div className={classes.availabilityLabel}>
-                                {t("Available.bikes")}
-                            </div>
-                            <div className={classes.availabilityValueCont}>
-                                <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.availabilityImage}/>
-                                <div className={classes.availabilityValue}>
-                                    {location.bikePod.availableBikes !== undefined ? location.bikePod.availableBikes : "?"}
+                        {location.bikePod.availableBikes !== undefined &&
+                        <React.Fragment>
+                            <div className={classes.availabilitySection}>
+                                <div className={classes.availabilityLabel}>
+                                    {t("Available.bikes")}
+                                </div>
+                                <div className={classes.availabilityValueCont}>
+                                    <img src={TransportUtil.getTransportIconLocal("bicycle", false, this.props.theme.isDark)} className={classes.availabilityImage}/>
+                                    <div className={classes.availabilityValue}>
+                                        {location.bikePod.availableBikes}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className={classes.availabilityDivider} />
+                            <div className={classes.availabilityDivider} />
+                        </React.Fragment>}
                         <div className={classes.availabilitySection}>
                             <div className={classes.availabilityLabel}>
                                 {t("Empty.docks")}
                             </div>
                             <div className={classes.availabilityValueCont}>
-                                <img src={TransportUtil.getTransportIconLocal("bicycle-share")} className={classes.availabilityImage}/>
+                                <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, this.props.theme.isDark)} className={classes.availabilityImage}/>
                                 <div className={classes.availabilityValue}>
                                     {location.bikePod.availableSpaces!== undefined ? location.bikePod.availableSpaces : "?"}
                                 </div>
@@ -174,28 +177,32 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
             operator = location.bikePod.operator;
         } else if (location instanceof CarParkLocation) {
             moreInfoItems.push(
-                <div className={classes.availabilityInfo}>
+                <div className={classes.availabilityInfo} key={"availability"}>
                     <div className={classes.availabilityInfoBody}>
-                        <div className={classes.availabilitySection}>
-                            <div className={classes.availabilityLabel}>
-                                {t("Available.spots")}
-                            </div>
-                            <div className={classes.availabilityValueCont}>
-                                <img src={TransportUtil.getTransportIconLocal("car")} className={classes.availabilityImage}/>
-                                <div className={classes.availabilityValue}>
-                                    {location.carPark.availableSpaces}
+                        {location.carPark.availableSpaces !== undefined &&
+                        <React.Fragment>
+                            <div className={classes.availabilitySection}>
+                                <div className={classes.availabilityLabel}>
+                                    {t("Available.spots")}
+                                </div>
+                                <div className={classes.availabilityValueCont}>
+                                    <img src={TransportUtil.getTransportIconLocal("car", false, this.props.theme.isDark)}
+                                         className={classes.availabilityImage}/>
+                                    <div className={classes.availabilityValue}>
+                                        {location.carPark.availableSpaces}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className={classes.availabilityDivider} />
+                            <div className={classes.availabilityDivider} />
+                        </React.Fragment>}
                         <div className={classes.availabilitySection}>
                             <div className={classes.availabilityLabel}>
                                 {t("Total.spaces")}
                             </div>
                             <div className={classes.availabilityValueCont}>
-                                <img src={TransportUtil.getTransportIconLocal("parking")} className={classes.availabilityImage}/>
+                                <img src={TransportUtil.getTransportIconLocal("parking", false, this.props.theme.isDark)} className={classes.availabilityImage}/>
                                 <div className={classes.availabilityValue}>
-                                    {location.carPark.totalSpaces}
+                                    {location.carPark.totalSpaces !== undefined ? location.carPark.totalSpaces : "?"}
                                 </div>
                             </div>
                         </div>
@@ -213,12 +220,14 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
             moreInfoItems.push(
                 <TKUILocationDetailField title={'tel:' + operator.phone}
                                          icon={<IconPhone/>}
+                                         key={"tel"}
                 />
             );
             operator.website &&
             moreInfoItems.push(
                 <TKUILocationDetailField title={operator.website}
                                          icon={<IconWebsite/>}
+                                         key={"website"}
                 />)
         }
         if (locationInfo && locationInfo.details && locationInfo.details.w3w) {
@@ -229,6 +238,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                                                  {t("what3words.address")}
                                              </a>}
                                          icon={iconW3w}
+                                         key={"w3w"}
                 />);
         }
 
@@ -237,17 +247,17 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         };
 
         const tabs =
-        <ToggleButtonGroup value={this.state.section} exclusive onChange={onSectionChange} aria-label="text formatting">
-            <ToggleButton value={Sections.Details}>
-                {t(Sections.Details)}
-            </ToggleButton>
-            <ToggleButton value={Sections.OpeningHours}>
-                {t(Sections.OpeningHours)}
-            </ToggleButton>
-            <ToggleButton value={Sections.Pricing}>
-                {t(Sections.Pricing)}
-            </ToggleButton>
-        </ToggleButtonGroup>;
+            <ToggleButtonGroup value={this.state.section} exclusive onChange={onSectionChange} aria-label="text formatting">
+                <ToggleButton value={Sections.Details}>
+                    {t(Sections.Details)}
+                </ToggleButton>
+                <ToggleButton value={Sections.OpeningHours}>
+                    {t(Sections.OpeningHours)}
+                </ToggleButton>
+                <ToggleButton value={Sections.Pricing}>
+                    {t(Sections.Pricing)}
+                </ToggleButton>
+            </ToggleButtonGroup>;
 
         return (
             <TKUICard
@@ -281,7 +291,6 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         // TODO: if this.props.location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
         const location = this.props.location;
-        console.log(location);
         RegionsData.instance.getRegionP(location).then((region?: Region) =>
             LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ?
                 location.id : location, location.source === TKDefaultGeocoderNames.skedgo && location.id && region ?
