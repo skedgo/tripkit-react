@@ -41,7 +41,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                 <div className={classes.info}>
                     {location.carPark.availableSpaces !== undefined &&
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("car")} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("car", false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Available.spots")}
                         </div>
@@ -51,7 +51,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                     </div>}
                     {location.carPark.totalSpaces !== undefined &&
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("parking")} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("parking", false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Total.spaces")}
                         </div>
@@ -67,7 +67,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                 <div className={classes.info}>
                     {location.bikePod.availableBikes !== undefined &&
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle", false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Available.bikes")}
                         </div>
@@ -77,7 +77,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                     </div>}
                     {location.bikePod.availableSpaces !== undefined &&
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("bicycle-share")} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Empty.docks")}
                         </div>
@@ -92,7 +92,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
             return (
                 <div className={classes.info}>
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("bicycle")} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle", false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
                             {t("Bicycle")}
                         </div>
