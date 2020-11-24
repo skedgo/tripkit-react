@@ -505,6 +505,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             try {
                 return Promise.resolve(Util.deserialize(JSON.parse(tripUrl), RoutingResults));
             } catch (e) {
+                console.log(e);
                 return Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false));
             }
         }

@@ -7,9 +7,7 @@ import RealTimeAlert from "../service/RealTimeAlert";
 
 @JsonObject
 class RoutingResults {
-    @JsonProperty('region', String)
-    private _region: string = "";
-    @JsonProperty('regions', [String])
+    @JsonProperty('regions', [String], true)
     public _regions: string[] = [];
     @JsonProperty('segmentTemplates', [SegmentTemplate], true)
     private _segmentTemplates: SegmentTemplate[] = [];
@@ -22,7 +20,7 @@ class RoutingResults {
     private satappQuery: string = "";
 
     get region(): string {
-        return this._region;
+        return this._regions.length > 0 ? this._regions[0] : "";
     }
 
     get regions(): string[] {

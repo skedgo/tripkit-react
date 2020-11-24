@@ -26,7 +26,7 @@ class SegmentTemplate {
     @JsonProperty("to", Location, true)
     private _to: Location = new Location();
     @JsonProperty("modeInfo", ModeInfo, true) // required according to specs, but sometimes is missing
-    public modeInfo?: ModeInfo = undefined;
+    public modeInfo?: ModeInfo = new ModeInfo();
     @JsonProperty("modeIdentifier", String, true)
     private _modeIdentifier: string | null = null;
     @JsonProperty("action", String, true)
