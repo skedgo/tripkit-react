@@ -83,14 +83,11 @@ class RoutingQuery {
         for (const mode of modeSet) {
             modeParams += "&modes=" + mode;
         }
+        // Notice I include all avoid modes, even modes that are not present in the region.
         let avoidModeParams = "";
-        if (regionInfo) {
-            const avoidModes = regionInfo.transitModes
-                .map((transitMode: ModeInfo) => transitMode.identifier!)
-                .filter((transitModeS: string) => !options.transportOptions.isPreferredTransport(transitModeS));
-            for (const avoidMode of avoidModes) {
-                avoidModeParams += "&avoid=" + avoidMode;
-            }
+        const avoidModes = options.transportOptions.avoidTransports;
+        for (const avoidMode of avoidModes) {
+            avoidModeParams += "&avoid=" + avoidMode;
         }
         const weightingPreferencesParam = "&wp=" + options.weightingPrefs.toUrlParam();
         const minTransferTimeParam = "&tt=" + options.minimumTransferTime;

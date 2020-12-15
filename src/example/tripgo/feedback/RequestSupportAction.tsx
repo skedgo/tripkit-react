@@ -29,12 +29,12 @@ class RequestSupportAction extends React.Component<IProps, IState> {
                             onClick={() => this.setState({showForm: true})}
                             key={0}
                 />,
-                this.state.showForm &&
+                {this.state.showForm &&
                 <TGUIFeedbackForm
                     titleDefault={this.props.formTitle}
                     msgDefault={this.props.formMessage}
                     onRequestClose={() => this.setState({showForm: false})}
-                />
+                />}
             </React.Fragment>
         );
     }

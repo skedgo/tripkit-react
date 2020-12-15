@@ -382,8 +382,7 @@ const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyl
 
 const otherStyles = {
     // TODO: check if media queries work, or need to use a jss plugin.
-    ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {
-        /* IE10+ CSS styles go here */
+    ['@media all and (-ms-high-contrast: none), (-ms-high-contrast: active)']: {    /* IE10+ CSS */
         '@global': {
             ['.' + genClassNames.root]: {
                 '& button': {
@@ -393,6 +392,20 @@ const otherStyles = {
             '*': {
                 MsOverflowStyle: 'none'
             }
+        }
+    },
+    ['@supports (-ms-accelerator:true)']: { /* Edge 12+ CSS */
+        '@global': {
+            '*': {
+                MsOverflowStyle: 'none'
+            }
+        }
+    },
+    ['@supports (-ms-ime-align:auto)']: { /* Edge 16+ CSS */
+        '@global': {
+            '*': {
+                MsOverflowStyle: 'none'
+            },
         }
     },
     '@global': {

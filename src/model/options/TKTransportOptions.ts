@@ -22,7 +22,7 @@ class TKTransportOptions {
     private transportToOption: Map<string, DisplayConf> = new Map<string, DisplayConf>([[ModeIdentifier.WHEELCHAIR_ID, DisplayConf.HIDDEN]]);
 
     @JsonProperty('avoidTransports', [String], true)
-    private avoidTransports: string[] = [];
+    public avoidTransports: string[] = [];
 
     public setTransportOption(mode: string, option: DisplayConf) {
         if (option === DisplayConf.NORMAL) {
