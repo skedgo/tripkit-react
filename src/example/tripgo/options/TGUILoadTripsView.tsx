@@ -62,7 +62,7 @@ export const loadTripState = (sharedTripJsonUrl: any, tKState: any): Promise<voi
             }
         }).catch((error: Error) => {
             tKState.onWaitingStateLoad(false,
-                new TKError("Error loading trips" + (error.message ? ": " + error.message : ""), error.name, false));
+                new TKError("Error loading trips" + (error.message ? ": " + error.message : ""), error.name, false, error.stack));
         });
 };
 

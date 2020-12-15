@@ -498,16 +498,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     directionsView: true
                 }, () => this.refreshRegion());
                 return trips;
-            });
+            }).catch((e) => Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false, e.toString()))
+            )
         }
 
         public resultsFromJsonString(tripUrl: string): Promise<RoutingResults> {
-            try {
-                return Promise.resolve(Util.deserialize(JSON.parse(tripUrl), RoutingResults));
-            } catch (e) {
-                console.log(e);
-                return Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false));
-            }
+            return NetworkUtil.deserializer(RoutingResults)(JSON.parse(tripUrl));
         }
 
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
@@ -535,8 +531,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             // }
             let modeSetsQ1;
             let modeSetsQ2;
-            const regionQ1 = this.getQueryRegion(q1);
-            const regionQ2 = this.getQueryRegion(q2);
             if (RegionsData.instance.hasRegions()) {
                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
                 modeSetsQ1 = computeModeSetsFc(q1, opts1);
@@ -546,24 +540,19 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 modeSetsQ2 = [[]]; // which happens when checking if same query on TripPlanner.componentDidMount
             }
             const q1Urls = modeSetsQ1.map((modeSet: string[]) => {
-                return q1.getQueryUrl(modeSet, opts1, regionQ1 && RegionsData.instance.getRegionInfo(regionQ1.name));
+                return q1.getQueryUrl(modeSet, opts1);
             });
             const q2Urls = modeSetsQ2.map((modeSet: string[]) => {
-                return q2.getQueryUrl(modeSet, opts2, regionQ2 && RegionsData.instance.getRegionInfo(regionQ2.name));
+                return q2.getQueryUrl(modeSet, opts2);
             });
             return JSON.stringify(q1Urls) === JSON.stringify(q2Urls);
         }
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
-                const queryRegion = this.getQueryRegion(query)!;
-                // Waiting for region info is not necessary if I send all avoid modes, which may include modes that are
-                // not present in the region.
-                return RegionsData.instance.getRegionInfoP(queryRegion.name).then((regionInfo: RegionInfo) => {
-                    const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                    return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
-                        return query.getQueryUrl(modeSet, this.props.options, regionInfo);
-                    });
+                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
+                    return query.getQueryUrl(modeSet, this.props.options);
                 });
             });
         }

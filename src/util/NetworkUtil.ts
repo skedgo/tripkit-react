@@ -51,7 +51,13 @@ class NetworkUtil {
 
     public static deserializer<T>(classRef: { new(): T }): (json: any) => Promise<T> {
         return (json: any) => {
-            return Promise.resolve(Util.deserialize(json, classRef));
+            try {
+                return Promise.resolve(Util.deserialize(json, classRef));
+            } catch (e) {
+                // Print to console deserialize exception.
+                console.log(e);
+                return Promise.reject(e);
+            }
         }
     }
 
