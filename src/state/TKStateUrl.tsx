@@ -130,8 +130,8 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 timePref === "2" ? TimePreference.ARRIVE : TimePreference.NOW;
         }
         if (fieldsMap.has(URLFields.TIME)) {
-            const timeMilis = Number(fieldsMap.get(URLFields.TIME)) * 1000;
-            query.time = DateTimeUtil.momentFromTimeTZ(timeMilis);
+            const time = Number(fieldsMap.get(URLFields.TIME));
+            query.time = isNaN(time) ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(time * 1000);
         }
 
         let tripJsonUrl: string | undefined = undefined;

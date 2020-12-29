@@ -35,7 +35,6 @@ import TKUISidebar from "../sidebar/TKUISidebar";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
 import {TKUISlideUpPosition} from "../card/TKUISlideUp";
-import {MapLocationType} from "../model/location/MapLocationType";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
