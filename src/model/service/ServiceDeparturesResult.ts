@@ -52,11 +52,13 @@ class ServiceDeparturesResult {
             for (const parentStop of this.stops) {
                 if (parentStop.code === code) {
                     result = parentStop;
-                    break
+                    break;
                 }
                 if (parentStop instanceof StopLocationParent) {
                     result = parentStop.getStopFromCode(code);
-                    break
+                    if (result) {
+                        break;
+                    }
                 }
             }
         }
