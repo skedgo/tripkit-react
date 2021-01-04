@@ -28,7 +28,7 @@ class RequestSupportAction extends React.Component<IProps, IState> {
                             type={TKUIButtonType.PRIMARY}
                             onClick={() => this.setState({showForm: true})}
                             key={0}
-                />,
+                />
                 {this.state.showForm &&
                 <TGUIFeedbackForm
                     titleDefault={this.props.formTitle}

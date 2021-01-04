@@ -103,7 +103,9 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     displayLimit: this.idealMinDisplayed
                 },
                 () => {
-                    this.applyFilter(() => this.coverDisplayLimit());
+                    this.applyFilter(() =>
+                        this.state.startStop &&     // On initial state load filter is set before stop, so don't call
+                        this.coverDisplayLimit());  // coverDisplayLimit in that case (will be called when stop is set).
                 });
         }
 
