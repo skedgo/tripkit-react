@@ -120,7 +120,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                 mapboxGlLayerProps: {
                     accessToken: "pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA",
                     style: props.theme.isLight ?
-                        "mapbox://styles/mgomezlucero/cjvp9zm9114591cn8cictke9e" :
+                        "mapbox://styles/mgomezlucero/ckjliu0460xxh1aqgzzb2bb34" :
                         "mapbox://styles/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm",
                     attribution: "&copy <a href='http://osm.org/copyright' tabindex='-1'>OpenStreetMap</a> contributors"
                 }
