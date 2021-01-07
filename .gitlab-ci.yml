@@ -15,7 +15,7 @@ buildnode:
     - CI=false npm run build
   artifacts:
     paths:
-      - build/  # This is what we want to publish
+      - dist/  # This is what we want to publish
   only:
     refs:
       - tripgoBeta
@@ -36,7 +36,7 @@ deploy_beta:
   script:
     - S3_FOLDER_NAME="tripkit.tripgo.com"
     - echo ${S3_FOLDER_NAME}
-    - aws s3 sync --delete build s3://${S3_FOLDER_NAME}
+    - aws s3 sync --delete dist s3://${S3_FOLDER_NAME}
     - echo "Purge https://${S3_FOLDER_NAME}/*"
     - 'curl -X POST "https://api.cloudflare.com/client/v4/zones/e4eb074c0d924353ba3da074e7fa5f87/purge_cache" -H "X-Auth-Email: root@skedgo.com" -H "X-Auth-Key: ${CF_X_AUTH_KEY}" -H "Content-Type: application/json" --data "{\"files\":[\"https://${S3_FOLDER_NAME}/*\"]}"'
   environment:
@@ -61,7 +61,7 @@ deploy_production:
   script:
     - S3_FOLDER_NAME="tripgo.com"
     - echo ${S3_FOLDER_NAME}
-    - aws s3 sync --delete build s3://${S3_FOLDER_NAME}
+    - aws s3 sync --delete dist s3://${S3_FOLDER_NAME}
     - echo "Purge https://${S3_FOLDER_NAME}/*"
     - 'curl -X POST "https://api.cloudflare.com/client/v4/zones/e4eb074c0d924353ba3da074e7fa5f87/purge_cache" -H "X-Auth-Email: root@skedgo.com" -H "X-Auth-Key: ${CF_X_AUTH_KEY}" -H "Content-Type: application/json" --data "{\"files\":[\"https://${S3_FOLDER_NAME}/*\"]}"'
   environment:
