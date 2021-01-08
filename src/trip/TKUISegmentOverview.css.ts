@@ -4,6 +4,11 @@ import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "./TKUISegmentO
 import genStyles from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 
+function lineColorForSegment(segment?: Segment) {
+    return (!segment || segment.arrival || isUnconnected(segment)) ?
+        undefined : segment.getColor();
+}
+
 export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyle, TKUISegmentOverviewProps> =
     (theme: TKUITheme) => ({
         main: {
@@ -66,8 +71,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
                     // stationary prev segment is not displayed.
                     prevSegment = prevSegment.prevSegment();
                 }
-                return !prevSegment || isUnconnected(prevSegment) ? undefined :
-                    '4px solid ' + prevSegment.getColor();
+                const color = lineColorForSegment(prevSegment);
+                return color && '4px solid ' + color;
             },
             ...genStyles.grow
         },
@@ -76,13 +81,17 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             flexGrow: '0!important'
         },
         line: { // Line with the color of the current segment.
-            borderLeft: (props: TKUISegmentOverviewProps) => (props.value.arrival || isUnconnected(props.value)) ?
-                undefined : '4px solid ' + props.value.getColor(),
+            borderLeft: (props: TKUISegmentOverviewProps) => {
+                const color = lineColorForSegment(props.value);
+                return color && '4px solid ' + color;
+            },
             ...genStyles.grow
         },
         nextLine: { // Line with the color of the next segment. This style is just used for stationary segments.
-            borderLeft: (props: TKUISegmentOverviewProps) => props.value.nextSegment() &&
-                '4px solid ' + props.value.nextSegment()!.getColor(),
+            borderLeft: (props: TKUISegmentOverviewProps) => {
+                const color = lineColorForSegment(props.value.nextSegment());
+                return color && '4px solid ' + color;
+            },
             ...genStyles.grow
         },
         prevCircle: {

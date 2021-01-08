@@ -5,21 +5,17 @@
     <bookmark url="file://$PROJECT_DIR$/../act-react/src/data/json/schools.json" description="{" line="1162" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/Segment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Segment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/Trip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Trip.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" afterDir="false" />
-    </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="">
       <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.module.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/example/chym/regions.json" afterDir="false" />
+    </list>
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/trip/Segment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Segment.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -57,11 +53,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUISegmentOverview.tsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TKUISegmentOverview.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="160" column="23" lean-forward="true" selection-start-line="130" selection-start-column="12" selection-end-line="160" selection-end-column="23" />
+            <state relative-caret-position="305">
+              <caret line="202" column="48" selection-start-line="202" selection-start-column="48" selection-end-line="202" selection-end-column="48" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -72,8 +68,8 @@
       <file leaf-file-name="TKUISegmentOverview.css.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="76" column="35" selection-start-line="76" selection-start-column="35" selection-end-line="76" selection-end-column="35" />
+            <state relative-caret-position="260">
+              <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
               <folding>
                 <element signature="e#0#46#0" expanded="true" />
               </folding>
@@ -84,8 +80,8 @@
       <file leaf-file-name="Segment.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/trip/Segment.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="214">
-              <caret line="241" column="11" selection-start-line="241" selection-start-column="11" selection-end-line="241" selection-end-column="11" />
+            <state relative-caret-position="15">
+              <caret line="1" column="45" lean-forward="true" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -99,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SegmentTemplate.ts" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SegmentTemplate.ts" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="107">
-              <caret line="111" column="24" lean-forward="true" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
+            <state relative-caret-position="180">
+              <caret line="12" column="10" lean-forward="true" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
               <folding>
                 <element signature="e#0#57#0" expanded="true" />
               </folding>
@@ -164,17 +160,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>segment.type</find>
-      <find>&quot;unscheduled&quot;</find>
-      <find>type</find>
-      <find>stops</find>
-      <find>console.log</find>
-      <find>@JsonConverter</find>
       <find>wait</find>
       <find>modeInfo</find>
       <find>getFr</find>
       <find>get fr</find>
-      <find>SegmentType</find>
       <find>from</find>
       <find>prevSegment</find>
       <find>preTime</find>
@@ -192,8 +181,15 @@
       <find>separation</find>
       <find>fontM</find>
       <find>grow</find>
-      <find>preLine</find>
       <find>noGrow</find>
+      <find>preLine</find>
+      <find>nextSegment</find>
+      <find>isCont</find>
+      <find>stops</find>
+      <find>type</find>
+      <find>SegmentType</find>
+      <find>prevCir</find>
+      <find>visibi</find>
     </findStrings>
     <replaceStrings>
       <replace>&lt;/TKUIConfigProvider</replace>
@@ -264,7 +260,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="tripgoProd" />
+        <entry key="$PROJECT_DIR$" value="tripgoBeta" />
       </map>
     </option>
   </component>
@@ -324,11 +320,11 @@
         <option value="$USER_HOME$/Desktop/platformChange.json" />
         <option value="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" />
         <option value="$PROJECT_DIR$/src/model/trip/Trip.ts" />
-        <option value="$PROJECT_DIR$/src/model/trip/Segment.ts" />
         <option value="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" />
-        <option value="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" />
         <option value="$PROJECT_DIR$/src/css/GenStyle.css.ts" />
+        <option value="$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts" />
         <option value="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" />
+        <option value="$PROJECT_DIR$/src/model/trip/Segment.ts" />
       </list>
     </option>
   </component>
@@ -626,14 +622,7 @@
       <workItem from="1606305239955" duration="17863000" />
       <workItem from="1608643868705" duration="8995000" />
       <workItem from="1609417052100" duration="20947000" />
-      <workItem from="1610050144249" duration="20382000" />
-    </task>
-    <task id="LOCAL-00361" summary="Feature 13029: TripKit React - Documentation:&#10;- Resolve class references to markdown links.&#10;- Populate doc with class references. &#10;- bug fixing.">
-      <created>1601067614793</created>
-      <option name="number" value="00361" />
-      <option name="presentableId" value="LOCAL-00361" />
-      <option name="project" value="LOCAL" />
-      <updated>1601067614793</updated>
+      <workItem from="1610050144249" duration="25497000" />
     </task>
     <task id="LOCAL-00362" summary="Feature 13029: TripKit React - Documentation (Sep-29):">
       <created>1601406764880</created>
@@ -971,11 +960,18 @@
       <option name="project" value="LOCAL" />
       <updated>1610045970812</updated>
     </task>
-    <option name="localTasksCounter" value="410" />
+    <task id="LOCAL-00410" summary="UX Issue #13933: Platform change instructions missing">
+      <created>1610134546890</created>
+      <option name="number" value="00410" />
+      <option name="presentableId" value="LOCAL-00410" />
+      <option name="project" value="LOCAL" />
+      <updated>1610134546892</updated>
+    </task>
+    <option name="localTasksCounter" value="411" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4171451000" />
+    <option name="totallyTimeSpent" value="4176566000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1007,7 +1003,7 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32424676" />
-      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49499285" weight="0.41907513" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="13" sideWeight="0.49499285" visible="true" weight="0.41907513" />
       <window_info id="npm" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49427754" weight="0.23699422" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.2081545" />
@@ -1110,7 +1106,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="#13579: TripKit React - Map locations + location details (3)" />
     <MESSAGE value="#13579: TripKit React - Map locations + location details (4)" />
     <MESSAGE value="#13579: TripKit React - Map locations + location details:&#10;- Map locations.&#10;- Enabled / disabled by transport modes settings.&#10;- LS caching based on hashes returned by locations.json." />
     <MESSAGE value="#13579: TripKit React - Map locations + location details:&#10;- Show all kind of locations, special icon for free-floating vehicles." />
@@ -1135,7 +1130,8 @@
     <MESSAGE value="/build -&gt; /dist." />
     <MESSAGE value="Trigger CI/CD (2)." />
     <MESSAGE value="Trigger CI/CD (prod)." />
-    <option name="LAST_COMMIT_MESSAGE" value="Trigger CI/CD (prod)." />
+    <MESSAGE value="UX Issue #13933: Platform change instructions missing" />
+    <option name="LAST_COMMIT_MESSAGE" value="UX Issue #13933: Platform change instructions missing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1523,27 +1519,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="111" column="24" lean-forward="true" selection-start-line="111" selection-start-column="24" selection-end-line="111" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
           <caret line="138" column="43" lean-forward="true" selection-start-line="138" selection-start-column="43" selection-end-line="138" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/Segment.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="241" column="11" selection-start-line="241" selection-start-column="11" selection-end-line="241" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -1556,8 +1535,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="76" column="35" selection-start-line="76" selection-start-column="35" selection-end-line="76" selection-end-column="35" />
+        <state relative-caret-position="260">
+          <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
           <folding>
             <element signature="e#0#46#0" expanded="true" />
           </folding>
@@ -1566,10 +1545,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="160" column="23" lean-forward="true" selection-start-line="130" selection-start-column="12" selection-end-line="160" selection-end-column="23" />
+        <state relative-caret-position="305">
+          <caret line="202" column="48" selection-start-line="202" selection-start-column="48" selection-end-line="202" selection-end-column="48" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/trip/Segment.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="45" lean-forward="true" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="10" lean-forward="true" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -85,27 +85,9 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segment = this.props.value;
-        const previousWaitingSegment = prevWaitingSegment(segment);
-        const prevWaitingSegmentTime = previousWaitingSegment ?
-            DateTimeUtil.momentFromTimeTZ(previousWaitingSegment.startTime * 1000, segment.from.timezone)
-                .format(DateTimeUtil.TIME_FORMAT_TRIP) : undefined;
-        const startTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-            .format(DateTimeUtil.TIME_FORMAT_TRIP);
         const modeInfo = segment.modeInfo!;
         const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "")
             + (segment.type === SegmentType.stationary ? segment.location.getDisplayString() : segment.from.getDisplayString());
-        let stops: ServiceStopLocation[] | null = null;
-        if (segment.shapes) {
-            stops = [];
-            for (const shape of segment.shapes) {
-                if (shape.travelled && shape.stops) {
-                    stops = stops.concat(shape.stops);
-                }
-            }
-        }
-        if (stops) {
-            stops = stops.slice(1, stops.length - 1); // remove the first and last stop.
-        }
         const iconOnDark = isIconOnDark(segment);
         const hasBusOccupancy = segment.isPT() && segment.realtimeVehicle && segment.realtimeVehicle.components &&
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
@@ -126,8 +108,13 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             <TKUIWCSegmentInfo value={segment}/> : undefined;
         const showPin = (segment.isFirst() || segment.arrival) && isUnconnected(segment);
         const prevSegment = segment.prevSegment();
+
         let header;
-        if (segment.type === SegmentType.stationary) {
+        if (prevSegment && prevSegment.type === SegmentType.stationary) {
+            // E.g./s of stationary segments: transfer, wait taxi, find parking, collect vehicle, etc.
+            // Don't display the header since it's substituted by the header of the previous (stationary) segment.
+            header = null;
+        } else if (segment.type === SegmentType.stationary) {   // Header of a stationary segment.
             const nextSegment = segment.nextSegment();
             const arrivePlatform = prevSegment && prevSegment.type === SegmentType.scheduled ? prevSegment.endPlatform : undefined;
             const transferAction = nextSegment && nextSegment.type === SegmentType.scheduled ? nextSegment.startPlatform : segment.getAction();
@@ -135,79 +122,60 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                 .format(DateTimeUtil.TIME_FORMAT_TRIP);
             const departTime = DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone)
                 .format(DateTimeUtil.TIME_FORMAT_TRIP);
-            if (prevSegment && prevSegment.type === SegmentType.scheduled && nextSegment && nextSegment.type === SegmentType.scheduled) {
-                header = <div className={classes.header}>
+            const betweenScheduled = prevSegment && prevSegment.type === SegmentType.scheduled && nextSegment && nextSegment.type === SegmentType.scheduled;
+            header =
+                <div className={classes.header}>
                     <div className={classes.track}>
-                        <div className={classNames(classes.preLine, classes.longLine)}/>
-                        <div className={classNames(classes.prevCircle, classes.circleSeparation)}/>
-                        <div className={classes.nextCircle}/>
+                        <div className={classNames(classes.preLine, betweenScheduled && classes.longLine)}/>
+                        {betweenScheduled &&
+                        <div className={classNames(classes.prevCircle, classes.circleSeparation)}/>}
+                        {/* If next segment is unconnected, then the stationary segment connects with previous one, so
+                        paint circle accordingly. E.g. find parking. */}
+                        <div className={nextSegment && isUnconnected(nextSegment) ? classes.prevCircle : classes.nextCircle}/>
                         <div className={classes.nextLine}/>
                     </div>
                     <div className={classes.title} aria-label={from}>
                         {from}
-                        {arrivePlatform ?
-                        <div className={classNames(classes.subtitle, classes.separation)}>
-                            {arrivePlatform}
-                        </div> : null}
+                        {betweenScheduled && arrivePlatform ?
+                            <div className={classNames(classes.subtitle, classes.separation)}>
+                                {arrivePlatform}
+                            </div> : null}
                         <div className={classes.subtitle}>
                             {transferAction}
                         </div>
                         {this.props.actions}
                     </div>
-                    <div className={classes.timeBottom} aria-label={"at " + departTime + "."}>
-                        <span className={classes.separation}>{arriveTime}</span>
+                    <div className={betweenScheduled ? classes.timeBottom : classes.time} aria-label={"at " + departTime + "."}>
+                        {betweenScheduled &&
+                        <span className={classes.separation}>{arriveTime}</span>}
                         <span>{departTime}</span>
                     </div>
                 </div>;
-            } else {
-                const transferAction = nextSegment && nextSegment.type === SegmentType.scheduled ? nextSegment.startPlatform : segment.getAction();
-                header = <div className={classes.header}>
+        } else {    // Header of a non-stationary segment.
+            const startTime = segment.isContinuation ? undefined :
+                DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
+                    .format(DateTimeUtil.TIME_FORMAT_TRIP);
+            const startPlatform = segment.type === SegmentType.scheduled && !segment.isContinuation ? segment.startPlatform : undefined;
+            header =
+                <div className={classes.header}>
                     <div className={classes.track}>
                         <div className={classes.preLine}/>
-                        {/*{prevSegment && prevSegment.type === SegmentType.scheduled ?*/}
-                            {/*<div className={classes.prevCircle}/> : undefined}*/}
-                        {showPin ? <IconPinStart className={classes.iconPin}/> : <div className={classes.nextCircle}/>}
-                        <div className={classes.nextLine}/>
+                        {showPin ? <IconPinStart className={classes.iconPin}/> :
+                            <div className={isUnconnected(segment) ? classes.prevCircle : classes.circle}/>}
+                        <div className={classes.line}/>
                     </div>
                     <div className={classes.title} aria-label={from}>
                         {from}
-                        {/*{arrivePlatform &&*/}
-                        {/*<div className={classes.subtitle}>*/}
-                            {/*{arrivePlatform}*/}
-                        {/*</div>}*/}
+                        {startPlatform &&
                         <div className={classes.subtitle}>
-                            {transferAction}
-                        </div>
+                            {startPlatform}
+                        </div>}
                         {this.props.actions}
                     </div>
-                    <div className={classes.time} aria-label={"at " + departTime + "."}>
-                        {/*{prevWaitingSegmentTime &&*/}
-                        {/*<span className={classes.preTime}>{prevWaitingSegmentTime}</span>}*/}
-                        <span>{departTime}</span>
+                    <div className={classes.time} aria-label={"at " + startTime + "."}>
+                        <span>{startTime}</span>
                     </div>
                 </div>;
-            }
-        } else if (!prevSegment || prevSegment.type !== SegmentType.stationary) {
-            const startPlatform = segment.type === SegmentType.scheduled ? segment.startPlatform : undefined;
-            header = <div className={classes.header}>
-                <div className={classes.track}>
-                    <div className={classes.preLine}/>
-                    {showPin ? <IconPinStart className={classes.iconPin}/> :
-                        <div className={isUnconnected(segment) ? classes.prevCircle : classes.circle}/>}
-                    <div className={classes.line}/>
-                </div>
-                <div className={classes.title} aria-label={from}>
-                    {from}
-                    {startPlatform &&
-                    <div className={classes.subtitle}>
-                        {startPlatform}
-                    </div>}
-                    {this.props.actions}
-                </div>
-                <div className={classes.time} aria-label={"at " + startTime + "."}>
-                    <span>{startTime}</span>
-                </div>
-            </div>;
         }
         return (
             <div className={classes.main} tabIndex={0}>
