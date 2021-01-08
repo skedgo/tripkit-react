@@ -207,7 +207,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
                                     role="link"
                             >
                                 <img src={appleStoreLogo} key={'appleStoreLogo'} style={{width: '100%', height: '100%'}}/>
-                            </button>,
+                            </button>
                             <button onClick={() => window.open('https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner', '_blank')}
                                     style={storeBtnStyle}
                                     aria-label="Download on Google Play"

@@ -31,10 +31,18 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         time: {
             ...theme.textSizeCaption,
             ...theme.textColorGray,
-            margin: '0 16px',
             ...genStyles.flex,
             ...genStyles.column,
-            ...genStyles.center
+            ...genStyles.center,
+            margin: '0 16px'
+        },
+        timeBottom: {
+            ...theme.textSizeCaption,
+            ...theme.textColorGray,
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.center,
+            margin: 'auto 16px 10px 16px'
         },
         preTime: {
             marginBottom: 'auto'
@@ -50,10 +58,12 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         body: {
             ...genStyles.flex
         },
-        preLine: {
+        preLine: {  // Line with the color of the previous segment.
             borderLeft: (props: TKUISegmentOverviewProps) => {
                 let prevSegment = props.value.prevSegment();
-                if (prevSegment && prevSegment.isStationay()) { // Skip stationary segment.
+                if (prevSegment && prevSegment.isStationay()) {
+                    // Skip stationary segment, though it should never be the case since header of a segment with a
+                    // stationary prev segment is not displayed.
                     prevSegment = prevSegment.prevSegment();
                 }
                 return !prevSegment || isUnconnected(prevSegment) ? undefined :
@@ -61,33 +71,48 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
             },
             ...genStyles.grow
         },
-        line: {
-            borderLeft: (props: TKUISegmentOverviewProps) =>
-                isUnconnected(props.value) ? undefined :
-                    '4px solid ' + props.value.getColor(),
+        longLine: {
+            height: '35px',
+            flexGrow: '0!important'
+        },
+        line: { // Line with the color of the current segment.
+            borderLeft: (props: TKUISegmentOverviewProps) => (props.value.arrival || isUnconnected(props.value)) ?
+                undefined : '4px solid ' + props.value.getColor(),
             ...genStyles.grow
         },
-        posLine: {
-            borderLeft: (props: TKUISegmentOverviewProps) =>
-                props.value.arrival || isUnconnected(props.value) ? undefined :
-                    '4px solid ' + props.value.getColor(),
+        nextLine: { // Line with the color of the next segment. This style is just used for stationary segments.
+            borderLeft: (props: TKUISegmentOverviewProps) => props.value.nextSegment() &&
+                '4px solid ' + props.value.nextSegment()!.getColor(),
             ...genStyles.grow
         },
-        noLine: {
-            ...genStyles.grow
+        prevCircle: {
+            width: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
+            height: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
+            border: (props: TKUISegmentOverviewProps) => {  // Circle with the color of the previous segment.
+                const segment = props.value;
+                let prevSegment = segment.prevSegment();
+                // Skip stationary segment, though it should never be the case since header of a segment with a
+                // stationary prev segment is not displayed.
+                if (prevSegment && prevSegment.isStationay()) {
+                    prevSegment = prevSegment.prevSegment();
+                }
+                return prevSegment ? '4px solid ' + prevSegment.getColor() : 'none';
+            },
+            ...genStyles.borderRadius(50, "%")
         },
-        circle: {
+        circle: {   // Circle with the color of the current segment.
+            width: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
+            height: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
+            border: (props: TKUISegmentOverviewProps) => '4px solid ' + props.value.getColor(),
+            ...genStyles.borderRadius(50, "%")
+        },
+        nextCircle: {   // Circle with the color of the next segment. This style is just used for stationary segments.
             width: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
             height: (props: TKUISegmentOverviewProps) => props.value.isContinuation ? '14px' : '16px',
             border: (props: TKUISegmentOverviewProps) => {
                 const segment = props.value;
-                let prevSegment = segment.prevSegment();
-                // This is since stationary segments are skipped on TKUITripOverviewView (since are merged with current segment)
-                if (prevSegment && prevSegment.isStationay()) {
-                    prevSegment = prevSegment.prevSegment();
-                }
-                const colourSegment = !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay() ? segment : prevSegment;
-                return colourSegment ? '4px solid ' + colourSegment.getColor() : 'none';
+                let nextSegment = segment.nextSegment();
+                return nextSegment ? '4px solid ' + nextSegment.getColor() : 'none';
             },
             ...genStyles.borderRadius(50, "%")
         },
@@ -147,6 +172,12 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
         },
         cancelledMsg: {
             ...genStyles.fontM,
+            marginBottom: '10px'
+        },
+        separation: {
+            marginBottom: '5px'
+        },
+        circleSeparation: {
             marginBottom: '10px'
         }
     });
