@@ -131,8 +131,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const segments = this.props.value.getSegments(Visibility.IN_DETAILS)
-            .filter((segment: Segment) => !segment.isStationay());
+        const segments = this.props.value.getSegments(Visibility.IN_DETAILS);
         const trip = this.props.value;
         const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;

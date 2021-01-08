@@ -1,5 +1,5 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
-import SegmentTemplate, {Visibility} from "./SegmentTemplate";
+import SegmentTemplate, {SegmentType, Visibility} from "./SegmentTemplate";
 import Trip from "./Trip";
 import Color from "./Color";
 import TransportUtil from "../../trip/TransportUtil";
@@ -66,6 +66,17 @@ class Segment extends SegmentTemplate {
     private _bicycleAccessible: boolean | null = null;
     @JsonProperty("ticket", Ticket, true)
     private _ticket: Ticket | null = null;
+
+    @JsonProperty("stops", Number, true)
+    public stops?: number = undefined;
+    @JsonProperty("startPlatform", String, true)
+    public startPlatform?: string = undefined;
+    @JsonProperty("endPlatform", String, true)
+    public endPlatform?: string = undefined;
+    @JsonProperty("endPlatform", String, true)
+    public timetableStartPlatform?: string = undefined;
+    @JsonProperty("timetableEndPlatform", String, true)
+    public timetableEndPlatform?: string = undefined;
 
     public alerts: RealTimeAlert[] = [];
 
@@ -170,7 +181,7 @@ class Segment extends SegmentTemplate {
     }
 
     public isStationay(): boolean {
-        return this.type === 'stationary';
+        return this.type === SegmentType.stationary;
     }
 
     public isNonTCService() {
