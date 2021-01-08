@@ -286,13 +286,10 @@ class Segment extends SegmentTemplate {
         if (result.includes("<LINE_NAME>")) {
             result = result.replace("<LINE_NAME>", this.serviceName)
         }
-        // if (result.includes("<LOCATIONS>")) {
-        //     result = result.replace("<LOCATIONS>", "")
-        // }
+        if (result.includes("<STOPS>")) { // Don't want to instantiate stops for ACT, so replace whole note with duration.
+            result = result.replace("<STOPS>", this.stops !== undefined ? this.stops.toString() + " stops" : "")
+        }
         if (result.includes("<DURATION>")) {
-            if (result.includes("<STOPS>")) { // Don't want to instantiate stops for ACT, so replace whole note with duration.
-                return DateTimeUtil.durationToBriefString(this.getDurationInMinutes());
-            }
             result = result.replace("<DURATION>", DateTimeUtil.durationToBriefString(this.getDurationInMinutes()))
         }
         if (result.includes("<NUMBER>")) {
