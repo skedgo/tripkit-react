@@ -1,7 +1,7 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import Segment, {TripAvailability} from "./Segment";
 import Util from "../../util/Util";
-import {Visibility} from "./SegmentTemplate";
+import {SegmentType, Visibility} from "./SegmentTemplate";
 import DateTimeUtil from "../../util/DateTimeUtil";
 import TransportUtil from "../../trip/TransportUtil";
 import {TranslationFunction} from "../../i18n/TKI18nProvider";
@@ -131,7 +131,7 @@ class Trip {
 
     public isBicycleTrip(): boolean {
         return this.hasBicycle() &&
-            this.segments.every((segment: Segment) => segment.isBicycle() || segment.isWalking() || segment.type === "stationary");
+            this.segments.every((segment: Segment) => segment.isBicycle() || segment.isWalking() || segment.type === SegmentType.stationary);
     }
 
     public isWalkTrip(): boolean {

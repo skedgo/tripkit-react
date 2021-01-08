@@ -1,4 +1,4 @@
-import {Any, JsonObject, JsonProperty} from "json2typescript";
+import {Any, JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import Location from "../Location";
 import ModeInfo from "./ModeInfo";
 import ServiceShape from "./ServiceShape";
@@ -12,6 +12,22 @@ export enum Visibility {
     ON_MAP,
     IN_SUMMARY,
     UNKNOWN
+}
+
+export enum SegmentType {
+    stationary,
+    unscheduled,
+    scheduled
+}
+
+@JsonConverter
+export class SegmentTypeConverter implements JsonCustomConvert<SegmentType> {
+    public serialize(value: SegmentType): any {
+        return SegmentType[value];
+    }
+    public deserialize(obj: any): SegmentType {
+        return SegmentType[obj as string];
+    }
 }
 
 @JsonObject
@@ -38,8 +54,8 @@ class SegmentTemplate {
     @JsonProperty("visibility", String, true)
     private _visibility: string | null = null;
     private _visibilityType: Visibility | undefined;
-    @JsonProperty("type", String, true)
-    private _type: string = "";
+    @JsonProperty("type", SegmentTypeConverter, true) // Required according to spec.
+    public type: SegmentType = SegmentType.stationary;
     @JsonProperty("travelDirection", Number, true)
     private _travelDirection: number | undefined = undefined;
     @JsonProperty("location", Location, true)
@@ -158,14 +174,6 @@ class SegmentTemplate {
 
     public hasVisibility(visibility: Visibility): boolean {
         return (visibility <= this.visibilityType);
-    }
-
-    get type(): string {
-        return this._type;
-    }
-
-    set type(value: string) {
-        this._type = value;
     }
 
     get travelDirection(): number | undefined {
