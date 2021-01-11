@@ -12,7 +12,7 @@ import 'rc-tooltip/assets/bootstrap_white.css';
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";
-import DeviceUtil from "../util/DeviceUtil";
+import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
@@ -476,7 +476,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
             errorMessage = t("Could.not.determine.your.current.location.");
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
-            errorMessage = t("You.blocked.this.site.access.to.your.location");
+            errorMessage = DeviceUtil.browser === BROWSER.SAFARI ?
+                t("You.blocked.this.site.access.to.your.location,.either.at.browser.or.system.level") :
+                t("You.blocked.this.site.access.to.your.location");
         } else {
             errorMessage = t("Could.not.determine.your.current.location.");
         }
