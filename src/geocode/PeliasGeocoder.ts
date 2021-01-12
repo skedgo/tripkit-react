@@ -55,6 +55,7 @@ class PeliasGeocoder implements IGeocoder {
                         "&boundary.rect.max_lon=" + bounds.maxLng : ""
                 )
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
+                + (this.options.resultsLimit !== undefined ? "&size=" + this.options.resultsLimit : "")
                 + "&text=" + query;
 
             fetch(url, {
