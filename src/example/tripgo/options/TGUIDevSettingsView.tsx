@@ -111,11 +111,13 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
     const serverName = customData && customData.server ? customData.server :
         Object.keys(getPredefinedServers())[0];
 
-    Util.useComponentWillMount(() => {
+    // Revert this change, that was done so SelectBox works well with screen readers, since server options
+    // needs to be updated after adding / editing a server. TODO: see how to trigger an update int that case.
+    // Util.useComponentWillMount(() => {
         serverOptions = Object.keys(servers)
             .map((serverName: string) => ({ value: servers[serverName], label: serverName}))
             .concat([{ value: 'add', label: 'Add...'}]);
-    });
+    // });
 
     const ServerOption = (props: any) => {
         const {
@@ -220,7 +222,6 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                     };
                     const update = Util.iAssign(userProfile, { customData: customDataUpdate });
                     props.onUserProfileChange(update);
-                    setEditingServer(undefined);
                 } else if (result === EditResult.DELETE) {
                     const serversUpdate = {
                         ...customServers
@@ -264,7 +265,6 @@ const TGUIDevSettingsView: React.SFC<IProps> = (props: IProps) => {
                     };
                     const update = Util.iAssign(userProfile, { customData: customDataUpdate });
                     props.onUserProfileChange(update);
-                    setEditingKey(undefined);
                 } else if (result === EditResult.DELETE) {
                     const apiKeysUpdate = {
                         ...customApiKeys
