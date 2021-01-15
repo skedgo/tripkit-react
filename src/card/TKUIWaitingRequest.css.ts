@@ -2,6 +2,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "./TKUIWaitingRequest";
 import {black, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWaitingRequestProps> =
     (theme: TKUITheme) => ({
@@ -34,13 +35,16 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.center,
-            ...genStyles.alignCenter
+            ...genStyles.alignCenter,
+            maxWidth: '90%'
         },
         waitingMessage: {
             fontWeight: 'bold',
             marginBottom: '5px',
             ...genStyles.fontM,
-            color: black(1, theme.isDark)
+            color: black(1, theme.isDark),
+            textAlign: 'center',
+            maxWidth: '100%'
         },
         iconLoading: {
             margin: '10px',
@@ -64,5 +68,23 @@ export const tKUIWaitingDefaultStyle: TKUIStyles<TKUIWaitingRequestStyle, TKUIWa
             height: '30px',
             ...genStyles.svgFillCurrColor,
             color: theme.colorError
-        }
+        },
+        btnClear: {
+            ...resetStyles.button,
+            ...genStyles.alignSelfEnd,
+            height: '24px',
+            width: '24px',
+            padding: '6px',
+            cursor: 'pointer',
+            '& svg path': {
+                fill: black(1, theme.isDark)
+            },
+            '&:hover svg path, &:active svg path': {
+                fill: black(0, theme.isDark)
+            }
+        },
+        iconClear: {
+            width: '100%',
+            height: '100%'
+        },
     });

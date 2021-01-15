@@ -61,7 +61,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
     geocodeEarth.getOptions().resultsLimit = 5;
 
     const hostname = window.location.hostname;
-    const devSettings = hostname.includes("tripkit.") || hostname.includes("localhost");
+    const devSettings = hostname.includes("tripkit.") || hostname.includes("beta.") || hostname.includes("localhost");
 
     const [showDevSettings, setShowDevSettings] = useState<boolean>(false);
     const [showLoadTrips, setShowLoadTrips] = useState<boolean>(false);
@@ -246,7 +246,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             });
             document.addEventListener("keydown", (zEvent: any) => {
                 if (zEvent.shiftKey && zEvent.metaKey && zEvent.key === "v") {
-                    navigator.clipboard.readText && navigator.clipboard.readText().then(t => {
+                    navigator.clipboard && navigator.clipboard.readText && navigator.clipboard.readText().then(t => {
                         loadTripState(t, tKState);
                         console.log("Compute trips for: " + t);
                     }).catch((e) => console.log(e));
@@ -265,7 +265,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "d" || zEvent.key === "s")) {
                 setShowDevSettings(true);
                 zEvent.preventDefault();
-            } else if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "p" || zEvent.key === "t")) {
+            } else if (zEvent.shiftKey && zEvent.metaKey && (zEvent.key === "p" || zEvent.key === "t" || zEvent.key === "l")) {
                 setShowLoadTrips(true);
                 setShowDevSettings(true);
                 zEvent.preventDefault();

@@ -1,9 +1,18 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, Any} from "json2typescript";
 import SegmentTemplate from "./SegmentTemplate";
 import TripGroup from "./TripGroup";
 import RoutingQuery from "../RoutingQuery";
 import Trip from "./Trip";
 import RealTimeAlert from "../service/RealTimeAlert";
+import Location from "../Location";
+
+@JsonObject
+class ResultsQuery {
+    @JsonProperty("from", Location, true)
+    public from: Location = new Location();
+    @JsonProperty("to", Location, true)
+    public to: Location = new Location();
+}
 
 @JsonObject
 class RoutingResults {
@@ -16,6 +25,12 @@ class RoutingResults {
     @JsonProperty('alerts', [RealTimeAlert], true)
     public alerts: RealTimeAlert[] = [];
 
+    @JsonProperty('query', ResultsQuery, true)
+    public resultsQuery?: ResultsQuery = undefined;
+
+    /**
+     * @Deprecated. Replace by the previous one coming with the results.
+     */
     private query: RoutingQuery = new RoutingQuery();
     private satappQuery: string = "";
 
