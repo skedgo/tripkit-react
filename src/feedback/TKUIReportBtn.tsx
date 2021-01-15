@@ -75,7 +75,8 @@ function feedbackTextFromState(state: TKState): string {
         feedbackS += "\n";
         feedbackS += "State load error " + state.stateLoadError + "\n";
         feedbackS += "Stack trace:\n\n"
-            + "------------------------------------------------------\n\n" + state.stateLoadError.stack + "\n";
+            + state.stateLoadError.stack + "\n"
+            + "------------------------------------------------------\n\n";
     }
     if (state.selectedTrip) {
         feedbackS += "\n";

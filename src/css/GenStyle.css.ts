@@ -23,6 +23,7 @@ interface ITKUIGenStyleClasses {
     alignStretch: CSS.Properties;
     alignSelfCenter: CSS.Properties;
     alignSelfStart: CSS.Properties;
+    alignSelfEnd: CSS.Properties;
     alignSelfStretch: CSS.Properties;
     grow: CSS.Properties;
     noShrink: CSS.Properties;
@@ -186,6 +187,11 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     alignSelfStart: {
         alignSelf: 'flex-start',
         WebkitAlignSelf: 'flex-start'
+    },
+
+    alignSelfEnd: {
+        alignSelf: 'flex-end',
+        WebkitAlignSelf: 'flex-end'
     },
 
     alignSelfStretch: {

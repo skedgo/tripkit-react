@@ -86,7 +86,7 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
     };
 
     useEffect(() => {
-        if (!navigator.clipboard.readText || DeviceUtil.browser === BROWSER.SAFARI) {
+        if (!navigator.clipboard || !navigator.clipboard.readText || DeviceUtil.browser === BROWSER.SAFARI) {
             setTimeout(() => inputRef && inputRef.focus(), 200);
         } else {
             navigator.clipboard.readText().then(t => {
@@ -98,7 +98,8 @@ const TGUILoadTripsView: React.SFC<IProps> = (props: IProps) => {
 
 
     const classes = props.classes;
-    const placeholder = "Paste trips in JSON format or a url returning trips (either absolute or relative, e.g. starting with routing.json)";
+    const placeholder = "Paste trips in JSON format or a url returning trips (either absolute or relative, e.g. starting with routing.json). " +
+        "Shortcut to open this dialog: meta key + shift + L.";
     return (
         <TKUICard
             title={"Load trips"}

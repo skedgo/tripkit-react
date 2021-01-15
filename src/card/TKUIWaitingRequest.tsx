@@ -17,8 +17,9 @@ export enum TKRequestStatus {
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     status?: TKRequestStatus,
-    message?: string;
+    message?: React.ReactNode;
     blocking?: boolean;
+    onDismiss?: () => void;
 }
 
 export interface IStyle {
@@ -30,6 +31,8 @@ export interface IStyle {
     iconLoading: CSSProps<IProps>;
     iconTick: CSSProps<IProps>;
     iconCross: CSSProps<IProps>;
+    btnClear: CSSProps<IProps>;
+    iconClear: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -58,6 +61,12 @@ class TKUIWaitingRequest extends React.Component<IProps, IState> {
         return (this.props.status !== undefined &&
             <div className={classNames(classes.main, this.props.blocking ? classes.blocking : classes.noBlocking)}>
                 <div className={classes.waitingBanner}>
+                    {this.props.onDismiss &&
+                    <button onClick={this.props.onDismiss} className={classNames(classes.btnClear)}>
+                        <IconCross  aria-hidden={true}
+                                    className={classes.iconClear}
+                                    focusable="false"/>
+                    </button>}
                     <div className={classes.waitingMessage}>
                         {this.props.message}
                     </div>
@@ -69,6 +78,20 @@ class TKUIWaitingRequest extends React.Component<IProps, IState> {
                 </div>
             </div>
         )
+    }
+
+    private keyEventListener = (zEvent: any) => {
+        if (zEvent.keyCode === 27 && this.props.onDismiss) {
+            this.props.onDismiss();
+        }
+    };
+
+    public componentDidMount() {
+        document.addEventListener("keydown", this.keyEventListener);
+    }
+
+    public componentWillUnmount() {
+        document.removeEventListener("keydown", this.keyEventListener);
     }
 
 }

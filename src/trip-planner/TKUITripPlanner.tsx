@@ -48,6 +48,7 @@ import {CardPresentation} from "../card/TKUICard";
 import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
+import Environment from "../env/Environment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -69,6 +70,7 @@ export interface IStyle {
     reportBtnLandscape: CSSProps<IProps>;
     reportBtnPortrait: CSSProps<IProps>;
     carouselPage: CSSProps<IProps>;
+    stacktrace: CSSProps<IProps>;
 }
 
 export type TKUITKUITripPlannerProps = IProps;
@@ -417,6 +419,27 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
         // this.props.landscape ? {left: 500} :
         //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
+        let stateLoadError: React.ReactNode = null;
+        if (this.props.stateLoadError) {
+            stateLoadError = this.props.stateLoadError.message;
+            if (Environment.isBeta() && this.props.stateLoadError.stack) {
+                stateLoadError =
+                    <React.Fragment>
+                        {stateLoadError}
+                        <div className={classes.stacktrace}>
+                            {this.props.stateLoadError.stack}
+                        </div>
+                    </React.Fragment>
+            }
+        }
+        // Include a close button on beta environment.
+        const waitingRequest =
+            <TKUIWaitingRequest
+                status={this.state.tripUpdateStatus}
+                message={this.props.waitingTripUpdate ? "Updating trip" :
+                    this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
+                onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({tripUpdateStatus: undefined}) : undefined}
+            />;
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
@@ -451,12 +474,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             {serviceDetailView}
                             {transportSettings}
                             {favouritesView}
-                            {<TKUIWaitingRequest
-                                status={this.state.tripUpdateStatus}
-                                message={this.props.waitingTripUpdate ? "Updating trip" :
-                                    this.props.tripUpdateError ? "Error updating trip" :
-                                        this.props.stateLoadError ? this.props.stateLoadError.message : ""}
-                            />}
+                            {waitingRequest}
                         </div>
                     </div>
                 }
@@ -550,7 +568,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.setState({
                 tripUpdateStatus: status
             });
-            if (status === TKRequestStatus.error) {
+            if (!Environment.isBeta() && status === TKRequestStatus.error) { // Don't hide error automatically on beta environment.
                 setTimeout(() => this.setState({
                     tripUpdateStatus: undefined
                 }), 4000);

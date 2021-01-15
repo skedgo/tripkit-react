@@ -93,5 +93,11 @@ export const tKUITripPlannerDefaultStyle: TKUIStyles<TKUITKUITripPlannerStyle, T
             '&>*': {
                 height: '100%'
             }
+        },
+        stacktrace: {
+            overflowY: 'auto',
+            maxHeight: '80vh',
+            marginTop: '10px',
+            textAlign: 'left'
         }
     });

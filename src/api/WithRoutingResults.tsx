@@ -481,12 +481,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     TripGoApi.apiCallUrlT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults) :
                     TripGoApi.apiCallT(tripUrl, NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
-                const firstTrip = routingResults.groups[0].trips[0];
-                const from = firstTrip.segments[0].from;
-                const to = firstTrip.segments[firstTrip.segments.length - 1].to;
+                const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
+                const from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
+                    firstTrip && firstTrip.segments[0].from;
+                const to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
+                    firstTrip && firstTrip.segments[firstTrip.segments.length - 1].to;
                 const query = RoutingQuery.create(from, to,
-                    firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE,
-                    firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
+                    firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
+                    firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
                 routingResults.setQuery(query);
                 routingResults.setSatappQuery(tripUrl);
                 const trips = routingResults.groups;
@@ -494,7 +496,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 this.setState({
                     query: query,
                     trips: sortedTrips,
-                    selected: sortedTrips[0],
+                    selected: sortedTrips.length > 0 ? sortedTrips[0] : undefined,
                     directionsView: true
                 }, () => this.refreshRegion());
                 return trips;
