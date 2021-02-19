@@ -80,7 +80,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             fontFamily: 'ProximaNova, sans-serif'
         },
         // isDarkDefault: true,
-        analytics: analyticsConfig,
+        // analytics: analyticsConfig,
         i18n: (window as any).tKI18nPromise,
         geocoding: (defaultOptions: TKGeocodingOptions) => ({
             geocoders: {
