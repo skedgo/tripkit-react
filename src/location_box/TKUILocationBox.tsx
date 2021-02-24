@@ -36,6 +36,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onInputTextChange?: (text: string) => void,
     resolveCurr?: boolean
     onFailedToResolve?: (highlighted: boolean, error: Error) => void;
+    ariaLabel?: string;
     inputAriaLabel?: string;
     inputId?: string;
     sideDropdown?: boolean;
@@ -343,7 +344,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     private renderInput(props: any) {
         const classes = this.props.classes;
         return (
-            <div className={classes.main}>
+            <div className={classes.main} role="none">
                 <input type="text"
                        spellCheck="false"
                        autoComplete="off"
@@ -424,6 +425,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 className={classes.menu}
                 role="listbox"
                 id={this.getPopupId()}
+                aria-label="Choose location result"
             />
         }
     }
@@ -514,7 +516,8 @@ class TKUILocationBox extends Component<IProps, IState> {
                         role: "combobox",
                         "aria-owns": this.state.ddopen() ? popupId : undefined,
                         "aria-haspopup": "listbox",
-                        "aria-expanded": this.state.ddopen()
+                        "aria-expanded": this.state.ddopen(),
+                        "aria-label": this.props.ariaLabel
                     }}
                     inputProps={{
                         placeholder: this.props.placeholder,

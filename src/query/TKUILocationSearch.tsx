@@ -111,9 +111,9 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
         return (
             <TKUICard scrollable={false} mainFocusElemId={inputId} ariaLabel={"Quick Search"}
                       styles={{
-                          main: overrideClass({overflow: 'visible'}),
-                          subHeader: overrideClass({borderBottom: 'none'})
+                          main: overrideClass({overflow: 'visible'})
                       }}
+                      role="search"
             >
                 <TKUIViewportUtil>
                     {(viewportProps: TKUIViewportUtilProps) =>
@@ -152,6 +152,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                     width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
                                 }}
                                 inputId={inputId}
+                                ariaLabel={"Search location"}
                                 inputAriaLabel={ariaLabel}
                             />
                             {viewportProps.landscape &&

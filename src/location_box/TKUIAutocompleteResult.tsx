@@ -66,14 +66,14 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
             }
             mainAddressComponents.push(<span key={offset}>{mainText.substr(offset, mainText.length)}</span>);
             mainAddressComponent = <span key={1} className={classes.mainAddress}>{mainAddressComponents}</span>;
-            addressComponent = <span className={classes.address}> {[
+            addressComponent = <span className={classes.address} role="none"> {[
                 mainAddressComponent,
                 <span key={2} className={classes.secondaryAddress}>{structuredFormatting.secondary_text}</span>
             ]}
             </span>;
         } else {
             addressComponent =
-                <span className={classes.address}>
+                <span className={classes.address} role="none">
                     {(Environment.isDevAnd(this.props.location.source === TKDefaultGeocoderNames.skedgo && false) ? "*SG*" : "") +
                         LocationUtil.getMainText(this.props.location, this.props.t)}
                     <span key={2} className={classes.secondaryAddress}>{LocationUtil.getSecondaryText(this.props.location)}</span>
@@ -87,9 +87,9 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                  aria-selected={this.props.ariaSelected}
                  ref={this.props.reference}
             >
-                <div className={classes.icon}>
+                <div className={classes.icon} aria-hidden={true}>
                     {this.props.renderIcon ? this.props.renderIcon(this.props.location) :
-                    this.props.location.isCurrLoc() ? <IconCurrLoc aria-hidden={true} focusable="false"/> : <IconPin/>}
+                    this.props.location.isCurrLoc() ? <IconCurrLoc focusable="false"/> : <IconPin/>}
                 </div>
                 {addressComponent}
             </div>

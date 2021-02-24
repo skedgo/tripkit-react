@@ -137,7 +137,14 @@ class TKUISidebar extends React.Component<IProps, {}> {
                     beforeClose: classes.slideOut
                 }}
                 closeTimeoutMS={100}
+                role={"navigation"}
                 contentLabel={"Menu"}
+                overlayRef={(instance: HTMLDivElement) => {
+                    // To avoid groups appearing on Articles in voiceover web rotor,
+                    // however a group seems to still appear anyway.
+                    instance && instance.setAttribute("role", "none");
+                    instance && instance.parentElement && instance.parentElement.setAttribute("role", "none")
+                }}
             >
                 <div className={classes.main}>
                     <div className={classes.header}>

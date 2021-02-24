@@ -445,9 +445,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {(config: TKUIConfig) =>
                     <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root)}
                          ref={el => el && (this.ref = el)}
+                         role="none"
                     >
-                        <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)}>
-                            <div className={classes.queryPanel}>
+                        <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
+                            <div className={classes.queryPanel} role="none">
                                 {searchBar}
                                 {queryInput}
                             </div>

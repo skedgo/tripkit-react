@@ -284,8 +284,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 shouldFocusAfterRender={this.props.shouldFocusAfterRender}
                 styles={{
                     main: overrideClass({overflow: 'visible'}),
-                    subHeader: overrideClass({borderBottom: 'none'})
+                    divider: overrideClass({borderBottom: 'none'})
                 }}
+                role="form"
             >
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
@@ -428,6 +429,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             main: overrideClass(this.props.injectedStyles.timePrefSelect),
                             menu: overrideClass({ marginTop: '3px' })
                         }}
+                        ariaLabel={"Time preference"}
                     />}
                     {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
