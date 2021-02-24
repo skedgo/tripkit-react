@@ -98,12 +98,10 @@ class TKUIButton extends React.Component<IProps, {}> {
                 <button className={classNames(classes.main, classes.vertical)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
+                        aria-hidden={this.props['aria-hidden']}
+                        tabIndex={this.props.tabIndex}
                 >
-                    <div className={classNames(secondary ? classes.secondary : classes.primary)}
-                            aria-label={this.props.text}
-                            aria-hidden={this.props['aria-hidden']}
-                            tabIndex={this.props.tabIndex}
-                    >
+                    <div className={classNames(secondary ? classes.secondary : classes.primary)}>
                         {this.props.icon &&
                         <div className={classes.iconContainer}>
                             {this.props.icon}
@@ -132,9 +130,9 @@ class TKUIButton extends React.Component<IProps, {}> {
     componentDidUpdate(prevProps: Readonly<IProps>) {
         // Manually refresh styles if they changed. Temporal workaround until discover how to make dynamic update of
         // sheets work. Needed for TKUIFavouriteAction, for instance.
-        if (this.props.styles !== prevProps.styles) {
-            this.props.refreshStyles()
-        }
+        // if (this.props.styles !== prevProps.styles) {
+        //     this.props.refreshStyles()
+        // }
     }
 
 }

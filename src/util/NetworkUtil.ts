@@ -38,7 +38,7 @@ class NetworkUtil {
         }
         return response.json().then(jsonData => {
             if (jsonData.error) {
-                throw new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+                throw new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
             }
             return jsonData;
         });

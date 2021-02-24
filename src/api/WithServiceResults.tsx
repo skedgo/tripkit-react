@@ -70,6 +70,10 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             };
 
             this.rTSchedule = setInterval(() => {
+                // this.forceUpdate forces a re-render of almost the whole app, avoid it when no timetable is displaying.
+                if (!this.state.startStop) {
+                    return;
+                }
                 this.forceUpdate(); //to update 'time to depart' labels
                 if (Features.instance.realtimeEnabled()) {
                     this.realtimeUpdate();

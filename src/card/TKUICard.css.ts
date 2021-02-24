@@ -63,8 +63,11 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         subHeader: {
-            padding: '0 16px',
-            borderBottom: '1px solid ' + black(4, theme.isDark)
+            padding: '0 16px'
+        },
+
+        divider: {
+            ...theme.divider
         },
 
         body: {

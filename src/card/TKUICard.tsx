@@ -117,6 +117,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     closeAriaLabel?: string;
 
+    role?: string;
+
     /**
      * States if card should get focus right after shown.
      * @default ```true``` if detected that user is navigating through keyboard, '''false''' otherwise.
@@ -146,6 +148,7 @@ interface IStyle {
     headerTop: CSS.Properties & CSSProperties<IProps>;
     title: CSS.Properties & CSSProperties<IProps>;
     subtitle: CSS.Properties & CSSProperties<IProps>;
+    divider: CSS.Properties & CSSProperties<IProps>;
     btnClear: CSS.Properties & CSSProperties<IProps>;
     iconClear: CSS.Properties & CSSProperties<IProps>;
     handle: CSS.Properties & CSSProperties<IProps>;
@@ -236,28 +239,28 @@ class TKUICard extends React.Component<IProps, IState> {
             }
         }
         if (cardAriaLabel && presentation !== CardPresentation.MODAL) {
-            cardAriaLabel += "  Card";
+            cardAriaLabel += " Card";
         }
+        const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose;
+        const showHandle = hasHandle(this.props);
         const body =
             <div className={classNames(classes.main, genClassNames.root,
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
                  aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
                  ref={(ref: any) => this.bodyRef = ref}
                  tabIndex={presentation === CardPresentation.NONE ? 0 : undefined}
-                 role={presentation === CardPresentation.NONE ? "group" : undefined}
+                 role={this.props.role || (presentation === CardPresentation.NONE ? "group" : undefined)}
             >
+                {(showHandle || showHeader) &&
                 <div ref={(ref: any) => {
                     this.state.handleRef === undefined && this.setState({handleRef: ref});
                     this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
                 }}>
-                    {hasHandle(this.props) &&
-                    <div
-                        className={classes.handle}
-                        // onClick={() => this.setState({showTestCard: true})}
-                    >
+                    {showHandle &&
+                    <div className={classes.handle}>
                         <div className={classes.handleLine}/>
                     </div>}
-                    {(this.props.title || this.props.subtitle || this.props.onRequestClose) &&
+                    {showHeader &&
                     <div className={classes.header}>
                         <div className={classes.headerTop}>
                             <div className={classes.title}>
@@ -276,10 +279,13 @@ class TKUICard extends React.Component<IProps, IState> {
                             {this.props.subtitle}
                         </div>}
                     </div>}
-                </div>
+                </div>}
+                {this.props.renderSubHeader &&
                 <div className={classes.subHeader}>
-                    {this.props.renderSubHeader && this.props.renderSubHeader()}
-                </div>
+                    {this.props.renderSubHeader()}
+                </div>}
+                {(showHandle || showHeader || this.props.renderSubHeader) &&
+                <div className={classes.divider} />}
                 {this.props.scrollable !== false ?
                     <TKUIScrollForCard
                         className={classes.body}
