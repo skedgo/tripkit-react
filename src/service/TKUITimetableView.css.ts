@@ -78,7 +78,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             border: '1px solid ' + black(3, theme.isDark),
             color: black(1, theme.isDark),
             height: '32px',
-            padding: '6px 12px',
+            padding: '6px 12px!important',
             ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
             ...genStyles.grow,
             '&::placeholder': {
