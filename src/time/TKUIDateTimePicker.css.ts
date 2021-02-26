@@ -62,9 +62,15 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
                 backgroundColor: theme.isDark ? white(3) : '#f0f0f0'
             },
             '& .react-datepicker__day.react-datepicker__day--selected, .react-datepicker__day.react-datepicker__day--keyboard-selected, .react-datepicker__day.react-datepicker__day--selected:hover, .react-datepicker__day.react-datepicker__day--keyboard-selected:hover': {
+                ...genStyles.borderRadius(50, '%')
+            },
+            '& .react-datepicker__day.react-datepicker__day--selected, .react-datepicker__day.react-datepicker__day--selected:hover': {
                 backgroundColor: theme.colorPrimary,
-                ...genStyles.borderRadius(50, '%'),
                 color: white(0, theme.isDark)
+            },
+            '& .react-datepicker__day.react-datepicker__day--keyboard-selected, .react-datepicker__day.react-datepicker__day--keyboard-selected:hover': {
+                backgroundColor: black(4),
+                color: black(0, theme.isDark)
             },
             '& .react-datepicker__day:hover': {
                 ...genStyles.borderRadius(50, '%'),

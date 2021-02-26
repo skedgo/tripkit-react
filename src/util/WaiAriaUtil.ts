@@ -57,7 +57,6 @@ class WaiAriaUtil {
     }
 
     public static isUserTabbing(): boolean {
-        console.log(document.body.classList.contains(genClassNames.userIsTabbing));
         return document.body.classList.contains(genClassNames.userIsTabbing);
     }
 

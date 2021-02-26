@@ -4,8 +4,8 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class DateTimeUtil {
 
-    public static readonly DATE_FORMAT = "DD/MM/YYYY";
-    public static readonly TIME_FORMAT = "h:mm A";
+    public static readonly DATE_FORMAT = "dd/MM/yyyy";
+    public static readonly TIME_FORMAT = "h:mm a";
     public static readonly TIME_FORMAT_TRIP = "h:mma";
     public static readonly DATE_TIME_FORMAT = DateTimeUtil.DATE_FORMAT + ", " + DateTimeUtil.TIME_FORMAT;
     public static readonly HTML5_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
@@ -30,6 +30,10 @@ class DateTimeUtil {
 
     public static momentFromTimeTZ(time: number, timezone: string = DateTimeUtil.defaultTZ): Moment {
         return moment.tz(time, timezone);
+    }
+
+    public static momentTZ(datetime: any, timezone: string): Moment {
+        return moment.tz(datetime, timezone);
     }
 
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {

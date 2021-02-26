@@ -229,8 +229,10 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 return elems;
             }, []);
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        const renderCustomInput = (value: any, onClick: any, ref: any) => (
-            <button className={classes.faceButtonClass} onClick={onClick} ref={ref}>
+        const renderCustomInput = (value: any, onClick: any, onKeyDown: any, ref: any) => (
+            // Pass onKeyDown to preserve keyboard navigation when using react-datepicker.
+            <button className={classes.faceButtonClass} onClick={onClick} onKeyDown={onKeyDown} ref={ref}
+                    aria-label="Show datetime picker">
                 <IconClock/>
             </button>
         );
@@ -277,7 +279,13 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 {error ? error :
                     <div className={classes.main}>
                         <div className={classes.secondaryBar}>
-                            <input className={classes.filterInput} placeholder={t("Search")}
+                            <input type="text"
+                                   spellCheck="false"
+                                   autoComplete="off"
+                                   autoCorrect="off"
+                                   autoCapitalize="off"
+                                   className={classes.filterInput}
+                                   placeholder={t("Search")}
                                    value={this.props.timetableFilter}
                                    onChange={this.onFilterChange}/>
                             <TKUIDateTimePicker

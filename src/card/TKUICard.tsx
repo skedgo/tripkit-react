@@ -249,7 +249,7 @@ class TKUICard extends React.Component<IProps, IState> {
                  aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
                  ref={(ref: any) => this.bodyRef = ref}
                  tabIndex={presentation === CardPresentation.NONE ? 0 : undefined}
-                 role={this.props.role || (presentation === CardPresentation.NONE ? "group" : undefined)}
+                 role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
             >
                 {(showHandle || showHeader) &&
                 <div ref={(ref: any) => {
@@ -311,7 +311,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     parentElement={this.parentElement}
                     zIndex={this.zIndex}
                     ariaLabel={cardAriaLabel}
-                    role={"group"}
+                    role={this.props.role || "group"}
                 >
                     {body}
                 </TKUISlideUp>
@@ -416,6 +416,7 @@ class TKUICard extends React.Component<IProps, IState> {
 
 window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.keyCode === 27 && TKUICard.cardStack.length > 0) {
+        console.log("esc in card")
         const topCard = TKUICard.cardStack[TKUICard.cardStack.length - 1];
         topCard.props.presentation !== CardPresentation.MODAL && topCard.props.onRequestClose && topCard.props.onRequestClose();
     }
