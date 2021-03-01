@@ -9,7 +9,8 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUIDateTimePickerDefaultStyle} from "./TKUIDateTimePicker.css";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { zonedTimeToUtc, utcToZonedTime, format } from "date-fns-tz";
+import TimePicker from 'react-time-picker';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Moment;
@@ -30,6 +31,7 @@ export interface IStyle {
     inputElem: CSSProps<IProps>;
     face: CSSProps<IProps>;
     faceHidden: CSSProps<IProps>;
+    timePicker: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -71,6 +73,14 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         return this.datePickerRef !== undefined && this.datePickerRef.state.open;
     }
 
+    public componentDidUpdate(prevProps: IProps) {
+        if (prevProps.value !== this.props.value) {
+            this.setState({
+                dateSelection: this.props.value
+            });
+        }
+    }
+
     public render(): React.ReactNode {
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
@@ -78,7 +88,25 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
-        return (DeviceUtil.isDesktop || (DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX)) ?
+        const nativeDateTimeInput = !DeviceUtil.isDesktop && !(DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX);
+        const nativeTimeInputSupport = DeviceUtil.supportInputType('time');
+        const customTimeInput = !nativeDateTimeInput && !nativeTimeInputSupport &&
+            <TimePicker
+                value={format(displayDate, "HH:mm")}
+                onChange={(update) => {
+                    const displayDateUpdate = new Date(displayDate.getTime());
+                    displayDateUpdate.setHours(update.getHours(), update.getMinutes());
+                    const updateUTCValue = zonedTimeToUtc(displayDateUpdate, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+                    const updateMomentTZValue = DateTimeUtil.momentTZ(updateUTCValue, this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+                    this.setState({dateSelection: updateMomentTZValue})
+                }}
+                disableClock={true}
+                clearIcon={null}
+                className={classes.timePicker}
+                hourAriaLabel={"Hour"}
+                minuteAriaLabel={"Minutes"}
+            />;
+        return !nativeDateTimeInput ?
             <div onKeyDown={(e) => {
                 // Esc key is used to close calendar, so this avoids esc key press to bubble up and cause current card
                 // to be closed.
@@ -99,6 +127,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                 shouldCloseOnSelect={false}
                 // showTimeSelect={true}
                 showTimeInput={true}
+                customTimeInput={customTimeInput}
                 timeFormat={this.props.timeFormat}
                 dateFormat={this.props.dateFormat}
                 className={classes.datePicker}
@@ -118,6 +147,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     }
                 }}
                 onCalendarClose={() => {
+                    this.state.dateSelection.valueOf() !== this.props.value.valueOf() &&
                     this.onValueChange(this.state.dateSelection);
                 }}
                 popperModifiers={{

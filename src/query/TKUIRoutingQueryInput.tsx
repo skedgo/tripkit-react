@@ -431,7 +431,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         }}
                         ariaLabel={"Time preference"}
                     />}
-                    {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
+                    {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
                     <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                         value={routingQuery.time}
                         timeZone={this.props.timezone}

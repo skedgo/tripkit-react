@@ -60,6 +60,7 @@
     "react-responsive": "^6.0.0",
     "react-responsive-carousel": "^3.1.50",
     "react-select": "^3.0.8",
+    "react-time-picker": "^4.1.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.3",
     "utility-types": "^2.1.0"

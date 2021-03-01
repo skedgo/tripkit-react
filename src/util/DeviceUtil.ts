@@ -133,6 +133,12 @@ class DeviceUtil {
         document.getElementsByTagName("body")[0].classList.add("os-" + DeviceUtil.os.toLowerCase());
         document.getElementsByTagName("body")[0].classList.add("browser-" + DeviceUtil.browser.toLowerCase());
     }
+
+    public static supportInputType(type) {
+        const input = document.createElement("input");
+        input.setAttribute("type", type);
+        return input.type == type;
+    }
 }
 
 export default DeviceUtil;
