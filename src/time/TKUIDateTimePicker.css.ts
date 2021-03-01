@@ -90,6 +90,10 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
                 backgroundColor: theme.colorPrimary + '!important',
                 color: white(0, theme.isDark) + '!important'
             },
+            '& .react-datepicker-time__input': {
+                border: 'none',
+                fontFamily: theme.fontFamily
+            },
             '& *': {
                 color: black(0, theme.isDark)
             }
@@ -112,6 +116,14 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
                 zIndex: '-1',
                 height: '0',
                 width: '0'
+            }
+        },
+        timePicker: {
+            '& select': {
+                appearance: 'none'
+            },
+            '& .react-time-picker__wrapper': {
+                border: 'none'
             }
         }
     });
