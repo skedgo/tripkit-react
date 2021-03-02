@@ -57,6 +57,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * @default _Share Arrival_, if segment is the last one, which is an instance of [](TKUIButton).
      */
     segmentActions?: (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[];
+    shouldFocusAfterRender?: boolean;
+    doNotStack?: boolean;
 }
 
 export interface IStyle {
@@ -152,6 +154,8 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 handleRef={this.props.handleRef}
                 slideUpOptions={this.props.slideUpOptions}
                 ariaLabel={trip.mainSegment.modeInfo ? trip.mainSegment.modeInfo.alt + " Trip Details" : undefined}
+                shouldFocusAfterRender={this.props.shouldFocusAfterRender}
+                doNotStack={this.props.doNotStack}
             >
                 <div className={classes.main}>
                     {segmentsAndArrival.map((segment: Segment, index: number) => {

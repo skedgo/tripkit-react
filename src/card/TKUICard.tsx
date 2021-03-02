@@ -131,6 +131,13 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     mainFocusElemId?: string;
 
+    /**
+     * Avoid stacking cards (to handle esc close & focus), useful for special situations
+     * like several cards being rendered at once (e.g. trip details carousel) that causes
+     * issues related to returning focus.
+     */
+    doNotStack?: boolean;
+
     children?: React.ReactNode;
 }
 
@@ -218,10 +225,13 @@ class TKUICard extends React.Component<IProps, IState> {
         // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
         // created.
         this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
-        TKUICard.cardStack.push(this);
+        if (!props.doNotStack) {
+            TKUICard.cardStack.push(this);
+        }
         const parentElementId = props.parentElementId || modalContainerId;
         this.parentElement = document.getElementById(parentElementId);
         this.appMainElement = document.getElementById(mainContainerId);
+        this.close = this.close.bind(this);
     }
 
     public render(): React.ReactNode {
@@ -248,7 +258,7 @@ class TKUICard extends React.Component<IProps, IState> {
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
                  aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
                  ref={(ref: any) => this.bodyRef = ref}
-                 tabIndex={presentation === CardPresentation.NONE ? 0 : undefined}
+                 tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
                  role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
             >
                 {(showHandle || showHeader) &&
@@ -267,7 +277,7 @@ class TKUICard extends React.Component<IProps, IState> {
                                 {this.props.title}
                             </div>
                             {this.props.onRequestClose &&
-                            <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}
+                            <button onClick={this.close} className={classNames(classes.btnClear)}
                                     aria-label={this.props.closeAriaLabel || "Close"}>
                                 <IconRemove aria-hidden={true}
                                             className={classes.iconClear}
@@ -334,7 +344,7 @@ class TKUICard extends React.Component<IProps, IState> {
                             )
                         }}
                         shouldCloseOnEsc={true}
-                        onRequestClose={() => this.props.onRequestClose && this.props.onRequestClose()}
+                        onRequestClose={this.close}
                         appElement={this.appMainElement}
                         parentSelector={() => this.parentElement ? this.parentElement : document.getElementsByTagName("BODY")[0]}
                         contentLabel={cardAriaLabel}
@@ -373,11 +383,6 @@ class TKUICard extends React.Component<IProps, IState> {
 
     // Don't steal focus from inner elements
     focusContent = () => {
-        const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
-            this.props.shouldFocusAfterRender : WaiAriaUtil.isUserTabbing();
-        if (!shouldFocusAfterRender) {
-            return;
-        }
         const mainFocusElem = this.props.mainFocusElemId && document.getElementById(this.props.mainFocusElemId);
         if (mainFocusElem && !this.contentHasFocus()) {
             mainFocusElem.focus();
@@ -388,11 +393,30 @@ class TKUICard extends React.Component<IProps, IState> {
         }
     };
 
+    /**
+     * Registers that the card actually gave focus to some (content) element, and so
+     * it has to return the focus. It's false when shoudlFocusAfterRender = false.
+     */
+    private gaveFocus;
+
+    private close() {
+        this.props.onRequestClose && this.props.onRequestClose();
+        if (this.gaveFocus) {
+            returnFocus();
+        }
+    }
+
     componentDidMount() {
-        if (this.props.presentation === CardPresentation.NONE) {
+        if (this.props.presentation !== CardPresentation.MODAL) {
+            const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
+                this.props.shouldFocusAfterRender : WaiAriaUtil.isUserTabbing();
+            if (!shouldFocusAfterRender) {
+                return;
+            }
             // setupScopedFocus(this.bodyRef);
             markForFocusLater();
             this.focusContent();
+            this.gaveFocus = true;
         }
     }
 
@@ -406,19 +430,13 @@ class TKUICard extends React.Component<IProps, IState> {
         if (thisIndex !== -1) {
             TKUICard.cardStack.splice(thisIndex, 1);
         }
-
-        if (this.props.presentation === CardPresentation.NONE) {
-            // teardownScopedFocus();
-            returnFocus();
-        }
     }
 }
 
 window.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.keyCode === 27 && TKUICard.cardStack.length > 0) {
-        console.log("esc in card")
         const topCard = TKUICard.cardStack[TKUICard.cardStack.length - 1];
-        topCard.props.presentation !== CardPresentation.MODAL && topCard.props.onRequestClose && topCard.props.onRequestClose();
+        topCard.props.presentation !== CardPresentation.MODAL && topCard.close();
     }
 });
 

@@ -7,6 +7,7 @@ import ServiceDetail from "./ServiceDetail";
 import RealTimeVehicle from "./RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "./RealTimeAlert";
 import {alertSeverity} from "../trip/Segment";
+import {TranslationFunction} from "../../i18n/TKI18nProvider";
 
 @JsonObject
 class ServiceDeparture {

@@ -32,7 +32,11 @@ export function handleFocus() {
 }
 
 export function markForFocusLater() {
-    focusLaterElements.push(document.activeElement);
+    // Workaround to avoid cases where body has the focus since the desired
+    // target element is no longer displayed.
+    if (document.activeElement !== document.body) {
+        focusLaterElements.push(document.activeElement);
+    }
 }
 
 /* eslint-disable no-console */
@@ -41,7 +45,9 @@ export function returnFocus(preventScroll = false) {
     try {
         if (focusLaterElements.length !== 0) {
             toFocus = focusLaterElements.pop();
-            toFocus.focus({ preventScroll });
+            // Workaround to issue with focus being gained by other element, so the timer
+            // ensures the target element is focused after that and doesn't lose it.
+            setTimeout(() => toFocus.focus({ preventScroll }), 50);
         }
         return;
     } catch (e) {
