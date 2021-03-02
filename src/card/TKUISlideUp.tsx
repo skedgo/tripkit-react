@@ -4,7 +4,7 @@ import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
 import {cardSpacing} from "../jss/TKUITheme";
 import ReactDOM from 'react-dom';
-import {markForFocusLater, returnFocus, setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
+import {setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
 
@@ -202,7 +202,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                          }
                      }}
                      aria-label={this.props.ariaLabel}
-                     tabIndex={0}
                      role={this.props.role}
                 >
                     <div style={{
@@ -264,20 +263,14 @@ class TKUISlideUp extends React.Component<IProps, IState> {
             this.state.top !== this.getTopFromPosition(this.getPosition())) {
             this.refreshTop();
         }
-        if (this.props.open && !prevProps.open) {
-            this.focusContent();
-        }
     }
 
     componentDidMount() {
         setupScopedFocus(this.elem);
-        markForFocusLater();
-        this.focusContent();
     }
 
     componentWillUnmount() {
         teardownScopedFocus();
-        returnFocus();
     }
 }
 

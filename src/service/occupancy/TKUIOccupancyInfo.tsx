@@ -10,6 +10,7 @@ import {TKI18nContextProps, TKI18nContext, TranslationFunction} from "../../i18n
 export interface ITKUIOccupancyInfoProps {
     status: OccupancyStatus;
     brief?: boolean;
+    tabIndex?: number;
 }
 
 interface IConsumedProps {
@@ -63,7 +64,11 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
         const brief = this.props.brief;
         const t = this.props.t;
         return (
-            <div className={classes.main}>
+            <div className={classes.main}
+                 aria-label={TKUIOccupancyInfo.getText(this.props.status, t)}
+                 tabIndex={this.props.tabIndex}
+                 role="none"
+            >
                 <div className={classes.passengers}>
                     <IconPassenger className={classNames(classes.passengerSlot,
                         TKUIOccupancyInfo.toSlots(this.props.status) > 0 ? classes.passenger : undefined)}/>

@@ -392,7 +392,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
                                                 showHandle: true
                                             }}
-                                            onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
+                                            shouldFocusAfterRender={i === selected ? undefined : false}
+                                            doNotStack={i !== selected}
                                         />
                                     </div>
                                 )}

@@ -142,7 +142,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     {showWheelchair && <TKUIWheelchairInfo accessible= {departure.isWheelchairAccessible()} brief={!this.state.realtimeOpen}/>}
                     {occupancy ?
                         <TKUIOccupancySign status={occupancy}
-                                           brief={!this.state.realtimeOpen}/> : undefined}
+                                           brief={!this.state.realtimeOpen} tabIndex={0}/> : undefined}
                     {occupancy && this.state.realtimeOpen && departure.modeInfo.alt.includes("train") &&
                     <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>}
                     {alerts}
@@ -154,12 +154,15 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 />
             </div> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+        const leftLabelFc = (step: ServiceStopLocation, timeFormat: string = DateTimeUtil.TIME_FORMAT_TRIP) => step.departure ?
+            DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(timeFormat) :
+            step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(timeFormat) : "";
         return (
             <TKUICard
                 title={this.props.title}
                 onRequestClose={this.props.onRequestClose}
                 renderSubHeader={() =>
-                    <div className={this.props.classes.serviceOverview}>
+                    <div className={this.props.classes.serviceOverview} id="serviceViewHeader">
                         <TKUIServiceDepartureRow
                             value={this.props.departure}
                             detailed={true}
@@ -171,17 +174,16 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
                 scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
+                // mainFocusElemId={"serviceViewHeader"}
             >
                 <div className={classes.main}>
                     {stops &&
                     <TKUIStopSteps
                         steps={stops}
                         // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
-                        leftLabel = {(step: ServiceStopLocation) => step.departure ?
-                            DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-                            step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : ""
-                        }
+                        leftLabel = {leftLabelFc}
                         rightLabel={(step: ServiceStopLocation) => step.name}
+                        ariaLabel={(step: ServiceStopLocation) => step.name + ", " + t("At.X", {0: leftLabelFc(step, "h:mm A")}) + ". "}
                         // TODO: use to mark vehicle's current position
                         // stepMarker={(step: ServiceStopLocation) =>
                         //     step.departure === departure.startTime ?

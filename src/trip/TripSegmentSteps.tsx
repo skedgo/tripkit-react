@@ -14,6 +14,7 @@ export interface IClientProps<T> extends TKUIWithStyle<IStyle<T>, IProps<T>> {
     toggleLabel?: (open: boolean) => string;
     leftLabel?: (step: T) => string | JSX.Element;
     rightLabel: (step: T) => string | JSX.Element;
+    ariaLabel?: (step: T) => string;
     stepMarker?: (step: T) => JSX.Element | undefined;
     stepClassName?: (step: T) => string | undefined;
     onStepClicked?: (step: T) => void;
@@ -99,6 +100,8 @@ class TripSegmentSteps<T> extends React.Component<IProps<T>, IState> {
                                      key={index}
                                      onClick={this.props.onStepClicked &&
                                      (() => this.props.onStepClicked && this.props.onStepClicked(step))}
+                                     tabIndex={0}
+                                     aria-label={this.props.ariaLabel && this.props.ariaLabel(step)}
                                 >
                                     <div className={classes.leftLabel}>
                                         {this.props.leftLabel ? this.props.leftLabel(step) : ""}

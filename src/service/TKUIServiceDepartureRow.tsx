@@ -66,9 +66,16 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
                               // each with a different service color.
 };
 
+interface UIStrings {
+    status?: string;
+    modifier?: string;
+    statusClassname?: string;
+    serviceTime: string;
+}
+
 class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
-    private getTime(departure: ServiceDeparture): JSX.Element | undefined {
+    private getUIStrings(departure: ServiceDeparture): UIStrings {
         const t = this.props.t;
         let status: string | undefined;
         let modifier: string | undefined = undefined;
@@ -107,22 +114,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         } else {
             serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
         }
-        return (
-            <div className={classNames(classes.time, statusClassname)}>
-                {status &&
-                [<span key={"status"}>{status}</span>,
-                <span className={classes.separatorDot} key={"statusSeparator"}>⋅</span>]}
-                {modifier &&
-                [<span key={"modifier"}>{modifier}</span>,
-                <span className={classes.separatorDot} key={"modifierSeparator"}>⋅</span>]}
-                <span>
-                    {serviceTime}
-                </span>
-            </div>
-        );
+        return {status, modifier, statusClassname, serviceTime};
     }
 
     public render(): React.ReactNode {
+        const classes = this.props.classes;
         const departure = this.props.value;
         const timezone = departure.startTimezone;
         const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
@@ -137,8 +133,19 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
         // const timeToDepart = Math.floor(departureTime.valueOf() / 60000) - Math.ceil(DateTimeUtil.getNow().valueOf() / 60000);
         const timeToDepartS = cancelled ? t("Cancelled") : DateTimeUtil.minutesToDepartToString(timeToDepart);
-        const time = this.getTime(departure);
-        const classes = this.props.classes;
+        const {status, statusClassname, modifier, serviceTime} = this.getUIStrings(departure);
+        const time =
+            <div className={classNames(classes.time, statusClassname)}>
+                {status &&
+                [<span key={"status"}>{status}</span>,
+                    <span className={classes.separatorDot} key={"statusSeparator"} aria-hidden="true">⋅</span>]}
+                {modifier &&
+                [<span key={"modifier"}>{modifier}</span>,
+                    <span className={classes.separatorDot} key={"modifierSeparator"} aria-hidden="true">⋅</span>]}
+                <span>
+                    {serviceTime}
+                </span>
+            </div>;
         const detailed = this.props.detailed;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const briefOccupancy = !detailed && occupancy ?
@@ -146,12 +153,30 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const briefWheelchair = !detailed &&
             (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&
             <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true}/>;
+        let ariaLabel = "";
+        if (departure.serviceNumber) {
+            ariaLabel += departure.serviceNumber + " ";
+        }
+        if (!cancelled) {
+            ariaLabel += (timeToDepartS === "Now" ? t("Leave.now") : t("Leave.in") + " " + timeToDepartS) + ", ";
+        }
+        ariaLabel += t("At.X", {0: serviceTime}) + ", ";
+        if (status || modifier) {
+            ariaLabel += (status || modifier) + ". ";
+        }
+        if (serviceDescrText) {
+            ariaLabel += serviceDescrText.replace(" ·", ",") + ". ";
+        }
+        if (!detailed) {
+            ariaLabel += "Press enter for details.";
+        }
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,
                 !detailed && classes.row, this.props.selected && classes.rowSelected)}
                  onClick={this.props.onClick}
                  onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
                  tabIndex={0}
+                 aria-label={ariaLabel}
             >
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
