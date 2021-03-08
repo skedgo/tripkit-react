@@ -92,7 +92,8 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             },
             '& .react-datepicker-time__input': {
                 border: 'none',
-                fontFamily: theme.fontFamily
+                fontFamily: theme.fontFamily,
+                background: 'none!important'
             },
             '& *': {
                 color: black(0, theme.isDark)

@@ -1,6 +1,13 @@
 import {genClassNames} from "../css/GenStyle.css";
 import {KeyboardEvent} from "react";
 
+export interface AriaAttributes {
+    tabIndex?: number;
+    ariaHidden?: boolean;
+    ariaLabel?: string;
+}
+
+
 class WaiAriaUtil {
 
     public static addTabbingDetection() {
@@ -34,18 +41,22 @@ class WaiAriaUtil {
         return Array.from((querySearchResult as any).values());
     }
 
-    public static apply(query: string, tabIndex?: 0 | -1, ariaHidden?: boolean) {
-        const element = this.getElementByQuerySelector(query);
-        tabIndex !== undefined && element && element.setAttribute("tabindex", tabIndex.toString());
-        ariaHidden !== undefined && element && element.setAttribute("aria-hidden", ariaHidden.toString());
+    private static applyToElement(element: Element, ariaAttributes: AriaAttributes) {
+        ariaAttributes.tabIndex !== undefined && element.setAttribute("tabindex", ariaAttributes.tabIndex.toString());
+        ariaAttributes.ariaHidden !== undefined && element.setAttribute("aria-hidden", ariaAttributes.ariaHidden.toString());
+        ariaAttributes.ariaLabel !== undefined && element.setAttribute("aria-label", ariaAttributes.ariaLabel);
     }
 
-    public static applyToAll(query: string, tabIndex?: 0 | -1, ariaHidden?: boolean) {
+    public static apply(query: string, ariaAttributes: AriaAttributes) {
+        const element = this.getElementByQuerySelector(query);
+        if (element) {
+            this.applyToElement(element, ariaAttributes);
+        }
+    }
+
+    public static applyToAll(query: string, ariaAttributes: AriaAttributes) {
         const elements = this.getElementsByQuerySelector(query);
-        elements.forEach((element: Element) => {
-            tabIndex !== undefined && element && element.setAttribute("tabindex", tabIndex.toString());
-            ariaHidden !== undefined && element && element.setAttribute("aria-hidden", ariaHidden.toString());
-        });
+        elements.forEach((element: Element) => this.applyToElement(element, ariaAttributes));
     }
 
     public static keyDownToClick(clickListener: () => void) {

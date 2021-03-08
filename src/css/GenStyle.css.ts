@@ -342,6 +342,7 @@ const genStyleClasses: ITKUIGenStyleClasses = {
 
     userIsTabbing: {
         ['& $root input[type=text]:focus,' +
+        '& $root input[type=email]:focus,' +
         '& $root input[aria-autocomplete=list]:focus,' +
         '& $root button:focus,' +
         '& $root a:focus,' +

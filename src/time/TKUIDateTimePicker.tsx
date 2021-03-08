@@ -88,6 +88,18 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
+        const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.DATE_TIME_FORMAT) + ". Open date time picker";
+        // Display date picker as a button instead of a input text field, given that entering date as text is very
+        // limited and confusing in react-datepicker, and also is confusing the way it's red by screenreaders.
+        const DatePickerInput = React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) =>
+            <button ref={ref}
+                    onClick={props.onClick}
+                    onKeyDown={props.onKeyDown}
+                    aria-label={datePickerInputAriaLabel}
+                    className={classes.datePicker}
+            >
+                {props.value}
+            </button>));
         const nativeDateTimeInput = !DeviceUtil.isDesktop && !(DeviceUtil.os === OS.IOS && DeviceUtil.browser === BROWSER.FIREFOX);
         const nativeTimeInputSupport = DeviceUtil.supportInputType('time');
         const customTimeInput = !nativeDateTimeInput && !nativeTimeInputSupport &&
@@ -134,9 +146,16 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                 popperClassName={classes.calendarPopper}
                 calendarClassName={classes.calendar}
                 disabled={this.props.disabled}
-                // preventOpenOnFocus={true}   // prevents calendar re-opening after picking time
+                preventOpenOnFocus={true}   // prevents calendar re-opening after picking time
+                // enableTabLoop={false}
                 ref={(el: any) => this.datePickerRef = el}
                 // disabledKeyboardNavigation={true}   // Since want to enable user to navigate / update date-time text.
+                onKeyDown={(e) => {
+                    // Do not show on focus (preventOpenOnFocus={false}), instead show on enter.
+                    if (e.keyCode === 13) {
+                        this.datePickerRef && this.datePickerRef.setOpen(true);
+                    }
+                }}
                 disabledKeyboardNavigation={false}
                 onCalendarOpen={() => {
                     // Give focus to selected day on calendar open (date input as text has no sense anymore, anyway it's
@@ -158,7 +177,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     },
                     ...this.props.popperModifiers
                 }}
-                customInput={CustomInput && <CustomInput/>}
+                customInput={CustomInput ? <CustomInput/> : <DatePickerInput/>}
                 popperPlacement={this.props.popperPlacement}
             /></div> :
             (CustomInput ?

@@ -457,13 +457,18 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 <TKUIMapView
                                     hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                                     padding={mapPadding}
-                                    onLocAction={(loc: Location) => {
+                                    locationActionHandler={(loc: Location) => {
                                         if (loc instanceof StopLocation) {
-                                            this.showTimetableFor(loc as StopLocation);
-                                            FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                        } else {
-                                            TKUITripPlanner.ableToShowLocationDetailView(this.props) && this.setState({showLocationDetails: true});
+                                            return () => {
+                                                this.showTimetableFor(loc as StopLocation);
+                                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                            }
+                                        } else if (loc.isCurrLoc()) {
+                                            return undefined;
+                                        } else if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
+                                             return () => this.setState({showLocationDetails: true});
                                         }
+                                        return undefined;
                                     }}/>
                             </div>
                             <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>

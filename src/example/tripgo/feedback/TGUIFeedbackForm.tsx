@@ -128,8 +128,9 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
             >
                 <div className={classes.main}>
                     <div className={classes.row}>
-                        <div className={classes.label}>Title:</div>
-                        <input className={classes.input}
+                        <label className={classes.label} htmlFor="fb-title">Title:</label>
+                        <input id="fb-title"
+                               className={classes.input}
                                value={this.state.title}
                                onChange={(e: any) =>
                                    this.setState({title: e.target.value},
@@ -151,8 +152,10 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                         </div>}
                     </div>
                     <div className={classes.row}>
-                        <div className={classes.label}>Email:</div>
-                        <input className={classes.input}
+                        <label className={classes.label} htmlFor="fb-email">Email:</label>
+                        <input id="fb-email"
+                               type="email"
+                               className={classes.input}
                                placeholder={"(required)"}
                                value={this.state.email}
                                onChange={(e: any) =>
@@ -163,7 +166,7 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                            }
                                        })}
                                spellCheck="false"
-                               autoComplete="off"
+                               autoComplete="email"
                                autoCorrect="off"
                                autoCapitalize="off"
                         />
@@ -173,14 +176,15 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                         </div>}
                     </div>
                     <div className={classes.row}>
-                        <div className={classes.label}>Name:</div>
-                        <input className={classes.input}
+                        <label className={classes.label} htmlFor="fb-name">Name:</label>
+                        <input id="fb-name"
+                               className={classes.input}
                                placeholder={"Anonymous"}
                                value={this.state.name}
                                onChange={(e: any) => this.setState({name: e.target.value})}
                                type="text"
                                spellCheck="false"
-                               autoComplete="off"
+                               autoComplete="name"
                                autoCorrect="off"
                                autoCapitalize="off"
                         />
