@@ -83,7 +83,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Function that will run when a map location is clicked.
      * @ctype
      */
-    onLocAction?: (loc: Location) => void;
+    locationActionHandler?: (loc: Location) => (() => void) | undefined;
 
     /**
      * Properties to be passed to react-leaflet [TileLayer component](https://react-leaflet.js.org/docs/en/components#tilelayer),
@@ -661,7 +661,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                     this.showUserLocTooltip(t("Could.not.determine.your.current.location."));
                                 }
                             })}
-                            tabIndex={-1}
+                            aria-label="Show my location on map"
                     >
                         <IconCurrentLocation/>
                     </button>
@@ -691,7 +691,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         >
             <TKUIMapLocationPopup
                 location={location}
-                onAction={() => this.props.onLocAction && this.props.onLocAction(location)}
+                onAction={this.props.locationActionHandler && this.props.locationActionHandler(location)}
             />
         </Popup>;
     }
@@ -704,10 +704,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // TODO Delete: Can actually delete this? It causes an exception sometimes.
         setTimeout(() => this.onResize(), 5000);
         setTimeout(() => {
-            WaiAriaUtil.apply(".mapboxgl-canvas", -1, true);
-            WaiAriaUtil.apply(".mapboxgl-ctrl-logo", -1, true);
-            WaiAriaUtil.apply(".leaflet-control-zoom-in", -1, true);
-            WaiAriaUtil.apply(".leaflet-control-zoom-out", -1, true);
+            WaiAriaUtil.apply(".mapboxgl-canvas", {tabIndex: -1, ariaHidden: true});
+            WaiAriaUtil.apply(".mapboxgl-ctrl-logo", {tabIndex: -1, ariaHidden: true});
+            WaiAriaUtil.apply(".leaflet-control-zoom-in", {ariaHidden: true, ariaLabel: "Zoom in map"});
+            WaiAriaUtil.apply(".leaflet-control-zoom-out", {ariaHidden: true, ariaLabel: "Zoom out map"});
             const leafletControlAttribution = WaiAriaUtil.getElementByQuerySelector(".leaflet-control-attribution");
             leafletControlAttribution && leafletControlAttribution.children.length > 0 &&
             leafletControlAttribution.children[0].setAttribute("tabindex", "-1");

@@ -121,9 +121,9 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        WaiAriaUtil.apply(".carousel-root", -1);
-        WaiAriaUtil.applyToAll(".control-arrow", -1, true);
-        WaiAriaUtil.applyToAll(".dot", -1, true);
+        WaiAriaUtil.apply(".carousel-root", {tabIndex: -1});
+        WaiAriaUtil.applyToAll(".control-arrow", {tabIndex: -1, ariaHidden: true});
+        WaiAriaUtil.applyToAll(".dot", {tabIndex: -1, ariaHidden: true});
     }
 
 }
