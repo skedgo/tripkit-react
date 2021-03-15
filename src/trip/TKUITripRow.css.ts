@@ -40,7 +40,7 @@ export const tKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowPr
         track: {
             ...genStyles.flex,
             ...genStyles.alignCenter,
-            whiteSpace: 'nowrap',
+            flexWrap: 'wrap',
             overflowX: 'hidden',
             textOverflow: 'ellipsis',
             '& > *': {

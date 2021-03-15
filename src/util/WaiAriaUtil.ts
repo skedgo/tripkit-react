@@ -12,6 +12,7 @@ class WaiAriaUtil {
 
     public static addTabbingDetection() {
         window.addEventListener('keydown', WaiAriaUtil.handleFirstTab);
+        // This breaks WCAG Accessibility Audit chrome plugin, comment to run the tool.
         document.body.setAttribute("tabindex", "-1");
     }
 

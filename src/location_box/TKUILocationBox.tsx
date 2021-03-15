@@ -353,8 +353,6 @@ class TKUILocationBox extends Component<IProps, IState> {
                        {...props}
                        style={this.props.inputStyle}
                        className={classes.input}
-                       role="textbox"
-                       aria-expanded={undefined}
                 />
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
@@ -513,10 +511,6 @@ class TKUILocationBox extends Component<IProps, IState> {
                     // WAI-ARIA spec example: https://www.w3.org/TR/wai-aria-1.1/#combobox. With this VoiceOver started
                     // reading options ok.
                     wrapperProps={{
-                        role: "combobox",
-                        "aria-owns": this.state.ddopen() ? popupId : undefined,
-                        "aria-haspopup": "listbox",
-                        "aria-expanded": this.state.ddopen(),
                         "aria-label": this.props.ariaLabel
                     }}
                     inputProps={{
@@ -531,6 +525,8 @@ class TKUILocationBox extends Component<IProps, IState> {
                             }
                             this.props.onFocus && this.props.onFocus();
                         },
+                        role: "combobox",
+                        "aria-expanded": this.state.ddopen(),
                         "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.id).indexOf(this.highlightedItem) : undefined,
                         "aria-label": this.props.inputAriaLabel,
                         id: this.props.inputId,

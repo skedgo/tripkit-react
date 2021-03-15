@@ -346,10 +346,18 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // To avoid wrong calculation in movePointInPixels due to special case of initial bounds.
             const boundsEstablished = this.props.viewport &&
                 JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
-            const fitPoint = this.props.padding && this.props.padding.left && boundsEstablished ?
-                MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
+            let fitPoint;
+            if (this.props.padding && this.props.padding.left && boundsEstablished) {
+                fitPoint = MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
                     this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
-                    LeafletUtil.toBBox(this.leafletElement!.getBounds())) : fitSet[0];
+                    LeafletUtil.toBBox(this.leafletElement!.getBounds()));
+            } else if (this.props.padding && this.props.padding.bottom && boundsEstablished) {
+                fitPoint = MapUtil.movePointInPixels(fitSet[0], 0, -this.props.padding.bottom/2,
+                    this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
+                    LeafletUtil.toBBox(this.leafletElement!.getBounds()));
+            } else {
+                fitPoint = fitSet[0]
+            }
             this.onViewportChange(Util.iAssign(this.props.viewport || {},
                 {center: fitPoint,
                     zoom: (this.props.viewport && this.props.viewport.zoom && this.props.viewport.zoom >= 10) ?

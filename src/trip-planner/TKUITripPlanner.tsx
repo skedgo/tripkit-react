@@ -275,7 +275,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     position: DeviceUtil.isTouch() ? undefined :
-                        this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 48 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
@@ -414,7 +414,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             } else {
                 mapPadding.top = 50;
             }
-            if (serviceDetailView) {
+            if (serviceDetailView || (!DeviceUtil.isTouch() && locationDetailView)) {
                 mapPadding.bottom = this.getContainerHeight() * .55;
             }
         }

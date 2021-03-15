@@ -8,14 +8,14 @@ export const TKUIThemeForDoc = (props: Partial<TKUITheme>) => null;
 TKUIThemeForDoc.displayName = 'TKUITheme';
 
 export const tKUIColors = {
-    black: '#212A33',
-    black1: '#20293199',
+    black: '#212A33',       // rgb(33,42,51)
+    black1: '#212a33a6',    // rgba(33,42,51,.65)
     black2: '#212a334d',
     black3: '#212a332e',
     black4: '#212a331f',
-    black5: '#20293114',
-    white: '#ffffff',
-    white1: '#fff9',
+    black5: '#212a3314',
+    white:  '#ffffff',
+    white1: '#ffffff99',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
     white4: '#ffffff1f',
@@ -88,7 +88,7 @@ const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
             // Brand colors
             colorPrimary: '#23b15e',
             colorSuccess: '#23b15e',
-            colorInfo: '#454c50', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
+            colorInfo: '#2e3336', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
             colorWarning: '#fcba1e',
             colorError: '#e34040',
 
@@ -154,16 +154,16 @@ export const generateClassNameFactory = (prefix: string) =>
 export const generateClassNameSeed = createGenerateClassName();
 
 if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
-    tKUIColors.black1 = Color.createFromString('#212A33').toRGBA(.6);
-    tKUIColors.black2 = Color.createFromString('#212A33').toRGBA(.3);
-    tKUIColors.black3 = Color.createFromString('#212A33').toRGBA(.18);
-    tKUIColors.black4 = Color.createFromString('#212A33').toRGBA(.12);
-    tKUIColors.black5 = Color.createFromString('#212A33').toRGBA(.08);
-    tKUIColors.white1 = Color.createFromString('#ffffff').toRGBA(.6);
-    tKUIColors.white2 = Color.createFromString('#ffffff').toRGBA(.3);
-    tKUIColors.white3 = Color.createFromString('#ffffff').toRGBA(.18);
-    tKUIColors.white4 = Color.createFromString('#ffffff').toRGBA(.12);
-    tKUIColors.white5 = Color.createFromString('#ffffff').toRGBA(.08);
+    tKUIColors.black1 = colorWithOpacity('#212A33',.65);
+    tKUIColors.black2 = colorWithOpacity('#212A33',.3);
+    tKUIColors.black3 = colorWithOpacity('#212A33',.18);
+    tKUIColors.black4 = colorWithOpacity('#212A33',.12);
+    tKUIColors.black5 = colorWithOpacity('#212A33',.08);
+    tKUIColors.white1 = colorWithOpacity('#ffffff',.6);
+    tKUIColors.white2 = colorWithOpacity('#ffffff',.3);
+    tKUIColors.white3 = colorWithOpacity('#ffffff',.18);
+    tKUIColors.white4 = colorWithOpacity('#ffffff',.12);
+    tKUIColors.white5 = colorWithOpacity('#ffffff',.08);
 }
 
 export {cardSpacing, important, tKUIDeaultTheme};

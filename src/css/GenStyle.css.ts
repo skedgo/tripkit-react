@@ -42,8 +42,6 @@ interface ITKUIGenStyleClasses {
     fontS: CSSProps<{}>;
     fontSM: CSSProps<{}>;
 
-    fontMImp: CSSProps<{}>;
-
     link: CSSProps<{}>;
 
     root: CSSProps<{}>;
@@ -273,11 +271,6 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     fontM: {
         fontSize: '16px',
         lineHeight: '24px'
-    },
-
-    fontMImp: {
-        fontSize: '16px!important',
-        lineHeight: '24px!important'
     },
 
     fontS: {
