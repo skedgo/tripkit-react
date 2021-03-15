@@ -82,8 +82,7 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
         },
         serviceDescription: {
             ...theme.textSizeCaption,
-            ...theme.textColorGray,
-            ...genStyles.overflowEllipsis
+            ...theme.textColorGray
         },
         cancelled: {
             color: theme.colorError

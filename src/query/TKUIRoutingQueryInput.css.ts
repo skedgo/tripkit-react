@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
-import {black, colorWithOpacity, important, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import {CSSProperties} from "react-jss";
 
@@ -90,14 +90,14 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             whiteSpace: 'nowrap',
             ...theme.textSizeCaption,
             ...theme.textWeightSemibold,
-            ...theme.textColorGray
+            color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
         },
         timePrefSelect: {
             minWidth: '97px',
             '& *': {
                 ...theme.textSizeCaption,
                 ...theme.textWeightSemibold,
-                ...important(theme.textColorGray)
+                color: (theme.isLight ? '#666d71' : white(1)) + "!important"    // 4.50:1 contrast for AA
             },
             '& path': {
                 fill: black(1, theme.isDark)

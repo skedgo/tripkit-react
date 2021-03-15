@@ -145,12 +145,12 @@ function badgeIcon(badge: Badges): JSX.Element {
 
 function badgeColor(badge: Badges): string {
     switch (badge) {
-        case Badges.CHEAPEST: return "rgb(255, 141, 27)";
-        case Badges.EASIEST: return "rgb(35, 177, 94)";
-        case Badges.FASTEST: return "rgb(255, 191, 0)";
-        case Badges.GREENEST: return "rgb(0, 168, 143)";
-        case Badges.HEALTHIEST: return "rgb(225, 91, 114)";
-        default: return "rgb(24, 128, 231)";
+        case Badges.CHEAPEST: return "#d14600";
+        case Badges.EASIEST: return "#1a8446";
+        case Badges.FASTEST: return "#94710a";
+        case Badges.GREENEST: return "#008571";
+        case Badges.HEALTHIEST: return "#da3450";
+        default: return "#1675d4";
     }
 }
 

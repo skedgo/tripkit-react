@@ -1,6 +1,6 @@
 import genStyles from "../css/GenStyle.css";
 import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "./TKUIRoutingResultsView";
-import {black, important, TKUITheme} from "../jss/TKUITheme";
+import {black, important, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
@@ -32,7 +32,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
             padding: '10px',
             ...genStyles.fontS,
             '& *': {
-                ...important(theme.textColorGray)
+                color: (theme.isLight ? '#666d71' : white(1)) + "!important"    // 4.50:1 contrast for AA
             }
         },
         sortSelect: {
