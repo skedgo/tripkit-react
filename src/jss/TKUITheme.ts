@@ -86,7 +86,7 @@ const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
         const isLight = !isDark;
         return {
             // Brand colors
-            colorPrimary: '#23b15e',
+            colorPrimary: '#008543',
             colorSuccess: '#23b15e',
             colorInfo: '#2e3336', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
             colorWarning: '#fcba1e',

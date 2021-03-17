@@ -150,7 +150,7 @@ function badgeColor(badge: Badges): string {
         case Badges.FASTEST: return "#94710a";
         case Badges.GREENEST: return "#008571";
         case Badges.HEALTHIEST: return "#da3450";
-        default: return "#1675d4";
+        default: return "#1565C0";
     }
 }
 

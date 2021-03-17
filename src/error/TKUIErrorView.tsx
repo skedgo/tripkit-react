@@ -37,7 +37,7 @@ class TKUIErrorView extends React.Component<IProps, {}> {
         const message = this.props.message || "Something went wrong.";
         const actions = this.props.actions;
         return (
-            <div className={classes.main}>
+            <div className={classes.main} role="alert">
                 <ImgConstruction className={classes.imgConstruction}/>
                 <div className={classes.message}>{message}</div>
                 {actions && actions.length > 0 &&

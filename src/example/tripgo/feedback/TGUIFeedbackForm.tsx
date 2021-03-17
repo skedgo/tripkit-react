@@ -145,9 +145,11 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                autoComplete="off"
                                autoCorrect="off"
                                autoCapitalize="off"
+                               aria-required="true"
+                               aria-invalid={!!this.state.titleError}
                         />
                         {this.state.titleError &&
-                        <div className={classes.fieldError}>
+                        <div className={classes.fieldError} role="alert">
                             {this.state.titleError}
                         </div>}
                     </div>
@@ -169,9 +171,11 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                autoComplete="email"
                                autoCorrect="off"
                                autoCapitalize="off"
+                               aria-required="true"
+                               aria-invalid={!!this.state.emailError}
                         />
                         {this.state.emailError &&
-                        <div className={classes.fieldError}>
+                        <div className={classes.fieldError} role="alert">
                             {this.state.emailError}
                         </div>}
                     </div>

@@ -168,7 +168,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             ariaLabel += serviceDescrText.replace(" ·", ",") + ". ";
         }
         if (!detailed) {
-            ariaLabel += "Press enter for details.";
+            ariaLabel += departure.endStopCode ? "Press enter to select." : "Press enter for details.";
         }
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,

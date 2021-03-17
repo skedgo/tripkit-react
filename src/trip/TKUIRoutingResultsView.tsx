@@ -475,9 +475,9 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                     )}
                     {error}
                     {!this.props.waiting && !routingError && this.props.values.length === 0
-                    && <div className={classes.noResults}>{t("No.routes.found.")}</div>}
+                    && <div className={classes.noResults} role="status" aria-label={t("No.routes.found.")}>{t("No.routes.found.")}</div>}
                     {this.props.waiting ?
-                        <IconSpin className={classes.iconLoading} focusable="false"/> : null}
+                        <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results"/> : null}
                 </div>
             </TKUICard>
         );

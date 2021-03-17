@@ -59,7 +59,8 @@ class TKUIWaitingRequest extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         return (this.props.status !== undefined &&
-            <div className={classNames(classes.main, this.props.blocking ? classes.blocking : classes.noBlocking)}>
+            <div className={classNames(classes.main, this.props.blocking ? classes.blocking : classes.noBlocking)}
+                 role={this.props.status === TKRequestStatus.error ? "alert" : "status"}>
                 <div className={classes.waitingBanner}>
                     {this.props.onDismiss &&
                     <button onClick={this.props.onDismiss} className={classNames(classes.btnClear)}>

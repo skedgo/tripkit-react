@@ -26,6 +26,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     reference?: (ref: TKUITooltip) => void;
     onRequestClose?: () => void;
     destroyTooltipOnHide?: boolean;
+    role?: string;
 }
 
 export interface IStyle {
@@ -86,7 +87,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const overlay = this.props.overlay ? this.props.overlay :
-            <div className={classes.overlayContent}>
+            <div className={classes.overlayContent} role={this.props.role}>
                 {this.props.overlayContent}
                 {this.props.onRequestClose &&
                 <button onClick={this.props.onRequestClose} className={classNames(classes.btnClear)}

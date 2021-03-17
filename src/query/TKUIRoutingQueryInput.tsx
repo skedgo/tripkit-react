@@ -33,6 +33,7 @@ import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationU
 import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import HasCard, {HasCardKeys} from "../card/HasCard";
+import {TKUITheme, white} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -439,6 +440,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         timeFormat={DateTimeUtil.TIME_FORMAT}
                         dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
                         disabled={datePickerDisabled}
+                        styles={(theme: TKUITheme) => ({
+                            datePicker: overrideClass({
+                                color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
+                            })
+                        })}
                     />
                     }
                     {showTransportsBtn &&
