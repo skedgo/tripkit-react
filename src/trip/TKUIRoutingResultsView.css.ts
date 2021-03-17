@@ -53,7 +53,8 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
         },
         transportsBtn: {
             ...resetStyles.button,
-            padding: '10px'
+            padding: '10px',
+            ...theme.textColorGray
         },
         timePrefSelect: {
             minWidth: '92px',

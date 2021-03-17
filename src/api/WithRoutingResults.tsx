@@ -537,6 +537,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
                 modeSetsQ1 = computeModeSetsFc(q1, opts1);
                 modeSetsQ2 = computeModeSetsFc(q2, opts2);
+                // When there's no mode enabled put empty set so q1Urls and q2Urls below has at least one element,
+                // and the queries are actually compared.
+                if (modeSetsQ1.length === 0) {
+                    modeSetsQ1 = [[]];
+                }
+                if (modeSetsQ2.length === 0) {
+                    modeSetsQ2 = [[]]; // Put empty set to put something if called with no region,
+                }
             } else {
                 modeSetsQ1 = [[]]; // Put empty set to put something if called with no region,
                 modeSetsQ2 = [[]]; // which happens when checking if same query on TripPlanner.componentDidMount
