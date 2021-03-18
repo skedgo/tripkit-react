@@ -1,16 +1,19 @@
 (function () {
 
-    if (!String.prototype.endsWith) {
-        String.prototype.endsWith = function(search, this_len) {
-            if (this_len === undefined || this_len > this.length) {
-                this_len = this.length;
+    if (!String.prototype.includes) {
+        String.prototype.includes = function(search, start) {
+            'use strict';
+
+            if (search instanceof RegExp) {
+                throw TypeError('first argument must not be a RegExp');
             }
-            return this.substring(this_len - search.length, this_len) === search;
+            if (start === undefined) { start = 0; }
+            return this.indexOf(search, start) !== -1;
         };
     }
 
     function isMe(scriptElem){
-        return scriptElem.getAttribute('src').endsWith("/embed.js");
+        return scriptElem.getAttribute('src') && scriptElem.getAttribute('src').includes("/embed.js");
     }
 
     function getCurrentScript() {
@@ -28,13 +31,13 @@
     }
 
     var currentScript = getCurrentScript();
-    var embedjsSrc = currentScript ? currentScript.src : "https://act.tripgo.com/embed.js";
+    var embedjsSrc = currentScript.src;
     console.log("embedjsSrc = " + embedjsSrc);
 
     var deployUrl = embedjsSrc.slice(0, embedjsSrc.indexOf("/embed.js"));
 
-    var mainJsUrl = deployUrl + "/static/js/" + "main.%MAIN_JS_HASH%.js";
-    var mainCssUrl = deployUrl + "/static/css/" + "main.%MAIN_CSS_HASH%.css";
+    var mainJsUrl = deployUrl + "/static/js/" + "index.js";
+    var mainCssUrl = deployUrl + "/static/css/" + "index.css";
     // var mainJsUrl = deployUrl + "/static/js/" + "bundle.js";
     // var mainCssUrl = null;
 
@@ -69,58 +72,39 @@
         head.appendChild(link);
     }
 
-    loadScript("https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Array.prototype.findIndex");
-    loadScript("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Source+Sans+Pro");
+    loadCss("https://fonts.googleapis.com/css?family=Open+Sans:400,600,700|Source+Sans+Pro");
 
-    var containerArray = document.getElementsByClassName("tripgo-query");
-    if (containerArray.length > 0) {
-        var container = containerArray[0];
-        var tripgoKey = container.getAttribute("data-tripgo-key");
-        var tripgoPlannerUrl = container.getAttribute("data-tripgo-planner-url");
-        // var src = deployUrl + "?app=queryInput"
-        //     + (tripgoKey ? "&key=" + tripgoKey : "")
-        //     + (tripgoPlannerUrl ? "&plannerUrl=" + tripgoPlannerUrl : "");
-        // var iframe = createIframe({
-        //     src: src,
-        //     width: "100%",
-        //     height: "100%",
-        //     style: "min-height: 600px"
-        // });
-        // containerArray[0].appendChild(iframe);
+    var query = embedjsSrc.replace(/^[^\?]+\??/,'');
+    // Parse the querystring into arguments and parameters
+    var vars = query.split("&");
+    var args = {};
+    for (var i=0; i<vars.length; i++) {
+        var pair = vars[i].split("=");
+        // decodeURI doesn't expand "+" to a space.
+        args[pair[0]] = decodeURI(pair[1]).replace(/\+/g, ' ');
+    }
+    var apiKey = args['key'];
+
+    var queryContainer = document.getElementById("tripgo-query");
+    if (queryContainer) {
         if (mainCssUrl !== null) {
             loadCss(mainCssUrl);
         }
         loadScript(mainJsUrl, function() {
             var rootDiv = document.createElement('div');
             rootDiv.id = "query-root";
-            container.appendChild(rootDiv);
-            renderQueryInputWidget("query-root", tripgoKey != null ? tripgoKey : undefined, tripgoPlannerUrl);
+            queryContainer.appendChild(rootDiv);
+            renderQueryInputWidget("query-root", apiKey);
         });
     }
-    containerArray = document.getElementsByClassName("tripgo-journeyplanner");
-    if (containerArray.length > 0) {
-        container = containerArray[0];
-        tripgoKey = container.getAttribute("data-tripgo-key");
-        // src = deployUrl + "?app=tripPlanner"
-        //     + (tripgoKey ? "&key=" + tripgoKey : "")
-        //     + "&" + document.location.search.replace("?", "");
-        // iframe = createIframe({
-        //     src: src,
-        //     width: "100%",
-        //     height: "100%",
-        //     style: "min-height: 600px"
-        // });
-        // containerArray[0].appendChild(iframe);
+
+    var plannerContainer = document.getElementById("tripgo-planner");
+    if (plannerContainer) {
         if (mainCssUrl !== null) {
             loadCss(mainCssUrl);
         }
-        // loadCss("https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css");
         loadScript(mainJsUrl, function() {
-            var rootDiv = document.createElement('div');
-            rootDiv.id = "trip-planner-root";
-            // rootDiv.className = "app-style";
-            container.appendChild(rootDiv);
-            renderTripPlanner("trip-planner-root", tripgoKey != null ? tripgoKey : undefined);
+            renderTripPlanner("tripgo-planner", apiKey);
         });
     }
 }());
