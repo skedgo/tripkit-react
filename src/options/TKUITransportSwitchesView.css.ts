@@ -11,9 +11,9 @@ import DeviceUtil from "../util/DeviceUtil";
 export const tKUITransportSwitchesViewDefaultStyle: TKUIStyles<TKUITransportSwitchesViewStyle, TKUITransportSwitchesViewProps> =
     (theme: TKUITheme) => ({
         main: {
-            padding: '10px',
+            padding: (props: TKUITransportSwitchesViewProps) => !props.inline ? '10px' : undefined,
             backgroundColor: theme.isLight ? '#f5f6f7' : '#384450',
-            maxWidth: '275px',
+            maxWidth: (props: TKUITransportSwitchesViewProps) => !props.inline ? '275px' : undefined,
             fontFamily: theme.fontFamily,
             ...genStyles.flex,
             ...genStyles.column,

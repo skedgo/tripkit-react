@@ -47,6 +47,14 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Forwarded to button element.
      */
     tabIndex?: number;
+
+    'aria-pressed'?: boolean;
+
+    role?: string;
+
+    'aria-label'?: string;
+
+    onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -77,7 +85,15 @@ class TKUIButton extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
-        const type = this.props.type;
+        const { type, text, icon, role, tabIndex, onKeyDown } = this.props;
+        const buttonProps = {
+            ['aria-hidden']: this.props['aria-hidden'],
+            ['aria-pressed']: this.props['aria-pressed'],
+            ['aria-label']: this.props['aria-label'],
+            role,
+            tabIndex,
+            onKeyDown
+        };
         const secondary = type === TKUIButtonType.SECONDARY || type === TKUIButtonType.SECONDARY_VERTICAL;
         const vertical = type === TKUIButtonType.PRIMARY_VERTICAL || type === TKUIButtonType.SECONDARY_VERTICAL;
         const link = type === TKUIButtonType.PRIMARY_LINK;
@@ -86,10 +102,9 @@ class TKUIButton extends React.Component<IProps, {}> {
                 <button className={classNames(classes.main, classes.link)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
-                        aria-hidden={this.props['aria-hidden']}
-                        tabIndex={this.props.tabIndex}
+                        {...buttonProps}
                 >
-                    {this.props.text}
+                    {text}
                 </button>
             )
         }
@@ -98,30 +113,27 @@ class TKUIButton extends React.Component<IProps, {}> {
                 <button className={classNames(classes.main, classes.vertical)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
-                        aria-hidden={this.props['aria-hidden']}
-                        tabIndex={this.props.tabIndex}
+                        {...buttonProps}
                 >
                     <div className={classNames(secondary ? classes.secondary : classes.primary)}>
-                        {this.props.icon &&
+                        {icon &&
                         <div className={classes.iconContainer}>
-                            {this.props.icon}
+                            {icon}
                         </div>}
                     </div>
-                    {this.props.text}
+                    {text}
                 </button>
                 :
                 <button className={classNames(classes.main, secondary ? classes.secondary : classes.primary)}
                         onClick={this.props.onClick}
                         disabled={this.props.disabled}
-                        aria-hidden={this.props['aria-hidden']}
-                        tabIndex={this.props.tabIndex}
+                        {...buttonProps}
                 >
-                    {this.props.icon &&
+                    {icon &&
                     <div className={classes.iconContainer}>
-                        {this.props.icon}
-                    </div>
-                    }
-                    {this.props.text}
+                        {icon}
+                    </div>}
+                    {text}
                 </button>
         );
     }

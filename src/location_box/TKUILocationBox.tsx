@@ -45,6 +45,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     menuStyle?: CSS.Properties;
     inputStyle?: CSS.Properties;
     onFocus?: () => void;
+    /**
+     * Until implement forwarding ref on connect HOC.
+     */
+    onRef?: (ref: TKUILocationBoxRef) => void;
 }
 
 interface IStyle {
@@ -78,17 +82,15 @@ interface IState {
     highlightedValue: Location | null;
     items: any[],
     focus: boolean,
-    ddopen: () => boolean;
     waiting: boolean;
     waitingResolveFor?: Location;
 }
 
 class TKUILocationBox extends Component<IProps, IState> {
 
-    private itemToLocationMap: Map<string, Location> = new Map<string, Location>();
-    private highlightedItem: string | null = null;
+    private resultsArrivedForQuery?: string;
     private geocodingData: MultiGeocoder;
-    private inputRef: any;
+    private autocompleteRef: React.RefObject<Autocomplete> = React.createRef<Autocomplete>();
 
     private readonly AUTOCOMPLETE_DELAY = 200;
 
@@ -104,10 +106,6 @@ class TKUILocationBox extends Component<IProps, IState> {
             highlightedValue: null,
             items: [],
             focus: false,
-            ddopen: () => {
-                return this.state.focus && this.state.items !== undefined && this.state.items.length > 0;
-                // return true;
-            },
             waiting: false
         };
         const geocodingOptions = this.props.geocodingOptions;
@@ -126,10 +124,27 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.refreshHighlight = this.refreshHighlight.bind(this);
         this.getHighlightedLocation = this.getHighlightedLocation.bind(this);
         this.setValue = this.setValue.bind(this);
+        this.isDDOpen = this.isDDOpen.bind(this);
+        this.getHighlightedItem = this.getHighlightedItem.bind(this);
+        this.updateResolvedItem = this.updateResolvedItem.bind(this);
     }
 
-    private static itemId(location: Location): string {
-        return LocationUtil.getMainText(location) + LocationUtil.getSecondaryText(location) + (location.id ? "-" + location.id : "");
+    public focus() {
+        this.autocompleteRef.current && this.autocompleteRef.current.focus();
+    }
+
+    private isDDOpen() {
+        return this.state.focus && this.state.items !== undefined && this.state.items.length > 0;
+        // return true;
+    }
+
+    private getHighlightedIndex(): number | null {
+        return this.autocompleteRef.current ? this.autocompleteRef.current.state.highlightedIndex : null;
+    }
+
+    private getHighlightedItem() {
+        const highlightedIndex = this.getHighlightedIndex();
+        return (highlightedIndex !== null && this.state.items.length > highlightedIndex) ? this.state.items[highlightedIndex] : null;
     }
 
     /**
@@ -155,9 +170,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             } else if (fireEvents) {
                 this.fireLocationChange(highlighted);
             }
-            if (callback) {
-                callback();
-            }
+            callback && callback();
         };
         if (!highlighted) {
             this.setState((prevState: IState) => ({
@@ -185,10 +198,11 @@ class TKUILocationBox extends Component<IProps, IState> {
                 this.geocodingData.resolveLocation(locationValue)
                     .then((resolvedLocation: Location) => {
                         if (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue) {
-                            this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true, () => {
-                                this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), resolvedLocation);
-                                console.log("Resolved: " + JSON.stringify(resolvedLocation));
-                            });
+                            this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true,
+                                () => {
+                                    this.updateResolvedItem(locationValue, resolvedLocation);
+                                    console.log("Resolved: " + JSON.stringify(resolvedLocation));
+                                });
                         }
                         if (this.state.waitingResolveFor === locationValue) {
                             this.setState({
@@ -217,15 +231,15 @@ class TKUILocationBox extends Component<IProps, IState> {
                             }
                             if (locationValue === this.state.locationValue) {
                                 if (results.length > 0) {
-                                    this.setValue(results[0], false, true, () => {
-                                        this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), results[0]);
-                                        console.log("Resolved: " + JSON.stringify(results[0]));
-                                    });
+                                    this.setValue(results[0], false, true,
+                                        () => {
+                                            this.updateResolvedItem(locationValue, results[0]);
+                                            console.log("Resolved: " + JSON.stringify(results[0]));
+                                        });
                                 } else {
                                     this.props.onFailedToResolve && this.props.onFailedToResolve(
                                         locationValue === this.state.highlightedValue,
                                         new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
-                                    // this.setValue(null, false, true);
                                 }
                             }
                         })
@@ -246,9 +260,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             this.geocodingData.reverseGeocode(locationValue, location => {
                 if (locationValue === this.state.locationValue) {
                     if (location) {
-                        this.setValue(location, false, true, () => {
-                            this.itemToLocationMap.set(TKUILocationBox.itemId(locationValue), location);
-                        });
+                        this.setValue(location, false, true, () =>
+                            this.updateResolvedItem(locationValue, location));
                     }
                 }
                 if (this.state.waitingResolveFor === locationValue) {
@@ -258,6 +271,19 @@ class TKUILocationBox extends Component<IProps, IState> {
                 }
             });
         }
+    }
+
+    private updateResolvedItem(unresolved, resolved) {
+        const itemsUpdate = this.state.items
+            .map((item) => {
+                if (item.location === unresolved) {
+                    return {...item, location: resolved}
+                }
+                return item;
+            });
+        this.setState({
+            items: itemsUpdate
+        });
     }
 
     private onChange(inputText: string) {
@@ -290,31 +316,29 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
         this.setState({ waiting: false });
         const items: object[] = [];
-        this.itemToLocationMap.clear();
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
-                const item = {label: LocationUtil.getMainText(results[i], this.props.t), id: TKUILocationBox.itemId(results[i])};
+                const item = {
+                    label: LocationUtil.getMainText(results[i], this.props.t),
+                    location: results[i]
+                };
                 items.push(item);
-                this.itemToLocationMap.set(item.id, results[i]);
             }
         }
-        // Next two lines are to reset highlighted item
-        this.highlightedItem = null;
+        // Reset highlighted item, except that more results arrived for the same query.
+        if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current) {
+            this.autocompleteRef.current.setState({highlightedIndex: null});
+        }
+        this.resultsArrivedForQuery = query;
         this.setState({
-            items: []
-        }, () => {
-            this.setState({
-                items: items,
-            }, () => {
-                this.refreshHighlight()
-            });
-        })
+            items: items,
+        }, () => this.refreshHighlight());
     }
 
     private onSelect(selectedItem: string, item: any) {
-        const locationValue = this.itemToLocationMap.get(item.id);
+        const locationValue = item.location;
         this.setValue(locationValue!, false, true);
-        this.inputRef && this.inputRef.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
+        this.autocompleteRef.current && this.autocompleteRef.current.blur();   // Lose focus on selection (e.g. user hits enter on highligthed result)
     }
 
     /**
@@ -329,10 +353,8 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private getHighlightedLocation(): Location | null {
-        if (this.state.items.length === 0) {
-            return null;
-        }
-        return this.highlightedItem ? this.itemToLocationMap.get(this.highlightedItem)! : null;
+        const highlightedItem = this.getHighlightedItem();
+        return highlightedItem ? highlightedItem.location : null;
     }
 
     private fireLocationChange(preselect: boolean) {
@@ -353,6 +375,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                        {...props}
                        style={this.props.inputStyle}
                        className={classes.input}
+                       // autoFocus={true}
                 />
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
@@ -375,7 +398,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.setValue(null, false, true,
             () => {
                 setTimeout(() => {
-                    this.inputRef && this.inputRef.focus();
+                    this.autocompleteRef.current && this.autocompleteRef.current.focus();
                 }, 100);    // TODO: see why: if don't put this timeout focus is not set, or is lost.
 
             });
@@ -415,7 +438,6 @@ class TKUILocationBox extends Component<IProps, IState> {
                         top: "initial",
                         left: "0",
                         width: "100%",
-                        // visibility: this.state.ddopen() ? "visible" : "hidden"
                         ...this.props.menuStyle
                     }
                 }
@@ -429,10 +451,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private renderItem(item: any, isHighlighted: boolean) {
-        if (isHighlighted) {
-            this.highlightedItem = item.id;
-        }
-        const location = this.itemToLocationMap.get(item.id)!;
+        const location = item.location;
         const geocoder = this.geocodingData.options.geocoders[location.source!];
         return (
             <TKUIAutocompleteResult
@@ -477,7 +496,9 @@ class TKUILocationBox extends Component<IProps, IState> {
 
     public componentDidMount() {
         this.setValue(this.props.value);
+        this.props.onRef && this.props.onRef(this);
     }
+
     private getPopupId() {
         return this.props.inputId ? "popup-" + this.props.inputId : undefined;
     }
@@ -506,10 +527,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                             this.setState({focus: isOpen});
                         }
                     }}
-                    open={this.state.ddopen()}
-                    // Re-distribute combobox attributes set on react-autocomplete to container, input and menu to match
-                    // WAI-ARIA spec example: https://www.w3.org/TR/wai-aria-1.1/#combobox. With this VoiceOver started
-                    // reading options ok.
+                    open={this.isDDOpen()}
                     wrapperProps={{
                         "aria-label": this.props.ariaLabel
                     }}
@@ -526,23 +544,21 @@ class TKUILocationBox extends Component<IProps, IState> {
                             this.props.onFocus && this.props.onFocus();
                         },
                         role: "combobox",
-                        "aria-expanded": this.state.ddopen(),
-                        "aria-activedescendant": this.highlightedItem ? "item-" + this.state.items.map((item: any) => item.id).indexOf(this.highlightedItem) : undefined,
+                        "aria-expanded": this.isDDOpen(),
+                        "aria-activedescendant": this.getHighlightedItem() ? "item-" + this.state.items.indexOf(this.getHighlightedItem()) : undefined,
                         "aria-label": this.props.inputAriaLabel,
                         id: this.props.inputId,
-                        "aria-controls": this.state.ddopen() ? popupId : undefined,
-                        tabIndex: 0
+                        "aria-owns": this.isDDOpen() ? popupId : undefined,
+                        "aria-haspopup": this.isDDOpen(),
+                        tabIndex: 0,
+                        "aria-live": "polite"
                     }}
                     wrapperStyle = {{
                         position: "relative",
                         ...this.props.style
                     }}
                     autoHighlight={false}
-                    ref={el => {
-                        if (el) {
-                            this.inputRef = el;
-                        }
-                    }}
+                    ref={this.autocompleteRef}
                     selectOnBlur={true}
                 />
         );
@@ -570,3 +586,4 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);
+export type TKUILocationBoxRef = TKUILocationBox;

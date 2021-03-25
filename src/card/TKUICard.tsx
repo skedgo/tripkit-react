@@ -409,7 +409,9 @@ class TKUICard extends React.Component<IProps, IState> {
     componentDidMount() {
         if (this.props.presentation !== CardPresentation.MODAL) {
             const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
-                this.props.shouldFocusAfterRender : WaiAriaUtil.isUserTabbing();
+                this.props.shouldFocusAfterRender :
+                (WaiAriaUtil.isUserTabbing()
+                    || DeviceUtil.isTouch()); // For VO on iOS.
             if (!shouldFocusAfterRender) {
                 return;
             }

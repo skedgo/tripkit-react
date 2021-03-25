@@ -81,6 +81,8 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
                         })
                     })}
                     onClick={this.onClick}
+                    role={"button"}
+                    aria-pressed={this.exists()}
                 />
             }
         </TKI18nContext.Consumer>

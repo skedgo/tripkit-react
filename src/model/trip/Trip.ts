@@ -182,6 +182,7 @@ class Trip {
      *  Fallback can be removed when id or saveURL becomes required.
      *  It's important to have a unique id for each trip, and that is maintained across real-time updates.
      *  See comment on TKUIRoutingResultsView.
+     *  See comment in TripGroup.getKey().
      */
     public getKey(fallback?: string): string {
         return (this.id ? this.id :
@@ -265,6 +266,13 @@ class Trip {
             t("departs.X", {0: departureTime}) + ", " + t("arrives.X", {0: arrivalTime}) :
             this.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime});
         return description;
+    }
+
+    public getAriaTimeDescription(t: TranslationFunction): string {
+        const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(this);
+        return hasPT ?
+            t("departs.X", {0: departureTime}) + ", " + t("arrives.X", {0: arrivalTime}) :
+            this.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime});
     }
 }
 

@@ -52,6 +52,16 @@ class TripGroup extends Trip {
     public allCancelled(): boolean {
         return this.trips.every((value: Trip) => value.isCancelled());
     }
+
+    /**
+     * The id of the trip group is calculated as the id of the first trip, no matter it's or not the selected. This is
+     * to avoid an id change when selected alternative changes, which whould cause an unnecessary re-construction of
+     * a component using this id as key (e.g. TKUITripRow), which in turn causes focus cannot be returned to original
+     * HTML element (e.g. Details button, which pushes details card and changes alternative selected at the same time.)
+     */
+    public getKey(fallback?: string): string {
+        return this.trips[0]!.getKey(fallback);
+    }
 }
 
 export default TripGroup;

@@ -3,6 +3,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {black, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {rowSelectedStyle, rowStyle} from "../service/TKUIServiceDepartureRow.css";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowProps> =
     (theme: TKUITheme) => ({
@@ -11,7 +12,9 @@ export const tKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowPr
             borderTop: '1px solid ' + black(4, theme.isDark),
             borderRight: '1px solid ' + black(4, theme.isDark),
             borderBottom: '1px solid ' + black(4, theme.isDark),
-            cursor: 'pointer'
+            cursor: 'pointer',
+            ...genStyles.flex,
+            ...genStyles.column
         },
         badge: {
             ...genStyles.flex,
@@ -56,6 +59,7 @@ export const tKUITripRowDefaultStyle: TKUIStyles<TKUITripRowStyle, TKUITripRowPr
             }
         },
         alternative: {
+            ...resetStyles.button,
             ...rowStyle(theme),
             borderBottom: '1px solid ' + black(4, theme.isDark)
         },

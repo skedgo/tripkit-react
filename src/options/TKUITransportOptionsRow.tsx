@@ -22,6 +22,7 @@ import TKUISlider from "./TKUISlider";
 import RegionInfo from "../model/region/RegionInfo";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mode: ModeIdentifier;
@@ -307,21 +308,23 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         {mode.title}
                     </div>
                 </ExpansionPanelSummary>
-                <ExpansionPanelDetails
-                    classes={{
-                        root: classes.expansionPanelDetails
-                    }}
-                >
-                    {minimizedOption}
-                    {preferredTransportOption}
-                    <div className={classes.sectionBody}>
-                        {minTransferTimeOption}
-                        {concessionPricingOption}
-                        {wheelchairOption}
-                        {walkSpeedOption}
-                        {cycleSpeedOption}
-                    </div>
-                </ExpansionPanelDetails>
+                {DeviceUtil.browser === BROWSER.SAFARI && !this.state.expanded ?
+                    null : // To avoid focus to get trapped on checkbox on Safari.
+                    <ExpansionPanelDetails
+                        classes={{
+                            root: classes.expansionPanelDetails
+                        }}
+                    >
+                        {minimizedOption}
+                        {preferredTransportOption}
+                        <div className={classes.sectionBody}>
+                            {minTransferTimeOption}
+                            {concessionPricingOption}
+                            {wheelchairOption}
+                            {walkSpeedOption}
+                            {cycleSpeedOption}
+                        </div>
+                    </ExpansionPanelDetails>}
             </ExpansionPanel>
         );
 

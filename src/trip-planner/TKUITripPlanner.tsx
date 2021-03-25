@@ -49,6 +49,7 @@ import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
 import Environment from "../env/Environment";
+import {TKUILocationBoxRef} from "../location_box/TKUILocationBox";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -98,6 +99,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private ref: any;
     private appMainRef: any;
+    private locSearchBoxRef?: TKUILocationBoxRef = undefined;
 
     constructor(props: IProps) {
         super(props);
@@ -218,6 +220,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowSideBarClicked={() => {
                     this.setState({showSidebar: true});
                 }}
+                onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
             />;
         const sideBar =
             <TKUISidebar
@@ -453,7 +456,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 {searchBar}
                                 {queryInput}
                             </div>
-                            <div id="map-main" className={classes.mapMain} aria-hidden="true">
+                            <div id="map-main" className={classes.mapMain}>
                                 <TKUIMapView
                                     hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
                                     padding={mapPadding}
@@ -501,6 +504,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         });
 
         setTimeout(() => GATracker.pageview(window.location.pathname + window.location.search), 1000);
+
+        // Focus location search box on web-app load.
+        setTimeout(() => this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {

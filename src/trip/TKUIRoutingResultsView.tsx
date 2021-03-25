@@ -23,7 +23,7 @@ import GATracker from "../analytics/GATracker";
 import {Moment} from "moment-timezone";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
-import {TKUIButtonType, TKUITheme, TKUITooltip} from "../index";
+import {genClassNames, TKUIButtonType, TKUITheme} from "../index";
 import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
@@ -44,6 +44,7 @@ import {cardSpacing} from "../jss/TKUITheme";
 import Environment from "../env/Environment";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import HasCard, {HasCardKeys} from "../card/HasCard";
+import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -317,52 +318,44 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         }
 
         const renderSubHeader = (!error || this.props.values.length > 0) && (showTimeSelect || showTransportsBtn) ? () => {
+            const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}} {...props}/>;
             return (
-                <div className={classes.footer}
-                     style={!showTimeSelect && showTransportsBtn ? {
-                         justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
-                     } : undefined}
-                >
-                    {showTimeSelect &&
-                    <TKUISelect
-                        options={this.timePrefOptions}
-                        value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
-                        onChange={(option) => this.onPrefChange(option.value)}
-                        styles={{
-                            main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                            menu: overrideClass({ marginTop: '3px' })
-                        }}
-                    />}
-                    {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
-                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                        value={routingQuery.time}
-                        timeZone={this.props.timezone}
-                        onChange={(date: Moment) => this.updateQuery({time: date})}
-                        timeFormat={DateTimeUtil.TIME_FORMAT}
-                        dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
-                        disabled={datePickerDisabled}
-                    />
-                    }
-                    {showTransportsBtn &&
-                    <TKUITooltip
-                        placement="right"
-                        overlay={
-                            <TKUITransportSwitchesView
-                                onMoreOptions={this.props.onShowOptions ?
-                                    () => {
-                                        this.setState({showTransportSwitches: false});
-                                        this.props.onShowOptions!();
-                                    } : undefined}
-                            />
-                        }
-                        visible={this.state.showTransportSwitches}
-                        onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
+                <div>
+                    <div className={classes.footer}
+                         style={!showTimeSelect && showTransportsBtn ? {
+                             justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
+                         } : undefined}
                     >
+                        {showTimeSelect &&
+                        <TKUISelect
+                            options={this.timePrefOptions}
+                            value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
+                            onChange={(option) => this.onPrefChange(option.value)}
+                            styles={{
+                                main: overrideClass(this.props.injectedStyles.timePrefSelect),
+                                menu: overrideClass({ marginTop: '3px' })
+                            }}
+                        />}
+                        {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
+                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                            value={routingQuery.time}
+                            timeZone={this.props.timezone}
+                            onChange={(date: Moment) => this.updateQuery({time: date})}
+                            timeFormat={DateTimeUtil.TIME_FORMAT}
+                            dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                            disabled={datePickerDisabled}
+                        />
+                        }
+                        {showTransportsBtn &&
                         <button className={classes.transportsBtn}
-                                onClick={() => this.setState({showTransportSwitches: true})}>
+                                onClick={() => this.setState({showTransportSwitches: !this.state.showTransportSwitches})}
+                                aria-expanded={this.state.showTransportSwitches}
+                        >
                             {t("Transport")}
-                        </button>
-                    </TKUITooltip>}
+                            <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined}/>
+                        </button>}
+                    </div>
+                    {showTransportsBtn && this.state.showTransportSwitches && <TKUITransportSwitchesView inline={true}/>}
                 </div>
             )
         } : undefined;
@@ -504,7 +497,8 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         // Automatic trip selection a while after first group of trips arrived
         if (!prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
             this.automaticSelectionTimeout = setTimeout(() => {
-                if (this.props.values && this.props.values.length > 0 && this.props.onChange && !this.props.value) {
+                if (this.props.values && this.props.values.length > 0 && this.props.onChange && !this.props.value
+                    && !this.state.showTransportSwitches) { // Avoid automatic trip selection if showTransportSwitches is showing.
                     this.props.onChange(this.props.values[0]);
                 }
             }, 2000);
