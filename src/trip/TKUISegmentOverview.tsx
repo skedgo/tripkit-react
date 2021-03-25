@@ -27,6 +27,7 @@ import {cardSpacing} from "../jss/TKUITheme";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {SegmentType} from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
+import DeviceUtil from "../util/DeviceUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
@@ -178,7 +179,10 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                 </div>;
         }
         return (
-            <div className={classes.main} tabIndex={0}>
+            <div className={classes.main}
+                 tabIndex={0}
+                 role={DeviceUtil.isTouch() ? "button" : undefined}
+            >
                 {header}
                 {!segment.arrival && segment.type !== SegmentType.stationary ?
                     <div className={classes.body}>

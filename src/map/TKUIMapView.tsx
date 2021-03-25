@@ -476,7 +476,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             : undefined;
         const t = this.props.t;
         return (
-            <div className={classes.main} aria-hidden="true">
+            <div className={classes.main}>
                 <RLMap
                     className={classes.leaflet}
                     viewport={leafletViewport}
@@ -715,8 +715,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
         setTimeout(() => {
             WaiAriaUtil.apply(".mapboxgl-canvas", {tabIndex: -1, ariaHidden: true});
             WaiAriaUtil.apply(".mapboxgl-ctrl-logo", {tabIndex: -1, ariaHidden: true});
-            WaiAriaUtil.apply(".leaflet-control-zoom-in", {ariaHidden: true, ariaLabel: "Zoom in map"});
-            WaiAriaUtil.apply(".leaflet-control-zoom-out", {ariaHidden: true, ariaLabel: "Zoom out map"});
+            WaiAriaUtil.apply(".leaflet-control-zoom-in", {ariaLabel: "Zoom in map"});
+            WaiAriaUtil.apply(".leaflet-control-zoom-out", {ariaLabel: "Zoom out map"});
+            WaiAriaUtil.apply(".leaflet-marker-pane", {ariaHidden: true});
+            WaiAriaUtil.apply(".leaflet-popup-pane", {ariaHidden: true});
             const leafletControlAttribution = WaiAriaUtil.getElementByQuerySelector(".leaflet-control-attribution");
             leafletControlAttribution && leafletControlAttribution.children.length > 0 &&
             leafletControlAttribution.children[0].setAttribute("tabindex", "-1");

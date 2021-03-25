@@ -35,7 +35,7 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
                 '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
         },
         option: {
-            ...theme.textSizeCaption,
+            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption,
             ...theme.textWeightSemibold,
             ...theme.textColorGray,
             cursor: 'pointer',
@@ -49,5 +49,8 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
         optionSelected: {
             color: 'white',
             backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
+        },
+        singleValue: {
+            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
         }
     });

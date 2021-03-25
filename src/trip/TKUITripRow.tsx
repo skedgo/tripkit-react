@@ -20,6 +20,8 @@ import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {Subtract} from "utility-types";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import WaiAriaUtil from "../util/WaiAriaUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -134,12 +136,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 function badgeIcon(badge: Badges): JSX.Element {
     switch (badge) {
-        case Badges.CHEAPEST: return <IconBadgeCheapest/>;
-        case Badges.EASIEST: return <IconBadgeEasiest/>;
-        case Badges.FASTEST: return <IconBadgeFastest/>;
-        case Badges.GREENEST: return <IconBadgeGreenest/>;
-        case Badges.HEALTHIEST: return <IconBadgeHealthiest/>;
-        default: return <IconBadgeRecommended/>;
+        case Badges.CHEAPEST: return <IconBadgeCheapest aria-hidden="true"/>;
+        case Badges.EASIEST: return <IconBadgeEasiest aria-hidden="true"/>;
+        case Badges.FASTEST: return <IconBadgeFastest aria-hidden="true"/>;
+        case Badges.GREENEST: return <IconBadgeGreenest aria-hidden="true"/>;
+        case Badges.HEALTHIEST: return <IconBadgeHealthiest aria-hidden="true"/>;
+        default: return <IconBadgeRecommended aria-hidden="true"/>;
     }
 }
 
@@ -168,10 +170,6 @@ function badgeLabel(badge: Badges, t: TranslationFunction): string {
 class TKUITripRow extends React.Component<IProps, {}> {
 
     private ref: any;
-
-    private formatCost(cost: number): string {
-        return cost.toFixed(2);
-    }
 
     public render(): React.ReactNode {
         const trip = this.props.value;
@@ -214,6 +212,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
         const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
         const t = this.props.t;
+        const collapsed = !this.props.expanded;
         return (
             <div className={classes.main}
                  onClick={this.props.onClick}
@@ -224,7 +223,10 @@ class TKUITripRow extends React.Component<IProps, {}> {
                      this.ref = el;
                      this.props.reference && this.props.reference(el);
                  }}
+                 aria-label={collapsed ? undefined : selectedAlt.getAriaDescription(t)}
             >
+                {!collapsed && !DeviceUtil.isTouch() &&
+                <div role="status" style={{height: 0, overflow: 'hidden'}}>To browse alternatives start pressing tab button</div>}
                 {this.props.badge &&
                 <div className={classes.badge}
                      key={"badge"}
@@ -234,36 +236,50 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     {badgeLabel(this.props.badge, this.props.t)}
                 </div>
                 }
-                {visibleAlternatives.map((altTrip: Trip, i: number) =>
-                    <div className={classNames(classes.alternative,
-                        this.props.selected && altTrip === selectedAlt && classes.selectedAlternative)}
-                         onClick={() => this.props.onAlternativeClick &&
-                             this.props.onAlternativeClick(trip as TripGroup, altTrip)}
-                         key={i}
-                         aria-label={altTrip.getAriaDescription(t)}
-                         aria-hidden={i !== 0}
-                    >
-                        <div className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
-                            <TKUITripTime value={altTrip} brief={this.props.brief}/>
-                            <div className={classes.trackAndAction}>
-                                <div style={{position: 'relative'}}>
-                                    {trip.isCancelled() &&
-                                    <div className={classes.crossOut}/>}
-                                    <TripRowTrack value={altTrip}
-                                                  className={classes.track}
-                                    />
+                {visibleAlternatives.map((altTrip: Trip, i: number) => {
+                    const isSelectedAlt = altTrip === selectedAlt;
+                    return (
+                        <div className={classNames(classes.alternative,
+                            this.props.selected && isSelectedAlt && classes.selectedAlternative)}
+                             onClick={() => this.props.onAlternativeClick &&
+                                 this.props.onAlternativeClick(trip as TripGroup, altTrip)}
+                             onKeyDown={(e) => {
+                                 // To get the same effect of a click when user presses enter (pick the alternative).
+                                 // Couldn't use a button since a button (Details) inside a button is forbidden.
+                                 if (e.keyCode === 13) {
+                                     this.props.onAlternativeClick &&
+                                     this.props.onAlternativeClick(trip as TripGroup, altTrip)
+                                 }
+                             }}
+                             key={i}
+                             aria-label={collapsed ? altTrip.getAriaDescription(t) : altTrip.getAriaTimeDescription(t)}
+                             aria-hidden={collapsed && !isSelectedAlt && !DeviceUtil.isTouch()}
+                             tabIndex={collapsed && !DeviceUtil.isTouch() ? -1 : 0}
+                             role={DeviceUtil.isTouch() ? "button" : undefined}
+                        >
+                            <div
+                                className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
+                                <TKUITripTime value={altTrip} brief={this.props.brief}/>
+                                <div className={classes.trackAndAction}>
+                                    <div style={{position: 'relative'}}>
+                                        {trip.isCancelled() &&
+                                        <div className={classes.crossOut}/>}
+                                        <TripRowTrack value={altTrip}
+                                                      className={classes.track}
+                                        />
+                                    </div>
+                                    {this.props.onDetailClick &&
+                                    <TKUIButton
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        text={t("Details")}
+                                        onClick={this.props.onDetailClick}
+                                        aria-hidden={!collapsed || !isSelectedAlt}
+                                        tabIndex={!collapsed || !isSelectedAlt ? -1 : undefined}
+                                    />}
                                 </div>
-                                {this.props.onDetailClick &&
-                                <TKUIButton
-                                    type={TKUIButtonType.PRIMARY_LINK}
-                                    text={t("Details")}
-                                    onClick={this.props.onDetailClick}
-                                    aria-hidden={i !== 0}
-                                    tabIndex={i !== 0 ? -1 : undefined}
-                                />}
                             </div>
                         </div>
-                    </div>)}
+                    );})}
                 <div className={classes.footer}
                      key={"footer"}
                      aria-label={info.replace(/ · /gi, ". ")}
@@ -279,8 +295,18 @@ class TKUITripRow extends React.Component<IProps, {}> {
                                 this.props.onExpand && this.props.onExpand(!this.props.expanded);
                                 e.stopPropagation();
                             }}
-                            aria-hidden={true}
-                            tabIndex={-1}
+                            onKeyDown={(e) => {
+                                if (e.keyCode === 9 && WaiAriaUtil.isUserTabbing() && this.props.expanded) {
+                                    // If navigating with keyboard, button is focused, alternatives are expanded,
+                                    // and press tab, then put focus on main element.
+                                    this.ref && this.ref.focus();
+                                    e.stopPropagation();
+                                    e.preventDefault();
+                                }
+                            }}
+                            role={"button"}
+                            aria-pressed={this.props.expanded}
+                            aria-label={this.props.expanded ? "Less alternatives" : "More alternatives"}
                         />
                     }
                 </div>

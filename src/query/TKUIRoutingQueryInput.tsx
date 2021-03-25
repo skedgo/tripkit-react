@@ -279,7 +279,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 presentation={CardPresentation.NONE}
                 title={this.props.landscape ? this.props.title : undefined}
                 onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
-                closeAriaLabel={"close query input"}
+                closeAriaLabel={"Close query input"}
                 scrollable={false}
                 mainFocusElemId={!routingQuery.from ? inputFromId : !routingQuery.to ? inputToId : undefined}
                 shouldFocusAfterRender={this.props.shouldFocusAfterRender}
@@ -292,7 +292,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 <div className={classes.fromToPanel}>
                     {this.props.portrait ?
                         this.props.onClearClicked &&
-                        <button className={classes.btnBack} onClick={this.props.onClearClicked}>
+                        <button className={classes.btnBack}
+                                onClick={this.props.onClearClicked}
+                                aria-label="Back to quick search view"
+                        >
                             <IconArrowBack/>
                         </button> :
                         <div className={classes.locSelector}>

@@ -30,6 +30,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     startElemRef?: (el: any) => void;
     onRequestClose?: () => void;
+    inline?: boolean;
 }
 
 interface IConsumedProps {
@@ -97,9 +98,15 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
                           header: (defaultStyle) => ({
                               ...defaultStyle,
                               padding: '0'
-                          })
+                          }),
+                          ...this.props.inline && {
+                              main: {
+                                  margin: '0 -5px'
+                              }
+                          }
                       }}
                       ariaLabel={"Transport Switches"}
+                      shouldFocusAfterRender={this.props.inline ? false : undefined}
             >
                 <div className={classes.main}>
                     <div className={classes.modeSelector}>

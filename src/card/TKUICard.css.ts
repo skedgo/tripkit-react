@@ -63,7 +63,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
         },
 
         subHeader: {
-            padding: '0 16px'
+            padding: (props: TKUICardProps) => props.landscape ? '0 16px' : '0 5px'
         },
 
         divider: {

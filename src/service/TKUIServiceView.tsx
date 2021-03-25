@@ -151,6 +151,9 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     onClick={() => this.setState({realtimeOpen: !this.state.realtimeOpen})}
                     className={classes.iconAngleDown}
                     style={this.state.realtimeOpen ? {...genStyles.rotate180} : undefined}
+                    role="button"
+                    aria-expanded={this.state.realtimeOpen}
+                    aria-label={"Show realtime info"}
                 />
             </div> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};

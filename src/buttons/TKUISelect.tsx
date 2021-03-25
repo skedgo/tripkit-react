@@ -65,6 +65,7 @@ interface IStyle {
     option: CSSProps<IProps>;
     optionFocused: CSSProps<IProps>;
     optionSelected: CSSProps<IProps>;
+    singleValue: CSSProps<IProps>;
 }
 
 export type TKUISelectProps = IProps;
@@ -111,7 +112,8 @@ class TKUISelect extends React.Component<IProps, {}> {
                             ...styles, ...injectedStyles.option,
                             ...(state.isFocused && injectedStyles.optionFocused),
                             ...(state.isSelected && injectedStyles.optionSelected)
-                        })
+                        }),
+                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue})
                     }}
                     isDisabled={this.props.isDisabled}
                     aria-label={this.props.ariaLabel}

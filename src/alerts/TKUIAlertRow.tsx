@@ -50,7 +50,7 @@ class TKUIAlertRow extends React.Component<IProps, {}> {
         return (
             <div className={classNames(classes.main, this.props.asCard && classes.asCard)}
                  onClick={this.props.onClick} tabIndex={0}>
-                <AlertIcon className={classes.alertIcon}/>
+                <AlertIcon className={classes.alertIcon} aria-hidden={true}/>
                 <div className={classes.content}>
                     <div className={classes.title}>
                         {alert.title}

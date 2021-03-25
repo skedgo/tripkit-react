@@ -54,7 +54,12 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
         transportsBtn: {
             ...resetStyles.button,
             padding: '10px',
-            ...theme.textColorGray
+            ...theme.textColorGray,
+            whiteSpace: 'nowrap',
+            '& svg': {
+                marginLeft: '5px',
+                ...genStyles.svgFillCurrColor
+            }
         },
         timePrefSelect: {
             minWidth: '92px',

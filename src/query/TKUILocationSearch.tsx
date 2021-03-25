@@ -9,7 +9,7 @@ import LatLng from "../model/LatLng";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
-import TKUILocationBox from "../location_box/TKUILocationBox";
+import TKUILocationBox, {TKUILocationBoxRef} from "../location_box/TKUILocationBox";
 import {ReactComponent as IconMenu} from '../images/ic-menu.svg';
 import {ReactComponent as IconGlass} from "../images/ic-search.svg";
 import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
@@ -74,6 +74,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default The center of the main city of current region ({@link TKState#region})
      */
     focusLatLng?: LatLng;
+
+    onLocationBoxRef?: (ref: TKUILocationBoxRef) => void;
 }
 
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -154,6 +156,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 inputId={inputId}
                                 ariaLabel={"Search location"}
                                 inputAriaLabel={ariaLabel}
+                                onRef={this.props.onLocationBoxRef}
                             />
                             {viewportProps.landscape &&
                             <div className={classes.divider}/>}

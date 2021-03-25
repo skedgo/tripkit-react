@@ -16,6 +16,7 @@ import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
 import WaiAriaUtil from "../util/WaiAriaUtil";
+import DeviceUtil from "../util/DeviceUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -177,6 +178,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                  onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
                  tabIndex={0}
                  aria-label={ariaLabel}
+                 role={DeviceUtil.isTouch() ? "button" : undefined}
             >
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
