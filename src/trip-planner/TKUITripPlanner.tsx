@@ -506,7 +506,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         setTimeout(() => GATracker.pageview(window.location.pathname + window.location.search), 1000);
 
         // Focus location search box on web-app load.
-        setTimeout(() => this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
+        setTimeout(() => !this.props.directionsView && !this.props.query.to &&
+            this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {

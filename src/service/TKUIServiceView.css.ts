@@ -4,6 +4,7 @@ import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import {alertSeverity} from "../model/trip/Segment";
+import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIServiceViewProps> =
     (theme: TKUITheme) => ({
@@ -36,6 +37,7 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             ...genStyles.alignStart
         },
         iconAngleDown: {
+            ...resetStyles.button,
             width: '24px',
             height: '24px',
             padding: '7px',
@@ -43,7 +45,11 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             ...genStyles.borderRadius(50, "%"),
             ...genStyles.svgFillCurrColor,
             color: theme.colorPrimary,
-            cursor: 'pointer'
+            cursor: 'pointer',
+            '& svg': {
+                width: '100%',
+                height: '100%'
+            }
         },
         realtimeInfo: {
             ...genStyles.grow,
