@@ -147,14 +147,15 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>}
                     {alerts}
                 </div>
-                <IconAngleDown
+                <button
                     onClick={() => this.setState({realtimeOpen: !this.state.realtimeOpen})}
                     className={classes.iconAngleDown}
                     style={this.state.realtimeOpen ? {...genStyles.rotate180} : undefined}
-                    role="button"
                     aria-expanded={this.state.realtimeOpen}
                     aria-label={"Show realtime info"}
-                />
+                >
+                    <IconAngleDown/>
+                </button>
             </div> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         const leftLabelFc = (step: ServiceStopLocation, timeFormat: string = DateTimeUtil.TIME_FORMAT_TRIP) => step.departure ?

@@ -69,9 +69,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         <TGUIDevSettingsView
             showLoadTrips={showLoadTrips}
             setShowLoadTrips={setShowLoadTrips}
-            onRequestClose={() => {
-                setShowDevSettings(false);
-            }}
+            onRequestClose={() => setShowDevSettings(false)}
         />;
 
     const config: TKUIConfig = {
@@ -181,9 +179,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         },
         TKUIProfileView: {
             props: devSettings ? {
-                customSettings: (userProfile: TKUserProfile,
-                                 onUserProfileChange: (value: TKUserProfile) => void,
-                                 onRequestClose?: () => void) =>
+                customSettings: () =>
                     <TKUISettingSection>
                         <TKUISettingLink text={"Beta Testing"} onClick={() => setShowDevSettings(true)}/>
                     </TKUISettingSection>
