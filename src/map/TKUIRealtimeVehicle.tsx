@@ -47,7 +47,7 @@ class TKUIRealtimeVehicle extends React.Component<IProps, {}> {
         const angleNormalized360 = angle ? (angle + 360) % 360 : undefined;
         return (
             <div className={classes.main}
-                 style={angle ? {...genStyles.transformRotate(-angle)} : undefined}
+                 style={angle ? {...genStyles.transformRotate(-angle)} as any : undefined}
             >
                 <div className={classes.vehicleBackground}>
                     <div className={classes.bodyBackground}/>
@@ -60,7 +60,7 @@ class TKUIRealtimeVehicle extends React.Component<IProps, {}> {
                 {label &&
                 <div className={classes.label}
                      style={angleNormalized360 && 90 < angleNormalized360 && angleNormalized360 < 270 ?
-                         {...genStyles.transformRotate(180)} : undefined
+                         {...genStyles.transformRotate(180)} as any : undefined
                      }
                 >
                     {label}

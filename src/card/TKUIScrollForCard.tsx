@@ -30,7 +30,7 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
                     ...this.props.style,
                     ...!this.props.freezeScroll ? {overflowY: 'scroll'} :
                         this.scrollRef && this.scrollRef.scrollTop <= 10 ? {overflowY: 'visible'} : {overflowY: 'hidden'},
-                    ...{overflowX: 'hidden'}
+                    ...{overflowX: 'hidden'} as any
                 }}
                 // style={{...this.props.style, ...!this.props.freezeScroll ? {overflowY: 'scroll'} : {overflowY: 'hidden'}}}
                 ref={(scrollRef: any) => {

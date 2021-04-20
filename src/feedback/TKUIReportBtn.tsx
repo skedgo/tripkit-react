@@ -138,7 +138,7 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
         const icon = this.props.renderIcon ? this.props.renderIcon() : <IconFeedback/>;
         const onClick = this.props.onClick ? this.props.onClick : copyToClipboard;
         const classes = this.props.classes;
-        const onShowActionsMenu = (e: MouseEvent) => {
+        const onShowActionsMenu = (e: any) => {
             this.showActionMenu(true);
             e.preventDefault && e.preventDefault(); // Since safari on iOS fails saying preventDefault is not defined.
         };

@@ -43,7 +43,7 @@ class SegmentPopup extends React.Component<IProps, IState> {
                     () => <div style={{...genStyles.link,   // TODO: hover rule will not work.
                         borderTop: '1px solid #ECEBEB',
                         marginTop: '7px',
-                        paddingTop: '7px'}}
+                        paddingTop: '7px'} as any}
                                onClick={() => window.open(this.state.interchangeUrl,'_blank')}
                     >View stop map</div> : undefined
                 }

@@ -23,7 +23,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
                 ...genStyles.borderRadius(50, '%'),
                 background: white(0, this.props.isDarkMode),
                 border: '1px solid ' + black(0, this.props.isDarkMode)
-            }}/>
+            } as any}/>
         }
         const modeInfo = this.props.stop.modeInfo;
         const wantIconForDark = true;
@@ -72,7 +72,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
             height: '100%'
         };
         return (
-            <div style={style}>
+            <div style={style as any}>
                 <img src={transIcon}
                      style={imgStyle}
                      aria-hidden={true}

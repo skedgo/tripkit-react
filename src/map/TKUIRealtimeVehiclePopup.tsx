@@ -29,11 +29,11 @@ class TKUIRealtimeVehiclePopup extends React.Component<IProps, IState> {
         const text = "Updated " + this.state.secsOld + "s ago";
         return (
             <div style={{...genStyles.flex, ...genStyles.column, ...genStyles.center, ...genStyles.fontM,
-                     padding: '5px 10px'}}
+                     padding: '5px 10px'} as any}
             >
                 {title}
                 <div style={{
-                    ...genStyles.fontSM,
+                    ...genStyles.fontSM as any,
                     whiteSpace: 'nowrap'
                 }}>
                     {text}

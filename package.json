@@ -1,9 +1,11 @@
 {
   "name": "tripkit-react",
   "version": "0.1.30",
-  "main": "dist/js/index.js",
+  "_prod_main": "dist/js/index.js",
+  "_dev_main": "src/index.tsx",
+  "main": "src/index.tsx",
   "_module": "dist/esm/index.js",
-  "types": "dist/js/index.d.ts",
+  "_prod_types": "dist/js/index.d.ts",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -71,8 +73,8 @@
     "test": "react-scripts-ts test --env=jsdom",
     "eject": "react-scripts-ts eject",
     "build:lib": "npm run build:babel && npm run build:types && node ./scripts/copyFiles.js",
-    "_build:babel": "npm run build:babel:cjs",
-    "build:babel": "concurrently \"npm run build:babel:esm && npm run build:babel:umd\" \"npm run build:babel:cjs\"",
+    "build:babel": "npm run build:babel:cjs",
+    "_build:babel": "concurrently \"npm run build:babel:esm && npm run build:babel:umd\" \"npm run build:babel:cjs\"",
     "build:babel:cjs": "BABEL_ENV=cjs babel --source-maps --extensions \".js,.ts,.tsx\" src --out-dir dist/js --presets=@babel/env && npm run build:svg:cjs",
     "build:babel:esm": "BABEL_ENV=esm babel --source-maps --extensions \".js,.ts,.tsx\" src --out-dir dist/esm && npm run build:svg:esm",
     "build:babel:umd": "BABEL_ENV=umd babel --source-maps --extensions \".js\" dist/esm --out-dir dist/umd --plugins=transform-es2015-modules-umd && npm run build:svg:umd",
