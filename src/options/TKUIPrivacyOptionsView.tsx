@@ -122,7 +122,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.forever.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
                     </div>
-                    <div style={this.props.theme.divider}/>
+                    <div style={this.props.theme.divider as any}/>
                     <div className={classes.section}>
                         <div className={classes.sectionBody}>
                             <div className={classes.optionRow}>

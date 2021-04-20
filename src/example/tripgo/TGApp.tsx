@@ -273,6 +273,8 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         };
     });
 
+    // Obs: OptionsProvider used here and inside TKRoot keep their values at sync due to OptionsProvider subscribing to
+    // OptionsData changes (See OptionsProvider:36). Try to avoid this so can remove that subscription.
     return (
         <OptionsProvider>
             <OptionsContext.Consumer>

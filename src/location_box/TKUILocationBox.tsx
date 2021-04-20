@@ -382,7 +382,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     (this.state.inputText ?
                         <button onClick={this.onClearClicked}
                                 className={classes.btnClear}
-                                style={resetStyles.button}
+                                style={resetStyles.button as any}
                                 aria-hidden={true}
                                 tabIndex={-1}>
                             <IconRemove aria-hidden={true} className={classes.iconClear} focusable="false"/>

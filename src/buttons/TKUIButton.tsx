@@ -31,7 +31,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Button click handler.
      * @ctype (e: React.MouseEvent) => void
      */
-    onClick?: (e: MouseEvent) => void;
+    onClick?: (e: any) => void;
 
     /**
      * Stating if button is disabled.
