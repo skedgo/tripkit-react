@@ -43,9 +43,6 @@ export interface IStyle {
 
 interface IProps {}
 
-export type TGAppProps = IProps;
-export type TGAppStyle = IStyle;
-
 const TGApp: React.SFC<IProps> = (props: IProps) => {
 
     const analyticsConfig = Environment.isProd() ? {
@@ -188,7 +185,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         },
         TKUISidebar: {
             props: {
-                nativeAppLinks: () => {
+                renderNativeAppLinks: () => {
                     const storeBtnStyle = {
                         ...resetStyles.button as any,
                         height: '48px',
