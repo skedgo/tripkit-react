@@ -14,6 +14,8 @@ import {IRoutingResultsContext as IRoutingResultsContextForExport} from "./trip-
 import {TKState as TKUIStateForExport} from "./config/TKState";
 import {TKUIReportBtnProps as TKUIReportBtnPropsForExport} from "./feedback/TKUIReportBtn";
 import {TKUIRoutingResultsViewProps as TKUIRoutingResultsViewPropsForExport} from "./trip/TKUIRoutingResultsView";
+import {TKUIMapViewProps as TKUIMapViewPropsForExport} from "./map/TKUIMapView"
+import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptions";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
 export {default as TKStateController} from "./config/TKStateController";
@@ -55,7 +57,11 @@ export {TKError} from "./error/TKError";
 export type TKUIRoutingResultsViewProps = TKUIRoutingResultsViewPropsForExport;
 export {default as TKFeatures} from "./env/Features";
 export {default as TKUIMapView} from "./map/TKUIMapView";
+export type TKUIMapViewProps = TKUIMapViewPropsForExport;
 export {tKRequestCurrentLocation} from "./util/GeolocationUtil";
+export {default as TKStateUrl} from "./state/TKStateUrl";
+export type TKGeocodingOptions = TKGeocodingOptionsForExport;
+export {resetStyles} from "./css/ResetStyle.css"
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
