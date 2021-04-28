@@ -15,6 +15,7 @@ import {TKState as TKUIStateForExport} from "./config/TKState";
 import {TKUIReportBtnProps as TKUIReportBtnPropsForExport} from "./feedback/TKUIReportBtn";
 import {TKUIRoutingResultsViewProps as TKUIRoutingResultsViewPropsForExport} from "./trip/TKUIRoutingResultsView";
 import {TKUIMapViewProps as TKUIMapViewPropsForExport} from "./map/TKUIMapView"
+import {TKUIWithStyle as TKUIWithStyleForExport, TKUIWithClasses as TKUIWithClassesForExport} from "./jss/StyleHelper";
 import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptions";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
@@ -62,6 +63,17 @@ export {tKRequestCurrentLocation} from "./util/GeolocationUtil";
 export {default as TKStateUrl} from "./state/TKStateUrl";
 export type TKGeocodingOptions = TKGeocodingOptionsForExport;
 export {resetStyles} from "./css/ResetStyle.css"
+export {default as TripGoApi} from "./api/TripGoApi";
+export {default as LocalStorageItem} from "./data/LocalStorageItem";
+export {default as TKUISettingSection} from "./options/TKUISettingSection";
+export {default as TKUISettingLink} from "./options/TKUISettingLink";
+export type TKUIWithStyle<ST, CP> = TKUIWithStyleForExport<ST, CP>;
+export {OptionsContext} from "./options/OptionsProvider"
+export {connect} from "./config/TKConfigHelper";
+export {withStyles} from "./jss/StyleHelper";
+export type TKUIWithClasses<STYLE, PROPS> = TKUIWithClassesForExport<STYLE, PROPS>;
+export {default as genStyles} from "./css/GenStyle.css";
+export {colorWithOpacity, white, black} from "./jss/TKUITheme";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {

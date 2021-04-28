@@ -10,7 +10,7 @@ import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceR
 import {IRoutingResultsContext, RoutingResultsContext} from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITripPlannerDefaultStyle} from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
@@ -56,23 +56,14 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     userLocationPromise?: Promise<LatLng>;
+    renderSignInOut?: () => React.ReactNode;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext {}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
-export interface IStyle {
-    modalMain: CSSProps<IProps>;
-    main: CSSProps<IProps>;
-    queryPanel: CSSProps<IProps>;
-    mapMain: CSSProps<IProps>;
-    reportBtn: CSSProps<IProps>;
-    reportBtnLandscape: CSSProps<IProps>;
-    reportBtnPortrait: CSSProps<IProps>;
-    carouselPage: CSSProps<IProps>;
-    stacktrace: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUITripPlannerDefaultStyle>
 
 export type TKUITKUITripPlannerProps = IProps;
 export type TKUITKUITripPlannerStyle = IStyle;
@@ -485,6 +476,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             {transportSettings}
                             {favouritesView}
                             {waitingRequest}
+                            {this.props.renderSignInOut &&
+                            <div className={classes.signInOut}>
+                                {this.props.renderSignInOut()}
+                            </div>}
                         </div>
                     </div>
                 }
