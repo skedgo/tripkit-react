@@ -252,7 +252,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.state = {
             mapLayers: new Map<MapLocationType, Location[]>()
         };
-        this.onMoveEnd = this.onMoveEnd.bind(this);
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
@@ -318,13 +317,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
     }
 
-    private onMoveEnd() {
-        const mapBounds = this.leafletElement!.getBounds();
-        if (mapBounds.getNorth() === 90) {  // Filter first bounds, which are like max possible bounds
-            return;
-        }
-    }
-
     private checkFitLocation(oldLoc?: Location | null, loc?: Location | null): boolean {
         return !!(oldLoc !== loc && loc && loc.isResolved()) && JSON.stringify(Util.transerialize(loc, LatLng)) !== JSON.stringify(avoidFitLatLng);
     }
@@ -348,13 +340,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
             let fitPoint;
             if (this.props.padding && this.props.padding.left && boundsEstablished) {
-                fitPoint = MapUtil.movePointInPixels(fitSet[0], -this.props.padding.left/2, 0,
-                    this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
-                    LeafletUtil.toBBox(this.leafletElement!.getBounds()));
+                const targetPoint = this.leafletElement!.project(fitSet[0], 13).subtract([this.props.padding.left / 2, 0]);
+                fitPoint = this.leafletElement!.unproject(targetPoint, 13);
             } else if (this.props.padding && this.props.padding.bottom && boundsEstablished) {
-                fitPoint = MapUtil.movePointInPixels(fitSet[0], 0, -this.props.padding.bottom/2,
-                    this.leafletElement!.getContainer().offsetWidth, this.leafletElement!.getContainer().offsetHeight,
-                    LeafletUtil.toBBox(this.leafletElement!.getBounds()));
+                const targetPoint = this.leafletElement!.project(fitSet[0], 13).subtract([0, -this.props.padding.bottom / 2]);
+                fitPoint = this.leafletElement!.unproject(targetPoint, 13);
             } else {
                 fitPoint = fitSet[0]
             }
@@ -480,9 +470,16 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <RLMap
                     className={classes.leaflet}
                     viewport={leafletViewport}
-                    // TODO: check I don't need to pass boundsOptios to fitBounds anymore
+                    // TODO: check I don't need to pass boundsOptions to fitBounds anymore
                     boundsOptions={paddingOptions}
-                    maxBounds={L.latLngBounds([-90, -180], [90, 180])} // To avoid lngs greater than 180.
+                    maxBounds={L.latLngBounds([-90, -1800], [90, 1800])} // To avoid lats > 90 or < -90
+                    minZoom={2}
+                    // If maxBounds is set, this option will control how solid the bounds are when dragging the map
+                    // around, 1.0 makes the bounds fully solid, preventing the user from dragging outside the bounds.
+                    maxBoundsViscosity={1.0}
+                    // With this option enabled, the map tracks when you pan to another "copy" of the world and seamlessly
+                    // jumps to the original one so that all overlays like markers and vector layers are still visible.
+                    worldCopyJump={true}
                     onViewportChanged={(viewport: Viewport) => {
                         this.onViewportChange({
                             center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
@@ -498,7 +495,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             this.onClick(LatLng.createLatLng(event.latlng.lat, event.latlng.lng));
                         });
                     }}
-                    onmoveend={this.onMoveEnd}
                     ref={(ref: any) => {
                         if (ref) {
                             this.leafletElement = ref.leafletElement;
