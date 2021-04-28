@@ -65,20 +65,6 @@ class MapUtil {
         return radians * 180 / Math.PI;
     }
 
-    public static movePointInPixels(latlng: LatLng, offsetX: number, offsetY: number, width: number, height: number, bounds: BBox): LatLng {
-        const westLong = bounds.sw.lng;
-        const eastLong = bounds.ne.lng;
-        const northLat = bounds.ne.lat;
-        const southLat = bounds.sw.lat;
-        const diffLong = eastLong >= westLong ? eastLong - westLong : eastLong - westLong + 360;
-        const diffLat = northLat >= southLat ? northLat - southLat : northLat - southLat + 180;
-        const pixelsPerLongDegree = width / diffLong;
-        const pixelsPerLatDegree = height / diffLat;
-        const newCenterLong = latlng.lng + (offsetX / pixelsPerLongDegree);
-        const newCenterLat = latlng.lat + (offsetY / pixelsPerLatDegree);
-        return LatLng.createLatLng(newCenterLat, newCenterLong);
-    }
-
     public static expandBoundsByPercent(bounds: BBox, left: number, right: number, top: number, bottom: number): BBox {
         const westLong = bounds.sw.lng;
         const eastLong = bounds.ne.lng;
