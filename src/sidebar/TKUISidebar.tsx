@@ -93,7 +93,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
             </TKStyleOverride>,
             <TKStyleOverride componentKey={"TKUIButton"} stylesOverride={buttonStylesOverride} key={3}>
                 <TKUIButton
-                    text={t("Settings")}
+                    text={t("Profile")}
                     icon={<IconSettings style={{width: '22px', height: '22px'}}/>}
                     type={TKUIButtonType.SECONDARY}
                     onClick={() => {

@@ -190,6 +190,23 @@ export function withStyleInjection<
     }
 }
 
+export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
+    Consumer: React.ComponentType<PROPS>,
+    stylesJss: (theme: TKUITheme) => STYLE) {
+    const StyledComponent: any = injectSheet(stylesJss)(Consumer as any);
+    const WithTheme = withTheme(({theme, ...props}) =>
+        <StyledComponent
+            {...props}
+            injectedStyles={stylesJss(theme)}
+            refreshStyles={() => {}}
+            theme={theme}
+        />);
+    return (props: Subtract<PROPS, TKUIWithClasses<STYLE, PROPS>>) => {
+        const consumerProps = {...props} as PROPS; // See why I need to do this.
+        return <WithTheme {...consumerProps}/>;
+    };
+}
+
 // Deprecated
 function withStyleProp<
         ST,
