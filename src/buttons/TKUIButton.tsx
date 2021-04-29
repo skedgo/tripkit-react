@@ -20,7 +20,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
      * Button text.
      */
-    text?: string;
+    text?: string | JSX.Element;
     /**
      * Button icon.
      * @ctype JSX.Element
