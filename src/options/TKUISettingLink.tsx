@@ -10,6 +10,7 @@ import {Subtract} from "utility-types";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     text: string;
     onClick: () => void;
+    rightIcon?: () => JSX.Element;
 }
 
 export interface IStyle {
@@ -34,7 +35,7 @@ const TKUISettingLink: React.SFC<IProps> = (props: IProps) => {
              onClick={props.onClick}
         >
             {props.text}
-            <IconRightArrow/>
+            {props.rightIcon ? props.rightIcon() : <IconRightArrow/>}
         </button>
     );
 };
