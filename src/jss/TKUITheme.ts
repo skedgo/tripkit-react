@@ -76,6 +76,7 @@ export interface TKUITheme {
     textWeightBold: CSS.Properties;
 
     cardBackground: CSS.Properties;
+    secondaryBackground: CSS.Properties;
     divider: CSS.Properties;
     modalFog: CSS.Properties;
 
@@ -135,6 +136,9 @@ const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
                     '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)' :
                     '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)',
                 ...genStyles.borderRadius(12)
+            },
+            secondaryBackground: {
+                backgroundColor: isLight ? '#F6F6F6' : '#384450',
             },
             divider: {
                 borderBottom: '1px solid ' + black(4, isDark)

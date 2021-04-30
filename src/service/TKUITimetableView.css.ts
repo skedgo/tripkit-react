@@ -57,8 +57,8 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             }
         },
         secondaryBar: {
+            ...theme.secondaryBackground,
             padding: '8px 16px',
-            backgroundColor: theme.isLight ? '#e6eff2' : '#384450',
             borderBottom: '1px solid ' + tKUIColors.black4,
             ...genStyles.flex,
             ...genStyles.alignCenter,

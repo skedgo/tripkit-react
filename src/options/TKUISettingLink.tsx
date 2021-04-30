@@ -8,7 +8,7 @@ import {tKUISettingLinkDefaultStyle} from "./TKUISettingLink.css";
 import {Subtract} from "utility-types";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    text: string;
+    text: string | JSX.Element;
     onClick: () => void;
     rightIcon?: () => JSX.Element;
 }

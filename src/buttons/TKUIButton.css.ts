@@ -39,7 +39,9 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
                 cursor: 'initial'
             },
             '&:active': {
-                backgroundColor: '#079541'
+                // Until integrate library to decrease color luminosity.
+                // backgroundColor: '#079541'
+                backgroundColor: theme.colorPrimary
             },
         },
 

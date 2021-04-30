@@ -17,6 +17,7 @@ import {TKUIRoutingResultsViewProps as TKUIRoutingResultsViewPropsForExport} fro
 import {TKUIMapViewProps as TKUIMapViewPropsForExport} from "./map/TKUIMapView"
 import {TKUIWithStyle as TKUIWithStyleForExport, TKUIWithClasses as TKUIWithClassesForExport} from "./jss/StyleHelper";
 import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptions";
+import {TKUISlideUpPosition} from "./card/TKUISlideUp";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
 export {default as TKStateController} from "./config/TKStateController";
@@ -53,7 +54,8 @@ export {feedbackTextFromState} from "./feedback/TKUIReportBtn";
 export {default as Environment} from "./env/Environment";
 export {default as TKGATracker} from "./analytics/GATracker";
 export {default as TKPeliasGeocoder} from "./geocode/PeliasGeocoder";
-export {default as TKUICard} from "./card/TKUICard";
+export {default as TKUICard, CardPresentation} from "./card/TKUICard";
+export {TKUISlideUpPosition} from "./card/TKUISlideUp";
 export {TKError} from "./error/TKError";
 export type TKUIRoutingResultsViewProps = TKUIRoutingResultsViewPropsForExport;
 export {default as TKFeatures} from "./env/Features";
@@ -74,7 +76,7 @@ export {withStyles} from "./jss/StyleHelper";
 export type TKUIWithClasses<STYLE, PROPS> = TKUIWithClassesForExport<STYLE, PROPS>;
 export {default as genStyles} from "./css/GenStyle.css";
 export {colorWithOpacity, white, black} from "./jss/TKUITheme";
-
+export {TKUIViewportUtil} from "./util/TKUIResponsiveUtil";
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
     import("./example/tripgo/tripgo-sample");
