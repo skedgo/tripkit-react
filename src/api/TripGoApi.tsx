@@ -16,6 +16,7 @@ class TripGoApi {
     public static isBetaServer = false;
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
+    public static userToken?: string = undefined;
 
     public static getServer(): string {
         return this.server;
@@ -50,7 +51,10 @@ class TripGoApi {
                 'X-TripGo-Key': this.apiKey,
                 'referer': 'https://tripgo.com',
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...this.userToken && {
+                    'userToken': this.userToken
+                }
             },
             body: body ? JSON.stringify(body) : undefined
         }, cache)

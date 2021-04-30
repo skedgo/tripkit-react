@@ -158,6 +158,8 @@ export function withStyleInjection<
          * As per react-jss documentation, it seems that refresh of css on props update should happen automatically:
          * https://cssinjs.org/react-jss/?v=v10.0.0-alpha.3#dynamic-values
          * Investigate why it doesn't work.
+         * Try workaround of forcing an artificial update of theme (maybe just re-setting a shallow copy of theme) to
+         * get prop dependent styles refreshed.
          */
         public onRefreshStyles(forceUpdate: boolean = false) {
             const props = this.props;

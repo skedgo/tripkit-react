@@ -75,7 +75,7 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             }
         },
         footer: {
-            backgroundColor: theme.isLight ? '#e6eff2' : '#384450',
+            ...theme.secondaryBackground,
             borderBottomLeftRadius: '12px',
             borderBottomRightRadius: '12px',
             borderTop: '1px solid ' + tKUIColors.black4,

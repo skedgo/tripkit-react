@@ -28,6 +28,7 @@ import TKUISettingLink from "./TKUISettingLink";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
+    accountSettings?: () => React.ReactNode;
     customSettings?: () => React.ReactNode;
 }
 
@@ -152,6 +153,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 }}
             />;
         const t = this.props.t;
+        const accountSettings = this.props.accountSettings && this.props.accountSettings();
         const customSettings = this.props.customSettings && this.props.customSettings();
         return (
             <TKUICard
@@ -162,6 +164,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             >
                 <div className={classes.main}>
                     <TKUISettingSection>
+                        {accountSettings}
                         <TKUISettingLink
                             text={t("My.Personal.Data")}
                             onClick={() => this.setState({showPersonalData: true})}/>
@@ -191,10 +194,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                                         this.applyChanges();
                                     });
                                 }}
-                                styles={{
+                                styles={() => ({
                                     main: overrideClass(this.props.injectedStyles.optionSelect),
                                     menu: overrideClass({ marginTop: '2px' })
-                                }}
+                                })}
                                 components={{
                                     IndicatorsContainer: () => <IconAngleDown style={{width: '11px', height: '11px', marginRight: '5px'}}/>
                                 }}

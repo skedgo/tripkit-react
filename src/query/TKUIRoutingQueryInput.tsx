@@ -429,10 +429,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         options={this.timePrefOptions}
                         value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
                         onChange={(option) => this.onPrefChange(option.value)}
-                        styles={{
+                        styles={() => ({
+                            // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
+                            // a theme update would not be reflected (e.g. switch dark / light mode).
+                            // This will not be needed anymore when get dynamic style updates working.
                             main: overrideClass(this.props.injectedStyles.timePrefSelect),
                             menu: overrideClass({ marginTop: '3px' })
-                        }}
+                        })}
                         ariaLabel={"Time preference"}
                     />}
                     {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&

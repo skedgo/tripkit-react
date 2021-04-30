@@ -11,7 +11,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
         main: {
             ...genStyles.flex,
             ...genStyles.column,
-            background: theme.isLight ? '#e6eff2' : '#384450',
+            ...theme.secondaryBackground,
             minHeight: '100%'
         },
         row: {

@@ -331,10 +331,10 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                             options={this.timePrefOptions}
                             value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
                             onChange={(option) => this.onPrefChange(option.value)}
-                            styles={{
+                            styles={() => ({
                                 main: overrideClass(this.props.injectedStyles.timePrefSelect),
                                 menu: overrideClass({ marginTop: '3px' })
-                            }}
+                            })}
                         />}
                         {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                         <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
