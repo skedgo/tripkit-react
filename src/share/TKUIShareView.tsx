@@ -1,5 +1,5 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIShareViewDefaultStyle} from "./TKUIShareView.css";
@@ -9,22 +9,14 @@ import classNames from "classnames";
 import QRCode from "qrcode.react";
 import TKUITooltip from "../card/TKUITooltip";
 import {tKUIColors} from "../index";
+import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     link?: string;
     customMsg: string;
 }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    qrSharePanel: CSSProps<IProps>;
-    qrLabel: CSSProps<IProps>;
-    qrCode: CSSProps<IProps>;
-    copyLinkPanel: CSSProps<IProps>;
-    linkBox: CSSProps<IProps>;
-    linkIcon: CSSProps<IProps>;
-    separation: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUIShareViewDefaultStyle>
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -64,45 +56,48 @@ class TKUIShareView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const classes = this.props.classes;
         const t = this.props.t;
-        return (
-            <div className={classes.main}>
-                <div className={classNames(classes.qrSharePanel, classes.separation)}>
-                    <div className={classes.qrLabel}>
-                        {t("See.it.on.your.mobile.device")}
-                    </div>
-                    <div className={classes.qrCode}>
-                        {this.props.link &&
+        return (!this.props.link ?
+                <div className={classes.loadingPanel}>
+                    <IconSpin className={classes.iconLoading} focusable="false"/>
+                </div> :
+                <div className={classes.main}>
+                    <div className={classNames(classes.qrSharePanel, classes.separation)}>
+                        <div className={classes.qrLabel}>
+                            {t("See.it.on.your.mobile.device")}
+                        </div>
+                        <div className={classes.qrCode}>
+                            {this.props.link &&
                             <QRCode value={this.props.link}/>
-                        }
+                            }
+                        </div>
+                        <div className={classes.qrLabel}>
+                            {t("Scan.the.QR.code.with.your.device.camera")}
+                        </div>
                     </div>
-                    <div className={classes.qrLabel}>
-                        {t("Scan.the.QR.code.with.your.device.camera")}
-                    </div>
+                    <TKUITooltip
+                        overlayContent={t("Copied.to.clipboard")}
+                        placement={"bottom"}
+                        visible={this.state.copiedTooltip}
+                        arrowColor={tKUIColors.black2}
+                    >
+                        <div className={classes.copyLinkPanel}>
+                            <input className={classes.linkBox}
+                                   value={this.props.link}
+                                   readOnly={true}
+                                   onClick={() => {
+                                       if (this.linkInputRef) {
+                                           this.linkInputRef.select();
+                                       }
+                                       this.onCopyLink();
+                                   }}
+                                   ref={(ref: any) => this.linkInputRef = ref}
+                            />
+                            <IconLink className={classes.linkIcon}
+                                      onClick={this.onCopyLink}
+                            />
+                        </div>
+                    </TKUITooltip>
                 </div>
-                <TKUITooltip
-                    overlayContent={t("Copied.to.clipboard")}
-                    placement={"bottom"}
-                    visible={this.state.copiedTooltip}
-                    arrowColor={tKUIColors.black2}
-                >
-                    <div className={classes.copyLinkPanel}>
-                        <input className={classes.linkBox}
-                               value={this.props.link}
-                               readOnly={true}
-                               onClick={() => {
-                                   if (this.linkInputRef) {
-                                       this.linkInputRef.select();
-                                   }
-                                   this.onCopyLink();
-                               }}
-                               ref={(ref: any) => this.linkInputRef = ref}
-                        />
-                        <IconLink className={classes.linkIcon}
-                                  onClick={this.onCopyLink}
-                        />
-                    </div>
-                </TKUITooltip>
-            </div>
         );
     }
 
