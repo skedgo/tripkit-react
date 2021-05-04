@@ -116,7 +116,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }
                 const initViewport = {center: userLocation, zoom: 13};
                 this.props.onViewportChange(initViewport);
-            });
+            })
+            .catch((error) => console.log(error));
 
         WaiAriaUtil.addTabbingDetection();
 
@@ -329,7 +330,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     position: this.isShowTripDetail() ? TKUISlideUpPosition.HIDDEN :
                         DeviceUtil.isTouch() ? undefined :
-                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ? {top: 176 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
                     modalMiddle: {top: 55, unit: '%'},
@@ -460,7 +461,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         } else if (loc.isCurrLoc()) {
                                             return undefined;
                                         } else if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
-                                             return () => this.setState({showLocationDetails: true});
+                                            return () => this.setState({showLocationDetails: true});
                                         }
                                         return undefined;
                                     }}/>
