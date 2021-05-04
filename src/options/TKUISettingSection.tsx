@@ -28,7 +28,7 @@ export type TKUISettingSectionStyle = IStyle;
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUISettingSection {...props}/>,
     styles: tKUISettingSectionDefaultStyle,
-    classNamePrefix: "TKUISettingLink"
+    classNamePrefix: "TKUISettingSection"
 };
 
 const TKUISettingSection: React.SFC<IProps> = (props: IProps) => {
