@@ -77,6 +77,7 @@ export type TKUIWithClasses<STYLE, PROPS> = TKUIWithClassesForExport<STYLE, PROP
 export {default as genStyles} from "./css/GenStyle.css";
 export {colorWithOpacity, white, black} from "./jss/TKUITheme";
 export {TKUIViewportUtil} from "./util/TKUIResponsiveUtil";
+export {default as TKNetworkUtil} from "./util/NetworkUtil";
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 if (document.getElementById("tripgo-sample-root")) {
     import("./example/tripgo/tripgo-sample");
