@@ -21,17 +21,14 @@ import {TKUITimetableViewProps} from "../../service/TKUITimetableView";
 import {TKUIMapViewProps} from "../../map/TKUIMapView";
 import TKStateUrl from "../../state/TKStateUrl";
 import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
-import TKUserProfile from "../../model/options/TKUserProfile";
 import TKUISettingLink from "../../options/TKUISettingLink";
 import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../../options/OptionsProvider";
 import {getApiKey, default as TGUIDevSettingsView, getServer} from "./options/TGUIDevSettingsView";
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
-import appleStoreLogo from "./images/logo/apple-store-logo.png";
-import playStoreLogo from "./images/logo/play-store-logo.png";
 import {loadTripState} from "./options/TGUILoadTripsView";
-import {resetStyles} from "../../css/ResetStyle.css";
+import {ReactComponent as TripgoLogo} from './images/logo-tripgo.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
@@ -183,34 +180,18 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
 
             } : undefined
         },
+        TKUITripPlanner: {
+            props: (props) => ({
+                renderTopRight: props.landscape ?
+                    () => <TripgoLogo/>
+                    : undefined
+            })
+        },
         TKUISidebar: {
             props: {
-                renderNativeAppLinks: () => {
-                    const storeBtnStyle = {
-                        ...resetStyles.button as any,
-                        height: '48px',
-                        width: '144px',
-                        cursor: 'pointer'
-                    };
-                    return (
-                        <React.Fragment>
-                            <button onClick={() => window.open( 'https://apps.apple.com/au/app/tripgo/id533630842', '_blank')}
-                                    style={storeBtnStyle}
-                                    aria-label="Download on the App Store"
-                                    role="link"
-                            >
-                                <img src={appleStoreLogo} key={'appleStoreLogo'} style={{width: '100%', height: '100%'}}/>
-                            </button>
-                            <button onClick={() => window.open('https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner', '_blank')}
-                                    style={storeBtnStyle}
-                                    aria-label="Download on Google Play"
-                                    role="link"
-                            >
-                                <img src={playStoreLogo} key={'playStoreLogo'} style={{width: '100%', height: '100%'}}/>
-                            </button>
-                        </React.Fragment>
-                    )
-                }
+                renderLogo: () => <TripgoLogo/>,
+                appStoreUrl: "https://apps.apple.com/au/app/tripgo/id533630842",
+                playStoreUrl: "https://play.google.com/store/apps/details?id=com.buzzhives.android.tripplanner"
             }
         },
         onInitState: (tKState: TKState) => {

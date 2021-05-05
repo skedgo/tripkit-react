@@ -80,8 +80,8 @@ export {TKUIViewportUtil} from "./util/TKUIResponsiveUtil";
 export {default as TKNetworkUtil} from "./util/NetworkUtil";
 export {default as TKUIRow} from "./options/TKUIRow";
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-if (document.getElementById("tripgo-sample-root")) {
-    import("./example/tripgo/tripgo-sample");
+// if (document.getElementById("tripgo-sample-root")) {
+//     import("./example/tripgo/tripgo-sample");
 //     import("./example/chym/index");
 //     import("./example/client-sample");
-}
+// }
