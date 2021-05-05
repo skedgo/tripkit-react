@@ -56,7 +56,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     userLocationPromise?: Promise<LatLng>;
-    renderSignInOut?: () => React.ReactNode;
+    renderTopRight?: () => React.ReactNode;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext {}
@@ -477,9 +477,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             {transportSettings}
                             {favouritesView}
                             {waitingRequest}
-                            {this.props.renderSignInOut &&
-                            <div className={classes.signInOut}>
-                                {this.props.renderSignInOut()}
+                            {this.props.renderTopRight &&
+                            <div className={classes.renderTopRight}>
+                                {this.props.renderTopRight()}
                             </div>}
                         </div>
                     </div>

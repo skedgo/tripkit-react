@@ -98,7 +98,7 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '10px',
         textAlign: 'left'
     },
-    signInOut: {
+    renderTopRight: {
         position: 'absolute',
         top: '16px',
         right: '55px'

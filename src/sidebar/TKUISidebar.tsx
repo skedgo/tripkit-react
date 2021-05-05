@@ -3,7 +3,6 @@ import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUISidebarDefaultStyle} from "./TKUISidebar.css";
 import {connect, mapperFromFunction, TKStyleOverride} from "../config/TKConfigHelper";
-import {ReactComponent as TripgoLogo} from '../images/logo/tripgo_logo.svg';
 import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
 import genStyles, {genClassNames} from "../css/GenStyle.css";
 import classNames from "classnames";
@@ -22,11 +21,11 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: () => void;
     onShowFavourites?: () => void;
     onShowSettings?: () => void;
-    logo?: () => JSX.Element;
     menuItems?: (defaultMenuItems: JSX.Element[]) => React.ReactNode;
     renderNativeAppLinks?: () => React.ReactNode;
     appStoreUrl?: string;
     playStoreUrl?: string;
+    renderLogo?: () => React.ReactNode;
     parentElement?: any;
     appMainElement?: any;
 }
@@ -110,7 +109,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
         const t = this.props.t;
         const defaultMenuItems = this.getDefaultMenuItems();
         const menuItems = this.props.menuItems ? this.props.menuItems(defaultMenuItems) : defaultMenuItems;
-        const logo = this.props.logo ? this.props.logo() : <TripgoLogo style={{height: '24px', width: '120px'}}/>
+        const logo = this.props.renderLogo ? this.props.renderLogo() : <div></div>;
         return (
             <Modal
                 isOpen={this.props.open!}
