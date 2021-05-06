@@ -22,6 +22,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowFavourites?: () => void;
     onShowSettings?: () => void;
     menuItems?: (defaultMenuItems: JSX.Element[]) => React.ReactNode;
+    nativeAppsTitle?: string;
     renderNativeAppLinks?: () => React.ReactNode;
     appStoreUrl?: string;
     playStoreUrl?: string;
@@ -152,7 +153,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                         {(this.props.renderNativeAppLinks || this.props.appStoreUrl || this.props.playStoreUrl) &&
                         <div className={classes.nativeAppLinksPanel}>
                             <div className={classes.nativeAppsTitle}>
-                                {t("Get.mobile.app") + ":"}
+                                {this.props.nativeAppsTitle || t("Get.mobile.app") + ":"}
                             </div>
                             <div className={classes.nativeAppLinks}>
                                 {this.props.renderNativeAppLinks ? this.props.renderNativeAppLinks() :
