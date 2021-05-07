@@ -27,6 +27,8 @@ export {default as TKUIRoutingQueryInput} from "./query/TKUIRoutingQueryInput";
 export {default as TKUILocationSearch} from "./query/TKUILocationSearch";
 export {default as TKUILocationBox} from "./location_box/TKUILocationBox";
 export {default as RegionsData} from "./data/RegionsData";
+export {default as TKRegionsData} from "./data/RegionsData";
+export {default as TKRegionResults} from "./model/region/RegionResults";
 export {default as TKUIProfileView} from "./options/TKUIProfileView";
 export {default as TKUITooltip} from "./card/TKUITooltip";
 export {default as TKUITransportSwitchesView} from "./options/TKUITransportSwitchesView";

@@ -25,12 +25,21 @@ export class RegionsData {
 
     // Set this to hardcode regions json
     public static regionsJsonPromise: Promise<any> | undefined = undefined;
+    public static regionsJsonFallback: any = undefined;
 
     constructor() {
         this.regionsRequest = (RegionsData.regionsJsonPromise !== undefined ? RegionsData.regionsJsonPromise :
             TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 }))
             .then((regionResultsJson: any) => {
-                return Util.deserialize(regionResultsJson, RegionResults) as RegionResults;
+                return Util.deserialize(regionResultsJson, RegionResults);
+            }).catch((error) => {
+                console.log("Error getting regions data.");
+                if (RegionsData.regionsJsonFallback) {
+                    console.log("Using fallback.");
+                    return Promise.resolve(Util.deserialize(RegionsData.regionsJsonFallback, RegionResults))
+                } else {
+                    throw error;
+                }
             });
         this.regionsPromise = this.regionsRequest.then((regionResults: RegionResults) => {
             this.regions = new Map<string, Region>();
