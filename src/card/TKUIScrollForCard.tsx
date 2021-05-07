@@ -28,7 +28,7 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
                 // and then dragged the card up to top from its body. In this situation we need the workaround below.
                 style={{
                     ...this.props.style,
-                    ...!this.props.freezeScroll ? {overflowY: 'scroll'} :
+                    ...!this.props.freezeScroll ? {overflowY: 'auto'} :
                         this.scrollRef && this.scrollRef.scrollTop <= 10 ? {overflowY: 'visible'} : {overflowY: 'hidden'},
                     ...{overflowX: 'hidden'} as any
                 }}
