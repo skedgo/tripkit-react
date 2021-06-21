@@ -89,6 +89,11 @@ class TripGoApi {
             });
     }
 
+    public static defaultToVersion(url: string, v: number) {
+        return !url.includes('v=') ?
+            url + (url.includes("?") ? "&" : "?") + "v=" + v : url;
+    }
+
 }
 
 export default TripGoApi;
