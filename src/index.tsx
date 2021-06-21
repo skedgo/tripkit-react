@@ -20,6 +20,7 @@ import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptio
 import {TKUISlideUpPosition} from "./card/TKUISlideUp";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
+export {default as TKStateConsumer} from "./config/TKStateConsumer";
 export {default as TKStateController} from "./config/TKStateController";
 export type TKUIConfig = TKUIConfigForExport;
 export {default as TKShareHelper} from "./share/TKShareHelper";
@@ -29,6 +30,7 @@ export {default as TKUILocationBox} from "./location_box/TKUILocationBox";
 export {default as RegionsData} from "./data/RegionsData";
 export {default as TKRegionsData} from "./data/RegionsData";
 export {default as TKRegionResults} from "./model/region/RegionResults";
+export {default as TKSegment} from "./model/trip/Segment";
 export {default as TKUIProfileView} from "./options/TKUIProfileView";
 export {default as TKUITooltip} from "./card/TKUITooltip";
 export {default as TKUITransportSwitchesView} from "./options/TKUITransportSwitchesView";
@@ -74,7 +76,7 @@ export {default as TKUISettingLink} from "./options/TKUISettingLink";
 export type TKUIWithStyle<ST, CP> = TKUIWithStyleForExport<ST, CP>;
 export {OptionsContext} from "./options/OptionsProvider"
 export {connect} from "./config/TKConfigHelper";
-export {withStyles} from "./jss/StyleHelper";
+export {withStyles, overrideClass} from "./jss/StyleHelper";
 export type TKUIWithClasses<STYLE, PROPS> = TKUIWithClassesForExport<STYLE, PROPS>;
 export {default as genStyles} from "./css/GenStyle.css";
 export {colorWithOpacity, white, black} from "./jss/TKUITheme";

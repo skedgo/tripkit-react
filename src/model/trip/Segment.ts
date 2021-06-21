@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
 import SegmentTemplate, {SegmentType, Visibility} from "./SegmentTemplate";
 import Trip from "./Trip";
 import Color from "./Color";
@@ -59,7 +59,8 @@ class Segment extends SegmentTemplate {
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     @JsonProperty("alertHashCodes", [Number], true)
     private _alertHashCodes: number[] = [];
-    // @Json GWTJsonBooking booking;
+    @JsonProperty("booking", Any, true)
+    public booking?: any = undefined;
     @JsonProperty("wheelchairAccessible", Boolean, true)
     public wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)

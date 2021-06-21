@@ -3,9 +3,10 @@
   "version": "0.1.30",
   "_prod_main": "dist/js/index.js",
   "_dev_main": "src/index.tsx",
-  "main": "src/index.tsx",
+  "main": "dist/js/index.js",
   "_module": "dist/esm/index.js",
   "_prod_types": "dist/js/index.d.ts",
+  "types": "dist/js/index.d.ts",
   "private": false,
   "publishConfig": {
     "access": "public"
