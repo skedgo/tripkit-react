@@ -170,6 +170,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
+            if (!viewport.center || !viewport.zoom) {
+                return;
+            }
             this.setState({viewport: viewport}, () => this.refreshRegion());
         }
 
