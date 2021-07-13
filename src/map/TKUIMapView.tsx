@@ -98,6 +98,17 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype [MapboxGLLayerProps](https://github.com/mongodb-js/react-mapbox-gl-leaflet#usage)
      */
     mapboxGlLayerProps?: MapboxGLLayerProps;
+
+    /**
+     * true by default. Can be set to false to avoid map shaking on pin drop.
+     * TODO: controlled viewport is just needed to set initial viewport. Set it imperatively instead, since the issue
+     * is also on TripGo web-app.
+     */
+    controlledViewport?: boolean;
+
+    fromHereText?: string;
+
+    toHereText?: string;
 }
 
 export interface IStyle {
@@ -266,9 +277,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         } else {
             this.props.onToChange && this.props.onToChange(mapLocation);
         }
-        // routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-        //     [isFrom ? "from" : "to"]: mapLocation
-        // }));
         if (mapLocation.isDroppedPin()) {
             getGeocodingData(this.props.config.geocoding)
                 .reverseGeocode(latLng, loc => {
@@ -282,7 +290,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         } else {
                             this.props.onToChange && this.props.onToChange(loc);
                         }
-                        // routingContext.onQueryUpdate({[isFrom ? "from" : "to"]: loc});
                     }
                 })
         }
@@ -435,7 +442,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                              this.setState({menuPopupPosition: undefined});
                          }}
                     >
-                        Directions from here
+                        {this.props.fromHereText || "Directions from here"}
                     </div>
                     <div className={classes.menuPopupItem}
                          onClick={() => {
@@ -444,7 +451,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                              this.setState({menuPopupPosition: undefined});
                          }}
                     >
-                        Directions to here
+                        {this.props.toHereText || "Directions to here"}
                     </div>
                     {!this.props.directionsView &&
                     <div className={classes.menuPopupItem}
@@ -461,7 +468,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
         const service = this.props.service;
         const viewport = this.props.viewport;
-        const leafletViewport = viewport ?
+        const leafletViewport = this.props.controlledViewport !== false && viewport ?
             {center: viewport.center ? [viewport.center.lat, viewport.center.lng] as [number, number] : undefined, zoom: viewport.zoom}
             : undefined;
         const t = this.props.t;
@@ -707,7 +714,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         });
 
         // TODO Delete: Can actually delete this? It causes an exception sometimes.
-        setTimeout(() => this.onResize(), 5000);
+        // setTimeout(() => this.onResize(), 5000);
         setTimeout(() => {
             WaiAriaUtil.apply(".mapboxgl-canvas", {tabIndex: -1, ariaHidden: true});
             WaiAriaUtil.apply(".mapboxgl-ctrl-logo", {tabIndex: -1, ariaHidden: true});
@@ -719,6 +726,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
             leafletControlAttribution && leafletControlAttribution.children.length > 0 &&
             leafletControlAttribution.children[0].setAttribute("tabindex", "-1");
         }, 1000);
+        if (this.props.from || this.props.to) {
+            this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
+        }
     }
 
     public componentDidUpdate(prevProps: IProps): void {
