@@ -109,6 +109,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     fromHereText?: string;
 
     toHereText?: string;
+
+    readonly?: boolean;
+
+    shouldFitMap?: (from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) => boolean
 }
 
 export interface IStyle {
@@ -178,6 +182,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * Map viewport expressed as center coordinates and zoom level.
      * @ctype
      * @default {@link TKState#viewport}
+     * @deprecated Remove this property and make the map uncontrolled, since controlled map causes shaking map issues
+     * sometimes.
      */
     viewport?: {center?: LatLng, zoom?: number};
 
@@ -355,10 +361,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
             } else {
                 fitPoint = fitSet[0]
             }
-            this.onViewportChange(Util.iAssign(this.props.viewport || {},
-                {center: fitPoint,
-                    zoom: (this.props.viewport && this.props.viewport.zoom && this.props.viewport.zoom >= 10) ?
-                        this.props.viewport.zoom : 13})); // zoom in if zoom < 10.
+            const center = this.leafletElement!.getCenter();
+            const zoom = this.leafletElement!.getZoom();
+            const newCenter = fitPoint || center;
+            const newZoom = zoom !== undefined && zoom >= 10 ? zoom : 13; // zoom in if zoom < 10.
+            this.leafletElement!.setView([newCenter.lat, newCenter.lng], newZoom);
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));
@@ -510,7 +517,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     zoomControl={false}
                     attributionControl={this.props.attributionControl !== false}
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
-                        this.setState({menuPopupPosition: e});
+                        if (!this.props.readonly) {
+                            this.setState({menuPopupPosition: e});
+                        }
                     }}
                     tap={true} // It should make a long tap to trigger oncontextmenu on iOS, but it doesn't work.
                     // Workaround: https://github.com/Leaflet/Leaflet/issues/6865
@@ -566,7 +575,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 iconAnchor: [13, 39],
                                 className: "LeafletMap-pinTo"
                             })}
-                            draggable={true}
+                            draggable={!this.props.readonly}
                             riseOnHover={true}
                             ondragend={(event: L.DragEndEvent) => {
                                 const latLng = event.target.getLatLng();
@@ -589,7 +598,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 iconAnchor: [13, 39],
                                 className: "LeafletMap-pinTo"
                             })}
-                            draggable={true}
+                            draggable={!this.props.readonly}
                             riseOnHover={true}
                             ondragend={(event: L.DragEndEvent) => {
                                 const latLng = event.target.getLatLng();
@@ -733,8 +742,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     public componentDidUpdate(prevProps: IProps): void {
         const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
-        if (this.checkFitLocation(prevProps.from, this.props.from) || this.checkFitLocation(prevProps.to, this.props.to)
-            || paddingChanged) {
+        const shouldFitMap = this.props.shouldFitMap ||
+            ((from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) =>
+                this.checkFitLocation(preFrom, from) || this.checkFitLocation(preTo, to));
+        if (shouldFitMap(this.props.from, this.props.to, prevProps.from, prevProps.to) || paddingChanged) {
             // TODO: avoid switching from undefined to null, use one or the other.
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
         }
