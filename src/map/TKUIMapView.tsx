@@ -113,6 +113,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     readonly?: boolean;
 
     shouldFitMap?: (from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) => boolean
+
+    showCurrLocBtn?: boolean;
 }
 
 export interface IStyle {
@@ -663,6 +665,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                                      onResize={() => this.onResize()}
                 />
+                {this.props.showCurrLocBtn !== false &&
                 <TKUITooltip
                     overlayContent={this.state.userLocationTooltip}
                     arrowColor={this.props.theme.isLight ? tKUIColors.black2 : tKUIColors.black1}
@@ -686,7 +689,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     >
                         <IconCurrentLocation/>
                     </button>
-                </TKUITooltip>
+                </TKUITooltip>}
             </div>
         )
     }
