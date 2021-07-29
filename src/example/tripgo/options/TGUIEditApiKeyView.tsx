@@ -102,7 +102,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                            }}
                            placeholder={props.namePlaceholder}
                            type="text"
-                           spellCheck="false"
+                           spellCheck={false}
                            autoComplete="off"
                            autoCorrect="off"
                            autoCapitalize="off"
@@ -126,7 +126,7 @@ const TGUIEditApiKeyView: React.SFC<IProps> = (props: IProps) => {
                            }}
                            placeholder={props.valuePlaceholder}
                            type="text"
-                           spellCheck="false"
+                           spellCheck={false}
                            autoComplete="off"
                            autoCorrect="off"
                            autoCapitalize="off"

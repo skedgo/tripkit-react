@@ -21,7 +21,7 @@ class TKUIScrollForCard extends React.Component<IProps, {}> {
         const {scrollRef: any, freezeScroll: boolean, ...props} = this.props;
         return (
             <div
-                {...props}
+                {...props as any}
                 // If freezeScroll (card not on top) and scroll is at initial position, then set overflowY to visible,
                 // instead of hidden, since it avoids the undesired scroll freeze problem. Still need to use hidden
                 // otherwise, e.g. when user did scroll down, then dragged the card down from header to middle position,

@@ -68,26 +68,14 @@ export function popWithoutFocus() {
 
 export function setupScopedFocus(element) {
     modalElement = element;
-
-    if (window.addEventListener) {
-        window.addEventListener("blur", handleBlur, false);
-        document.addEventListener("focus", handleFocus, true);
-    } else {
-        (window as any).attachEvent("onBlur", handleBlur);
-        (document as any).attachEvent("onFocus", handleFocus);
-    }
+    window.addEventListener("blur", handleBlur, false);
+    document.addEventListener("focus", handleFocus, true);
 }
 
 export function teardownScopedFocus() {
     modalElement = null;
-
-    if (window.addEventListener) {
-        window.removeEventListener("blur", handleBlur);
-        document.removeEventListener("focus", handleFocus);
-    } else {
-        (window as any).detachEvent("onBlur", handleBlur);
-        (document as any).detachEvent("onFocus", handleFocus);
-    }
+    window.removeEventListener("blur", handleBlur);
+    document.removeEventListener("focus", handleFocus);
 }
 
 /*!
@@ -144,6 +132,6 @@ function tabbable(element) {
     return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
 }
 
-export default function findTabbableDescendants(element) {
+export default function findTabbableDescendants(element): any {
     return [].slice.call(element.querySelectorAll("*"), 0).filter(tabbable);
 }

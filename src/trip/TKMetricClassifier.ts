@@ -81,6 +81,7 @@ class TKMetricClassifier {
         if (this.matches(ranges.carbons, trip.carbonCost)) {
             return Badges.GREENEST;
         }
+        return undefined;
     }
 
     private static matches(range: {min: number, max: number, anyUnknown?: boolean}, value?: number): boolean {

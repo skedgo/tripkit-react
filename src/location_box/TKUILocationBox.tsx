@@ -368,7 +368,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         return (
             <div className={classes.main} role="none">
                 <input type="text"
-                       spellCheck="false"
+                       spellCheck={false}
                        autoComplete="off"
                        autoCorrect="off"
                        autoCapitalize="off"
