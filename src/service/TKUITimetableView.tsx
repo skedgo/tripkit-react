@@ -280,7 +280,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                     <div className={classes.main}>
                         <div className={classes.secondaryBar}>
                             <input type="text"
-                                   spellCheck="false"
+                                   spellCheck={false}
                                    autoComplete="off"
                                    autoCorrect="off"
                                    autoCapitalize="off"

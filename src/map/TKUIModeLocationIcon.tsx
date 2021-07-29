@@ -67,7 +67,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
                 ...genStyles.alignCenter
             };
         const imgStyle = {
-            opacity: getTransIconOpacity(modeInfo, !!this.props.isDarkMode),
+            opacity: getTransIconOpacity(modeInfo, !!this.props.isDarkMode) as any,
             width: '100%',
             height: '100%'
         };

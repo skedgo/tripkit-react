@@ -130,10 +130,11 @@ class Util {
 
     /**
      * Hook to run func only once before component mounts: https://stackoverflow.com/a/56818036
+     * Comment for now since causes react compile error.
      */
-    public static useComponentWillMount = (func) => {
-        useMemo(func, []);
-    }
+    // public static useComponentWillMount = (func) => {
+    //     useMemo(func, []);
+    // }
 
 }
 

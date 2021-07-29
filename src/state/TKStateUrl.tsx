@@ -56,7 +56,7 @@ export function loadTimetableState(tKState: TKState, regionCode: string, stopCod
                 tKState.onQueryUpdate({to: stop});
                 if (!serviceID || !timeInSecs) {
                     filter && tKState.onFilterChange(filter);
-                    tKState.onStopChange(stop);
+                    return tKState.onStopChange(stop);
                 } else {
                     filter && tKState.onFilterChange(filter);
                     const initTime = DateTimeUtil.momentFromTimeTZ(timeInSecs * 1000);

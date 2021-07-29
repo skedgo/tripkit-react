@@ -141,7 +141,7 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                        })}
                                placeholder={"(required)"}
                                type="text"
-                               spellCheck="false"
+                               spellCheck={false}
                                autoComplete="off"
                                autoCorrect="off"
                                autoCapitalize="off"
@@ -167,7 +167,7 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                                this.setState({emailError: undefined});
                                            }
                                        })}
-                               spellCheck="false"
+                               spellCheck={false}
                                autoComplete="email"
                                autoCorrect="off"
                                autoCapitalize="off"
@@ -187,7 +187,7 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
                                value={this.state.name}
                                onChange={(e: any) => this.setState({name: e.target.value})}
                                type="text"
-                               spellCheck="false"
+                               spellCheck={false}
                                autoComplete="name"
                                autoCorrect="off"
                                autoCapitalize="off"

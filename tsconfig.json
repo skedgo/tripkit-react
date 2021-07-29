@@ -5,7 +5,6 @@
     "outDir": "./dist",
     "jsx": "react",
     "lib": [
-      //      "es5",
       "es6",
       "dom",
       "dom.iterable",
@@ -26,7 +25,8 @@
     "resolveJsonModule": true,
     "allowJs": true,
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "src"
