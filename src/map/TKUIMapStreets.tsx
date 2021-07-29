@@ -9,8 +9,8 @@ import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     streets: Street[];
-    color: string;
-    toPolylineProps?: (streets: Street[], color: string) => PolylineProps | PolylineProps[];
+    color?: string;
+    toPolylineProps?: (streets: Street[], color?: string) => PolylineProps | PolylineProps[];
     modeInfo?: ModeInfo;
     id: string;
 }
@@ -34,7 +34,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
     /**
      * if color === null show friendliness (which makes sense for bicycle and wheelchair segments)
      */
-    private streetsRenderer(streets: Street[], color: string | null) {
+    private streetsRenderer(streets: Street[], color?: string) {
         return streets.map((street: Street) => {
             return {
                 positions: street.waypoints,

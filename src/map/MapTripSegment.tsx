@@ -76,7 +76,9 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                     segment.streets ?
                                         <TKUIMapStreets key={"map-polyline" + segment.trip.getKey() + segment.id}
                                                         id={"map-polyline" + segment.trip.getKey() + segment.id}
-                                                        color={segment.isWalking() ? "#20ce6e" : segment.getColor()}
+                                                        color={segment.isWalking() ? "#20ce6e" :
+                                                            (segment.isBicycle() && segment.streets.length > 0 && segment.streets[0].safe !== null
+                                                                ? undefined : segment.getColor())}
                                                         modeInfo={segment.modeInfo}
                                                         streets={segment.streets}
 
