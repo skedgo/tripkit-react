@@ -50,6 +50,7 @@ import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
 import Environment from "../env/Environment";
 import {TKUILocationBoxRef} from "../location_box/TKUILocationBox";
+import TKUIMxMView from "../mxm/TKUIMxMView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -128,16 +129,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
-            // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
-            // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
-            // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060") // Central Station
-            //     .then((stop: StopLocation) => {
-            //             this.props.onStopChange(stop);
-            //         }
-            //     )
+        // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200942")
+        // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "AU_NSW_Sydney-Central Station Railway Square-bus")
+        // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200070")
+        // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "AU_ACT_Canberra-P4937")
+        // StopsData.instance.getStopFromCode("AU_ACT_Canberra", "P3418")
+        // StopsData.instance.getStopFromCode("AU_NSW_Sydney", "200060") // Central Station
+        //     .then((stop: StopLocation) => {
+        //             this.props.onStopChange(stop);
+        //         }
+        //     )
         // });
     }
 
@@ -201,6 +202,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const props = this.props;
         const t = this.props.t;
         const searchBar =
             !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
@@ -364,7 +366,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         selected={selected}
                         onChange={(selected: number) => this.props.onChange((this.props.trips || [])[selected])}
                         slideUpOptions={{
-                            position: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
+                                    this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             modalDown: {top: this.getContainerHeight() - 100, unit: 'px'},
                             draggable: false
                         }}
@@ -389,6 +392,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                             }}
                                             shouldFocusAfterRender={i === selected ? undefined : false}
                                             doNotStack={i !== selected}
+                                            setSelectedTripSegment={props.setSelectedTripSegment}
                                         />
                                     </div>
                                 )}
@@ -436,6 +440,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
                 onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({tripUpdateStatus: undefined}) : undefined}
             />;
+        const mxMView = props.selectedTripSegment && <TKUIMxMView/>;
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
@@ -464,7 +469,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                             return () => this.setState({showLocationDetails: true});
                                         }
                                         return undefined;
-                                    }}/>
+                                    }}
+                                    // controlledViewport={false}
+                                />
                             </div>
                             <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>
                             {sideBar}
@@ -481,6 +488,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             <div className={classes.renderTopRight}>
                                 {this.props.renderTopRight()}
                             </div>}
+                            {mxMView}
                         </div>
                     </div>
                 }

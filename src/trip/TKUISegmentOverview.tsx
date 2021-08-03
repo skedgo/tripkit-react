@@ -33,6 +33,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
     actions?: JSX.Element[];
     onRequestAlternativeRoutes?: (segment: Segment) => void;
+    onClick?: () => void;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -182,6 +183,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             <div className={classes.main}
                  tabIndex={0}
                  role={DeviceUtil.isTouch() ? "button" : undefined}
+                 onClick={this.props.onClick}
             >
                 {header}
                 {!segment.arrival && segment.type !== SegmentType.stationary ?

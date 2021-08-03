@@ -40,6 +40,8 @@ export interface IRoutingResultsContext {
     tripUpdateError?: TKError;
     selectedTrip?: Trip;
     onChange: (select?: Trip) => void;
+    selectedTripSegment?: Segment;
+    setSelectedTripSegment: (segment?: Segment) => void;
     tripDetailsView: boolean;
     onTripDetailsView: (tripDetailsView: boolean) => void;
     sort: TripSort;
@@ -66,6 +68,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     waiting: true,
     waitingTripUpdate: false,
     onChange: (select?: Trip) => {},
+    setSelectedTripSegment: (segment?: Segment) => {},
     tripDetailsView: false,
     onTripDetailsView: (tripDetailsView: boolean) => {},
     sort: TripSort.OVERALL,
