@@ -59,6 +59,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     segmentActions?: (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[];
     shouldFocusAfterRender?: boolean;
     doNotStack?: boolean;
+    selectedTripSegment?: Segment;
+    setSelectedTripSegment?: (segment: Segment) => void;
 }
 
 export interface IStyle {
@@ -167,6 +169,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                                 key={index}
                                 actions={segmentActions}
                                 onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
+                                onClick={() => this.props.setSelectedTripSegment && this.props.setSelectedTripSegment(segment)}
                             />;
                         }
                     )}

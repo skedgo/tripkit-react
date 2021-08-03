@@ -13,7 +13,8 @@ export const tKUISegmentOverviewDefaultStyle: TKUIStyles<TKUISegmentOverviewStyl
     (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
-            ...genStyles.column
+            ...genStyles.column,
+            cursor: props => props.onClick ? 'pointer' : undefined
         },
         header: {
             ...genStyles.flex,

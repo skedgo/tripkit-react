@@ -42,6 +42,7 @@ interface IWithRoutingResultsState {
     directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
+    selectedSegment?: Segment;
     tripDetailsView: boolean;
     sort: TripSort;
     waiting: boolean;
@@ -86,6 +87,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onQueryUpdate = this.onQueryUpdate.bind(this);
             this.onTripJsonUrl = this.onTripJsonUrl.bind(this);
             this.onChange = this.onChange.bind(this);
+            this.setSelectedSegment = this.setSelectedSegment.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
             this.onDirectionsView = this.onDirectionsView.bind(this);
@@ -150,6 +152,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onQueryUpdate(update: Partial<RoutingQuery>) {
             this.onQueryChange(Util.iAssign(this.state.query, update));
+        }
+
+        public setSelectedSegment(segment?: Segment) {
+            this.setState({
+                selectedSegment: segment
+            });
         }
 
         public onChange(select?: Trip): void {
@@ -456,6 +464,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 tripUpdateError={this.state.tripUpdateError}
                 selectedTrip={this.state.selected}
                 onChange={this.onChange}
+                selectedTripSegment={this.state.selectedSegment}
+                setSelectedTripSegment={this.setSelectedSegment}
                 tripDetailsView={this.state.tripDetailsView}
                 onTripDetailsView={this.onTripDetailsView}
                 sort={this.state.sort}

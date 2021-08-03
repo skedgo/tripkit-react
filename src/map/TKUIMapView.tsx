@@ -102,7 +102,13 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
      * true by default. Can be set to false to avoid map shaking on pin drop.
      * TODO: controlled viewport is just needed to set initial viewport. Set it imperatively instead, since the issue
-     * is also on TripGo web-app.
+     * is also on TripGo web-app. Replace all external uses of onViewportChange (search for ".onViewportChange(")
+     * Need to take into account that calls to onViewportChange may happen before or after TKUIMapView is mounted.
+     * Maybe define a setMapViewport on TKState, that if the state already has the map reference then call setViewport
+     * (setView) imperatively, while if not it records it to call setView when map reference is set. There is also a function
+     * setMapReference that TKUIMapView consumes and uses to set the map reference on the global state.
+     * The TKUIMapView.setViewport should actually call Map.setView if controlledViewport === false, or onViewportChange
+     * otherwise.
      */
     controlledViewport?: boolean;
 
@@ -367,7 +373,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
             const zoom = this.leafletElement!.getZoom();
             const newCenter = fitPoint || center;
             const newZoom = zoom !== undefined && zoom >= 10 ? zoom : 13; // zoom in if zoom < 10.
-            this.leafletElement!.setView([newCenter.lat, newCenter.lng], newZoom);
+            if (this.props.controlledViewport === false) {
+                this.leafletElement!.setView([newCenter.lat, newCenter.lng], newZoom);
+            } else {
+                this.onViewportChange({center: newCenter, zoom: newZoom});
+            }
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));

@@ -63,6 +63,8 @@ import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
 import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
 import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIMapLocationPopup";
 import {TKUIQueryLocationBoxProps, TKUIQueryLocationBoxStyle} from "../query/TKUIQueryLocationBox";
+import {TKUIMxMViewProps, TKUIMxMViewStyle} from "../mxm/TKUIMxMView";
+import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
 
 /**
  * SDK configuration
@@ -152,6 +154,8 @@ interface ITKUIConfigOptional {
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
     TKUIErrorView: TKComponentConfig<TKUIErrorViewProps, TKUIErrorViewStyle>;
     TKUIStopSteps: TKComponentConfig<TKUIStopStepsProps, TKUIStopStepsStyle>;
+    TKUIMxMView: TKComponentConfig<TKUIMxMViewProps, TKUIMxMViewStyle>;
+    TKUIMxMIndex: TKComponentConfig<TKUIMxMIndexProps, TKUIMxMIndexStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

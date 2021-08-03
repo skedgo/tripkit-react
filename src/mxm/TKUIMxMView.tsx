@@ -1,0 +1,156 @@
+import React, {useState, useEffect, Fragment} from 'react';
+import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {tKUIMxMViewDefaultStyle} from "./TKUIMxMView.css";
+import {connect, PropsMapper} from "../config/TKConfigHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import {TKUISlideUpPosition} from "../card/TKUISlideUp";
+import TKUICardCarousel from "../card/TKUICardCarousel";
+import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import {Subtract} from 'utility-types';
+import TKUIMxMIndex from "./TKUIMxMIndex";
+import Trip from "../model/trip/Trip";
+import {Visibility} from "../model/trip/SegmentTemplate";
+import Segment from "../model/trip/Segment";
+import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import TKUICard from "../card/TKUICard";
+
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
+
+interface IConsumedProps extends TKUIViewportUtilProps {
+    selectedTrip?: Trip;
+    selectedTripSegment?: Segment;
+    setSelectedTripSegment: (segment?: Segment) => void;
+}
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+
+type IStyle = ReturnType<typeof tKUIMxMViewDefaultStyle>
+
+export type TKUIMxMViewProps = IProps;
+export type TKUIMxMViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIMxMView {...props}/>,
+    styles: tKUIMxMViewDefaultStyle,
+    classNamePrefix: "TKUIMxMView"
+};
+
+function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
+    let cards: JSX.Element[] = [];
+    if (segment.isPT()) {
+        cards.push(
+            <TKUICard
+                title={"Get on service to " + segment.to.getDisplayString()}
+                subtitle={"From " + segment.from.getDisplayString()}
+                onRequestClose={onClose}
+            >
+                <div style={{height: '100%'}}/>
+            </TKUICard>
+        )
+    }
+    cards.push(
+        <TKUICard
+            title={segment.getAction()}
+            subtitle={segment.to.getDisplayString()}
+            onRequestClose={onClose}
+        >
+            <div style={{height: '100%'}}/>
+        </TKUICard>
+    );
+    return cards;
+}
+
+function buildSegmentCardsMap(segments: Segment[], onClose: () => void): Map<Segment, JSX.Element[]> {
+    return segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
+        map.set(segment, getSegmentMxMCards(segment, onClose));
+        return map;
+    }, new Map<Segment, JSX.Element[]>());
+}
+
+/**
+ * Gets the index in the carousel of the first card for the segment.
+ */
+const cardIndexForSegment = (segment: Segment, segments: Segment[], map: Map<Segment, JSX.Element[]>) =>
+    segments.slice(0, segments.indexOf(segment))    // exclude segment since should count up to the previous one.
+        .reduce((cardIndex, segment) => cardIndex + map.get(segment)!.length, 0);
+
+/**
+ * Maps the card index in the carousel to the associated segment (this is not a one-to-one correspondence given
+ * some segments have 2 or more cards, as PT and Collect segments).
+ */
+const cardIndexToSegment = (cardIndex: number, segments: Segment[], map: Map<Segment, JSX.Element[]>) =>
+    cardIndex < map.get(segments[0])!.length ? segments[0] :
+        cardIndexToSegment(cardIndex - map.get(segments[0])!.length, segments.slice(1), map);
+
+/**
+ * Gets the first segment in segments, from the selected one, that is visible in summary.
+ */
+const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segment =>
+    segments.slice(segments.indexOf(selectedSegment))
+        .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
+
+const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
+    const trip = props.selectedTrip!;
+    const segments = trip.getSegments();
+    const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
+    const [segmentToCards] = useState<Map<Segment, JSX.Element[]>>(buildSegmentCardsMap(segments,
+        () => props.setSelectedTripSegment(undefined)));
+    const classes = props.classes;
+    const selectedSegment = props.selectedTripSegment!;
+    // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
+    const selectedSegmentInSummary = findNextInSummary(selectedSegment, segments);
+    const selectedIndexInSummary = segmentsInSummary.indexOf(selectedSegmentInSummary);
+    // Since a segment may have 2 or more cards (e.g. PT or Collect segments), we use this offset to keep track of
+    // which of the cards of the segment is currently visible in the cards carousel.
+    const [selectedCardOffset, setSelectedCardOffset] = useState<number>(0);
+    // Index of selected card in carousel.
+    const selectedCardIndex = cardIndexForSegment(selectedSegment, segments, segmentToCards) + selectedCardOffset;
+    return (
+        <Fragment>
+            <div className={classes.trackIndexPanel}>
+                <TKUIMxMIndex
+                    segments={segmentsInSummary}
+                    value={selectedIndexInSummary}
+                    onChange={(value: number) => {
+                        props.setSelectedTripSegment(segmentsInSummary[value]);
+                        // reset card offset since changed to another in-summary segment.
+                        setSelectedCardOffset(0);
+                    }}
+                />
+            </div>
+            <TKUICardCarousel
+                selected={selectedCardIndex}
+                onChange={(selectedCardIndex) => {
+                    const segment = cardIndexToSegment(selectedCardIndex, segments, segmentToCards);
+                    props.setSelectedTripSegment(segment);
+                    setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
+                }}
+                slideUpOptions={{
+                    position: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    modalDown: {top: (window as any).document.body.offsetHeight - 200, unit: 'px'},
+                    modalUp: {top: 100, unit: 'px'},
+                    draggable: false
+                }}
+                showControls={true}
+                // parentElement={this.ref}
+            >
+                {segments.reduce((cards, segment) => cards.concat(segmentToCards.get(segment)!), [] as JSX.Element[])}
+            </TKUICardCarousel>
+        </Fragment>
+    );
+};
+
+const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+    ({inputProps, children}) =>
+        <RoutingResultsContext.Consumer>
+            {(routingResultsContext: IRoutingResultsContext) =>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) => {
+                        const {selectedTrip, selectedTripSegment, setSelectedTripSegment} = routingResultsContext;
+                        return children!({...inputProps, ...viewportProps, selectedTrip, selectedTripSegment, setSelectedTripSegment});
+                    }}
+                </TKUIViewportUtil>
+            }
+        </RoutingResultsContext.Consumer>;
+
+export default connect((config: TKUIConfig) => config.TKUIMxMView, config, Mapper);
