@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment} from 'react';
-import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import {overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIMxMViewDefaultStyle} from "./TKUIMxMView.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
@@ -12,7 +12,10 @@ import Trip from "../model/trip/Trip";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import Segment from "../model/trip/Segment";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TKUICard from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
+import TKUITimetableView from "../service/TKUITimetableView";
+import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import {TKStateController} from "../index";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -35,17 +38,45 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMView"
 };
 
+const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
+    return (
+        <RoutingResultsContext.Consumer>
+            {(routingResultsContext: IRoutingResultsContext) =>
+                <ServiceResultsProvider
+                    onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
+                >
+                    <ServiceResultsContext.Consumer>
+                        {(serviceContext: IServiceResultsContext) => (
+                            <Fragment>
+                                <TKUITimetableView
+                                    cardProps={{
+                                        title: "Get on service to " + segment.to.getDisplayString(),
+                                        subtitle: "From " + segment.from.getDisplayString(),
+                                        onRequestClose: onRequestClose,
+                                        styles: {
+                                            main: overrideClass({height: '100%'})
+                                        },
+                                        presentation: CardPresentation.NONE
+                                    }}
+                                    showSearch={false}
+                                />
+                                <TKStateController
+                                    onInit={() => serviceContext.onTimetableForSegment(segment)}
+                                />
+                            </Fragment>
+                        )}
+                    </ServiceResultsContext.Consumer>
+                </ServiceResultsProvider>
+            }
+        </RoutingResultsContext.Consumer>
+    );
+};
+
 function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
     let cards: JSX.Element[] = [];
-    if (segment.isPT()) {
+    if (segment.isPT()) { // && !segment.isContinuation(?)
         cards.push(
-            <TKUICard
-                title={"Get on service to " + segment.to.getDisplayString()}
-                subtitle={"From " + segment.from.getDisplayString()}
-                onRequestClose={onClose}
-            >
-                <div style={{height: '100%'}}/>
-            </TKUICard>
+            <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
         )
     }
     cards.push(
@@ -53,6 +84,10 @@ function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[
             title={segment.getAction()}
             subtitle={segment.to.getDisplayString()}
             onRequestClose={onClose}
+            styles={{
+                main: overrideClass({ height: '100%'})
+            }}
+            key={segment.id + "b"}
         >
             <div style={{height: '100%'}}/>
         </TKUICard>
@@ -93,8 +128,9 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
     const trip = props.selectedTrip!;
     const segments = trip.getSegments();
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
-    const [segmentToCards] = useState<Map<Segment, JSX.Element[]>>(buildSegmentCardsMap(segments,
-        () => props.setSelectedTripSegment(undefined)));
+    // Evaluate if building the map on each render is too inefficient, and if so store on field and just
+    // update if trip changes (including trip alternative).
+    const segmentToCards = buildSegmentCardsMap(segments, () => props.setSelectedTripSegment(undefined));
     const classes = props.classes;
     const selectedSegment = props.selectedTripSegment!;
     // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.

@@ -48,7 +48,7 @@ export interface IRoutingResultsContext {
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
 
     // This is general, not routing specific.
     waitingStateLoad: boolean;
@@ -75,7 +75,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => {},
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => {},
     inputTextFrom: "",
     inputTextTo:  "",
     onInputTextChange: (from: boolean, text: string) => {},

@@ -180,7 +180,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private isShowServiceDetail() {
-        return this.props.selectedService && !this.props.timetableForSegment;
+        return this.props.selectedService;
     }
 
     /**
@@ -281,22 +281,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const timetableView = this.isShowTimetable() ?
             <TKUITimetableView
-                onRequestClose={() => {
-                    if (this.props.timetableForSegment) {
-                        this.props.onTimetableForSegment(undefined);
-                    } else {
-                        this.showTimetableFor(undefined);
-                    }
-                }}
+                onRequestClose={() => this.showTimetableFor(undefined)}
                 slideUpOptions={{
                     initPosition: TKUISlideUpPosition.UP,
                     // Hide, but don't close, when service is selected.
                     // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
-                    position: this.props.selectedService && !this.props.timetableForSegment ?
-                        TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
+                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
                     draggable: false,
-                    modalUp: this.props.landscape ? {top: this.props.timetableForSegment ? 40 :
-                            (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
+                    modalUp: this.props.landscape ?
+                        {top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px'} :
+                        {top: cardSpacing(false), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 40, unit: 'px'}
                 }}
             /> : null;
@@ -371,7 +365,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             modalDown: {top: this.getContainerHeight() - 100, unit: 'px'},
                             draggable: false
                         }}
-                        showControls={!this.props.timetableForSegment}
                         parentElement={this.ref}
                     >
                         {(registerHandle: (index: number, handle: any) => void) =>
@@ -531,8 +524,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.showTimetableFor(this.props.query.to as StopLocation);
         } else if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
             && (!this.props.query.from || !(this.props.query.from instanceof StopLocation))
-            && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))
-            && (!this.props.timetableForSegment)) {
+            && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))) {
             this.showTimetableFor(undefined);
         }
 
@@ -607,7 +599,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
      */
     private isShowTimetable(props?: IProps) {
         const targetProps = props || this.props;
-        return targetProps.stop !== undefined || targetProps.timetableForSegment !== undefined;
+        return targetProps.stop !== undefined;
     }
 
     private showTimetableFor(stop?: StopLocation) {

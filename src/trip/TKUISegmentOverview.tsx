@@ -2,13 +2,11 @@ import * as React from "react";
 import Segment, {TripAvailability} from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
-import ServiceStopLocation from "../model/ServiceStopLocation";
 import {ClassNameMap} from "react-jss";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {
     isIconOnDark,
     isUnconnected,
-    prevWaitingSegment,
     tKUISegmentOverviewDefaultStyle
 } from "./TKUISegmentOverview.css";
 import {ReactComponent as IconPinStart} from "../images/ic-pin-start.svg";
@@ -22,7 +20,6 @@ import {Subtract} from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {cardSpacing} from "../jss/TKUITheme";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {SegmentType} from "../model/trip/SegmentTemplate";
@@ -38,7 +35,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     options: TKUserProfile;
-    onTimetableForSegment: (segment?: Segment) => void,
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -219,19 +215,6 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                                     }}
                                 />
                             </div>}
-                            {segment.isPT() && !segment.isContinuation &&
-                            <TKUIButton
-                                type={TKUIButtonType.PRIMARY_LINK}
-                                text={t("Show.timetable")}
-                                onClick={() => this.props.onTimetableForSegment(segment)}
-                                styles={{
-                                    main: overrideClass({
-                                        marginTop: '5px',
-                                        paddingLeft: '0'
-                                    })
-                                }}
-                            />
-                            }
                         </div>
                     </div>
                     :
@@ -259,16 +242,11 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
             {(viewportProps: TKUIViewportUtilProps) =>
                 <OptionsContext.Consumer>
                     {(optionsContext: IOptionsContext) =>
-                        <ServiceResultsContext.Consumer>
-                            {(serviceContext: IServiceResultsContext) =>
-                                children!({
-                                    ...inputProps,
-                                    options: optionsContext.userProfile,
-                                    onTimetableForSegment: serviceContext.onTimetableForSegment,
-                                    ...viewportProps
-                                })
-                            }
-                        </ServiceResultsContext.Consumer>
+                        children!({
+                            ...inputProps,
+                            options: optionsContext.userProfile,
+                            ...viewportProps
+                        })
                     }
                 </OptionsContext.Consumer>
             }

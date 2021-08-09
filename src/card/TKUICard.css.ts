@@ -92,6 +92,7 @@ export const tKUICardDefaultStyle: TKUIStyles<TKUICardStyle, TKUICardProps> =
 
         btnClear: {
             ...resetStyles.button,
+            ...genStyles.noShrink,
             height: '24px',
             width: '24px',
             padding: '6px',
