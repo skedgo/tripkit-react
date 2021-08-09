@@ -40,11 +40,14 @@ const TKUIMxMIndex: React.SFC<IProps> = (props: IProps) => {
             <div className={classes.main}>
                 <div className={classes.track}>
                     {segments.map((segment: Segment, i: number) =>
-                        <div className={classNames(classes.transport, props.value === i && classes.selected)} onClick={() => props.onChange(i)}>
+                        <div className={classNames(classes.transport, props.value === i && classes.selected)}
+                             onClick={() => props.onChange(i)}
+                             key={i}
+                        >
                             <TKUITrackTransport
                                 segment={segment}
                                 brief={true}
-                                key={i}/>
+                            />
                         </div>)}
                 </div>
                 <div className={classes.tripTime}>

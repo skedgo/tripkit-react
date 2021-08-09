@@ -22,7 +22,7 @@ import {TKError} from "../error/TKError";
 import {ERROR_DEPARTURES_FROM_OLD_REQUEST, default as TKErrorHelper} from "../error/TKErrorHelper";
 
 export interface IWithServiceResultsProps {
-    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: () => void) => void;
+    onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
 }
 
 interface IWithServiceResultsState {
@@ -142,6 +142,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public onServiceSelection(departure?: ServiceDeparture) {
+            const originalService = this.state.selected;
             this.setState({
                 selected: departure,
                 serviceError: undefined
@@ -149,8 +150,19 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             if (!departure || departure.serviceDetail) {
                 return
             }
-            if (this.state.segment) {   // Timetable for PT trip segment, so request alternative trip for new leg.
-                this.props.onSegmentServiceChange(this.state.segment, departure, () => this.onTimetableForSegment(undefined));
+            const segment = this.state.segment;
+            if (segment) {   // Timetable for PT trip segment, so request alternative trip for new leg.
+                this.props.onSegmentServiceChange(segment, departure, (segmentReplacement?: Segment) => {
+                    if (segmentReplacement === segment) {   // Something failed, so restore original service selection
+                        this.setState({
+                            selected: originalService
+                            // Maybe receive the error in the callback, and in that case set the serviceError
+                            // (or just detect it with segmentReplacement === segment).
+                        })
+                    } else {
+                        this.onTimetableForSegment(segmentReplacement);
+                    }
+                });
             } else {    // Timetable for stop, so request departure details.
                 const endpoint = "service.json"
                     + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name

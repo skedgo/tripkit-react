@@ -335,19 +335,23 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
         }
 
-        public onSegmentServiceChange(segment: Segment, service: ServiceDeparture, callback: () => void) {
+        public onSegmentServiceChange(segment: Segment, service: ServiceDeparture, callback: (segmentReplacement?: Segment) => void) {
             const selectedTrip = this.state.selected;
             if (!selectedTrip) {
                 return;
             }
-
             // Find if there's already a trip for that service among selected trip alternatives.
             const selectedTripGroup = selectedTrip as TripGroup;
             for (const alternative of selectedTripGroup.trips) {
                 for (const altSegment of alternative.segments) {
                     if (TripUtil.sameService(altSegment, service)) {
                         this.onAlternativeChange(selectedTripGroup, alternative);
-                        callback && callback();
+                        let segmentReplacement;
+                        if (this.state.selectedSegment) {
+                            segmentReplacement = selectedTripGroup.segments.find(segment => TripUtil.sameService(segment, service));
+                            this.setSelectedSegment(segmentReplacement);
+                        }
+                        callback && callback(segmentReplacement);
                         return;
                     }
                 }
@@ -391,6 +395,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 config: {v: 11},
                 segments: waypointSegments
             };
+            let segmentReplacement;
             TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
                 .then((result: RoutingResults) => {
                     const tripAlternative = result.groups[0].trips[0];
@@ -412,10 +417,20 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     };
                     selectedTripGroup.trips.sort(sorting);
                     this.onAlternativeChange(selectedTripGroup, tripAlternative);
+                    if (this.state.selectedSegment) {
+                        segmentReplacement = selectedTripGroup.segments.find(segment => TripUtil.sameService(segment, service));
+                        this.setSelectedSegment(segmentReplacement);
+                    }
                     this.setState({waitingTripUpdate: false});
                 })
-                .catch(() => this.setState({waitingTripUpdate: false, tripUpdateError: new TKError("Error updating trip")}))
-                .finally(() => callback && callback());
+                .catch(() => {
+                    this.setState({
+                        waitingTripUpdate: false,
+                        tripUpdateError: new TKError("Error updating trip")
+                    });
+                    segmentReplacement = segment;
+                })
+                .finally(() => callback && callback(segmentReplacement));
         };
 
         public onWaitingStateLoad(waiting: boolean, error?: Error) {

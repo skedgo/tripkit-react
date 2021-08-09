@@ -8,7 +8,7 @@ import {ReactComponent as IconClock} from "../images/ic-clock.svg";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import {Moment} from "moment";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
+import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
 import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
@@ -49,6 +49,12 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
 
     /** @ignore */
     errorActions?: (error: TKError) => JSX.Element[];
+
+    cardProps?: TKUICardClientProps;
+    /**
+     * @default {true}
+     */
+    showSearch?: boolean;
 }
 
 interface IConsumedProps extends Pick<IServiceResultsContext, "stop" | "timetableForSegment" | "timetableInitTime" |
@@ -206,21 +212,21 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const stop = this.props.stop;
-        if (!stop) {
-            return null;
-        }
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
         const classes = this.props.classes;
         const t = this.props.t;
-        const defaultActions = this.getDefaultActions(stop);
-        const actions = this.props.actions ? this.props.actions(stop, defaultActions) : defaultActions;
-        const actionElems = actions ?
-            <TKUIActionsView
-                actions={actions}
-                className={classes.actionsPanel}
-            /> : undefined;
+        let actionElems;
+        if (stop) {
+            const defaultActions = stop && this.getDefaultActions(stop);
+            const actions = this.props.actions ? this.props.actions(stop, defaultActions) : defaultActions;
+            actionElems = actions ?
+                <TKUIActionsView
+                    actions={actions}
+                    className={classes.actionsPanel}
+                /> : undefined;
+        }
         const serviceListSamples = this.props.departures
             .reduce((elems: ServiceDeparture[], departure: ServiceDeparture, i: number) => {
                 if (!elems.find((elem: ServiceDeparture) => departure.serviceNumber === elem.serviceNumber)) {
@@ -275,9 +281,11 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 // Timetable should not scroll at body, but at panel below filter, on body content. Next is just required
                 // for Safari so div below filter can actually get a height and scroll happens there.
                 styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({height: '100%'}) } : undefined}
+                {...this.props.cardProps}
             >
                 {error ? error :
                     <div className={classes.main}>
+                        {this.props.showSearch !== false &&
                         <div className={classes.secondaryBar}>
                             <input type="text"
                                    spellCheck={false}
@@ -290,7 +298,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                    onChange={this.onFilterChange}/>
                             <TKUIDateTimePicker
                                 value={this.props.timetableInitTime}
-                                timeZone={stop.timezone}
+                                timeZone={stop && stop.timezone}
                                 onChange={this.props.onInitTimeChange}
                                 renderCustomInput={renderCustomInput}
                                 popperPlacement="bottom-end"
@@ -301,7 +309,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     }
                                 }}
                             />
-                        </div>
+                        </div>}
                         <div className={classes.listPanel}>
                             <TKUIScrollForCard className={classes.containerPanel}
                                                onScroll={this.onScroll}
@@ -309,10 +317,10 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             >
                                 {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
                                     const showDayLabel = i === 0 ||
-                                        DateTimeUtil.momentFromTimeTZ(this.props.departures[i - 1].actualStartTime * 1000, stop.timezone).format("ddd D") !==
-                                        DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone).format("ddd D");
+                                        DateTimeUtil.momentFromTimeTZ(this.props.departures[i - 1].actualStartTime * 1000, stop && stop.timezone).format("ddd D") !==
+                                        DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop && stop.timezone).format("ddd D");
                                     if (showDayLabel) {
-                                        elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop.timezone)}
+                                        elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop && stop.timezone)}
                                                                  key={"day-" + i}
                                                                  scrollRef={this.scrollRef}
                                                                  isDark={this.props.theme.isDark}
@@ -332,9 +340,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     );
                                     return elems;
                                 }, [])}
-                                {this.props.waiting ?
+                                {this.props.waiting || !stop ?
                                     <IconSpin className={classes.iconLoading} focusable="false"/> : null}
-                                {!this.props.waiting && !this.props.serviceError && this.props.departures.length === 0
+                                {!this.props.waiting && stop && !this.props.serviceError && this.props.departures.length === 0
                                 && <div className={classes.noResults}>{"No results"}</div>}
                             </TKUIScrollForCard>
                         </div>
@@ -346,7 +354,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
     public componentDidMount() {
         // If shared link then this is triggered from WithServicesResults.tsx constructor
         if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
-            && !this.props.timetableForSegment && this.props.onRequestMore) {
+            && !this.props.timetableForSegment && this.props.stop && this.props.onRequestMore) {
             this.props.onRequestMore();
         }
     }
@@ -361,7 +369,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
                 return timeToDepart >= 0;   // To be consistent with timeToDepart calculation in TKUIServiceDepartureRow
             });
-            if (nextDepartureIndex !== -1 && this.scrollRef) {
+            if (!this.props.timetableForSegment && nextDepartureIndex !== -1 && this.scrollRef) {
                 Array.prototype.slice.call(this.scrollRef.children).filter((child: any) =>
                     child.className.includes // This is to filter svg IconSpin, which has className.includes undefined
                     && !child.className.includes("DaySeparator")
