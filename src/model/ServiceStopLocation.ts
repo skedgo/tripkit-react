@@ -12,9 +12,9 @@ class ServiceStopLocation extends LatLng {
     @JsonProperty('bearing', Number, true)
     private _bearing: number | undefined = undefined;
     @JsonProperty('arrival', Number, true)
-    private _arrival: number | null = null;
+    public arrival: number | null = null;
     @JsonProperty('departure', Number, true)
-    private _departure: number | null = null;
+    public departure: number | null = null;
     @JsonProperty('relativeArrival', Number, true)
     private _relativeArrival: number | null = null;
     @JsonProperty('relativeDeparture', Number, true)
@@ -32,14 +32,6 @@ class ServiceStopLocation extends LatLng {
 
     get bearing(): number | undefined{
         return this._bearing;
-    }
-
-    get arrival(): number | null {
-        return this._arrival;
-    }
-
-    get departure(): number | null {
-        return this._departure;
     }
 
     get relativeArrival(): number | null {
