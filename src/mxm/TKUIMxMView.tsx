@@ -17,6 +17,7 @@ import TKUITimetableView from "../service/TKUITimetableView";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {TKStateController} from "../index";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -73,7 +74,7 @@ const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}
     );
 };
 
-function getPTSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
+function getPTSegmentMxMCards(segment: Segment, onClose: () => void, t: TranslationFunction): JSX.Element[] {
     let cards: JSX.Element[] = [];
     cards.push(
         <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
@@ -82,7 +83,7 @@ function getPTSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Elemen
     cards.push(
         <TKUICard
             title={segment.getAction()}
-            subtitle={segment.to.getDisplayString()}
+            subtitle={t("Direction") + ": " + segment.serviceDirection}
             onRequestClose={onClose}
             styles={{
                 main: overrideClass({ height: '100%'})
@@ -100,9 +101,9 @@ function getPTSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Elemen
     return cards;
 }
 
-function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
+function getSegmentMxMCards(segment: Segment, onClose: () => void, t: TranslationFunction): JSX.Element[] {
     if (segment.isPT()) {
-        return getPTSegmentMxMCards(segment, onClose);
+        return getPTSegmentMxMCards(segment, onClose, t);
     } else {
         return ([
             <TKUICard
@@ -119,9 +120,9 @@ function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[
     }
 }
 
-function buildSegmentCardsMap(segments: Segment[], onClose: () => void): Map<Segment, JSX.Element[]> {
+function buildSegmentCardsMap(segments: Segment[], onClose: () => void, t: TranslationFunction): Map<Segment, JSX.Element[]> {
     return segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
-        map.set(segment, getSegmentMxMCards(segment, onClose));
+        map.set(segment, getSegmentMxMCards(segment, onClose, t));
         return map;
     }, new Map<Segment, JSX.Element[]>());
 }
@@ -150,11 +151,12 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
 
 const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
     const trip = props.selectedTrip!;
+    const t = props.t;
     const segments = trip.getSegments();
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
-    const segmentToCards = buildSegmentCardsMap(segments, () => props.setSelectedTripSegment(undefined));
+    const segmentToCards = buildSegmentCardsMap(segments, () => props.setSelectedTripSegment(undefined), t);
     const classes = props.classes;
     const selectedSegment = props.selectedTripSegment!;
     // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
