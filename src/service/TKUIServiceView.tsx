@@ -1,7 +1,5 @@
 import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import DateTimeUtil from "../util/DateTimeUtil";
-import ServiceStopLocation from "../model/ServiceStopLocation";
 import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
@@ -144,9 +142,6 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 </button>
             </div> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        const leftLabelFc = (step: ServiceStopLocation, timeFormat: string = DateTimeUtil.TIME_FORMAT_TRIP) => step.departure ?
-            DateTimeUtil.momentFromTimeTZ(step.departure * 1000, departure.startStop!.timezone).format(timeFormat) :
-            step.arrival ? DateTimeUtil.momentFromTimeTZ(step.arrival * 1000, departure.startStop!.timezone).format(timeFormat) : "";
         return (
             <TKUICard
                 title={this.props.title}
@@ -164,7 +159,6 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 presentation={CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
                 scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
-                // mainFocusElemId={"serviceViewHeader"}
             >
                 <div className={classes.main}>
                     {departure.serviceDetail?.shapes &&
