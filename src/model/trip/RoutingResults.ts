@@ -5,6 +5,8 @@ import RoutingQuery from "../RoutingQuery";
 import Trip from "./Trip";
 import RealTimeAlert from "../service/RealTimeAlert";
 import Location from "../Location";
+import ServiceShape from "./ServiceShape";
+import ServiceStopLocation from "../ServiceStopLocation";
 
 @JsonObject
 class ResultsQuery {
@@ -76,6 +78,15 @@ class RoutingResults {
                 for (const segment of trip.segments) {
                     Object.assign(segment, this.templatesMap.get(segment.segmentTemplateHashCode));
                     segment.trip = trip;
+                    segment.shapes?.forEach((shape: ServiceShape) =>
+                        shape.stops?.forEach((stop: ServiceStopLocation) => {
+                            if (stop.departure === null && stop.relativeDeparture !== null) {
+                                stop.departure = segment.startTime + stop.relativeDeparture;
+                            }
+                            if (stop.arrival === null && stop.relativeArrival !== null) {
+                                stop.arrival = segment.endTime + stop.relativeArrival;
+                            }
+                        }));
                     if (segment.isFirst() && !this.query.isEmpty() && this.query.from!.address) { // Check that this.query is defined to avoid crashing when injecting trips tests.
                         segment.from.address = this.query.from!.address;
                     }

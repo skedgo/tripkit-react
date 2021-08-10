@@ -2,8 +2,6 @@ import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import DateTimeUtil from "../util/DateTimeUtil";
 import ServiceStopLocation from "../model/ServiceStopLocation";
-import {TKUIStopSteps} from "../trip/TripSegmentSteps";
-import ServiceShape from "../model/trip/ServiceShape";
 import {EventEmitter} from "fbemitter";
 import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
@@ -26,6 +24,7 @@ import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
+import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -101,19 +100,6 @@ class TKUIServiceView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const departure = this.props.departure;
-        let stops: ServiceStopLocation[] | undefined;
-        const stopToShapes: Map<ServiceStopLocation, ServiceShape> = new Map<ServiceStopLocation, ServiceShape>();
-        if (departure.serviceDetail && departure.serviceDetail.shapes) {
-            stops = [];
-            for (const shape of departure.serviceDetail.shapes) {
-                if (shape.stops) {
-                    stops = stops.concat(shape.stops);
-                    for (const stop of shape.stops) {
-                        stopToShapes.set(stop, shape);
-                    }
-                }
-            }
-        }
         const classes = this.props.classes;
         const t = this.props.t;
         const showWheelchair = this.props.options.wheelchair || departure.isWheelchairAccessible() === false;
@@ -181,27 +167,12 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 // mainFocusElemId={"serviceViewHeader"}
             >
                 <div className={classes.main}>
-                    {stops &&
-                    <TKUIStopSteps
-                        steps={stops}
-                        // toggleLabel={(open: boolean) => (open ? "Hide " : "Show ") + stops!.length + " stops"}
-                        leftLabel = {leftLabelFc}
-                        rightLabel={(step: ServiceStopLocation) => step.name}
-                        ariaLabel={(step: ServiceStopLocation) => step.name + ", " + t("At.X", {0: leftLabelFc(step, "h:mm A")}) + ". "}
-                        // TODO: use to mark vehicle's current position
-                        // stepMarker={(step: ServiceStopLocation) =>
-                        //     step.departure === departure.startTime ?
-                        //         <img src={transIcon} className={classes.currStopMarker} alt=""/>
-                        //         :undefined
-                        // }
-                        stepClassName={(step: ServiceStopLocation) =>
-                            (step.departure && step.departure < departure.startTime ? classes.pastStop :
-                                step.departure === departure.startTime ? classes.currStop : undefined)}
-                        borderColor={TransportUtil.getServiceDepartureColor(departure)}
-                        onStepClicked={(step: ServiceStopLocation) =>
-                            this.props.eventBus && this.props.eventBus.emit(STOP_CLICKED_EVENT, step)}
-                    />
-                    }
+                    {departure.serviceDetail?.shapes &&
+                    <TKUIServiceSteps
+                        steps={departure.serviceDetail.shapes}
+                        serviceColor={TransportUtil.getServiceDepartureColor(departure)}
+                        timezone={departure.startTimezone}
+                    />}
                 </div>
             </TKUICard>
         );
@@ -211,7 +182,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         if (!this.scrolledIntoView && this.props.departure.serviceDetail && this.scrollRef) {
             this.scrolledIntoView = true;
             const classes = this.props.classes;
-            this.scrollRef.getElementsByClassName(classes.currStop)[0].scrollIntoView();
+            this.scrollRef.getElementsByClassName("TKUIServiceSteps-firstTravelledStop")[0].scrollIntoView();
         }
     }
 }
@@ -236,12 +207,11 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     );
 };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
+                children!({...consumedProps, ...inputProps})}
         </Consumer>;
 
-export default connect(
-    (config: TKUIConfig) => config.TKUIServiceView, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUIServiceView, config, Mapper);

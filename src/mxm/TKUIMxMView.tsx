@@ -16,8 +16,9 @@ import TKUICard, {CardPresentation} from "../card/TKUICard";
 import TKUITimetableView from "../service/TKUITimetableView";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {TKStateController} from "../index";
+import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     selectedTrip?: Trip;
@@ -72,13 +73,12 @@ const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}
     );
 };
 
-function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
+function getPTSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
     let cards: JSX.Element[] = [];
-    if (segment.isPT()) { // && !segment.isContinuation(?)
-        cards.push(
-            <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
-        )
-    }
+    cards.push(
+        <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
+    );
+    const timezone = segment.from.timezone;
     cards.push(
         <TKUICard
             title={segment.getAction()}
@@ -89,10 +89,34 @@ function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[
             }}
             key={segment.id + "b"}
         >
-            <div style={{height: '100%'}}/>
+            {segment.shapes &&
+            <TKUIServiceSteps
+                steps={segment.shapes}
+                serviceColor={segment.getColor()}
+                timezone={timezone}
+            />}
         </TKUICard>
     );
     return cards;
+}
+
+function getSegmentMxMCards(segment: Segment, onClose: () => void): JSX.Element[] {
+    if (segment.isPT()) {
+        return getPTSegmentMxMCards(segment, onClose);
+    } else {
+        return ([
+            <TKUICard
+                title={segment.getAction()}
+                subtitle={segment.to.getDisplayString()}
+                onRequestClose={onClose}
+                styles={{
+                    main: overrideClass({ height: '100%'})
+                }}
+            >
+                <div style={{height: '100%'}}/>
+            </TKUICard>
+        ]);
+    }
 }
 
 function buildSegmentCardsMap(segments: Segment[], onClose: () => void): Map<Segment, JSX.Element[]> {

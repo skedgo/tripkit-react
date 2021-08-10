@@ -11,7 +11,7 @@ class ServiceShape {
     @JsonProperty("serviceTripID", String, true)  // Documentation says it's required, however sometimes is missing.
     private _serviceTripID: string = "";
     @JsonProperty("serviceName", String, true)
-    private _serviceName: string | null = null;
+    public serviceName: string | null = null;
     @JsonProperty("serviceNumber", String, true)
     private _serviceNumber: string | null = null;
     @JsonProperty("serviceDirection", String, true)
@@ -43,10 +43,6 @@ class ServiceShape {
 
     get serviceTripID(): string {
         return this._serviceTripID;
-    }
-
-    get serviceName(): string | null {
-        return this._serviceName;
     }
 
     get serviceNumber(): string | null {

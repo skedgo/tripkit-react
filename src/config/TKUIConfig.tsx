@@ -58,7 +58,7 @@ import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
 import {TKComponentConfig} from "./TKComponentConfig";
 import {TKComponentDefaultConfig as TKComponentDefaultConfigForExport} from "./TKComponentConfig";
 import {TKUIWithClasses} from "../jss/StyleHelper";
-import {TKUIStopStepsProps, TKUIStopStepsStyle} from "../trip/TripSegmentSteps";
+import {TKUIServiceStepsProps, TKUIServiceStepsStyle} from "../trip/TKUIServiceSteps";
 import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
 import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
 import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIMapLocationPopup";
@@ -153,7 +153,7 @@ interface ITKUIConfigOptional {
     TKUIAutocompleteResult: TKComponentConfig<TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle>;
     TKUICardCarousel: TKComponentConfig<TKUICardCarouselProps, TKUICardCarouselStyle>;
     TKUIErrorView: TKComponentConfig<TKUIErrorViewProps, TKUIErrorViewStyle>;
-    TKUIStopSteps: TKComponentConfig<TKUIStopStepsProps, TKUIStopStepsStyle>;
+    TKUIServiceSteps: TKComponentConfig<TKUIServiceStepsProps, TKUIServiceStepsStyle>;
     TKUIMxMView: TKComponentConfig<TKUIMxMViewProps, TKUIMxMViewStyle>;
     TKUIMxMIndex: TKComponentConfig<TKUIMxMIndexProps, TKUIMxMIndexStyle>;
 }
