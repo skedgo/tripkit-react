@@ -319,7 +319,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
                     cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
                     parentElement={this.parentElement}
-                    zIndex={this.zIndex}
+                    zIndex={this.props.slideUpOptions?.zIndex !== undefined ? this.props.slideUpOptions.zIndex : this.zIndex}
                     ariaLabel={cardAriaLabel}
                     role={this.props.role || "group"}
                 >

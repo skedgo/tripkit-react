@@ -1,10 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIServiceViewProps, TKUIServiceViewStyle} from "./TKUIServiceView";
-import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {severityColor} from "../trip/TKUITrackTransport.css";
-import {alertSeverity} from "../model/trip/Segment";
-import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIServiceViewProps> =
     (theme: TKUITheme) => ({
@@ -31,48 +28,9 @@ export const tKUIServiceViewDefaultStyle: TKUIStyles<TKUIServiceViewStyle, TKUIS
             boxShadow: '0 0 4px 0 rgba(0,0,0,.2), 0 6px 12px 0 rgba(0,0,0,.08)!important',
             ...genStyles.borderRadius(50, "%")
         },
-        realtimePanel: {
-            marginTop: '10px',
-            ...genStyles.flex,
-            ...genStyles.alignStart
-        },
-        iconAngleDown: {
-            ...resetStyles.button,
-            width: '24px',
-            height: '24px',
-            padding: '7px',
-            background: colorWithOpacity(theme.colorPrimary, .12),
-            ...genStyles.borderRadius(50, "%"),
-            ...genStyles.svgFillCurrColor,
-            color: theme.colorPrimary,
-            cursor: 'pointer',
-            '& svg': {
-                width: '100%',
-                height: '100%'
-            }
-        },
-        realtimeInfo: {
-            ...genStyles.grow,
-            ...genStyles.flex,
-            '&>*': {
-                marginRight: '10px'
-            }
-        },
-        realtimeInfoDetailed: {
-            ...genStyles.grow,
-            '& > *:not(:first-child)': {
-                marginTop: '10px'
-            },
-        },
         actionsPanel: {
             margin: '24px 0 16px',
             ...genStyles.flex,
             ...genStyles.spaceAround
-        },
-        alertsSummary: {
-            marginTop: '8px'
-        },
-        alertsBrief: {
-            color: (props: TKUIServiceViewProps) => severityColor(alertSeverity(props.departure.alerts), theme),
         }
     });

@@ -18,6 +18,10 @@ import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} f
 import {TKStateController} from "../index";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
+import TKUserProfile from "../model/options/TKUserProfile";
+import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import {cardSpacing} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -25,6 +29,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     selectedTrip?: Trip;
     selectedTripSegment?: Segment;
     setSelectedTripSegment: (segment?: Segment) => void;
+    options: TKUserProfile
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -39,6 +44,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     styles: tKUIMxMViewDefaultStyle,
     classNamePrefix: "TKUIMxMView"
 };
+
+const MODAL_UP_TOP = 100;
 
 const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
     return (
@@ -74,7 +81,16 @@ const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}
     );
 };
 
-function getPTSegmentMxMCards(segment: Segment, onClose: () => void, t: TranslationFunction): JSX.Element[] {
+interface SegmentMxMCardsProps {
+    segment: Segment;
+    onClose: () => void;
+    t: TranslationFunction;
+    options: TKUserProfile;
+    landscape: boolean;
+}
+
+function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
+    const {segment, onClose, t, options, landscape} = props;
     let cards: JSX.Element[] = [];
     cards.push(
         <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
@@ -84,6 +100,20 @@ function getPTSegmentMxMCards(segment: Segment, onClose: () => void, t: Translat
         <TKUICard
             title={segment.getAction()}
             subtitle={t("Direction") + ": " + segment.serviceDirection}
+            renderSubHeader={() => (
+                <TKUIServiceRealtimeInfo
+                    wheelchairAccessible={segment.wheelchairAccessible}
+                    vehicle={segment.realtimeVehicle}
+                    alerts={segment.hasAlerts ? segment.alerts : undefined}
+                    modeInfo={segment.modeInfo}
+                    options={options}
+                    styles={{main: overrideClass({marginBottom: '16px'})}}
+                    // Make alerts slide up go to the top so hides MxM navigation, avoiding
+                    // moving to other segment while alerts view is showing: need to close it
+                    // first to see MxM navigation.
+                    alertsSlideUpOptions={{modalUp: {top: cardSpacing(landscape), unit: 'px'}, zIndex: 1010}}
+                />
+            )}
             onRequestClose={onClose}
             styles={{
                 main: overrideClass({ height: '100%'})
@@ -101,9 +131,10 @@ function getPTSegmentMxMCards(segment: Segment, onClose: () => void, t: Translat
     return cards;
 }
 
-function getSegmentMxMCards(segment: Segment, onClose: () => void, t: TranslationFunction): JSX.Element[] {
+function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
+    const {segment, onClose} = props;
     if (segment.isPT()) {
-        return getPTSegmentMxMCards(segment, onClose, t);
+        return getPTSegmentMxMCards(props);
     } else {
         return ([
             <TKUICard
@@ -118,13 +149,6 @@ function getSegmentMxMCards(segment: Segment, onClose: () => void, t: Translatio
             </TKUICard>
         ]);
     }
-}
-
-function buildSegmentCardsMap(segments: Segment[], onClose: () => void, t: TranslationFunction): Map<Segment, JSX.Element[]> {
-    return segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
-        map.set(segment, getSegmentMxMCards(segment, onClose, t));
-        return map;
-    }, new Map<Segment, JSX.Element[]>());
 }
 
 /**
@@ -156,7 +180,16 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
-    const segmentToCards = buildSegmentCardsMap(segments, () => props.setSelectedTripSegment(undefined), t);
+    const segmentToCards = segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
+        map.set(segment, getSegmentMxMCards({
+            segment,
+            onClose: () => props.setSelectedTripSegment(undefined),
+            t,
+            options: props.options,
+            landscape: props.landscape
+        }));
+        return map;
+    }, new Map<Segment, JSX.Element[]>());
     const classes = props.classes;
     const selectedSegment = props.selectedTripSegment!;
     // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
@@ -190,7 +223,7 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
                 slideUpOptions={{
                     position: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     modalDown: {top: (window as any).document.body.offsetHeight - 200, unit: 'px'},
-                    modalUp: {top: 100, unit: 'px'},
+                    modalUp: {top: MODAL_UP_TOP, unit: 'px'},
                     draggable: false
                 }}
                 showControls={true}
@@ -204,15 +237,19 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
-        <RoutingResultsContext.Consumer>
-            {(routingResultsContext: IRoutingResultsContext) =>
-                <TKUIViewportUtil>
-                    {(viewportProps: TKUIViewportUtilProps) => {
-                        const {selectedTrip, selectedTripSegment, setSelectedTripSegment} = routingResultsContext;
-                        return children!({...inputProps, ...viewportProps, selectedTrip, selectedTripSegment, setSelectedTripSegment});
-                    }}
-                </TKUIViewportUtil>
+        <OptionsContext.Consumer>
+            {(optionsContext: IOptionsContext) =>
+                <RoutingResultsContext.Consumer>
+                    {(routingResultsContext: IRoutingResultsContext) =>
+                        <TKUIViewportUtil>
+                            {(viewportProps: TKUIViewportUtilProps) => {
+                                const {selectedTrip, selectedTripSegment, setSelectedTripSegment} = routingResultsContext;
+                                return children!({...inputProps, ...viewportProps, options: optionsContext.userProfile, selectedTrip, selectedTripSegment, setSelectedTripSegment});
+                            }}
+                        </TKUIViewportUtil>
+                    }
+                </RoutingResultsContext.Consumer>
             }
-        </RoutingResultsContext.Consumer>;
+        </OptionsContext.Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIMxMView, config, Mapper);

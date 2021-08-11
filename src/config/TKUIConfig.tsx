@@ -65,6 +65,7 @@ import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIM
 import {TKUIQueryLocationBoxProps, TKUIQueryLocationBoxStyle} from "../query/TKUIQueryLocationBox";
 import {TKUIMxMViewProps, TKUIMxMViewStyle} from "../mxm/TKUIMxMView";
 import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
+import {TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle} from "../service/TKUIServiceRealtimeInfo";
 
 /**
  * SDK configuration
@@ -156,6 +157,7 @@ interface ITKUIConfigOptional {
     TKUIServiceSteps: TKComponentConfig<TKUIServiceStepsProps, TKUIServiceStepsStyle>;
     TKUIMxMView: TKComponentConfig<TKUIMxMViewProps, TKUIMxMViewStyle>;
     TKUIMxMIndex: TKComponentConfig<TKUIMxMIndexProps, TKUIMxMIndexStyle>;
+    TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
