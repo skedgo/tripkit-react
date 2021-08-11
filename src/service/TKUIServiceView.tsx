@@ -7,10 +7,6 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
-import genStyles from "../css/GenStyle.css";
-import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
-import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {Subtract} from "utility-types";
@@ -18,11 +14,10 @@ import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
-import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
+import TKUIServiceRealtimeInfo from "./TKUIServiceRealtimeInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose?: () => void;
@@ -36,13 +31,7 @@ interface IStyle {
     pastStop: CSSProps<IProps>;
     currStop: CSSProps<IProps>;
     currStopMarker: CSSProps<IProps>;
-    realtimePanel: CSSProps<IProps>;
-    iconAngleDown: CSSProps<IProps>;
-    realtimeInfo: CSSProps<IProps>;
-    realtimeInfoDetailed: CSSProps<IProps>;
     actionsPanel: CSSProps<IProps>;
-    alertsSummary: CSSProps<IProps>;
-    alertsBrief: CSSProps<IProps>;
 }
 
 interface IConsumedProps {
@@ -99,20 +88,6 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const departure = this.props.departure;
         const classes = this.props.classes;
-        const t = this.props.t;
-        const showWheelchair = this.props.options.wheelchair || departure.isWheelchairAccessible() === false;
-        const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
-        const alerts = !departure.hasAlerts ? null :
-            this.state.realtimeOpen ?
-                <div className={classes.alertsSummary}>
-                    <TKUIAlertsSummary
-                        alerts={departure.alerts}
-                        slideUpOptions={this.props.slideUpOptions ? {modalUp: this.props.slideUpOptions.modalUp} : undefined}
-                    />
-                </div> :
-                <div className={classes.alertsBrief}>
-                    {t("X.alerts", {0: departure.alerts.length})}
-                </div>;
         const defaultActions = this.getDefaultActions(departure);
         const actions = this.props.actions ? this.props.actions(departure, defaultActions) : defaultActions;
         const actionElems = actions ?
@@ -120,27 +95,6 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                 actions={actions}
                 className={classes.actionsPanel}
             /> : undefined;
-        const realtimePanel = showWheelchair || occupancy || alerts ?
-            <div className={classes.realtimePanel}>
-                <div className={this.state.realtimeOpen ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
-                    {showWheelchair && <TKUIWheelchairInfo accessible= {departure.isWheelchairAccessible()} brief={!this.state.realtimeOpen}/>}
-                    {occupancy ?
-                        <TKUIOccupancySign status={occupancy}
-                                           brief={!this.state.realtimeOpen} tabIndex={0}/> : undefined}
-                    {occupancy && this.state.realtimeOpen && departure.modeInfo.alt.includes("train") &&
-                    <TKUITrainOccupancyInfo components={departure.realtimeVehicle!.components!}/>}
-                    {alerts}
-                </div>
-                <button
-                    onClick={() => this.setState({realtimeOpen: !this.state.realtimeOpen})}
-                    className={classes.iconAngleDown}
-                    style={this.state.realtimeOpen ? {...genStyles.rotate180 as any} : undefined}
-                    aria-expanded={this.state.realtimeOpen}
-                    aria-label={"Show realtime info"}
-                >
-                    <IconAngleDown/>
-                </button>
-            </div> : undefined;
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
@@ -152,7 +106,14 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             value={this.props.departure}
                             detailed={true}
                         />
-                        {realtimePanel}
+                        <TKUIServiceRealtimeInfo
+                            wheelchairAccessible={departure.isWheelchairAccessible()}
+                            vehicle={departure.realtimeVehicle}
+                            alerts={departure.hasAlerts ? departure.alerts : undefined}
+                            modeInfo={departure.modeInfo}
+                            options={this.props.options}
+                            alertsSlideUpOptions={this.props.slideUpOptions && {modalUp: this.props.slideUpOptions.modalUp}}
+                        />
                         {actionElems}
                     </div>
                 }
