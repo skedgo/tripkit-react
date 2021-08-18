@@ -11,6 +11,7 @@ import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
+import {TKUIMapViewClass} from "../map/TKUIMapView";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -29,6 +30,11 @@ export interface IRoutingResultsContext {
     region?: Region;
     regionInfo?: RegionInfo;
     viewport?: {center?: LatLng, zoom?: number};    // Maybe define viewport as required.
+    setViewport: (center: LatLng, zoom: number) => void;
+    /**
+     * To be called by map so the global state keeps track of the current viewport, and sets regions accordingly.
+     * Also optionally the map can behave as controlled by viewport prop (above).
+     */
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => void;
     directionsView: boolean;
     onDirectionsView: (directionsView: boolean) => void;
@@ -54,6 +60,9 @@ export interface IRoutingResultsContext {
     waitingStateLoad: boolean;
     stateLoadError?: Error;
     onWaitingStateLoad: (waiting: boolean, error?: Error) => void;
+    map?: TKUIMapViewClass;
+    setMap: (ref: TKUIMapViewClass) => void;
+    mapAsync: Promise<TKUIMapViewClass>;
 }
 
 export const RoutingResultsContext = React.createContext<IRoutingResultsContext>({
@@ -80,7 +89,10 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     inputTextTo:  "",
     onInputTextChange: (from: boolean, text: string) => {},
     waitingStateLoad: false,
-    onWaitingStateLoad: (waiting: boolean, error?: Error) => {}
+    onWaitingStateLoad: (waiting: boolean, error?: Error) => {},
+    setMap: (ref: TKUIMapViewClass) => {},
+    mapAsync: new Promise<TKUIMapViewClass>(() => {}),
+    setViewport: (center: LatLng, zoom: number) => {}
 });
 
 class RoutingResultsProvider extends React.Component<IWithRoutingResultsProps, {}> {

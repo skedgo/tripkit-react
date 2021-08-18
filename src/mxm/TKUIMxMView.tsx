@@ -22,6 +22,8 @@ import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {cardSpacing} from "../jss/TKUITheme";
+import {TKUIMapViewClass} from "../map/TKUIMapView";
+import MapUtil from "../util/MapUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -29,7 +31,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     selectedTrip?: Trip;
     selectedTripSegment?: Segment;
     setSelectedTripSegment: (segment?: Segment) => void;
-    options: TKUserProfile
+    options: TKUserProfile;
+    mapAsync: Promise<TKUIMapViewClass>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -144,6 +147,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 styles={{
                     main: overrideClass({ height: '100%'})
                 }}
+                key={segment.id}
             >
                 <div style={{height: '100%'}}/>
             </TKUICard>
@@ -200,6 +204,17 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
     const [selectedCardOffset, setSelectedCardOffset] = useState<number>(0);
     // Index of selected card in carousel.
     const selectedCardIndex = cardIndexForSegment(selectedSegment, segments, segmentToCards) + selectedCardOffset;
+    useEffect(() => {
+        props.mapAsync.then((map) => {
+            if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
+                map.fitBounds(MapUtil.getShapesBounds(selectedSegment.shapes, true));
+            } else {
+                const zoom = map.getZoom();
+                const newZoom = zoom !== undefined && zoom >= 15 ? zoom : 15; // zoom in if zoom < 10.
+                map.setViewport(selectedSegment.from, newZoom);
+            }
+        });
+    }, [selectedSegment, selectedCardOffset]);
     return (
         <Fragment>
             <div className={classes.trackIndexPanel}>
@@ -243,8 +258,14 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                     {(routingResultsContext: IRoutingResultsContext) =>
                         <TKUIViewportUtil>
                             {(viewportProps: TKUIViewportUtilProps) => {
-                                const {selectedTrip, selectedTripSegment, setSelectedTripSegment} = routingResultsContext;
-                                return children!({...inputProps, ...viewportProps, options: optionsContext.userProfile, selectedTrip, selectedTripSegment, setSelectedTripSegment});
+                                const {selectedTrip, selectedTripSegment, setSelectedTripSegment, mapAsync} = routingResultsContext;
+                                return children!({...inputProps, ...viewportProps,
+                                    options: optionsContext.userProfile,
+                                    selectedTrip,
+                                    selectedTripSegment,
+                                    setSelectedTripSegment,
+                                    mapAsync
+                                });
                             }}
                         </TKUIViewportUtil>
                     }

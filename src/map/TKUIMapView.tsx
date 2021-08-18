@@ -101,14 +101,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     /**
      * true by default. Can be set to false to avoid map shaking on pin drop.
-     * TODO: controlled viewport is just needed to set initial viewport. Set it imperatively instead, since the issue
-     * is also on TripGo web-app. Replace all external uses of onViewportChange (search for ".onViewportChange(")
-     * Need to take into account that calls to onViewportChange may happen before or after TKUIMapView is mounted.
-     * Maybe define a setMapViewport on TKState, that if the state already has the map reference then call setViewport
-     * (setView) imperatively, while if not it records it to call setView when map reference is set. There is also a function
-     * setMapReference that TKUIMapView consumes and uses to set the map reference on the global state.
-     * The TKUIMapView.setViewport should actually call Map.setView if controlledViewport === false, or onViewportChange
-     * otherwise.
      */
     controlledViewport?: boolean;
 
@@ -225,6 +217,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     config: TKUIConfig;
 
     transportOptions: TKTransportOptions;
+
+    setMap: (ref: TKUIMapView) => void;
 }
 
 interface MapboxGLLayerProps {
@@ -281,6 +275,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
+        this.props.setMap(this);
     }
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
@@ -356,37 +351,16 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         if (fitSet.length === 1) {
-            // To avoid wrong calculation in movePointInPixels due to special case of initial bounds.
-            const boundsEstablished = this.props.viewport &&
-                JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
-            let fitPoint;
-            if (this.props.padding && this.props.padding.left && boundsEstablished) {
-                const targetPoint = this.leafletElement!.project(fitSet[0], 13).subtract([this.props.padding.left / 2, 0]);
-                fitPoint = this.leafletElement!.unproject(targetPoint, 13);
-            } else if (this.props.padding && this.props.padding.bottom && boundsEstablished) {
-                const targetPoint = this.leafletElement!.project(fitSet[0], 13).subtract([0, -this.props.padding.bottom / 2]);
-                fitPoint = this.leafletElement!.unproject(targetPoint, 13);
-            } else {
-                fitPoint = fitSet[0]
-            }
-            const center = this.leafletElement!.getCenter();
             const zoom = this.leafletElement!.getZoom();
-            const newCenter = fitPoint || center;
             const newZoom = zoom !== undefined && zoom >= 10 ? zoom : 13; // zoom in if zoom < 10.
-            if (this.props.controlledViewport === false) {
-                this.leafletElement!.setView([newCenter.lat, newCenter.lng], newZoom);
-            } else {
-                this.onViewportChange({center: newCenter, zoom: newZoom});
-            }
+            this.setViewport(fitSet[0], newZoom);
             return;
         }
         this.fitBounds(BBox.createBBoxArray(fitSet));
     }
 
     private onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
-        if (this.props.onViewportChange) {
-            this.props.onViewportChange(viewport);
-        }
+        this.props.onViewportChange?.(viewport);
     }
 
     private userLocationSubscription?: any;
@@ -523,7 +497,12 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     }}
                     ref={(ref: any) => {
                         if (ref) {
+                            const init = !this.leafletElement && ref.leafletElement;
                             this.leafletElement = ref.leafletElement;
+                            if (init) {
+                                // Init map viewport, so we don't get an exception when getting map zoom or center.
+                                this.setViewport(MapUtil.worldCoords, 2);
+                            }
                         }
                     }}
                     zoomControl={false}
@@ -847,6 +826,31 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // this.mapboxGlMap.setPaintProperty('road-pedestrian', 'line-color', 'rgba(255,0,0,.5)');
     }
 
+    public getZoom(): number | undefined {
+        return this.leafletElement?.getZoom();
+    }
+
+    public setViewport(center: LatLng, zoom: number) {
+        // To avoid wrong calculation in movePointInPixels due to special case of initial bounds.
+        const boundsEstablished = this.props.viewport &&
+            JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
+        let adjustedCenter;
+        if (this.props.padding && this.props.padding.left && boundsEstablished) {
+            const targetPoint = this.leafletElement!.project(center, zoom).subtract([this.props.padding.left / 2, 0]);
+            adjustedCenter = this.leafletElement!.unproject(targetPoint, zoom);
+        } else if (this.props.padding && this.props.padding.bottom && boundsEstablished) {
+            const targetPoint = this.leafletElement!.project(center, zoom).subtract([0, -this.props.padding.bottom / 2]);
+            adjustedCenter = this.leafletElement!.unproject(targetPoint, zoom);
+        } else {
+            adjustedCenter = center
+        }
+        if (this.props.controlledViewport !== false) {
+            this.onViewportChange({center: adjustedCenter, zoom});
+        } else {
+            this.leafletElement && this.leafletElement.setView([adjustedCenter.lat, adjustedCenter.lng], zoom);
+        }
+    }
+
     public fitBounds(bounds: BBox) {
         if (this.leafletElement) {
             const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
@@ -923,7 +927,8 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                         onDirectionsView: routingContext.onDirectionsView,
                                                         ...viewportProps,
                                                         config: config,
-                                                        transportOptions: optionsContext.userProfile.transportOptions
+                                                        transportOptions: optionsContext.userProfile.transportOptions,
+                                                        setMap: routingContext.setMap
                                                     };
                                                     return (
                                                         props.children!(consumerProps)

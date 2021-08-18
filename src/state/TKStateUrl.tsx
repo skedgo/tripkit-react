@@ -269,10 +269,6 @@ class TKStateUrl extends React.Component<IProps, {}> {
                             location, TimePreference.ARRIVE,
                             DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
                             RoutingQuery.create(null, location);
-                        tKState.onViewportChange({
-                            center: arrivalLoc,
-                            zoom: 13
-                        });
                         tKState.onQueryChange(routingQuery);
                         if (queryMap.at) {
                             this.setState({directionsView: true})
@@ -292,7 +288,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             const query = TKShareHelper.parseSharedQueryLink();
             const viewport = TKShareHelper.parseViewport();
             if (viewport) {
-                tKState.onViewportChange(viewport);
+                tKState.setViewport(viewport.center, viewport.zoom);
             }
             if (query) {
                 tKState.onQueryChange(query);

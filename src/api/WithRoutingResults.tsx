@@ -22,6 +22,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
+import {TKUIMapViewClass} from "../map/TKUIMapView";
 
 export interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
@@ -51,6 +52,7 @@ interface IWithRoutingResultsState {
     tripUpdateError?: Error;    // When waitingTripUpdate === false, if undefined it indicates success, if not, it gives the error.
     waitingStateLoad: boolean;
     stateLoadError?: Error;
+    mapRef?: TKUIMapViewClass;
 }
 
 export enum TripSort {
@@ -59,6 +61,15 @@ export enum TripSort {
     DURATION = "Duration",
     PRICE = "Price",
     CARBON = "Greener"
+}
+
+let resolveMapP!: (map: TKUIMapViewClass) => void;
+const mapPromise: Promise<TKUIMapViewClass> = new Promise<TKUIMapViewClass>((resolve, reject) => {
+    resolveMapP = resolve;
+});
+async function setViewport(center: LatLng, zoom: number) {
+    const map = await mapPromise;
+    map.setViewport(center, zoom);
 }
 
 // function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
@@ -491,13 +502,23 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waitingStateLoad={this.state.waitingStateLoad}
                 stateLoadError={this.state.stateLoadError}
                 onWaitingStateLoad={this.onWaitingStateLoad}
+                setMap={(map: TKUIMapViewClass) => {
+                    this.setState({
+                        mapRef: map
+                    });
+                    resolveMapP(map);
+                }}
+                map={this.state.mapRef}
+                mapAsync={mapPromise}
+                setViewport={setViewport}
             />;
         }
 
 
         public componentDidMount(): void {
-            if (this.props.initViewport) {
-                this.onViewportChange(this.props.initViewport);
+            const initViewport = this.props.initViewport;
+            if (initViewport && initViewport.center && initViewport.zoom) {
+                setViewport(initViewport.center!, initViewport.zoom!);
             }
             this.refreshRegion();
         }
