@@ -462,7 +462,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         }
                                         return undefined;
                                     }}
-                                    controlledViewport={false}
                                 />
                             </div>
                             <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>

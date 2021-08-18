@@ -99,11 +99,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     mapboxGlLayerProps?: MapboxGLLayerProps;
 
-    /**
-     * true by default. Can be set to false to avoid map shaking on pin drop.
-     */
-    controlledViewport?: boolean;
-
     fromHereText?: string;
 
     toHereText?: string;
@@ -177,15 +172,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default {@link TKState#selectedService}
      */
     service?: ServiceDeparture;
-
-    /**
-     * Map viewport expressed as center coordinates and zoom level.
-     * @ctype
-     * @default {@link TKState#viewport}
-     * @deprecated Remove this property and make the map uncontrolled, since controlled map causes shaking map issues
-     * sometimes.
-     */
-    viewport?: {center?: LatLng, zoom?: number};
 
     /**
      * Map viewport change callback.
@@ -460,16 +446,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
         const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
         const service = this.props.service;
-        const viewport = this.props.viewport;
-        const leafletViewport = this.props.controlledViewport !== false && viewport ?
-            {center: viewport.center ? [viewport.center.lat, viewport.center.lng] as [number, number] : undefined, zoom: viewport.zoom}
-            : undefined;
         const t = this.props.t;
         return (
             <div className={classes.main}>
                 <RLMap
                     className={classes.leaflet}
-                    viewport={leafletViewport}
                     // TODO: check I don't need to pass boundsOptions to fitBounds anymore
                     boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -1800], [90, 1800])} // To avoid lats > 90 or < -90
@@ -501,7 +482,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             this.leafletElement = ref.leafletElement;
                             if (init) {
                                 // Init map viewport, so we don't get an exception when getting map zoom or center.
-                                this.setViewport(MapUtil.worldCoords, 2);
+                                this.leafletElement!.setView([MapUtil.worldCoords.lat, MapUtil.worldCoords.lng], 2);
                             }
                         }
                     }}
@@ -831,24 +812,17 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public setViewport(center: LatLng, zoom: number) {
-        // To avoid wrong calculation in movePointInPixels due to special case of initial bounds.
-        const boundsEstablished = this.props.viewport &&
-            JSON.stringify(this.props.viewport.center) !== JSON.stringify(MapUtil.worldCoords);
         let adjustedCenter;
-        if (this.props.padding && this.props.padding.left && boundsEstablished) {
+        if (this.props.padding && this.props.padding.left) {
             const targetPoint = this.leafletElement!.project(center, zoom).subtract([this.props.padding.left / 2, 0]);
             adjustedCenter = this.leafletElement!.unproject(targetPoint, zoom);
-        } else if (this.props.padding && this.props.padding.bottom && boundsEstablished) {
+        } else if (this.props.padding && this.props.padding.bottom) {
             const targetPoint = this.leafletElement!.project(center, zoom).subtract([0, -this.props.padding.bottom / 2]);
             adjustedCenter = this.leafletElement!.unproject(targetPoint, zoom);
         } else {
             adjustedCenter = center
         }
-        if (this.props.controlledViewport !== false) {
-            this.onViewportChange({center: adjustedCenter, zoom});
-        } else {
-            this.leafletElement && this.leafletElement.setView([adjustedCenter.lat, adjustedCenter.lng], zoom);
-        }
+        this.leafletElement && this.leafletElement.setView([adjustedCenter.lat, adjustedCenter.lng], zoom);
     }
 
     public fitBounds(bounds: BBox) {
@@ -921,7 +895,6 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                         trip: routingContext.selectedTrip,
                                                         service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
                                                             serviceContext.selectedService : undefined,
-                                                        viewport: routingContext.viewport,
                                                         onViewportChange: routingContext.onViewportChange,
                                                         directionsView: routingContext.directionsView,
                                                         onDirectionsView: routingContext.onDirectionsView,
