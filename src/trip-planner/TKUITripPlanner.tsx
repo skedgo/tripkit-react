@@ -115,8 +115,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     queryTo !== null && !(queryTo.isCurrLoc() && !queryTo.isResolved())) {
                     return;
                 }
-                const initViewport = {center: userLocation, zoom: 13};
-                this.props.onViewportChange(initViewport);
+                this.props.setViewport(userLocation, 13);
             })
             .catch((error) => console.log(error));
 
@@ -463,7 +462,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         }
                                         return undefined;
                                     }}
-                                    // controlledViewport={false}
+                                    controlledViewport={false}
                                 />
                             </div>
                             <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)}/>

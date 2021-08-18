@@ -7,14 +7,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.css.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceView.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="">
       <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.module.css" afterDir="false" />
@@ -51,105 +50,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TKUIMxMView.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx">
+      <file leaf-file-name="WithRoutingResults.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="113" column="79" selection-start-line="113" selection-start-column="79" selection-end-line="113" selection-end-column="79" />
+            <state relative-caret-position="282">
+              <caret line="250" column="9" lean-forward="true" selection-start-line="250" selection-start-column="9" selection-end-line="250" selection-end-column="9" />
               <folding>
-                <element signature="e#0#59#0" expanded="true" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUITheme.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/jss/TKUITheme.ts">
+      <file leaf-file-name="TKUIMapView.tsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIServiceRealtimeInfo.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
+            <state relative-caret-position="64">
+              <caret line="123" column="37" lean-forward="true" selection-start-line="123" selection-start-column="37" selection-end-line="123" selection-end-column="37" />
               <folding>
-                <element signature="e#0#38#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIAlertsSummary.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="79" column="28" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIAlertsView.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsView.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="412">
-              <caret line="40" column="18" lean-forward="true" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUICard.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/card/TKUICard.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1146">
-              <caret line="203" column="6" lean-forward="true" selection-start-line="203" selection-start-column="6" selection-end-line="203" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUICard.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/card/TKUICard.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="13" />
-              <folding>
-                <element signature="e#0#44#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIMxMView.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mxm/TKUIMxMView.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="56" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="56" />
-              <folding>
-                <element signature="e#0#68#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUITripPlanner.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIAlertsView.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsView.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="e#0#46#0" expanded="true" />
+                <element signature="e#0#31#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -168,36 +87,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sign</find>
-      <find>TKUIOccupancySign</find>
-      <find>modeInfo</find>
-      <find>modeInf</find>
-      <find>IconAngle</find>
-      <find>alerts</find>
-      <find>options</find>
-      <find>wheelcha</find>
-      <find>locationInfo</find>
-      <find>styles={</find>
-      <find>cardPresent</find>
-      <find>OptionsContext</find>
-      <find>heigh</find>
-      <find>48</find>
-      <find>176</find>
-      <find>top: 100</find>
-      <find>100</find>
-      <find>slideUp</find>
-      <find>1003</find>
-      <find>slideUpOptions</find>
-      <find>slideUpOp</find>
-      <find>trackIndexPan</find>
-      <find>// above card modal container</find>
-      <find>modal</find>
-      <find>zIndex</find>
-      <find>zIndex:</find>
-      <find>MODAL_UP_TOP</find>
-      <find>getPTSegmentMxMCards</find>
-      <find>getSegmentMxMCards</find>
-      <find>buildSegmentCardsMap</find>
+      <find>getBo</find>
+      <find>controlledVi</find>
+      <find>leafletElemen</find>
+      <find>viewport</find>
+      <find>.onViewportChange</find>
+      <find>lea</find>
+      <find>boundsEstablished</find>
+      <find>.setView(</find>
+      <find>setView</find>
+      <find>.setViewport</find>
+      <find>TKUIMapVi</find>
+      <find>initViewport</find>
+      <find>onViewport</find>
+      <find>controlledViewport</find>
+      <find>.onViewportChange(</find>
+      <find>getMap().t</find>
+      <find>onViewportChange</find>
+      <find>userLocationPromise</find>
+      <find>getMapP</find>
+      <find>this.getMap</find>
+      <find>resolveMapP</find>
+      <find>setMapRef</find>
+      <find>mapRef</find>
+      <find>getMap(</find>
+      <find>mapAsync</find>
+      <find>getMap</find>
+      <find>setMap</find>
+      <find>setViewport</find>
+      <find>controlled</find>
+      <find>leafletViewport</find>
     </findStrings>
     <replaceStrings>
       <replace>TKUIWaitingRequest</replace>
@@ -282,7 +201,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" />
         <option value="$PROJECT_DIR$/src/options/TKUIProfileView.tsx" />
         <option value="$PROJECT_DIR$/src/api/TripGoApi.tsx" />
         <option value="$PROJECT_DIR$/src/buttons/TKUIButton.tsx" />
@@ -294,10 +212,8 @@
         <option value="$PROJECT_DIR$/src/card/TKUIScrollForCard.tsx" />
         <option value="$PROJECT_DIR$/src/example/tripgo/feedback/TGUIFeedbackForm.tsx" />
         <option value="$PROJECT_DIR$/src/map/TKUIModeLocationIcon.tsx" />
-        <option value="$PROJECT_DIR$/src/state/TKStateUrl.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKMetricClassifier.ts" />
         <option value="$PROJECT_DIR$/README_DEV.md" />
-        <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
         <option value="$PROJECT_DIR$/src/mxm/TKUIMxMView.css.ts" />
         <option value="$PROJECT_DIR$/src/mxm/TrackIndex.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" />
@@ -305,13 +221,11 @@
         <option value="$PROJECT_DIR$/src/trip/TKUITrackTransport.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKUITrackTransport.css.ts" />
         <option value="$PROJECT_DIR$/src/mxm/TKUIMxMIndex.css.ts" />
-        <option value="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" />
         <option value="$PROJECT_DIR$/src/card/TKUICard.css.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" />
         <option value="$PROJECT_DIR$/src/index.tsx" />
         <option value="$PROJECT_DIR$/src/mxm/TKUIMxMIndex.tsx" />
-        <option value="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" />
         <option value="$PROJECT_DIR$/src/service/TKUITimetableView.tsx" />
         <option value="$PROJECT_DIR$/src/api/WithServiceResults.tsx" />
         <option value="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" />
@@ -327,12 +241,17 @@
         <option value="$PROJECT_DIR$/src/config/TKUIConfig.tsx" />
         <option value="$PROJECT_DIR$/src/service/TKUIServiceView.css.ts" />
         <option value="$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.css.ts" />
-        <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
         <option value="$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.tsx" />
         <option value="$PROJECT_DIR$/src/service/TKUIServiceView.tsx" />
         <option value="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" />
         <option value="$PROJECT_DIR$/src/card/TKUICard.tsx" />
+        <option value="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" />
+        <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
         <option value="$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx" />
+        <option value="$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx" />
+        <option value="$PROJECT_DIR$/src/state/TKStateUrl.tsx" />
+        <option value="$PROJECT_DIR$/src/api/WithRoutingResults.tsx" />
+        <option value="$PROJECT_DIR$/src/map/TKUIMapView.tsx" />
       </list>
     </option>
   </component>
@@ -369,7 +288,7 @@
   <component name="ProjectFrameBounds">
     <option name="y" value="25" />
     <option name="width" value="1440" />
-    <option name="height" value="815" />
+    <option name="height" value="814" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -378,6 +297,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -394,51 +315,19 @@
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="alerts" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
               <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="card" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="model" type="462c0819:PsiDirectoryNode" />
-              <item name="location" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="mxm" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="service" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="tripkit-react" type="b2602c69:ProjectViewProjectNode" />
-              <item name="tripkit-react" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="trip" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="tripgo" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -671,14 +560,8 @@
       <workItem from="1624801659351" duration="50343000" />
       <workItem from="1626372830019" duration="18869000" />
       <workItem from="1627575581935" duration="72462000" />
-      <workItem from="1628625821749" duration="11477000" />
-    </task>
-    <task id="LOCAL-00389" summary="Testing and bug fixing.">
-      <created>1603479579210</created>
-      <option name="number" value="00389" />
-      <option name="presentableId" value="LOCAL-00389" />
-      <option name="project" value="LOCAL" />
-      <updated>1603479579211</updated>
+      <workItem from="1628625821749" duration="13487000" />
+      <workItem from="1629206114353" duration="14693000" />
     </task>
     <task id="LOCAL-00390" summary="Fix to slide-up issue on touch devices.">
       <created>1603491097596</created>
@@ -1016,11 +899,18 @@
       <option name="project" value="LOCAL" />
       <updated>1628627803624</updated>
     </task>
-    <option name="localTasksCounter" value="438" />
+    <task id="LOCAL-00438" summary="Feature #13578: TripKit React - Mode by Mode flow:&#10;- display real-time info on service detail view.">
+      <created>1628710456389</created>
+      <option name="number" value="00438" />
+      <option name="presentableId" value="LOCAL-00438" />
+      <option name="project" value="LOCAL" />
+      <updated>1628710456392</updated>
+    </task>
+    <option name="localTasksCounter" value="439" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4584542000" />
+    <option name="totallyTimeSpent" value="4601245000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1032,8 +922,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1440" height="815" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="25" width="1440" height="814" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5071531" side_tool="true" weight="0.29575402" />
@@ -1053,11 +942,11 @@
       <window_info id="Image Layers" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32424676" />
-      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49499285" weight="0.60522497" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="13" sideWeight="0.49499285" visible="true" weight="0.60465115" />
       <window_info id="npm" order="6" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49284694" weight="0.5834543" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49284694" weight="0.58284885" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2081545" />
-      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49713877" weight="0.2743106" />
+      <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49713877" weight="0.27325583" />
       <window_info anchor="right" id="Theme Preview" order="7" />
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Messages" order="0" />
@@ -1072,7 +961,7 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Maven" order="10" />
-      <window_info anchor="right" id="SvgViewer" order="8" weight="0.3297568" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
       <window_info id="Designer" order="2" />
       <window_info anchor="right" id="Palette" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -1104,7 +993,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="2" sideWeight="0.49713877" weight="0.2743106" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="right" id="SvgViewer" order="8" weight="0.3297568" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1156,7 +1045,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Pelias geocoder: reflect resultsLimit option on autocompletion request." />
     <MESSAGE value="Fix to issue with dev settings." />
     <MESSAGE value="Temporary disable GA tracking until implement cookies consent banner to comply with GDPR." />
     <MESSAGE value="Feature #12818: TripKit React - WCAG AA Compliance" />
@@ -1181,7 +1069,8 @@
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail" />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail (refactor to simplify render logic)." />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- more work on service detail" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- more work on service detail" />
+    <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- display real-time info on service detail view." />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- display real-time info on service detail view." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1250,119 +1139,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/util/Util.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="138" column="18" selection-start-line="138" selection-start-column="18" selection-end-line="138" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/service/ServiceDetail.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/Trip.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="209" column="48" selection-start-line="209" selection-start-column="48" selection-end-line="209" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/Location.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="89" column="8" selection-start-line="89" selection-start-column="8" selection-end-line="89" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="30" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TransportUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="82" column="18" selection-start-line="82" selection-start-column="18" selection-end-line="82" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/DateTimeUtil.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="8" column="27" selection-start-line="8" selection-start-column="27" selection-end-line="8" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/RoutingResults.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="83" column="40" selection-start-line="83" selection-start-column="40" selection-end-line="83" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/Color.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="36" column="11" selection-start-line="36" selection-start-column="11" selection-end-line="36" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/ServiceShape.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="140">
-          <caret line="34" column="24" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUIServiceSteps.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="455">
-          <caret line="62" column="25" selection-start-line="62" selection-start-column="25" selection-end-line="62" selection-end-column="25" />
-          <folding>
-            <element signature="e#1#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/ServiceStopLocation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="22" column="57" selection-start-line="22" selection-start-column="57" selection-end-line="22" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="194" column="59" lean-forward="true" selection-start-line="194" selection-start-column="59" selection-end-line="194" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="127" column="51" selection-start-line="127" selection-start-column="51" selection-end-line="127" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/trip/TKUIServiceSteps.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="534">
@@ -1398,9 +1174,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="64" lean-forward="true" selection-start-line="3" selection-end-line="3" selection-end-column="64" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1422,23 +1195,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="32" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="159" column="4" selection-start-line="159" selection-start-column="4" selection-end-line="159" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1501,9 +1257,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
           <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1518,16 +1271,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="286" column="38" lean-forward="true" selection-start-line="286" selection-start-column="38" selection-end-line="286" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1546,9 +1289,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
           <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1574,32 +1314,26 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsView.css.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#46#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsSummary.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
+        <state relative-caret-position="1050">
           <caret line="79" column="28" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/alerts/TKUIAlertsView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="40" column="18" lean-forward="true" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
+        <state relative-caret-position="450">
+          <caret line="40" column="18" selection-start-line="40" selection-start-column="18" selection-end-line="40" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mxm/TKUIMxMView.css.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="56" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="56" />
+        <state relative-caret-position="135">
+          <caret line="10" column="56" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="56" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
           </folding>
@@ -1608,14 +1342,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
+        <state relative-caret-position="645">
           <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/card/TKUICard.css.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
+        <state relative-caret-position="60">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="13" />
           <folding>
             <element signature="e#0#44#0" expanded="true" />
@@ -1625,14 +1359,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/card/TKUICard.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1146">
-          <caret line="203" column="6" lean-forward="true" selection-start-line="203" selection-start-column="6" selection-end-line="203" selection-end-column="6" />
+        <state relative-caret-position="2760">
+          <caret line="203" column="6" selection-start-line="203" selection-start-column="6" selection-end-line="203" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/service/TKUIServiceRealtimeInfo.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
+        <state relative-caret-position="480">
           <caret line="47" column="26" selection-start-line="47" selection-start-column="26" selection-end-line="47" selection-end-column="26" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
@@ -1649,17 +1383,158 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/jss/TKUITheme.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
+        <state relative-caret-position="375">
           <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="155" column="13" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="155" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapLocations.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="29" column="6" selection-start-line="29" selection-start-column="6" selection-end-line="29" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKState.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/@types/react-leaflet/index.d.ts">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/options/TKUITransportOptionsRow.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="303" column="59" selection-start-line="303" selection-start-column="59" selection-end-line="303" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="110" column="8" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#96#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="20" selection-start-line="4" selection-start-column="20" selection-end-line="4" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#50#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="24" column="33" selection-start-line="24" selection-start-column="33" selection-end-line="24" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="89" column="17" selection-start-line="89" selection-start-column="4" selection-end-line="89" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/example/tripgo/TGApp.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
+          <caret line="81" column="11" lean-forward="true" selection-start-line="81" selection-start-column="11" selection-end-line="81" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/share/TKShareHelper.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="141" column="18" selection-start-line="141" selection-start-column="18" selection-end-line="141" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="117" column="54" lean-forward="true" selection-start-line="117" selection-start-column="54" selection-end-line="117" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip/TransportUtil.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-644">
+          <caret line="60" column="5" lean-forward="true" selection-start-line="60" selection-start-column="5" selection-end-line="60" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/trip-planner/RoutingResultsProvider.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="62" column="7" selection-start-line="62" selection-start-column="7" selection-end-line="62" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="113" column="79" selection-start-line="113" selection-start-column="79" selection-end-line="113" selection-end-column="79" />
+        <state relative-caret-position="263">
+          <caret line="211" column="18" lean-forward="true" selection-start-line="211" selection-start-column="18" selection-end-line="211" selection-end-column="18" />
           <folding>
             <element signature="e#0#59#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/state/TKStateUrl.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="212">
+          <caret line="295" column="9" selection-start-line="295" selection-start-column="9" selection-end-line="295" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/api/WithRoutingResults.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="250" column="9" lean-forward="true" selection-start-line="250" selection-start-column="9" selection-end-line="250" selection-end-column="9" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="123" column="37" lean-forward="true" selection-start-line="123" selection-start-column="37" selection-end-line="123" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
           </folding>
         </state>
       </provider>
