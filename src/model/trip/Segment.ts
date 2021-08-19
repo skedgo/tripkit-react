@@ -8,8 +8,6 @@ import ModeIdentifier from "../region/ModeIdentifier";
 import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
-import ServiceDeparture from "../service/ServiceDeparture";
-import Util from "../../util/Util";
 
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
