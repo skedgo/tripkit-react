@@ -10,6 +10,14 @@ class DateTimeUtil {
     public static readonly DATE_TIME_FORMAT = DateTimeUtil.DATE_FORMAT + ", " + DateTimeUtil.TIME_FORMAT;
     public static readonly HTML5_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
+    public static timeFormat = () => {
+        return "h:mm A";
+    };
+
+    public static dateFormat = () => {
+        return navigator.language === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
+    };
+
     public static defaultTZ = "Etc/UTC";
 
     public static getNow() {

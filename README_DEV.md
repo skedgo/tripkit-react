@@ -3,7 +3,7 @@
 - Sym link to tripkit-react dir on client package node_modules dir:<br>
 ```npm link tripkit-react```
 - Make tripkit-react to use the same instance of react than tripgo-web, 
-to avoid error about invalid use of hooks.O n tripkit-react dir run:<br> 
+to avoid error about invalid use of hooks. On tripkit-react dir run:<br> 
 ```npm link ../<client_package_dir>/node_modules/react``` 
 
 #### Hot loading of lib updates

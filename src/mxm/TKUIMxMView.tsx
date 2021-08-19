@@ -12,10 +12,7 @@ import Trip from "../model/trip/Trip";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import Segment from "../model/trip/Segment";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import TKUITimetableView from "../service/TKUITimetableView";
-import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {TKStateController} from "../index";
+import TKUICard from "../card/TKUICard";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
@@ -24,6 +21,8 @@ import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {cardSpacing} from "../jss/TKUITheme";
 import {TKUIMapViewClass} from "../map/TKUIMapView";
 import MapUtil from "../util/MapUtil";
+import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
+import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -50,40 +49,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const MODAL_UP_TOP = 100;
 
-const MxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
-    return (
-        <RoutingResultsContext.Consumer>
-            {(routingResultsContext: IRoutingResultsContext) =>
-                <ServiceResultsProvider
-                    onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
-                >
-                    <ServiceResultsContext.Consumer>
-                        {(serviceContext: IServiceResultsContext) => (
-                            <Fragment>
-                                <TKUITimetableView
-                                    cardProps={{
-                                        title: "Get on service to " + segment.to.getDisplayString(),
-                                        subtitle: "From " + segment.from.getDisplayString(),
-                                        onRequestClose: onRequestClose,
-                                        styles: {
-                                            main: overrideClass({height: '100%'})
-                                        },
-                                        presentation: CardPresentation.NONE
-                                    }}
-                                    showSearch={false}
-                                />
-                                <TKStateController
-                                    onInit={() => serviceContext.onTimetableForSegment(segment)}
-                                />
-                            </Fragment>
-                        )}
-                    </ServiceResultsContext.Consumer>
-                </ServiceResultsProvider>
-            }
-        </RoutingResultsContext.Consumer>
-    );
-};
-
 interface SegmentMxMCardsProps {
     segment: Segment;
     onClose: () => void;
@@ -96,7 +61,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     const {segment, onClose, t, options, landscape} = props;
     let cards: JSX.Element[] = [];
     cards.push(
-        <MxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
+        <TKUIMxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"}/>
     );
     const timezone = segment.from.timezone;
     cards.push(
@@ -138,6 +103,10 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     const {segment, onClose} = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
+    } else if (segment.booking?.quickBookingsUrl) {
+        return [
+            <TKUIMxMBookingCard segment={segment} onRequestClose={onClose} key={segment.id}/>
+        ];
     } else {
         return ([
             <TKUICard

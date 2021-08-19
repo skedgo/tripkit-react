@@ -25,12 +25,12 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * The selected option.
      * @ctype
      */
-    value?: SelectOption;
+    value?: SelectOption | SelectOption[];
 
     /**
      * Option selection change callback.
      */
-    onChange?: (value: SelectOption) => void;
+    onChange?: ((value: SelectOption) => void) | ((value: SelectOption) => void);
 
     /**
      * States if menu is shown. Specify this property to manage menu visibility on a controlled way.
@@ -53,6 +53,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Forwarded to 'react-select' base component.
      */
     ariaLabel?: string
+
+    isMulti?: boolean;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -88,14 +90,16 @@ export interface SelectOption {
 class TKUISelect extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const injectedStyles = this.props.injectedStyles;
         const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
-        const classes = this.props.classes;
+        const {isMulti, value, classes, injectedStyles} = this.props;
+        if (isMulti && value !== undefined && !Array.isArray(value)) {
+            throw "If multi we always expect an array as value, but comes: " + value;
+        }
         return (
             <div className={classes.main}>
                 <Select
                     options={this.props.options}
-                    value={this.props.value}
+                    value={value}
                     onChange={this.props.onChange as any}
                     components={{
                         IndicatorsContainer: SelectDownArrow,
@@ -117,6 +121,7 @@ class TKUISelect extends React.Component<IProps, {}> {
                     }}
                     isDisabled={this.props.isDisabled}
                     aria-label={this.props.ariaLabel}
+                    isMulti={isMulti}
                 />
             </div>
         );
