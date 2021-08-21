@@ -30,7 +30,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
      * Option selection change callback.
      */
-    onChange?: ((value: SelectOption) => void) | ((value: SelectOption) => void);
+    onChange?: ((value: SelectOption) => void) | ((value: SelectOption[]) => void);
 
     /**
      * States if menu is shown. Specify this property to manage menu visibility on a controlled way.
