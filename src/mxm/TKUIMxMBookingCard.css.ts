@@ -91,6 +91,26 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
             borderColor: black(4, theme.isDark),
             backgroundColor: black(5, theme.isDark)
         }
+    },
+    loadingPanel: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter,
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: '0',
+        marginLeft: '-16px',
+        background: white(4)
+    },
+    iconLoading: {
+        margin: '0 5px',
+        width: '20px',
+        height: '20px',
+        color: black(1, theme.isDark),
+        ...genStyles.alignSelfCenter,
+        ...genStyles.animateSpin,
+        ...genStyles.svgFillCurrColor
     }
 
 });

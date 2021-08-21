@@ -21,9 +21,9 @@ class BookingField {
     @JsonProperty("options", [BookingFieldOption], true)
     public options: BookingFieldOption[] = [];
     @JsonProperty("values", [Any], true)
-    public values: any[] = [];
+    public values?: string[] = undefined;
     @JsonProperty("value", String, true)
-    public value: string = "";
+    public value?: string = undefined;
 
 }
 
@@ -40,4 +40,4 @@ class BookingInfo {
 }
 
 export default BookingInfo;
-export {BookingFieldOption}
+export {BookingField, BookingFieldOption}
