@@ -822,7 +822,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
         } else {
             adjustedCenter = center
         }
-        this.leafletElement && this.leafletElement.setView([adjustedCenter.lat, adjustedCenter.lng], zoom);
+        try {
+            this.leafletElement && this.leafletElement.setView([adjustedCenter.lat, adjustedCenter.lng], zoom);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     public fitBounds(bounds: BBox) {

@@ -53,6 +53,7 @@ export interface IRoutingResultsContext {
     sort: TripSort;
     onSortChange: (sort: TripSort) => void;
     onReqRealtimeFor: (trip?: Trip) => void;
+    refreshSelectedTrip: () => Promise<boolean>;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
 
@@ -83,6 +84,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     sort: TripSort.OVERALL,
     onSortChange: (sort: TripSort) => {},
     onReqRealtimeFor: (trip?: Trip) => {},
+    refreshSelectedTrip: () => Promise.resolve(false),
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => {},
     inputTextFrom: "",
