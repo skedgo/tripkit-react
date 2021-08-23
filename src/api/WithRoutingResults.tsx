@@ -103,6 +103,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onViewportChange = this.onViewportChange.bind(this);
             this.onDirectionsView = this.onDirectionsView.bind(this);
             this.onTripDetailsView = this.onTripDetailsView.bind(this);
+            this.refreshTrip = this.refreshTrip.bind(this);
+            this.refreshSelectedTrip = this.refreshSelectedTrip.bind(this);
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
@@ -312,6 +314,30 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 tripA.segments.length === tripB.segments.length;
         }
 
+        public refreshSelectedTrip(): Promise<boolean> {
+            return this.state.selected ?
+                this.refreshTrip(this.state.selected) : Promise.resolve(false);
+        }
+
+        public refreshTrip(trip: Trip): Promise<boolean> {
+            const updateURL = trip.updateURL;
+            if (!updateURL) {
+                return Promise.resolve(false);
+            }
+            return TripGoApi.updateRT(trip, this.state.query)
+                .then((tripUpdate: Trip | undefined) => {
+                    // updateURL !== selected.updateURL will happen if selected trip group changed selected
+                    // alternative, so shouldn't update.
+                    if (!tripUpdate || updateURL !== trip.updateURL) {
+                        return false;
+                    }
+                    const selectedTGroup = trip as TripGroup;
+                    selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
+                    this.setState({});
+                    return true;
+                });
+        }
+
         public onReqRealtimeFor(selected?: Trip) {
             if (this.realtimeInterval) {
                 clearInterval(this.realtimeInterval);
@@ -323,18 +349,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 return;
             }
             this.realtimeInterval = setInterval(() => {
-                const updateURL = selected.updateURL;
-                TripGoApi.updateRT(selected, this.state.query)
-                    .then((tripUpdate: Trip | undefined) => {
-                        // updateURL !== selected.updateURL will happen if selected trip group changed selected
-                        // alternative, so shouldn't update.
-                        if (!tripUpdate || updateURL !== selected.updateURL) {
-                            return;
-                        }
-                        const selectedTGroup = selected as TripGroup;
-                        selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
-                        this.setState({});
-                    });
+                this.refreshTrip(selected);
             }, 10000);
         }
 
@@ -497,6 +512,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 sort={this.state.sort}
                 onSortChange={this.onSortChange}
                 onReqRealtimeFor={this.onReqRealtimeFor}
+                refreshSelectedTrip={this.refreshSelectedTrip}
                 onAlternativeChange={this.onAlternativeChange}
                 onSegmentServiceChange={this.onSegmentServiceChange}
                 waitingStateLoad={this.state.waitingStateLoad}

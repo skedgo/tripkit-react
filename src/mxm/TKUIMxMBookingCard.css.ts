@@ -3,7 +3,7 @@ import genStyles from "../css/GenStyle.css";
 import {tKUIProfileViewDefaultStyle} from "../options/TKUIProfileView.css";
 
 export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
-    main: {
+    bookingFormMain: {
         height: '100%',
         padding: '16px'
     },
@@ -111,6 +111,42 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignSelfCenter,
         ...genStyles.animateSpin,
         ...genStyles.svgFillCurrColor
+    },
+    status: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    statusInfo: {
+        background: theme.colorPrimary,
+        ...genStyles.flex,
+        ...genStyles.column,
+        padding: '16px',
+        color: white(0)
+    },
+    statusTitle: {
+        ...genStyles.fontL,
+        ...theme.textWeightBold,
+        marginBottom: '10px'
+
+    },
+    statusImg: {
+        background: white(0),
+        width: '100px!important',
+        height: '100px',
+        ...genStyles.alignSelfCenter,
+        margin: '20px'
+    },
+    actions: {
+        ...genStyles.flex,
+        borderTop: '1px solid ' + black(4, theme.isDark),
+        borderBottom: '1px solid ' + black(4, theme.isDark),
+        '&>*': {
+            ...genStyles.grow,
+            padding: '10px!important'
+        },
+        '&>*:not(:last-child)': {
+            borderRight: '1px solid ' + black(4, theme.isDark)
+        }
     }
 
 });

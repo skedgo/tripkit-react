@@ -30,6 +30,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     selectedTrip?: Trip;
     selectedTripSegment?: Segment;
     setSelectedTripSegment: (segment?: Segment) => void;
+    refreshSelectedTrip: () => Promise<boolean>;
     options: TKUserProfile;
     mapAsync: Promise<TKUIMapViewClass>;
 }
@@ -55,6 +56,7 @@ interface SegmentMxMCardsProps {
     t: TranslationFunction;
     options: TKUserProfile;
     landscape: boolean;
+    refreshSelectedTrip: () => Promise<boolean>;
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
@@ -100,12 +102,16 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
 }
 
 function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
-    const {segment, onClose} = props;
+    const {segment, onClose, refreshSelectedTrip} = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
-    } else if (segment.booking?.quickBookingsUrl) {
+    } else if (segment.booking) {
         return [
-            <TKUIMxMBookingCard segment={segment} onRequestClose={onClose} key={segment.id}/>
+            <TKUIMxMBookingCard
+                segment={segment}
+                onRequestClose={onClose}
+                refreshSelectedTrip={refreshSelectedTrip}
+                key={segment.id}/>
         ];
     } else {
         return ([
@@ -147,6 +153,7 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
 const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
+    const {refreshSelectedTrip} = props;
     const trip = props.selectedTrip!;
     const t = props.t;
     const segments = trip.getSegments();
@@ -159,7 +166,8 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
             onClose: () => props.setSelectedTripSegment(undefined),
             t,
             options: props.options,
-            landscape: props.landscape
+            landscape: props.landscape,
+            refreshSelectedTrip
         }));
         return map;
     }, new Map<Segment, JSX.Element[]>());
@@ -227,12 +235,13 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                     {(routingResultsContext: IRoutingResultsContext) =>
                         <TKUIViewportUtil>
                             {(viewportProps: TKUIViewportUtilProps) => {
-                                const {selectedTrip, selectedTripSegment, setSelectedTripSegment, mapAsync} = routingResultsContext;
+                                const {selectedTrip, selectedTripSegment, setSelectedTripSegment, mapAsync, refreshSelectedTrip} = routingResultsContext;
                                 return children!({...inputProps, ...viewportProps,
                                     options: optionsContext.userProfile,
                                     selectedTrip,
                                     selectedTripSegment,
                                     setSelectedTripSegment,
+                                    refreshSelectedTrip,
                                     mapAsync
                                 });
                             }}
