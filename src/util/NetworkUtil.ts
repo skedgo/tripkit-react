@@ -21,7 +21,10 @@ class NetworkUtil {
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json().then(jsonData => {
                     if (jsonData.error) {
-                        throw new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+                        const tkError = new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+                        tkError.title = jsonData.title;
+                        tkError.title = jsonData.subtitle;
+                        throw tkError;
                     } else {
                         return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
                     }
@@ -38,7 +41,10 @@ class NetworkUtil {
         }
         return response.json().then(jsonData => {
             if (jsonData.error) {
-                throw new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
+                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
+                tkError.title = jsonData.title;
+                tkError.title = jsonData.subtitle;
+                throw tkError;
             }
             return jsonData;
         });

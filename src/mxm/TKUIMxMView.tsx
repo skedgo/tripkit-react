@@ -23,6 +23,7 @@ import {TKUIMapViewClass} from "../map/TKUIMapView";
 import MapUtil from "../util/MapUtil";
 import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
 import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
+import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -70,6 +71,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         <TKUICard
             title={segment.getAction()}
             subtitle={t("Direction") + ": " + segment.serviceDirection}
+            renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props}/>}
             renderSubHeader={() => (
                 <TKUIServiceRealtimeInfo
                     wheelchairAccessible={segment.wheelchairAccessible}
@@ -119,6 +121,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
                 onRequestClose={onClose}
+                renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props}/>}
                 styles={{
                     main: overrideClass({ height: '100%'})
                 }}

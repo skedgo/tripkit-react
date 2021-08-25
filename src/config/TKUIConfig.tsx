@@ -66,6 +66,8 @@ import {TKUIQueryLocationBoxProps, TKUIQueryLocationBoxStyle} from "../query/TKU
 import {TKUIMxMViewProps, TKUIMxMViewStyle} from "../mxm/TKUIMxMView";
 import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
 import {TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle} from "../service/TKUIServiceRealtimeInfo";
+import {TKUICardHeaderProps, TKUICardHeaderStyle} from "../card/TKUICardHeader";
+import {TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle} from "../mxm/TKUIMxMCardHeader";
 
 /**
  * SDK configuration
@@ -113,6 +115,7 @@ interface ITKUIConfigOptional {
     TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
     TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;
     TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
+    TKUICardHeader: TKComponentConfig<TKUICardHeaderProps, TKUICardHeaderStyle>;
     TKUITripRow: TKComponentConfig<TKUITripRowProps, TKUITripRowStyle>;
     TKUITripTime: TKComponentConfig<TKUITripTimeProps, TKUITripTimeStyle>;
     TKUITrackTransport: TKComponentConfig<TKUITrackTransportProps, TKUITrackTransportStyle>;
@@ -157,6 +160,7 @@ interface ITKUIConfigOptional {
     TKUIServiceSteps: TKComponentConfig<TKUIServiceStepsProps, TKUIServiceStepsStyle>;
     TKUIMxMView: TKComponentConfig<TKUIMxMViewProps, TKUIMxMViewStyle>;
     TKUIMxMIndex: TKComponentConfig<TKUIMxMIndexProps, TKUIMxMIndexStyle>;
+    TKUIMxMCardHeader: TKComponentConfig<TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle>;
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
 }
 

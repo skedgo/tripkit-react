@@ -8,6 +8,7 @@ import ModeIdentifier from "../region/ModeIdentifier";
 import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
+import {Booking} from "./BookingInfo";
 
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
@@ -59,8 +60,8 @@ class Segment extends SegmentTemplate {
     public realtimeAlternativeVehicle: RealTimeVehicle[] | undefined = undefined;
     @JsonProperty("alertHashCodes", [Number], true)
     private _alertHashCodes: number[] = [];
-    @JsonProperty("booking", Any, true)
-    public booking?: any = undefined;
+    @JsonProperty("booking", Booking, true)
+    public booking?: Booking = undefined;
     @JsonProperty("wheelchairAccessible", Boolean, true)
     public wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)
