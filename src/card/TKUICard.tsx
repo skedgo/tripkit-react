@@ -1,6 +1,5 @@
 import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
-import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
 import classNames from "classnames";
 import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
 import * as CSS from 'csstype';
@@ -18,6 +17,7 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
 import {mainContainerId, modalContainerId} from "../trip-planner/TKUITripPlanner";
 import WaiAriaUtil from "../util/WaiAriaUtil";
+import TKUICardHeader, {TKUICardHeaderClientProps, TKUICardHeaderProps} from "./TKUICardHeader";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -37,6 +37,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * The subtitle for the card, to be displayed on card header.
      */
     subtitle?: string;
+
+    renderHeader?: (props: TKUICardHeaderClientProps) => JSX.Element;
 
     /**
      * Function to render content on header below subtitle and above head-body divider.
@@ -149,15 +151,9 @@ interface IStyle {
     main: CSS.Properties & CSSProperties<IProps>;
     mainForSlideUp: CSS.Properties & CSSProperties<IProps>;
     innerMain: CSSProps<IProps>;
-    header: CSS.Properties & CSSProperties<IProps>;
     subHeader: CSS.Properties & CSSProperties<IProps>;
     body: CSS.Properties & CSSProperties<IProps>;
-    headerTop: CSS.Properties & CSSProperties<IProps>;
-    title: CSS.Properties & CSSProperties<IProps>;
-    subtitle: CSS.Properties & CSSProperties<IProps>;
     divider: CSS.Properties & CSSProperties<IProps>;
-    btnClear: CSS.Properties & CSSProperties<IProps>;
-    iconClear: CSS.Properties & CSSProperties<IProps>;
     handle: CSS.Properties & CSSProperties<IProps>;
     handleLine: CSS.Properties & CSSProperties<IProps>;
 }
@@ -235,6 +231,7 @@ class TKUICard extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const {title, subtitle, onRequestClose, closeAriaLabel} = this.props;
         const classes = this.props.classes;
         const presentation = this.props.presentation;
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
@@ -252,6 +249,7 @@ class TKUICard extends React.Component<IProps, IState> {
             cardAriaLabel += " Card";
         }
         const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose;
+        const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props}/>);
         const showHandle = hasHandle(this.props);
         const body =
             <div className={classNames(classes.main, genClassNames.root,
@@ -271,24 +269,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         <div className={classes.handleLine}/>
                     </div>}
                     {showHeader &&
-                    <div className={classes.header}>
-                        <div className={classes.headerTop}>
-                            <div className={classes.title}>
-                                {this.props.title}
-                            </div>
-                            {this.props.onRequestClose &&
-                            <button onClick={this.close} className={classNames(classes.btnClear)}
-                                    aria-label={this.props.closeAriaLabel || "Close"}>
-                                <IconRemove aria-hidden={true}
-                                            className={classes.iconClear}
-                                            focusable="false"/>
-                            </button>}
-                        </div>
-                        {this.props.subtitle &&
-                        <div className={classes.subtitle}>
-                            {this.props.subtitle}
-                        </div>}
-                    </div>}
+                        renderHeader({title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle})}
                 </div>}
                 {this.props.renderSubHeader &&
                 <div className={classes.subHeader}>

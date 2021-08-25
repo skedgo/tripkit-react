@@ -6,6 +6,7 @@ import TKUITimetableView from "../service/TKUITimetableView";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {TKStateController} from "../index";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 
 const TKUIMxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
     return (
@@ -22,6 +23,7 @@ const TKUIMxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => v
                                         title: "Get on service to " + segment.to.getDisplayString(),
                                         subtitle: "From " + segment.from.getDisplayString(),
                                         onRequestClose: onRequestClose,
+                                        renderHeader: props => <TKUIMxMCardHeader segment={segment} {...props}/>,
                                         styles: {
                                             main: overrideClass({height: '100%'})
                                         },

@@ -19,6 +19,7 @@ import {Subtract} from "utility-types";
 import DeviceUtil from "../util/DeviceUtil";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
+import TKUICardHeader from "../card/TKUICardHeader";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
@@ -88,17 +89,21 @@ class TKUITransportSwitchesView extends React.Component<IProps, {}> {
             <TKUICard presentation={CardPresentation.NONE}
                       onRequestClose={this.props.onRequestClose}
                       mainFocusElemId={firstModeId}
+                      renderHeader={props =>
+                          <TKUICardHeader
+                              {...props}
+                              styles={{
+                                  main: overrideClass({
+                                      padding: '0'
+                                  }),
+                                  btnClear: overrideClass({
+                                      position: 'absolute',
+                                      right: '12px',
+                                      top: '10px'
+                                  })
+                              }}
+                          />}
                       styles={{
-                          btnClear: (defaultStyle) => ({
-                              ...defaultStyle,
-                              position: 'absolute',
-                              right: '12px',
-                              top: '10px'
-                          }),
-                          header: (defaultStyle) => ({
-                              ...defaultStyle,
-                              padding: '0'
-                          }),
                           ...this.props.inline && {
                               main: {
                                   margin: '0 -5px'

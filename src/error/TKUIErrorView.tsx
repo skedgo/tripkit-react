@@ -33,13 +33,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUIErrorView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const message = this.props.message || "Something went wrong.";
-        const actions = this.props.actions;
+        const {error, message, actions, classes} = this.props;
+        const messageToDisplay = message || error.message || "Something went wrong.";
         return (
             <div className={classes.main} role="alert">
                 <ImgConstruction className={classes.imgConstruction}/>
-                <div className={classes.message}>{message}</div>
+                <div className={classes.message}>{messageToDisplay}</div>
                 {actions && actions.length > 0 &&
                 <div className={classes.errorActions}>
                     {actions}

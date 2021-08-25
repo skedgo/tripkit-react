@@ -39,5 +39,49 @@ class BookingInfo {
     public input: BookingField[] = [];
 }
 
+@JsonObject
+class BookingAction {
+    @JsonProperty("type", String, true)
+    public type: string = "";   // values: CANCEL
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("internalURL", String, true)
+    public internalURL: string = "";
+    @JsonProperty("isDestructive", Boolean, true)
+    public isDestructive: boolean = false;
+}
+
+@JsonObject
+class BookingConfirmationStatus {
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("subtitle", String, true)
+    public subtitle: string = "";
+    @JsonProperty("imageURL", String, true)
+    public imageURL: string = "";
+    @JsonProperty("value", String, true)
+    public value: string = ""; // e.g. "PROCESSING"
+}
+
+@JsonObject
+class BookingConfirmation {
+    @JsonProperty("input", [BookingField], true)
+    public input: BookingField[] = [];
+    @JsonProperty("actions", [BookingAction], true)
+    public actions: BookingAction[] = [];
+    @JsonProperty("status", BookingConfirmationStatus, true)
+    public status?: BookingConfirmationStatus = undefined;
+}
+
+@JsonObject
+class Booking {
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("confirmation", BookingConfirmation, true)
+    public confirmation?: BookingConfirmation = undefined;
+    @JsonProperty("quickBookingsUrl", String, true)
+    public quickBookingsUrl: string = "";
+}
+
 export default BookingInfo;
-export {BookingField, BookingFieldOption}
+export {Booking, BookingField, BookingFieldOption}

@@ -2,6 +2,8 @@ class TKError extends Error {
 
     public code?: string;
     public usererror?: boolean;
+    public title?: string;
+    public subtitle?: string;
 
     constructor(message: string, code?: string, usererror?: boolean, stack?: string) {
         super(message);

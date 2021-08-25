@@ -1,10 +1,8 @@
 import {black, important, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {tKUIProfileViewDefaultStyle} from "../options/TKUIProfileView.css";
 
 export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     bookingFormMain: {
-        height: '100%',
         padding: '16px'
     },
     startTime: {
@@ -23,7 +21,10 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         // ...theme.divider
     },
     icon: {
-
+        marginRight: '16px',
+        '& path': {
+            fill: theme.colorPrimary
+        }
     },
     groupRight: {
         ...genStyles.flex,
@@ -44,8 +45,14 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
             ...genStyles.grow,
             border: '1px solid ' + black(4, theme.isDark),
             borderRadius: '12px',
-            minHeight: '100px'
+            minHeight: '100px',
+            padding: '10px 18px'
         }
+    },
+    value: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        marginTop: '10px'
     },
     required: {
         ...genStyles.borderRadius(4),
@@ -59,10 +66,11 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         ...genStyles.alignCenter,
         ...genStyles.alignSelfStretch,
-        margin: '2px 14px 28px 0'
+        marginRight: '16px',
+        padding: '2px 4px 40px'
     },
     circle: {
-        border: '2px solid ' + theme.colorPrimary,
+        border: '3px solid ' + theme.colorPrimary,
         ...genStyles.borderRadius(50, '%'),
         width: '13px',
         height: '13px'
@@ -100,8 +108,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         width: '100%',
         position: 'absolute',
         top: '0',
-        marginLeft: '-16px',
-        background: white(4)
+        background: white(1)
     },
     iconLoading: {
         margin: '0 5px',
@@ -148,5 +155,4 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
             borderRight: '1px solid ' + black(4, theme.isDark)
         }
     }
-
 });
