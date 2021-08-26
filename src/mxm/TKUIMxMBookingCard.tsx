@@ -18,6 +18,7 @@ import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
 import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
+import classNames from 'classnames';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -63,7 +64,7 @@ const BookingInput: React.SFC<BookingInputProps> =
             multiValue: overrideClass(injectedStyles.selectMultiValue)
         };
         return (
-            <Fragment>
+            <div className={classes.form}>
                 {inputFields.map((inputField, i) => {
                     let valueElem: React.ReactNode = undefined;
                     const changeHandler = valueUpdate => {
@@ -139,7 +140,7 @@ const BookingInput: React.SFC<BookingInputProps> =
                         </div>
                     );
                 })}
-            </Fragment>)
+            </div>)
     };
 
 const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refreshSelectedTrip, classes, injectedStyles}) => {
@@ -210,47 +211,45 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                     {DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
                         .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat())}
                 </div>
-                <div className={classes.form}>
-                    <div className={classes.group}>
-                        <div className={classes.fromToTrack}>
-                            <div className={classes.circle}/>
-                            <div className={classes.line}/>
-                            <div className={classes.circle}/>
+                <div className={classNames(classes.group, classes.divider)}>
+                    <div className={classes.fromToTrack}>
+                        <div className={classes.circle}/>
+                        <div className={classes.line}/>
+                        <div className={classes.circle}/>
+                    </div>
+                    <div className={classes.groupRight}>
+                        <div className={classes.label} style={{marginTop: 0}}>
+                            Pickup
                         </div>
-                        <div className={classes.groupRight}>
-                            <div className={classes.label} style={{marginTop: 0}}>
-                                Pickup
-                            </div>
-                            <div className={classes.value} style={{marginTop: 0, marginBottom: 10}}>
-                                {segment.from.getDisplayString()}
-                            </div>
-                            <div className={classes.label}>
-                                Drop off
-                            </div>
-                            <div className={classes.value}>
-                                {segment.to.getDisplayString()}
-                            </div>
+                        <div className={classes.value} style={{marginTop: 0, marginBottom: 10}}>
+                            {segment.from.getDisplayString()}
+                        </div>
+                        <div className={classes.label}>
+                            Drop off
+                        </div>
+                        <div className={classes.value}>
+                            {segment.to.getDisplayString()}
                         </div>
                     </div>
-                    <BookingInput
-                        inputFields={requestBookingForm.input}
-                        onChange={(inputUpdate) =>
-                            setRequestBookingForm(Util.iAssign(requestBookingForm, {input: inputUpdate}))}
-                        classes={classes}
-                        injectedStyles={injectedStyles}
-                    />
-                    <TKUIButton
-                        text={"Book"}
-                        onClick={() => {
-                            setWaiting(true);
-                            TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
-                                .then(refreshSelectedTrip)
-                                .catch((e) => setError(e))
-                                .finally(() => setWaiting(false))
-                        }}
-                        disabled={!canBook(requestBookingForm)}
-                    />
                 </div>
+                <BookingInput
+                    inputFields={requestBookingForm.input}
+                    onChange={(inputUpdate) =>
+                        setRequestBookingForm(Util.iAssign(requestBookingForm, {input: inputUpdate}))}
+                    classes={classes}
+                    injectedStyles={injectedStyles}
+                />
+                <TKUIButton
+                    text={"Book"}
+                    onClick={() => {
+                        setWaiting(true);
+                        TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
+                            .then(refreshSelectedTrip)
+                            .catch((e) => setError(e))
+                            .finally(() => setWaiting(false))
+                    }}
+                    disabled={!canBook(requestBookingForm)}
+                />
             </div>
         );
     }
