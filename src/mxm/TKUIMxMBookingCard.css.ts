@@ -11,7 +11,10 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     },
     form: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        '&>*': {
+            ...theme.divider
+        }
     },
     group: {
         ...genStyles.flex,
@@ -43,10 +46,12 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '10px',
         '& textarea': {
             ...genStyles.grow,
-            border: '1px solid ' + black(4, theme.isDark),
+            fontFamily: theme.fontFamily,
+            ...theme.textSizeCaption,
+            border: 'none',
             borderRadius: '12px',
-            minHeight: '100px',
-            padding: '10px 18px'
+            minHeight: '50px',
+            padding: '10px 0'
         }
     },
     value: {
@@ -81,14 +86,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     },
     optionSelect: {
         minWidth: '200px',
-        padding: '0 10px',
-        border: '1px solid ' + black(4, theme.isDark),
         borderRadius: '12px',
-        '& *': {
-            ...theme.textSizeCaption,
-            ...theme.textWeightSemibold,
-            ...important(theme.textColorDefault)
-        },
         '& path': {
             fill: black(0, theme.isDark)
         },
@@ -98,6 +96,14 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         '&:active': {
             borderColor: black(4, theme.isDark),
             backgroundColor: black(5, theme.isDark)
+        }
+    },
+    selectMenu: {
+        marginTop: '2px',
+        '& *': {
+            ...theme.textSizeCaption,
+            ...theme.textWeightSemibold,
+            ...important(theme.textColorDefault)
         }
     },
     loadingPanel: {
@@ -154,5 +160,10 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         '&>*:not(:last-child)': {
             borderRight: '1px solid ' + black(4, theme.isDark)
         }
+    },
+    link: {
+        color: theme.colorPrimary,
+        ...theme.textSizeBody,
+        marginTop: '5px'
     }
 });

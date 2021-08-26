@@ -27,6 +27,8 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
                 minHeight: 0
             }
         },
+        placeholder: {},
+        valueContainer: {},
         menu: {
             marginTop: '1px',
             background: white(0, theme.isDark),

@@ -55,6 +55,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     ariaLabel?: string
 
     isMulti?: boolean;
+
+    placeholder?: string;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -62,6 +64,8 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
 interface IStyle {
     main: CSSProps<IProps>;
     container: CSSProps<IProps>;
+    placeholder: CSSProps<IProps>;
+    valueContainer: CSSProps<IProps>;
     menu: CSSProps<IProps>;
     control: CSSProps<IProps>;
     option: CSSProps<IProps>;
@@ -117,11 +121,14 @@ class TKUISelect extends React.Component<IProps, {}> {
                             ...(state.isFocused && injectedStyles.optionFocused),
                             ...(state.isSelected && injectedStyles.optionSelected)
                         }),
-                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue})
+                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue}),
+                        placeholder: (styles: any) => ({...styles, ...injectedStyles.placeholder}),
+                        valueContainer: (styles: any) => ({...styles, ...injectedStyles.valueContainer})
                     }}
                     isDisabled={this.props.isDisabled}
                     aria-label={this.props.ariaLabel}
                     isMulti={isMulti}
+                    placeholder={this.props.placeholder}
                 />
             </div>
         );
