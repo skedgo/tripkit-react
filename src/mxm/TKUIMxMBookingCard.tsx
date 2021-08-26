@@ -12,8 +12,10 @@ import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import NetworkUtil from "../util/NetworkUtil";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {ClassNameMap, Styles} from "react-jss";
-import {ReactComponent as IconClock} from '../images/ic-clock.svg';
-import {TKError} from "..";
+import {ReactComponent as IconUser} from '../images/ic-user.svg';
+import {ReactComponent as IconFlag} from '../images/ic-flag.svg';
+import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
+import {genStylesJSS, TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 
@@ -35,9 +37,38 @@ interface BookingInputProps {
     injectedStyles: Styles<keyof IStyle, IProps>;
 }
 
+const inputIcon = (inputId: string) => {
+    switch (inputId) {
+        case "mobilityOptions":
+            return <IconUser/>;
+        case "purpose":
+            return <IconFlag/>;
+        case "notes":
+            return <IconEdit/>;
+        default:
+            return null;
+    }
+};
+
 const BookingInput: React.SFC<BookingInputProps> =
     ({inputFields, onChange, classes, injectedStyles}) => {
         const readonly = !onChange;
+        const selectOverrideStyle = {
+            main: overrideClass(injectedStyles.optionSelect),
+            menu: overrideClass(injectedStyles.selectMenu),
+            control: overrideClass({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start'
+            }),
+            valueContainer: overrideClass({
+                ...genStylesJSS.alignSelfStretch,
+                padding: '2px 0'
+            }),
+            placeholder: overrideClass({
+                ...injectedStyles.link
+            })
+        };
         return (
             <Fragment>
                 {inputFields.map((inputField, i) => {
@@ -62,11 +93,18 @@ const BookingInput: React.SFC<BookingInputProps> =
                                     value: option.id,
                                     label: option.title
                                 }))}
-                                styles={() => ({
-                                    main: overrideClass(injectedStyles.optionSelect),
-                                    menu: overrideClass({marginTop: '2px'})
-                                })}
+                                styles={{
+                                    ...selectOverrideStyle,
+                                    singleValue: overrideClass({
+                                        marginLeft: '0'
+                                    })
+                                }}
                                 onChange={update => changeHandler(update.value)}
+                                placeholder={"Select"}
+                                components={{
+                                    IndicatorsContainer: () => !inputField.value ? null :
+                                        <div className={classes.link}>Change</div>
+                                }}
                             />;
                     } else if (inputField.type === "MULTIPLE_CHOICE") {
                         valueElem = readonly ?
@@ -78,12 +116,14 @@ const BookingInput: React.SFC<BookingInputProps> =
                                     label: option.title
                                 }))}
                                 isMulti
-                                styles={() => ({
-                                    main: overrideClass(injectedStyles.optionSelect),
-                                    menu: overrideClass({marginTop: '2px'})
-                                })}
+                                styles={selectOverrideStyle}
                                 onChange={(update: SelectOption[]) => // update is null if no option is selected.
                                     changeHandler((update || []).map(option => option.value))}
+                                placeholder={"Select"}
+                                components={{
+                                    IndicatorsContainer: () => inputField.values?.length === 0 ? null :
+                                        <div className={classes.link}>Add</div>
+                                }}
                             />;
                     } else if (inputField.type === "LONG_TEXT") {
                         valueElem = readonly ?
@@ -97,14 +137,13 @@ const BookingInput: React.SFC<BookingInputProps> =
                     return (
                         <div className={classes.group} key={i}>
                             <div className={classes.icon}>
-                                <IconClock/>
+                                {inputIcon(inputField.id)}
                             </div>
                             <div className={classes.groupRight}>
+                                {inputField.type !== "LONG_TEXT" &&
                                 <div className={classes.label}>
-                                    {inputField.title}
-                                    {!readonly && inputField.required &&
-                                    <div className={classes.required}>required</div>}
-                                </div>
+                                    {inputField.title + (!readonly && inputField.required ? " (required)" : "")}
+                                </div>}
                                 <div className={readonly ? classes.value : classes.input}>
                                     {valueElem}
                                 </div>
