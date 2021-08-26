@@ -1,8 +1,10 @@
 import React, {useState, useEffect, useRef, useContext} from 'react';
 import {Auth0Provider, useAuth0} from "@auth0/auth0-react";
-import {TripGoApi, LocalStorageItem, RoutingResultsContext} from "../index";
+import TripGoApi from "../api/TripGoApi";
 import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
 import TKUserAccount from "./TKUserAccount";
+import LocalStorageItem from "../data/LocalStorageItem";
+import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 
 export enum SignInStatus {
     signedIn, signedOut, loading
@@ -11,6 +13,7 @@ export enum SignInStatus {
 export interface IAccountContext {
     status: SignInStatus;
     userAccount?: TKUserAccount;
+    returnToAfterLogin?: string;
     login: () => void;
     logout: () => void;
 }
@@ -97,7 +100,11 @@ const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React
             onWaitingStateLoad(true);
         }
         // prompt 'login' to always show login dialog to user if logged out.
-        (props.withPopup ? loginWithPopup({prompt: 'login'}, {timeoutInSeconds: 600}) : loginWithRedirect({prompt: 'login'}))
+        (props.withPopup ? loginWithPopup({prompt: 'login'}, {timeoutInSeconds: 600}) :
+            loginWithRedirect({
+                prompt: 'login',
+                appState: { returnTo: location.href }
+            }))
             .catch((error) => console.log(error))
             .finally(() => setTimeout(() => {
                 // Stop spinning after (2 secs of) the redirect, in case the user goes back (cancel login).
@@ -131,10 +138,17 @@ const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React
 interface IProps {
     auth0Domain: string;
     auth0ClientId: string;
-    children: React.ReactNode;
+    children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
 }
 
 const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
+    const [returnToAfterLogin, setReturnToAfterLogin] = useState<string | undefined>(undefined);
+    const onRedirectCallback = (appState) => {
+        const returnTo = appState?.returnTo;
+        if (returnTo) {
+            setReturnToAfterLogin(returnTo);
+        }
+    };
     return (
         <Auth0Provider
             domain={props.auth0Domain}
@@ -142,11 +156,12 @@ const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
             redirectUri={window.location.origin}
             // audience="https://tripgo.au.auth0.com/api/v2/"
             // scope="openid profile"
+            onRedirectCallback={onRedirectCallback}
         >
             <Auth0ToTKAccount>
                 {(context: IAccountContext) =>
                     <TKAccountContext.Provider
-                        value={context}>
+                        value={{...context, returnToAfterLogin}}>
                         {props.children}
                     </TKAccountContext.Provider>}
             </Auth0ToTKAccount>

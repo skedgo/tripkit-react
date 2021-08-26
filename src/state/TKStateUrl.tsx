@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext} from "react";
 import TKStateConsumer from "../config/TKStateConsumer";
 import {TKState} from "../config/TKState";
 import TKShareHelper from "../share/TKShareHelper";
@@ -12,15 +12,17 @@ import MultiGeocoder from "../geocode/MultiGeocoder";
 import LatLng from "../model/LatLng";
 import * as queryString from "query-string";
 import Util from "../util/Util";
-import {TKError} from "..";
+import {TKError} from "../error/TKError";
 import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Trip from "../model/trip/Trip";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import {TKAccountContext} from "../account/TKAccountProvider";
 
 interface IProps {
     tKState: TKState;
+    returnToAfterLogin?: string;
 }
 
 enum URLFields {
@@ -234,9 +236,17 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 window.history.replaceState(null, '', url)
             }
         });
+        if (!prevProps.returnToAfterLogin && this.props.returnToAfterLogin) {
+            history.replaceState({}, "", this.props.returnToAfterLogin);
+            this.loadStateFromUrl();
+        }
     }
 
     public componentDidMount(): void {
+        this.loadStateFromUrl();
+    }
+
+    private loadStateFromUrl() {
         const sharedTripJsonUrl = TKShareHelper.getSharedTripJsonUrl();
         const tKState = this.props.tKState;
         if (sharedTripJsonUrl) {
@@ -315,11 +325,13 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
 }
 
-export default (props: {}) =>
-    <TKStateConsumer>
+export default () => {
+    const accountContext = useContext(TKAccountContext);
+    return <TKStateConsumer>
         {(state: TKState) =>
-            <TKStateUrl {...props}
-                        tKState={state}
+            <TKStateUrl tKState={state}
+                        returnToAfterLogin={accountContext.returnToAfterLogin}
             />
         }
-    </TKStateConsumer>
+    </TKStateConsumer>;
+}
