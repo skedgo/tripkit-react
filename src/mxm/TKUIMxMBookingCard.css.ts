@@ -1,5 +1,6 @@
 import {black, important, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
+import {genStylesJSS} from "../index";
 
 export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     bookingFormMain: {
@@ -104,6 +105,33 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
             ...theme.textSizeCaption,
             ...theme.textWeightSemibold,
             ...important(theme.textColorDefault)
+        }
+    },
+    selectControl: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+    },
+    selectValueContainer: {
+        ...genStylesJSS.alignSelfStretch,
+        padding: '2px 0'
+    },
+    selectSingleValue: {
+        marginLeft: '0',
+        fontFamily: theme.fontFamily
+    },
+    selectMultiValue: {
+        borderRadius: '4px',
+        border: '1px solid ' + black(4),
+        background: 'none',
+        '&>*:last-child:hover': {
+            background: 'none'
+        },
+        '&>*:last-child svg path': {
+            fill: black(1, theme.isDark)
+        },
+        '&>*:last-child:hover svg path, &>*:last-child:active svg path': {
+            fill: black(0, theme.isDark)
         }
     },
     loadingPanel: {

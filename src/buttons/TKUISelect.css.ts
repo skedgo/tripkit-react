@@ -54,5 +54,8 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
         },
         singleValue: {
             ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
+        },
+        multiValue: {
+            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
         }
     });
