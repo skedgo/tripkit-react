@@ -72,6 +72,7 @@ interface IStyle {
     optionFocused: CSSProps<IProps>;
     optionSelected: CSSProps<IProps>;
     singleValue: CSSProps<IProps>;
+    multiValue: CSSProps<IProps>;
 }
 
 export type TKUISelectProps = IProps;
@@ -122,6 +123,7 @@ class TKUISelect extends React.Component<IProps, {}> {
                             ...(state.isSelected && injectedStyles.optionSelected)
                         }),
                         singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue}),
+                        multiValue: (styles: any) => ({...styles, ...injectedStyles.multiValue}),
                         placeholder: (styles: any) => ({...styles, ...injectedStyles.placeholder}),
                         valueContainer: (styles: any) => ({...styles, ...injectedStyles.valueContainer})
                     }}

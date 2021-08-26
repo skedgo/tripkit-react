@@ -15,7 +15,7 @@ import {ClassNameMap, Styles} from "react-jss";
 import {ReactComponent as IconUser} from '../images/ic-user.svg';
 import {ReactComponent as IconFlag} from '../images/ic-flag.svg';
 import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
-import {genStylesJSS, TKError} from "..";
+import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 
@@ -56,18 +56,11 @@ const BookingInput: React.SFC<BookingInputProps> =
         const selectOverrideStyle = {
             main: overrideClass(injectedStyles.optionSelect),
             menu: overrideClass(injectedStyles.selectMenu),
-            control: overrideClass({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start'
-            }),
-            valueContainer: overrideClass({
-                ...genStylesJSS.alignSelfStretch,
-                padding: '2px 0'
-            }),
-            placeholder: overrideClass({
-                ...injectedStyles.link
-            })
+            control: overrideClass(injectedStyles.selectControl),
+            valueContainer: overrideClass(injectedStyles.selectValueContainer),
+            placeholder: overrideClass(injectedStyles.link),
+            singleValue: overrideClass(injectedStyles.selectSingleValue),
+            multiValue: overrideClass(injectedStyles.selectMultiValue)
         };
         return (
             <Fragment>
@@ -93,12 +86,7 @@ const BookingInput: React.SFC<BookingInputProps> =
                                     value: option.id,
                                     label: option.title
                                 }))}
-                                styles={{
-                                    ...selectOverrideStyle,
-                                    singleValue: overrideClass({
-                                        marginLeft: '0'
-                                    })
-                                }}
+                                styles={selectOverrideStyle}
                                 onChange={update => changeHandler(update.value)}
                                 placeholder={"Select"}
                                 components={{
