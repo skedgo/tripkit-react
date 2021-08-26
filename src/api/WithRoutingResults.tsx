@@ -558,12 +558,16 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 routingResults.setSatappQuery(tripUrl);
                 const trips = routingResults.groups;
                 const sortedTrips = this.sortTrips(trips, this.state.sort);
+                const selected = sortedTrips.length > 0 ? sortedTrips[0] : undefined;
                 this.setState({
                     query: query,
                     trips: sortedTrips,
-                    selected: sortedTrips.length > 0 ? sortedTrips[0] : undefined,
+                    selected: selected,
                     directionsView: true
                 }, () => this.refreshRegion());
+                if (selected) {
+                    this.onReqRealtimeFor(selected);
+                }
                 return trips;
             }).catch((e) => Promise.reject(new TKError("Invalid trips JSON", "INVALID_TRIPS_JSON", false, e.toString()))
             )
