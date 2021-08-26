@@ -4,6 +4,8 @@ import {genStylesJSS} from "../index";
 
 export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     bookingFormMain: {
+        ...genStyles.flex,
+        ...genStyles.column,
         padding: '16px'
     },
     startTime: {
@@ -155,7 +157,8 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     },
     status: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        ...theme.divider
     },
     statusInfo: {
         background: theme.colorPrimary,
@@ -193,5 +196,8 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         color: theme.colorPrimary,
         ...theme.textSizeBody,
         marginTop: '5px'
+    },
+    divider: {
+        ...theme.divider
     }
 });
