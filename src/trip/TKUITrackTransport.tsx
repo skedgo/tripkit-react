@@ -23,6 +23,7 @@ interface IStyle {
     icon: CSSProps<IProps>;
     alertIcon: CSSProps<IProps>;
     info: CSSProps<IProps>;
+    title: CSSProps<IProps>;
     subtitle: CSSProps<IProps>;
 }
 
@@ -93,7 +94,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                     <div className={classes.info}
                          aria-hidden={true}
                     >
-                        {infoTitle ? <div>{infoTitle}</div> : null}
+                        {infoTitle ? <div className={classes.title}>{infoTitle}</div> : null}
                         <div className={classes.subtitle}>{infoSubtitle}</div>
                     </div> : null }
             </div>

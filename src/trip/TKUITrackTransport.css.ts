@@ -48,6 +48,12 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
             ...genStyles.alignStart,
             padding: (props: TKUITrackTransportProps) => props.brief === false ? '0 5px' : undefined
         },
+        title: {
+            maxWidth: '200px',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis'
+        },
         subtitle: {
             color: black(1, theme.isDark)
         }
