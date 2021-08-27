@@ -45,6 +45,7 @@ import Environment from "../env/Environment";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import HasCard, {HasCardKeys} from "../card/HasCard";
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
+import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -166,6 +167,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default Timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
+
+    setSelectedTripSegment: (segment?: Segment) => void;
 }
 
 export interface IStyle {
@@ -464,6 +467,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                 this.setState({
                                     expanded: expand ? trip : undefined
                                 })}
+                            onSegmentSelected={this.props.setSelectedTripSegment}
                         />
                     )}
                     {error}
@@ -556,6 +560,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                 onQueryChange: routingContext.onQueryChange,
                                 onQueryUpdate: routingContext.onQueryUpdate,
                                 timezone: routingContext.region ? routingContext.region.timezone : undefined,
+                                setSelectedTripSegment: routingContext.setSelectedTripSegment,
                                 ...viewportProps
                             };
                             return props.children!(consumerProps);
