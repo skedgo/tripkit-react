@@ -43,6 +43,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         let infoTitle: string | undefined;
         let infoSubtitle: string | undefined;
         const brief = this.props.brief;
+        const modeInfo = segment.modeInfo!;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
             if (!brief) {
@@ -63,17 +64,17 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         } else {
             if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
                 infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
-            } else {
-                if (!brief) {
-                    infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
-                }
+            } else if (!brief) {
+                infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
             }
+            // At this point we don't have title.
             if (segment.realTime) {
                 infoTitle = infoSubtitle;
                 infoSubtitle = t("Live.traffic");
+            } else if (modeInfo.description && !brief) {    // Put modeInfo description as title if not brief.
+                infoTitle = modeInfo.description
             }
         }
-        const modeInfo = segment.modeInfo!;
         const classes = this.props.classes;
             const ariaLabel = modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + (infoSubtitle ? " " + infoSubtitle : "") +
                 (!segment.isLast(Visibility.IN_SUMMARY) ? ", then " : "");

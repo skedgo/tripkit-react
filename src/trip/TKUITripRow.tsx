@@ -22,6 +22,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import DeviceUtil from "../util/DeviceUtil";
+import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -106,6 +107,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype
      */
     onExpand?: (expand: boolean) => void;
+
+    onSegmentSelected?: (segment: Segment) => void;
 }
 
 interface IStyle {
@@ -213,6 +216,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
         const classes = this.props.classes;
         const t = this.props.t;
         const collapsed = !this.props.expanded;
+        const bookingSegment = trip.segments.find(segment => segment.booking);
         return (
             <div className={classes.main}
                  onClick={this.props.onClick}
@@ -309,6 +313,17 @@ class TKUITripRow extends React.Component<IProps, {}> {
                             aria-label={this.props.expanded ? "Less alternatives" : "More alternatives"}
                         />
                     }
+                    {bookingSegment &&
+                    <TKUIButton
+                        text={t("Book")}
+                        type={TKUIButtonType.PRIMARY_LINK}
+                        onClick={(e: any) => {
+                            this.props.onSegmentSelected?.(bookingSegment);
+                            e.stopPropagation();
+                        }}
+                        role={"button"}
+                        aria-label={t("Book")}
+                    />}
                 </div>
             </div>
         )
