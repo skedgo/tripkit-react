@@ -125,6 +125,9 @@ class TransportUtil {
         if (modeId.startsWith("ps_shu")) {
             return "shuttle";
         }
+        if (modeId.startsWith("ps_drt")) {
+            return "car-ride-share";
+        }
         if (modeId.startsWith(ModeIdentifier.SCHOOLBUS_ID)) {
             return "school-bus";
         }
