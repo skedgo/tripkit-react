@@ -64,6 +64,14 @@ class BookingConfirmationStatus {
 }
 
 @JsonObject
+class BookingProvider {
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("phone", String, true)
+    public phone: string = "";
+}
+
+@JsonObject
 class BookingConfirmation {
     @JsonProperty("input", [BookingField], true)
     public input: BookingField[] = [];
@@ -71,6 +79,8 @@ class BookingConfirmation {
     public actions: BookingAction[] = [];
     @JsonProperty("status", BookingConfirmationStatus, true)
     public status?: BookingConfirmationStatus = undefined;
+    @JsonProperty("provider", BookingProvider, true)
+    public provider?: BookingProvider = undefined;
 }
 
 @JsonObject
@@ -84,4 +94,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export {Booking, BookingField, BookingFieldOption}
+export {Booking, BookingField, BookingFieldOption, BookingConfirmation}

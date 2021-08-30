@@ -68,6 +68,8 @@ import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
 import {TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle} from "../service/TKUIServiceRealtimeInfo";
 import {TKUICardHeaderProps, TKUICardHeaderStyle} from "../card/TKUICardHeader";
 import {TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle} from "../mxm/TKUIMxMCardHeader";
+import {TKUIMyBookingsProps, TKUIMyBookingsStyle} from "../booking/TKUIMyBookings";
+import {TKUIMyBookingProps, TKUIMyBookingStyle} from "../booking/TKUIMyBooking";
 
 /**
  * SDK configuration
@@ -162,6 +164,8 @@ interface ITKUIConfigOptional {
     TKUIMxMIndex: TKComponentConfig<TKUIMxMIndexProps, TKUIMxMIndexStyle>;
     TKUIMxMCardHeader: TKComponentConfig<TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle>;
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
+    TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
+    TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

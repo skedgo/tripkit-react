@@ -261,7 +261,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
-        this.props.setMap(this);
     }
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
@@ -483,6 +482,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             if (init) {
                                 // Init map viewport, so we don't get an exception when getting map zoom or center.
                                 this.leafletElement!.setView([MapUtil.worldCoords.lat, MapUtil.worldCoords.lng], 2);
+                                this.props.setMap(this);
                             }
                         }
                     }}

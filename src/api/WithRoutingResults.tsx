@@ -63,21 +63,21 @@ export enum TripSort {
     CARBON = "Greener"
 }
 
-let resolveMapP!: (map: TKUIMapViewClass) => void;
-const mapPromise: Promise<TKUIMapViewClass> = new Promise<TKUIMapViewClass>((resolve, reject) => {
-    resolveMapP = resolve;
-});
-async function setViewport(center: LatLng, zoom: number) {
-    const map = await mapPromise;
-    map.setViewport(center, zoom);
-}
-
-// function withRoutingResults<P extends RResultsConsumerProps>(Consumer: React.ComponentType<P>) {
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
     return class WithRoutingResults extends React.Component<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps, IWithRoutingResultsState> {
 
         public realtimeInterval: any;
+
+        public resolveMapP!: (map: TKUIMapViewClass) => void;
+        public mapPromise: Promise<TKUIMapViewClass> = new Promise<TKUIMapViewClass>((resolve, reject) => {
+            this.resolveMapP = resolve;
+        });
+        public setViewport = async (center: LatLng, zoom: number) => {
+            const map = await this.mapPromise;
+            map.setViewport(center, zoom);
+        };
+
 
         constructor(props: Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps) {
             super(props);
@@ -522,11 +522,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     this.setState({
                         mapRef: map
                     });
-                    resolveMapP(map);
+                    this.resolveMapP(map);
                 }}
                 map={this.state.mapRef}
-                mapAsync={mapPromise}
-                setViewport={setViewport}
+                mapAsync={this.mapPromise}
+                setViewport={this.setViewport}
             />;
         }
 
@@ -534,7 +534,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public componentDidMount(): void {
             const initViewport = this.props.initViewport;
             if (initViewport && initViewport.center && initViewport.zoom) {
-                setViewport(initViewport.center!, initViewport.zoom!);
+                this.setViewport(initViewport.center!, initViewport.zoom!);
             }
             this.refreshRegion();
         }

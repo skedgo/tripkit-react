@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext} from "react";
 import Util from "../util/Util";
 import Region from "../model/region/Region";
 import RegionsData from "../data/RegionsData";
@@ -23,6 +23,8 @@ import {cardSpacing} from "../jss/TKUITheme";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import TKUISettingSection from "./TKUISettingSection";
 import TKUISettingLink from "./TKUISettingLink";
+import {IAccountContext, SignInStatus, TKAccountContext} from "../account/TKAccountProvider";
+import TKUIMyBookings from "../booking/TKUIMyBookings";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -32,7 +34,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     customSettings?: () => React.ReactNode;
 }
 
-interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps {
+interface IConsumedProps extends IOptionsContext, TKUIViewportUtilProps, IAccountContext {
     region?: Region;
 }
 
@@ -59,6 +61,7 @@ interface IState {
     schoolModeId?: ModeIdentifier;
     pickSchoolError: boolean;
     showPersonalData: boolean;
+    showMyBookings: boolean;
     showTransports: boolean;
     showPriorities: boolean;
     showDevSettings: boolean;
@@ -74,6 +77,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             update: this.props.userProfile,
             pickSchoolError: false,
             showPersonalData: false,
+            showMyBookings: true,
             showTransports: false,
             showPriorities: false,
             showDevSettings: false
@@ -139,6 +143,10 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                     draggable: false
                 }}
             />;
+        const myBookings = this.state.showMyBookings &&
+            <TKUIMyBookings
+                onRequestClose={() => this.setState({showMyBookings: false})}
+            />;
         const prioritiesSettings = this.state.showPriorities
             && <TKUIUserPriorities
                 onRequestClose={() => this.setState({showPriorities: false},
@@ -169,6 +177,13 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             text={t("My.Personal.Data")}
                             onClick={() => this.setState({showPersonalData: true})}/>
                     </TKUISettingSection>
+                    {this.props.status === SignInStatus.signedIn &&
+                    <TKUISettingSection>
+                        <TKUISettingLink
+                            text={t("My.Bookings")}
+                            onClick={() => this.setState({showMyBookings: true})}
+                        />
+                    </TKUISettingSection>}
                     <TKUISettingSection title={t("My.Transport")}>
                         <TKUISettingLink
                             text={t("Transport")}
@@ -210,6 +225,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                 {personalDataSettings}
                 {transportSettings}
                 {prioritiesSettings}
+                {myBookings}
             </TKUICard>
         );
     }
@@ -223,6 +239,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 }
 
 const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+    const accountContext = useContext(TKAccountContext);
     return (
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
@@ -230,7 +247,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     {(optionsContext: IOptionsContext) =>
                         <RoutingResultsContext.Consumer>
                             {(routingContext: IRoutingResultsContext) =>
-                                props.children!({...optionsContext, region: routingContext.region, ...viewportProps})
+                                props.children!({...optionsContext, region: routingContext.region, ...viewportProps, ...accountContext})
                             }
                         </RoutingResultsContext.Consumer>
                     }
