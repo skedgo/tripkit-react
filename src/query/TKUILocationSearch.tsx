@@ -76,6 +76,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     focusLatLng?: LatLng;
 
     onLocationBoxRef?: (ref: TKUILocationBoxRef) => void;
+
+    menuContainer?: HTMLElement;
 }
 
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -157,6 +159,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 ariaLabel={"Search location"}
                                 inputAriaLabel={ariaLabel}
                                 onRef={this.props.onLocationBoxRef}
+                                menuContainer={this.props.menuContainer}
                             />
                             {viewportProps.landscape &&
                             <div className={classes.divider}/>}

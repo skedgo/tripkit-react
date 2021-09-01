@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import Autocomplete from 'react-autocomplete';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg'
@@ -49,6 +50,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Until implement forwarding ref on connect HOC.
      */
     onRef?: (ref: TKUILocationBoxRef) => void;
+    menuContainer?: HTMLElement;
 }
 
 interface IStyle {
@@ -375,7 +377,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                        {...props}
                        style={this.props.inputStyle}
                        className={classes.input}
-                       // autoFocus={true}
+                    // autoFocus={true}
                 />
                 {   this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
@@ -431,22 +433,30 @@ class TKUILocationBox extends Component<IProps, IState> {
                 />
             </Tooltip>
         } else {
-            return <div
-                style={
-                    { ...style,
-                        position: "absolute",
-                        top: "initial",
-                        left: "0",
-                        width: "100%",
-                        ...this.props.menuStyle
+            const externalContainer = this.props.menuContainer;
+            const menu =
+                <div
+                    style={
+                        { ...style,
+                            top: "initial",
+                            left: "0",
+                            width: "100%",
+                            ...this.props.menuStyle,
+                            ...externalContainer && {
+                                position: "relative",
+                                left: undefined,
+                                top: undefined,
+                                width: undefined
+                            }
+                        }
                     }
-                }
-                children={items}
-                className={classes.menu}
-                role="listbox"
-                id={this.getPopupId()}
-                aria-label="Choose location result"
-            />
+                    children={items}
+                    className={classes.menu}
+                    role="listbox"
+                    id={this.getPopupId()}
+                    aria-label="Choose location result"
+                />;
+            return externalContainer ? <div>{ReactDOM.createPortal(menu, externalContainer)}</div> : menu;
         }
     }
 
@@ -507,60 +517,62 @@ class TKUILocationBox extends Component<IProps, IState> {
         const classes = this.props.classes;
         const popupId = this.getPopupId();
         return (
-                <Autocomplete
-                    getItemValue={(item) => item.label}
-                    items={this.state.items}
-                    renderInput={this.renderInput}
-                    renderMenu={this.renderMenu}
-                    renderItem={this.renderItem}
-                    value={this.state.inputText}
-                    onChange={(e) => {
-                        this.onChange(e.target.value);
-                    }}
-                    onSelect={this.onSelect}
-                    onMenuVisibilityChange={(isOpen) => {
-                        if (DeviceUtil.isTablet && !isOpen) {
-                            setTimeout(() => {
-                                this.setState({focus: isOpen})
-                            }, 40);
+            <Autocomplete
+                getItemValue={(item) => item.label}
+                items={this.state.items}
+                renderInput={this.renderInput}
+                renderMenu={this.renderMenu}
+                renderItem={this.renderItem}
+                value={this.state.inputText}
+                onChange={(e) => {
+                    this.onChange(e.target.value);
+                }}
+                onSelect={this.onSelect}
+                onMenuVisibilityChange={(isOpen) => {
+                    // If menuContainer was provided, then delay hiding menu so a click on an external element happens
+                    // before, since menu hiding may cause click target to move, missing the click.
+                    if ((DeviceUtil.isTablet || this.props.menuContainer) && !isOpen) {
+                        setTimeout(() => {
+                            this.setState({focus: isOpen})
+                        }, 40);
+                    } else {
+                        this.setState({focus: isOpen});
+                    }
+                }}
+                open={this.isDDOpen()}
+                wrapperProps={{
+                    "aria-label": this.props.ariaLabel
+                }}
+                inputProps={{
+                    placeholder: this.props.placeholder,
+                    onKeyDown: this.onKeyDown,
+                    onFocus: () => { // Remove current location on focus.
+                        if (this.state.locationValue && this.state.locationValue.isCurrLoc()) {
+                            this.setValue(null, false, true,
+                                () => this.refreshResults(this.state.inputText))
                         } else {
-                            this.setState({focus: isOpen});
+                            this.refreshResults(this.state.inputText);
                         }
-                    }}
-                    open={this.isDDOpen()}
-                    wrapperProps={{
-                        "aria-label": this.props.ariaLabel
-                    }}
-                    inputProps={{
-                        placeholder: this.props.placeholder,
-                        onKeyDown: this.onKeyDown,
-                        onFocus: () => { // Remove current location on focus.
-                            if (this.state.locationValue && this.state.locationValue.isCurrLoc()) {
-                                this.setValue(null, false, true,
-                                    () => this.refreshResults(this.state.inputText))
-                            } else {
-                                this.refreshResults(this.state.inputText);
-                            }
-                            this.props.onFocus && this.props.onFocus();
-                        },
-                        role: "combobox",
-                        "aria-expanded": this.isDDOpen(),
-                        "aria-activedescendant": this.getHighlightedItem() ? "item-" + this.state.items.indexOf(this.getHighlightedItem()) : undefined,
-                        "aria-label": this.props.inputAriaLabel,
-                        id: this.props.inputId,
-                        "aria-owns": this.isDDOpen() ? popupId : undefined,
-                        "aria-haspopup": this.isDDOpen(),
-                        tabIndex: 0,
-                        "aria-live": "polite"
-                    }}
-                    wrapperStyle = {{
-                        position: "relative",
-                        ...this.props.style
-                    }}
-                    autoHighlight={false}
-                    ref={this.autocompleteRef}
-                    selectOnBlur={true}
-                />
+                        this.props.onFocus && this.props.onFocus();
+                    },
+                    role: "combobox",
+                    "aria-expanded": this.isDDOpen(),
+                    "aria-activedescendant": this.getHighlightedItem() ? "item-" + this.state.items.indexOf(this.getHighlightedItem()) : undefined,
+                    "aria-label": this.props.inputAriaLabel,
+                    id: this.props.inputId,
+                    "aria-owns": this.isDDOpen() ? popupId : undefined,
+                    "aria-haspopup": this.isDDOpen(),
+                    tabIndex: 0,
+                    "aria-live": "polite"
+                }}
+                wrapperStyle = {{
+                    position: "relative",
+                    ...this.props.style
+                }}
+                autoHighlight={false}
+                ref={this.autocompleteRef}
+                selectOnBlur={true}
+            />
         );
     }
 }

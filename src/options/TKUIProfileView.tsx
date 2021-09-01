@@ -77,7 +77,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             update: this.props.userProfile,
             pickSchoolError: false,
             showPersonalData: false,
-            showMyBookings: true,
+            showMyBookings: false,
             showTransports: false,
             showPriorities: false,
             showDevSettings: false
@@ -145,7 +145,13 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             />;
         const myBookings = this.state.showMyBookings &&
             <TKUIMyBookings
-                onRequestClose={() => this.setState({showMyBookings: false})}
+                onRequestClose={closeAll => {
+                    this.setState({showMyBookings: false});
+                    if (closeAll) {
+                        this.props.onRequestClose && this.props.onRequestClose();
+                    }
+                }}
+                slideUpOptions={this.props.slideUpOptions}
             />;
         const prioritiesSettings = this.state.showPriorities
             && <TKUIUserPriorities

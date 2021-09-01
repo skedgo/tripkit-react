@@ -6,9 +6,13 @@ import {Subtract} from 'utility-types';
 import {tKUIMyBookingDefaultStyle} from "./TKUIMyBooking.css";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIRow from "../options/TKUIRow";
+import TKUISettingLink from "../options/TKUISettingLink";
+import TransportUtil from "../trip/TransportUtil";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
+    onShowTrip: (tripUrl: string) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -25,18 +29,31 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
-    const {classes} = props;
-    const {confirmation} = props.booking;
+    const {onShowTrip, classes, theme} = props;
+    const {confirmation, mode, trips, time, timeZone} = props.booking;
     if (!confirmation) {
         return null;
     }
+    const tripUrl = trips?.[0];
     return (
         <div className={classes.main}>
+            {time &&
+            <div className={classes.startTime}>
+                {DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
+                    .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat())}
+            </div>}
             <TKUIRow
                 title={confirmation.status!.title}
                 subtitle={confirmation.status?.subtitle}
             />
-            {confirmation.provider?.title}
+            <div>
+                {confirmation.provider?.title}
+            </div>
+            {tripUrl &&
+            <TKUISettingLink
+                text={<img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)}/>}
+                onClick={() => onShowTrip(tripUrl)}
+            />}
         </div>
     );
 };

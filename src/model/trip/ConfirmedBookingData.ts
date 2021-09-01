@@ -1,5 +1,14 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
 import {BookingConfirmation} from "./BookingInfo";
+import Location from "../Location";
+
+@JsonObject
+class TripInfo {
+    @JsonProperty("origin", Location, true)
+    public origin?: Location = undefined;
+    @JsonProperty("destination", Location, true)
+    public destination?: Location = undefined;
+}
 
 @JsonObject
 class ConfirmedBookingData {
@@ -7,6 +16,8 @@ class ConfirmedBookingData {
     public confirmation?: BookingConfirmation = undefined;
     @JsonProperty("trips", [String], true)
     public trips?: string[] = undefined;
+    @JsonProperty("tripsInfo", [TripInfo], true)
+    public tripsInfo?: TripInfo[] = undefined;
     @JsonProperty("mode", String, true)
     public mode?: string = undefined;
     /**

@@ -62,13 +62,6 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         marginTop: '10px'
     },
-    required: {
-        ...genStyles.borderRadius(4),
-        background: theme.colorError,
-        padding: '0 6px',
-        marginLeft: '10px',
-        color: white(0)
-    },
     fromToTrack: {
         ...genStyles.flex,
         ...genStyles.column,
