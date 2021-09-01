@@ -52,6 +52,9 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
             left: '0',
             padding: cardSpacing(false) + 'px ' + cardSpacing(false) + 'px 0 ' + cardSpacing(false) + 'px',
             zIndex: '1001' // below card modal container
+        },
+        '&>*:not(:first-child)': {
+            marginTop: '16px'
         }
     },
     mapMain: {
@@ -102,5 +105,8 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         position: 'absolute',
         top: '16px',
         right: '55px'
+    },
+    searchMenuContainer: {
+        marginTop: '1px'
     }
 });

@@ -51,6 +51,8 @@ import {cardSpacing} from "../jss/TKUITheme";
 import Environment from "../env/Environment";
 import {TKUILocationBoxRef} from "../location_box/TKUILocationBox";
 import TKUIMxMView from "../mxm/TKUIMxMView";
+import TKUIHomeCard from "../sidebar/TKUIHomeCard";
+import TKUIMyBookings from "../booking/TKUIMyBookings";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -79,6 +81,7 @@ interface IState {
     mapView: boolean;
     showSidebar: boolean;
     showTransportSettings: boolean;
+    showMyBookings?: boolean;
     showFavourites: boolean;
     showLocationDetails: boolean;
     tripUpdateStatus?: TKRequestStatus;
@@ -92,6 +95,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private ref: any;
     private appMainRef: any;
     private locSearchBoxRef?: TKUILocationBoxRef = undefined;
+    private searchMenuPanelRef? = React.createRef<HTMLDivElement>();
 
     constructor(props: IProps) {
         super(props);
@@ -202,19 +206,24 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         const props = this.props;
+        const classes = this.props.classes;
         const t = this.props.t;
         const searchBar =
             !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
-            <TKUILocationSearch
-                onDirectionsClicked={() => {
-                    this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
-                    this.props.onDirectionsView(true);
-                }}
-                onShowSideBarClicked={() => {
-                    this.setState({showSidebar: true});
-                }}
-                onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
-            />;
+            <div>
+                <TKUILocationSearch
+                    onDirectionsClicked={() => {
+                        this.props.onQueryChange(Util.iAssign(this.props.query, {from: Location.createCurrLoc()}));
+                        this.props.onDirectionsView(true);
+                    }}
+                    onShowSideBarClicked={() => {
+                        this.setState({showSidebar: true});
+                    }}
+                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
+                    menuContainer={this.searchMenuPanelRef!.current || undefined}
+                />
+                <div className={classes.searchMenuContainer} ref={this.searchMenuPanelRef}/>
+            </div>;
         const sideBar =
             <TKUISidebar
                 open={this.state.showSidebar && !this.props.directionsView}
@@ -246,6 +255,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalUp: {top: cardSpacing(this.props.landscape), unit: 'px'},
                     modalDown: {top: this.getContainerHeight() - 145, unit: 'px'}
                 }}
+            />;
+        const myBookings = this.state.showMyBookings &&
+            <TKUIMyBookings
+                onRequestClose={() => this.setState({showMyBookings: false})}
             />;
         const queryInput = this.props.directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
@@ -336,6 +349,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 showTransportsBtn={this.props.portrait}
             /> : null;
 
+        const homeCard = searchBar && !locationDetailView && !favouritesView &&
+            <TKUIHomeCard onMyBookings={() => this.setState({showMyBookings: true})}/>;
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
             if (DeviceUtil.isTouch()) {
@@ -392,7 +407,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     </TKUICardCarousel>;
             }
         }
-        const classes = this.props.classes;
         const mapPadding: TKUIMapPadding = {};
         if(this.props.landscape) {
             mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView
@@ -444,6 +458,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
                             <div className={classes.queryPanel} role="none">
                                 {searchBar}
+                                {homeCard}
                                 {queryInput}
                             </div>
                             <div id="map-main" className={classes.mapMain}>
@@ -474,6 +489,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             {timetableView}
                             {serviceDetailView}
                             {transportSettings}
+                            {myBookings}
                             {favouritesView}
                             {waitingRequest}
                             {this.props.renderTopRight &&

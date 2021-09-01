@@ -208,8 +208,8 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
         content = (
             <div className={classes.bookingFormMain}>
                 <div className={classes.startTime}>
-                    {DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-                        .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat())}
+                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone),
+                        DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                 </div>
                 <div className={classNames(classes.group, classes.divider)}>
                     <div className={classes.fromToTrack}>

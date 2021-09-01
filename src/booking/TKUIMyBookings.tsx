@@ -12,12 +12,22 @@ import {ConfirmedBookingsResult} from "../model/trip/ConfirmedBookingData";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIMyBooking from "./TKUIMyBooking";
 import TKLoading from "../card/TKLoading";
+import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import Trip from "../model/trip/Trip";
+import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
+import {TKError} from "../error/TKError";
+import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    onRequestClose: () => void;
+    onRequestClose: (closeAll?: boolean) => void;
+    slideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {}
+interface IConsumedProps extends TKUIViewportUtilProps {
+    onTripJsonUrl: (tripJsonUrl: string) => Promise<Trip[] | undefined>;
+    onWaitingStateLoad: (waiting: boolean, error?: Error) => void;
+    onTripDetailsView: (tripDetailsView: boolean) => void;
+}
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 
@@ -41,15 +51,29 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
                 setBookings(result.bookings)
             })
     }, []);
-    const {t, onRequestClose, landscape, classes} = props;
+    const {onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, slideUpOptions, t, landscape, classes} = props;
     return (
         <TKUICard
             title={t("My.Bookings")}
             onRequestClose={onRequestClose}
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
-
+            slideUpOptions={slideUpOptions}
         >
-            {bookings ? bookings.map((booking, i) => <TKUIMyBooking booking={booking} key={i}/>) :
+            {bookings ? bookings.map((booking, i) =>
+                    <TKUIMyBooking booking={booking}
+                                   onShowTrip={url => {
+                                       onWaitingStateLoad(true);
+                                       onTripJsonUrl(url)
+                                           .then(() => {
+                                               onWaitingStateLoad(false);
+                                               onTripDetailsView(true);
+                                               onRequestClose(true);
+                                           })
+                                           .catch((error: Error) => onWaitingStateLoad(false,
+                                               new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+                                   }}
+                                   key={i}
+                    />) :
                 <div className={classes.loadingPanel}>
                     <TKLoading/>
                 </div>}
@@ -58,13 +82,18 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
 };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
-        <TKUIViewportUtil>
+    ({inputProps, children}) => {
+        const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView} = useContext(RoutingResultsContext);
+        return <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
                 children!({
                     ...inputProps,
-                    ...viewportProps
+                    ...viewportProps,
+                    onTripJsonUrl,
+                    onWaitingStateLoad,
+                    onTripDetailsView
                 })}
         </TKUIViewportUtil>;
+    };
 
 export default connect((config: TKUIConfig) => config.TKUIMyBookings, config, Mapper);

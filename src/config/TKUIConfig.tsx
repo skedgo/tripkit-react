@@ -70,6 +70,8 @@ import {TKUICardHeaderProps, TKUICardHeaderStyle} from "../card/TKUICardHeader";
 import {TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle} from "../mxm/TKUIMxMCardHeader";
 import {TKUIMyBookingsProps, TKUIMyBookingsStyle} from "../booking/TKUIMyBookings";
 import {TKUIMyBookingProps, TKUIMyBookingStyle} from "../booking/TKUIMyBooking";
+import {TKUIHomeCardProps, TKUIHomeCardStyle} from "../sidebar/TKUIHomeCard";
+import {TKUIActiveTripProps, TKUIActiveTripStyle} from "../sidebar/TKUIActiveTrip";
 
 /**
  * SDK configuration
@@ -166,6 +168,8 @@ interface ITKUIConfigOptional {
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
+    TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
+    TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

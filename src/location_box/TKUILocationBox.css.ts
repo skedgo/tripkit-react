@@ -11,6 +11,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             ...genStyles.flex,
             ...genStyles.alignCenter,
             ...genStyles.grow,
+            fontFamily: theme.fontFamily
         },
         input: {
             ...resetStyles.input, /* Style resets */
@@ -55,7 +56,8 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
         menu: {
             ...theme.cardBackground,
             padding: '5px 0',
-            zIndex: '10'
+            zIndex: '10',
+            fontFamily: theme.fontFamily
         },
         sideMenu: {
             fontFamily: theme.fontFamily,
