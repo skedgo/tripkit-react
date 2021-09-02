@@ -438,6 +438,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 <div
                     style={
                         { ...style,
+                            position: "absolute",
                             top: "initial",
                             left: "0",
                             width: "100%",

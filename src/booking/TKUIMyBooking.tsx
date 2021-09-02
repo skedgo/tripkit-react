@@ -6,9 +6,9 @@ import {Subtract} from 'utility-types';
 import {tKUIMyBookingDefaultStyle} from "./TKUIMyBooking.css";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIRow from "../options/TKUIRow";
-import TKUISettingLink from "../options/TKUISettingLink";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
+import TKUIFromTo from "./TKUIFromTo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
@@ -30,30 +30,31 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
     const {onShowTrip, classes, theme} = props;
-    const {confirmation, mode, trips, time, timeZone} = props.booking;
+    const {confirmation, mode, trips, time, timeZone, tripsInfo} = props.booking;
     if (!confirmation) {
         return null;
     }
     const tripUrl = trips?.[0];
     return (
         <div className={classes.main}>
-            {time &&
-            <div className={classes.startTime}>
-                {DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
-                    .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat())}
-            </div>}
+            <div className={classes.timeMode}>
+                <div>
+                    {time ? DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
+                        .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat()) : ""}
+                </div>
+                <div className={classes.mode}>
+                    {confirmation.provider?.title}
+                    <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)}/>
+                </div>
+            </div>
             <TKUIRow
                 title={confirmation.status!.title}
                 subtitle={confirmation.status?.subtitle}
             />
-            <div>
-                {confirmation.provider?.title}
-            </div>
-            {tripUrl &&
-            <TKUISettingLink
-                text={<img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)}/>}
-                onClick={() => onShowTrip(tripUrl)}
-            />}
+            <TKUIFromTo from={tripsInfo![0].origin!}
+                        to={tripsInfo![0].destination!}
+                        onClick={tripUrl ? () => onShowTrip(tripUrl) : undefined}
+            />
         </div>
     );
 };

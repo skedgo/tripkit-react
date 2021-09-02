@@ -6,7 +6,7 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         border: '1px solid ' + black(4, theme.isDark),
-        margin: '10px',
+        margin: '16px',
         '&>*': {
             padding: '16px!important'
         },
@@ -14,7 +14,16 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
             ...theme.divider
         }
     },
-    startTime: {
-
+    timeMode: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.spaceBetween
+    },
+    mode: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        '& img': {
+            marginLeft: '10px'
+        }
     }
 });
