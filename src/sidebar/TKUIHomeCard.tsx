@@ -40,15 +40,25 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIHomeCard"
 };
 
+let refreshActiveTripInterval: any;
+
 const TKUIHomeCard: React.SFC<IProps> = (props: IProps) => {
     const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, onMyBookings, t, landscape, status, classes} = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     useEffect(() => {
-        if (status === SignInStatus.signedIn) {
+        const refreshActiveTrip = () =>
             TripGoApi.apiCallT("booking/v2/active", NetworkUtil.MethodType.GET, ConfirmedBookingData)
                 .then((result: ConfirmedBookingData) => {
                     setActiveTrip(Util.stringify(result) === Util.stringify(new ConfirmedBookingData()) ? null : result)
-                })
+                });
+        if (status === SignInStatus.signedIn) {
+            refreshActiveTrip();
+            refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 10000);
+        }
+        return () => {
+            if (refreshActiveTripInterval) {
+                clearInterval(refreshActiveTripInterval);
+            }
         }
     }, [status]);
     if (status !== SignInStatus.signedIn) {

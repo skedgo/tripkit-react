@@ -23,8 +23,12 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.alignCenter,
         paddingBottom: '20px',
+        marginBottom: '20px'
+    },
+    fromTo: {
+        paddingBottom: '20px',
         marginBottom: '20px',
-        // ...theme.divider
+        ...theme.divider
     },
     icon: {
         marginRight: '16px',
@@ -61,24 +65,6 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         marginTop: '10px'
-    },
-    fromToTrack: {
-        ...genStyles.flex,
-        ...genStyles.column,
-        ...genStyles.alignCenter,
-        ...genStyles.alignSelfStretch,
-        marginRight: '16px',
-        padding: '2px 4px 40px'
-    },
-    circle: {
-        border: '3px solid ' + theme.colorPrimary,
-        ...genStyles.borderRadius(50, '%'),
-        width: '13px',
-        height: '13px'
-    },
-    line: {
-        ...genStyles.grow,
-        borderLeft: '1px solid ' + theme.colorPrimary
     },
     optionSelect: {
         minWidth: '200px',

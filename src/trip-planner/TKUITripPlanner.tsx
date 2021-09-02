@@ -85,6 +85,8 @@ interface IState {
     showFavourites: boolean;
     showLocationDetails: boolean;
     tripUpdateStatus?: TKRequestStatus;
+    // Need to put this elem into the state so when instantiated it triggers a re-render on consumer TKUILocationSearch.
+    searchMenuPanelElem?: HTMLDivElement;
 }
 
 export const modalContainerId = "mv-modal-panel";
@@ -95,7 +97,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     private ref: any;
     private appMainRef: any;
     private locSearchBoxRef?: TKUILocationBoxRef = undefined;
-    private searchMenuPanelRef? = React.createRef<HTMLDivElement>();
 
     constructor(props: IProps) {
         super(props);
@@ -220,9 +221,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         this.setState({showSidebar: true});
                     }}
                     onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
-                    menuContainer={this.searchMenuPanelRef!.current || undefined}
+                    menuContainer={this.state.searchMenuPanelElem}
                 />
-                <div className={classes.searchMenuContainer} ref={this.searchMenuPanelRef}/>
+                <div className={classes.searchMenuContainer}
+                     ref={(ref) => ref && ref !== this.state.searchMenuPanelElem && this.setState({searchMenuPanelElem: ref})}/>
             </div>;
         const sideBar =
             <TKUISidebar

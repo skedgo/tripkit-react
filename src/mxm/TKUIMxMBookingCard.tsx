@@ -18,7 +18,7 @@ import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
 import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
-import classNames from 'classnames';
+import TKUIFromTo from "../booking/TKUIFromTo";
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -211,26 +211,11 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                     {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone),
                         DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                 </div>
-                <div className={classNames(classes.group, classes.divider)}>
-                    <div className={classes.fromToTrack}>
-                        <div className={classes.circle}/>
-                        <div className={classes.line}/>
-                        <div className={classes.circle}/>
-                    </div>
-                    <div className={classes.groupRight}>
-                        <div className={classes.label} style={{marginTop: 0}}>
-                            Pickup
-                        </div>
-                        <div className={classes.value} style={{marginTop: 0, marginBottom: 10}}>
-                            {segment.from.getDisplayString()}
-                        </div>
-                        <div className={classes.label}>
-                            Drop off
-                        </div>
-                        <div className={classes.value}>
-                            {segment.to.getDisplayString()}
-                        </div>
-                    </div>
+                <div className={classes.fromTo}>
+                    <TKUIFromTo
+                        from={segment.from}
+                        to={segment.to}
+                    />
                 </div>
                 <BookingInput
                     inputFields={requestBookingForm.input}

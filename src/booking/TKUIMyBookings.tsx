@@ -45,7 +45,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
     const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);
     useEffect(() => {
-        TripGoApi.apiCall("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
+        TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
             .then((result: ConfirmedBookingsResult) => {
                 console.log(result);
                 setBookings(result.bookings)
