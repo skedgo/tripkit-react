@@ -49,10 +49,7 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
     useEffect(() => {
         const refreshBookings = () =>
             TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
-                .then((result: ConfirmedBookingsResult) => {
-                    console.log(result);
-                    setBookings(result.bookings)
-                });
+                .then((result: ConfirmedBookingsResult) => setBookings(result.bookings));
         refreshBookings();
         refreshActiveTripInterval = setInterval(() => refreshBookings(), 30000);
         return () => {
@@ -69,24 +66,30 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={slideUpOptions}
         >
-            {bookings ? bookings.map((booking, i) =>
-                    <TKUIMyBooking booking={booking}
-                                   onShowTrip={url => {
-                                       onWaitingStateLoad(true);
-                                       onTripJsonUrl(url)
-                                           .then(() => {
-                                               onWaitingStateLoad(false);
-                                               onTripDetailsView(true);
-                                               onRequestClose(true);
-                                           })
-                                           .catch((error: Error) => onWaitingStateLoad(false,
-                                               new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
-                                   }}
-                                   key={i}
-                    />) :
+            {!bookings ?
                 <div className={classes.loadingPanel}>
                     <TKLoading/>
-                </div>}
+                </div> :
+                bookings.length === 0 ?
+                    <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
+                        {t("No.bookings.yet_n")}
+                    </div> :
+                    bookings.map((booking, i) =>
+                        <TKUIMyBooking booking={booking}
+                                       onShowTrip={url => {
+                                           onWaitingStateLoad(true);
+                                           onTripJsonUrl(url)
+                                               .then(() => {
+                                                   onWaitingStateLoad(false);
+                                                   onTripDetailsView(true);
+                                                   onRequestClose(true);
+                                               })
+                                               .catch((error: Error) => onWaitingStateLoad(false,
+                                                   new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+                                       }}
+                                       key={i}
+                        />)
+            }
         </TKUICard>
     );
 };

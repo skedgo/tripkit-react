@@ -553,7 +553,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 const latLng = event.target.getLatLng();
                                 this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
-                            onpopupclose={() => console.log("close")}
                             keyboard={false}
                     >
                         {this.getLocationPopup(this.props.from!)}

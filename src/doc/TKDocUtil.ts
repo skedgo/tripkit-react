@@ -45,7 +45,6 @@ export function resolveRelativeLinks(mdText: string): string {
 export function typeReferencesToLinks(typeText: string): string {
     const regexTypeRefs = /([\w\d]+)/gm;
     return typeText.replace(regexTypeRefs, (match) => {
-        console.log(match);
         const url = getDocUrl(match);
         return url ? "[" + match + "](" + url + ")" : match;
     });
@@ -56,8 +55,6 @@ export function jSDocLinksToMD(typeText: string): string {
     return typeText.replace(regexJSDocLinks, (match) => {
         const singleMatch = /(?:\[([^\[]*)\])?\{@link\s([^\}#]*)(?:#([^\}]*))?\}/;
         let text = singleMatch.exec(match);
-        console.log(text);
-        console.log(match);
         const label = text![1];
         const component = text![2];
         const property = text![3];
