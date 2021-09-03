@@ -6,21 +6,9 @@
     <bookmark url="file://$PROJECT_DIR$/../ansible-playbooks/aws-s3-website-bucket.yaml" description="enabled: false" line="51" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="- My Bookings view.&#10;- Home Card and Active Trip.">
-      <change afterPath="$PROJECT_DIR$/src/booking/TKUIFromTo.css.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/booking/TKUIFromTo.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/images/ic-sunclock.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/images/ic-ticket.svg" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBooking.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBooking.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBooking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBooking.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
     </list>
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
@@ -58,37 +46,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TKUITripPlanner.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
+      <file leaf-file-name="TKUIHomeCard.tsx" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="82" column="33" selection-start-line="82" selection-start-column="33" selection-end-line="82" selection-end-column="33" />
+            <state relative-caret-position="272">
+              <caret line="46" column="101" lean-forward="true" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="101" />
               <folding>
-                <element signature="e#0#31#0" expanded="true" />
+                <element signature="e#0#71#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TKUILocationSearch.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/query/TKUILocationSearch.tsx">
+      <file leaf-file-name="TKUIMyBookings.tsx" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="79" column="20" selection-start-line="79" selection-start-column="20" selection-end-line="79" selection-end-column="20" />
+            <state relative-caret-position="74">
+              <caret line="57" column="22" lean-forward="true" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
               <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUILocationBox.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="435" column="62" selection-start-line="435" selection-start-column="49" selection-end-line="435" selection-end-column="62" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
+                <element signature="e#0#71#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -134,9 +110,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isDDOpen</find>
       <find>focus:</find>
-      <find>_prod</find>
       <find>IconTicket</find>
       <find>icon</find>
       <find>export default connect(</find>
@@ -161,9 +135,11 @@
       <find>TKUILoca</find>
       <find>this.searchMenuPanelRef!.current</find>
       <find>searchMenuPanelRef</find>
-      <find>menuContainer</find>
       <find>searchMe</find>
+      <find>_prod</find>
       <find>searchMenuPanelElem</find>
+      <find>isShowTimetable(</find>
+      <find>menuContainer</find>
     </findStrings>
     <replaceStrings>
       <replace>this.getPosition()</replace>
@@ -226,8 +202,9 @@
       <dir>$PROJECT_DIR$/public</dir>
       <dir>$PROJECT_DIR$/src/model</dir>
       <dir>$PROJECT_DIR$/node_modules</dir>
-      <dir>$PROJECT_DIR$</dir>
+      <dir>$PROJECT_DIR$/public</dir>
       <dir>$PROJECT_DIR$/src</dir>
+      <dir>$PROJECT_DIR$</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -283,10 +260,8 @@
         <option value="$PROJECT_DIR$/src/model/trip/ConfirmedBookingData.ts" />
         <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" />
         <option value="$PROJECT_DIR$/src/location_box/TKUILocationBox.css.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/images/ic-sunclock.svg" />
         <option value="$PROJECT_DIR$/src/images/ic-ticket.svg" />
-        <option value="$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx" />
         <option value="$PROJECT_DIR$/src/booking/TKUIMyBooking.tsx" />
         <option value="$PROJECT_DIR$/src/booking/TKUIMyBooking.css.ts" />
         <option value="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" />
@@ -298,7 +273,9 @@
         <option value="$PROJECT_DIR$/src/booking/TKUIFromTo.css.ts" />
         <option value="$PROJECT_DIR$/src/query/TKUILocationSearch.tsx" />
         <option value="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" />
+        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" />
+        <option value="$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx" />
       </list>
     </option>
   </component>
@@ -628,13 +605,6 @@
       <workItem from="1629206114353" duration="76886000" />
       <workItem from="1629838307123" duration="35869000" />
       <workItem from="1630076031737" duration="16582000" />
-    </task>
-    <task id="LOCAL-00406" summary="Trigger CI/CD.">
-      <created>1610034036587</created>
-      <option name="number" value="00406" />
-      <option name="presentableId" value="LOCAL-00406" />
-      <option name="project" value="LOCAL" />
-      <updated>1610034036587</updated>
     </task>
     <task id="LOCAL-00407" summary="/build -&gt; /dist.">
       <created>1610034838097</created>
@@ -972,11 +942,18 @@
       <option name="project" value="LOCAL" />
       <updated>1630523922854</updated>
     </task>
-    <option name="localTasksCounter" value="455" />
+    <task id="LOCAL-00455" summary="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip.">
+      <created>1630622022429</created>
+      <option name="number" value="00455" />
+      <option name="presentableId" value="LOCAL-00455" />
+      <option name="project" value="LOCAL" />
+      <updated>1630622022431</updated>
+    </task>
+    <option name="localTasksCounter" value="456" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4748328000" />
+    <option name="totallyTimeSpent" value="4750503000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -989,7 +966,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="25" width="1440" height="814" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="2" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5071531" side_tool="true" weight="0.29575402" />
@@ -1101,7 +1077,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Improve fit map control." />
     <MESSAGE value="Add showCurrLocBtn prop to map view." />
     <MESSAGE value="Fix to map not displaying bicycle friendliness." />
     <MESSAGE value="Upgrade typescript and react-scripts, to enable import of tripkit-react library as local package with hot reload on lib changes." />
@@ -1126,7 +1101,8 @@
     <MESSAGE value="Overflow ellipsis transport title in trip summary." />
     <MESSAGE value="My Bookings view." />
     <MESSAGE value="- My Bookings view.&#10;- Home Card and Active Trip." />
-    <option name="LAST_COMMIT_MESSAGE" value="- My Bookings view.&#10;- Home Card and Active Trip." />
+    <MESSAGE value="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip." />
+    <option name="LAST_COMMIT_MESSAGE" value="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1429,13 +1405,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="12" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/images/ic-sunclock.svg">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -1453,16 +1422,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
           <caret line="154" column="38" selection-start-line="154" selection-end-line="154" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-200">
-          <caret line="47" column="27" selection-start-line="47" selection-start-column="27" selection-end-line="47" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1486,16 +1445,6 @@
           <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="22" column="60" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#33#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1560,26 +1509,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="142">
-          <caret line="38" column="44" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="69" column="23" lean-forward="true" selection-start-line="69" selection-start-column="23" selection-end-line="69" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#71#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-92">
@@ -1610,12 +1539,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-562">
+          <caret line="22" column="60" selection-start-line="22" selection-start-column="60" selection-end-line="22" selection-end-column="60" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="20" lean-forward="true" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="82" column="33" selection-start-line="82" selection-start-column="33" selection-end-line="82" selection-end-column="33" />
+        <state relative-caret-position="203">
+          <caret line="354" column="34" selection-start-line="354" selection-start-column="34" selection-end-line="354" selection-end-column="34" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sidebar/TKUIActiveTrip.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" column="44" selection-start-line="38" selection-start-column="44" selection-end-line="38" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="46" column="101" lean-forward="true" selection-start-line="46" selection-start-column="4" selection-end-line="46" selection-end-column="101" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/booking/TKUIMyBookings.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74">
+          <caret line="57" column="22" lean-forward="true" selection-start-line="57" selection-start-column="22" selection-end-line="57" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#71#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -42,14 +42,24 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMyBookings"
 };
 
+let refreshActiveTripInterval: any;
+
 const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
     const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);
     useEffect(() => {
-        TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
-            .then((result: ConfirmedBookingsResult) => {
-                console.log(result);
-                setBookings(result.bookings)
-            })
+        const refreshBookings = () =>
+            TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
+                .then((result: ConfirmedBookingsResult) => {
+                    console.log(result);
+                    setBookings(result.bookings)
+                });
+        refreshBookings();
+        refreshActiveTripInterval = setInterval(() => refreshBookings(), 30000);
+        return () => {
+            if (refreshActiveTripInterval) {
+                clearInterval(refreshActiveTripInterval);
+            }
+        }
     }, []);
     const {onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, slideUpOptions, t, landscape, classes} = props;
     return (

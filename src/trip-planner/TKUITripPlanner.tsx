@@ -352,6 +352,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             /> : null;
 
         const homeCard = searchBar && !locationDetailView && !favouritesView &&
+            !this.isShowTimetable() &&
             <TKUIHomeCard onMyBookings={() => this.setState({showMyBookings: true})}/>;
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
