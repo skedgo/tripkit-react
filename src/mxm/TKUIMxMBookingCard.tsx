@@ -155,7 +155,6 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
             TripGoApi.apiCallUrl(bookingInfosUrl, "GET")
                 .then((bookingsInfoJsonArray) => {
                     const bookingsInfo = bookingsInfoJsonArray.map(infoJson => Util.deserialize(infoJson, BookingInfo));
-                    console.log(bookingsInfo);
                     setRequestBookingForm(bookingsInfo[0]);
                     setWaiting(false);
                 })

@@ -11,6 +11,7 @@ import {ReactComponent as IconSunClock} from "../images/ic-sunclock.svg";
 import {tKUIActiveTripDefaultStyle} from "./TKUIActiveTrip.css";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIFromTo from "../booking/TKUIFromTo";
+import TransportUtil from "../trip/TransportUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     activeTrip: ConfirmedBookingData | undefined | null;
@@ -32,7 +33,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
-    const {activeTrip, onShowTrip, onMyBookings, t, classes} = props;
+    const {activeTrip, onShowTrip, onMyBookings, t, classes, theme} = props;
     let content;
     if (activeTrip) {
         content =
@@ -43,6 +44,12 @@ const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
                             DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                     </div>
                     {activeTrip.confirmation?.status?.title}
+                </div>
+                <div className={classes.mode}>
+                    <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(activeTrip.mode!), false, theme.isDark)}/>
+                    <div className={classes.modeName}>
+                        {activeTrip.confirmation?.provider?.title}
+                    </div>
                 </div>
                 {activeTrip.tripsInfo?.[0].origin && activeTrip.tripsInfo?.[0].destination &&
                 <TKUIFromTo

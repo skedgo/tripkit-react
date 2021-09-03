@@ -44,6 +44,19 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
         marginBottom: '16px'
     },
     startTime: {
-        ...theme.textWeightBold
+        ...theme.textWeightBold,
+        ...genStyles.noShrink
+    },
+    mode: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        minWidth: 0,            // This is so this div does not overflow through parents limits, but init's width is
+        marginBottom: '16px'    // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
+    },
+    modeName: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        marginLeft: '16px'
     }
 });

@@ -14,7 +14,7 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
             ...theme.divider
         }
     },
-    timeMode: {
+    timeStatus: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.spaceBetween

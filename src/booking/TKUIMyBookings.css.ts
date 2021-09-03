@@ -10,5 +10,14 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.grow,
         ...genStyles.center,
         height: '100%'
+    },
+    noResults: {
+        ...theme.textSizeBody,
+        ...theme.textColorDisabled,
+        ...genStyles.flex,
+        ...genStyles.grow,
+        height: '100%',
+        ...genStyles.center,
+        ...genStyles.alignCenter
     }
 });

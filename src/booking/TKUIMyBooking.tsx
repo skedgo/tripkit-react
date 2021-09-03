@@ -37,7 +37,7 @@ const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
     const tripUrl = trips?.[0];
     return (
         <div className={classes.main}>
-            <div className={classes.timeMode}>
+            <div className={classes.timeStatus}>
                 <div>
                     {time ? DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
                         .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat()) : ""}
