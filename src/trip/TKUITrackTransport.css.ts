@@ -43,6 +43,7 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
         },
         info: {
             fontSize: '13px',
+            lineHeight: 'normal',
             ...genStyles.flex,
             ...genStyles.column,
             ...genStyles.alignStart,

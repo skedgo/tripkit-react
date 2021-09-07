@@ -7,7 +7,7 @@ import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import TKUIRow from "../options/TKUIRow";
 import {ReactComponent as IconTicket} from "../images/ic-ticket.svg";
-import {ReactComponent as IconSunClock} from "../images/ic-sunclock.svg";
+import {ReactComponent as IconSunClock} from "../images/ic-clocksand.svg";
 import {tKUIActiveTripDefaultStyle} from "./TKUIActiveTrip.css";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIFromTo from "../booking/TKUIFromTo";
@@ -47,9 +47,7 @@ const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
                 </div>
                 <div className={classes.mode}>
                     <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(activeTrip.mode!), false, theme.isDark)}/>
-                    <div className={classes.modeName}>
-                        {activeTrip.confirmation?.provider?.title}
-                    </div>
+                    {activeTrip.confirmation?.provider?.title}
                 </div>
                 {activeTrip.tripsInfo?.[0].origin && activeTrip.tripsInfo?.[0].destination &&
                 <TKUIFromTo
