@@ -18,6 +18,7 @@ import TransportUtil from "./TransportUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     street: Street;
+    onClick?: () => void;
 }
 
 interface IConsumedProps {}
@@ -57,9 +58,9 @@ function instructionIcon(instruction: StreetInstructions) {
 }
 
 const TKUIStreetStep: React.SFC<IProps> = (props: IProps) => {
-    const {street, classes} = props;
+    const {street, onClick, classes} = props;
     return (
-        <div className={classes.main}>
+        <div className={classes.main} onClick={onClick}>
             <div className={classes.icon}>
                 {instructionIcon(street.instruction)}
             </div>

@@ -4,6 +4,7 @@ import LeafletUtil from "./LeafletUtil";
 import ServiceShape from "../model/trip/ServiceShape";
 import LatLng from "../model/LatLng";
 import {TKUIMapPadding} from "../map/TKUIMapView";
+import Street from "../model/trip/Street";
 
 class MapUtil {
 
@@ -55,6 +56,10 @@ class MapUtil {
 
     public static getTripBounds(trip: Trip): BBox {
         return LeafletUtil.toBBox(LeafletUtil.getTripBounds(trip));
+    }
+
+    public static getStreetBounds(streets: Street[]): BBox {
+        return LeafletUtil.toBBox(LeafletUtil.getStreetBounds(streets));
     }
 
     public static getShapesBounds(shapes: ServiceShape[], travelledOnly: boolean = false): BBox {
