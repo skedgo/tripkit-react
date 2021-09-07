@@ -24,6 +24,7 @@ import MapUtil from "../util/MapUtil";
 import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
 import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
+import TKUIStreetStep from "../trip/TKUIStreetStep";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
 
@@ -103,10 +104,30 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     return cards;
 }
 
+function getBicycleMxMCard(props: SegmentMxMCardsProps): JSX.Element {
+    const {segment, onClose} = props;
+    return (
+        <TKUICard
+            title={segment.getAction()}
+            subtitle={segment.to.getDisplayString()}
+            renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props}/>}
+            onRequestClose={onClose}
+            styles={{
+                main: overrideClass({ height: '100%'})
+            }}
+        >
+            {segment.streets &&
+            segment.streets.map(street => <TKUIStreetStep street={street}/>)}
+        </TKUICard>
+    );
+}
+
 function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     const {segment, onClose, refreshSelectedTrip} = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
+    } else if (segment.isWalking() || segment.isBicycle()) {
+        return [getBicycleMxMCard(props)]
     } else if (segment.booking) {
         return [
             <TKUIMxMBookingCard
