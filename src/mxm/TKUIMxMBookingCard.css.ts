@@ -53,8 +53,10 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '10px',
         '& textarea': {
             ...genStyles.grow,
+            background: 'none',
             fontFamily: theme.fontFamily,
             ...theme.textSizeCaption,
+            ...theme.textColorDefault,
             border: 'none',
             borderRadius: '12px',
             minHeight: '50px',
@@ -123,7 +125,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         width: '100%',
         position: 'absolute',
         top: '0',
-        background: white(1)
+        background: white(1, theme.isDark)
     },
     iconLoading: {
         margin: '0 5px',

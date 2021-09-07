@@ -19,11 +19,22 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         ...genStyles.spaceBetween
     },
+    time: {
+        ...genStyles.noShrink
+    },
     mode: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
+        minWidth: 0,            // This is so this div does not overflow through parents limits, but init's width is
+        marginLeft: '20px',     // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
         '& img': {
-            marginLeft: '10px'
+            marginLeft: '16px'
         }
+    },
+    modeName: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        marginLeft: '16px'
     }
 });

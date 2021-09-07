@@ -39,16 +39,26 @@ const TKUIMxMIndex: React.SFC<IProps> = (props: IProps) => {
         <TKUICard>
             <div className={classes.main}>
                 <div className={classes.track}>
-                    {segments.map((segment: Segment, i: number) =>
-                        <div className={classNames(classes.transport, props.value === i && classes.selected)}
-                             onClick={() => props.onChange(i)}
-                             key={i}
-                        >
-                            <TKUITrackTransport
-                                segment={segment}
-                                brief={true}
-                            />
-                        </div>)}
+                    {segments.map((segment: Segment, i: number) => {
+                        let brief: boolean | undefined;
+                        const nOfSegments = segments.length;
+                        if (nOfSegments > 4 || (nOfSegments > 3 && window.innerWidth <= 400)) {
+                            brief = true;
+                        } else if (nOfSegments < 4) {
+                            brief = false;
+                        }
+                        return (
+                            <div className={classNames(classes.transport, props.value === i && classes.selected)}
+                                 onClick={() => props.onChange(i)}
+                                 key={i}
+                            >
+                                <TKUITrackTransport
+                                    segment={segment}
+                                    brief={brief}
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className={classes.tripTime}>
                     {departureTime + " - " + arrivalTime}

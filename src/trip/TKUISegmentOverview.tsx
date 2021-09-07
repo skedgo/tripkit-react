@@ -129,7 +129,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                         <div className={classNames(classes.prevCircle, classes.circleSeparation)}/>}
                         {/* If next segment is unconnected, then the stationary segment connects with previous one, so
                         paint circle accordingly. E.g. find parking. */}
-                        <div className={nextSegment && isUnconnected(nextSegment) ? classes.prevCircle : classes.nextCircle}/>
+                        <div className={!nextSegment || nextSegment.arrival || isUnconnected(nextSegment) ? classes.prevCircle : classes.nextCircle}/>
                         <div className={classes.nextLine}/>
                     </div>
                     <div className={classes.title} aria-label={from}>
