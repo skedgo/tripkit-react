@@ -1,6 +1,67 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import LatLng from "../LatLng";
 import LeafletUtil from "../../util/LeafletUtil";
+import Util from "../../util/Util";
+
+export enum StreetInstructions {
+    HEAD_TOWARDS = "HEAD_TOWARDS",
+    CONTINUE_STRAIGHT = "CONTINUE_STRAIGHT",
+    TURN_LEFT = "TURN_LEFT",
+    TURN_SLIGHTLY_LEFT = "TURN_SLIGHTLY_LEFT",
+    TURN_SHARPLY_LEFT = "TURN_SHARPLY_LEFT",
+    TURN_RIGHT= "TURN_RIGHT",
+    TURN_SLIGHTLY_RIGHT= "TURN_SLIGHTLY_RIGHT",
+    TURN_SHARPLY_RIGHT= "TURN_SHARPLY_RIGHT"
+}
+
+/**
+ * Assume enum values (right-hand side strings) match api representation, which if changes, we can just update those
+ * values without any other code change, since we can preserve enum keys (left-hand side values).
+ */
+@JsonConverter
+export class StreetInstructionsConverter implements JsonCustomConvert<StreetInstructions> {
+    public serialize(value: StreetInstructions): any {
+        return value;
+    }
+    public deserialize(obj: any): StreetInstructions {
+        return obj as StreetInstructions;
+    }
+}
+
+export enum RoadTags {
+    "CYCLE-LANE",
+    "CYCLE-TRACK",
+    "CYCLE-NETWORK",
+    "BICYCLE-DESIGNATED",
+    "BICYCLE-BOULEVARD",
+    "SIDE-WALK",
+    "MAIN-ROAD",
+    "SIDE-ROAD",
+    "SHARED-ROAD",
+    "UNPAVED/UNSEALED"
+}
+
+export function roadTagDisplayS(tag: RoadTags) {
+    return Util.kebabCaseToSpaced(RoadTags[tag].toLowerCase());
+}
+
+export function roadTagColor(tag: RoadTags) {
+    return 'gray';
+}
+
+export function roadTagTextColor(tag: RoadTags) {
+    return 'white';
+}
+
+@JsonConverter
+export class RoadTagsConverter implements JsonCustomConvert<RoadTags[]> {
+    public serialize(value: RoadTags[]): any {
+        return value;
+    }
+    public deserialize(obj: any): RoadTags[] {
+        return obj.map(tag => RoadTags[tag]);
+    }
+}
 
 @JsonObject
 class Street {
@@ -22,7 +83,11 @@ class Street {
     @JsonProperty("cyclingNetwork", String, true)
     private _cyclingNetwork: string | null = null;
     @JsonProperty("metres", Number, true)
-    private _metres: number | null = null;
+    public metres: number | null = null;
+    @JsonProperty("instruction", String, true)
+    public instruction: StreetInstructions = StreetInstructions.CONTINUE_STRAIGHT;
+    @JsonProperty("roadTags", RoadTagsConverter, true)
+    public roadTags: RoadTags[] = [];
 
     private _waypoints: LatLng[] | null = null;
 
@@ -41,10 +106,6 @@ class Street {
 
     get cyclingNetwork(): string | null {
         return this._cyclingNetwork;
-    }
-
-    get metres(): number | null {
-        return this._metres;
     }
 
     get waypoints(): LatLng[] | null {

@@ -136,6 +136,15 @@ class Util {
     //     useMemo(func, []);
     // }
 
+    public static kebabCaseToSpaced(text: string): string {
+        return text
+            // insert a space before all caps
+            .replace(/(-[a-z])/g, (str) => ' ' + str.substring(1).toUpperCase())
+            // uppercase the first character
+            .replace(/^./, function(str){ return str.toUpperCase(); })
+    }
+
+
     public static camelCaseToSpaced(text: string): string {
         return text
         // insert a space before all caps

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>maneuver-go-straight</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="maneuver-go-straight" fill="#000000" fill-rule="nonzero">
+            <path d="M55.5,41.1587776 L55.5,80 L45,80 L45,41.0858257 L38.3588163,42.2969301 C37.2721679,42.4950943 36.2306215,41.7748355 36.0324573,40.6881871 C35.937448,40.1671963 36.0529502,39.6297914 36.3536302,39.1938445 L49.2937659,20.4323246 C49.6073351,19.9776899 50.2300875,19.8633337 50.6847223,20.1769029 C50.7846617,20.2458328 50.8712141,20.3323852 50.940144,20.4323246 L63.888482,39.2057368 C64.5156205,40.1150064 64.2869081,41.3605112 63.3776386,41.9876497 C62.942905,42.2874927 62.4072235,42.4032207 61.8874824,42.3095814 L55.5,41.1587776 Z" id="Combined-Shape"></path>
+        </g>
+    </g>
+</svg>
