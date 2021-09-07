@@ -59,6 +59,7 @@ interface SegmentMxMCardsProps {
     options: TKUserProfile;
     landscape: boolean;
     refreshSelectedTrip: () => Promise<boolean>;
+    mapAsync: Promise<TKUIMapViewClass>;
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
@@ -104,8 +105,8 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     return cards;
 }
 
-function getBicycleMxMCard(props: SegmentMxMCardsProps): JSX.Element {
-    const {segment, onClose} = props;
+function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
+    const {segment, onClose, mapAsync} = props;
     return (
         <TKUICard
             title={segment.getAction()}
@@ -116,8 +117,13 @@ function getBicycleMxMCard(props: SegmentMxMCardsProps): JSX.Element {
                 main: overrideClass({ height: '100%'})
             }}
         >
-            {segment.streets &&
-            segment.streets.map(street => <TKUIStreetStep street={street}/>)}
+            {segment.streets && segment.streets.map(street => {
+                const onStepClick = () => {
+                    mapAsync.then((map) =>
+                        map.fitBounds(MapUtil.getStreetBounds([street])));
+                };
+                return <TKUIStreetStep street={street} onClick={onStepClick}/>;
+            })}
         </TKUICard>
     );
 }
@@ -127,7 +133,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
     } else if (segment.isWalking() || segment.isBicycle()) {
-        return [getBicycleMxMCard(props)]
+        return [getStreetMxMCard(props)]
     } else if (segment.booking) {
         return [
             <TKUIMxMBookingCard
@@ -177,9 +183,8 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
 const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
-    const {refreshSelectedTrip} = props;
+    const {refreshSelectedTrip, mapAsync, t} = props;
     const trip = props.selectedTrip!;
-    const t = props.t;
     const segments = trip.getSegments();
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
@@ -191,7 +196,8 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
             t,
             options: props.options,
             landscape: props.landscape,
-            refreshSelectedTrip
+            refreshSelectedTrip,
+            mapAsync
         }));
         return map;
     }, new Map<Segment, JSX.Element[]>());
@@ -206,7 +212,7 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
     // Index of selected card in carousel.
     const selectedCardIndex = cardIndexForSegment(selectedSegment, segments, segmentToCards) + selectedCardOffset;
     useEffect(() => {
-        props.mapAsync.then((map) => {
+        props.mapAsync.then(map => {
             if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
                 map.fitBounds(MapUtil.getShapesBounds(selectedSegment.shapes, true));
             } else {
@@ -215,6 +221,9 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
                 map.setViewport(selectedSegment.from, newZoom);
             }
         });
+        return () => {
+            props.mapAsync.then(map => map.fitBounds(MapUtil.getTripBounds(trip)))
+        };
     }, [selectedSegment, selectedCardOffset]);
     return (
         <Fragment>

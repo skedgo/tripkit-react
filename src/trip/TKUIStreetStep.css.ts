@@ -7,7 +7,8 @@ export const tKUIStreetStepDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         ...theme.divider,
         padding: '10px',
-        marginLeft: '10px'
+        marginLeft: '10px',
+        cursor: props => props.onClick ? 'pointer' : undefined
     },
     icon: {
         marginRight: '10px',
