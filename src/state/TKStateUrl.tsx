@@ -237,7 +237,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             }
         });
         if (!prevProps.returnToAfterLogin && this.props.returnToAfterLogin) {
-            history.replaceState({}, "", this.props.returnToAfterLogin);
+            window.history.replaceState({}, "", this.props.returnToAfterLogin);
             this.loadStateFromUrl();
         }
     }

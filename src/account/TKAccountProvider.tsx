@@ -103,7 +103,7 @@ const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React
         (props.withPopup ? loginWithPopup({prompt: 'login'}, {timeoutInSeconds: 600}) :
             loginWithRedirect({
                 prompt: 'login',
-                appState: { returnTo: location.href }
+                appState: { returnTo: window.location.href }
             }))
             .catch((error) => console.log(error))
             .finally(() => setTimeout(() => {

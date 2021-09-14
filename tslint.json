@@ -23,6 +23,7 @@
       "allow-pascal-case"
     ],
     "object-literal-shorthand": false,
-    "max-classes-per-file": [true, 2]
+    "max-classes-per-file": [true, 2],
+    "no-restricted-globals": [false, "location"]
   }
 }
