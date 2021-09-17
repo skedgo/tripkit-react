@@ -74,12 +74,17 @@ class LeafletUtil {
         }, L.latLngBounds([]));
     }
 
-    public static decodePolyline(encoded: string): LatLng[] {
+    public static decodePolylineGeoJson(encoded: string): number[][] {
         const polyline = require('@mapbox/polyline');
-        const pointsArray = polyline.decode(encoded);
+        // switch to [Long, Lat] order used by GeoJson
+        return polyline.decode(encoded).map(coord => [coord[1], coord[0]]);
+    }
+
+    public static decodePolyline(encoded: string): LatLng[] {
+        const pointsArray = this.decodePolylineGeoJson(encoded);
         const decoded: LatLng[] = [];
         for (const point of pointsArray) {
-            decoded.push(LatLng.createLatLng(point[0], point[1]));
+            decoded.push(LatLng.createLatLng(point[1], point[0]));
         }
         return decoded;
     }

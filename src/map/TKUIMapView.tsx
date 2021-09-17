@@ -44,7 +44,6 @@ import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
 import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
 import {ERROR_GEOLOC_DENIED, TKUserPosition} from "../util/GeolocationUtil";
-import {tKUIColors} from "../index";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
 import {TileLayer} from "react-leaflet";
@@ -57,6 +56,8 @@ import ModeLocation from "../model/location/ModeLocation";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
+import RegionsData from "../data/RegionsData";
+import {tKUIColors} from "../jss/TKUITheme";
 
 export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
 
@@ -236,13 +237,6 @@ interface IState {
     userLocation?: TKUserPosition;
     userLocationTooltip?: string;
     refreshTiles?: boolean;
-}
-
-export interface IMapSegmentRenderer {
-    renderPopup?: () => JSX.Element;
-    polylineOptions: PolylineProps | PolylineProps[];
-    renderServiceStop: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element | undefined;
-    renderServiceStopPopup: (stop: ServiceStopLocation, shape: ServiceShape) => JSX.Element;
 }
 
 class TKUIMapView extends React.Component<IProps, IState> {
@@ -507,6 +501,28 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                        ref={(ref: any) => {
                                            if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
                                                this.mapboxGlMap = ref.leafletElement.getMapboxMap();
+                                               RegionsData.instance.requireRegions().then(() => {
+                                                   if (!this.mapboxGlMap.getSource('coverage')) {
+                                                       this.mapboxGlMap.addSource('coverage', {
+                                                           'type': 'geojson',
+                                                           'data': {
+                                                               'type': 'Feature',
+                                                               'geometry': RegionsData.instance.getCoverageGeoJson()
+                                                           }
+                                                       });
+                                                       // Add a new layer to visualize the polygon.
+                                                       this.mapboxGlMap.addLayer({
+                                                           'id': 'coverageLayer',
+                                                           'type': 'fill',
+                                                           'source': 'coverage', // reference the data source
+                                                           'layout': {},
+                                                           'paint': {
+                                                               'fill-color': '#212A33',
+                                                               'fill-opacity': 0.4
+                                                           }
+                                                       });
+                                                   }
+                                               });
                                            }
                                            if (this.mapboxGlMap) {
                                                // Since this could be a consequence of a complete style change
