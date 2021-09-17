@@ -229,9 +229,14 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         }
     };
 
-    const userLocationPromise = (window as any).tKUserLocationPromise ?
+    let userLocationPromise = (window as any).tKUserLocationPromise ?
         (window as any).tKUserLocationPromise
             .then((userCoords: [number, number]) => LatLng.createLatLng(userCoords[0], userCoords[1])) : undefined;
+
+    if (window.location.pathname === '/world') {
+        window.history.replaceState(null, '', '/');
+        userLocationPromise = Promise.reject();
+    }
 
     useEffect(() => {
         const keyEventListener = (zEvent: any) => {

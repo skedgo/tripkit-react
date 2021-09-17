@@ -11,6 +11,8 @@ import RegionInfo from "../model/region/RegionInfo";
 import RegionInfoResults from "../model/region/RegionInfoResults";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
+import LeafletUtil from "../util/LeafletUtil";
+import * as turf from "@turf/turf";
 
 export class RegionsData {
 
@@ -22,6 +24,7 @@ export class RegionsData {
     private cachedRegion?: Region;
     private regionInfosRequests: Map<string, Promise<RegionInfo>> = new Map<string, Promise<RegionInfo>>();
     private regionInfos: Map<string, RegionInfo> = new Map<string, RegionInfo>();
+    private coverageGeoJson: any;
 
     // Set this to hardcode regions json
     public static regionsJsonPromise: Promise<any> | undefined = undefined;
@@ -196,6 +199,54 @@ export class RegionsData {
      */
     public getSegmentRegions(segment: Segment): [Region, Region] {
         return [this.getRegion(segment.from)!, this.getRegion(segment.to)!];
+    }
+
+    public getCoverageGeoJson() {
+        if (!this.coverageGeoJson) {
+            const world = [
+                [-180.0, -90.0],
+                [180.0, -90.0],
+                [180.0, 90.0],
+                [-180.0, 90.0],
+                [-180.0, -90.0]
+            ];
+            const regions = this.getRegionList();
+            if (!regions) {
+                return undefined;
+            }
+            const polygons = regions.map(region => {
+                const decoded = LeafletUtil.decodePolylineGeoJson(region.polygon);
+                if (JSON.stringify(decoded[0]) !== JSON.stringify(decoded[decoded.length - 1])) {
+                    decoded.push(decoded[0]);
+                }
+                return turf.polygon([decoded]);
+            });
+
+            let result = polygons.slice();
+            for (let i = 0; i < polygons.length; i++) {
+                for (let j = i + 1; j < polygons.length; j++) {
+                    if (turf.intersect(polygons[i], polygons[j])) {
+                        const union = turf.union(polygons[i], polygons[j]) as any;
+                        // Don't replace polygons[j] by the union since we need to preserve the elements in common with
+                        // result for this to work.
+                        polygons[j].geometry.coordinates = union.geometry.coordinates;
+                        result = result.filter(polygon => polygon !== polygons[i]);
+                        break;
+                    }
+                }
+            }
+
+            this.coverageGeoJson = {
+                "type": "MultiPolygon",
+                "coordinates": [
+                    [
+                        world,
+                        ...result.map(polygon => polygon.geometry.coordinates[0])
+                    ]
+                ]
+            }
+        }
+        return this.coverageGeoJson;
     }
 }
 

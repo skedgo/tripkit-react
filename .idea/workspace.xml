@@ -9,19 +9,19 @@
     <bookmark url="file://$PROJECT_DIR$/../ansible-playbooks/aws-s3-website-bucket.yaml" description="enabled: false" line="51" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Temporary disable GA tracking until implement cookies consent banner to comply with GDPR.">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/account/TKAccountProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKAccountProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUIScrollForCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUIScrollForCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tslint.json" beforeDir="false" afterPath="$PROJECT_DIR$/tslint.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/RegionsData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/RegionsData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/LeafletUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/LeafletUtil.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -155,7 +155,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="feature/customScrollbar" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -334,6 +334,8 @@
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="loadTrips&#9;FILE&#9;file:///Users/mauro/Work/SkedGo/Projects/tripkit-react/src/example/tripgo/options/TGUILoadTripsView.tsx&#10;isRele&#9;null&#9;null&#10;override&#9;null&#9;null&#10;genSty&#9;FILE&#9;file:///Users/mauro/Work/SkedGo/Projects/tripkit-react/src/css/GenStyle.css.ts&#10;realtimeEn&#9;null&#9;null&#10;tkuicolo&#9;null&#9;null&#10;tKCol&#9;null&#9;null&#10;TKState&#9;null&#9;null&#10;SlideUpOp&#9;null&#9;null&#10;getCurre&#9;null&#9;null&#10;world&#9;null&#9;null&#10;isShareS&#9;null&#9;null&#10;isShare&#9;null&#9;null&#10;isSha&#9;null&#9;null&#10;tKColo&#9;null&#9;null&#10;getQuery&#9;null&#9;null&#10;fetchca&#9;null&#9;null&#10;componentDidM&#9;null&#9;null&#10;tkUiCo&#9;null&#9;null&#10;tKUICo&#9;null&#9;null&#10;tkuico&#9;null&#9;null&#10;distanceIn&#9;null&#9;null&#10;Geolo&#9;null&#9;null&#10;generatesvg&#9;null&#9;null&#10;equivalent&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -536,21 +538,12 @@
       <workItem from="1631555709705" duration="2169000" />
       <workItem from="1631557962692" duration="638000" />
       <workItem from="1631618420313" duration="3171000" />
-      <workItem from="1631647384781" duration="4163000" />
-    </task>
-    <task id="LOCAL-00410" summary="UX Issue #13933: Platform change instructions missing">
-      <created>1610134546890</created>
-      <option name="number" value="00410" />
-      <option name="presentableId" value="LOCAL-00410" />
-      <option name="project" value="LOCAL" />
-      <updated>1610134546892</updated>
-    </task>
-    <task id="LOCAL-00411" summary="Specific message for Safari when user blocked access to her location: &quot;You blocked this site access to your location, either at browser or system level&quot;">
-      <created>1610373099690</created>
-      <option name="number" value="00411" />
-      <option name="presentableId" value="LOCAL-00411" />
-      <option name="project" value="LOCAL" />
-      <updated>1610373099690</updated>
+      <workItem from="1631647384781" duration="5456000" />
+      <workItem from="1631705968842" duration="634000" />
+      <workItem from="1631733960165" duration="6367000" />
+      <workItem from="1631815441028" duration="215000" />
+      <workItem from="1631882428964" duration="1807000" />
+      <workItem from="1631903520662" duration="12607000" />
     </task>
     <task id="LOCAL-00412" summary="Task #13955: Set up basic white label with data for client testing.">
       <created>1610487537222</created>
@@ -881,7 +874,21 @@
       <option name="project" value="LOCAL" />
       <updated>1631019971193</updated>
     </task>
-    <option name="localTasksCounter" value="459" />
+    <task id="LOCAL-00459" summary="Fix to issues after running npm install from cloned repo.">
+      <created>1631655591362</created>
+      <option name="number" value="00459" />
+      <option name="presentableId" value="LOCAL-00459" />
+      <option name="project" value="LOCAL" />
+      <updated>1631655591363</updated>
+    </task>
+    <task id="LOCAL-00460" summary="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress.">
+      <created>1631655905867</created>
+      <option name="number" value="00460" />
+      <option name="presentableId" value="LOCAL-00460" />
+      <option name="project" value="LOCAL" />
+      <updated>1631655905867</updated>
+    </task>
+    <option name="localTasksCounter" value="461" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -969,8 +976,6 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Add README_DEV.md documenting import lib as local repo, and hot loading of lib updates." />
-    <MESSAGE value="Work on Feature #13578: TripKit React - Mode by Mode flow" />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- Pick alternative service." />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail" />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail (refactor to simplify render logic)." />
@@ -994,7 +999,9 @@
     <MESSAGE value="- Refresh My Bookings view each 30 secs.&#10;- bug fixing." />
     <MESSAGE value="- cleanup console.log/s.&#10;- display mode on active trip.&#10;- bug fixing." />
     <MESSAGE value="- bug fixing." />
-    <option name="LAST_COMMIT_MESSAGE" value="- bug fixing." />
+    <MESSAGE value="Fix to issues after running npm install from cloned repo." />
+    <MESSAGE value="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress." />
+    <option name="LAST_COMMIT_MESSAGE" value="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1015,7 +1022,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/data/RegionsData.ts</url>
-          <line>185</line>
+          <line>188</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
