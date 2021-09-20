@@ -9,19 +9,14 @@
     <bookmark url="file://$PROJECT_DIR$/../ansible-playbooks/aws-s3-website-bucket.yaml" description="enabled: false" line="51" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Task #15527: Migrate coverage map from old to new web-app&#10;- display region polygons as holes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/RegionsData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/RegionsData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/LeafletUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/LeafletUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.css.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-    </list>
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -543,14 +538,8 @@
       <workItem from="1631733960165" duration="6367000" />
       <workItem from="1631815441028" duration="215000" />
       <workItem from="1631882428964" duration="1807000" />
-      <workItem from="1631903520662" duration="12607000" />
-    </task>
-    <task id="LOCAL-00412" summary="Task #13955: Set up basic white label with data for client testing.">
-      <created>1610487537222</created>
-      <option name="number" value="00412" />
-      <option name="presentableId" value="LOCAL-00412" />
-      <option name="project" value="LOCAL" />
-      <updated>1610487537222</updated>
+      <workItem from="1631903520662" duration="13373000" />
+      <workItem from="1632142159992" duration="5085000" />
     </task>
     <task id="LOCAL-00413" summary="Pelias geocoder: reflect resultsLimit option on autocompletion request.">
       <created>1610487664834</created>
@@ -888,7 +877,14 @@
       <option name="project" value="LOCAL" />
       <updated>1631655905867</updated>
     </task>
-    <option name="localTasksCounter" value="461" />
+    <task id="LOCAL-00461" summary="Task #15527: Migrate coverage map from old to new web-app&#10;- display region polygons as holes">
+      <created>1631917052470</created>
+      <option name="number" value="00461" />
+      <option name="presentableId" value="LOCAL-00461" />
+      <option name="project" value="LOCAL" />
+      <updated>1631917052471</updated>
+    </task>
+    <option name="localTasksCounter" value="462" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -976,7 +972,6 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- Pick alternative service." />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail" />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- service detail (refactor to simplify render logic)." />
     <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- more work on service detail" />
@@ -1001,7 +996,8 @@
     <MESSAGE value="- bug fixing." />
     <MESSAGE value="Fix to issues after running npm install from cloned repo." />
     <MESSAGE value="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress." />
-    <option name="LAST_COMMIT_MESSAGE" value="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress." />
+    <MESSAGE value="Task #15527: Migrate coverage map from old to new web-app&#10;- display region polygons as holes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Task #15527: Migrate coverage map from old to new web-app&#10;- display region polygons as holes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

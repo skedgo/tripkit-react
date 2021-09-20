@@ -11,6 +11,9 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
             height: '100%',
             overflowY: 'hidden!important'
         },
+        ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
+            height: '100%'
+        },
         '& input[type=text]': {
             fontFamily: theme.fontFamily
         },
