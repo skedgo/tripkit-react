@@ -88,6 +88,9 @@ export {default as TKAccountProvider} from "./account/TKAccountProvider";
 export {default as TKUIAccountBtn} from "./account/TKUIAccountBtn";
 export {default as TKUISignInFromSettings} from "./account/TKUISignInFromSettings";
 export {default as TKUIUserAccountSetting} from "./account/TKUIUserAccountSetting";
+export {default as TKDefaultGeocoderNames} from "./geocode/TKDefaultGeocoderNames";
+export {TKStyleOverride} from "./config/TKConfigHelper";
+export {default as WaiAriaUtil} from "./util/WaiAriaUtil";
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // if (document.getElementById("tripgo-sample-root")) {
 //     import("./example/tripgo/tripgo-sample");
