@@ -60,13 +60,17 @@ export class RegionsData {
         });
     }
 
-    private static _instance: RegionsData;
+    private static _instance?: RegionsData;
 
     public static get instance(): RegionsData {
         if (!this._instance) {
             this._instance = new RegionsData();
         }
         return this._instance;
+    }
+
+    public static reset() {
+        this._instance = undefined;
     }
 
     public static isInitialized(): boolean {
