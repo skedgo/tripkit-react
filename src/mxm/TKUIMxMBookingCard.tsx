@@ -8,7 +8,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import Util from "../util/Util";
 import BookingInfo, {BookingField, BookingFieldOption} from "../model/trip/BookingInfo";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import TKUIButton from "../buttons/TKUIButton";
 import NetworkUtil from "../util/NetworkUtil";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
 import {ClassNameMap, Styles} from "react-jss";
@@ -22,6 +22,7 @@ import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIFromTo from "../booking/TKUIFromTo";
+import TKUIBookingActions from "../booking/TKUIBookingActions";
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -213,8 +214,8 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                                 Notes from operator
                             </div>
                             <div className={classes.value}>
-                                {confirmation.notes.map(note => (
-                                    <div className={classes.note}>
+                                {confirmation.notes.map((note, i) => (
+                                    <div className={classes.note} key={i}>
                                         <div className={classes.noteText}>
                                             {note.text}
                                         </div>
@@ -231,25 +232,12 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                     </div>}
                 </div>
                 {confirmation.actions.length > 0 &&
-                <div className={classes.actions}>
-                    {confirmation.actions.map((action, i) =>
-                        <TKUIButton
-                            text={action.title}
-                            type={TKUIButtonType.PRIMARY_LINK}
-                            onClick={() => {
-                                if (action.internalURL) {
-                                    setWaiting(true);
-                                    TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
-                                        .then(refreshSelectedTrip)
-                                        .catch((e) => setError(e))
-                                        .finally(() => setWaiting(false));
-                                } else if (action.externalURL) {
-                                    window.open(action.externalURL, "_self");
-                                }
-                            }}
-                            key={i}
-                        />)}
-                </div>}
+                <TKUIBookingActions
+                    actions={confirmation.actions}
+                    setWaiting={setWaiting}
+                    setError={setError}
+                    requestRefresh={() => refreshSelectedTrip().then(() => {})}
+                />}
             </Fragment>
         )
     } else if (requestBookingForm) {
