@@ -21,6 +21,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onShowTransportOptions: () => void;
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
+    privacyPolicyUrl?: string;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -131,7 +132,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                             styles={{
                                                 main: overrideClass(this.props.injectedStyles.optionLink)
                                             }}
-                                            onClick={() => window.open("https://skedgo.com/privacy-policy",'_blank')}
+                                            onClick={() => window.open(this.props.privacyPolicyUrl || "https://skedgo.com/privacy-policy", '_blank')}
                                 />
                             </div>
                         </div>
