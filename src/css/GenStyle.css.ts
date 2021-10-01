@@ -20,6 +20,7 @@ interface ITKUIGenStyleClasses {
     justifyEnd: CSS.Properties;
     alignCenter: CSS.Properties;
     alignStart: CSS.Properties;
+    alignEnd: CSS.Properties;
     alignStretch: CSS.Properties;
     alignSelfCenter: CSS.Properties;
     alignSelfStart: CSS.Properties;
@@ -170,6 +171,11 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     alignStart: {
         alignItems: 'flex-start',
         WebkitAlignItems: 'flex-start'
+    },
+
+    alignEnd: {
+        alignItems: 'flex-end',
+        WebkitAlignItems: 'flex-end'
     },
 
     alignStretch: {

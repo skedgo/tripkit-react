@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>placeholder-person</title>
+    <g id="placeholder-person" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.18">
+        <path d="M32,-7.10542736e-15 C49.673112,-7.10542736e-15 64,14.326888 64,32 C64,41.3343487 60.0033709,49.7352346 53.6279751,55.5847954 C49.7502969,47.5462303 41.5228442,42 32,42 C22.4771558,42 14.2497031,47.5462303 10.3716278,55.5847051 C3.99662908,49.7352346 0,41.3343487 0,32 C0,14.326888 14.326888,-7.10542736e-15 32,-7.10542736e-15 Z M32,12 C25.372583,12 20,17.372583 20,24 C20,30.627417 25.372583,36 32,36 C38.627417,36 44,30.627417 44,24 C44,17.372583 38.627417,12 32,12 Z" id="Combined-Shape" fill="#292A2B"></path>
+    </g>
+</svg>

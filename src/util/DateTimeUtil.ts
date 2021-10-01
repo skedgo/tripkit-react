@@ -18,6 +18,10 @@ class DateTimeUtil {
         return navigator.language === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
     };
 
+    public static dayMonthFormat = () => {
+        return navigator.language === 'en-US' ? "MMM DD" : "DD MMM";
+    };
+
     public static defaultTZ = "Etc/UTC";
 
     public static getNow() {
