@@ -46,10 +46,10 @@ let refreshActiveTripInterval: any;
 
 const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
     const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);
+    const refreshBookings = () =>
+        TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
+            .then((result: ConfirmedBookingsResult) => setBookings(result.bookings));
     useEffect(() => {
-        const refreshBookings = () =>
-            TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
-                .then((result: ConfirmedBookingsResult) => setBookings(result.bookings));
         refreshBookings();
         refreshActiveTripInterval = setInterval(() => refreshBookings(), 30000);
         return () => {
@@ -87,6 +87,7 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
                                                .catch((error: Error) => onWaitingStateLoad(false,
                                                    new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
                                        }}
+                                       requestRefresh={refreshBookings}
                                        key={i}
                         />)
             }

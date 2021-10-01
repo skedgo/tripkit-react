@@ -40,7 +40,7 @@ class BookingInfo {
 }
 
 @JsonObject
-class BookingAction {
+export class BookingAction {
     @JsonProperty("type", String, true)
     public type: string = "";   // values: CANCEL
     @JsonProperty("title", String, true)
