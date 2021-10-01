@@ -47,6 +47,8 @@ class BookingAction {
     public title: string = "";
     @JsonProperty("internalURL", String, true)
     public internalURL: string = "";
+    @JsonProperty("externalURL", String, true)
+    public externalURL: string = "";
     @JsonProperty("isDestructive", Boolean, true)
     public isDestructive: boolean = false;
 }
@@ -67,8 +69,26 @@ class BookingConfirmationStatus {
 class BookingProvider {
     @JsonProperty("title", String, true)
     public title: string = "";
-    @JsonProperty("phone", String, true)
-    public phone: string = "";
+    @JsonProperty("subtitle", String, true)
+    public subtitle: string = "";
+}
+
+@JsonObject
+class BookingVehicle {
+    @JsonProperty("title", String, true)
+    public title: string = "";
+    @JsonProperty("subtitle", String, true)
+    public subtitle: string = "";
+}
+
+@JsonObject
+export class BookingNote {
+    @JsonProperty("timestamp", String)
+    public timestamp: string = "";
+    @JsonProperty("text", String, true)
+    public text: string = "";
+    @JsonProperty("provider", String, true)
+    public provider?: string = undefined;
 }
 
 @JsonObject
@@ -81,6 +101,10 @@ class BookingConfirmation {
     public status?: BookingConfirmationStatus = undefined;
     @JsonProperty("provider", BookingProvider, true)
     public provider?: BookingProvider = undefined;
+    @JsonProperty("vehicle", BookingVehicle, true)
+    public vehicle?: BookingVehicle = undefined;
+    @JsonProperty("notes", [BookingNote], true)
+    public notes?: BookingNote[] = undefined;
 }
 
 @JsonObject

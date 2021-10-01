@@ -15,6 +15,9 @@ import {ClassNameMap, Styles} from "react-jss";
 import {ReactComponent as IconUser} from '../images/ic-user.svg';
 import {ReactComponent as IconFlag} from '../images/ic-flag.svg';
 import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
+import {ReactComponent as IconNote} from '../images/ic-note.svg';
+import {ReactComponent as IconPerson} from '../images/ic-person-circle.svg';
+import {ReactComponent as IconShuttle} from '../images/ic-shuttle-circle.svg';
 import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
@@ -129,7 +132,7 @@ const BookingInput: React.SFC<BookingInputProps> =
                                 {inputIcon(inputField.id)}
                             </div>
                             <div className={classes.groupRight}>
-                                {inputField.type !== "LONG_TEXT" &&
+                                {(inputField.type !== "LONG_TEXT" || readonly) &&
                                 <div className={classes.label}>
                                     {inputField.title + (!readonly && inputField.required ? " (required)" : "")}
                                 </div>}
@@ -176,12 +179,56 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                     </div>
                     <img src={status.imageURL} className={classes.statusImg}/>
                 </div>
+                <div className={classes.service}>
+                    <div className={classes.serviceImages}>
+                        <IconPerson className={classes.iconPerson}/>
+                        <IconShuttle className={classes.iconShuttle}/>
+                    </div>
+                    {confirmation.vehicle &&
+                    <div className={classes.vehicle}>
+                        <div className={classes.title}>{confirmation.vehicle.title}</div>
+                        <div className={classes.subtitle}>{confirmation.vehicle.subtitle}</div>
+                    </div>}
+                    {confirmation.provider &&
+                    <div className={classes.provider}>
+                        <div className={classes.title}>{confirmation.provider.title}</div>
+                        <a href={"tel:" + confirmation.provider.subtitle} className={classes.subtitle}>
+                            {confirmation.provider.subtitle}
+                        </a>
+                    </div>}
+                </div>
                 <div className={classes.bookingFormMain}>
                     <BookingInput
                         inputFields={confirmation.input}
                         classes={classes}
                         injectedStyles={injectedStyles}
                     />
+                    {confirmation.notes &&
+                    <div className={classes.group}>
+                        <div className={classes.icon}>
+                            <IconNote/>
+                        </div>
+                        <div className={classes.groupRight} style={{minWidth: 0}}>
+                            <div className={classes.label}>
+                                Notes from operator
+                            </div>
+                            <div className={classes.value}>
+                                {confirmation.notes.map(note => (
+                                    <div className={classes.note}>
+                                        <div className={classes.noteText}>
+                                            {note.text}
+                                        </div>
+                                        <div className={classes.noteFooter}>
+                                            <div className={classes.noteProvider}>{note.provider}</div>
+                                            <div className={classes.noteTime}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.moment(note.timestamp),
+                                                DateTimeUtil.dayMonthFormat() + ", YYYY") +
+                                            " at " + DateTimeUtil.moment(note.timestamp).format(DateTimeUtil.timeFormat())}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>}
                 </div>
                 {confirmation.actions.length > 0 &&
                 <div className={classes.actions}>
@@ -196,6 +243,8 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                                         .then(refreshSelectedTrip)
                                         .catch((e) => setError(e))
                                         .finally(() => setWaiting(false));
+                                } else if (action.externalURL) {
+                                    window.open(action.externalURL, "_self");
                                 }
                             }}
                             key={i}
