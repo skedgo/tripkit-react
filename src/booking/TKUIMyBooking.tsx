@@ -43,15 +43,15 @@ const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
         <div className={classes.main}>
             <div className={classes.form}>
                 <div className={classes.timeStatus}>
-                    <div className={classes.time}>
-                        {time ? DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
-                            .format(DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat()) : ""}
-                    </div>
                     <div className={classes.mode}>
                         <div className={classes.modeName}>
                             {confirmation.provider?.title}
                         </div>
                         <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)}/>
+                    </div>
+                    <div className={classes.time}>
+                        {time ? DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
+                            .format(DateTimeUtil.dayMonthFormat() + " " + DateTimeUtil.timeFormat()) : ""}
                     </div>
                 </div>
                 <TKUIRow
