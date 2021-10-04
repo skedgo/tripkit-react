@@ -31,7 +31,8 @@ enum URLFields {
     TIME = "ti",
     TIME_PREF = "pr",
     SERVICE = "se",
-    TRIP = "tr"
+    TRIP = "tr",
+    SEGMENT = "sg"
 }
 
 const URL_FIELD_SEPARATOR = "/";
@@ -39,11 +40,16 @@ const URL_FIELD_VALUE_SEPARATOR = ":";
 const URL_VALUE_COMPONENT_SEPARATOR = "+";
 
 
-export function loadTripState(tKState: TKState, sharedTripJsonUrl: any) {
+export function loadTripState(tKState: TKState, sharedTripJsonUrl: any, selectedSegmentId?: string) {
     tKState.onWaitingStateLoad(true);
     tKState.onTripJsonUrl(sharedTripJsonUrl)
-        .then(() => {
+        .then((trips) => {
             tKState.onWaitingStateLoad(false);
+            if (selectedSegmentId && trips && trips.length > 0) {
+                const selectedTrip = trips[0];
+                const selectedSegment = selectedTrip.segments.find(segment => segment.id === selectedSegmentId);
+                selectedSegment && tKState.setSelectedTripSegment(selectedSegment);
+            }
             tKState.onTripDetailsView(true);
         })
         .catch((error: Error) => tKState.onWaitingStateLoad(false,
@@ -103,6 +109,9 @@ class TKStateUrl extends React.Component<IProps, {}> {
         if (state.selectedTrip && state.tripDetailsView) {
             fieldsMap.set(URLFields.TRIP, this.getTripFieldValue(state.selectedTrip));
         }
+        if (state.selectedTripSegment) {
+            fieldsMap.set(URLFields.SEGMENT, state.selectedTripSegment.id)
+        }
         let statePath = "/";
         for (const field of Object.values(URLFields)) {
             if (fieldsMap.has(field)) {
@@ -141,9 +150,14 @@ class TKStateUrl extends React.Component<IProps, {}> {
             tripJsonUrl = decodeURIComponent(fieldsMap.get(URLFields.TRIP)!);
         }
 
+        let segmentId: string | undefined = undefined;
+        if (fieldsMap.has(URLFields.SEGMENT)) {
+            segmentId = fieldsMap.get(URLFields.SEGMENT);
+        }
+
         const tKState = this.props.tKState;
         if (tripJsonUrl) {
-            this.loadTripState(tripJsonUrl);
+            this.loadTripState(tripJsonUrl, segmentId);
             return;
         }
 
@@ -311,8 +325,8 @@ class TKStateUrl extends React.Component<IProps, {}> {
         }
     }
 
-    private loadTripState(sharedTripJsonUrl) {
-        loadTripState(this.props.tKState, sharedTripJsonUrl);
+    private loadTripState(sharedTripJsonUrl: string, selectedSegmentId?: string) {
+        loadTripState(this.props.tKState, sharedTripJsonUrl, selectedSegmentId);
     }
 
     private loadTimetableState(regionCode: string, stopCode: string, filter?: string, serviceID?: string, timeInSecs?: number) {

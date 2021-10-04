@@ -92,6 +92,12 @@ export class BookingNote {
 }
 
 @JsonObject
+class BookingPurchase {
+    @JsonProperty("id", String, true)
+    public id: string = "";
+}
+
+@JsonObject
 class BookingConfirmation {
     @JsonProperty("input", [BookingField], true)
     public input: BookingField[] = [];
@@ -105,6 +111,8 @@ class BookingConfirmation {
     public vehicle?: BookingVehicle = undefined;
     @JsonProperty("notes", [BookingNote], true)
     public notes?: BookingNote[] = undefined;
+    @JsonProperty("purchase", BookingPurchase, true)
+    public purchase?: BookingPurchase = undefined;
 }
 
 @JsonObject

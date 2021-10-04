@@ -16,6 +16,7 @@ import TKUIActiveTrip from "./TKUIActiveTrip";
 import Util from "../util/Util";
 import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
 import {TKError} from "../error/TKError";
+import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMyBookings: () => void;
@@ -25,6 +26,7 @@ interface IConsumedProps extends TKUIViewportUtilProps, IAccountContext {
     onTripJsonUrl: (tripJsonUrl: string) => Promise<Trip[] | undefined>;
     onWaitingStateLoad: (waiting: boolean, error?: Error) => void;
     onTripDetailsView: (tripDetailsView: boolean) => void;
+    setSelectedTripSegment: (segment?: Segment) => void;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -43,7 +45,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 let refreshActiveTripInterval: any;
 
 const TKUIHomeCard: React.SFC<IProps> = (props: IProps) => {
-    const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, onMyBookings, t, landscape, status, classes} = props;
+    const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, t, landscape, status, classes} = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     useEffect(() => {
         const refreshActiveTrip = () =>
@@ -73,9 +75,16 @@ const TKUIHomeCard: React.SFC<IProps> = (props: IProps) => {
                         const url = activeTrip?.trips?.[0]!;
                         onWaitingStateLoad(true);
                         onTripJsonUrl(url)
-                            .then(() => {
+                            .then(trips => {
                                 onWaitingStateLoad(false);
                                 onTripDetailsView(true);
+                                if (trips && trips.length > 0) {
+                                    const bookingId = activeTrip?.id
+                                    const selectedTrip = trips[0];
+                                    const selectedSegment = selectedTrip.segments.find(segment =>
+                                        segment.booking?.confirmation?.purchase?.id === bookingId);
+                                    selectedSegment && setSelectedTripSegment(selectedSegment);
+                                }
                             })
                             .catch((error: Error) => onWaitingStateLoad(false,
                                 new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
@@ -89,7 +98,7 @@ const TKUIHomeCard: React.SFC<IProps> = (props: IProps) => {
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) => {
-        const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView} = useContext(RoutingResultsContext);
+        const {onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment} = useContext(RoutingResultsContext);
         const accountContext = useContext(TKAccountContext);
         return <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
@@ -99,7 +108,8 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
                     ...accountContext,
                     onTripJsonUrl,
                     onWaitingStateLoad,
-                    onTripDetailsView
+                    onTripDetailsView,
+                    setSelectedTripSegment
                 })}
         </TKUIViewportUtil>;
     };

@@ -428,6 +428,10 @@ const otherStyles = {
         },
         '.react-confirm-alert-overlay': {
             zIndex: '1099!important'
+        },
+        '.react-confirm-alert-body': {
+            boxSizing: 'border-box',
+            width: '100%!important'
         }
     }
 };
