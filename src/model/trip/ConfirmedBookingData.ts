@@ -31,6 +31,8 @@ class ConfirmedBookingData {
     public timeZone?: string = undefined;
     @JsonProperty("index", Number, true)
     public index?: number = undefined;
+    @JsonProperty("id", String, true)
+    public id: string = "";
 }
 
 @JsonObject
