@@ -29,28 +29,38 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingActions"
 };
 
+const TKUIBookingAction: React.SFC<IProps & {action: BookingAction}> = props => {
+    const {action, setWaiting, setError, requestRefresh, t} = props;
+    const [confirm, setConfirm] = useState<boolean>(false);
+    return (
+        <TKUIButton
+            text={confirm ? t("Confirm") : action.title}
+            type={TKUIButtonType.PRIMARY_LINK}
+            onClick={() => {
+                if (action.internalURL) {
+                    if (!confirm) {
+                        setConfirm(true);
+                        return;
+                    }
+                    setWaiting?.(true);
+                    TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
+                    // NetworkUtil.delayPromise(10)({})     // For testing
+                        .then(requestRefresh)
+                        .catch((e) => setError?.(e))
+                        .finally(() => setWaiting?.(false));
+                } else if (action.externalURL) {
+                    window.open(action.externalURL, "_self");
+                }
+            }}
+        />
+    );
+};
+
 const TKUIBookingActions: React.SFC<IProps> = (props: IProps) => {
-    const {actions, setWaiting, setError, requestRefresh, classes} = props;
+    const {actions, classes} = props;
     return (
         <div className={classes.actions}>
-            {actions.map((action, i) =>
-                <TKUIButton
-                    text={action.title}
-                    type={TKUIButtonType.PRIMARY_LINK}
-                    onClick={() => {
-                        if (action.internalURL) {
-                            setWaiting?.(true);
-                            TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
-                            // NetworkUtil.delayPromise(10)({})     // For testing
-                                .then(requestRefresh)
-                                .catch((e) => setError?.(e))
-                                .finally(() => setWaiting?.(false));
-                        } else if (action.externalURL) {
-                            window.open(action.externalURL, "_self");
-                        }
-                    }}
-                    key={i}
-                />)}
+            {actions.map((action, i) => <TKUIBookingAction action={action} key={i} {...props}/>)}
         </div>
     );
 };

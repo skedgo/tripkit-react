@@ -43,7 +43,9 @@ const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
                         {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromTimeTZ(activeTrip.time! * 1000, activeTrip.timeZone),
                             DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                     </div>
-                    {activeTrip.confirmation?.status?.title}
+                    <div className={classes.status}>
+                        {activeTrip.confirmation?.status?.title}
+                    </div>
                 </div>
                 <div className={classes.mode}>
                     <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(activeTrip.mode!), false, theme.isDark)}/>
