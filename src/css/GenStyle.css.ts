@@ -425,6 +425,9 @@ const otherStyles = {
 
         '.ReactModal__Overlay': {
             'zIndex': '1080'
+        },
+        '.react-confirm-alert-overlay': {
+            zIndex: '1099!important'
         }
     }
 };
