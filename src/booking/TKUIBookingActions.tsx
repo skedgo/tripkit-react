@@ -8,6 +8,7 @@ import NetworkUtil from "../util/NetworkUtil";
 import TripGoApi from "../api/TripGoApi";
 import {BookingAction} from "../model/trip/BookingInfo";
 import {tKUIBookingActionsDefaultStyle} from "./TKUIBookingActions.css";
+import UIUtil from "../util/UIUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
@@ -31,23 +32,22 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIBookingAction: React.SFC<IProps & {action: BookingAction}> = props => {
     const {action, setWaiting, setError, requestRefresh, t} = props;
-    const [confirm, setConfirm] = useState<boolean>(false);
     return (
         <TKUIButton
-            text={confirm ? t("Confirm") : action.title}
+            text={action.title}
             type={TKUIButtonType.PRIMARY_LINK}
             onClick={() => {
                 if (action.internalURL) {
-                    if (!confirm) {
-                        setConfirm(true);
-                        return;
-                    }
-                    setWaiting?.(true);
-                    TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
-                    // NetworkUtil.delayPromise(10)({})     // For testing
-                        .then(requestRefresh)
-                        .catch((e) => setError?.(e))
-                        .finally(() => setWaiting?.(false));
+                    UIUtil.confirmMsg({
+                        onConfirm: () => {
+                            setWaiting?.(true);
+                            TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
+                            // NetworkUtil.delayPromise(10)({})     // For testing
+                                .then(requestRefresh)
+                                .catch((e) => setError?.(e))
+                                .finally(() => setWaiting?.(false));
+                        }
+                    })
                 } else if (action.externalURL) {
                     window.open(action.externalURL, "_self");
                 }

@@ -97,3 +97,4 @@ export {default as WaiAriaUtil} from "./util/WaiAriaUtil";
 //     import("./example/chym/index");
 //     import("./example/client-sample");
 // }
+import 'react-confirm-alert/src/react-confirm-alert.css';
