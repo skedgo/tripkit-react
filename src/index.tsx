@@ -57,6 +57,7 @@ export {default as TKUIConstants} from "./util/Constants";
 export {tKUIColors} from "./jss/TKUITheme";
 export {feedbackTextFromState} from "./feedback/TKUIReportBtn";
 export {default as Environment} from "./env/Environment";
+export {Env} from "./env/Environment";
 export {default as TKGATracker} from "./analytics/GATracker";
 export {default as TKPeliasGeocoder} from "./geocode/PeliasGeocoder";
 export {default as TKUICard, CardPresentation} from "./card/TKUICard";

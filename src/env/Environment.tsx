@@ -19,6 +19,10 @@ class Environment {
         console.log("Environment: " + this.environment);
     }
 
+    public static setEnvironment(environment: Env) {
+        this.environment = environment;
+    }
+
     public static isProd(): boolean {
         return this.environment === Env.PRODUCTION;
     }
