@@ -124,6 +124,7 @@ class TGUIFeedbackForm extends React.Component<IProps, IState> {
             <TKUICard
                 title={t("Request.support")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                focusTrap={true}
                 onRequestClose={this.props.onRequestClose}
             >
                 <div className={classes.main}>

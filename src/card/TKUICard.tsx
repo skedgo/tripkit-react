@@ -18,6 +18,7 @@ import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
 import {mainContainerId, modalContainerId} from "../trip-planner/TKUITripPlanner";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import TKUICardHeader, {TKUICardHeaderClientProps, TKUICardHeaderProps} from "./TKUICardHeader";
+import FocusTrap from "focus-trap-react";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -141,6 +142,11 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     doNotStack?: boolean;
 
     children?: React.ReactNode;
+
+    /**
+     * By default is true for presentation === CardPresentation.MODAL, or false otherwise.
+     */
+    focusTrap?: boolean;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -251,7 +257,7 @@ class TKUICard extends React.Component<IProps, IState> {
         const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose;
         const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props}/>);
         const showHandle = hasHandle(this.props);
-        const body =
+        const bodyContent =
             <div className={classNames(classes.main, genClassNames.root,
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
                  aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
@@ -269,7 +275,7 @@ class TKUICard extends React.Component<IProps, IState> {
                         <div className={classes.handleLine}/>
                     </div>}
                     {showHeader &&
-                        renderHeader({title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle})}
+                    renderHeader({title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle})}
                 </div>}
                 {this.props.renderSubHeader &&
                 <div className={classes.subHeader}>
@@ -290,6 +296,11 @@ class TKUICard extends React.Component<IProps, IState> {
                     </TKUIScrollForCard> : this.props.children
                 }
             </div>;
+        const focusTrap = this.props.focusTrap !== undefined ? this.props.focusTrap : this.props.presentation === CardPresentation.MODAL;
+        const body = focusTrap ?
+            <FocusTrap>
+                {bodyContent}
+            </FocusTrap> : bodyContent
         return (
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
@@ -320,8 +331,8 @@ class TKUICard extends React.Component<IProps, IState> {
                                 width: '500px'
                             },
                             ...(!this.firstModal ?
-                                { overlay: {background: 'none'} } :
-                                { overlay: this.props.injectedStyles.modalOverlay }
+                                    { overlay: {background: 'none'} } :
+                                    { overlay: this.props.injectedStyles.modalOverlay }
                             )
                         }}
                         shouldCloseOnEsc={true}

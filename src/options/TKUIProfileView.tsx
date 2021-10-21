@@ -173,6 +173,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             <TKUICard
                 title={t("Profile")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                focusTrap={true}
                 onRequestClose={() => this.close(true)}
                 slideUpOptions={this.props.slideUpOptions}
             >

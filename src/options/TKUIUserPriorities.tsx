@@ -49,6 +49,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
             <TKUICard
                 title={t("My.Priorities")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                focusTrap={true}
                 onRequestClose={this.props.onRequestClose}
                 slideUpOptions={this.props.slideUpOptions}
             >

@@ -83,6 +83,7 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
             <TKUICard
                 title={t("Transport")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                focusTrap={true}
                 onRequestClose={this.onRequestClose}
                 slideUpOptions={this.props.slideUpOptions}
             >

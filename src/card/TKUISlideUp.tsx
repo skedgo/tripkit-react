@@ -227,19 +227,6 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         );
     }
 
-    /**
-     * Got from here: https://github.com/reactjs/react-modal/blob/master/src/helpers/focusManager.js
-     */
-    contentHasFocus = () =>
-        document.activeElement === this.elem ||
-        this.elem.contains(document.activeElement);
-
-    // Don't steal focus from inner elements
-    focusContent = () =>
-        this.elem &&
-        !this.contentHasFocus() &&
-        this.elem.focus({ preventScroll: true });
-
     componentDidUpdate(prevProps: IProps, prevState: IState) {
         if (prevProps.handleRef !== this.props.handleRef) {
             this.props.handleRef && this.props.handleRef.addEventListener("click", this.onHandleClicked);
