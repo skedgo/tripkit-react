@@ -75,6 +75,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
             <TKUICard
                 title={t("My.Personal.Data")}
                 presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                focusTrap={true}
                 onRequestClose={this.props.onRequestClose}
                 slideUpOptions={this.props.slideUpOptions}
             >
