@@ -101,22 +101,31 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             }
         },
         TKUIMapView: {
-            props: (props: TKUIMapViewProps) => ({
-                // tileLayerProps: {
-                //     attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
-                //     // url: "http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg",
-                //     url: props.theme.isLight ?
-                //         "https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA" :
-                //         "https://api.mapbox.com/styles/v1/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA",
-                // },
-                mapboxGlLayerProps: {
-                    accessToken: "pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA",
-                    style: props.theme.isLight ?
-                        "mapbox://styles/mgomezlucero/ckjliu0460xxh1aqgzzb2bb34" :
-                        "mapbox://styles/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm",
-                    attribution: "&copy <a href='http://osm.org/copyright' tabindex='-1'>OpenStreetMap</a> contributors"
-                }
-            })
+            props: (props: TKUIMapViewProps) => {
+                const {trip, tripSegment} = props;
+                const isBikeTrip = trip && trip.isBicycleTrip() || tripSegment && tripSegment.isBicycle();
+                return (isBikeTrip ?
+                    {
+                        tileLayerProps: {
+                            attribution: "&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors",
+                            url: "https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+                            // url: "http://1.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.day/{z}/{x}/{y}/256/png8?app_id=aYTqZORZ7FFwqoFZ7c4j&app_code=qUK5XVczkZcFESPnGPFKPg",
+                            // url: props.theme.isLight ?
+                            //     "https://api.mapbox.com/styles/v1/mgomezlucero/cjvp9zm9114591cn8cictke9e/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA" :
+                            //     "https://api.mapbox.com/styles/v1/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA",
+                        }
+                    } :
+                    {
+                        mapboxGlLayerProps: {
+                            accessToken: "pk.eyJ1IjoibWdvbWV6bHVjZXJvIiwiYSI6ImNqa3N3aTQ0cjAxZ3UzdnRnbWtyZDY4bXMifQ.mLGxFRgw2xvCmNa8DVrtxA",
+                            style: props.theme.isLight ?
+                                "mapbox://styles/mgomezlucero/ckjliu0460xxh1aqgzzb2bb34" :
+                                "mapbox://styles/mgomezlucero/ckbmm6m0w003e1hmy0ksjxflm",
+                            attribution: "&copy <a href='http://osm.org/copyright' tabindex='-1'>OpenStreetMap</a> contributors"
+                        }
+                    }
+                );
+            }
         },
         TKUIRoutingResultsView: {
             props: (props: TKUIRoutingResultsViewProps) => ({
