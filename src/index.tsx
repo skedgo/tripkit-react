@@ -93,9 +93,10 @@ export {default as TKDefaultGeocoderNames} from "./geocode/TKDefaultGeocoderName
 export {TKStyleOverride} from "./config/TKConfigHelper";
 export {default as WaiAriaUtil} from "./util/WaiAriaUtil";
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-// if (document.getElementById("tripgo-sample-root")) {
-//     import("./example/tripgo/tripgo-sample");
+/* eslint-disable import/first */
+if (document.getElementById("tripgo-sample-root")) {
+    import("./example/tripgo/tripgo-sample");
 //     import("./example/chym/index");
 //     import("./example/client-sample");
-// }
+}
 import 'react-confirm-alert/src/react-confirm-alert.css';
