@@ -167,6 +167,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     trip?: Trip;
 
+    tripSegment?: Segment;
+
     /**
      * Public transport service to be displayed on map.
      * @ctype
@@ -808,8 +810,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
                 this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
             }
-            const trip = this.props.trip;
-            const isWalkTrip = trip && trip.isWalkTrip();
+            const {trip, tripSegment} = this.props;
+            const isWalkTrip = trip && trip.isWalkTrip() || tripSegment && tripSegment.isWalking();
             this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
                 isWalkTrip ? 'visible' : 'none');
             this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility',
@@ -914,6 +916,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                                                                 to: location
                                                             })),
                                                         trip: routingContext.selectedTrip,
+                                                        tripSegment: routingContext.selectedTripSegment,
                                                         service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
                                                             serviceContext.selectedService : undefined,
                                                         onViewportChange: routingContext.onViewportChange,
