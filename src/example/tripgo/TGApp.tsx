@@ -103,7 +103,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         TKUIMapView: {
             props: (props: TKUIMapViewProps) => {
                 const {trip, tripSegment} = props;
-                const isBikeTrip = trip && trip.isBicycleTrip() || tripSegment && tripSegment.isBicycle();
+                const isBikeTrip = (trip && trip.isBicycleTrip()) || (tripSegment && tripSegment.isBicycle());
                 return (isBikeTrip ?
                     {
                         tileLayerProps: {

@@ -175,7 +175,8 @@ class Segment extends SegmentTemplate {
     }
 
     public isBicycle(): boolean {
-        return this.modeIdentifier !== null && this.modeIdentifier.startsWith("cy_bic");
+        return this.modeIdentifier !== null
+            && (this.modeIdentifier.startsWith("cy_bic") || this.modeIdentifier.startsWith("me_mic_bic"));
     }
 
     public isSchoolbus(): boolean {
