@@ -4,15 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/buttons/TKUIButton.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/buttons/TKUIButton.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -544,10 +545,7 @@
       <workItem from="1632861501460" duration="5000" />
       <workItem from="1632923731963" duration="23309000" />
       <workItem from="1633373565415" duration="300000" />
-      <workItem from="1635270056427" duration="13658000" />
-      <workItem from="1635336105114" duration="1970000" />
-      <workItem from="1635423519219" duration="1198000" />
-      <workItem from="1635445467173" duration="10218000" />
+      <workItem from="1635167640399" duration="5081000" />
     </task>
     <task id="LOCAL-00419" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Fix to issues on automatic content focus and focus return on cards.&#10;- aria labels to timetable and service views.">
       <created>1614723891309</created>
@@ -885,12 +883,12 @@
       <option name="project" value="LOCAL" />
       <updated>1633361950908</updated>
     </task>
-    <task id="LOCAL-00467" summary="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project.">
-      <created>1635287076373</created>
+    <task id="LOCAL-00467" summary="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments">
+      <created>1634920015766</created>
       <option name="number" value="00467" />
       <option name="presentableId" value="LOCAL-00467" />
       <option name="project" value="LOCAL" />
-      <updated>1635287076374</updated>
+      <updated>1634920015766</updated>
     </task>
     <option name="localTasksCounter" value="468" />
     <servers />
@@ -1039,8 +1037,8 @@
     <MESSAGE value="- Feature #15690: Display multiple notes for a booking (Web)&#10;- Match booking confirmation MxM card with iOS" />
     <MESSAGE value="- Feature #15691: My Bookings view - Match iOS UI" />
     <MESSAGE value="More work on:&#10;- Feature #15691: My Bookings view - Match iOS UI" />
-    <MESSAGE value="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project." />
+    <MESSAGE value="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments" />
+    <option name="LAST_COMMIT_MESSAGE" value="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

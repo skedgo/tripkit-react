@@ -505,25 +505,31 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                                this.mapboxGlMap = ref.leafletElement.getMapboxMap();
                                                this.mapboxGlMap.on('load', () =>
                                                    RegionsData.instance.requireRegions().then(() => {
-                                                       if (!this.mapboxGlMap.getSource('coverage')) {
-                                                           this.mapboxGlMap.addSource('coverage', {
-                                                               'type': 'geojson',
-                                                               'data': {
-                                                                   'type': 'Feature',
-                                                                   'geometry': RegionsData.instance.getCoverageGeoJson()
-                                                               }
-                                                           });
-                                                           // Add a new layer to visualize the polygon.
-                                                           this.mapboxGlMap.addLayer({
-                                                               'id': 'coverageLayer',
-                                                               'type': 'fill',
-                                                               'source': 'coverage', // reference the data source
-                                                               'layout': {},
-                                                               'paint': {
-                                                                   'fill-color': '#212A33',
-                                                                   'fill-opacity': 0.4
-                                                               }
-                                                           });
+                                                       try {
+                                                           if (!this.mapboxGlMap.getSource('coverage')) {
+                                                               this.mapboxGlMap.addSource('coverage', {
+                                                                   'type': 'geojson',
+                                                                   'data': {
+                                                                       'type': 'Feature',
+                                                                       'geometry': RegionsData.instance.getCoverageGeoJson()
+                                                                   }
+                                                               });
+                                                               // Add a new layer to visualize the polygon.
+                                                               this.mapboxGlMap.addLayer({
+                                                                   'id': 'coverageLayer',
+                                                                   'type': 'fill',
+                                                                   'source': 'coverage', // reference the data source
+                                                                   'layout': {},
+                                                                   'paint': {
+                                                                       'fill-color': '#212A33',
+                                                                       'fill-opacity': 0.4
+                                                                   }
+                                                               });
+                                                           }
+                                                       } catch (e) {
+                                                           // Catch exception inside getSource call probably caused by
+                                                           // using mode specific tiles.
+                                                           console.log(e);
                                                        }
                                                    })
                                                );

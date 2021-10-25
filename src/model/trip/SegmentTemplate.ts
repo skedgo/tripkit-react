@@ -5,6 +5,7 @@ import ServiceShape from "./ServiceShape";
 import Street from "./Street";
 import StopLocation from "../StopLocation";
 import MapUtil from "../../util/MapUtil";
+import DataSourceAttribution from "../location/DataSourceAttribution";
 
 export enum Visibility {
     HIDDEN,
@@ -28,6 +29,16 @@ export class SegmentTypeConverter implements JsonCustomConvert<SegmentType> {
     public deserialize(obj: any): SegmentType {
         return SegmentType[obj as string];
     }
+}
+
+@JsonObject
+class MapTiles {
+    @JsonProperty("name", String, true)
+    public name: string = "";
+    @JsonProperty("urlTemplates", [String], true)
+    public urlTemplates: string[] = [];
+    @JsonProperty("sources", [DataSourceAttribution], true)
+    public sources: DataSourceAttribution[] = [];
 }
 
 @JsonObject
@@ -87,6 +98,8 @@ class SegmentTemplate {
     // @Json GWTJsonMini mini;
     @JsonProperty("mini", Any, true)
     private _mini: any = {};
+    @JsonProperty("mapTiles", MapTiles, true)
+    public mapTiles?: MapTiles = undefined;
 
     private _stop: StopLocation | null = null;
     private _notesList: string[] | null = null;
