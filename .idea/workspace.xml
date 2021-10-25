@@ -4,26 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/util/UIUtil.tsx" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIBookingActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIBookingActions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/GenStyle.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/GenStyle.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/SegmentTemplate.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
-      <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.module.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/chym/QueryWidget.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/example/chym/regions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/dist/" />
-    <ignored path="$PROJECT_DIR$/node_modules/" />
-    <ignored path="$PROJECT_DIR$/out/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,55 +35,6 @@
   </component>
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="UIUtil.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/UIUtil.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="18" column="22" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
-              <folding>
-                <element signature="e#0#26#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TKUIBookingActions.tsx" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/booking/TKUIBookingActions.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="35" column="19" lean-forward="true" selection-start-line="35" selection-start-column="19" selection-end-line="35" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#71#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/index.tsx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
-              <caret line="73" column="19" selection-start-line="73" selection-start-column="19" selection-end-line="73" selection-end-column="19" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GenStyle.css.ts" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/css/GenStyle.css.ts">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6375">
-              <caret line="429" column="35" selection-start-line="429" selection-start-column="35" selection-end-line="429" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -224,6 +165,17 @@
       <filtered-out-file-type name="JavaScript" />
       <filtered-out-file-type name="ECMAScript 6" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/trip/ModeInfo.ts" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -419,18 +371,6 @@
       <recent name="$PROJECT_DIR$/src/doc/components" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
@@ -440,56 +380,30 @@
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <method>
+      <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="class" />
       <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <patterns />
-      <method>
+      <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="TestNG" factoryName="TestNG">
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="SUITE_NAME" />
-      <option name="PACKAGE_NAME" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="GROUP_NAME" />
+    <configuration default="true" type="TestNG">
       <option name="TEST_OBJECT" value="CLASS" />
       <option name="VM_PARAMETERS" />
-      <option name="PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="OUTPUT_DIRECTORY" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <option name="USE_DEFAULT_REPORTERS" value="false" />
-      <option name="PROPERTIES_FILE" />
       <properties />
       <listeners />
-      <method>
+      <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -630,13 +544,7 @@
       <workItem from="1632861501460" duration="5000" />
       <workItem from="1632923731963" duration="23309000" />
       <workItem from="1633373565415" duration="300000" />
-    </task>
-    <task id="LOCAL-00418" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Need to provide a custom time picker Safari since it doesn't support HTML5 time input type.">
-      <created>1614627444816</created>
-      <option name="number" value="00418" />
-      <option name="presentableId" value="LOCAL-00418" />
-      <option name="project" value="LOCAL" />
-      <updated>1614627444817</updated>
+      <workItem from="1635167640399" duration="5081000" />
     </task>
     <task id="LOCAL-00419" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Fix to issues on automatic content focus and focus return on cards.&#10;- aria labels to timetable and service views.">
       <created>1614723891309</created>
@@ -974,7 +882,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633361950908</updated>
     </task>
-    <option name="localTasksCounter" value="467" />
+    <task id="LOCAL-00467" summary="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments">
+      <created>1634920015766</created>
+      <option name="number" value="00467" />
+      <option name="presentableId" value="LOCAL-00467" />
+      <option name="project" value="LOCAL" />
+      <updated>1634920015766</updated>
+    </task>
+    <option name="localTasksCounter" value="468" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1066,7 +981,7 @@
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.ts" />
@@ -1087,34 +1002,16 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Feature #13578: TripKit React - Mode by Mode flow:&#10;- stop supporting viewport controlled map, cleanup code." />
     <MESSAGE value="Booking on tripkit-react:&#10;- moved account implementation from feonix-react to tripkit.&#10;- started with MxM booking card." />
     <MESSAGE value="Booking on tripkit-react:&#10;- more work." />
     <MESSAGE value="Booking on tripkit-react:&#10;- Confirmation view." />
@@ -1139,7 +1036,8 @@
     <MESSAGE value="- Feature #15690: Display multiple notes for a booking (Web)&#10;- Match booking confirmation MxM card with iOS" />
     <MESSAGE value="- Feature #15691: My Bookings view - Match iOS UI" />
     <MESSAGE value="More work on:&#10;- Feature #15691: My Bookings view - Match iOS UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="More work on:&#10;- Feature #15691: My Bookings view - Match iOS UI" />
+    <MESSAGE value="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments" />
+    <option name="LAST_COMMIT_MESSAGE" value="(2) Mode specific map layers, which activate when a single-mode trips of that mode is selected, and when segment of that mode is selected (MxM view).&#10;- CycleOSM layer for bicycle segments&#10;- Walk paths layer for walking segments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
