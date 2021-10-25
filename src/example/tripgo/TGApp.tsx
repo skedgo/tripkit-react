@@ -31,7 +31,6 @@ import {loadTripState} from "./options/TGUILoadTripsView";
 import {ReactComponent as TripgoLogo} from './images/logo-tripgo.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-
 }
 
 export interface IStyle {
