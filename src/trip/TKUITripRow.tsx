@@ -69,7 +69,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Function that will be forwarded to the main element. It can be useful to implement support for keyboard navigation.
      * @ctype
      */
-    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent<HTMLDivElement>) => void;
 
     /**
      * Callback reference to be passed to main element.

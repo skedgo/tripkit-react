@@ -1,6 +1,9 @@
 class Constants {
 
     public static DEPLOY_URL: string;
+    // Using tripgo.com as static assets repository.
+    // TODO: avoid this.
+    public static RESOURCES_URL: string = "https://tripgo.com";
 
     private static isMe(scriptElem: any){
         return scriptElem.getAttribute('src') && scriptElem.getAttribute('src').includes("/embed.js");
@@ -38,10 +41,7 @@ class Constants {
     }
 
     public static absUrl(path: string): string {
-        // return this.DEPLOY_URL + path;
-        // Using tripgo.com as static assets repository.
-        // TODO: avoid this.
-        return "https://tripgo.com" + path;
+        return this.RESOURCES_URL + path;
     }
 
 }
