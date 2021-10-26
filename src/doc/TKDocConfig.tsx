@@ -181,6 +181,7 @@ const styles = {
     }
 };
 
+// @ts-ignore: avoid TS2741
 const classes: Record<keyof typeof styles, string> = jss.createStyleSheet(styles as any).attach().classes;
 
 export {tKDocConfig};

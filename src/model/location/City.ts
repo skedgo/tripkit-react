@@ -12,6 +12,7 @@ class City extends Location {
     @JsonProperty('title', String)
     public title: string = '';
     @JsonProperty('timezone', String)
+    // @ts-ignore: avoid TS2610
     public timezone: string = '';
 
     get address(): string {

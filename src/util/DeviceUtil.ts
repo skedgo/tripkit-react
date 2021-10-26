@@ -125,6 +125,7 @@ class DeviceUtil {
     public static isTouch() {
         return ( 'ontouchstart' in window ) ||
             ( navigator.maxTouchPoints > 0 ) ||
+            // @ts-ignore: avoid TS2551
             ( navigator.msMaxTouchPoints > 0 );
     }
 

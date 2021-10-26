@@ -12,7 +12,9 @@ import RegionInfoResults from "../model/region/RegionInfoResults";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import LeafletUtil from "../util/LeafletUtil";
-import * as turf from "@turf/turf";
+import union from "@turf/union"
+import intersect from "@turf/intersect";
+import {polygon} from "@turf/helpers";
 
 export class RegionsData {
 
@@ -223,17 +225,17 @@ export class RegionsData {
                 if (JSON.stringify(decoded[0]) !== JSON.stringify(decoded[decoded.length - 1])) {
                     decoded.push(decoded[0]);
                 }
-                return turf.polygon([decoded]);
+                return polygon([decoded]);
             });
 
             let result = polygons.slice();
             for (let i = 0; i < polygons.length; i++) {
                 for (let j = i + 1; j < polygons.length; j++) {
-                    if (turf.intersect(polygons[i], polygons[j])) {
-                        const union = turf.union(polygons[i], polygons[j]) as any;
+                    if (intersect(polygons[i], polygons[j])) {
+                        const unionPolygon = union(polygons[i], polygons[j]) as any;
                         // Don't replace polygons[j] by the union since we need to preserve the elements in common with
                         // result for this to work.
-                        polygons[j].geometry.coordinates = union.geometry.coordinates;
+                        polygons[j].geometry.coordinates = unionPolygon.geometry.coordinates;
                         result = result.filter(polygon => polygon !== polygons[i]);
                         break;
                     }

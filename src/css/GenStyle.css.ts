@@ -384,6 +384,7 @@ const genStyleCreators: ITKUIGenStyleCreators = {
 };
 
 const genStyles = {...genStyleClasses, ...genStyleCreators};
+// @ts-ignore: avoid TS2740
 const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyleSheet(genStyleClasses as any).attach().classes;
 
 const otherStyles = {
