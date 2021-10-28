@@ -32,10 +32,10 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             width: (props: TKUIButtonProps) =>
                 (props.type === TKUIButtonType.PRIMARY_VERTICAL || props.type === TKUIButtonType.SECONDARY_VERTICAL) ? '40px' : 'initial',
             '&:hover': {
-                backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .9)
             },
             '&:disabled': {
-                backgroundColor: colorWithOpacity(theme.colorPrimary, .5),
+                backgroundColor: colorWithOpacity(theme.colorPrimary, .8), // To get >= 4.5:1 contrast
                 cursor: 'initial'
             },
             '&:active': {

@@ -78,7 +78,7 @@ export {default as TKUISettingLink} from "./options/TKUISettingLink";
 export type TKUIWithStyle<ST, CP> = TKUIWithStyleForExport<ST, CP>;
 export {OptionsContext} from "./options/OptionsProvider"
 export {connect} from "./config/TKConfigHelper";
-export {withStyles, overrideClass} from "./jss/StyleHelper";
+export {withStyles, overrideClass, mergeStyleOverrides} from "./jss/StyleHelper";
 export type TKUIWithClasses<STYLE, PROPS> = TKUIWithClassesForExport<STYLE, PROPS>;
 export {default as genStyles} from "./css/GenStyle.css";
 export {colorWithOpacity, white, black} from "./jss/TKUITheme";
