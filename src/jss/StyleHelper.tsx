@@ -124,6 +124,37 @@ export function overrideStyles<ST,PR>(style: TKUIStyles<ST, PR>, styleOverride: 
     }
 }
 
+export function mergeStyleOverrides<ST,PR>(styleOverride1: TKUICustomStyles<ST, PR>, styleOverride2: TKUICustomStyles<ST, PR>): TKUICustomStyleCreator<keyof ST, TKUITheme, PR> {
+    return (theme: TKUITheme) => {
+        const themedStyleOverride1: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(styleOverride1) ?
+            (styleOverride1 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            styleOverride1 as Partial<CustomStyles<keyof ST, PR>>;
+        const themedStyleOverride2: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(styleOverride2) ?
+            (styleOverride2 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
+            styleOverride2 as Partial<CustomStyles<keyof ST, PR>>;
+        const overrideStyles =
+            Object.keys(themedStyleOverride2)
+                .reduce((overrideStylesMerge: Partial<CustomStyles<keyof ST, PR>>, className: string) => {
+                    const classOverride = defaultStyle => {
+                        const cssPropsOverride1: TKUICustomCSSProperties<PR> = themedStyleOverride1[className];
+                        const cssPropsOverridden1: CSSProperties<PR> = Util.isFunction(cssPropsOverride1) ?
+                            (cssPropsOverride1 as CSSPropertiesCreator<PR>)(defaultStyle) :
+                            cssPropsOverride1 as CSSProperties<PR>;
+                        const cssPropsOverride2: TKUICustomCSSProperties<PR> = themedStyleOverride2[className];
+                        const cssPropsOverridden2: CSSProperties<PR> = Util.isFunction(cssPropsOverride2) ?
+                            (cssPropsOverride2 as CSSPropertiesCreator<PR>)(cssPropsOverridden1) :
+                            cssPropsOverride2 as CSSProperties<PR>;
+                        return cssPropsOverridden2
+                    }
+                    return {
+                        ...overrideStylesMerge,
+                        [className]: classOverride
+                    }
+                }, {});
+        return {...themedStyleOverride1, ...overrideStyles};
+    }
+}
+
 export function withStyleInjection<
     STYLE,
     IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>,
