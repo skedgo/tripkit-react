@@ -18,11 +18,11 @@ import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
 import {ReactComponent as IconNote} from '../images/ic-note.svg';
 import {ReactComponent as IconPerson} from '../images/ic-person-circle.svg';
 import {ReactComponent as IconShuttle} from '../images/ic-shuttle-circle.svg';
-import {TKError} from "..";
 import TKUIErrorView from "../error/TKUIErrorView";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIFromTo from "../booking/TKUIFromTo";
 import TKUIBookingActions from "../booking/TKUIBookingActions";
+import {TKError} from "../error/TKError";
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 

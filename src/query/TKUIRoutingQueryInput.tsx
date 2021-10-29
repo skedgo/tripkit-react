@@ -28,12 +28,11 @@ import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUti
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
-import {tKUIColors} from "..";
 import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
 import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import HasCard, {HasCardKeys} from "../card/HasCard";
-import {TKUITheme, white} from "../jss/TKUITheme";
+import {tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 

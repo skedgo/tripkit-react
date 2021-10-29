@@ -1,7 +1,6 @@
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Region from "../model/region/Region";
-import {JsonConvert} from "json2typescript";
 import RegionResults from "../model/region/RegionResults";
 import TripGoApi from "../api/TripGoApi";
 import ModeIdentifier from "../model/region/ModeIdentifier";
@@ -11,10 +10,10 @@ import RegionInfo from "../model/region/RegionInfo";
 import RegionInfoResults from "../model/region/RegionInfoResults";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
-import LeafletUtil from "../util/LeafletUtil";
 import union from "@turf/union"
 import intersect from "@turf/intersect";
 import {polygon} from "@turf/helpers";
+import LeafletUtil from "../util/LeafletUtil";
 
 export class RegionsData {
 

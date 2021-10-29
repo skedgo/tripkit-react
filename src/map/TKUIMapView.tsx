@@ -337,7 +337,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.setViewport(fitSet[0], newZoom);
             return;
         }
-        this.fitBounds(BBox.createBBoxArray(fitSet));
+        this.fitBounds(LeafletUtil.createBBoxArray(fitSet));
     }
 
     private onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
@@ -754,7 +754,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // if (!prevProps.from && !prevProps.to &&
         if (this.props.from !== prevProps.from && this.props.to !== prevProps.to &&
             this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
-            this.fitBounds(BBox.createBBoxArray([this.props.from, this.props.to]));
+            this.fitBounds(LeafletUtil.createBBoxArray([this.props.from, this.props.to]));
         }
 
         // If computing trips from user location then show it on map.

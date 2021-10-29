@@ -44,7 +44,7 @@ import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
 import {TKUserPosition} from "../util/GeolocationUtil";
 import TKUIWaitingRequest, {TKRequestStatus} from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
-import {CardPresentation} from "../card/TKUICard";
+import {CardPresentation, TKUICardRaw} from "../card/TKUICard";
 import {genClassNames} from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import {cardSpacing} from "../jss/TKUITheme";
@@ -89,8 +89,8 @@ interface IState {
     searchMenuPanelElem?: HTMLDivElement;
 }
 
-export const modalContainerId = "mv-modal-panel";
-export const mainContainerId = "mv-main-panel";
+const modalContainerId = "mv-modal-panel";
+const mainContainerId = "mv-main-panel";
 
 class TKUITripPlanner extends React.Component<IProps, IState> {
 
@@ -107,6 +107,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showFavourites: false,
             showLocationDetails: false
         };
+        TKUICardRaw.modalContainerId = modalContainerId;
+        TKUICardRaw.mainContainerId = mainContainerId;
 
         (this.props.userLocationPromise ||
             GeolocationData.instance.requestCurrentLocation(true, true)
