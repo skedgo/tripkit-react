@@ -4,12 +4,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #15916: Web widget enhancement">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/buttons/TKUIButton.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/buttons/TKUIButton.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIAccountBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIAccountBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUISignInBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUISignInBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUISignInFromSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUISignInFromSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIUserAccountSetting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIUserAccountSetting.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIUserAccountView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIUserAccountView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/alerts/TKUIAlertsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/alerts/TKUIAlertsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBooking.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBooking.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBookings.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBookings.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/card/TKUICardHeader.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICardHeader.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config/TKRoot.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKRoot.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/feedback/RequestSupportAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/feedback/RequestSupportAction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/location_box/TKUILocationBox.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUILocationBox.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Location.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Location.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMCardHeader.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMCardHeader.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMIndex.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMIndex.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMTimetableCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMTimetableCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/options/TKUIPrivacyOptionsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUIPrivacyOptionsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/options/TKUIRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUIRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/share/TKUIShareView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKUIShareView.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/share/TKUIShareView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKUIShareView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/time/TKUIDateTimePicker.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/time/TKUIDateTimePicker.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip/TKUIRoutingResultsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIRoutingResultsView.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -546,14 +568,9 @@
       <workItem from="1635270056427" duration="13658000" />
       <workItem from="1635336105114" duration="1970000" />
       <workItem from="1635423519219" duration="1198000" />
-      <workItem from="1635445467173" duration="10218000" />
-    </task>
-    <task id="LOCAL-00419" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Fix to issues on automatic content focus and focus return on cards.&#10;- aria labels to timetable and service views.">
-      <created>1614723891309</created>
-      <option name="number" value="00419" />
-      <option name="presentableId" value="LOCAL-00419" />
-      <option name="project" value="LOCAL" />
-      <updated>1614723891310</updated>
+      <workItem from="1635445467173" duration="11255000" />
+      <workItem from="1635509738198" duration="4169000" />
+      <workItem from="1635532024546" duration="4080000" />
     </task>
     <task id="LOCAL-00420" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Display date picker as a button instead of a input text field, given that entering date as text is very.&#10;- Open date picker calendar on button click and enter / space key press.">
       <created>1615228758370</created>
@@ -891,7 +908,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635287076374</updated>
     </task>
-    <option name="localTasksCounter" value="468" />
+    <task id="LOCAL-00468" summary="Feature #15916: Web widget enhancement">
+      <created>1635456982251</created>
+      <option name="number" value="00468" />
+      <option name="presentableId" value="LOCAL-00468" />
+      <option name="project" value="LOCAL" />
+      <updated>1635456982252</updated>
+    </task>
+    <option name="localTasksCounter" value="469" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1014,7 +1038,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Booking on tripkit-react:&#10;- moved account implementation from feonix-react to tripkit.&#10;- started with MxM booking card." />
     <MESSAGE value="Booking on tripkit-react:&#10;- more work." />
     <MESSAGE value="Booking on tripkit-react:&#10;- Confirmation view." />
     <MESSAGE value="- Header for MxM cards.&#10;- Error handling on MxM booking." />
@@ -1039,7 +1062,8 @@
     <MESSAGE value="- Feature #15691: My Bookings view - Match iOS UI" />
     <MESSAGE value="More work on:&#10;- Feature #15691: My Bookings view - Match iOS UI" />
     <MESSAGE value="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project." />
+    <MESSAGE value="Feature #15916: Web widget enhancement" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #15916: Web widget enhancement" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1080,7 +1104,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/trip/TKUIRoutingResultsView.tsx</url>
-          <line>427</line>
+          <line>424</line>
           <option name="timeStamp" value="56" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">

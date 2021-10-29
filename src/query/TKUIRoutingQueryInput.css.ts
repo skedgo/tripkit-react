@@ -3,7 +3,6 @@ import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRout
 import genStyles from "../css/GenStyle.css";
 import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
-import {CSSProperties} from "react-jss";
 
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
     (theme: TKUITheme) => ({

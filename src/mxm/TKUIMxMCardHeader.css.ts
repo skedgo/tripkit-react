@@ -1,5 +1,5 @@
-import {TKUITheme} from "../index";
 import genStyles from "../css/GenStyle.css";
+import {TKUITheme} from "../jss/TKUITheme";
 
 export const tKUIMxMCardHeaderJss = (theme: TKUITheme) => ({
     main: {

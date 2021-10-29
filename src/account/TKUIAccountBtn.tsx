@@ -1,8 +1,12 @@
 import React, {useContext} from 'react';
 import TKUISignInBtn from "./TKUISignInBtn";
 import {SignInStatus, TKAccountContext} from "./TKAccountProvider";
-import {OptionsContext, withStyles, TKUITheme, TKUIWithClasses, resetStyles, genStyles, colorWithOpacity, white} from '../index';
 import {ReactComponent as IconProfile} from "../images/ic-profile.svg";
+import {resetStyles} from "../css/ResetStyle.css";
+import {colorWithOpacity, TKUITheme, white} from "../jss/TKUITheme";
+import genStyles from "../css/GenStyle.css";
+import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import {OptionsContext} from "../options/OptionsProvider";
 
 const accountBtnJss = (theme: TKUITheme) => ({
     main: {

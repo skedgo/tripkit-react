@@ -1,6 +1,6 @@
 import * as React from "react";
-import {TKUIButtonType, TKUIButton} from "../../../index";
 import TGUIFeedbackForm from "./TGUIFeedbackForm";
+import TKUIButton, {TKUIButtonType} from "../../../buttons/TKUIButton";
 
 interface IProps {
     actionTitle: string;

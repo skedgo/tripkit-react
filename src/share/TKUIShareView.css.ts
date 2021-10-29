@@ -1,7 +1,7 @@
 import {black, TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
-import {DeviceUtil, genStylesJSS} from "../index";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIShareViewDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -43,7 +43,7 @@ export const tKUIShareViewDefaultStyle = (theme: TKUITheme) => ({
         height: '30px',
         padding: '0 5px',
         ...genStyles.borderRadius(5),
-        ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+        ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
         ...genStyles.grow,
         color: black(0, theme.isDark)
     },

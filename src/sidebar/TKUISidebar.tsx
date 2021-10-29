@@ -6,12 +6,11 @@ import {connect, mapperFromFunction, TKStyleOverride} from "../config/TKConfigHe
 import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
 import genStyles, {genClassNames} from "../css/GenStyle.css";
 import classNames from "classnames";
-import {black} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import TKUIDirectionsAction from "../action/TKUIRouteToLocationAction";
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import {ReactComponent as IconFavourite} from "../images/ic-favorite-outline.svg";
 import {ReactComponent as IconSettings} from "../images/ic-settings-gear.svg";
-import {TKUITheme} from "../index";
 import Modal from 'react-modal';
 import appleStoreLogo from "../images/apple-store-logo.png";
 import playStoreLogo from "../images/play-store-logo.png";

@@ -1,6 +1,5 @@
-import {black, TKUITheme} from "../index";
 import genStyles from "../css/GenStyle.css";
-import {white} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 
 export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
     main: {
