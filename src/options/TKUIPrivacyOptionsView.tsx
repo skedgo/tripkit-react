@@ -11,9 +11,9 @@ import classNames from "classnames";
 import {black} from "../jss/TKUITheme";
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-import {TKUIButton, TKUIButtonType} from "../index";
 import Util from "../util/Util";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,

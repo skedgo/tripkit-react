@@ -5,9 +5,9 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIMxMIndexDefaultStyle} from "./TKUIMxMIndex.css";
 import Segment from "../model/trip/Segment";
 import TKUITrackTransport from "../trip/TKUITrackTransport";
-import {TKUICard} from "../index";
 import TripUtil from "../trip/TripUtil";
 import classNames from 'classnames';
+import TKUICard from "../card/TKUICard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segments: Segment[];

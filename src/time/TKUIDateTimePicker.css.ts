@@ -2,8 +2,8 @@ import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "./TKUIDateTimePicker";
 import genStyles from "../css/GenStyle.css";
-import {DeviceUtil, genStylesJSS} from "../index";
 import {resetStyles} from "../css/ResetStyle.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle, TKUIDateTimePickerProps> =
     (theme: TKUITheme) => ({
@@ -100,7 +100,7 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
             }
         },
         inputElem: {
-            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+            ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
             ...resetStyles.input,
             ...theme.textColorGray
         },

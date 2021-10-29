@@ -2,10 +2,11 @@ import * as React from "react";
 import {TKUIConfig} from "./TKUIConfig";
 import Util from "../util/Util";
 import TKStateConsumer from "./TKStateConsumer";
+import TKStateController from "./TKStateController";
 import {TKState} from "./TKState";
 import TKStateProvider from "./TKStateProvider";
-import {genClassNames, TKStateController} from "../index";
 import classNames from "classnames";
+import {genClassNames} from "../css/GenStyle.css";
 
 interface IProps {
     /**

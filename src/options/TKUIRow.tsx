@@ -1,8 +1,7 @@
 import * as React from "react";
 import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
-import {TKUITheme} from "../index";
 import genStyles from "../css/GenStyle.css";
-import {important} from "../jss/TKUITheme";
+import {important, TKUITheme} from "../jss/TKUITheme";
 
 const tKUIRowJss = (theme: TKUITheme) => ({
     main: {

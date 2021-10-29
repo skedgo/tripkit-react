@@ -1,7 +1,13 @@
 import React, {useContext} from 'react';
 import {TKAccountContext} from "./TKAccountProvider";
-import {TKUISettingSection, CardPresentation, TKUIViewportUtil, TKUISlideUpPosition, TKUICard,
-    withStyles, TKUITheme, TKUIWithClasses, genStyles, TKUIRow} from '../index';
+import {TKUITheme} from "../jss/TKUITheme";
+import genStyles from "../css/GenStyle.css";
+import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import {TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
+import {TKUISlideUpPosition} from "../card/TKUISlideUp";
+import TKUISettingSection from "../options/TKUISettingSection";
+import TKUIRow from "../options/TKUIRow";
 
 const userAccountViewJss = (theme: TKUITheme) => ({
     main: {

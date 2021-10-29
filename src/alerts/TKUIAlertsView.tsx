@@ -4,11 +4,9 @@ import RealTimeAlert from "../model/service/RealTimeAlert";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUIAlertsViewDefaultStyle} from "./TKUIAlertsView.css";
-import {CardPresentation} from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import {Subtract} from "utility-types";
 import TKUIAlertRow from "./TKUIAlertRow";
-import {TKUICard} from "../index";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alerts: RealTimeAlert[];

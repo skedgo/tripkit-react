@@ -2,7 +2,7 @@ import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
-import RegionsData from "../data/RegionsData";
+// import RegionsData from "../data/RegionsData";
 
 @JsonObject
 class Location extends LatLng {
@@ -88,10 +88,10 @@ class Location extends LatLng {
     }
 
     get timezone(): string {
-        if (!this.timeZone && !this._timezone) {
-            const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(this) : undefined;
-            this._timezone = region ? region.timezone : "";
-        }
+        // if (!this.timeZone && !this._timezone) {
+        //     const region = RegionsData.isInitialized() ? RegionsData.instance.getRegion(this) : undefined;
+        //     this._timezone = region ? region.timezone : "";
+        // }
         return this.timeZone || this._timezone;
     }
 

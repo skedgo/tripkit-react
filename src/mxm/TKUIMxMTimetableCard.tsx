@@ -4,9 +4,9 @@ import Segment from "../model/trip/Segment";
 import {CardPresentation} from "../card/TKUICard";
 import TKUITimetableView from "../service/TKUITimetableView";
 import ServiceResultsProvider, {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {TKStateController} from "../index";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
+import TKStateController from "../config/TKStateController";
 
 const TKUIMxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
     return (

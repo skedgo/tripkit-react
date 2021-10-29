@@ -8,8 +8,8 @@ import copy from "copy-to-clipboard";
 import classNames from "classnames";
 import QRCode from "qrcode.react";
 import TKUITooltip from "../card/TKUITooltip";
-import {tKUIColors} from "../index";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
+import {tKUIColors} from "../jss/TKUITheme";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     link?: string;

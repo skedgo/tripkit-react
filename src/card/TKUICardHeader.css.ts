@@ -1,6 +1,5 @@
-import {TKUITheme} from "../index";
 import genStyles from "../css/GenStyle.css";
-import {black} from "../jss/TKUITheme";
+import {black, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 import {TKUICardHeaderProps} from "./TKUICardHeader";
 

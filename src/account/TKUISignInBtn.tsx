@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {SignInStatus, TKAccountContext} from "./TKAccountProvider";
-import {TKUIButton, TKUIButtonType} from '../index';
 import {ReactComponent as IconLoading} from "../images/ic-spin-bar.svg";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 
 const TKUISignInBtn: React.SFC<{}> = () => {
     const {status, login, logout} = useContext(TKAccountContext);

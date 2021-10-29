@@ -3,7 +3,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUILocationBoxProps, TKUILocationBoxStyle} from "./TKUILocationBox";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
-import {DeviceUtil, genStylesJSS} from "../index";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUILocationBoxProps> =
     (theme: TKUITheme) => ({
@@ -23,7 +23,7 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
             // TODO: according to design in
             // https://gallery.io/projects/MCHbtQVoQ2HCZfaRajvkOh8D/files/MCEJu8Y2hyDScdIdFBgmhJm0KOkWUeRa6WY it's
             // always fontM (16px).
-            ...DeviceUtil.isPhone ? genStylesJSS.fontM : genStylesJSS.fontS,
+            ...DeviceUtil.isPhone ? genStyles.fontM : genStyles.fontS,
             lineHeight: '30px',
             color: black(1, theme.isDark),
             ...DeviceUtil.isIE && {

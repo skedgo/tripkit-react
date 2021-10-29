@@ -1,7 +1,10 @@
 import React, {useContext, useState} from 'react';
 import {TKAccountContext} from "./TKAccountProvider";
-import {TKUISettingLink, withStyles, TKUITheme, TKUIWithClasses, genStyles} from '../index';
 import TKUIUserAccountView from "./TKUIUserAccountView";
+import {TKUITheme} from "../jss/TKUITheme";
+import genStyles from "../css/GenStyle.css";
+import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import TKUISettingLink from "../options/TKUISettingLink";
 
 const userAccountSettingJss = (theme: TKUITheme) => ({
     main: {

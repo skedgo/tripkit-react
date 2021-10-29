@@ -1,6 +1,5 @@
 import {black, important, TKUITheme, white} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {genStylesJSS} from "../index";
 
 export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     bookingFormMain: {
@@ -96,7 +95,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         alignItems: 'flex-start'
     },
     selectValueContainer: {
-        ...genStylesJSS.alignSelfStretch,
+        ...genStyles.alignSelfStretch,
         padding: '2px 0'
     },
     selectSingleValue: {
