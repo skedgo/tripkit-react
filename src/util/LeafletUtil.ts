@@ -1,12 +1,11 @@
-import {LatLng as LLatLng, LatLngBounds} from "leaflet";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
-import L from "leaflet";
 import Segment from "../model/trip/Segment";
 import Trip from "../model/trip/Trip";
-import inside from "point-in-polygon";
 import ServiceShape from "../model/trip/ServiceShape";
 import Street from "../model/trip/Street";
+import {latLngBounds, LatLng as LLatLng, LatLngBounds} from "leaflet/src/geo";
+import inside from "point-in-polygon";
 
 class LeafletUtil {
 
@@ -18,16 +17,23 @@ class LeafletUtil {
         return new LLatLng(latLng.lat, latLng.lng);
     }
 
+    public static createBBoxArray(latLngs: LatLng[]): BBox {
+        const lfBBox = latLngBounds(latLngs);
+        const lfne = lfBBox.getNorthEast();
+        const lfsw = lfBBox.getSouthWest();
+        return BBox.createBBox(LatLng.createLatLng(lfne.lat, lfne.lng), LatLng.createLatLng(lfsw.lat, lfsw.lng));
+    }
+
     public static toBBox(bounds: LatLngBounds) {
-        return BBox.createBBoxArray([this.toLatLng(bounds.getNorthEast()), this.toLatLng(bounds.getSouthWest())]);
+        return this.createBBoxArray([this.toLatLng(bounds.getNorthEast()), this.toLatLng(bounds.getSouthWest())]);
     }
 
     public static fromBBox(bbox: BBox): LatLngBounds {
-        return L.latLngBounds(this.fromLatLng(bbox.sw), this.fromLatLng(bbox.ne));
+        return latLngBounds(this.fromLatLng(bbox.sw), this.fromLatLng(bbox.ne));
     }
 
     public static getTripBounds(trip: Trip): LatLngBounds {
-        const bounds = L.latLngBounds([]);
+        const bounds = latLngBounds([]);
         for (const segment of trip.segments) {
             const segmentBounds = this.getSegmentBounds(segment);
             bounds.extend(segmentBounds.getNorthEast())
@@ -43,7 +49,7 @@ class LeafletUtil {
         } else if (segment.shapes) {
             bounds = this.getShapesBounds(segment.shapes, true);
         } else {
-            bounds = L.latLngBounds([]);
+            bounds = latLngBounds([]);
         }
         return bounds.extend(segment.from).extend(segment.to);
     }
@@ -71,7 +77,7 @@ class LeafletUtil {
     public static boundsFromLatLngArray(latLngArray: LatLng[]): LatLngBounds {
         return latLngArray.reduce((bounds: LatLngBounds, latLng: LatLng) => {
             return bounds.extend(latLng);
-        }, L.latLngBounds([]));
+        }, latLngBounds([]));
     }
 
     public static decodePolylineGeoJson(encoded: string): number[][] {
@@ -92,7 +98,6 @@ class LeafletUtil {
     public static pointInPolygon(point: LatLng, polygon: LatLng[]): boolean {
         return inside([point.lat, point.lng], polygon.map((polyPoint: LatLng) => [polyPoint.lat, polyPoint.lng]));
     }
-
 }
 
 export default LeafletUtil;

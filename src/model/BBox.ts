@@ -1,5 +1,4 @@
 import LatLng from "./LatLng";
-import L from "leaflet";
 
 class BBox {
     private _ne: LatLng = LatLng.createLatLng(0, 0);
@@ -10,13 +9,6 @@ class BBox {
         instance._ne = ne;
         instance._sw = sw;
         return instance;
-    }
-
-    public static createBBoxArray(latLngs: LatLng[]): BBox {
-        const lfBBox = L.latLngBounds(latLngs);
-        const lfne = lfBBox.getNorthEast();
-        const lfsw = lfBBox.getSouthWest();
-        return BBox.createBBox(LatLng.createLatLng(lfne.lat, lfne.lng), LatLng.createLatLng(lfsw.lat, lfsw.lng));
     }
 
     get ne(): LatLng {

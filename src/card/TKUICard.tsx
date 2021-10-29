@@ -15,7 +15,6 @@ import TKUISlideUp from "./TKUISlideUp";
 import {genClassNames} from "../css/GenStyle.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
-import {mainContainerId, modalContainerId} from "../trip-planner/TKUITripPlanner";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import TKUICardHeader, {TKUICardHeaderClientProps, TKUICardHeaderProps} from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
@@ -200,6 +199,9 @@ class TKUICard extends React.Component<IProps, IState> {
     private parentElement?: any;
     private appMainElement?: any;
 
+    public static modalContainerId: string = "";
+    public static mainContainerId: string = "";
+
     public static defaultProps: Partial<IProps> = {
         presentation: CardPresentation.NONE,
         open: true
@@ -230,9 +232,9 @@ class TKUICard extends React.Component<IProps, IState> {
         if (!props.doNotStack) {
             TKUICard.cardStack.push(this);
         }
-        const parentElementId = props.parentElementId || modalContainerId;
+        const parentElementId = props.parentElementId || TKUICard.modalContainerId;
         this.parentElement = document.getElementById(parentElementId);
-        this.appMainElement = document.getElementById(mainContainerId);
+        this.appMainElement = document.getElementById(TKUICard.mainContainerId);
         this.close = this.close.bind(this);
     }
 
@@ -443,5 +445,6 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         </TKUIViewportUtil>;
 
 export default connect((config: TKUIConfig) => config.TKUICard, config, Mapper);
+export {TKUICard as TKUICardRaw};
 
 export {hasHandle}

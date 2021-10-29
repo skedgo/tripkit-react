@@ -1,7 +1,7 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import LatLng from "../LatLng";
-import LeafletUtil from "../../util/LeafletUtil";
 import Util from "../../util/Util";
+import LeafletUtil from "../../util/LeafletUtil";
 
 export enum StreetInstructions {
     HEAD_TOWARDS = "HEAD_TOWARDS",

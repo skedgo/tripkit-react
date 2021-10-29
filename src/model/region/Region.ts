@@ -41,7 +41,7 @@ class Region {
 
     get bounds(): BBox {
         if (this._bounds === null) {
-            this._bounds = BBox.createBBoxArray(LeafletUtil.decodePolyline(this._polygon));
+            this._bounds = LeafletUtil.createBBoxArray(LeafletUtil.decodePolyline(this._polygon));
         }
         return this._bounds;
     }
