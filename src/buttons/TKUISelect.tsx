@@ -5,6 +5,7 @@ import {tKUISelectDefaultStyle} from "./TKUISelect.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Select from 'react-select';
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
+export {components as reactSelectComponents} from "react-select";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
