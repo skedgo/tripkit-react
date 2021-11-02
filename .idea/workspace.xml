@@ -4,22 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx, replace them by imports from specific component file.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Export components from react-select for tripkit-react clients.">
+      <change afterPath="$PROJECT_DIR$/src/buttons/TKUIProfileSelect.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data/RegionsData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/data/RegionsData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/BBox.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/BBox.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/region/Region.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/region/Region.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/Street.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Street.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/LeafletUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/LeafletUtil.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geocode/MultiGeocoder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/MultiGeocoder.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geocode/TKGeocodingOptions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/TKGeocodingOptions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/location_box/TKUIAutocompleteResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUIAutocompleteResult.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="Do not commit" />
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -559,21 +556,11 @@
       <workItem from="1635423519219" duration="1198000" />
       <workItem from="1635445467173" duration="11255000" />
       <workItem from="1635509738198" duration="4169000" />
-      <workItem from="1635532024546" duration="10771000" />
-    </task>
-    <task id="LOCAL-00421" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Meet meen contrast requirement.&#10;- Resize text - Level AA.&#10;- 1.4.10 - Reflow - Level AA&#10;- 1.4.11 - Non-text Contrast - Level AA">
-      <created>1615832257474</created>
-      <option name="number" value="00421" />
-      <option name="presentableId" value="LOCAL-00421" />
-      <option name="project" value="LOCAL" />
-      <updated>1615832257474</updated>
-    </task>
-    <task id="LOCAL-00422" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Language of Page - Level A&#10;- Error Identification - Level A&#10;- Status Messages - Level AA&#10;- Task #14214: Update color palette to match WCAG">
-      <created>1616005379701</created>
-      <option name="number" value="00422" />
-      <option name="presentableId" value="LOCAL-00422" />
-      <option name="project" value="LOCAL" />
-      <updated>1616005379701</updated>
+      <workItem from="1635532024546" duration="11168000" />
+      <workItem from="1635766090974" duration="8348000" />
+      <workItem from="1635793015016" duration="8836000" />
+      <workItem from="1635856155785" duration="6861000" />
+      <workItem from="1635874791146" duration="10124000" />
     </task>
     <task id="LOCAL-00423" summary="Update embed.js">
       <created>1616076946386</created>
@@ -904,7 +891,21 @@
       <option name="project" value="LOCAL" />
       <updated>1635539874809</updated>
     </task>
-    <option name="localTasksCounter" value="470" />
+    <task id="LOCAL-00470" summary="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx as &quot;..&quot;.&#10;- make dependencies on Leaflet more selective, e.g., from LeafletUtil.ts">
+      <created>1635546058819</created>
+      <option name="number" value="00470" />
+      <option name="presentableId" value="LOCAL-00470" />
+      <option name="project" value="LOCAL" />
+      <updated>1635546058819</updated>
+    </task>
+    <task id="LOCAL-00471" summary="Export components from react-select for tripkit-react clients.">
+      <created>1635775832637</created>
+      <option name="number" value="00471" />
+      <option name="presentableId" value="LOCAL-00471" />
+      <option name="project" value="LOCAL" />
+      <updated>1635775832638</updated>
+    </task>
+    <option name="localTasksCounter" value="472" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1027,8 +1028,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Booking on tripkit-react:&#10;- Confirmation view." />
-    <MESSAGE value="- Header for MxM cards.&#10;- Error handling on MxM booking." />
     <MESSAGE value="Apply Duy design to booking card." />
     <MESSAGE value="Apply Duy design to booking card:&#10;- cleanup" />
     <MESSAGE value="Apply Duy design to booking card:&#10;- more cleanup" />
@@ -1052,7 +1051,9 @@
     <MESSAGE value="Changes for Task #15907: Consider embedding on a website with CSP in place.&#10;Also to make the library compile with a newer version of typescript (4.4.4) used in query-widget project." />
     <MESSAGE value="Feature #15916: Web widget enhancement" />
     <MESSAGE value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx, replace them by imports from specific component file." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx, replace them by imports from specific component file." />
+    <MESSAGE value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx as &quot;..&quot;.&#10;- make dependencies on Leaflet more selective, e.g., from LeafletUtil.ts" />
+    <MESSAGE value="Export components from react-select for tripkit-react clients." />
+    <option name="LAST_COMMIT_MESSAGE" value="Export components from react-select for tripkit-react clients." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1102,13 +1103,8 @@
           <option name="timeStamp" value="58" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx</url>
-          <line>536</line>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/src/buttons/TKUISelect.tsx</url>
-          <line>91</line>
+          <line>92</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>

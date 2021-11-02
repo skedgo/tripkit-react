@@ -33,7 +33,7 @@ class MultiGeocoder {
                     }
                 }
                 const mergedResults = this.merge(query, geocoderResults);
-                callback(query, mergedResults.slice(0, 5));
+                callback(query, mergedResults.slice(0, this._options.maxResults || 5));
             })
         }
     }
@@ -50,9 +50,6 @@ class MultiGeocoder {
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
         // TODO: fix. It maybe de case that neither Pelias nor Skedgo geocoders were included.
-        // Also reverseGeocode on SkedgoGeocoder is not implemented. Maybe can implement it
-        // and use SkedGo geocoder as callback, but create an instance on MultiGeocoder since it may not
-        // be included on this._options.geocoders.
         let reverseGeocoderId = this._options.geocoders["geocodeEarth"] ? "geocodeEarth" : // TODO: remove hardcoding
             TKDefaultGeocoderNames.skedgo;
         this._options.geocoders[reverseGeocoderId]!.reverseGeocode(coord, (location: Location | null) => {

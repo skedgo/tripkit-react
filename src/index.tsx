@@ -18,6 +18,7 @@ import {TKUIMapViewProps as TKUIMapViewPropsForExport} from "./map/TKUIMapView"
 import {TKUIWithStyle as TKUIWithStyleForExport, TKUIWithClasses as TKUIWithClassesForExport} from "./jss/StyleHelper";
 import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptions";
 import {TKUISlideUpPosition} from "./card/TKUISlideUp";
+import {SelectOption} from "./buttons/TKUISelect";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
 export {default as TKStateConsumer} from "./config/TKStateConsumer";
@@ -93,6 +94,9 @@ export {default as TKDefaultGeocoderNames} from "./geocode/TKDefaultGeocoderName
 export {TKStyleOverride} from "./config/TKConfigHelper";
 export {default as WaiAriaUtil} from "./util/WaiAriaUtil";
 export {components as reactSelectComponents} from "react-select";
+export {default as TKUISelect} from "./buttons/TKUISelect";
+export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
+export type TKSelectOption = SelectOption;
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 /* eslint-disable import/first */
 if (document.getElementById("tripgo-sample-root")) {

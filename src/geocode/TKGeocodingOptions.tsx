@@ -35,6 +35,7 @@ interface TKGeocodingOptions {
     compare: (l1: Location, l2: Location, query: string) => number;
     /** @ctype */
     analogResults: (r1: Location, r2: Location) => boolean;
+    maxResults?: number;
 }
 
 function getDefaultGeocodingOptions(): TKGeocodingOptions {
