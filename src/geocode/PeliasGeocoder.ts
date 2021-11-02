@@ -8,11 +8,15 @@ import Util from "../util/Util";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
 import {Env} from "../env/Environment";
+import Region from "../model/region/Region";
 
 class PeliasGeocoder implements IGeocoder {
 
     private geocodeServer: string;
     private apiKey: string;
+    // Allow to pass region as constructor parameter to use it's polygon to restrict results.
+    // TODO: make geocode method to receive a polygon instead of a bounding box (or both things).
+    private region?: Region;
 
     private options: GeocoderOptions;
     private cache: GeocodingCache;
@@ -20,12 +24,13 @@ class PeliasGeocoder implements IGeocoder {
     // Added as constructor parameter, just for this geocoder, instead of a new option field, general for any geocoder.
     private restrictToBounds: boolean;
 
-    constructor(geocodeServer: string, apiKey: string, restrictToBounds: boolean = false) {
+    constructor(geocodeServer: string, apiKey: string, restrictToBounds: boolean = false, region?: Region) {
         this.geocodeServer = geocodeServer;
         this.apiKey = apiKey;
         this.restrictToBounds = restrictToBounds;
         this.options = new GeocoderOptions();
         this.cache = new GeocodingCache();
+        this.region = region;
     }
 
     public getOptions(): GeocoderOptions {
@@ -62,8 +67,11 @@ class PeliasGeocoder implements IGeocoder {
                 method: NetworkUtil.MethodType.GET
             }).then(NetworkUtil.jsonCallback).then((json: any) => {
                 const features = (json as FeatureCollection).features;
-                const locationResults = !features ? [] : features
+                let locationResults = !features ? [] : features
                     .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
+                if (this.restrictToBounds) {
+                    locationResults = locationResults.filter(result => !this.region || this.region.contains(result as any))
+                }
                 if (center) {
                     this.cache.addResults(query, autocomplete, center, locationResults);
                 }

@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Export components from react-select for tripkit-react clients.">
-      <change afterPath="$PROJECT_DIR$/src/buttons/TKUIProfileSelect.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geocode/MultiGeocoder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/MultiGeocoder.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geocode/TKGeocodingOptions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/TKGeocodingOptions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/location_box/TKUIAutocompleteResult.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUIAutocompleteResult.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #15672: Integrating geocoding services">
+      <change beforePath="$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
@@ -560,14 +554,7 @@
       <workItem from="1635766090974" duration="8348000" />
       <workItem from="1635793015016" duration="8836000" />
       <workItem from="1635856155785" duration="6861000" />
-      <workItem from="1635874791146" duration="10124000" />
-    </task>
-    <task id="LOCAL-00423" summary="Update embed.js">
-      <created>1616076946386</created>
-      <option name="number" value="00423" />
-      <option name="presentableId" value="LOCAL-00423" />
-      <option name="project" value="LOCAL" />
-      <updated>1616076946386</updated>
+      <workItem from="1635874791146" duration="10430000" />
     </task>
     <task id="LOCAL-00424" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Mobile">
       <created>1616104661671</created>
@@ -905,7 +892,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635775832638</updated>
     </task>
-    <option name="localTasksCounter" value="472" />
+    <task id="LOCAL-00472" summary="Feature #15672: Integrating geocoding services">
+      <created>1635890141037</created>
+      <option name="number" value="00472" />
+      <option name="presentableId" value="LOCAL-00472" />
+      <option name="project" value="LOCAL" />
+      <updated>1635890141038</updated>
+    </task>
+    <option name="localTasksCounter" value="473" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1028,7 +1022,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Apply Duy design to booking card." />
     <MESSAGE value="Apply Duy design to booking card:&#10;- cleanup" />
     <MESSAGE value="Apply Duy design to booking card:&#10;- more cleanup" />
     <MESSAGE value="Make web-app url (and so state) to persist across sign-in. Save and restore url to maintain web-app state." />
@@ -1053,7 +1046,8 @@
     <MESSAGE value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx, replace them by imports from specific component file." />
     <MESSAGE value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx as &quot;..&quot;.&#10;- make dependencies on Leaflet more selective, e.g., from LeafletUtil.ts" />
     <MESSAGE value="Export components from react-select for tripkit-react clients." />
-    <option name="LAST_COMMIT_MESSAGE" value="Export components from react-select for tripkit-react clients." />
+    <MESSAGE value="Feature #15672: Integrating geocoding services" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #15672: Integrating geocoding services" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
