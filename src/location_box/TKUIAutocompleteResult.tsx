@@ -19,6 +19,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     id?: string;
     renderIcon?: (location: Location) => JSX.Element;
     reference?: (el: any) => void;
+    scrollIntoView?: boolean;
 }
 
 interface IStyle {
@@ -85,7 +86,11 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                  role="option"
                  id={this.props.id}
                  aria-selected={this.props.ariaSelected}
-                 ref={this.props.reference}
+                 ref={(ref) => {
+                     this.props.reference?.(ref);
+                     this.props.scrollIntoView && this.props.highlighted && ref
+                     && ref.scrollIntoView({block: 'nearest'});
+                 }}
             >
                 <div className={classes.icon} aria-hidden={true}>
                     {this.props.renderIcon ? this.props.renderIcon(this.props.location) :
@@ -101,6 +106,8 @@ const Connected = connect((config: TKUIConfig) => config.TKUIAutocompleteResult,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
 
 // If I need it many times then add to connect function.
+// This ref forwarding is necessary since react-select passes a reference
+// to this component (if I ommit this an exception is thrown).
 export default React.forwardRef((props: IClientProps, ref: any) => (
     <Connected {...props} reference={ref}/>
 ));

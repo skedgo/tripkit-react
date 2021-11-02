@@ -51,6 +51,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     onRef?: (ref: TKUILocationBoxRef) => void;
     menuContainer?: HTMLElement;
+    menuMaxHeightPx?: number;
 }
 
 interface IStyle {
@@ -224,7 +225,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                         return;
                     }
                     this.geocodingData.geocode(locationValue.address, false, this.props.bounds ?
-                        this.props.bounds : null, this.props.focus ? this.props.focus : null,
+                            this.props.bounds : null, this.props.focus ? this.props.focus : null,
                         (query: string, results: Location[]) => {
                             if (this.state.waitingResolveFor === locationValue) {
                                 this.setState({
@@ -448,6 +449,10 @@ class TKUILocationBox extends Component<IProps, IState> {
                                 left: undefined,
                                 top: undefined,
                                 width: undefined
+                            },
+                            ...this.props.menuMaxHeightPx && {
+                                maxHeight: this.props.menuMaxHeightPx + 'px',
+                                overflow: 'auto'
                             }
                         }
                     }
@@ -473,6 +478,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 ariaSelected={isHighlighted}
                 onClick={() => this.setValue(location, false, true)}
                 renderIcon={geocoder && geocoder.getOptions().renderIcon}
+                scrollIntoView={!!this.props.menuMaxHeightPx}
             />
         );
     }
@@ -502,6 +508,10 @@ class TKUILocationBox extends Component<IProps, IState> {
             this.setState({
                 inputText: LocationUtil.getMainText(this.state.locationValue, this.props.t)
             });
+        }
+        if (JSON.stringify(Object.keys(prevProps.geocodingOptions.geocoders)) !==
+            JSON.stringify(Object.keys(this.props.geocodingOptions.geocoders))) {
+            this.geocodingData = new MultiGeocoder(this.props.geocodingOptions);
         }
     }
 
