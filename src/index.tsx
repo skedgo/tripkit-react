@@ -103,10 +103,10 @@ export {default as TKUISelect} from "./buttons/TKUISelect";
 export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
 export type TKSelectOption = SelectOption;
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-if (document.getElementById("tripgo-sample-root")) {
+// if (document.getElementById("tripgo-sample-root")) {
     /* eslint-disable import/first */
-    import("./example/tripgo/tripgo-sample");
+    // import("./example/tripgo/tripgo-sample");
 //     import("./example/chym/index");
 //     import("./example/client-sample");
-}
+// }
 import 'react-confirm-alert/src/react-confirm-alert.css';
