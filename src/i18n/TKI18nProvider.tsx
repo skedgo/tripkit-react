@@ -14,11 +14,16 @@ export type TranslationFunction = (
 export interface TKI18nContextProps {
     locale: string;
     t: TranslationFunction;
+    // So components can know i18n promise resolved and transaltions were overridden, and
+    // explicitly update string that are not (re)translated on (re)render (e.g. those translations
+    // performed on component construction.
+    i18nOverridden: boolean;
 }
 
 export const TKI18nContext = React.createContext<TKI18nContextProps> ({
     t: (key: string, params?: any) => "",
-    locale: 'en'
+    locale: 'en',
+    i18nOverridden: false
 });
 
 const WithTranslate = translate()(
@@ -36,7 +41,8 @@ interface IProps {
 
 interface IState {
     locale: string,
-    messages: TKI18nMessages
+    messages: TKI18nMessages,
+    overridden: boolean
 }
 
 class TKI18nProvider extends React.Component<IProps, IState> {
@@ -47,7 +53,8 @@ class TKI18nProvider extends React.Component<IProps, IState> {
         const messages = Object.assign({}, untranslated, messages_en);
         this.state = {
             locale: 'en',
-            messages: messages
+            messages: messages,
+            overridden: false
         }
     }
 
@@ -67,7 +74,7 @@ class TKI18nProvider extends React.Component<IProps, IState> {
                 <WithTranslate>
                     {(props: { t: TranslationFunction }) =>
                         <TKI18nContext.Provider
-                            value={{locale: this.state.locale, ...props}}
+                            value={{locale: this.state.locale, i18nOverridden: this.state.overridden, ...props}}
                         >
                             {this.props.children}
                         </TKI18nContext.Provider>
@@ -89,8 +96,9 @@ class TKI18nProvider extends React.Component<IProps, IState> {
                     const messages = Object.assign({}, untranslated, messages_en, data.translations);
                     this.setState({
                         locale: data.locale,
-                        messages: messages
-                    })
+                        messages: messages,
+                        overridden: true
+                    });
                 })
                 .catch((error: Error) => {
                     // console.log(error.message);
