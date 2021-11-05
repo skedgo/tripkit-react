@@ -433,7 +433,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             // a theme update would not be reflected (e.g. switch dark / light mode).
                             // This will not be needed anymore when get dynamic style updates working.
                             main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                            menu: overrideClass({ marginTop: '3px' })
+                            menu: overrideClass({ marginTop: '3px' }),
+                            container: overrideClass({ minWidth: '100%' }),
                         })}
                         ariaLabel={"Time preference"}
                     />}
@@ -504,6 +505,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
         if (!prevProps.value.to && this.props.value.to) {
             this.showTooltip(false,undefined);
+        }
+        // To refresh translations of time pref strings after i18n promise resolves (i18nOverridden turn true),
+        // which are computed on component constructor, and so do not automatically update on re-render.
+        if (this.props.i18nOverridden !== prevProps.i18nOverridden) {
+            this.timePrefOptions = TKUIRoutingQueryInput.getTimePrefOptions(this.props.t);
         }
     }
 

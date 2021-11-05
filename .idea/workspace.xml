@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #15672: Integrating geocoding services">
-      <change beforePath="$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/geocode/PeliasGeocoder.ts" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #15672: Integrating geocoding services (2)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/i18n/TKI18nProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/i18n/TKI18nProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
-    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="">
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-    </list>
+    <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -553,14 +553,13 @@
       <workItem from="1635766090974" duration="8348000" />
       <workItem from="1635793015016" duration="8836000" />
       <workItem from="1635856155785" duration="6861000" />
-      <workItem from="1635874791146" duration="10430000" />
-    </task>
-    <task id="LOCAL-00424" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Mobile">
-      <created>1616104661671</created>
-      <option name="number" value="00424" />
-      <option name="presentableId" value="LOCAL-00424" />
-      <option name="project" value="LOCAL" />
-      <updated>1616104661671</updated>
+      <workItem from="1635874791146" duration="12155000" />
+      <workItem from="1635939786274" duration="2457000" />
+      <workItem from="1635962609387" duration="599000" />
+      <workItem from="1636028883863" duration="599000" />
+      <workItem from="1636050321884" duration="1197000" />
+      <workItem from="1636113669199" duration="2799000" />
+      <workItem from="1636135686967" duration="8635000" />
     </task>
     <task id="LOCAL-00425" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Simplify TKUILocationBox (the way it uses react-autocomplete) to fix issue with VO on Safari not reading autocompletion results.">
       <created>1616602887163</created>
@@ -898,7 +897,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635890141038</updated>
     </task>
-    <option name="localTasksCounter" value="473" />
+    <task id="LOCAL-00473" summary="Feature #15672: Integrating geocoding services (2)">
+      <created>1635890660589</created>
+      <option name="number" value="00473" />
+      <option name="presentableId" value="LOCAL-00473" />
+      <option name="project" value="LOCAL" />
+      <updated>1635890660589</updated>
+    </task>
+    <option name="localTasksCounter" value="474" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1021,7 +1027,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Apply Duy design to booking card:&#10;- cleanup" />
     <MESSAGE value="Apply Duy design to booking card:&#10;- more cleanup" />
     <MESSAGE value="Make web-app url (and so state) to persist across sign-in. Save and restore url to maintain web-app state." />
     <MESSAGE value="- Book from trip summary view.&#10;- Operator name (mode info description) as transport icon title (see #15265)." />
@@ -1046,7 +1051,8 @@
     <MESSAGE value="Fix to dependencies issues that break modularity, making that depending on a small component brings all the library into the bundle.&#10;- remove imports from index.tsx as &quot;..&quot;.&#10;- make dependencies on Leaflet more selective, e.g., from LeafletUtil.ts" />
     <MESSAGE value="Export components from react-select for tripkit-react clients." />
     <MESSAGE value="Feature #15672: Integrating geocoding services" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #15672: Integrating geocoding services" />
+    <MESSAGE value="Feature #15672: Integrating geocoding services (2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #15672: Integrating geocoding services (2)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
