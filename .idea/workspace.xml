@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #15916: Web widget enhancement&#10;- IE11&#10;- Other issues listed here: https://redmine.buzzhives.com/issues/15916#note-7">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="comment tripgo-sample import in index.tsx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -562,13 +559,6 @@
       <workItem from="1636113669199" duration="2799000" />
       <workItem from="1636135686967" duration="10219000" />
     </task>
-    <task id="LOCAL-00426" summary="Feature #12818: TripKit React - WCAG AA Compliance&#10;- Inline transports switcher for mobile view, instead on displaying it on popup.&#10;- Simplify TKUILocationBox (the way it uses react-autocomplete) to fix issue with VO on Safari not reading autocompletion results.&#10;- Focus location search box on web-app load.&#10;- Other fixes for WCAG on Mobile and cross-browser.">
-      <created>1616698985444</created>
-      <option name="number" value="00426" />
-      <option name="presentableId" value="LOCAL-00426" />
-      <option name="project" value="LOCAL" />
-      <updated>1616698985444</updated>
-    </task>
     <task id="LOCAL-00427" summary="Refinements motivated by using tripkit-react on MaaS Dash.">
       <created>1626217181949</created>
       <option name="number" value="00427" />
@@ -905,7 +895,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636148687115</updated>
     </task>
-    <option name="localTasksCounter" value="475" />
+    <task id="LOCAL-00475" summary="comment tripgo-sample import in index.tsx">
+      <created>1636150282490</created>
+      <option name="number" value="00475" />
+      <option name="presentableId" value="LOCAL-00475" />
+      <option name="project" value="LOCAL" />
+      <updated>1636150282490</updated>
+    </task>
+    <option name="localTasksCounter" value="476" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1028,7 +1025,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Make web-app url (and so state) to persist across sign-in. Save and restore url to maintain web-app state." />
     <MESSAGE value="- Book from trip summary view.&#10;- Operator name (mode info description) as transport icon title (see #15265)." />
     <MESSAGE value="Overflow ellipsis transport title in trip summary." />
     <MESSAGE value="My Bookings view." />
@@ -1053,7 +1049,8 @@
     <MESSAGE value="Feature #15672: Integrating geocoding services" />
     <MESSAGE value="Feature #15672: Integrating geocoding services (2)" />
     <MESSAGE value="Feature #15916: Web widget enhancement&#10;- IE11&#10;- Other issues listed here: https://redmine.buzzhives.com/issues/15916#note-7" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #15916: Web widget enhancement&#10;- IE11&#10;- Other issues listed here: https://redmine.buzzhives.com/issues/15916#note-7" />
+    <MESSAGE value="comment tripgo-sample import in index.tsx" />
+    <option name="LAST_COMMIT_MESSAGE" value="comment tripgo-sample import in index.tsx" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
