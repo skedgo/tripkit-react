@@ -1,5 +1,10 @@
+// These two imports mean ~50kb in the bundle size.
 import 'react-app-polyfill/ie11';
 import 'react-app-polyfill/stable';
+// This polyfill means extra ~50kb in the bundle size (see https://github.com/formatjs/date-time-format-timezone#browserified-file-size).
+// import 'date-time-format-timezone/build/browserified/date-time-format-timezone-golden-zones-no-locale-min';
+// This polyfill means extra ~320kb in the bundle size (see https://github.com/formatjs/date-time-format-timezone#browserified-file-size).
+import 'date-time-format-timezone';
 // This import is to avoid the following runtime error:
 // Uncaught TypeError: Reflect.metadata is not a function
 // However this error still happens when including module declaration on package.json, so remove it for now.
@@ -98,8 +103,8 @@ export {default as TKUISelect} from "./buttons/TKUISelect";
 export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
 export type TKSelectOption = SelectOption;
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
-/* eslint-disable import/first */
 if (document.getElementById("tripgo-sample-root")) {
+    /* eslint-disable import/first */
     import("./example/tripgo/tripgo-sample");
 //     import("./example/chym/index");
 //     import("./example/client-sample");
