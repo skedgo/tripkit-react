@@ -62,7 +62,6 @@ import {TKUIServiceStepsProps, TKUIServiceStepsStyle} from "../trip/TKUIServiceS
 import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
 import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
 import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIMapLocationPopup";
-import {TKUIQueryLocationBoxProps, TKUIQueryLocationBoxStyle} from "../query/TKUIQueryLocationBox";
 import {TKUIMxMViewProps, TKUIMxMViewStyle} from "../mxm/TKUIMxMView";
 import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
 import {TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle} from "../service/TKUIServiceRealtimeInfo";
@@ -116,7 +115,6 @@ interface ITKUIConfigOptional {
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
     TKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
-    TKUIQueryLocationBox: TKComponentConfig<TKUIQueryLocationBoxProps, TKUIQueryLocationBoxStyle>;
     TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
     TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;
     TKUICard: TKComponentConfig<TKUICardProps, TKUICardStyle>;
