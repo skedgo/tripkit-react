@@ -19,25 +19,7 @@ import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
 import {loadTripState} from "./options/TGUILoadTripsView";
 import {ReactComponent as TripgoLogo} from './images/logo-tripgo.svg';
-import Environment from "../../env/Environment";
-import {default as TKPeliasGeocoder} from "../../geocode/PeliasGeocoder";
-import {TKUIRoutingResultsViewProps} from "../../trip/TKUIRoutingResultsView";
-import {TKError} from "../../error/TKError";
-import {TKUIConfig} from "../../config/TKUIConfig";
-import TKUIButton from "../../buttons/TKUIButton";
-import LatLng from "../../model/LatLng";
-import TKRoot from "../../config/TKRoot";
-import TKUITripPlanner from "../../trip-planner/TKUITripPlanner";
-// import {
-//     TKUITripPlanner,
-//     TKRoot,
-//     TKUIConfig,
-//     LatLng,
-//     Environment,
-//     TKPeliasGeocoder, TKError, TKUIRoutingResultsViewProps,
-//     TKUIButton}
-//     from '../../index';
-// from 'tripkit-react';
+import {ReactComponent as TripgoLogoDark} from './images/logo-tripgo-dark.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
@@ -203,8 +185,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         TKUITripPlanner: {
             props: (props) => ({
                 renderTopRight: props.landscape ?
-                    () => <TripgoLogo/>
-                    : undefined
+                    (props.theme.isDark ? () => <TripgoLogoDark/> : () => <TripgoLogo/>) : undefined
             })
         },
         TKUISidebar: {
