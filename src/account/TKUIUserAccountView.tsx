@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {TKAccountContext} from "./TKAccountProvider";
+import {TKAccountContext} from "./TKAccountContext";
 import {TKUITheme} from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";

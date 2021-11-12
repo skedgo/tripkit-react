@@ -7,7 +7,7 @@ import {ClassNameMap} from "react-jss";
 import {TKRandomizeClassNamesOverride} from "../../config/TKConfigHelper";
 import TKDocTabButton from "./TKDocTabButton";
 import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
-import {TKPeliasGeocoder} from "../../index";
+import {default as TKPeliasGeocoder} from "../../geocode/PeliasGeocoder";
 
 export interface TKDocComponentProps {
     compName: string;

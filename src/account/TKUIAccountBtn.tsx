@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import TKUISignInBtn from "./TKUISignInBtn";
-import {SignInStatus, TKAccountContext} from "./TKAccountProvider";
+import {SignInStatus, TKAccountContext} from "./TKAccountContext";
 import {ReactComponent as IconProfile} from "../images/ic-profile.svg";
 import {resetStyles} from "../css/ResetStyle.css";
 import {colorWithOpacity, TKUITheme, white} from "../jss/TKUITheme";

@@ -6,9 +6,8 @@ import {connect, PropsMapper} from "../../../config/TKConfigHelper";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../../../util/TKUIResponsiveUtil";
 import {tGUIDevSettingsViewDefaultStyle} from "./TGUIDevSettingsView.css";
-import {CardPresentation} from "../../../card/TKUICard";
+import TKUICard, {CardPresentation} from "../../../card/TKUICard";
 import {TKUISlideUpOptions, TKUISlideUpPosition} from "../../../card/TKUISlideUp";
-import {TKUICard, TKUserProfile} from "../../../index";
 import TKUISelect, {SelectOption} from "../../../buttons/TKUISelect";
 import classNames from "classnames";
 import Util from "../../../util/Util";
@@ -21,6 +20,7 @@ import TGUILoadTripsView from "./TGUILoadTripsView";
 import TripGoApi from "../../../api/TripGoApi";
 import {IOptionsContext, OptionsContext} from "../../../options/OptionsProvider";
 import {cardSpacing} from "../../../jss/TKUITheme";
+import TKUserProfile from "../../../model/options/TKUserProfile";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {

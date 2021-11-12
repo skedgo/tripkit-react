@@ -23,7 +23,7 @@ import {cardSpacing} from "../jss/TKUITheme";
 import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import TKUISettingSection from "./TKUISettingSection";
 import TKUISettingLink from "./TKUISettingLink";
-import {IAccountContext, SignInStatus, TKAccountContext} from "../account/TKAccountProvider";
+import {IAccountContext, SignInStatus, TKAccountContext} from "../account/TKAccountContext";
 import TKUIMyBookings from "../booking/TKUIMyBookings";
 
 

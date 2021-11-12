@@ -22,7 +22,7 @@ import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "../trip/TKUI
 import {TKUIWithClasses} from "../jss/StyleHelper";
 import {Subtract} from 'utility-types';
 import TKStateProvider from "../config/TKStateProvider";
-import {genClassNames} from "../index";
+import {genClassNames} from "../css/GenStyle.css";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
