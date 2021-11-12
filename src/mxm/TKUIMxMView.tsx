@@ -134,7 +134,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         return getPTSegmentMxMCards(props);
     } else if (segment.isWalking() || segment.isBicycle()) {
         return [getStreetMxMCard(props)]
-    } else if (segment.booking) {
+    } else if (segment.booking && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
         return [
             <TKUIMxMBookingCard
                 segment={segment}

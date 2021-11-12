@@ -19,6 +19,7 @@ import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
 import {loadTripState} from "./options/TGUILoadTripsView";
 import {ReactComponent as TripgoLogo} from './images/logo-tripgo.svg';
+import {ReactComponent as TripgoLogoDark} from './images/logo-tripgo-dark.svg';
 import Environment from "../../env/Environment";
 import {default as TKPeliasGeocoder} from "../../geocode/PeliasGeocoder";
 import {TKUIRoutingResultsViewProps} from "../../trip/TKUIRoutingResultsView";
@@ -203,8 +204,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         TKUITripPlanner: {
             props: (props) => ({
                 renderTopRight: props.landscape ?
-                    () => <TripgoLogo/>
-                    : undefined
+                    (props.theme.isDark ? () => <TripgoLogoDark/> : () => <TripgoLogo/>) : undefined
             })
         },
         TKUISidebar: {
