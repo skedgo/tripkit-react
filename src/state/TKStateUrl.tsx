@@ -18,7 +18,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import Trip from "../model/trip/Trip";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
-import {TKAccountContext} from "../account/TKAccountProvider";
+import {TKAccountContext} from "../account/TKAccountContext";
 
 interface IProps {
     tKState: TKState;

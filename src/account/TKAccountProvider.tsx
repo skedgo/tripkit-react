@@ -5,24 +5,7 @@ import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
 import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-
-export enum SignInStatus {
-    signedIn, signedOut, loading
-}
-
-export interface IAccountContext {
-    status: SignInStatus;
-    userAccount?: TKUserAccount;
-    returnToAfterLogin?: string;
-    login: () => void;
-    logout: () => void;
-}
-
-export const TKAccountContext = React.createContext<IAccountContext>({
-    status: SignInStatus.loading,
-    login: () => {},
-    logout: () => {}
-});
+import {IAccountContext, SignInStatus, TKAccountContext} from "./TKAccountContext";
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
     private static _instance: AuthStorage;

@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
-import TKUIButton from "../buttons/TKUIButton";
-import {genClassNames, TKState, TKStateController, TKUIButtonType, TKUICard, TKUIRoutingQueryInput} from "../index";
+import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import {tKUIDeaultTheme} from "../jss/TKUITheme";
 import {tKUIButtonDefaultStyle} from "../buttons/TKUIButton.css";
 import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
-import {CardPresentation} from "../card/TKUICard";
+import TKUICard, {CardPresentation} from "../card/TKUICard";
 import Util from "../util/Util";
 import RoutingResults from "../model/trip/RoutingResults";
 import Trip from "../model/trip/Trip";
@@ -34,6 +33,10 @@ import TKUILocationSearch from "../query/TKUILocationSearch";
 import {tKUILocationSearchDefaultStyle} from "../query/TKUILocationSearch.css";
 import TKUIMapView from "../map/TKUIMapView";
 import {tKUIMapViewDefaultStyle} from "../map/TKUIMapView.css";
+import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
+import {genClassNames} from "../css/GenStyle.css";
+import TKStateController from "../config/TKStateController";
+import TKState from "../config/TKState";
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme(false)) : defaultStyle);

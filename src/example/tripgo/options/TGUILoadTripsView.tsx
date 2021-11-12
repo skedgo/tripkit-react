@@ -1,11 +1,10 @@
-import React, {useState, ChangeEvent, useContext, useEffect} from 'react';
+import React, {useState, ChangeEvent, useEffect} from 'react';
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";
-import {TKError, TKUIButtonType} from "../../../index";
 import {CardPresentation, default as TKUICard} from "../../../card/TKUICard";
 import {TKUIViewportUtilProps, TKUIViewportUtil} from "../../../util/TKUIResponsiveUtil";
-import TKUIButton from "../../../buttons/TKUIButton";
+import TKUIButton, {TKUIButtonType} from "../../../buttons/TKUIButton";
 import {Subtract} from "utility-types";
 import {TKUISlideUpOptions} from "../../../card/TKUISlideUp";
 import {TGUIFeedbackFormStyle} from "../feedback/TGUIFeedbackForm";
@@ -14,6 +13,7 @@ import TKStateConsumer from "../../../config/TKStateConsumer";
 import {TKState} from "../../../config/TKState";
 import Trip from "../../../model/trip/Trip";
 import DeviceUtil, {BROWSER} from "../../../util/DeviceUtil";
+import {TKError} from "../../../error/TKError";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {

@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {SignInStatus, TKAccountContext} from "./TKAccountProvider";
+import {SignInStatus, TKAccountContext} from "./TKAccountContext";
 import {ReactComponent as IconLoading} from "../images/ic-spin-bar.svg";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 

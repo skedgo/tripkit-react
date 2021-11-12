@@ -1,13 +1,13 @@
 import * as React from "react";
-import {TKUICard, TKUIButton, TKUIButtonType} from "../../../index";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../../../util/TKUIResponsiveUtil";
-import {CardPresentation} from "../../../card/TKUICard";
+import TKUICard, {CardPresentation} from "../../../card/TKUICard";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import TKUIWaitingRequest, {TKRequestStatus} from "../../../card/TKUIWaitingRequest";
 import {tGUIFeedbackFormDefaultStyle} from "./TGUIFeedbackForm.css";
 import {Subtract} from "utility-types";
+import TKUIButton, {TKUIButtonType} from "../../../buttons/TKUIButton";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     titleDefault?: string;

@@ -4,11 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="More selective import of date-time-format-timezone polyfill, which reduced ~300k of download size.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Remove imports of index.tsx from tripgo web-app.">
+      <change afterPath="$PROJECT_DIR$/src/account/TKAccountContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/usersnap/Usersnap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/usersnap/Usersnap.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKAccountProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKAccountProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIAccountBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIAccountBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUISignInBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUISignInBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUISignInFromSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUISignInFromSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIUserAccountSetting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIUserAccountSetting.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/account/TKUIUserAccountView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/account/TKUIUserAccountView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/doc/components/TKDocComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/components/TKDocComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/feedback/TGUIFeedbackForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/feedback/TGUIFeedbackForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUIEditApiKeyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUIEditApiKeyView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUILoadTripsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUILoadTripsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/options/TKUIProfileView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUIProfileView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUIHomeCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -563,14 +578,7 @@
       <workItem from="1636113669199" duration="2799000" />
       <workItem from="1636135686967" duration="10219000" />
       <workItem from="1636717210014" duration="4398000" />
-      <workItem from="1636742715340" duration="2921000" />
-    </task>
-    <task id="LOCAL-00428" summary="Improve fit map control.">
-      <created>1626373976412</created>
-      <option name="number" value="00428" />
-      <option name="presentableId" value="LOCAL-00428" />
-      <option name="project" value="LOCAL" />
-      <updated>1626373976413</updated>
+      <workItem from="1636742715340" duration="6485000" />
     </task>
     <task id="LOCAL-00429" summary="Add showCurrLocBtn prop to map view.">
       <created>1626739476595</created>
@@ -908,7 +916,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636729637066</updated>
     </task>
-    <option name="localTasksCounter" value="477" />
+    <task id="LOCAL-00477" summary="Remove imports of index.tsx from tripgo web-app.">
+      <created>1636752035467</created>
+      <option name="number" value="00477" />
+      <option name="presentableId" value="LOCAL-00477" />
+      <option name="project" value="LOCAL" />
+      <updated>1636752035467</updated>
+    </task>
+    <option name="localTasksCounter" value="478" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1031,7 +1046,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Overflow ellipsis transport title in trip summary." />
     <MESSAGE value="My Bookings view." />
     <MESSAGE value="- My Bookings view.&#10;- Home Card and Active Trip." />
     <MESSAGE value="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip." />
@@ -1056,7 +1070,8 @@
     <MESSAGE value="Feature #15916: Web widget enhancement&#10;- IE11&#10;- Other issues listed here: https://redmine.buzzhives.com/issues/15916#note-7" />
     <MESSAGE value="comment tripgo-sample import in index.tsx" />
     <MESSAGE value="More selective import of date-time-format-timezone polyfill, which reduced ~300k of download size." />
-    <option name="LAST_COMMIT_MESSAGE" value="More selective import of date-time-format-timezone polyfill, which reduced ~300k of download size." />
+    <MESSAGE value="Remove imports of index.tsx from tripgo web-app." />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove imports of index.tsx from tripgo web-app." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

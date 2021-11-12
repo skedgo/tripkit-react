@@ -11,7 +11,7 @@ import NetworkUtil from "../util/NetworkUtil";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import Trip from "../model/trip/Trip";
-import {IAccountContext, SignInStatus, TKAccountContext} from "../account/TKAccountProvider";
+import {IAccountContext, SignInStatus, TKAccountContext} from "../account/TKAccountContext";
 import TKUIActiveTrip from "./TKUIActiveTrip";
 import Util from "../util/Util";
 import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
