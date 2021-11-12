@@ -1,4 +1,4 @@
-import React, {MouseEvent, useState} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import TGApp from "./TGApp";
 

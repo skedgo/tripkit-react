@@ -1,4 +1,6 @@
-import {TKState, feedbackTextFromState} from '../../../index';
+import TKState from "../../../config/TKState";
+import {feedbackTextFromState} from "../../../feedback/TKUIReportBtn";
+// import {TKState, feedbackTextFromState} from '../../../index';
 
 class Usersnap {
 
