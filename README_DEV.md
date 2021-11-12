@@ -100,3 +100,11 @@ module.exports = override(
     process.env.REACT_APP_HOT_TRIPKIT == 1 && alias(aliasMap)
 );
 ```
+
+### CI / CD
+
+#### Skip CI pipeline for push
+
+```
+git push -o ci.skip
+```
