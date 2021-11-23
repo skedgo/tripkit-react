@@ -52,8 +52,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 function getPredefinedApiKeys(): object {
+    const referrer = document.referrer;
+    let productionKey: string;
+    if (referrer.startsWith("https://tfgm.com")) {
+        productionKey = 'c923000febe2292c458b4a1ad8ef736b';
+    } else if (referrer.startsWith("https://www.choosehowyoumove.co.uk")) {
+        productionKey = 'f1c2e2bc7de12f6659a224a625ec64f3';
+    } else {
+        productionKey = '790892d5eae024712cfd8616496d7317';
+    }
     return ({
-        'production': document.referrer.startsWith("https://tfgm.com") ? 'c923000febe2292c458b4a1ad8ef736b' : '790892d5eae024712cfd8616496d7317',
+        'production': productionKey,
         'beta': '032de02a53a155f901e6953bcdbf77ad'
     });
 }
