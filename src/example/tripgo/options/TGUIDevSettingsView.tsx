@@ -53,7 +53,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 function getPredefinedApiKeys(): object {
     return ({
-        'production': '790892d5eae024712cfd8616496d7317',
+        'production': document.referrer.startsWith("https://tfgm.com") ? 'c923000febe2292c458b4a1ad8ef736b' : '790892d5eae024712cfd8616496d7317',
         'beta': '032de02a53a155f901e6953bcdbf77ad'
     });
 }
