@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Remove Auth0 dependency for projects that don't have accounts.">
-      <change beforePath="$PROJECT_DIR$/README_DEV.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_DEV.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -561,13 +562,6 @@
       <workItem from="1636717210014" duration="4398000" />
       <workItem from="1636742715340" duration="6891000" />
     </task>
-    <task id="LOCAL-00430" summary="Fix to map not displaying bicycle friendliness.">
-      <created>1627570398702</created>
-      <option name="number" value="00430" />
-      <option name="presentableId" value="LOCAL-00430" />
-      <option name="project" value="LOCAL" />
-      <updated>1627570398702</updated>
-    </task>
     <task id="LOCAL-00431" summary="Upgrade typescript and react-scripts, to enable import of tripkit-react library as local package with hot reload on lib changes.">
       <created>1627575241652</created>
       <option name="number" value="00431" />
@@ -904,7 +898,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636755239386</updated>
     </task>
-    <option name="localTasksCounter" value="479" />
+    <task id="LOCAL-00479" summary="- Remove jquery dependency.&#10;- Send address (along lat lng) in routing.json queries.">
+      <created>1637697348111</created>
+      <option name="number" value="00479" />
+      <option name="presentableId" value="LOCAL-00479" />
+      <option name="project" value="LOCAL" />
+      <updated>1637697348112</updated>
+    </task>
+    <option name="localTasksCounter" value="480" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1027,7 +1028,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="- My Bookings view.&#10;- Home Card and Active Trip." />
     <MESSAGE value="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip." />
     <MESSAGE value="- Refresh My Bookings view each 30 secs.&#10;- bug fixing." />
     <MESSAGE value="- cleanup console.log/s.&#10;- display mode on active trip.&#10;- bug fixing." />
@@ -1052,7 +1052,8 @@
     <MESSAGE value="More selective import of date-time-format-timezone polyfill, which reduced ~300k of download size." />
     <MESSAGE value="Remove imports of index.tsx from tripgo web-app." />
     <MESSAGE value="Remove Auth0 dependency for projects that don't have accounts." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Auth0 dependency for projects that don't have accounts." />
+    <MESSAGE value="- Remove jquery dependency.&#10;- Send address (along lat lng) in routing.json queries." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Remove jquery dependency.&#10;- Send address (along lat lng) in routing.json queries." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
