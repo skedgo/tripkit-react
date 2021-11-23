@@ -67,34 +67,6 @@ class NetworkUtil {
         }
     }
 
-    /**
-     * Dynamically imports jquery, and then gets the script dynamically
-     */
-    public static getScript(url: string) {
-        if (Util.global.$) {
-            return Util.global.$.getScript(url);
-        }
-        return import('../jslib/JQuery').then(value => Util.global.$.getScript(url));
-    }
-
-    public static getStylesheet(url: string) {
-        if (Util.global.$) {
-            return NetworkUtil.getStylesheetJQ(url);
-        }
-        return import('../jslib/JQuery').then(value => NetworkUtil.getStylesheetJQ(url));
-    }
-
-    private static getStylesheetJQ = (href: any) => {
-        const $d = $.Deferred();
-        const $link = $('<link/>', {
-            rel: 'stylesheet',
-            type: 'text/css',
-            href: href
-        }).appendTo('head');
-        $d.resolve($link);
-        return $d.promise();
-    };
-
     public static loadCss(url: string, callback?: () => void) {
         // Adding the script tag to the head as suggested before
         const head: any = document.getElementsByTagName('head')[0];
@@ -179,10 +151,6 @@ class NetworkUtil {
         return (data) => new Promise(resolve => setTimeout(() => resolve(data), duration));
     }
 }
-
-// Exports to gwt
-Util.global.getScript = NetworkUtil.getScript;
-Util.global.getStylesheet = NetworkUtil.getStylesheet;
 
 
 export default NetworkUtil;

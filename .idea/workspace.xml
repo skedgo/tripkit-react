@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Remove Auth0 dependency for projects that don't have accounts.">
-      <change beforePath="$PROJECT_DIR$/README_DEV.md" beforeDir="false" afterPath="$PROJECT_DIR$/README_DEV.md" afterDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="README_DEV.md">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jslib/JQuery.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RoutingQuery.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RoutingQuery.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/NetworkUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/NetworkUtil.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -560,6 +564,14 @@
       <workItem from="1636135686967" duration="10219000" />
       <workItem from="1636717210014" duration="4398000" />
       <workItem from="1636742715340" duration="6891000" />
+      <workItem from="1637146712960" duration="5023000" />
+      <workItem from="1637168399324" duration="4463000" />
+      <workItem from="1637239089942" duration="2142000" />
+      <workItem from="1637262371588" duration="606000" />
+      <workItem from="1637329801915" duration="138000" />
+      <workItem from="1637330430097" duration="1014000" />
+      <workItem from="1637668452203" duration="599000" />
+      <workItem from="1637692267499" duration="1521000" />
     </task>
     <task id="LOCAL-00430" summary="Fix to map not displaying bicycle friendliness.">
       <created>1627570398702</created>

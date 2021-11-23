@@ -96,9 +96,10 @@ class RoutingQuery {
         const concessionPricingParam = options.transitConcessionPricing ? "&conc=true" : ""; // API default: false
         const wheelchairParam = options.wheelchair ? "&wheelchair=true" : ""; // API default: false
 
-        return "routing.json?" +
-            "from=(" + this.from.lat + "," + this.from.lng + ")&to=(" + this.to.lat + "," + this.to.lng + ")&" +
-            (this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter") + "=" + Math.floor(this.time.valueOf() / 1000) +
+        return "routing.json" +
+            `?from=(${this.from.lat}, ${this.from.lng})"${this.from.address}"`+
+            `&to=(${this.to.lat}, ${this.to.lng})"${this.to.address}"`+
+            `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}`+
             modeParams + avoidModeParams +
             weightingPreferencesParam +
             minTransferTimeParam +
