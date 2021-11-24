@@ -98,6 +98,13 @@ interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     /**
      * @ctype
+     * If true then region in global state will be fixed to that one of the initial
+     * viewport. Useful when the api key covers multiple regions, but we want one
+     * of them to be the central region (e.g. consider just transports of that region).
+     */
+    fixToInitViewportRegion: boolean;
+    /**
+     * @ctype
      */
     i18n: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>;
     isDarkDefault: boolean,

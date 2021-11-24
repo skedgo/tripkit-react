@@ -26,6 +26,7 @@ import {TKUIMapViewClass} from "../map/TKUIMapView";
 
 export interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
+    fixToInitViewportRegion?: boolean;
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
@@ -214,6 +215,20 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public refreshRegion() {
+            // Implements the behaviour described in TKUIConfig.fixToInitViewportRegion
+            if (this.props.initViewport?.center && this.props.fixToInitViewportRegion) {
+                RegionsData.instance.requireRegions().then(() => {
+                    RegionsData.instance.getCloserRegionP(this.props.initViewport!.center!).then((region: Region) => {
+                        if (this.state.region === region) {
+                            return;
+                        }
+                        this.setState({region: region},
+                            () => this.refreshRegionInfo());
+                    });
+                });
+                return;
+            }
+
             const query = this.state.query;
             const viewport = this.state.viewport;
             // Just trigger region change from viewport change if zoom is greater then 6 (avoids moving on zoom out viewport to pass through multiple regions, and avoids initial world zoom to set region).

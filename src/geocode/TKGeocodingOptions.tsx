@@ -36,6 +36,11 @@ interface TKGeocodingOptions {
     /** @ctype */
     analogResults: (r1: Location, r2: Location) => boolean;
     maxResults?: number;
+    /**
+     * If true then the coverage bounds will be used to restrict geocoding results.
+     * Otherwise, current region bounds are used.
+     */
+    restrictToCoverageBounds?: boolean;
 }
 
 function getDefaultGeocodingOptions(): TKGeocodingOptions {
