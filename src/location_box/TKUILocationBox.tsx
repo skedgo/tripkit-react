@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import Autocomplete from 'react-autocomplete';
 import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
@@ -19,12 +19,11 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
 import {genClassNames} from "../css/GenStyle.css";
-import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
+import TKGeocodingOptions, {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import {Subtract} from 'utility-types';
 import {TKUIConfigContext} from "../config/TKUIConfigProvider";
 import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
 import LocationUtil from "../util/LocationUtil";
-import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -221,31 +220,33 @@ class TKUILocationBox extends Component<IProps, IState> {
                     });
             } else {
                 const searchAddress = () => {
-                    if (!locationValue.address) {
-                        return;
-                    }
-                    this.geocodingData.geocode(locationValue.address, false, this.props.bounds ?
-                            this.props.bounds : null, this.props.focus ? this.props.focus : null,
-                        (query: string, results: Location[]) => {
-                            if (this.state.waitingResolveFor === locationValue) {
-                                this.setState({
-                                    waitingResolveFor: undefined
-                                });
+                    this.getLimitBounds().then(limitBounds => {
+                            if (!locationValue.address) {
+                                return;
                             }
-                            if (locationValue === this.state.locationValue) {
-                                if (results.length > 0) {
-                                    this.setValue(results[0], false, true,
-                                        () => {
-                                            this.updateResolvedItem(locationValue, results[0]);
-                                            console.log("Resolved: " + JSON.stringify(results[0]));
+                            this.geocodingData.geocode(locationValue.address!, false, limitBounds, this.props.focus ? this.props.focus : null,
+                                (query: string, results: Location[]) => {
+                                    if (this.state.waitingResolveFor === locationValue) {
+                                        this.setState({
+                                            waitingResolveFor: undefined
                                         });
-                                } else {
-                                    this.props.onFailedToResolve && this.props.onFailedToResolve(
-                                        locationValue === this.state.highlightedValue,
-                                        new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
-                                }
-                            }
-                        })
+                                    }
+                                    if (locationValue === this.state.locationValue) {
+                                        if (results.length > 0) {
+                                            this.setValue(results[0], false, true,
+                                                () => {
+                                                    this.updateResolvedItem(locationValue, results[0]);
+                                                    console.log("Resolved: " + JSON.stringify(results[0]));
+                                                });
+                                        } else {
+                                            this.props.onFailedToResolve && this.props.onFailedToResolve(
+                                                locationValue === this.state.highlightedValue,
+                                                new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
+                                        }
+                                    }
+                                });
+                        }
+                    )
                 };
                 if (this.props.bounds) {
                     searchAddress()
@@ -307,9 +308,19 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
     }
 
+    private getLimitBounds(): Promise<BBox | null> {
+        return RegionsData.instance.requireRegions().then(() => {
+            return (this.props.geocodingOptions?.restrictToCoverageBounds && RegionsData.instance.getCoverageBounds())
+                || this.props.bounds || null;
+        });
+    }
+
     private refreshResults(inputText: string) {
         this.setState({ waiting: true });
-        this.geocodingData.geocode(inputText, true, this.props.bounds ? this.props.bounds : null, this.props.focus ? this.props.focus : null, this.handleAutocompleteResults)
+        this.getLimitBounds().then(limitBounds =>
+            this.geocodingData.geocode(inputText, true, limitBounds, this.props.focus ? this.props.focus : null,
+                this.handleAutocompleteResults));
+
     }
 
     // noinspection JSUnusedLocalSymbols

@@ -14,6 +14,7 @@ import union from "@turf/union"
 import intersect from "@turf/intersect";
 import {polygon} from "@turf/helpers";
 import LeafletUtil from "../util/LeafletUtil";
+import BBox from "../model/BBox";
 
 export class RegionsData {
 
@@ -26,6 +27,7 @@ export class RegionsData {
     private regionInfosRequests: Map<string, Promise<RegionInfo>> = new Map<string, Promise<RegionInfo>>();
     private regionInfos: Map<string, RegionInfo> = new Map<string, RegionInfo>();
     private coverageGeoJson: any;
+    private coverageBounds?: BBox | null;
 
     // Set this to hardcode regions json
     public static regionsJsonPromise: Promise<any> | undefined = undefined;
@@ -252,6 +254,25 @@ export class RegionsData {
             }
         }
         return this.coverageGeoJson;
+    }
+
+    /**
+     * Get the smaller bounds that contains the coverage.
+     */
+    public getCoverageBounds(): BBox | undefined {
+        if (this.coverageBounds === null) {
+            return undefined;
+        }
+        if (this.coverageBounds === undefined) {
+            const coverageGeoJson = this.getCoverageGeoJson();
+            const coveragePolygons = coverageGeoJson?.coordinates[0].slice(1);
+            const pointsToCover = coveragePolygons?.reduce((polygon, pointsToCover) => pointsToCover.concat(polygon), []);
+            this.coverageBounds = pointsToCover ?
+                LeafletUtil.toBBox(LeafletUtil.boundsFromLatLngArray(pointsToCover
+                    .map(coord => LatLng.createLatLng(coord[1], coord[0])))) :
+                null;
+        }
+        return this.coverageBounds || undefined;
     }
 }
 
