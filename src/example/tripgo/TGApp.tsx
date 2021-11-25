@@ -13,7 +13,7 @@ import TKStateUrl from "../../state/TKStateUrl";
 import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
 import TKUISettingLink from "../../options/TKUISettingLink";
 import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../../options/OptionsProvider";
-import {getApiKey, default as TGUIDevSettingsView, getServer} from "./options/TGUIDevSettingsView";
+import {getApiKey, default as TGUIDevSettingsView, getServer, isTfGMReferrer} from "./options/TGUIDevSettingsView";
 import TKUISettingSection from "../../options/TKUISettingSection";
 import RegionsData from "../../data/RegionsData";
 import OptionsData from "../../data/OptionsData";
@@ -60,7 +60,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         }
     } : undefined;
 
-    const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
+    const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8", isTfGMReferrer());
     geocodeEarth.getOptions().resultsLimit = 5;
 
     const hostname = window.location.hostname;
@@ -74,7 +74,6 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             setShowLoadTrips={setShowLoadTrips}
             onRequestClose={() => setShowDevSettings(false)}
         />;
-
     const config: TKUIConfig = {
         apiKey: '790892d5eae024712cfd8616496d7317',
         theme: {
@@ -87,7 +86,8 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
             geocoders: {
                 ...defaultOptions.geocoders,
                 'geocodeEarth': geocodeEarth
-            }
+            },
+            ...isTfGMReferrer() && {restrictToCoverageBounds: true}
         }),
         TKUIReportBtn: {
             // Good example of element replacement.
