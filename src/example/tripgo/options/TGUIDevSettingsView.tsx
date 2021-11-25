@@ -51,10 +51,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TGUIDevSettingsView"
 };
 
+export function isTfGMReferrer(): boolean {
+    return document.referrer.startsWith("https://tfgm.com");
+}
+
 function getPredefinedApiKeys(): object {
     const referrer = document.referrer;
     let productionKey: string;
-    if (referrer.startsWith("https://tfgm.com")) {
+    if (isTfGMReferrer()) {
         productionKey = 'c923000febe2292c458b4a1ad8ef736b';
     } else if (referrer.startsWith("https://www.choosehowyoumove.co.uk")) {
         productionKey = 'f1c2e2bc7de12f6659a224a625ec64f3';
