@@ -15,14 +15,25 @@ import TripGoApi from "../api/TripGoApi";
 
 class TKShareHelper {
 
+    public static useHash = false;
+
+    public static getPathname(): string {
+        return this.useHash ? document.location.hash.slice(1) : document.location.pathname;
+    }
+
+    public static getSearch(): string {
+        const stateString = this.getPathname();
+        return stateString.slice(stateString.indexOf('?'));
+    }
+
     public static isSharedTripLink(): boolean {
-        const shareLinkPath = document.location.pathname;
-        const shareLinkQuery = document.location.search;
+        const shareLinkPath = this.getPathname();
+        const shareLinkQuery = this.getSearch();
         return shareLinkPath.startsWith("/trip/") || shareLinkQuery.includes("tripUrl=");
     }
 
     public static getSharedTripJsonUrl(): string | undefined {
-        const path = document.location.pathname;
+        const path = this.getPathname();
         const tripUrlPattern = "/trip/url/";
         if (path.startsWith(tripUrlPattern)) {
             return decodeURIComponent(path.substring(tripUrlPattern.length));
@@ -30,7 +41,7 @@ class TKShareHelper {
         if (path.startsWith("/trip/")) {
             return TripGoApi.getSatappUrl(path);
         }
-        const searchStr = document.location.search;
+        const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         if (queryMap.tripUrl) { // Already decoded (decodeURIComponent) by queryString.parse
             return queryMap.tripUrl;
@@ -39,22 +50,22 @@ class TKShareHelper {
     }
 
     public static isSharedArrivalLink(): boolean {
-        const shareLinkPath = document.location.pathname;
+        const shareLinkPath = this.getPathname();
         return shareLinkPath.startsWith("/meet");
     }
 
     public static isSharedStopLink(): boolean {
-        const shareLinkPath = document.location.pathname;
+        const shareLinkPath = this.getPathname();
         return shareLinkPath.startsWith("/stop");
     }
 
     public static isSharedServiceLink(): boolean {
-        const shareLinkPath = document.location.pathname;
+        const shareLinkPath = this.getPathname();
         return shareLinkPath.startsWith("/service");
     }
 
     public static isSharedQueryLink(): boolean {
-        const shareLinkPath = document.location.pathname;
+        const shareLinkPath = this.getPathname();
         return shareLinkPath.startsWith("/go");
     }
 
@@ -91,7 +102,11 @@ class TKShareHelper {
 
     public static getShareQuery(query: RoutingQuery, plannerUrl?: string): string {
         let goURL = (plannerUrl ? plannerUrl : Constants.DEPLOY_URL);
-        goURL += (goURL.endsWith("/") ? "" : "/") + "go";
+        // Add trailing '/', if missing
+        goURL += goURL.endsWith("/") ? "" : "/";
+        // Add '#' if useHash
+        goURL += this.useHash ? "#" : "";
+        goURL += "/go";
         if (query.from) {
             goURL += (goURL.includes("?") ? "&" : "?");
             goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +
@@ -112,7 +127,7 @@ class TKShareHelper {
     }
 
     public static parseSharedQueryLink(): RoutingQuery | undefined {
-        const searchStr = window.location.search;
+        const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
@@ -134,13 +149,13 @@ class TKShareHelper {
     }
 
     public static parseTransportsQueryParam(): TKTransportOptions | undefined {
-        const searchStr = window.location.search;
+        const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         return queryMap && queryMap.transports && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.transports)), TKTransportOptions);
     }
 
     public static parseViewport(): {center: LatLng, zoom: number} | undefined {
-        const searchStr = window.location.search;
+        const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         return queryMap && queryMap.clat && queryMap.clng && queryMap.zoom ?
             {center: LatLng.createLatLng(queryMap.clat, queryMap.clng), zoom: queryMap.zoom} : undefined;

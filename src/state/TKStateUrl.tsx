@@ -23,6 +23,7 @@ import {TKAccountContext} from "../account/TKAccountContext";
 interface IProps {
     tKState: TKState;
     returnToAfterLogin?: string;
+    useHash?: boolean;
 }
 
 enum URLFields {
@@ -85,6 +86,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
         this.loadTripState = this.loadTripState.bind(this);
         this.loadTimetableState = this.loadTimetableState.bind(this);
         this.setStateFromUrl = this.setStateFromUrl.bind(this);
+        TKShareHelper.useHash = !!this.props.useHash;
     }
 
     private getUrlFromState(state: TKState): string {
@@ -247,7 +249,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             const prevUrl = this.getUrlFromState(prevProps.tKState);
             const url = this.getUrlFromState(this.props.tKState);
             if (url !== prevUrl) {
-                window.history.replaceState(null, '', url)
+                window.history.replaceState(null, '', (TKShareHelper.useHash ? "#" : "") + url);
             }
         });
         if (!prevProps.returnToAfterLogin && this.props.returnToAfterLogin) {
@@ -266,14 +268,14 @@ class TKStateUrl extends React.Component<IProps, {}> {
         if (sharedTripJsonUrl) {
             this.loadTripState(sharedTripJsonUrl);
         } else if (TKShareHelper.isSharedStopLink()) {
-            const shareLinkPath = decodeURIComponent(document.location.pathname);
+            const shareLinkPath = decodeURIComponent(TKShareHelper.getPathname());
             const shareLinkSplit = shareLinkPath.split("/");
             const region = shareLinkSplit[2];
             const stopCode = shareLinkSplit[3];
             this.loadTimetableState(region, stopCode, "");
         } else if (TKShareHelper.isSharedServiceLink()) {
             tKState.onWaitingStateLoad(true);
-            const shareLinkPath = decodeURIComponent(document.location.pathname);
+            const shareLinkPath = decodeURIComponent(TKShareHelper.getPathname());
             const shareLinkSplit = shareLinkPath.split("/");
             const region = shareLinkSplit[2];
             const stopCode = shareLinkSplit[3];
@@ -281,7 +283,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             const initTimeInSecs = parseInt(shareLinkSplit[5]);
             this.loadTimetableState(region, stopCode, "", serviceCode, initTimeInSecs);
         } else if (TKShareHelper.isSharedArrivalLink()) {
-            const shareLinkS = document.location.search;
+            const shareLinkS = TKShareHelper.getSearch();
             const queryMap = queryString.parse(shareLinkS.startsWith("?") ? shareLinkS.substr(1) : shareLinkS);
             if (queryMap.lat && queryMap.lng) {
                 tKState.onWaitingStateLoad(true);
@@ -321,7 +323,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 }
             }
         } else {
-            this.setStateFromUrl(document.location.pathname);
+            this.setStateFromUrl(TKShareHelper.getPathname());
         }
     }
 
@@ -339,12 +341,13 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
 }
 
-export default () => {
+export default (props: {useHash?: boolean;}) => {
     const accountContext = useContext(TKAccountContext);
     return <TKStateConsumer>
         {(state: TKState) =>
             <TKStateUrl tKState={state}
                         returnToAfterLogin={accountContext.returnToAfterLogin}
+                        {...props}
             />
         }
     </TKStateConsumer>;

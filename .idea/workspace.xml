@@ -6,9 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Use Leicester api key if referrer is https://www.choosehowyoumove.co.uk.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/TGApp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUIDevSettingsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/share/TKShareHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKShareHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -573,6 +574,18 @@
       <workItem from="1637668452203" duration="599000" />
       <workItem from="1637692267499" duration="1521000" />
       <workItem from="1637775100154" duration="7283000" />
+      <workItem from="1637880418225" duration="1501000" />
+      <workItem from="1637916521952" duration="700000" />
+      <workItem from="1637928681171" duration="3429000" />
+      <workItem from="1638189197573" duration="599000" />
+      <workItem from="1638210468122" duration="4820000" />
+      <workItem from="1638217468871" duration="691000" />
+      <workItem from="1638220324511" duration="142000" />
+      <workItem from="1638223189385" duration="1102000" />
+      <workItem from="1638271708410" duration="599000" />
+      <workItem from="1638298591581" duration="720000" />
+      <workItem from="1638358508927" duration="2419000" />
+      <workItem from="1638384328614" duration="317000" />
     </task>
     <task id="LOCAL-00432" summary="Add README_DEV.md documenting import lib as local repo, and hot loading of lib updates.">
       <created>1627659569860</created>
