@@ -57,6 +57,10 @@ class ModeInfo {
     get color(): Color | undefined {
         return this._color;
     }
+
+    public isBicycle(): boolean {
+        return !!(this.identifier?.startsWith("cy_bic") || this.identifier?.startsWith("me_mic_bic"));
+    }
 }
 
 export default ModeInfo;

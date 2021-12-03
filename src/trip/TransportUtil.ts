@@ -17,16 +17,16 @@ class TransportUtil {
      * @returns {string}
      */
     public static getTransportIcon(modeInfo: ModeInfo, isRealtime = false, onDark = false, remoteOverOnDark = true): string {
-        return this.getTransIcon(modeInfo, {isRealtime, onDark, remoteOverOnDark});
+        return this.getTransIcon(modeInfo, { isRealtime, onDark, remoteOverOnDark });
     }
 
     public static getTransIcon(modeInfo: ModeInfo,
-                               options: {
-                                   isRealtime?: boolean;
-                                   onDark?: boolean;
-                                   useLocal?: boolean;
-                                   remoteOverOnDark?: boolean;
-                               } = {}): string {
+        options: {
+            isRealtime?: boolean;
+            onDark?: boolean;
+            useLocal?: boolean;
+            remoteOverOnDark?: boolean;
+        } = {}): string {
         const isRealtime = options.isRealtime !== undefined ? options.isRealtime : false;
         const onDark = options.onDark !== undefined ? options.onDark : false;
         const useLocal = options.useLocal ? options.useLocal : false;
@@ -89,18 +89,27 @@ class TransportUtil {
         switch (iconS) {
             case "bus":
             case "publicTransport":
-                // return "#025da8";
-                return "#0042ac";
+                return "#00b463";
+            case "train":
+                return "#6665b3";
+            case "lightRail":
+                return "#e99d48";
+            case "tram":
+                return "#e99d48";
+            case "coach":
+                return "#599efc";
             case "bicycle":
             case "bicycle-share":
                 return "#592e84";
             case "school-bus":
-                return "#f0cb01";
+                return "#00b463";
             case "taxi":
             case "uber":
             case "car-ride-share":
             case "car-share":
                 return "#0c9588";
+            case "parking":
+                return "#418bee"
             default:
                 return null;
         }
@@ -113,8 +122,11 @@ class TransportUtil {
         if (modeId.startsWith("pt_pub_train")) {
             return "train";
         }
-        if (modeId.startsWith("pt_pub_lightRail") || modeId.startsWith("pt_pub_tram")) {
+        if (modeId.startsWith("pt_pub_lightRail")) {
             return "lightRail";
+        }
+        if (modeId.startsWith("pt_pub_tram")) {
+            return "tram";
         }
         if (modeId.startsWith("pt_pub_ferry")) {
             return "ferry";
@@ -169,15 +181,15 @@ class TransportUtil {
             return distInMetres + " m";
         }
         if (distInMetres < 1000) {
-            return Math.floor(distInMetres/50) * 50 + " m";
+            return Math.floor(distInMetres / 50) * 50 + " m";
         }
-        return (distInMetres/1000).toFixed(1) + " km";
+        return (distInMetres / 1000).toFixed(1) + " km";
     }
 
     public static getRepresentativeColor(trip: Trip): string | null {
         const representativeSegment = this.getRepresentativeSegment(trip);
         const representativeColor = representativeSegment !== null &&
-        representativeSegment.modeInfo ? TransportUtil.getTransportColor(representativeSegment.modeInfo) : "black";
+            representativeSegment.modeInfo ? TransportUtil.getTransportColor(representativeSegment.modeInfo) : "black";
         return representativeColor !== null ? representativeColor : "black";
     }
 

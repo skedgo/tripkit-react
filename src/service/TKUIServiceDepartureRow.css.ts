@@ -28,12 +28,8 @@ export const rowSelectedStyle = (theme: TKUITheme) => ({
     backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
 });
 
-export const serviceTextColor = (service: ServiceDeparture) => {
-    return service.serviceTextColor &&
-        // Avoid setting both background and text colors to black.
-        !(TransportUtil.getServiceDepartureColor(service) === "black" && service.serviceTextColor.toRGB() === 'rgb(0,0,0)')
-        ? service.serviceTextColor.toRGB() : 'white'
-};
+// Just use serviceTextColor if serviceColor (background) also comes.
+export const serviceTextColor = (service: ServiceDeparture) => (service.serviceTextColor && service.serviceColor) ? service.serviceTextColor.toRGB() : 'white';
 
 export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartureRowStyle, TKUIServiceDepartureRowProps> =
     (theme: TKUITheme) => ({

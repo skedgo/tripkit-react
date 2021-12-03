@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Use Leicester api key if referrer is https://www.choosehowyoumove.co.uk.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Add TKStateUrl a parameter to reflect state in url hash instead of path.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/modeicons/ondark/ic-bus-24px.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/images/modeicons/ondark/ic-bus-24px.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/share/TKShareHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKShareHelper.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/state/TKStateUrl.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapStreets.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapStreets.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/location/ModeLocation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/location/ModeLocation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/trip/ModeInfo.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/ModeInfo.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/trip/Street.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Street.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/trip/TransportUtil.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TransportUtil.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -166,15 +171,20 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model/trip/ModeInfo.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/i18n/i18n_en.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -584,14 +594,14 @@
       <workItem from="1638271708410" duration="599000" />
       <workItem from="1638298591581" duration="720000" />
       <workItem from="1638358508927" duration="2419000" />
-      <workItem from="1638384328614" duration="317000" />
-    </task>
-    <task id="LOCAL-00430" summary="Fix to map not displaying bicycle friendliness.">
-      <created>1627570398702</created>
-      <option name="number" value="00430" />
-      <option name="presentableId" value="LOCAL-00430" />
-      <option name="project" value="LOCAL" />
-      <updated>1627570398702</updated>
+      <workItem from="1638384328614" duration="4729000" />
+      <workItem from="1638448227178" duration="7003000" />
+      <workItem from="1638471298483" duration="955000" />
+      <workItem from="1638473898447" duration="232000" />
+      <workItem from="1638474258135" duration="3821000" />
+      <workItem from="1638530140421" duration="413000" />
+      <workItem from="1638543417678" duration="683000" />
+      <workItem from="1638556027931" duration="1798000" />
     </task>
     <task id="LOCAL-00431" summary="Upgrade typescript and react-scripts, to enable import of tripkit-react library as local package with hot reload on lib changes.">
       <created>1627575241652</created>
@@ -929,7 +939,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636755239386</updated>
     </task>
-    <option name="localTasksCounter" value="479" />
+    <task id="LOCAL-00479" summary="Add TKStateUrl a parameter to reflect state in url hash instead of path.">
+      <created>1638386093919</created>
+      <option name="number" value="00479" />
+      <option name="presentableId" value="LOCAL-00479" />
+      <option name="project" value="LOCAL" />
+      <updated>1638386093920</updated>
+    </task>
+    <option name="localTasksCounter" value="480" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1052,7 +1069,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="- My Bookings view.&#10;- Home Card and Active Trip." />
     <MESSAGE value="More on:&#10;- My Bookings view.&#10;- Home Card and Active Trip." />
     <MESSAGE value="- Refresh My Bookings view each 30 secs.&#10;- bug fixing." />
     <MESSAGE value="- cleanup console.log/s.&#10;- display mode on active trip.&#10;- bug fixing." />
@@ -1077,7 +1093,8 @@
     <MESSAGE value="More selective import of date-time-format-timezone polyfill, which reduced ~300k of download size." />
     <MESSAGE value="Remove imports of index.tsx from tripgo web-app." />
     <MESSAGE value="Remove Auth0 dependency for projects that don't have accounts." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove Auth0 dependency for projects that don't have accounts." />
+    <MESSAGE value="Add TKStateUrl a parameter to reflect state in url hash instead of path." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add TKStateUrl a parameter to reflect state in url hash instead of path." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

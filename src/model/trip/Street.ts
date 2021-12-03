@@ -2,6 +2,8 @@ import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2t
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
 import LeafletUtil from "../../util/LeafletUtil";
+import { black, white } from "jss/TKUITheme";
+
 
 export enum StreetInstructions {
     HEAD_TOWARDS = "HEAD_TOWARDS",
@@ -46,11 +48,24 @@ export function roadTagDisplayS(tag: RoadTags) {
 }
 
 export function roadTagColor(tag: RoadTags) {
-    return 'gray';
+    switch (tag) {
+        case RoadTags["MAIN-ROAD"]:
+            return '#fcbb1d';
+        case RoadTags["CYCLE-LANE"]:
+        case RoadTags["CYCLE-NETWORK"]:    
+            return '#0600ff';
+        case RoadTags["CYCLE-TRACK"]:
+        case RoadTags["BICYCLE-DESIGNATED"]:    
+            return '#23b05e';
+        case RoadTags["SIDE-ROAD"]:
+            return '#78d6f9';   
+        default:
+            return 'gray';
+    }
 }
 
 export function roadTagTextColor(tag: RoadTags) {
-    return 'white';
+    return tag === RoadTags["MAIN-ROAD"] || tag === RoadTags["SIDE-ROAD"] ? black() : white();
 }
 
 @JsonConverter

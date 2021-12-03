@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Polyline, PolylineProps} from "react-leaflet";
-import Street from "../model/trip/Street";
+import Street, { roadTagColor } from "../model/trip/Street";
 import ModeInfo from "../model/trip/ModeInfo";
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
@@ -34,29 +34,37 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
     /**
      * if color === null show friendliness (which makes sense for bicycle and wheelchair segments)
      */
-    private streetsRenderer(streets: Street[], color?: string) {
+    private streetsRenderer(streets: Street[], modeInfo?: ModeInfo, color?: string) {
         return streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
                 weight: 9,
                 color: "black",
-                opacity: 1  // Disable safe distinction for now
+                opacity: 1,  // Disable safe distinction for now
+                ...modeInfo?.isBicycle() && {
+                    dashArray: '20 20'
+                }
             } as PolylineProps
         }).concat(streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
                 weight: 7,
-                color: color ? color : street.safe ? tKUIFriendlinessColors.safe :
+                color: color ? color : 
+                street.roadTags.length > 0 ? roadTagColor(street.roadTags[0]) : // This happens just when modeInfo?.isBicycle()
+                street.safe ? tKUIFriendlinessColors.safe :
                     street.safe === false ? tKUIFriendlinessColors.unsafe :
                         street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
-                opacity: 1  // Disable safe distinction for now
+                opacity: 1,  // Disable safe distinction for now
+                ...modeInfo?.isBicycle() && {
+                    dashArray: '20 20'
+                }
             } as PolylineProps
         }));
     }
 
     public render(): React.ReactNode {
         const polylineOptions = this.props.toPolylineProps ? this.props.toPolylineProps(this.props.streets, this.props.color) :
-            this.streetsRenderer(this.props.streets, this.props.color);
+            this.streetsRenderer(this.props.streets, this.props.modeInfo, this.props.color);
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         return polylineOptionsArray
             .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);

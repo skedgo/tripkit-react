@@ -182,11 +182,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             >
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
+                        <img src={transIcon} className={classes.transIcon}/>
                         {departure.serviceNumber &&
                         <div className={classes.serviceNumber}>
                             {departure.serviceNumber}
                         </div>}
-                        <img src={transIcon} className={classes.transIcon}/>
                         {briefWheelchair}
                         {briefOccupancy}
                         {departure.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
