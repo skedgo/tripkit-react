@@ -26,7 +26,9 @@ import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIStreetStep from "../trip/TKUIStreetStep";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {}
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+    parentElement?: any;
+}
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     selectedTrip?: Trip;
@@ -252,7 +254,7 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
                     draggable: false
                 }}
                 showControls={true}
-                // parentElement={this.ref}
+                parentElement={props.parentElement}
             >
                 {segments.reduce((cards, segment) => cards.concat(segmentToCards.get(segment)!), [] as JSX.Element[])}
             </TKUICardCarousel>

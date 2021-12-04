@@ -2,7 +2,7 @@ import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2t
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
 import LeafletUtil from "../../util/LeafletUtil";
-import { black, white } from "jss/TKUITheme";
+import { black, white } from "../../jss/TKUITheme";
 
 
 export enum StreetInstructions {

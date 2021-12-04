@@ -452,7 +452,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
                 onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({tripUpdateStatus: undefined}) : undefined}
             />;
-        const mxMView = props.selectedTripSegment && <TKUIMxMView/>;
+        const mxMView = props.selectedTripSegment && <TKUIMxMView parentElement={this.ref}/>;
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
