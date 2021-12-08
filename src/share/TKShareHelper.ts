@@ -105,8 +105,8 @@ class TKShareHelper {
         // Add trailing '/', if missing
         goURL += goURL.endsWith("/") ? "" : "/";
         // Add '#' if useHash
-        goURL += this.useHash ? "#" : "";
-        goURL += "/go";
+        goURL += this.useHash ? "#/" : "";
+        goURL += "go";
         if (query.from) {
             goURL += (goURL.includes("?") ? "&" : "?");
             goURL += "flat=" + query.from.lat + "&flng=" + query.from.lng +

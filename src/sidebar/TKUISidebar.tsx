@@ -24,7 +24,9 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     nativeAppsTitle?: string;
     renderNativeAppLinks?: () => React.ReactNode;
     appStoreUrl?: string;
+    appStoreImageUrl?: string;
     playStoreUrl?: string;
+    playStoreImageUrl?: string;
     renderLogo?: () => React.ReactNode;
     parentElement?: any;
     appMainElement?: any;
@@ -163,7 +165,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                                                 aria-label="Download on the App Store"
                                                 role="link"
                                         >
-                                            <img src={appleStoreLogo} key={'appleStoreLogo'} style={{width: '100%', height: '100%'}}/>
+                                            <img src={this.props.appStoreImageUrl || appleStoreLogo} key={'appleStoreLogo'} style={{width: '100%', height: '100%'}}/>
                                         </button>}
                                         {this.props.playStoreUrl &&
                                         <button onClick={() => window.open(this.props.playStoreUrl, '_blank')}
@@ -171,7 +173,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
                                                 aria-label="Download on Google Play"
                                                 role="link"
                                         >
-                                            <img src={playStoreLogo} key={'playStoreLogo'} style={{width: '100%', height: '100%'}}/>
+                                            <img src={this.props.playStoreImageUrl || playStoreLogo} key={'playStoreLogo'} style={{width: '100%', height: '100%'}}/>
                                         </button>}
                                     </React.Fragment>
                                 }

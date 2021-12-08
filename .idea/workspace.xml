@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Add TKStateUrl a parameter to reflect state in url hash instead of path.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/trip/Street.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/trip/Street.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip-planner/TKUITripPlanner.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/share/TKShareHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKShareHelper.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -598,6 +596,11 @@
       <workItem from="1638530140421" duration="413000" />
       <workItem from="1638543417678" duration="683000" />
       <workItem from="1638556027931" duration="2504000" />
+      <workItem from="1638823731440" duration="4000" />
+      <workItem from="1638825199001" duration="93000" />
+      <workItem from="1638878957427" duration="1805000" />
+      <workItem from="1638897921712" duration="11001000" />
+      <workItem from="1638967026440" duration="1808000" />
     </task>
     <task id="LOCAL-00431" summary="Upgrade typescript and react-scripts, to enable import of tripkit-react library as local package with hot reload on lib changes.">
       <created>1627575241652</created>
