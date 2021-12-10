@@ -72,6 +72,7 @@ import {TKUIMyBookingProps, TKUIMyBookingStyle} from "../booking/TKUIMyBooking";
 import {TKUIHomeCardProps, TKUIHomeCardStyle} from "../sidebar/TKUIHomeCard";
 import {TKUIActiveTripProps, TKUIActiveTripStyle} from "../sidebar/TKUIActiveTrip";
 import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
+import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
 
 /**
  * SDK configuration
@@ -175,6 +176,7 @@ interface ITKUIConfigOptional {
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
+    TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
 }

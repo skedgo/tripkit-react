@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Fragment} from 'react';
-import {overrideClass, TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import {overrideClass, TKUIWithClasses, TKUIWithStyle, withStyles} from "../jss/StyleHelper";
 import Segment from "../model/trip/Segment";
 import TKUICard from "../card/TKUICard";
 import TripGoApi from "../api/TripGoApi";
@@ -23,14 +23,28 @@ import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIFromTo from "../booking/TKUIFromTo";
 import TKUIBookingActions from "../booking/TKUIBookingActions";
 import {TKError} from "../error/TKError";
+import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
     onRequestClose: () => void;
     refreshSelectedTrip: () => Promise<boolean>;
+    onSuccess?: (bookingTripUpdateURL: string) => void;
 }
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type TKUIMxMBookingCardProps = IProps;
+export type TKUIMxMBookingCardStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIMxMBookingCard {...props}/>,
+    styles: tKUIMxMBookingCardDefaultStyle,
+    classNamePrefix: "TKUIMxMBookingCard"
+};
 
 const canBook = (bookingInfo: BookingInfo) =>
     bookingInfo.input.every((field: BookingField) => !field.required || field.value || (field.values && field.values.length > 0));
@@ -147,7 +161,7 @@ const BookingInput: React.SFC<BookingInputProps> =
             </div>)
     };
 
-const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refreshSelectedTrip, classes, injectedStyles}) => {
+const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles}) => {
     const booking = segment.booking!;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
@@ -265,6 +279,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
                     onClick={() => {
                         setWaiting(true);
                         TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
+                            .then((bookingForm) => onSuccess?.(bookingForm.refreshURLForSourceObject))
                             .then(refreshSelectedTrip)
                             .catch((e) => setError(e))
                             .finally(() => setWaiting(false))
@@ -295,4 +310,5 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, refresh
     );
 };
 
-export default withStyles(TKUIMxMBookingCard, tKUIMxMBookingCardDefaultStyle);
+export default connect((config: TKUIConfig) => config.TKUIMxMBookingCard, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));
