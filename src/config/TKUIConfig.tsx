@@ -112,6 +112,9 @@ interface ITKUIConfigOptional {
     analytics?: {google?: {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;
+        // It's checked before every GA event, allowing to enable / disable tracking
+        // dynamically, e.g. depending con cookies / tracking consent.
+        isEnabled?: () => boolean;  // () => true; by default
     }};
     /**
      * @ctype
