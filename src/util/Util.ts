@@ -153,6 +153,21 @@ class Util {
             .replace(/^./, function(str){ return str.toUpperCase(); })
     }
 
+    public static getCookiesMap(): any {
+        if (!document.cookie) {
+            return {};
+        }
+        return document.cookie.split(';').reduce((cookieObject, cookieString) => {
+            const splitCookie = cookieString.split('=').map((cookiePart) => cookiePart.trim());
+            try {
+                cookieObject[splitCookie[0]] = JSON.parse(splitCookie[1])
+            } catch (error) {
+                cookieObject[splitCookie[0]] = splitCookie[1]
+            }
+            return cookieObject
+        }, {});
+    }
+
 }
 
 export default Util;
