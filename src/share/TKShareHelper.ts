@@ -27,8 +27,8 @@ class TKShareHelper {
     }
 
     public static getBaseUrl(trailingSlash: boolean = false): string {
-        let s = location.protocol + "//" + location.hostname
-            + (location.port ? ":" + location.port : "") + (TKShareHelper.useHash ? location.pathname : "");
+        let s = document.location.protocol + "//" + document.location.hostname
+            + (document.location.port ? ":" + document.location.port : "") + (TKShareHelper.useHash ? document.location.pathname : "");
         // Remove trailing slash
         s = s.endsWith("/") ? s.slice(0, -1) : s;
         s += this.useHash ? "/#" : "";

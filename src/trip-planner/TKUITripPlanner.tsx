@@ -364,6 +364,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         value={this.props.selectedTrip!}
                         onRequestClose={() => this.props.onTripDetailsView(false)}
                         slideUpOptions={{
+                            position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
                             initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                             draggable: true,
                             modalUp: this.props.landscape ? {top: 5, unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
@@ -371,6 +372,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             modalDown: {top: 90, unit: '%'}
                         }}
                         onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
+                        setSelectedTripSegment={props.setSelectedTripSegment}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
