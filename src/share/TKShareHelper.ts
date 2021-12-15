@@ -26,6 +26,15 @@ class TKShareHelper {
         return stateString.slice(stateString.indexOf('?'));
     }
 
+    public static getBaseUrl(trailingSlash: boolean = false): string {
+        let s = location.protocol + "//" + location.hostname
+            + (location.port ? ":" + location.port : "") + (TKShareHelper.useHash ? location.pathname : "");
+        // Remove trailing slash
+        s = s.endsWith("/") ? s.slice(0, -1) : s;
+        s += this.useHash ? "/#" : "";
+        return trailingSlash ? s + "/" : s;
+    }
+
     public static isSharedTripLink(): boolean {
         const shareLinkPath = this.getPathname();
         const shareLinkQuery = this.getSearch();
@@ -70,7 +79,7 @@ class TKShareHelper {
     }
 
     public static getTempShareTripLink(trip: Trip): string {
-        return Constants.DEPLOY_URL + '/trip/url/' + encodeURIComponent(trip.temporaryURL);
+        return this.getBaseUrl() + '/trip/url/' + encodeURIComponent(trip.temporaryURL);
     }
 
     public static getShareArrival(trip: Trip): string {
@@ -80,32 +89,36 @@ class TKShareHelper {
 
     public static getShareSegmentArrival(segment: Segment): string {
         const destination = segment.to;
-        return Constants.DEPLOY_URL + "/meet?" + "lat=" + destination.lat + "&lng=" + destination.lng
+        return this.getBaseUrl() + "/meet?" + "lat=" + destination.lat + "&lng=" + destination.lng
             + "&at=" + segment.endTime;
     }
 
     public static getShareLocation(location: Location): string {
-        return Constants.DEPLOY_URL + "/meet?" + "lat=" + location.lat + "&lng=" + location.lng;
+        return this.getBaseUrl() + "/meet?" + "lat=" + location.lat + "&lng=" + location.lng;
     }
 
     public static getShareTimetable(stop: StopLocation): string {
-        return Constants.DEPLOY_URL + "/stop/" +
+        return this.getBaseUrl() + "/stop/" +
             encodeURIComponent(RegionsData.instance.getRegion(stop)!.name) + "/" + encodeURIComponent(stop.code)
     }
 
     public static getShareService(service: ServiceDeparture): string {
         const stop = service.startStop!;
-        return Constants.DEPLOY_URL + "/service/" +
+        return this.getBaseUrl() + "/service/" +
             encodeURIComponent(RegionsData.instance.getRegion(stop)!.name) + "/" + encodeURIComponent(stop.code)
         + "/" + encodeURIComponent(service.serviceTripID) + "/" + service.startTime;
     }
 
     public static getShareQuery(query: RoutingQuery, plannerUrl?: string): string {
-        let goURL = (plannerUrl ? plannerUrl : Constants.DEPLOY_URL);
-        // Add trailing '/', if missing
-        goURL += goURL.endsWith("/") ? "" : "/";
-        // Add '#' if useHash
-        goURL += this.useHash ? "#/" : "";
+        let goURL;
+        if (plannerUrl) {
+            // Add trailing '/', if missing
+            goURL = plannerUrl + (plannerUrl.endsWith("/") ? "" : "/");
+            // Add '#' if useHash
+            goURL += this.useHash ? "#/" : "";
+        } else {
+            goURL = this.getBaseUrl(true);
+        }
         goURL += "go";
         if (query.from) {
             goURL += (goURL.includes("?") ? "&" : "?");
