@@ -53,11 +53,8 @@ interface IState {
 }
 
 function feedbackTextFromState(state: TKState): string {
-    const location = window.location;
-    const plannerUrl = location.protocol + "//" + location.hostname
-        + (location.port ? ":" + location.port : "");
     let feedbackS = "";
-    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.query, plannerUrl)) + "\n";
+    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.query)) + "\n";
     feedbackS += "\n";
     // Remove sensible data from userProfile for feedback. Probably should remove customData (the sdk is not aware of
     // apiKeys field).

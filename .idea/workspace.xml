@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #16259: Create a booking on behalf of a user from Dashboard">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Add isEnabled function to analytics config, which is checked before every GA event, allowing to enable / disable tracking dynamically, e.g. depending con cookies / tracking consent.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/analytics/GATracker.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/analytics/GATracker.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfig.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/Util.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/Util.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/feedback/TKUIReportBtn.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/share/TKShareHelper.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/share/TKShareHelper.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -611,14 +608,9 @@
       <workItem from="1639393725633" duration="2056000" />
       <workItem from="1639419756332" duration="2460000" />
       <workItem from="1639484854884" duration="2195000" />
-      <workItem from="1639502559893" duration="6281000" />
-    </task>
-    <task id="LOCAL-00433" summary="Work on Feature #13578: TripKit React - Mode by Mode flow">
-      <created>1628020791286</created>
-      <option name="number" value="00433" />
-      <option name="presentableId" value="LOCAL-00433" />
-      <option name="project" value="LOCAL" />
-      <updated>1628020791287</updated>
+      <workItem from="1639502559893" duration="6579000" />
+      <workItem from="1639566021682" duration="599000" />
+      <workItem from="1639569374686" duration="4902000" />
     </task>
     <task id="LOCAL-00434" summary="Feature #13578: TripKit React - Mode by Mode flow:&#10;- Pick alternative service.">
       <created>1628540244256</created>
@@ -956,7 +948,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639169008570</updated>
     </task>
-    <option name="localTasksCounter" value="482" />
+    <task id="LOCAL-00482" summary="Add isEnabled function to analytics config, which is checked before every GA event, allowing to enable / disable tracking dynamically, e.g. depending con cookies / tracking consent.">
+      <created>1639518005692</created>
+      <option name="number" value="00482" />
+      <option name="presentableId" value="LOCAL-00482" />
+      <option name="project" value="LOCAL" />
+      <updated>1639518005692</updated>
+    </task>
+    <option name="localTasksCounter" value="483" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1094,7 +1093,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="- cleanup console.log/s.&#10;- display mode on active trip.&#10;- bug fixing." />
     <MESSAGE value="- bug fixing." />
     <MESSAGE value="Fix to issues after running npm install from cloned repo." />
     <MESSAGE value="Apply a custom scrollbar style to avoid each browser + OS + OS settings combination to possibly display it in a different way. Work in progress." />
@@ -1119,7 +1117,8 @@
     <MESSAGE value="Add TKStateUrl a parameter to reflect state in url hash instead of path." />
     <MESSAGE value="- Fix share query url." />
     <MESSAGE value="Feature #16259: Create a booking on behalf of a user from Dashboard" />
-    <option name="LAST_COMMIT_MESSAGE" value="Feature #16259: Create a booking on behalf of a user from Dashboard" />
+    <MESSAGE value="Add isEnabled function to analytics config, which is checked before every GA event, allowing to enable / disable tracking dynamically, e.g. depending con cookies / tracking consent." />
+    <option name="LAST_COMMIT_MESSAGE" value="Add isEnabled function to analytics config, which is checked before every GA event, allowing to enable / disable tracking dynamically, e.g. depending con cookies / tracking consent." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
