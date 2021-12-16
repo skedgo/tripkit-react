@@ -22,8 +22,7 @@ class TKShareHelper {
     }
 
     public static getSearch(): string {
-        const stateString = this.getPathname();
-        return stateString.slice(stateString.indexOf('?'));
+        return  this.useHash ? document.location.hash.slice(document.location.hash.indexOf('?')) : document.location.search;
     }
 
     public static getBaseUrl(trailingSlash: boolean = false): string {
