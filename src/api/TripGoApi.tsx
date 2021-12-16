@@ -17,6 +17,8 @@ class TripGoApi {
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
     public static userToken?: string = undefined;
+    public static accountAccessToken?: string = undefined;
+    public static userID?: string = undefined;
 
     public static getServer(): string {
         return this.server;
@@ -54,6 +56,12 @@ class TripGoApi {
                 'Content-Type': 'application/json',
                 ...this.userToken && {
                     'userToken': this.userToken
+                },
+                ...this.accountAccessToken && {
+                    'X-Account-Access-Token': this.accountAccessToken
+                },
+                ...this.userID && {
+                    'userID': this.userID
                 }
             },
             body: body ? JSON.stringify(body) : undefined
