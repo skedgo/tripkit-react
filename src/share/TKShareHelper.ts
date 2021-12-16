@@ -18,11 +18,17 @@ class TKShareHelper {
     public static useHash = false;
 
     public static getPathname(): string {
-        return this.useHash ? document.location.hash.slice(1) : document.location.pathname;
+        const hash = document.location.hash;
+        return this.useHash ?
+            hash.slice(1, hash.includes('?') ? hash.indexOf('?') : undefined) :
+            document.location.pathname;
     }
 
     public static getSearch(): string {
-        return  this.useHash ? document.location.hash.slice(document.location.hash.indexOf('?')) : document.location.search;
+        const hash = document.location.hash;
+        return  this.useHash ?
+            (hash.includes('?') ? hash.slice(hash.indexOf('?')) : "") :
+            document.location.search;
     }
 
     public static getBaseUrl(trailingSlash: boolean = false): string {
