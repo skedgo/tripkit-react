@@ -332,6 +332,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         if (fitSet.length === 1) {
+            if (fitSet[0].isDroppedPin()) {
+                return;
+            }
             const zoom = this.leafletElement!.getZoom();
             const newZoom = zoom !== undefined && zoom >= 10 ? zoom : 13; // zoom in if zoom < 10.
             this.setViewport(fitSet[0], newZoom);
