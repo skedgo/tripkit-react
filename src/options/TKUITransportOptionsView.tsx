@@ -10,7 +10,6 @@ import {CardPresentation, default as TKUICard} from "../card/TKUICard";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import RegionsData from "../data/RegionsData";
 import TKUITransportOptionsRow from "./TKUITransportOptionsRow";
-import RegionInfo from "../model/region/RegionInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import {TKUISlideUpOptions} from "../card/TKUISlideUp";
@@ -25,7 +24,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps extends TKUIViewportUtilProps {
     region?: Region;
-    regionInfo?: RegionInfo;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -94,11 +92,6 @@ class TKUITransportOptionsView extends React.Component<IProps, IState> {
                     :
                     <div className={classes.main}>
                         {regionModes.map((mode: string, i: number) => {
-                            // Show wheelchair row just if region includes wheelchair accessibility information.
-                            if (mode === ModeIdentifier.WHEELCHAIR_ID &&
-                                (!this.props.regionInfo || !this.props.regionInfo.transitWheelchairAccessibility)) {
-                                return null;
-                            }
                             const modeIdentifier = RegionsData.instance.getModeIdentifier(mode)!;
                             return <TKUITransportOptionsRow
                                 mode={modeIdentifier}
@@ -123,7 +116,6 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                     {(routingContext: IRoutingResultsContext) =>
                         props.children!({
                             region: routingContext.region,
-                            regionInfo: routingContext.regionInfo,
                             ...viewportProps
                         })}
                 </RoutingResultsContext.Consumer>
