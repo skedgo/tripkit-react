@@ -39,13 +39,13 @@ const TKUIFromTo: React.SFC<IProps> = (props: IProps) => {
                     Pickup
                 </div>
                 <div className={classes.value} style={{marginTop: 0, marginBottom: 10}}>
-                    {from.getDisplayString()}
+                    {from.getDisplayString(true)}
                 </div>
                 <div className={classes.label}>
                     Drop off
                 </div>
                 <div className={classes.value}>
-                    {to.getDisplayString()}
+                    {to.getDisplayString(true)}
                 </div>
             </div>
         </div>
