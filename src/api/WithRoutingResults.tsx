@@ -40,7 +40,6 @@ interface IWithRoutingResultsState {
     inputTextTo: string
     viewport?: {center?: LatLng, zoom?: number};
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
-    regionInfo?: RegionInfo;
     directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
@@ -110,7 +109,6 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
-            this.refreshRegionInfo = this.refreshRegionInfo.bind(this);
             this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
         }
 
@@ -222,8 +220,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (this.state.region === region) {
                             return;
                         }
-                        this.setState({region: region},
-                            () => this.refreshRegionInfo());
+                        this.setState({region: region});
                     });
                 });
                 return;
@@ -248,23 +245,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (this.state.region === region) {
                             return;
                         }
-                        this.setState({region: region},
-                            () => this.refreshRegionInfo());
+                        this.setState({region: region});
                     });
                 } else if (RegionsData.instance.getRegionList()!.length === 1 // Singleton region
                     && this.state.region !== RegionsData.instance.getRegionList()![0]) {
-                    this.setState({region: RegionsData.instance.getRegionList()![0]},
-                        () => this.refreshRegionInfo());
+                    this.setState({region: RegionsData.instance.getRegionList()![0]});
                 }
             });
-        }
-
-        public refreshRegionInfo() {
-            if (this.state.region && (!this.state.regionInfo || this.state.region.name !== this.state.regionInfo.code)) {
-                // this.setState({regionInfo: undefined});
-                RegionsData.instance.getRegionInfoP(this.state.region.name)
-                    .then((regionInfo: RegionInfo) => this.setState(() => ({regionInfo: regionInfo})));
-            }
         }
 
         public refreshTrips() {
@@ -508,7 +495,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                 }}
                 region={this.state.region}
-                regionInfo={this.state.regionInfo}
+                getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
                 viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}
                 directionsView={this.state.directionsView}

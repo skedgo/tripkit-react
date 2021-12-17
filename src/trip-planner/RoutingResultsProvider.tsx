@@ -28,7 +28,7 @@ export interface IRoutingResultsContext {
     inputTextTo: string,
     onInputTextChange?: (from: boolean, text: string) => void,
     region?: Region;
-    regionInfo?: RegionInfo;
+    getRegionInfoP: () => (Promise<RegionInfo> | undefined);
     viewport?: {center?: LatLng, zoom?: number};    // Maybe define viewport as required.
     setViewport: (center: LatLng, zoom: number) => void;
     /**
@@ -89,6 +89,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => {},
     inputTextFrom: "",
     inputTextTo:  "",
+    getRegionInfoP: () => undefined,
     onInputTextChange: (from: boolean, text: string) => {},
     waitingStateLoad: false,
     onWaitingStateLoad: (waiting: boolean, error?: Error) => {},

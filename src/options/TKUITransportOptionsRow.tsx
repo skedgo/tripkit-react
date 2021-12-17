@@ -31,7 +31,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 interface IConsumedProps {
-    regionInfo?: RegionInfo;
+    getRegionInfoP: () => (Promise<RegionInfo> | undefined);
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
@@ -63,6 +63,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 interface IState {
     expanded: boolean;
+    regionInfo?: RegionInfo;
 }
 
 class TKUITransportOptionsRow extends React.Component<IProps, IState> {
@@ -109,8 +110,8 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const mode = this.props.mode;
         const value = this.props.value;
         const displayValue = value.transportOptions.getTransportOption(mode.identifier);
-        const regionInfo = this.props.regionInfo;
-        const transitModes = regionInfo && regionInfo.transitModes;
+        const regionInfo = this.state.regionInfo;
+        const transitModes = regionInfo?.transitModes;
         const classes = this.props.classes;
         const t = this.props.t;
         const minimizedOption = false && // Hidden for now
@@ -131,7 +132,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     inputProps={{'aria-label': 'primary checkbox'}}
                 />
             </div>;
-        const preferredTransportOption = mode.identifier === 'pt_pub' &&
+        const preferredTransportOption = mode.isPT() &&
             <div className={classes.section} tabIndex={0} aria-label="Preferred transport">
                 <div className={classes.sectionTitle}>
                     {t("Preferred.transport")}
@@ -185,7 +186,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     aria-label={t("Min.transfer.time")}
                 />
             </div>;
-        const concessionPricingOption = mode.isPT() && regionInfo && regionInfo.transitConcessionPricing &&
+        const concessionPricingOption = mode.isPT() && regionInfo?.transitConcessionPricing &&
             <div className={classes.checkboxRow}>
                 <div>
                     Concession pricing
@@ -330,12 +331,18 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
     }
 
-    public componentDidUpdate(prevProps: Readonly<IProps>) {
+    private regionInfoP?: Promise<RegionInfo>;
+
+    public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>) {
         // This may happen when unchecking mode, or checking mutually exclusive mode (e.g. wa_wal and wa_whe)
         const prevDisplayValue = prevProps.value.transportOptions.getTransportOption(prevProps.mode.identifier);
         const displayValue = this.props.value.transportOptions.getTransportOption(this.props.mode.identifier);
         if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
             this.setState({expanded: false});
+        }
+        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && this.props.mode.isPT()) {
+            this.regionInfoP = this.props.getRegionInfoP();
+            this.regionInfoP?.then(regionInfo => this.setState({regionInfo}));
         }
     }
 
@@ -346,7 +353,7 @@ const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle,
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
                 const consumedProps: IConsumedProps = {
-                    regionInfo: routingContext.regionInfo
+                    getRegionInfoP: routingContext.getRegionInfoP
                 };
                 return children!({...inputProps, ...consumedProps})
             }}
