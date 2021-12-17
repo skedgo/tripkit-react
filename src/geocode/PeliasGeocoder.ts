@@ -146,9 +146,14 @@ class PeliasGeocoder implements IGeocoder {
         const id = result.properties !== null ? result.properties.gid : "";
         const point = result.geometry as Point;
         const latLng = LatLng.createLatLng(point.coordinates[1], point.coordinates[0]);
-        const address = result.properties !== null ?
-            (result.properties.label ? result.properties.label :
-                (result.properties.name ? result.properties.name : "")) : "";
+        const {label, street, housenumber} = result.properties!
+        let address = label || "";
+        if (street && !address.includes(street)) {
+            const numAndStreet = (housenumber || "") + " " + street;
+            address = !address ? numAndStreet :
+            !address.includes(',') ? address + ", " + numAndStreet :
+            [address.slice(0, address.indexOf(',')), ', ', numAndStreet, address.slice(address.indexOf(','))].join('');
+        }
         const name = '';
         const location = Location.create(latLng, address, id, name);
         location.suggestion = result;

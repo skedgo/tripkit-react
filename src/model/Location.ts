@@ -99,7 +99,16 @@ class Location extends LatLng {
         this._timezone = value;
     }
 
-    public getDisplayString(): string {
+    public getDisplayString(long: boolean = false): string {
+        if (long) {
+            const resultElems: string[] = [];
+            this.name && resultElems.push(this.name);
+            this.address && resultElems.push(this.address);
+            if (resultElems.length === 0) {
+                resultElems.push(this.getLatLngDisplayString());
+            }
+            return resultElems.join(', ');
+        }
         return this.name ? this.name :
             this.address ?
             (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address):
