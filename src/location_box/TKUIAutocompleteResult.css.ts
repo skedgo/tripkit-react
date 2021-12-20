@@ -40,18 +40,18 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             whiteSpace: 'nowrap',
             overflowX: 'hidden',
             textOverflow: 'ellipsis',
-            fontWeight: 'bold'
+            ...theme.textWeightBold
         },
         mainAddress: {
             ...theme.textColorDefault
         },
         matchingSubstr: {
-            fontWeight: 'bold'
+            ...theme.textWeightBold
         },
         secondaryAddress: {
             marginLeft: '5px',
             ...theme.textColorGray,
-            fontWeight: 'initial',
+            ...theme.textWeightRegular,
             ...genStyles.overflowEllipsis
         }
     });
