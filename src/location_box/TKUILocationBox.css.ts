@@ -15,6 +15,8 @@ export const tKUILocationBoxDefaultStyle: TKUIStyles<TKUILocationBoxStyle, TKUIL
         },
         input: {
             ...resetStyles.input, /* Style resets */
+            fontFamily: 'inherit',   // To inherit from main
+            ...theme.textWeightRegular,
             border: 'none!important',
             outline: '0',
             background: 'none',
