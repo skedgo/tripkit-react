@@ -51,6 +51,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRef?: (ref: TKUILocationBoxRef) => void;
     menuContainer?: HTMLElement;
     menuMaxHeightPx?: number;
+    debounce?: number;
 }
 
 interface IStyle {
@@ -93,8 +94,6 @@ class TKUILocationBox extends Component<IProps, IState> {
     private resultsArrivedForQuery?: string;
     private geocodingData: MultiGeocoder;
     private autocompleteRef: React.RefObject<Autocomplete> = React.createRef<Autocomplete>();
-
-    private readonly AUTOCOMPLETE_DELAY = 200;
 
     public static defaultProps: Partial<IProps> = {
         resolveCurr: true
@@ -299,7 +298,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     if (this.state.inputText === inputText) {
                         this.refreshResults(this.state.inputText)
                     }
-                }, this.AUTOCOMPLETE_DELAY);
+                }, this.props.debounce !== undefined ? this.props.debounce : 200);
             }
         });
         // Remove location value when user deletes all text.
