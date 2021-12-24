@@ -50,10 +50,11 @@ class LocationsResult {
     }
 
     /**
-     * Cache related field. Indicates if it's a result that was obtained or refreshed in the current session, or otherwise came from caché
-     * and was not yet refreshed.
+     * Cache related field. Records the time of the last request for the cell, in secs since epoch. It starts in 0 when it's loaded 
+     * from LS caché, reflecting it's old and will require a refresh. It is reset to now when it comes from a request (the first one
+     * or a refresh).
      */
-    public fresh: boolean = false;
+    public requestTime: number = 0;
 
     /**
      * Cache related field. Indicates we requested results (or a refresh) for this level + key and we are still awaiting, so to avoid asking

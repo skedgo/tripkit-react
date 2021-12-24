@@ -1,7 +1,6 @@
 import LocationsResult from "../model/location/LocationsResult";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
-import {JsonConvert} from "json2typescript";
 import {EventEmitter, EventSubscription} from "fbemitter";
 import BBox from "../model/BBox";
 import MapUtil from "../util/MapUtil";
@@ -9,6 +8,7 @@ import Util from "../util/Util";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import LatLng from "../model/LatLng";
 import {default as LocationsCache} from "./RegionLocationsCache";
+import DateTimeUtil from "util/DateTimeUtil";
 
 class LocationsData {
 
@@ -49,7 +49,8 @@ class LocationsData {
                 cachedResults.add(cellResults);
             }
             if (!cellResults ||
-                (!modes.every((mode: string) => cellResults.modes.includes(mode)) || !cellResults.fresh) && !cellResults.requesting){
+                (!modes.every((mode: string) => cellResults.modes.includes(mode)) || 
+                (Math.floor(DateTimeUtil.getNow().valueOf() / 1000) - cellResults.requestTime) > 300) && !cellResults.requesting) {   // More than 5 minutes old.
                 if (!cellResults || !modes.every((mode: string) => cellResults.modes.includes(mode))) {
                     requestCells.push(cellID);
                 } else { // !cellResults.fresh
@@ -77,7 +78,7 @@ class LocationsData {
                     const result = new LocationsResult(level, modes);
                     for (const group of groups) {
                         group.modes = modes;
-                        group.fresh = true;
+                        group.requestTime = Math.floor(DateTimeUtil.getNow().valueOf() / 1000);
                         this.cache.set(region, group.key, group);
                         result.add(group);
                     }
@@ -86,7 +87,7 @@ class LocationsData {
                         // and so came in the response, then they would be already marked as fresh by previous iteration,
                         // but this is necessary to mark as fresh the results that didn't change, and so didn't come in
                         // the response.
-                        this.cache.get(region, refreshed)!.fresh = true;
+                        this.cache.get(region, refreshed)!.requestTime = Math.floor(DateTimeUtil.getNow().valueOf() / 1000);
                     }
                     // Refresh just if results came.
                     if (groups.length > 0) {
