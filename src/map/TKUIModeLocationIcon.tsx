@@ -17,12 +17,13 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         if (this.props.stop instanceof FreeFloatingVehicleLocation) {
+            let providerColor = TransportUtil.getTransportColor(this.props.stop.modeInfo) || black(0);
             return <div style={{
-                width: '8px',
-                height: '8px',
+                width: '12px',
+                height: '12px',
                 ...genStyles.borderRadius(50, '%'),
-                background: white(0, this.props.isDarkMode),
-                border: '1px solid ' + black(0, this.props.isDarkMode)
+                background: providerColor,
+                border: '2px solid ' + white(0)
             } as any}/>
         }
         const modeInfo = this.props.stop.modeInfo;

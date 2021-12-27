@@ -1,12 +1,12 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import ModeLocation from "./ModeLocation";
-import FreeFloationVehicleInfo from "./VehicleInfo";
+import VehicleInfo from "./VehicleInfo";
 
 @JsonObject
 class FreeFloatingVehicleLocation extends ModeLocation {
 
-    @JsonProperty("vehicle", FreeFloationVehicleInfo)
-    public vehicle: FreeFloationVehicleInfo = new FreeFloationVehicleInfo();
+    @JsonProperty("vehicle", VehicleInfo)
+    public vehicle: VehicleInfo = new VehicleInfo();
 
 }
 

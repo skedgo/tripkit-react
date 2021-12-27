@@ -15,6 +15,7 @@ export const tKUILocationDetailViewDefaultStyle = (theme: TKUITheme) => ({
 
     alertsContainer: {
         borderBottom: '1px solid #ECEBEB',
+        paddingBottom: '15px',
         '&>*:not(:last-child)': {
             marginBottom: '15px'
         }

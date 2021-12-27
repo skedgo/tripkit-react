@@ -92,11 +92,21 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
             return (
                 <div className={classes.info}>
                     <div className={classes.infoRow}>
-                        <img src={TransportUtil.getTransportIconLocal("bicycle", false, props.theme.isDark)} className={classes.infoRowImage}/>
+                        <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, props.theme.isDark)} className={classes.infoRowImage}/>
                         <div className={classes.infoRowLabel}>
-                            {t("Bicycle")}
+                            {t("E-Bike")}
                         </div>
                     </div>
+                    {location.vehicle?.batteryLevel !== undefined &&
+                    <div className={classes.infoRow}>
+                        <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, props.theme.isDark)} className={classes.infoRowImage}/>
+                        <div className={classes.infoRowLabel}>
+                            {t("Battery")}
+                        </div>
+                        <div className={classes.infoRowValue}>
+                            {location.vehicle.batteryLevel + '%'}
+                        </div>
+                    </div>}
                 </div>
             );
         }

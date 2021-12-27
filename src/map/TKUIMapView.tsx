@@ -722,9 +722,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.leafletElement!.on("dblclick", event1 => {
             this.wasDoubleClick = true;
         });
-
-        // TODO Delete: Can actually delete this? It causes an exception sometimes.
-        // setTimeout(() => this.onResize(), 5000);
         setTimeout(() => {
             WaiAriaUtil.apply(".mapboxgl-canvas", {tabIndex: -1, ariaHidden: true});
             WaiAriaUtil.apply(".mapboxgl-ctrl-logo", {tabIndex: -1, ariaHidden: true});
@@ -739,6 +736,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (this.props.from || this.props.to) {
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
         }
+        // TODO Delete: Can actually delete this? It causes an exception sometimes.
+        setTimeout(() => this.onResize(), 5000);
     }
 
     public componentDidUpdate(prevProps: IProps): void {
