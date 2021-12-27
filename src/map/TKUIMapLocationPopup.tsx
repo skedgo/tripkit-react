@@ -12,7 +12,6 @@ import TransportUtil from "../trip/TransportUtil";
 import BikePodLocation from "../model/location/BikePodLocation";
 import CarParkLocation from "../model/location/CarParkLocation";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
-import Util from 'util/Util';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
