@@ -1,5 +1,5 @@
 import { JsonObject, JsonProperty } from "json2typescript";
-import Util from "util/Util";
+import Util from "../../util/Util";
 
 @JsonObject
 class VehicleTypeInfo {

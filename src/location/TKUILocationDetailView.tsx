@@ -37,7 +37,6 @@ import CompanyInfo from "../model/location/CompanyInfo";
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { OpeningHours, PricingTable } from "../model/location/CarParkInfo";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
-import Util from "util/Util";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
