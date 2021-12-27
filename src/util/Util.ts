@@ -153,6 +153,10 @@ class Util {
             .replace(/^./, function(str){ return str.toUpperCase(); })
     }
 
+    public static toFirstUpperCase(text: string): string {
+        return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+    }
+
     public static getCookiesMap(): any {
         if (!document.cookie) {
             return {};

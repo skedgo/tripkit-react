@@ -36,7 +36,8 @@ import CarParkLocation from "../model/location/CarParkLocation";
 import CompanyInfo from "../model/location/CompanyInfo";
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { OpeningHours, PricingTable } from "../model/location/CarParkInfo";
-import FreeFloatingVehicleLocation from "model/location/FreeFloatingVehicleLocation";
+import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
+import Util from "util/Util";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
@@ -176,12 +177,13 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 </div>);
             operator = location.bikePod.operator;
         } else if (location instanceof FreeFloatingVehicleLocation) {
+            const vehicle = location.vehicle;
             moreInfoItems.push(
                 <div className={classes.availabilityInfo} key={"availability"}>
                     <div className={classes.availabilityInfoBody}>
                         <div className={classes.availabilitySection}>
                             <div className={classes.availabilityLabel}>
-                                {t("E-Bike")}
+                                {vehicle.vehicleTypeInfo.formFactorS(t)}
                             </div>
                             <div className={classes.availabilityValueCont}>
                                 <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, this.props.theme.isDark)} className={classes.availabilityImage} />
@@ -195,18 +197,18 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                             <div className={classes.availabilityValueCont}>
                                 <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, this.props.theme.isDark)} className={classes.availabilityImage} />
                                 <div className={classes.availabilityValue}>
-                                    {location.vehicle?.batteryLevel !== undefined ? location.vehicle.batteryLevel + "%" : "?"}
+                                    {vehicle?.batteryLevel !== undefined ? vehicle.batteryLevel + "%" : "?"}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {location.vehicle.lastUpdate &&
+                    {vehicle.lastUpdate &&
                         <div className={classes.availabilityUpdated}>
                             {"Updated: " +
-                                DateTimeUtil.momentFromTimeTZ(location.vehicle.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                                DateTimeUtil.momentFromTimeTZ(vehicle.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
                         </div>}
                 </div>);
-            operator = location.vehicle.operator;
+            operator = vehicle.operator;
         } else if (location instanceof CarParkLocation) {
             moreInfoItems.push(
                 <div className={classes.availabilityInfo} key={"availability"}>

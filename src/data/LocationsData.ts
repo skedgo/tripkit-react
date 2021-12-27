@@ -8,7 +8,7 @@ import Util from "../util/Util";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import LatLng from "../model/LatLng";
 import {default as LocationsCache} from "./RegionLocationsCache";
-import DateTimeUtil from "util/DateTimeUtil";
+import DateTimeUtil from "../util/DateTimeUtil";
 
 class LocationsData {
 
