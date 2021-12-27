@@ -5,7 +5,7 @@ import VehicleInfo from "./VehicleInfo";
 @JsonObject
 class FreeFloatingVehicleLocation extends ModeLocation {
 
-    @JsonProperty("vehicle", VehicleInfo)
+    @JsonProperty("vehicle", VehicleInfo, true)
     public vehicle: VehicleInfo = new VehicleInfo();
 
 }
