@@ -1,10 +1,7 @@
 import {CSSProps} from "../jss/StyleHelper";
 import jss from 'jss';
-import camelCase from 'jss-plugin-camel-case';
 import genStyles from "./GenStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
-
-jss.use(camelCase());
 
 interface ITKUIResetStyle {
     button: CSSProps<{}>;

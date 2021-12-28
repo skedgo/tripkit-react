@@ -544,7 +544,15 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             // resolved, which happens when loading a timetable web-app url. Timetable will be triggered by TKStateUrl.
             && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
             this.showTimetableFor(this.props.query.to as StopLocation);
-        } else if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
+        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to
+            && !this.props.directionsView && !this.state.showLocationDetails
+            // Don't show location details if it was the case that the location was unresolved and become
+            // resolved. Copied from stop location case, not sure it it's actually necessary.
+            && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
+            this.setState({ showLocationDetails: true })
+        }
+
+        if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
             && (!this.props.query.from || !(this.props.query.from instanceof StopLocation))
             && (!this.props.query.to || !(this.props.query.to instanceof StopLocation))) {
             this.showTimetableFor(undefined);
