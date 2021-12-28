@@ -114,19 +114,19 @@ class TKUISelect extends React.Component<IProps, {}> {
                     isSearchable={false}
                     menuIsOpen={this.props.menuIsOpen}
                     styles={{
-                        container: (styles: any) => ({...styles, ...injectedStyles.container}),
-                        control: (styles: any) => ({...styles, ...injectedStyles.control}),
+                        container: (styles: any) => ({...styles, ...injectedStyles.container as any}),
+                        control: (styles: any) => ({...styles, ...injectedStyles.control as any}),
                         indicatorsContainer: (styles: any) => ({...styles, display: 'none'}),
-                        menu: (styles: any) => ({...styles, ...injectedStyles.menu}),
+                        menu: (styles: any) => ({...styles, ...injectedStyles.menu as any}),
                         option: (styles: any, state: any) => ({
-                            ...styles, ...injectedStyles.option,
-                            ...(state.isFocused && injectedStyles.optionFocused),
-                            ...(state.isSelected && injectedStyles.optionSelected)
+                            ...styles, ...injectedStyles.option as any,
+                            ...(state.isFocused && injectedStyles.optionFocused as any),
+                            ...(state.isSelected && injectedStyles.optionSelected as any)
                         }),
-                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue}),
-                        multiValue: (styles: any) => ({...styles, ...injectedStyles.multiValue}),
-                        placeholder: (styles: any) => ({...styles, ...injectedStyles.placeholder}),
-                        valueContainer: (styles: any) => ({...styles, ...injectedStyles.valueContainer})
+                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue as any}),
+                        multiValue: (styles: any) => ({...styles, ...injectedStyles.multiValue as any}),
+                        placeholder: (styles: any) => ({...styles, ...injectedStyles.placeholder as any}),
+                        valueContainer: (styles: any) => ({...styles, ...injectedStyles.valueContainer as any})
                     }}
                     isDisabled={this.props.isDisabled}
                     aria-label={this.props.ariaLabel}

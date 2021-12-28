@@ -7,7 +7,7 @@ import {tKUITrainOccupancyInfoDefaultStyle} from "./TKUITrainOccupancyInfo.css";
 import {ReactComponent as IconHead} from '../../images/occupancy/ic-train-head.svg';
 import {ReactComponent as IconCarriage} from '../../images/occupancy/ic-train-carriage.svg';
 import classNames from "classnames";
-import {ClassNameMap} from "react-jss";
+import { Classes } from "jss";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     components: VehicleComponent[][];
@@ -39,7 +39,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 class TKUITrainOccupancyInfo extends React.Component<IProps, {}> {
 
-    private getClass(status: OccupancyStatus | undefined, classes: ClassNameMap<keyof IStyle>): string {
+    private getClass(status: OccupancyStatus | undefined, classes: Classes<keyof IStyle>): string {
         switch (status) {
             case OccupancyStatus.EMPTY: return classes.empty;
             case OccupancyStatus.MANY_SEATS_AVAILABLE: return classes.manySeatsAvailable;

@@ -1,8 +1,7 @@
-import {TKUIStyles} from "../jss/StyleHelper";
+import {CSSProps, TKUIStyles} from "../jss/StyleHelper";
 import {TKUIMapViewProps, TKUIMapViewStyle} from "./TKUIMapView";
 import genStyles from "../css/GenStyle.css";
-import {CSSProperties} from "react-jss";
-import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
@@ -39,7 +38,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
                 background: 'none',
                 color: black(1, theme.isDark)
             }
-        } as CSSProperties<TKUIMapViewProps>,
+        } as any,
         leaflet: {
             ...genStyles.flex,
             ...genStyles.grow,
@@ -62,7 +61,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             '& .leaflet-popup-tip-container': {
                 display: 'none'
             }
-        } as CSSProperties<TKUIMapViewProps>,
+        } as any,
         menuPopupBelow: {
             top: '0'
         },

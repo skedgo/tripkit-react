@@ -1,7 +1,6 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
 import {tKUIWCSegmentInfoDefaultStyle} from "./TKUIWCSegmentInfo.css";
 import TransportUtil from "./TransportUtil";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";

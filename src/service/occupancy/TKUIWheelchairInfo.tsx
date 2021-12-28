@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ClassNameMap} from "react-jss";
+import { Classes } from "jss";
 import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
 import {tKUIWheelchairInfoDefaultStyle} from "./TKUIWheelchairInfo.css";
 import {ReactComponent as IconWCAccessible} from '../../images/service/ic_wheelchair_accessible.svg';
@@ -12,7 +12,7 @@ export interface ITKUIWheelchairInfoProps {
 }
 
 interface IProps extends ITKUIWheelchairInfoProps {
-    classes: ClassNameMap<keyof ITKUIWheelchairInfoStyle>
+    classes: Classes<keyof ITKUIWheelchairInfoStyle>
 }
 
 export interface ITKUIWheelchairInfoStyle {

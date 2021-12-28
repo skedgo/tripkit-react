@@ -1,5 +1,4 @@
 import * as React from "react";
-import {ClassNameMap} from "react-jss";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {connect, PropsMapper} from "../config/TKConfigHelper";

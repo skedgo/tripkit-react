@@ -1,7 +1,6 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIWCSegmentInfoStyle, TKUIWCSegmentInfoProps} from "./TKUIWCSegmentInfo";
 import genStyles from "../css/GenStyle.css";
-import {CSSProperties} from "react-jss";
 import {TKUITheme} from "../jss/TKUITheme";
 
 export const tKUIFriendlinessColors = {
@@ -24,7 +23,7 @@ export const tKUIWCSegmentInfoDefaultStyle: TKUIStyles<TKUIWCSegmentInfoStyle, T
                 ...genStyles.alignCenter,
                 ...genStyles.fontS,
                 ...theme.textColorGray,
-            } as CSSProperties<TKUIWCSegmentInfoProps>
+            } as any
         },
         safeRef: {
             width: '15px',

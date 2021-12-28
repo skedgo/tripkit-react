@@ -1,12 +1,24 @@
 import React from "react";
-import injectSheet, {JssProvider, withTheme} from "react-jss";
+import injectSheet, { JssProvider, useTheme, withTheme } from "react-jss";
 import { Subtract } from "utility-types";
-import { ClassNameMap, Styles, StyleCreator, CSSProperties } from "react-jss";
+import { Classes } from "jss";
+// import { JssStyle } from "react-jss/node_modules/jss";
+import { Styles } from "react-jss";
 import * as CSS from 'csstype';
-import {generateClassNameFactory, generateClassNameSeed, TKUITheme} from "./TKUITheme";
+import { generateClassNameFactory, generateClassNameSeed, TKUITheme } from "./TKUITheme";
 import Util from "../util/Util";
-import {TKI18nContextProps} from "../i18n/TKI18nProvider";
+import { TKI18nContextProps } from "../i18n/TKI18nProvider";
 import Environment from "../env/Environment";
+
+type StyleCreator<
+Name extends string | number | symbol = string,
+Theme = undefined,
+Props = unknown
+> = ((theme: Theme) => Styles<Name, Props>);
+
+type FcValues<PR> = ((props: PR) => CSS.Properties);
+type CSSProperties<PR> = FcValues<PR>;
+// type CSSProperties<PR> = JssStyle<PR>;
 
 export type TKUIStyles<ST, PR> = Styles<keyof ST, PR> | StyleCreator<keyof ST, TKUITheme, PR>;
 
@@ -19,11 +31,11 @@ export type TKUICustomStyleCreator<C extends string | number | symbol = string, 
 export type CustomStyles<ClassKey extends string | number | symbol = string, Props = {}> = Record<
     ClassKey,
     TKUICustomCSSProperties<Props>
-    >;
+>;
 
-export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProperties<Props>) => CSSProperties<Props>);
+export type CSSPropertiesCreator<Props> = ((defaultStyle: CSSProps<Props>) => CSSProps<Props>);
 
-export type TKUICustomCSSProperties<Props> = CSSProperties<Props> | CSSPropertiesCreator<Props>;
+export type TKUICustomCSSProperties<Props> = CSSProps<Props> | CSSPropertiesCreator<Props>;
 
 export type CSSProps<Props> = CSS.Properties | CSSProperties<Props>;
 
@@ -62,12 +74,12 @@ export interface TKUIWithStyle<ST, CP> {
 // adding too much boilerplate to current TKUI components scheme.
 export interface TKUIWithClasses<STYLE, PROPS> extends TKI18nContextProps {
     injectedStyles: Styles<keyof STYLE, PROPS>,
-    classes: ClassNameMap<keyof STYLE>;
+    classes: Classes<keyof STYLE>;
     refreshStyles: () => void;
     theme: TKUITheme;
 }
 
-export function mergeCustomStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
+export function mergeCustomStyles<ST, PR>(style1: TKUICustomStyles<ST, PR>, style2: TKUICustomStyles<ST, PR>): TKUICustomStyles<ST, PR> {
     return (theme: TKUITheme) => {
         const themedStyle1: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(style1) ?
             (style1 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
@@ -81,13 +93,13 @@ export function mergeCustomStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style
                     const style1CustomCssProps: TKUICustomCSSProperties<PR> = themedStyle1[className];
                     const style2CustomCssProps: TKUICustomCSSProperties<PR> = themedStyle2[className];
                     const mergedStyleProps: CSSPropertiesCreator<PR> =
-                        (defaultStyle: CSSProperties<PR>) => {
-                            const style1CssProps: CSSProperties<PR> = Util.isFunction(style1CustomCssProps) ?
+                        (defaultStyle: CSSProps<PR>) => {
+                            const style1CssProps: CSSProps<PR> = Util.isFunction(style1CustomCssProps) ?
                                 (style1CustomCssProps as CSSPropertiesCreator<PR>)(defaultStyle) :
-                                style1CustomCssProps as CSSProperties<PR>;
-                            const style2CssProps: CSSProperties<PR> = Util.isFunction(style2CustomCssProps) ?
+                                style1CustomCssProps as CSSProps<PR>;
+                            const style2CssProps: CSSProps<PR> = Util.isFunction(style2CustomCssProps) ?
                                 (style2CustomCssProps as CSSPropertiesCreator<PR>)(style1CssProps) :
-                                style2CustomCssProps as CSSProperties<PR>;
+                                style2CustomCssProps as CSSProps<PR>;
                             return style2CssProps;
                         };
                     return {
@@ -95,11 +107,11 @@ export function mergeCustomStyles<ST,PR>(style1: TKUICustomStyles<ST, PR>, style
                         [className]: mergedStyleProps
                     }
                 }, {});
-        return {...style1, ...overrideStyles};
+        return { ...style1, ...overrideStyles };
     }
 }
 
-export function overrideStyles<ST,PR>(style: TKUIStyles<ST, PR>, styleOverride: TKUICustomStyles<ST, PR>): StyleCreator<keyof ST, TKUITheme, PR> {
+export function overrideStyles<ST, PR>(style: TKUIStyles<ST, PR>, styleOverride: TKUICustomStyles<ST, PR>): StyleCreator<keyof ST, TKUITheme, PR> {
     return (theme: TKUITheme) => {
         const themedStyle: Styles<keyof ST, PR> = Util.isFunction(style) ?
             (style as StyleCreator<keyof ST, TKUITheme, PR>)(theme) :
@@ -110,21 +122,21 @@ export function overrideStyles<ST,PR>(style: TKUIStyles<ST, PR>, styleOverride: 
         const overrideStyles =
             Object.keys(themedStyleOverride)
                 .reduce((overrideStylesMerge: Partial<Styles<keyof ST, PR>>, className: string) => {
-                    const cssProps: CSSProperties<PR> = themedStyle[className];
+                    const cssProps: CSSProps<PR> = themedStyle[className];
                     const cssPropsOverride: TKUICustomCSSProperties<PR> = themedStyleOverride[className];
-                    const cssPropsOverridden: CSSProperties<PR> = Util.isFunction(cssPropsOverride) ?
+                    const cssPropsOverridden: CSSProps<PR> = Util.isFunction(cssPropsOverride) ?
                         (cssPropsOverride as CSSPropertiesCreator<PR>)(cssProps) :
-                        cssPropsOverride as CSSProperties<PR>;
+                        cssPropsOverride as CSSProps<PR>;
                     return {
                         ...overrideStylesMerge,
                         [className]: cssPropsOverridden
                     }
                 }, {});
-        return {...themedStyle, ...overrideStyles};
+        return { ...themedStyle, ...overrideStyles };
     }
 }
 
-export function mergeStyleOverrides<ST,PR>(styleOverride1: TKUICustomStyles<ST, PR>, styleOverride2: TKUICustomStyles<ST, PR>): TKUICustomStyleCreator<keyof ST, TKUITheme, PR> {
+export function mergeStyleOverrides<ST, PR>(styleOverride1: TKUICustomStyles<ST, PR>, styleOverride2: TKUICustomStyles<ST, PR>): TKUICustomStyleCreator<keyof ST, TKUITheme, PR> {
     return (theme: TKUITheme) => {
         const themedStyleOverride1: Partial<CustomStyles<keyof ST, PR>> = Util.isFunction(styleOverride1) ?
             (styleOverride1 as TKUICustomStyleCreator<keyof ST, TKUITheme, PR>)(theme) :
@@ -137,13 +149,13 @@ export function mergeStyleOverrides<ST,PR>(styleOverride1: TKUICustomStyles<ST, 
                 .reduce((overrideStylesMerge: Partial<CustomStyles<keyof ST, PR>>, className: string) => {
                     const classOverride = defaultStyle => {
                         const cssPropsOverride1: TKUICustomCSSProperties<PR> = themedStyleOverride1[className];
-                        const cssPropsOverridden1: CSSProperties<PR> = Util.isFunction(cssPropsOverride1) ?
+                        const cssPropsOverridden1: CSSProps<PR> = Util.isFunction(cssPropsOverride1) ?
                             (cssPropsOverride1 as CSSPropertiesCreator<PR>)(defaultStyle) :
-                            cssPropsOverride1 as CSSProperties<PR>;
+                            cssPropsOverride1 as CSSProps<PR>;
                         const cssPropsOverride2: TKUICustomCSSProperties<PR> = themedStyleOverride2[className];
-                        const cssPropsOverridden2: CSSProperties<PR> = Util.isFunction(cssPropsOverride2) ?
+                        const cssPropsOverridden2: CSSProps<PR> = Util.isFunction(cssPropsOverride2) ?
                             (cssPropsOverride2 as CSSPropertiesCreator<PR>)(cssPropsOverridden1) :
-                            cssPropsOverride2 as CSSProperties<PR>;
+                            cssPropsOverride2 as CSSProps<PR>;
                         return cssPropsOverridden2
                     }
                     return {
@@ -151,7 +163,7 @@ export function mergeStyleOverrides<ST,PR>(styleOverride1: TKUICustomStyles<ST, 
                         [className]: classOverride
                     }
                 }, {});
-        return {...themedStyleOverride1, ...overrideStyles};
+        return { ...themedStyleOverride1, ...overrideStyles };
     }
 }
 
@@ -165,15 +177,16 @@ export function withStyleInjection<
         configStyles?: TKUICustomStyles<STYLE, IMPL_PROPS>,
         randomizeClassNames?: boolean,
         classNamePrefix?: string,
-        verboseClassNames?: boolean}>
-(Consumer: React.ComponentType<IMPL_PROPS>) { // TODO: make classNamePrefix required
+        verboseClassNames?: boolean
+    }>
+    (Consumer: React.ComponentType<IMPL_PROPS>) { // TODO: make classNamePrefix required
 
     return class WithStyleProp extends React.Component<P, {}> {
 
         public StyledComponent: any;
         public generateClassName: ((rule: any, sheet: any) => string) | undefined;
         public stylesToInject: StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>;
-        public WithTheme: any;
+        public WithTheme: React.FC<any> = () => null;
 
         constructor(props: P) {
             super(props);
@@ -197,28 +210,30 @@ export function withStyleInjection<
             this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);
             const prefix = props.classNamePrefix!;
             this.generateClassName = generateClassNameFactory(prefix);
-            this.WithTheme = withTheme(({theme, ...props}) =>
-                <JssProvider
-                    classNamePrefix={Environment.isDev() ? prefix : undefined}
-                    generateClassName={this.props.randomizeClassNames === false ? this.generateClassName :
-                        this.props.verboseClassNames === true ?
-                            (rule: any, sheet: any) => {
-                                return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
-                            } : generateClassNameSeed}>
-                    <this.StyledComponent {...props}
-                                          injectedStyles={this.stylesToInject(theme as TKUITheme)}
-                                          refreshStyles={() => this.onRefreshStyles(true)}
-                                          theme={theme}
-                    />
-                </JssProvider>
-            );
+            const WithTheme = props =>
+                {
+                    const theme = useTheme() as TKUITheme;
+                    return <JssProvider
+                        classNamePrefix={Environment.isDev() ? prefix : undefined}
+                        generateId={this.props.randomizeClassNames === false ? this.generateClassName :
+                            this.props.verboseClassNames === true ?
+                                (rule: any, sheet: any) => {
+                                    return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
+                                } : generateClassNameSeed}>
+                        <this.StyledComponent {...props}
+                            injectedStyles={this.stylesToInject(theme as TKUITheme)}
+                            refreshStyles={() => this.onRefreshStyles(true)}
+                            theme={theme} />
+                    </JssProvider>;
+                };
+            this.WithTheme = WithTheme;
             if (forceUpdate) {
                 this.forceUpdate();
             }
         }
 
         public render(): React.ReactNode {
-            return <this.WithTheme {...this.props}/>;
+            return <this.WithTheme {...this.props} />;
         }
     }
 }
@@ -227,27 +242,28 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     Consumer: React.ComponentType<PROPS>,
     stylesJss: (theme: TKUITheme) => STYLE) {
     const StyledComponent: any = injectSheet(stylesJss)(Consumer as any);
-    const WithTheme = withTheme(({theme, ...props}) =>
-        <StyledComponent
+    const WithTheme = props => {
+        const theme = useTheme() as TKUITheme;
+        return <StyledComponent
             {...props}
             injectedStyles={stylesJss(theme)}
-            refreshStyles={() => {}}
-            theme={theme}
-        />);
+            refreshStyles={() => { }}
+            theme={theme} />;
+    };
     return (props: Subtract<PROPS, TKUIWithClasses<STYLE, PROPS>>) => {
-        const consumerProps = {...props} as PROPS; // See why I need to do this.
-        return <WithTheme {...consumerProps}/>;
+        const consumerProps = { ...props } as PROPS; // See why I need to do this.
+        return <WithTheme {...consumerProps} />;
     };
 }
 
 // Deprecated
 function withStyleProp<
-        ST,
-        CP extends {classes: ClassNameMap<keyof ST>},
-        ExtS extends string,
-        P extends Subtract<CP, {classes: ClassNameMap<keyof ST>}>
-            & {styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string}>
-        (Consumer: React.ComponentType<CP>, classPrefix?: string) { // TODO: remove classPrefix and make classNamePrefix required
+    ST,
+    CP extends { classes: Classes<keyof ST> },
+    ExtS extends string,
+    P extends Subtract<CP, { classes: Classes<keyof ST> }>
+    & { styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string }>
+    (Consumer: React.ComponentType<CP>, classPrefix?: string) { // TODO: remove classPrefix and make classNamePrefix required
 
     return class WithStyleProp extends React.Component<P, {}> {
 
@@ -262,9 +278,9 @@ function withStyleProp<
 
         public render(): React.ReactNode {
             const props = this.props;
-            return <JssProvider generateClassName={this.props.randomizeClassNames !== false ?
+            return <JssProvider generateId={this.props.randomizeClassNames !== false ?
                 generateClassNameSeed : this.generateClassName}>
-                <this.StyledComponent {...props}/>
+                <this.StyledComponent {...props} />
             </JssProvider>
         }
     }
@@ -278,11 +294,12 @@ function emptyValues<T>(sample: T): T {
     return emptyValues as T;
 }
 
-export function overrideClass(propsOverride: CSSProperties<any>) {
+// export function overrideClass(propsOverride: CSSProps<any>) {
+export function overrideClass(propsOverride: any) {
     return (defaultStyle) => ({
         ...defaultStyle,
         ...propsOverride
     });
 }
 
-export {withStyleProp, emptyValues};
+export { withStyleProp, emptyValues };

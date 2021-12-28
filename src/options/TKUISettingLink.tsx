@@ -1,5 +1,4 @@
 import * as React from "react";
-import {ClassNameMap} from "react-jss";
 import {ReactComponent as IconRightArrow} from "../images/ic-angle-right.svg";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";

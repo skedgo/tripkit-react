@@ -3,7 +3,6 @@ import {
     TKUIServiceDepartureRowProps,
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
-import {DynamicCSSRule, CSSProperties} from "react-jss";
 import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";

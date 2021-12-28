@@ -1,8 +1,7 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {} from 'react';
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig} from "../config/TKUIConfig";
-import {Subtract} from 'utility-types';
 import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
 import NetworkUtil from "../util/NetworkUtil";
 import TripGoApi from "../api/TripGoApi";

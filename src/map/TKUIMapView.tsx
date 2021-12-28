@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Map as RLMap, Marker, Popup, ZoomControl, PolylineProps, Viewport, TileLayerProps} from "react-leaflet";
+import {Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps} from "react-leaflet";
 import L, {FitBoundsOptions} from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
@@ -14,10 +14,8 @@ import {MapLocationType} from "../model/location/MapLocationType";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
 import {Visibility} from "../model/trip/SegmentTemplate";
-import ServiceShape from "../model/trip/ServiceShape";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
-import ServiceStopLocation from "../model/ServiceStopLocation";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";

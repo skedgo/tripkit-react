@@ -26,9 +26,9 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 }
 
 export interface IStyle extends TGUIFeedbackFormStyle {
-    main: CSSProps<IProps>;
-    fieldError: CSSProps<IProps>;
-    content: CSSProps<IProps>;
+    main: CSSProps<any>;
+    fieldError: CSSProps<any>;
+    content: CSSProps<any>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}

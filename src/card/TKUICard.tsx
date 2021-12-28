@@ -1,8 +1,6 @@
 import React, {UIEventHandler} from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
-import {CSSProperties, ClassNameMap, Styles, WithSheet, StyleCreator} from 'react-jss';
-import * as CSS from 'csstype';
 import {Subtract} from "utility-types";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUICardDefaultStyle} from "./TKUICard.css";
@@ -16,7 +14,7 @@ import {genClassNames} from "../css/GenStyle.css";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
 import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
 import WaiAriaUtil from "../util/WaiAriaUtil";
-import TKUICardHeader, {TKUICardHeaderClientProps, TKUICardHeaderProps} from "./TKUICardHeader";
+import TKUICardHeader, {TKUICardHeaderClientProps} from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
@@ -151,16 +149,16 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 interface IConsumedProps extends TKUIViewportUtilProps {}
 
 interface IStyle {
-    modalContainer: CSS.Properties & CSSProperties<IProps>;
-    modalOverlay: CSS.Properties & CSSProperties<IProps>;
-    main: CSS.Properties & CSSProperties<IProps>;
-    mainForSlideUp: CSS.Properties & CSSProperties<IProps>;
+    modalContainer: CSSProps<IProps>;
+    modalOverlay: CSSProps<IProps>;
+    main: CSSProps<IProps>;
+    mainForSlideUp: CSSProps<IProps>;
     innerMain: CSSProps<IProps>;
-    subHeader: CSS.Properties & CSSProperties<IProps>;
-    body: CSS.Properties & CSSProperties<IProps>;
-    divider: CSS.Properties & CSSProperties<IProps>;
-    handle: CSS.Properties & CSSProperties<IProps>;
-    handleLine: CSS.Properties & CSSProperties<IProps>;
+    subHeader: CSSProps<IProps>;
+    body: CSSProps<IProps>;
+    divider: CSSProps<IProps>;
+    handle: CSSProps<IProps>;
+    handleLine: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
