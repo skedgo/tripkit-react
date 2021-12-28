@@ -1,5 +1,5 @@
 import React from "react";
-import injectSheet, { JssProvider, useTheme, withTheme } from "react-jss";
+import injectSheet, { JssProvider, useTheme } from "react-jss";
 import { Subtract } from "utility-types";
 import { Classes } from "jss";
 // import { JssStyle } from "react-jss/node_modules/jss";

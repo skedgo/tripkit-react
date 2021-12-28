@@ -1,15 +1,12 @@
-import * as CSS from 'csstype';
-import {CSSProps} from "../jss/StyleHelper";
-// TODO!: switch to react-jss v10 that provides createUseStyles, now that issue with hooks is fixed. Allow
+// DONE: switch to react-jss v10 that provides createUseStyles, now that issue with hooks is fixed. Allow
 // to get rid of @types/react-jss
 // import {createUseStyles} from 'react-jss';
-// import jss from 'jss';   // Replaced by line below to avoid typescript to complaing about type mismatch
-import jss from 'react-jss/node_modules/jss';
-import camelCase from 'jss-plugin-camel-case';
-import nested from 'jss-plugin-nested';
-import global from 'jss-plugin-global';
-
-jss.use(camelCase(), nested(), global());
+import { jss } from 'react-jss';
+// For some reason everything works without next lines, and when included, function values break.
+// import camelCase from 'jss-plugin-camel-case';
+// import nested from 'jss-plugin-nested';
+// import global from 'jss-plugin-global';
+// jss.use(camelCase(), nested(), global());
 
 interface ITKUIGenStyleClasses {
     // TODO: see how to return to a typed version
@@ -127,7 +124,9 @@ const keyframesStyle = {
     // ]
 };
 
-export const keyFramesStyles = jss.createStyleSheet(keyframesStyle as any).attach();
+// Specify type any to avoid the following error. TODO find root cause.
+// TS2742: The inferred type of 'keyFramesStyles' cannot be named without a reference to 'react-jss/node_modules/jss'. This is likely not portable. A type annotation is necessary.
+export const keyFramesStyles: any = jss.createStyleSheet(keyframesStyle as any).attach();
 
 const genStyleClasses: ITKUIGenStyleClasses = {
 

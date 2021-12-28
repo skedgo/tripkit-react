@@ -9,7 +9,7 @@ import RoutingResults from "../model/trip/RoutingResults";
 import Trip from "../model/trip/Trip";
 import RoutingQuery from "../model/RoutingQuery";
 import classNames from "classnames";
-import jss from 'jss';
+import { jss } from 'react-jss';
 import {ReactComponent as IconDirections} from '../images/ic-directions.svg';
 import TKUITripRow from "../trip/TKUITripRow";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
