@@ -100,7 +100,7 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                     <div className={classes.infoRow}>
                         <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, props.theme.isDark)} className={classes.infoRowImage} />
                         <div className={classes.infoRowLabel}>
-                            {vehicle.vehicleTypeInfo.formFactorS(t)}
+                            {vehicle.vehicleTypeInfo.vehicleTypeS(t)}
                         </div>
                     </div>
                     {location.vehicle?.batteryLevel !== undefined &&
