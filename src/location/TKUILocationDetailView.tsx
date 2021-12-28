@@ -183,7 +183,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                     <div className={classes.availabilityInfoBody}>
                         <div className={classes.availabilitySection}>
                             <div className={classes.availabilityLabel}>
-                                {vehicle.vehicleTypeInfo.formFactorS(t)}
+                                {vehicle.vehicleTypeInfo.vehicleTypeS(t)}
                             </div>
                             <div className={classes.availabilityValueCont}>
                                 <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, this.props.theme.isDark)} className={classes.availabilityImage} />
