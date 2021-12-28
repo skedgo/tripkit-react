@@ -1,11 +1,6 @@
-import {CSSProps} from "../jss/StyleHelper";
-// import jss from 'jss';   // Replaced by line below to avoid typescript to complaing about type mismatch
-import jss from 'react-jss/node_modules/jss';
-import camelCase from 'jss-plugin-camel-case';
+import { jss } from 'react-jss';
 import genStyles from "./GenStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
-
-jss.use(camelCase());
 
 interface ITKUIResetStyle {
     // button: CSSProps<{}>;

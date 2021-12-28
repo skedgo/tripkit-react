@@ -156,7 +156,9 @@ export const generateClassNameFactory = (prefix: string) =>
         return prefix + "-" + rule.key;
     };
 
-export const generateClassNameSeed = createGenerateId();
+// Specify type any to avoid the following error. TODO find root cause.
+// TS2742: The inferred type of 'generateClassNameSeed' cannot be named without a reference to 'react-jss/node_modules/jss'. This is likely not portable. A type annotation is necessary.
+export const generateClassNameSeed: any = createGenerateId();
 
 if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
     tKUIColors.black1 = colorWithOpacity('#212A33',.65);

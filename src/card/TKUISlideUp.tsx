@@ -7,7 +7,6 @@ import ReactDOM from 'react-dom';
 import {setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
-import { CSSProps } from "jss/StyleHelper";
 import { Classes } from "jss";
 
 /**

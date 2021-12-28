@@ -4,60 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Comment TripGo web-app import.">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_15_12_2021_18_36_[Default]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_15_12_2021_18_36__Default_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_16_12_2021_13_11_[Default]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_16_12_2021_13_11__Default_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_16_12_2021_13_13_[Default]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_16_12_2021_13_13__Default_.xml" beforeDir="false" />
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Temporary disable GA tracking until implement cookies consent banner to comply with GDPR.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.npmignore" beforeDir="false" afterPath="$PROJECT_DIR$/.npmignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/modeicons/ondark/ic-kickscooter-share-24px copy.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/alerts/TKUIAlertRow.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/alerts/TKUIAlertRow.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/alerts/TKUIAlertRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIBookingActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIBookingActions.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIFromTo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIFromTo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/booking/TKUIMyBooking.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/booking/TKUIMyBooking.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/buttons/TKUIButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/buttons/TKUIButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/buttons/TKUISelect.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/buttons/TKUISelect.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUICard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUICard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKConfigHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKConfigHelper.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/config/TKUIConfigProvider.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/css/GenStyle.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/GenStyle.css.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/css/ResetStyle.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/ResetStyle.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/doc/components/TKDocComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/components/TKDocComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/doc/components/TKDocTabButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/components/TKDocTabButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/doc/components/TKDocTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/components/TKDocTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/client-sample.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/client-sample.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUIEditApiKeyView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUIEditApiKeyView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/example/tripgo/options/TGUILoadTripsView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/example/tripgo/options/TGUILoadTripsView.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/jss/TKUITheme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/TKUITheme.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/TKUIMapView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/mxm/TKUIMxMBookingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/options/TKUISettingLink.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUISettingLink.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/options/TKUISettingSection.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUISettingSection.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/options/TKUITransportSwitchesView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/options/TKUITransportSwitchesView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/query/TKUILocationSearch.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/query/TKUILocationSearch.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUIServiceDepartureRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/TKUITimetableView.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/TKUITimetableView.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/occupancy/TKUIOccupancyInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/occupancy/TKUIOccupancyInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/occupancy/TKUITrainOccupancyInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/occupancy/TKUITrainOccupancyInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/service/occupancy/TKUIWheelchairInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/service/occupancy/TKUIWheelchairInfo.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUISegmentOverview.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIServiceSteps.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIServiceSteps.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUITripOverviewView.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUITripRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUITripRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUITripTime.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUITripTime.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIWCSegmentInfo.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIWCSegmentInfo.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/trip/TKUIWCSegmentInfo.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/trip/TKUIWCSegmentInfo.tsx" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -194,7 +152,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="tripgoBeta" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -215,20 +173,24 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.npmignore" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model/trip/ModeInfo.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/i18n/i18n_en.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/i18n/i18n_en.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package-lock.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/jss/StyleHelper.tsx" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
