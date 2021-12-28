@@ -1,5 +1,5 @@
 import React from "react";
-import injectSheet, {ClassNameMap} from "react-jss";
+import injectSheet from "react-jss";
 import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
 import {cardSpacing} from "../jss/TKUITheme";
@@ -7,6 +7,8 @@ import ReactDOM from 'react-dom';
 import {setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
+import { CSSProps } from "jss/StyleHelper";
+import { Classes } from "jss";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -29,7 +31,7 @@ export type TKUISlideUpOptions = TKUISlideUpOptionsForExport;
 
 interface IProps extends TKUISlideUpOptions {
     containerClass?: string;
-    classes: ClassNameMap<any>;
+    classes: Classes<any>;
     open?: boolean;
     onDrag?: () => void;
     onDragEnd?: () => void;

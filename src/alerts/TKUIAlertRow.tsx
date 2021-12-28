@@ -4,7 +4,6 @@ import RealTimeAlert from "../model/service/RealTimeAlert";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
-import {Subtract} from "utility-types";
 import {tKUIAlertRowDefaultStyle} from "./TKUIAlertRow.css";
 import classNames from "classnames";
 

@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {tKUIColors, TKUITheme} from "../jss/TKUITheme";
+import {TKUITheme} from "../jss/TKUITheme";
 import {severityColor} from "../trip/TKUITrackTransport.css";
 import genStyles from "../css/GenStyle.css";
 import {TKUIAlertRowProps, TKUIAlertRowStyle} from "./TKUIAlertRow";

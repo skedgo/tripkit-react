@@ -11,7 +11,8 @@ import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
 import TKUIButton from "../buttons/TKUIButton";
 import NetworkUtil from "../util/NetworkUtil";
 import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
-import {ClassNameMap, Styles} from "react-jss";
+import { Styles } from "react-jss";
+import { Classes } from "jss";
 import {ReactComponent as IconUser} from '../images/ic-user.svg';
 import {ReactComponent as IconFlag} from '../images/ic-flag.svg';
 import {ReactComponent as IconEdit} from '../images/ic-edit.svg';
@@ -52,7 +53,7 @@ const canBook = (bookingInfo: BookingInfo) =>
 interface BookingInputProps {
     inputFields: BookingField[];
     onChange?: (update: BookingField[]) => void;
-    classes: ClassNameMap<keyof IStyle>;
+    classes: Classes<keyof IStyle>;
     injectedStyles: Styles<keyof IStyle, IProps>;
 }
 

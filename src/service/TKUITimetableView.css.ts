@@ -3,7 +3,6 @@ import {TKUITimetableViewProps, TKUITimetableViewStyle} from "./TKUITimetableVie
 import {resetStyles} from "../css/ResetStyle.css";
 import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
-import {CSSProperties} from "react-jss";
 import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUITimetableViewProps> =
@@ -27,7 +26,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.grow,
             '&>*': {
                 ...genStyles.noShrink
-            } as CSSProperties<TKUITimetableViewProps>
+            } as any
         },
         subHeader: {
             ...genStyles.flex,
@@ -51,7 +50,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.flex,
             '&>*': {
                 ...genStyles.grow
-            } as CSSProperties<TKUITimetableViewProps>,
+            } as any,
             '&>*:first-child': {
                 marginRight: '10px'
             }
@@ -97,7 +96,7 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
                 height: '24px',
                 color: black(1, theme.isDark),
                 ...genStyles.svgPathFillCurrColor
-            } as CSSProperties<TKUITimetableViewProps>
+            } as any
         },
         dapartureRow: {
             ...theme.divider

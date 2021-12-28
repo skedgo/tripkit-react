@@ -1,4 +1,4 @@
-import {createGenerateClassName} from 'react-jss'
+import {createGenerateId} from 'react-jss'
 import * as CSS from 'csstype';
 import DeviceUtil from "../util/DeviceUtil";
 import Color from "../model/trip/Color";
@@ -63,22 +63,23 @@ export interface TKUITheme {
     isDark: boolean;
     isLight: boolean;    // Shouldn't be customizable, it's derived: always the opposite of isDark.
 
-    textColorDefault: CSS.Properties;
-    textColorGray: CSS.Properties;
-    textColorDisabled: CSS.Properties;
+    // textColorDefault: CSSProps<{}>;
+    textColorDefault: any;
+    textColorGray: any;
+    textColorDisabled: any;
 
-    textSizeBody: CSS.Properties;
-    textSizeCaption: CSS.Properties;
+    textSizeBody: any;
+    textSizeCaption: any;
 
-    textWeightRegular: CSS.Properties;
-    textWeightMedium: CSS.Properties;
-    textWeightSemibold: CSS.Properties;
-    textWeightBold: CSS.Properties;
+    textWeightRegular: any;
+    textWeightMedium: any;
+    textWeightSemibold: any;
+    textWeightBold: any;
 
-    cardBackground: CSS.Properties;
-    secondaryBackground: CSS.Properties;
-    divider: CSS.Properties;
-    modalFog: CSS.Properties;
+    cardBackground: any;
+    secondaryBackground: any;
+    divider: any;
+    modalFog: any;
 
 }
 
@@ -155,7 +156,7 @@ export const generateClassNameFactory = (prefix: string) =>
         return prefix + "-" + rule.key;
     };
 
-export const generateClassNameSeed = createGenerateClassName();
+export const generateClassNameSeed = createGenerateId();
 
 if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
     tKUIColors.black1 = colorWithOpacity('#212A33',.65);

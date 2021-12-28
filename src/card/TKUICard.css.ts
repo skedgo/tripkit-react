@@ -1,5 +1,5 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUICardStyle, TKUICardProps, CardPresentation, hasHandle} from "./TKUICard";
+import {TKUICardStyle, TKUICardProps, CardPresentation} from "./TKUICard";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {black, cardSpacing, colorWithOpacity, queryWidth, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";

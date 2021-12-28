@@ -1,20 +1,20 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import TKRoot from "../../config/TKRoot";
 import TKDocStyle from "./TKDocStyle";
-import {tKDocComponentStyle} from "./TKDocComponent.css";
+import { tKDocComponentStyle } from "./TKDocComponent.css";
 import injectSheet from "react-jss";
-import {ClassNameMap} from "react-jss";
-import {TKRandomizeClassNamesOverride} from "../../config/TKConfigHelper";
+import { Classes } from "jss";
+import { TKRandomizeClassNamesOverride } from "../../config/TKConfigHelper";
 import TKDocTabButton from "./TKDocTabButton";
 import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
-import {default as TKPeliasGeocoder} from "../../geocode/PeliasGeocoder";
+import { default as TKPeliasGeocoder } from "../../geocode/PeliasGeocoder";
 
 export interface TKDocComponentProps {
     compName: string;
     docConfig: any;
 }
 
-function TKDocComponent(props: TKDocComponentProps & {classes: ClassNameMap<keyof typeof tKDocComponentStyle>;}) {
+function TKDocComponent(props: TKDocComponentProps & { classes: Classes<keyof typeof tKDocComponentStyle>; }) {
     const style = props.docConfig.style;
     const showcase = props.docConfig.showcase;
     const classes = props.classes;
@@ -36,28 +36,28 @@ function TKDocComponent(props: TKDocComponentProps & {classes: ClassNameMap<keyo
         <TKRoot config={config}>
             <div>
                 {style &&
-                <div className={classes.section}>
-                    <TKDocTabButton onClick={() => {setCssExpanded(!cssExpanded)}} active={cssExpanded}>
-                        CSS
-                    </TKDocTabButton>
-                    {cssExpanded &&
-                    <div>
-                        <TKDocStyle classNames={style}/>
-                        <div className={classes.cssTip}>
-                            Use DOM inspector of your browser on component demo below to see how classes are associated to HTML tags.
-                        </div>
+                    <div className={classes.section}>
+                        <TKDocTabButton onClick={() => { setCssExpanded(!cssExpanded) }} active={cssExpanded}>
+                            CSS
+                        </TKDocTabButton>
+                        {cssExpanded &&
+                            <div>
+                                <TKDocStyle classNames={style} />
+                                <div className={classes.cssTip}>
+                                    Use DOM inspector of your browser on component demo below to see how classes are associated to HTML tags.
+                                </div>
+                            </div>}
                     </div>}
-                </div>}
                 {showcase &&
-                <div className={classes.section}>
-                    <TKDocTabButton onClick={() => {setDemoExpanded(!demoExpanded)}} active={demoExpanded}>
-                        Demo
-                    </TKDocTabButton>
-                    {demoExpanded &&
-                    <TKRandomizeClassNamesOverride componentKey={props.compName} randomizeOverride={true} verboseOverride={true}>
-                        {showcase()}
-                    </TKRandomizeClassNamesOverride>}
-                </div>}
+                    <div className={classes.section}>
+                        <TKDocTabButton onClick={() => { setDemoExpanded(!demoExpanded) }} active={demoExpanded}>
+                            Demo
+                        </TKDocTabButton>
+                        {demoExpanded &&
+                            <TKRandomizeClassNamesOverride componentKey={props.compName} randomizeOverride={true} verboseOverride={true}>
+                                {showcase()}
+                            </TKRandomizeClassNamesOverride>}
+                    </div>}
             </div>
         </TKRoot>
     )

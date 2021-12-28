@@ -1,5 +1,4 @@
-import React, {MouseEvent} from "react";
-import {ClassNameMap} from 'react-jss';
+import React from "react";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {tKUIButtonDefaultStyle} from "./TKUIButton.css";

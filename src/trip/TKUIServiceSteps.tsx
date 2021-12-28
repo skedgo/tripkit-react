@@ -1,5 +1,4 @@
 import * as React from "react";
-import {ClassNameMap} from "react-jss";
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import classNames from "classnames";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";

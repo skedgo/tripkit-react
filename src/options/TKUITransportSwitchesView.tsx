@@ -1,6 +1,5 @@
 import * as React from "react";
 import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
 import {tKUITransportSwitchesViewDefaultStyle} from "./TKUITransportSwitchesView.css";
 import {IOptionsContext, OptionsContext} from "./OptionsProvider";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";

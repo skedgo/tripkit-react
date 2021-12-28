@@ -149,10 +149,10 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                     this.props.onInputTextChange && this.props.onInputTextChange(text);
                                 }}
                                 iconEmpty={<IconGlass className={classes.glassIcon}/>}
-                                style={this.props.injectedStyles.locationBox}
-                                inputStyle={this.props.injectedStyles.locationBoxInput}
+                                style={this.props.injectedStyles.locationBox as any}
+                                inputStyle={this.props.injectedStyles.locationBoxInput as any}
                                 menuStyle={{
-                                    ...this.props.injectedStyles.resultsMenu,
+                                    ...this.props.injectedStyles.resultsMenu as any,
                                     width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
                                 }}
                                 inputId={inputId}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import {tKDocTableStyle} from "./TKDocTable.css";
 import injectSheet from "react-jss";
-import {ClassNameMap} from "react-jss";
+import { Classes } from "jss";
 
 interface ColConfig {
     title: string,
@@ -13,7 +13,7 @@ export interface TKDocStyleProps {
     values: any[];
 }
 
-function TKDocTable(props: TKDocStyleProps & {classes: ClassNameMap<keyof typeof tKDocTableStyle>;}) {
+function TKDocTable(props: TKDocStyleProps & {classes: Classes<keyof typeof tKDocTableStyle>;}) {
     const classes = props.classes;
     console.log(props.values);
     return (

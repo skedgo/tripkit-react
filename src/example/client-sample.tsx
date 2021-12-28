@@ -9,7 +9,6 @@ import * as queryString from "query-string";
 import TripGoApi from "../api/TripGoApi";
 import {unregister} from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
-import {ThemeProvider, JssProvider, createGenerateClassName, StyleCreator, Styles, CSSProperties} from 'react-jss'
 import {TKUITheme} from "../jss/TKUITheme";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
 import {TKUIConfig} from "../config/TKUIConfig";

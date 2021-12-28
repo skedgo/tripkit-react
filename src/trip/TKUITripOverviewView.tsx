@@ -3,7 +3,6 @@ import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap} from "react-jss";
 import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
 import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";

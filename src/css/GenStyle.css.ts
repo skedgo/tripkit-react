@@ -3,59 +3,62 @@ import {CSSProps} from "../jss/StyleHelper";
 // TODO!: switch to react-jss v10 that provides createUseStyles, now that issue with hooks is fixed. Allow
 // to get rid of @types/react-jss
 // import {createUseStyles} from 'react-jss';
-import jss from 'jss';
+// import jss from 'jss';   // Replaced by line below to avoid typescript to complaing about type mismatch
+import jss from 'react-jss/node_modules/jss';
 import camelCase from 'jss-plugin-camel-case';
-import nested from 'jss-nested';
+import nested from 'jss-plugin-nested';
 import global from 'jss-plugin-global';
 
 jss.use(camelCase(), nested(), global());
 
 interface ITKUIGenStyleClasses {
-    flex: CSS.Properties;
-    column: CSS.Properties;
-    center: CSS.Properties;
-    spaceBetween: CSS.Properties;
-    spaceAround: CSS.Properties;
-    justifyStart: CSS.Properties;
-    justifyEnd: CSS.Properties;
-    alignCenter: CSS.Properties;
-    alignStart: CSS.Properties;
-    alignEnd: CSS.Properties;
-    alignStretch: CSS.Properties;
-    alignSelfCenter: CSS.Properties;
-    alignSelfStart: CSS.Properties;
-    alignSelfEnd: CSS.Properties;
-    alignSelfStretch: CSS.Properties;
-    grow: CSS.Properties;
-    noShrink: CSS.Properties;
-    wrap: CSS.Properties;
-    animateSpin: CSS.Properties;
-    svgFillCurrColor: CSSProps<{}>;
-    svgPathFillCurrColor: CSSProps<{}>;
-    scrollableY: CSSProps<{}>;
-    relative: CSSProps<{}>;
-    hidden: CSSProps<{}>;
-    rotate180: CSSProps<{}>;
-    overflowEllipsis: CSSProps<{}>;
+    // TODO: see how to return to a typed version
+    // flex: CSSProps<{}>;
+    flex: any;
+    column: any;
+    center: any;
+    spaceBetween: any;
+    spaceAround: any;
+    justifyStart: any;
+    justifyEnd: any;
+    alignCenter: any;
+    alignStart: any;
+    alignEnd: any;
+    alignStretch: any;
+    alignSelfCenter: any;
+    alignSelfStart: any;
+    alignSelfEnd: any;
+    alignSelfStretch: any;
+    grow: any;
+    noShrink: any;
+    wrap: any;
+    animateSpin: any;
+    svgFillCurrColor: any;
+    svgPathFillCurrColor: any;
+    scrollableY: any;
+    relative: any;
+    hidden: any;
+    rotate180: any;
+    overflowEllipsis: any;
 
-    fontL: CSSProps<{}>;
-    fontM: CSSProps<{}>;
-    fontS: CSSProps<{}>;
-    fontSM: CSSProps<{}>;
+    fontL: any;
+    fontM: any;
+    fontS: any;
+    fontSM: any;
 
-    link: CSSProps<{}>;
+    link: any;
 
-    root: CSSProps<{}>;
+    root: any;
 
-    focusTarget: CSSProps<{}>;
+    focusTarget: any;
 
-    userIsTabbing: CSSProps<{}>;
+    userIsTabbing: any;
 }
 
 interface ITKUIGenStyleCreators {
-    borderRadius: (radius: number, unit?: string) => CSSProps<{}>;
-    borderRadiusString: (value: string) => CSSProps<{}>;
-    transformRotate: (angle: number, unit?: string) => CSSProps<{}>;
+    borderRadius: (radius: number, unit?: string) => any;
+    borderRadiusString: (value: string) => any;
+    transformRotate: (angle: number, unit?: string) => any;
 }
 
 interface ITKUIGenStyle extends ITKUIGenStyleClasses, ITKUIGenStyleCreators {}

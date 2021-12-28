@@ -116,7 +116,7 @@ class TKUISidebar extends React.Component<IProps, {}> {
             <Modal
                 isOpen={this.props.open!}
                 style={{
-                    overlay: this.props.injectedStyles.modalContainer
+                    overlay: this.props.injectedStyles.modalContainer as any
                 }}
                 shouldCloseOnEsc={true}
                 shouldReturnFocusAfterClose={false}

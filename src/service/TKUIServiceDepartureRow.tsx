@@ -4,7 +4,6 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {ClassNameMap, createGenerateClassName, CSSProperties, JssProvider} from "react-jss";
 import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";

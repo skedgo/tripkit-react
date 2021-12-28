@@ -1,5 +1,5 @@
 import * as React from "react";
-import {ClassNameMap} from "react-jss";
+import { Classes } from "jss";
 import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
 import {tKUIOccupancyInfoDefaultStyle} from "./TKUIOccupancyInfo.css";
 import {OccupancyStatus} from "../../model/service/VehicleComponent";
@@ -18,7 +18,7 @@ interface IConsumedProps {
 }
 
 interface IProps extends ITKUIOccupancyInfoProps, IConsumedProps {
-    classes: ClassNameMap<keyof ITKUIOccupancyInfoStyle>
+    classes: Classes<keyof ITKUIOccupancyInfoStyle>
 }
 
 export interface ITKUIOccupancyInfoStyle {

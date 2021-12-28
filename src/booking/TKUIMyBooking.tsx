@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {Subtract} from 'utility-types';
 import {tKUIMyBookingDefaultStyle} from "./TKUIMyBooking.css";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIRow from "../options/TKUIRow";
