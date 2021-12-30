@@ -12,8 +12,11 @@ import Street, {
 import {ReactComponent as IconContinueStraight} from "../images/directions/ic-continue-straight.svg";
 import {ReactComponent as IconHeadTowards} from "../images/directions/ic-head-towards.svg"
 import {ReactComponent as IconTurnRight} from "../images/directions/ic-turn-right.svg"
+import {ReactComponent as IconTurnLeft} from "../images/directions/ic-turn-left.svg"
 import {ReactComponent as IconTurnSharplyRight} from "../images/directions/ic-turn-sharply-right.svg"
 import {ReactComponent as IconTurnSlightlyRight} from "../images/directions/ic-turn-slightly-right.svg"
+import {ReactComponent as IconTurnSharplyLeft} from "../images/directions/ic-turn-sharply-left.svg"
+import {ReactComponent as IconTurnSlightlyLeft} from "../images/directions/ic-turn-slightly-left.svg"
 import TransportUtil from "./TransportUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -43,16 +46,17 @@ function instructionIcon(instruction: StreetInstructions) {
         case StreetInstructions.HEAD_TOWARDS:
             return <IconHeadTowards/>;
         case StreetInstructions.TURN_RIGHT:
-        case StreetInstructions.TURN_LEFT:
             return <IconTurnRight/>;
+        case StreetInstructions.TURN_LEFT:
+            return <IconTurnLeft/>;
         case StreetInstructions.TURN_SLIGHTLY_RIGHT:
             return <IconTurnSlightlyRight/>;
         case StreetInstructions.TURN_SLIGHTLY_LEFT:
-            return <IconTurnSlightlyRight style={{transform: 'scaleX(-1)'}}/>;
+            return <IconTurnSlightlyLeft style={{transform: 'scaleX(-1)'}}/>;
         case StreetInstructions.TURN_SHARPLY_RIGHT:
             return <IconTurnSharplyRight/>;
         case StreetInstructions.TURN_SHARPLY_LEFT:
-            return <IconTurnSharplyRight style={{transform: 'scaleX(-1)'}}/>;
+            return <IconTurnSharplyLeft style={{transform: 'scaleX(-1)'}}/>;
     }
     return <IconContinueStraight/>;
 }
