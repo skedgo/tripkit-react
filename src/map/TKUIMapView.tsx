@@ -142,7 +142,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @ctype
      * @default Callback updating {@link TKState#query}.from
      */
-    onFromChange?: (location: Location) => void;
+    onFromChange?: (location: Location | null) => void;
 
     /**
      * Arrive location.
@@ -156,7 +156,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @ctype
      * @default Callback updating {@link TKState#query}.to
      */
-    onToChange?: (location: Location) => void;
+    onToChange?: (location: Location | null) => void;
 
     /**
      * Trip to be displayed on map.
@@ -261,8 +261,17 @@ class TKUIMapView extends React.Component<IProps, IState> {
         const mapLocation = latLng instanceof ModeLocation ? latLng as ModeLocation :
             Location.createDroppedPin(latLng);
         if (isFrom) {
+            // If from is already set then remove it so when setting it again the
+            // Marker onadd event is triggered again, and popup is displayed.
+            if (this.props.from) {
+                this.props.onFromChange && this.props.onFromChange(null);
+            }
             this.props.onFromChange && this.props.onFromChange(mapLocation);
         } else {
+            // Analogous to from above.
+            if (this.props.to) {
+                this.props.onToChange && this.props.onToChange(null);
+            }
             this.props.onToChange && this.props.onToChange(mapLocation);
         }
         if (mapLocation.isDroppedPin()) {
@@ -581,6 +590,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                             keyboard={false}
+                            onadd={event => event.target.openPopup()}
                     >
                         {this.getLocationPopup(this.props.from!)}
                     </Marker>}
@@ -603,6 +613,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
                             }}
                             keyboard={false}
+                            onadd={event => event.target.openPopup()}
                     >
                         {this.getLocationPopup(this.props.to!)}
                     </Marker>}
@@ -912,12 +923,12 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 
                                                     const consumerProps: IConsumedProps = {
                                                         from: routingContext.directionsView ? from : undefined,
-                                                        onFromChange: (location: Location) =>
+                                                        onFromChange: (location: Location | null) =>
                                                             routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
                                                                 from: location
                                                             })),
                                                         to: to,
-                                                        onToChange: (location: Location) =>
+                                                        onToChange: (location: Location | null) =>
                                                             routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
                                                                 to: location
                                                             })),

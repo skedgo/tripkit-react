@@ -15,10 +15,17 @@ class VehicleTypeInfo {
     @JsonProperty("propulsionType", String, true) // "HUMAN" "ELECTRIC_ASSIST" "ELECTRIC" "COMBUSTION"
     public propulsionType?: string;
 
-    public formFactorS(t: (phrase: string) => string) {
-        return this.formFactor === "BIKE" ? t("E-Bike") :
-            this.formFactor === "SCOOTER" ? t("Kick.Scooter") :
-                Util.toFirstUpperCase(this.formFactor);
+    public vehicleTypeS(t: (phrase: string) => string) {
+        switch (this.formFactor) {
+            case "BICYCLE":
+                return this.propulsionType === "ELECTRIC" || this.propulsionType === "ELECTRIC_ASSIST" ?
+                    t("E-Bike") : t("Bicycle");
+            case "SCOOTER":
+                return this.propulsionType === "ELECTRIC" || this.propulsionType === "ELECTRIC_ASSIST" ?
+                    "E-Scooter" : this.propulsionType === "COMBUSTION" ? t("Moto.Scooter") : t("Kick.Scooter");
+            default:
+                return Util.toFirstUpperCase(this.formFactor);
+        }
     }
 }
 

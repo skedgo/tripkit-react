@@ -37,6 +37,7 @@ import CompanyInfo from "../model/location/CompanyInfo";
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { OpeningHours, PricingTable } from "../model/location/CarParkInfo";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
+import {renderBatteryIcon} from "../map/TKUIMapLocationPopup";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
@@ -182,7 +183,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                     <div className={classes.availabilityInfoBody}>
                         <div className={classes.availabilitySection}>
                             <div className={classes.availabilityLabel}>
-                                {vehicle.vehicleTypeInfo.formFactorS(t)}
+                                {vehicle.vehicleTypeInfo.vehicleTypeS(t)}
                             </div>
                             <div className={classes.availabilityValueCont}>
                                 <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, this.props.theme.isDark)} className={classes.availabilityImage} />
@@ -194,7 +195,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                                 {t("Battery")}
                             </div>
                             <div className={classes.availabilityValueCont}>
-                                <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, this.props.theme.isDark)} className={classes.availabilityImage} />
+                                {renderBatteryIcon(vehicle?.batteryLevel || 0)}
                                 <div className={classes.availabilityValue}>
                                     {vehicle?.batteryLevel !== undefined ? vehicle.batteryLevel + "%" : "?"}
                                 </div>

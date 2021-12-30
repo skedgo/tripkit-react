@@ -12,6 +12,11 @@ import TransportUtil from "../trip/TransportUtil";
 import BikePodLocation from "../model/location/BikePodLocation";
 import CarParkLocation from "../model/location/CarParkLocation";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
+import { ReactComponent as Battery0 } from '../images/location/ic-battery-0.svg';
+import { ReactComponent as Battery25 } from '../images/location/ic-battery-25.svg';
+import { ReactComponent as Battery50 } from '../images/location/ic-battery-50.svg';
+import { ReactComponent as Battery75 } from '../images/location/ic-battery-75.svg';
+import { ReactComponent as Battery100 } from '../images/location/ic-battery.svg';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -95,12 +100,12 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
                     <div className={classes.infoRow}>
                         <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, props.theme.isDark)} className={classes.infoRowImage} />
                         <div className={classes.infoRowLabel}>
-                            {vehicle.vehicleTypeInfo.formFactorS(t)}
+                            {vehicle.vehicleTypeInfo.vehicleTypeS(t)}
                         </div>
                     </div>
                     {location.vehicle?.batteryLevel !== undefined &&
                         <div className={classes.infoRow}>
-                            <img src={TransportUtil.getTransportIconLocal("bicycle-share", false, props.theme.isDark)} className={classes.infoRowImage} />
+                            {renderBatteryIcon(location.vehicle.batteryLevel)}
                             <div className={classes.infoRowLabel}>
                                 {t("Battery")}
                             </div>
@@ -127,3 +132,17 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
 
 export default connect((config: TKUIConfig) => config.TKUIMapLocationPopup, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps))
+
+export function renderBatteryIcon(levelPct: number): React.ReactNode {
+    if (levelPct < 20) {
+        return <Battery0 />;
+    } else if (levelPct < 45) {
+        return <Battery25 />;
+    } else if (levelPct < 70) {
+        return <Battery50 />;
+    } else if (levelPct < 95) {
+        return <Battery75 />;
+    } else {
+        return <Battery100 />;
+    }
+}
