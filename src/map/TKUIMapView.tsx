@@ -254,7 +254,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
-        NetworkUtil.loadCss("https://unpkg.com/leaflet@1.3.4/dist/leaflet.css");
+        NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
     }
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
