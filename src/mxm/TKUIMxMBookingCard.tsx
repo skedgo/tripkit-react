@@ -81,6 +81,7 @@ const BookingInput: React.SFC<BookingInputProps> =
             singleValue: overrideClass(injectedStyles.selectSingleValue),
             multiValue: overrideClass(injectedStyles.selectMultiValue)
         };
+        const valueToOption = (value, options) => options.find((option: any) => option.value === value);
         return (
             <div className={classes.form}>
                 {inputFields.map((inputField, i) => {
@@ -97,15 +98,17 @@ const BookingInput: React.SFC<BookingInputProps> =
                         onChange!(inputFieldsUpdate);
                     };
                     if (inputField.type === "SINGLE_CHOICE") {
+                        const options = inputField.options.map((option: BookingFieldOption) => ({
+                            value: option.id,
+                            label: option.title
+                        }));
                         valueElem = readonly ?
                             inputField.value
                             :
                             <TKUISelect
-                                options={inputField.options.map((option: BookingFieldOption) => ({
-                                    value: option.id,
-                                    label: option.title
-                                }))}
+                                options={options}
                                 styles={selectOverrideStyle}
+                                value={valueToOption(inputField.value, options)}
                                 onChange={update => changeHandler(update.value)}
                                 placeholder={"Select"}
                                 components={{
@@ -114,16 +117,18 @@ const BookingInput: React.SFC<BookingInputProps> =
                                 }}
                             />;
                     } else if (inputField.type === "MULTIPLE_CHOICE") {
+                        const multiSelectOptions = inputField.options.map((option: BookingFieldOption) => ({
+                            value: option.id,
+                            label: option.title
+                        }));
                         valueElem = readonly ?
                             inputField.values!.map((value, i) => <div key={i}>{Util.camelCaseToSpaced(value)}</div>)
                             :
                             <TKUISelect
-                                options={inputField.options.map((option: BookingFieldOption) => ({
-                                    value: option.id,
-                                    label: option.title
-                                }))}
+                                options={multiSelectOptions}
                                 isMulti
                                 styles={selectOverrideStyle}
+                                value={inputField.values!.map(value => valueToOption(value, multiSelectOptions))}
                                 onChange={(update: SelectOption[]) => // update is null if no option is selected.
                                     changeHandler((update || []).map(option => option.value))}
                                 placeholder={"Select"}
@@ -138,10 +143,11 @@ const BookingInput: React.SFC<BookingInputProps> =
                             :
                             <textarea
                                 placeholder={inputField.title}
+                                value={inputField.value}
                                 onChange={e => changeHandler(e.target.value)}
                             />
                     }
-                    return (
+                    return (valueElem &&
                         <div className={classes.group} key={i}>
                             <div className={classes.icon}>
                                 {inputIcon(inputField.id)}
