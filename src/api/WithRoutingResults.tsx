@@ -147,7 +147,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     // onQueryChange. In that case trips will be computed when
                     // this.onDirectionsView(true) is called.
                     if (alreadyOnDirectionsView &&
-                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
+                        !query.from?.isDroppedPin() && !query.to?.isDroppedPin() &&
+                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options))
+                    {   // Avoid requesting routing if:
+                        // - from or to are dropped pins, since we want to delay it until they are resolved
+                        // - queries urls didn't change (queries are the same in practice. Check if this makes sense now
+                        // that location address is included in query, and so reverse geocoding of dropped pin locations
+                        // actually will make this false, triggering trips refresh. For what other calls to onQueryChange
+                        // I want to avoid triggering trips refresh?
                         this.refreshTrips();
                     }
                 } else {
@@ -549,10 +556,16 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
-                const from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
+                let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
                     firstTrip && firstTrip.segments[0].from;
-                const to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
+                if (from && !from.address) {
+                    from.address = "Location";
+                }
+                let to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
                     firstTrip && firstTrip.segments[firstTrip.segments.length - 1].to;
+                if (to && !to.address) {
+                    to.address = "Location";
+                }
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
                     firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);

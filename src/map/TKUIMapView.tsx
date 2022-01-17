@@ -278,17 +278,21 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
         if (mapLocation.isDroppedPin()) {
             getGeocodingData(this.props.config.geocoding)
-                .reverseGeocode(latLng, loc => {
-                    if (loc !== null) {
-                        // Need to use onQueryUpdate instead of onQueryChange since
-                        // routingContext.query can be outdated at the time this callback is
-                        // executed. OnQueryUpdate always use the correct query (the one on
-                        // WithRoutingResults state, the source of truth).
-                        if (isFrom) {
-                            this.props.onFromChange && this.props.onFromChange(loc);
-                        } else {
-                            this.props.onToChange && this.props.onToChange(loc);
-                        }
+                .reverseGeocode(latLng, result => {
+                    // If reverse geocode fails then add a trailing space to dropped pin address ("Location") to
+                    // force WithRoutingResults.onQueryChange to refresh trips (loc.isDroppedPin() will be false, and
+                    // WithRoutingResults.sameApiQueries will also be false, since now it also sends addresses).
+                    // Alternatively, to force WithRoutingResults.sameApiQueries to be false can set query from / to
+                    // to null before setting loc.
+                    const loc = result ?? Util.iAssign(mapLocation, {address: mapLocation.address + " "});
+                    // Need to use onQueryUpdate instead of onQueryChange since
+                    // routingContext.query can be outdated at the time this callback is
+                    // executed. OnQueryUpdate always use the correct query (the one on
+                    // WithRoutingResults state, the source of truth).
+                    if (isFrom) {
+                        this.props.onFromChange && this.props.onFromChange(loc);
+                    } else {
+                        this.props.onToChange && this.props.onToChange(loc);
                     }
                 })
         }
