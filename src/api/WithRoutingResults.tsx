@@ -558,13 +558,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
                 let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
                     firstTrip && firstTrip.segments[0].from;
-                if (from && !from.address) {
-                    from.address = "Location";
+                if (from && !from.address) { // Set address (to some string) to avoid location box to reverse geocode it and trips computation to be triggered after that.
+                    from.address = "Location "; // Trailing space to avoid accidentally making isDroppedPin true.
                 }
                 let to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
                     firstTrip && firstTrip.segments[firstTrip.segments.length - 1].to;
-                if (to && !to.address) {
-                    to.address = "Location";
+                if (to && !to.address) {    // Idem from.
+                    to.address = "Location ";
                 }
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
