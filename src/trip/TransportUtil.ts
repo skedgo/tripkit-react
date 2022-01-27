@@ -11,7 +11,7 @@ class TransportUtil {
     /**
      *
      * @param {ModeInfo} modeInfo
-     * @param {boolean} isRealtime
+     * @param {boolean} isRealtime @deprecated realtime icon is displayed separately.
      * @param {boolean} onDark
      * @param {boolean} remoteOverOnDark indicates we prefer the remote icon, even if it doesn't match onDark requirement.
      * @returns {string}
@@ -22,12 +22,15 @@ class TransportUtil {
 
     public static getTransIcon(modeInfo: ModeInfo,
         options: {
+            /**
+             * @deprecated realtime icon is displayed separately. Fix this to false.
+             */
             isRealtime?: boolean;
             onDark?: boolean;
             useLocal?: boolean;
             remoteOverOnDark?: boolean;
         } = {}): string {
-        const isRealtime = options.isRealtime !== undefined ? options.isRealtime : false;
+        const isRealtime = false;
         const onDark = options.onDark !== undefined ? options.onDark : false;
         const useLocal = options.useLocal ? options.useLocal : false;
         const remoteOverOnDark = options.remoteOverOnDark !== undefined ? options.remoteOverOnDark : true;
