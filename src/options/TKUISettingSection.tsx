@@ -38,7 +38,7 @@ const TKUISettingSection: React.SFC<IProps> = (props: IProps) => {
         <div className={classes.section}>
             {props.title &&
             <div className={classes.sectionTitle}>
-                {t("My.Transport")}
+                {props.title}
             </div>}
             <div className={classes.sectionBody}>
                 {props.children}

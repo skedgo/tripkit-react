@@ -23,7 +23,8 @@ import FocusTrap from "focus-trap-react";
 export enum CardPresentation {
     MODAL,
     SLIDE_UP,
-    NONE
+    NONE,
+    CONTENT // Just displays children. Possibly rename NONE to INLINE and CONTENT to NONE.
 }
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -239,9 +240,10 @@ class TKUICard extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const {title, subtitle, onRequestClose, closeAriaLabel} = this.props;
-        const classes = this.props.classes;
-        const presentation = this.props.presentation;
+        const {title, subtitle, onRequestClose, closeAriaLabel, children, presentation, classes} = this.props;
+        if (presentation === CardPresentation.CONTENT) {
+            return children;
+        }
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         let cardAriaLabel = this.props.ariaLabel;
         if (!cardAriaLabel) {

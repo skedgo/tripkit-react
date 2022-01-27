@@ -311,6 +311,11 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 const update = Util.iAssign(tKState.userProfile, {transportOptions: transports});
                 tKState.onUserProfileChange(update);
             }
+            const settings = TKShareHelper.parseSettingsQueryParam();
+            if (settings) {
+                const update = Util.iAssign(tKState.userProfile, settings);
+                tKState.onUserProfileChange(update);
+            }
             const query = TKShareHelper.parseSharedQueryLink();
             const viewport = TKShareHelper.parseViewport();
             if (viewport) {

@@ -19,8 +19,6 @@ export const tKUISettingSectionDefaultStyle: TKUIStyles<TKUISettingSectionStyle,
             ...genStyles.column,
             ...theme.divider,
             '&>*': {    // Style for option row
-                ...genStyles.flex,
-                ...genStyles.alignCenter,
                 padding: '15px 0',
                 '&:not(:last-child)': {
                     ...theme.divider
