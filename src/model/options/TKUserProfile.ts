@@ -4,6 +4,7 @@ import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
 import TKTransportOptions, {DisplayConf} from "./TKTransportOptions";
 import TKWeightingPreferences from "./TKWeightingPreferences";
+import {TripSort} from "../trip/TripSort";
 
 export enum WalkingSpeed {
     SLOW,
@@ -17,6 +18,16 @@ export class WalkingSpeedConverter implements JsonCustomConvert<WalkingSpeed> {
         return value;
     }
     public deserialize(obj: any): WalkingSpeed {
+        return obj;
+    }
+}
+
+@JsonConverter
+export class TripSortConverter implements JsonCustomConvert<TripSort> {
+    public serialize(value: TripSort): any {
+        return value;
+    }
+    public deserialize(obj: any): TripSort {
         return obj;
     }
 }
@@ -49,6 +60,8 @@ class TKUserProfile {
     public isDarkMode?: boolean = undefined;
     @JsonProperty('customData', Any, true)
     public customData?: any = undefined;
+    @JsonProperty('defaultTripSort', TripSortConverter, true)
+    public defaultTripSort?: TripSort = undefined;
 
     get wheelchair(): boolean {
         return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);

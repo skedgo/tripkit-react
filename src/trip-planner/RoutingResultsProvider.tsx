@@ -1,5 +1,5 @@
 import * as React from "react";
-import withRoutingResults, {IWithRoutingResultsProps, TripSort} from "../api/WithRoutingResults";
+import withRoutingResults, {IWithRoutingResultsProps} from "../api/WithRoutingResults";
 import RoutingQuery from "../model/RoutingQuery";
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
@@ -12,6 +12,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 import {TKUIMapViewClass} from "../map/TKUIMapView";
+import {TripSort} from "../model/trip/TripSort";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
