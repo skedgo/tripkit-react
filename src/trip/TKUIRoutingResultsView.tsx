@@ -6,7 +6,6 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TripGroup from "../model/trip/TripGroup";
 import TKUICard, {CardPresentation} from "../card/TKUICard";
 import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TripSort} from "../api/WithRoutingResults";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import {default as TKUITripRow} from "./TKUITripRow";
 import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
@@ -43,6 +42,7 @@ import WaiAriaUtil from "../util/WaiAriaUtil";
 import HasCard, {HasCardKeys} from "../card/HasCard";
 import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
 import Segment from "../model/trip/Segment";
+import {TripSort} from "../model/trip/TripSort";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -246,6 +246,9 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                         break;
                     case TripSort.DURATION:
                         label = t("sorted_by_duration");
+                        break;
+                    case TripSort.CALORIES:
+                        label = "Sorted by Healthiest";
                         break;
                 }
                 return { value: value, label: label};
