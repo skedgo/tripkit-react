@@ -4,7 +4,6 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig} from "../config/TKUIConfig";
 import {tKUISettingLinkDefaultStyle} from "./TKUISettingLink.css";
-import {Subtract} from "utility-types";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     text: string | JSX.Element;

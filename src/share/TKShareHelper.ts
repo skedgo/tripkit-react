@@ -12,6 +12,7 @@ import * as queryString from "query-string";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import Util from "../util/Util";
 import TripGoApi from "../api/TripGoApi";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 class TKShareHelper {
 
@@ -170,6 +171,12 @@ class TKShareHelper {
         const searchStr = this.getSearch();
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         return queryMap && queryMap.transports && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.transports)), TKTransportOptions);
+    }
+
+    public static parseSettingsQueryParam(): TKUserProfile | undefined {
+        const searchStr = this.getSearch();
+        const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
+        return queryMap && queryMap.settings && Util.deserialize(JSON.parse(decodeURIComponent(queryMap.settings)), TKUserProfile);
     }
 
     public static parseViewport(): {center: LatLng, zoom: number} | undefined {

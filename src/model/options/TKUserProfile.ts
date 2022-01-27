@@ -33,8 +33,6 @@ class TKUserProfile {
 
     @JsonProperty('weightingPrefs', TKWeightingPreferences, true)
     public weightingPrefs: TKWeightingPreferences = TKWeightingPreferences.create();
-    @JsonProperty('modesDisabled', [String], true)
-    private _modesDisabled: string[] = TKUserProfile.defaultDisabled;
     @JsonProperty('transportOptions', TKTransportOptions, true)
     public transportOptions: TKTransportOptions = new TKTransportOptions();
     @JsonProperty('transitConcessionPricing', Boolean, true)
@@ -46,19 +44,11 @@ class TKUserProfile {
     @JsonProperty('cyclingSpeed', WalkingSpeedConverter, true)
     public cyclingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
     @JsonProperty('trackTripSelections', Boolean, true)
-    public trackTripSelections: boolean = false;
+    public trackTripSelections?: boolean;
     @JsonProperty('isDarkMode', Boolean, true)
     public isDarkMode?: boolean = undefined;
     @JsonProperty('customData', Any, true)
     public customData?: any = undefined;
-
-    get modesDisabled(): string[] {
-        return this._modesDisabled.concat(TKUserProfile.overrideDisabled.filter((mode: string) => this._modesDisabled.indexOf(mode) === -1));
-    }
-
-    set modesDisabled(value: string[]) {
-        this._modesDisabled = value.filter((mode: string) => TKUserProfile.overrideDisabled.indexOf(mode) === -1);
-    }
 
     get wheelchair(): boolean {
         return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);
