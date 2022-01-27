@@ -41,6 +41,13 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
                 fill: 'currentColor'
             }
         },
+        realtimeIcon: {
+            width: '12px',
+            height: '12px',
+            '& path': {
+                fill: black(0, theme.isDark)
+            }
+        },
         info: {
             fontSize: '13px',
             lineHeight: 'normal',
@@ -56,6 +63,7 @@ export const tKUITrackTransportDefaultStyle: TKUIStyles<TKUITrackTransportStyle,
             textOverflow: 'ellipsis'
         },
         subtitle: {
-            color: black(1, theme.isDark)
+            color: black(1, theme.isDark),
+            ...genStyles.flex
         }
     });

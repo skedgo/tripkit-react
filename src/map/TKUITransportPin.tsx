@@ -14,6 +14,7 @@ import {tKUITransportPinDefaultStyle} from "./TKUITransportPin.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
+import {ReactComponent as RealtimeIcon} from "../images/ic-realtime.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     icon: string;
@@ -22,6 +23,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     rotation?: number;
     firstSegment?: boolean;
     arriveSegment?: boolean;
+    isRealtime?: boolean;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -31,6 +33,7 @@ interface IStyle {
     pin: CSSProps<IProps>;
     transport: CSSProps<IProps>;
     timeLabel: CSSProps<IProps>;
+    realtimeIcon: CSSProps<IProps>;
     base: CSSProps<IProps>;
     firstSegment: CSSProps<IProps>;
     arriveSegment: CSSProps<IProps>;
@@ -59,6 +62,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         return <TKUITransportPinConnected
             icon={transIcon}
             label={timeS}
+            isRealtime={segment.realTime ?? undefined}
             rotation={rotation}
             firstSegment={segment.isFirst(Visibility.IN_SUMMARY)}
             arriveSegment={segment.arrival}
@@ -77,13 +81,12 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
         const isTransIconForDark = isInvertedWrtMode ? !wantIconForDark : wantIconForDark;
         const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
-        return <TKUITransportPinConnected icon={transIcon} iconForDark={isTransIconForDark} label={timeS} rotation = {rotation}/>
+        return <TKUITransportPinConnected icon={transIcon} iconForDark={isTransIconForDark} label={timeS} rotation={rotation}/>
     }
 
     public render(): React.ReactNode {
-        const rotation = this.props.rotation;
+        const { rotation, classes, isRealtime, label } = this.props;
         const PinHead = rotation ? IconPinHeadPointer : IconPinHead;
-        const classes = this.props.classes;
         return (
             <div className={classNames(classes.main,
                 this.props.firstSegment && classes.firstSegment,
@@ -101,7 +104,8 @@ class TKUITransportPin extends React.Component<IProps, {}> {
                     />
                     <img src={this.props.icon} className={classes.transport}/>
                     <div className={classes.timeLabel}>
-                        {this.props.label}
+                        {isRealtime && <RealtimeIcon className={classes.realtimeIcon}/>}
+                        {label}
                     </div>
                 </div>
                 <img src={iconPinBase} className={classes.base}/>

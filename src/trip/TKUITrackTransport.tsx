@@ -8,6 +8,7 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUITrackTransportDefaultStyle} from "./TKUITrackTransport.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
+import {ReactComponent as RealtimeIcon} from "../images/ic-realtime.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
@@ -22,6 +23,7 @@ interface IStyle {
     compositeIcon: CSSProps<IProps>;
     icon: CSSProps<IProps>;
     alertIcon: CSSProps<IProps>;
+    realtimeIcon: CSSProps<IProps>;
     info: CSSProps<IProps>;
     title: CSSProps<IProps>;
     subtitle: CSSProps<IProps>;
@@ -90,12 +92,15 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                     />
                     {segment.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
                 </div>
-                { (infoTitle || infoSubtitle) ?
+                { (infoTitle || infoSubtitle || segment.realTime) ?
                     <div className={classes.info}
                          aria-hidden={true}
                     >
                         {infoTitle ? <div className={classes.title}>{infoTitle}</div> : null}
-                        <div className={classes.subtitle}>{infoSubtitle}</div>
+                        <div className={classes.subtitle}>
+                            {infoSubtitle}
+                            {segment.realTime && <RealtimeIcon className={classes.realtimeIcon}/>}
+                        </div>
                     </div> : null }
             </div>
         );
