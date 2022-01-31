@@ -96,7 +96,7 @@ export const tKUIDateTimePickerDefaultStyle: TKUIStyles<TKUIDateTimePickerStyle,
                 background: 'none!important'
             },
             '& *': {
-                color: black(0, theme.isDark)
+                ...theme.textColorDefault
             }
         },
         inputElem: {

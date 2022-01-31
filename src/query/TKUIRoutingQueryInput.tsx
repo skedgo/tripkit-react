@@ -487,8 +487,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
             errorMessage = "Cannot resolve address, try another search and pick a result from the autocomplete list."
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
-            // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
-            errorMessage = t("Could.not.determine.your.current.location.");
+            errorMessage = t("Could.not.determine.your.location.accurately..Please.set.manually.");
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
             errorMessage = DeviceUtil.browser === BROWSER.SAFARI ?
                 t("You.blocked.this.site.access.to.your.location,.either.at.browser.or.system.level") :
