@@ -1,21 +1,23 @@
-import React, {UIEventHandler} from "react";
+import React, { UIEventHandler } from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
-import {Subtract} from "utility-types";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUICardDefaultStyle} from "./TKUICard.css";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
+import { CSSProperties } from 'react-jss';
+import * as CSS from 'csstype';
+import { Subtract } from "utility-types";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUICardDefaultStyle } from "./TKUICard.css";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { TKUISlideUpOptions, TKUISlideUpPosition } from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
-import {genClassNames} from "../css/GenStyle.css";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
-import WaiAriaUtil from "../util/WaiAriaUtil";
-import TKUICardHeader, {TKUICardHeaderClientProps} from "./TKUICardHeader";
+import { genClassNames } from "../css/GenStyle.css";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { markForFocusLater, returnFocus } from "./FocusManagerHelper";
+import TKUICardHeader, { TKUICardHeaderClientProps } from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
+import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -147,7 +149,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     focusTrap?: boolean;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {}
+interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext { }
 
 interface IStyle {
     modalContainer: CSSProps<IProps>;
@@ -162,7 +164,7 @@ interface IStyle {
     handleLine: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUICardProps = IProps;
 export type TKUICardStyle = IStyle;
@@ -170,7 +172,7 @@ export type TKUICardStyle = IStyle;
 export type TKUICardClientProps = IClientProps;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUICard {...props}/>,
+    render: props => <TKUICard {...props} />,
     styles: tKUICardDefaultStyle,
     classNamePrefix: "TKUICard"
 };
@@ -238,7 +240,7 @@ class TKUICard extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const {title, subtitle, onRequestClose, closeAriaLabel, children, presentation, classes} = this.props;
+        const { title, subtitle, onRequestClose, closeAriaLabel, children, presentation, classes } = this.props;
         if (presentation === CardPresentation.CONTENT) {
             return children;
         }
@@ -257,34 +259,34 @@ class TKUICard extends React.Component<IProps, IState> {
             cardAriaLabel += " Card";
         }
         const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose;
-        const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props}/>);
+        const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props} />);
         const showHandle = hasHandle(this.props);
         const bodyContent =
             <div className={classNames(classes.main, genClassNames.root,
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
-                 aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
-                 ref={(ref: any) => this.bodyRef = ref}
-                 tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
-                 role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
+                aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
+                ref={(ref: any) => this.bodyRef = ref}
+                tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
+                role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
             >
                 {(showHandle || showHeader) &&
-                <div ref={(ref: any) => {
-                    this.state.handleRef === undefined && this.setState({handleRef: ref});
-                    this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
-                }}>
-                    {showHandle &&
-                    <div className={classes.handle}>
-                        <div className={classes.handleLine}/>
+                    <div ref={(ref: any) => {
+                        this.state.handleRef === undefined && this.setState({ handleRef: ref });
+                        this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
+                    }}>
+                        {showHandle &&
+                            <div className={classes.handle}>
+                                <div className={classes.handleLine} />
+                            </div>}
+                        {showHeader &&
+                            renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
                     </div>}
-                    {showHeader &&
-                    renderHeader({title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle})}
-                </div>}
                 {this.props.renderSubHeader &&
-                <div className={classes.subHeader}>
-                    {this.props.renderSubHeader()}
-                </div>}
+                    <div className={classes.subHeader}>
+                        {this.props.renderSubHeader()}
+                    </div>}
                 {(showHandle || showHeader || this.props.renderSubHeader) &&
-                <div className={classes.divider} />}
+                    <div className={classes.divider} />}
                 {this.props.scrollable !== false ?
                     <TKUIScrollForCard
                         className={classes.body}
@@ -310,8 +312,8 @@ class TKUICard extends React.Component<IProps, IState> {
                     handleRef={this.state.handleRef}
                     containerClass={classNames(classes.modalContainer, genClassNames.root)}
                     open={this.props.open}
-                    onPositionChange={(position: TKUISlideUpPosition) => this.setState({slideUpPosition: position})}
-                    cardOnTop={(onTop: boolean) => this.setState({cardOnTop: onTop})}
+                    onPositionChange={(position: TKUISlideUpPosition) => this.setState({ slideUpPosition: position })}
+                    cardOnTop={(onTop: boolean) => this.setState({ cardOnTop: onTop })}
                     parentElement={this.parentElement}
                     zIndex={this.props.slideUpOptions?.zIndex !== undefined ? this.props.slideUpOptions.zIndex : this.zIndex}
                     ariaLabel={cardAriaLabel}
@@ -333,8 +335,8 @@ class TKUICard extends React.Component<IProps, IState> {
                                 width: '500px'
                             },
                             ...(!this.firstModal ?
-                                    { overlay: {background: 'none'} } :
-                                    { overlay: this.props.injectedStyles.modalOverlay }
+                                { overlay: { background: 'none' } } :
+                                { overlay: this.props.injectedStyles.modalOverlay }
                             )
                         }}
                         shouldCloseOnEsc={true}
@@ -382,8 +384,8 @@ class TKUICard extends React.Component<IProps, IState> {
             mainFocusElem.focus();
         } else {
             this.bodyRef &&
-            !this.contentHasFocus() &&
-            this.bodyRef.focus({preventScroll: true});
+                !this.contentHasFocus() &&
+                this.bodyRef.focus({ preventScroll: true });
         }
     };
 
@@ -404,7 +406,7 @@ class TKUICard extends React.Component<IProps, IState> {
         if (this.props.presentation !== CardPresentation.MODAL) {
             const shouldFocusAfterRender = this.props.shouldFocusAfterRender !== undefined ?
                 this.props.shouldFocusAfterRender :
-                (WaiAriaUtil.isUserTabbing()
+                (this.props.isUserTabbing
                     || DeviceUtil.isTouch()); // For VO on iOS.
             if (!shouldFocusAfterRender) {
                 return;
@@ -437,14 +439,18 @@ window.addEventListener('keydown', (e: KeyboardEvent) => {
 });
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
-        <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) => {
-                return children!({...viewportProps, ...inputProps});
-            }}
-        </TKUIViewportUtil>;
+    ({ inputProps, children }) =>
+        <TKAccessibilityContext.Consumer>
+            {accessibilityContext =>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) => {
+                        return children!({ ...viewportProps, ...accessibilityContext, ...inputProps });
+                    }}
+                </TKUIViewportUtil>
+            }
+        </TKAccessibilityContext.Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUICard, config, Mapper);
-export {TKUICard as TKUICardRaw};
+export { TKUICard as TKUICardRaw };
 
-export {hasHandle}
+export { hasHandle }

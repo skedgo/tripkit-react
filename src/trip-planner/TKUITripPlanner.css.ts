@@ -111,5 +111,18 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     },
     searchMenuContainer: {
         marginTop: '1px'
+    },
+    ariaFocusEnabled: {
+        ['& input[type=text]:focus,' +
+        '& input[type=email]:focus,' +
+        '& input[aria-autocomplete=list]:focus,' +
+        '& button:focus,' +
+        '& a:focus,' +
+        '& select:focus,' +
+        '& textarea:focus,' +
+        '& div:focus,' +
+        '&:focus']: {
+            boxShadow: '0px 0px 3px 3px #024dff!important'  // To prevail to boxShadow: none of resetStyles.
+        }
     }
 });

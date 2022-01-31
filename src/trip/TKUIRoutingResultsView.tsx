@@ -1,48 +1,48 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import {tKUIResultsDefaultStyle} from "./TKUIRoutingResultsView.css";
-import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import { tKUIResultsDefaultStyle } from "./TKUIRoutingResultsView.css";
+import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import TripGroup from "../model/trip/TripGroup";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
-import {default as TKUITripRow} from "./TKUITripRow";
-import TKMetricClassifier, {Badges} from "./TKMetricClassifier";
-import {Subtract} from "utility-types";
-import {TKUIConfig, TKComponentDefaultConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper, replaceStyle} from "../config/TKConfigHelper";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
+import { default as TKUITripRow } from "./TKUITripRow";
+import TKMetricClassifier, { Badges } from "./TKMetricClassifier";
+import { Subtract } from "utility-types";
+import { TKUIConfig, TKComponentDefaultConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper, replaceStyle } from "../config/TKConfigHelper";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
-import {TKUIRoutingQueryInputClass} from "../query/TKUIRoutingQueryInput";
+import { TKUIRoutingQueryInputClass } from "../query/TKUIRoutingQueryInput";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import GATracker from "../analytics/GATracker";
-import {Moment} from "moment-timezone";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
-import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
+import { Moment } from "moment-timezone";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import TKUIAlertsSummary from "../alerts/TKUIAlertsSummary";
-import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
-import {alertSeverity} from "../model/trip/Segment";
+import { TKUIConfigContext, default as TKUIConfigProvider } from "../config/TKUIConfigProvider";
+import { alertSeverity } from "../model/trip/Segment";
 import Color from "../model/trip/Color";
-import {severityColor} from "./TKUITrackTransport.css";
-import genStyles, {genClassNames} from "../css/GenStyle.css";
-import {AlertSeverity} from "../model/service/RealTimeAlert";
-import {TKError} from "../error/TKError";
+import { severityColor } from "./TKUITrackTransport.css";
+import genStyles, { genClassNames } from "../css/GenStyle.css";
+import { AlertSeverity } from "../model/service/RealTimeAlert";
+import { TKError } from "../error/TKError";
 import LocationUtil from "../util/LocationUtil";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import TKErrorHelper, {ERROR_ROUTING_NOT_SUPPORTED} from "../error/TKErrorHelper";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
+import TKErrorHelper, { ERROR_ROUTING_NOT_SUPPORTED } from "../error/TKErrorHelper";
 import TKUIErrorView from "../error/TKUIErrorView";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
-import {cardSpacing, TKUITheme} from "../jss/TKUITheme";
+import { TranslationFunction } from "../i18n/TKI18nProvider";
+import { cardSpacing, TKUITheme } from "../jss/TKUITheme";
 import Environment from "../env/Environment";
-import WaiAriaUtil from "../util/WaiAriaUtil";
-import HasCard, {HasCardKeys} from "../card/HasCard";
-import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
+import HasCard, { HasCardKeys } from "../card/HasCard";
+import { ReactComponent as IconTriangleDown } from '../images/ic-triangle-down.svg';
 import Segment from "../model/trip/Segment";
-import {TripSort} from "../model/trip/TripSort";
+import { TripSort } from "../model/trip/TripSort";
+import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -81,7 +81,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     errorActions?: (error: TKError, defaultAtions: JSX.Element[]) => JSX.Element[];
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {
+interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext {
     /**
      * Array of routing results to be displayed. It's assumed that trips come already sorted according to selected sort
      * criterion (which is handled through ```sort``` and ```onSortChange``` properties in a controlled way).
@@ -181,13 +181,13 @@ export interface IStyle {
     noResults: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIRoutingResultsViewProps = IProps;
 export type TKUIRoutingResultsViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIRoutingResultsView {...props}/>,
+    render: props => <TKUIRoutingResultsView {...props} />,
     styles: tKUIResultsDefaultStyle,
     classNamePrefix: "TKUIRoutingResultsView"
 };
@@ -221,9 +221,9 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     private getDefaultErrorActions(error: TKError) {
         return [
             <TKUIButton text={this.props.t("Plan.a.new.trip")}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={() => this.props.onQueryUpdate({from: null, to: null})}
-                        key={"Plan.a.new.trip"}
+                type={TKUIButtonType.SECONDARY}
+                onClick={() => this.props.onQueryUpdate({ from: null, to: null })}
+                key={"Plan.a.new.trip"}
             />
         ]
     }
@@ -251,7 +251,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                         label = "Sorted by Healthiest";
                         break;
                 }
-                return { value: value, label: label};
+                return { value: value, label: label };
             });
     }
 
@@ -306,7 +306,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         if (!this.props.waiting && routingError) {
             const errorMessage = TKErrorHelper.hasErrorCode(routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
                 t("Routing.from.X.to.X.is.not.yet.supported",
-                    {0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t)}) + "." :
+                    { 0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t) }) + "." :
                 routingError.usererror || Environment.isDev() || Environment.isBeta() ? routingError.message : t("Something.went.wrong.");
             const defaultErrorActions = this.getDefaultErrorActions(routingError);
             const errorActions = this.props.errorActions ? this.props.errorActions(routingError, defaultErrorActions) :
@@ -321,44 +321,44 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         }
 
         const renderSubHeader = (!error || this.props.values.length > 0) && (showTimeSelect || showTransportsBtn) ? () => {
-            const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}} {...props}/>;
+            const SelectDownArrow = (props: any) => <IconTriangleDown style={{ width: '9px', height: '9px' }} {...props} />;
             return (
                 <div>
                     <div className={classes.footer}
-                         style={!showTimeSelect && showTransportsBtn ? {
-                             justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
-                         } : undefined}
+                        style={!showTimeSelect && showTransportsBtn ? {
+                            justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
+                        } : undefined}
                     >
                         {showTimeSelect &&
-                        <TKUISelect
-                            options={this.timePrefOptions}
-                            value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
-                            onChange={(option) => this.onPrefChange(option.value)}
-                            styles={() => ({
-                                main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                                menu: overrideClass({ marginTop: '3px' })
-                            })}
-                        />}
+                            <TKUISelect
+                                options={this.timePrefOptions}
+                                value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
+                                onChange={(option) => this.onPrefChange(option.value)}
+                                styles={() => ({
+                                    main: overrideClass(this.props.injectedStyles.timePrefSelect),
+                                    menu: overrideClass({ marginTop: '3px' })
+                                })}
+                            />}
                         {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
-                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                            value={routingQuery.time}
-                            timeZone={this.props.timezone}
-                            onChange={(date: Moment) => this.updateQuery({time: date})}
-                            timeFormat={DateTimeUtil.TIME_FORMAT}
-                            dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
-                            disabled={datePickerDisabled}
-                        />
+                            <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                value={routingQuery.time}
+                                timeZone={this.props.timezone}
+                                onChange={(date: Moment) => this.updateQuery({ time: date })}
+                                timeFormat={DateTimeUtil.TIME_FORMAT}
+                                dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                                disabled={datePickerDisabled}
+                            />
                         }
                         {showTransportsBtn &&
-                        <button className={classes.transportsBtn}
-                                onClick={() => this.setState({showTransportSwitches: !this.state.showTransportSwitches})}
+                            <button className={classes.transportsBtn}
+                                onClick={() => this.setState({ showTransportSwitches: !this.state.showTransportSwitches })}
                                 aria-expanded={this.state.showTransportSwitches}
-                        >
-                            {t("Transport")}
-                            <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined}/>
-                        </button>}
+                            >
+                                {t("Transport")}
+                                <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined} />
+                            </button>}
                     </div>
-                    {showTransportsBtn && this.state.showTransportSwitches && <TKUITransportSwitchesView inline={true}/>}
+                    {showTransportsBtn && this.state.showTransportSwitches && <TKUITransportSwitchesView inline={true} />}
                 </div>
             )
         } : undefined;
@@ -370,75 +370,75 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                 renderSubHeader={renderSubHeader}
                 slideUpOptions={this.props.slideUpOptions}
                 // Flex grow on body seem not take effect on Safari.
-                styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({height: '100%'}) } : undefined}
+                styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({ height: '100%' }) } : undefined}
             >
                 <div className={classes.main}>
                     {!routingError && this.props.values.length > 0 &&
-                    // length > 0 also prevents showing alert before routingError happens, and then so to disappear.
-                    this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
-                    // TODO: Define a TKUIStyleOverride that encapsulates all the following, i.e.,
-                    // the consumer, the call to replaceStyle, and the provider.
-                    <TKUIConfigContext.Consumer>
-                        {(config: TKUIConfig) => {
-                            const stylesOverride =
-                                (theme: TKUITheme) => ({
-                                    main: (defaultStyle) => ({
-                                        ...defaultStyle,
-                                        background: Color.createFromString(severityColor(alertSeverity(this.state.toLocInfo!.alerts), theme)).toRGB(),
-                                        color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
-                                        ...genStyles.borderRadius(0)
-                                    }),
-                                    alertIcon: (defaultStyle) => ({
-                                        ...defaultStyle,
-                                        color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
-                                        '& path': {
-                                            // stroke: tKUIColors.white,
-                                            strokeWidth: '1px',
-                                            fill: 'currentColor'
-                                        }
-                                    }),
-                                    numOfAlerts: (defaultStyle) => ({
-                                        ...defaultStyle,
-                                        ...genStyles.fontM,
-                                        fontWeight: 'normal'
-                                    }),
-                                    rightArrowIcon: (defaultStyle) => ({
-                                        ...defaultStyle,
-                                        visibility: 'hidden'
-                                    })
-                                });
-                            const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);
-                            // TODO delete next line
-                            // this.state.toLocInfo!.alerts[0].severity = AlertSeverity.info;
-                            return (<TKUIConfigProvider config={configOverride}>
-                                <TKUIAlertsSummary
-                                    alerts={this.state.toLocInfo!.alerts}
-                                    slideUpOptions={{
-                                        draggable: false,
-                                        modalUp: this.props.landscape ? {top: 176 + 2 * cardSpacing(), unit: 'px'} : {top: cardSpacing(false), unit: 'px'},
-                                    }}
-                                />
-                            </TKUIConfigProvider>);
-                        }}
-                    </TKUIConfigContext.Consumer>
+                        // length > 0 also prevents showing alert before routingError happens, and then so to disappear.
+                        this.state.toLocInfo && this.state.toLocInfo.alerts.length > 0 &&
+                        // TODO: Define a TKUIStyleOverride that encapsulates all the following, i.e.,
+                        // the consumer, the call to replaceStyle, and the provider.
+                        <TKUIConfigContext.Consumer>
+                            {(config: TKUIConfig) => {
+                                const stylesOverride =
+                                    (theme: TKUITheme) => ({
+                                        main: (defaultStyle) => ({
+                                            ...defaultStyle,
+                                            background: Color.createFromString(severityColor(alertSeverity(this.state.toLocInfo!.alerts), theme)).toRGB(),
+                                            color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
+                                            ...genStyles.borderRadius(0)
+                                        }),
+                                        alertIcon: (defaultStyle) => ({
+                                            ...defaultStyle,
+                                            color: alertSeverity(this.state.toLocInfo!.alerts) === AlertSeverity.warning ? 'black' : 'white',
+                                            '& path': {
+                                                // stroke: tKUIColors.white,
+                                                strokeWidth: '1px',
+                                                fill: 'currentColor'
+                                            }
+                                        }),
+                                        numOfAlerts: (defaultStyle) => ({
+                                            ...defaultStyle,
+                                            ...genStyles.fontM,
+                                            fontWeight: 'normal'
+                                        }),
+                                        rightArrowIcon: (defaultStyle) => ({
+                                            ...defaultStyle,
+                                            visibility: 'hidden'
+                                        })
+                                    });
+                                const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);
+                                // TODO delete next line
+                                // this.state.toLocInfo!.alerts[0].severity = AlertSeverity.info;
+                                return (<TKUIConfigProvider config={configOverride}>
+                                    <TKUIAlertsSummary
+                                        alerts={this.state.toLocInfo!.alerts}
+                                        slideUpOptions={{
+                                            draggable: false,
+                                            modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                        }}
+                                    />
+                                </TKUIConfigProvider>);
+                            }}
+                        </TKUIConfigContext.Consumer>
                     }
                     {(!error || this.props.values.length > 0) &&
-                    <div className={classes.sortBar}>
-                        <TKUISelect
-                            options={this.sortOptions}
-                            value={this.sortOptions.find((option: any) => option.value === this.props.sort)}
-                            onChange={(option) => this.props.onSortChange(option.value as TripSort)}
-                            styles={{
-                                main: overrideClass(injectedStyles.sortSelect),
-                                control: overrideClass(injectedStyles.sortSelectControl),
-                                menu: overrideClass({ marginTop: '3px' })
-                            }}
-                            components={{
-                                IndicatorsContainer: (props: any) => null
-                            }}
-                        />
-                        <div/>
-                    </div>}
+                        <div className={classes.sortBar}>
+                            <TKUISelect
+                                options={this.sortOptions}
+                                value={this.sortOptions.find((option: any) => option.value === this.props.sort)}
+                                onChange={(option) => this.props.onSortChange(option.value as TripSort)}
+                                styles={{
+                                    main: overrideClass(injectedStyles.sortSelect),
+                                    control: overrideClass(injectedStyles.sortSelectControl),
+                                    menu: overrideClass({ marginTop: '3px' })
+                                }}
+                                components={{
+                                    IndicatorsContainer: (props: any) => null
+                                }}
+                            />
+                            <div />
+                        </div>}
                     {this.props.values.map((trip: Trip, index: number) =>
                         <TKUITripRow
                             value={trip}
@@ -468,27 +468,28 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                     expanded: expand ? trip : undefined
                                 })}
                             onSegmentSelected={this.props.setSelectedTripSegment}
+                            isUserTabbing={this.props.isUserTabbing}
                         />
                     )}
                     {error}
                     {!this.props.waiting && !routingError && this.props.values.length === 0
-                    && <div className={classes.noResults} role="status" aria-label={t("No.routes.found.")}>{t("No.routes.found.")}</div>}
+                        && <div className={classes.noResults} role="status" aria-label={t("No.routes.found.")}>{t("No.routes.found.")}</div>}
                     {this.props.waiting ?
-                        <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results"/> : null}
+                        <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" /> : null}
                 </div>
             </TKUICard>
         );
     }
 
     private refreshBadges() {
-        this.setState({tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values)});
+        this.setState({ tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values) });
     }
 
     private automaticSelectionTimeout: any;
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
         // Focus first selected trip row.
-        if (WaiAriaUtil.isUserTabbing() && !prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
+        if (this.props.isUserTabbing && !prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
             this.rowRefs[this.props.values.indexOf(this.props.value)].focus();
         }
 
@@ -513,7 +514,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         }
 
         if (this.props.query.to !== prevProps.query.to) {
-            this.setState({toLocInfo: undefined});
+            this.setState({ toLocInfo: undefined });
             this.refreshAlert();
         }
     }
@@ -525,7 +526,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
     private refreshAlert() {
         this.props.query.to && LocationsData.instance.getLocationInfo(this.props.query.to)
-            .then((locInfo: TKLocationInfo) => this.setState({toLocInfo: locInfo}))
+            .then((locInfo: TKLocationInfo) => this.setState({ toLocInfo: locInfo }))
             .catch((e) => console.log(e));
     }
 
@@ -537,47 +538,52 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
-    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
         return (
-            <TKUIViewportUtil>
-                {(viewportProps: TKUIViewportUtilProps) =>
-                    <RoutingResultsContext.Consumer>
-                        {(routingContext: IRoutingResultsContext) => {
-                            const consumerProps: IConsumedProps = {
-                                values: routingContext.trips || [],
-                                waiting: routingContext.waiting,
-                                routingError: routingContext.routingError,
-                                value: routingContext.selectedTrip,
-                                onChange: (trip: Trip) => {
-                                    routingContext.onChange(trip);
-                                    routingContext.onReqRealtimeFor(trip);
-                                },
-                                onAlternativeChange: routingContext.onAlternativeChange,
-                                query: routingContext.query,
-                                sort: routingContext.sort,
-                                onSortChange: routingContext.onSortChange,
-                                onQueryChange: routingContext.onQueryChange,
-                                onQueryUpdate: routingContext.onQueryUpdate,
-                                timezone: routingContext.region ? routingContext.region.timezone : undefined,
-                                setSelectedTripSegment: routingContext.setSelectedTripSegment,
-                                ...viewportProps
-                            };
-                            return props.children!(consumerProps);
-                        }}
-                    </RoutingResultsContext.Consumer>
+            <TKAccessibilityContext.Consumer>
+                {accessibilityContext =>
+                    <TKUIViewportUtil>
+                        {(viewportProps: TKUIViewportUtilProps) =>
+                            <RoutingResultsContext.Consumer>
+                                {(routingContext: IRoutingResultsContext) => {
+                                    const consumerProps: IConsumedProps = {
+                                        values: routingContext.trips || [],
+                                        waiting: routingContext.waiting,
+                                        routingError: routingContext.routingError,
+                                        value: routingContext.selectedTrip,
+                                        onChange: (trip: Trip) => {
+                                            routingContext.onChange(trip);
+                                            routingContext.onReqRealtimeFor(trip);
+                                        },
+                                        onAlternativeChange: routingContext.onAlternativeChange,
+                                        query: routingContext.query,
+                                        sort: routingContext.sort,
+                                        onSortChange: routingContext.onSortChange,
+                                        onQueryChange: routingContext.onQueryChange,
+                                        onQueryUpdate: routingContext.onQueryUpdate,
+                                        timezone: routingContext.region ? routingContext.region.timezone : undefined,
+                                        setSelectedTripSegment: routingContext.setSelectedTripSegment,
+                                        ...viewportProps,
+                                        ...accessibilityContext
+                                    };
+                                    return props.children!(consumerProps);
+                                }}
+                            </RoutingResultsContext.Consumer>
+                        }
+                    </TKUIViewportUtil>
                 }
-            </TKUIViewportUtil>
+            </TKAccessibilityContext.Consumer>
         );
     };
 
-interface IClientConsumed extends IClientProps, Partial<IConsumedProps> {}
+interface IClientConsumed extends IClientProps, Partial<IConsumedProps> { }
 
 const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...consumedProps, ...inputProps})}
+                children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
 
 /**

@@ -107,6 +107,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onExpand?: (expand: boolean) => void;
 
     onSegmentSelected?: (segment: Segment) => void;
+
+    isUserTabbing?: boolean;
 }
 
 interface IStyle {
@@ -298,7 +300,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                                 e.stopPropagation();
                             }}
                             onKeyDown={(e) => {
-                                if (e.keyCode === 9 && WaiAriaUtil.isUserTabbing() && this.props.expanded) {
+                                if (e.keyCode === 9 && this.props.isUserTabbing && this.props.expanded) {
                                     // If navigating with keyboard, button is focused, alternatives are expanded,
                                     // and press tab, then put focus on main element.
                                     this.ref && this.ref.focus();
