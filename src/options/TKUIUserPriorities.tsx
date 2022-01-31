@@ -68,6 +68,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         // valueLabelFormat={(value: number) => "Money"}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("rQd-ri-hHa.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.time * 100}
@@ -81,6 +82,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("o4h-JW-YBy.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.carbon * 100}
@@ -94,6 +96,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("EzB-oD-wvZ.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.hassle * 100}
@@ -107,6 +110,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("brC-tq-EEG.text")}
+                        theme={this.props.theme}
                     />
                     <TKUIButton text={t("Reset")}
                                 type={TKUIButtonType.SECONDARY}

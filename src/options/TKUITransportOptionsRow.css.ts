@@ -28,7 +28,7 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
         expansionPanel: {
             ...theme.divider,
             background: white(0, theme.isDark),
-            color: black(0, theme.isDark),
+            ...theme.textColorDefault,
             '&:before': {
                 display: 'none'
             }

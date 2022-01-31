@@ -2,7 +2,7 @@ import * as React from "react";
 import {Slider, SliderProps, withStyles} from '@material-ui/core';
 import Constants from "../util/Constants";
 import genStyles from "../css/GenStyle.css";
-import {black, white} from "../jss/TKUITheme";
+import {TKUITheme, white} from "../jss/TKUITheme";
 
 export type TKUISliderProps = SliderProps &
     {
@@ -10,7 +10,8 @@ export type TKUISliderProps = SliderProps &
         label?: string,
         leftLabel?: string,
         rightLabel?: string,
-        isDarkMode?: boolean
+        isDarkMode?: boolean,
+        theme: TKUITheme
     }
 
 class TKUISlider extends React.Component<TKUISliderProps, {}> {
@@ -50,11 +51,11 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const {thumbIcon, label, leftLabel, rightLabel, isDarkMode, ...sliderProps} = this.props;
+        const {thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps} = this.props;
         return (
             <div style={genStyles.fontS as any}>
                 <this.WithStyle {...sliderProps}/>
-                <div style={{...genStyles.flex, ...genStyles.spaceBetween, color: black(0, this.props.isDarkMode)} as any}>
+                <div style={{...genStyles.flex, ...genStyles.spaceBetween, ...theme.textColorDefault} as any}>
                     <span style={{minWidth: '100px'}}>{this.props.leftLabel}</span>
                     <span>{this.props.label}</span>
                     <span style={{minWidth: '100px', textAlign: 'right'}}>{this.props.rightLabel}</span>
