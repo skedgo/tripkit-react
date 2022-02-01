@@ -53,7 +53,8 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
                             minWidth: '90px'
                         }),
                         // Needed to do this until get working dynamic style refreshes (see StyleHelper.onRefreshStyles doc).
-                        secondary: overrideClass({
+                        secondary: defaultStyle => ({
+                            ...defaultStyle,
                             background: (props: TKUIButtonProps) => {
                                 const exists = props.text === i18nProps.t("Remove.from.favourites");
                                 return exists ? colorWithOpacity(theme.colorPrimary, .08) : 'none';
@@ -69,6 +70,7 @@ class TKUIFavouriteAction extends React.Component<IProps, {}> {
                                 },
                             },
                             '&:hover': {
+                                ...defaultStyle['&:hover'] as any,  // Workaround until I support override (overrideClass / default => OverrideObject) of 2nd level styles.
                                 borderColor: (props: TKUIButtonProps) => {
                                     const exists = props.text === i18nProps.t("Remove.from.favourites");
                                     return exists ? colorWithOpacity(theme.colorPrimary, .3) : black(2, theme.isDark);

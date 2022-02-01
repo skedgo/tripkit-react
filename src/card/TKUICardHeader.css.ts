@@ -31,10 +31,10 @@ export const tKUICardHeaderJss = (theme: TKUITheme) => ({
         width: '24px',
         padding: '6px',
         cursor: 'pointer',
-        '& svg path': {
+        '& path': {
             fill: black(1, theme.isDark)
         },
-        '&:hover svg path, &:active svg path': {
+        '&:hover path, &:active path': {
             fill: black(0, theme.isDark)
         }
     },

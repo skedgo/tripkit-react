@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUISettingLinkProps, TKUISettingLinkStyle} from "./TKUISettingLink";
 import genStyles from "../css/GenStyle.css";
-import {TKUITheme} from "../jss/TKUITheme";
+import {important, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUISettingLinkDefaultStyle: TKUIStyles<TKUISettingLinkStyle, TKUISettingLinkProps> =
@@ -18,6 +18,7 @@ export const tKUISettingLinkDefaultStyle: TKUIStyles<TKUISettingLinkStyle, TKUIS
             },
             ...genStyles.spaceBetween,
             cursor: 'pointer',
+            ...important(theme.textColorDefault),
             '& svg': {
                 ...genStyles.svgFillCurrColor,
                 color: theme.colorPrimary

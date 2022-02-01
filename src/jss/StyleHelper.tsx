@@ -139,11 +139,11 @@ export function mergeStyleOverrides<ST,PR>(styleOverride1: TKUICustomStyles<ST, 
                         const cssPropsOverride1: TKUICustomCSSProperties<PR> = themedStyleOverride1[className];
                         const cssPropsOverridden1: CSSProperties<PR> = Util.isFunction(cssPropsOverride1) ?
                             (cssPropsOverride1 as CSSPropertiesCreator<PR>)(defaultStyle) :
-                            cssPropsOverride1 as CSSProperties<PR>;
+                            (cssPropsOverride1 as CSSProperties<PR>) ?? defaultStyle;   // If no class for className (cssPropsOverride1 === undefined), then retain defaultStyle.
                         const cssPropsOverride2: TKUICustomCSSProperties<PR> = themedStyleOverride2[className];
                         const cssPropsOverridden2: CSSProperties<PR> = Util.isFunction(cssPropsOverride2) ?
                             (cssPropsOverride2 as CSSPropertiesCreator<PR>)(cssPropsOverridden1) :
-                            cssPropsOverride2 as CSSProperties<PR>;
+                            (cssPropsOverride2 as CSSProperties<PR>) ?? cssPropsOverridden1;    // If no class for className (cssPropsOverride2 === undefined), then retain cssPropsOverriden1.
                         return cssPropsOverridden2
                     }
                     return {
