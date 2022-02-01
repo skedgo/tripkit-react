@@ -1,5 +1,5 @@
 import {TKUIStyles} from "../jss/StyleHelper";
-import {black, colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
+import {black, colorWithOpacity, important, TKUITheme} from "../jss/TKUITheme";
 import {TKUIButtonProps, TKUIButtonStyle, TKUIButtonType} from "./TKUIButton";
 import genStyles from "../css/GenStyle.css";
 import {resetStyles} from "../css/ResetStyle.css";
@@ -79,6 +79,7 @@ export const tKUIButtonDefaultStyle: TKUIStyles<TKUIButtonStyle, TKUIButtonProps
             ...genStyles.alignCenter,
             ...theme.textSizeBody,
             ...theme.textWeightSemibold,
+            ...important(theme.textColorDefault),
             textAlign: 'center'
         },
 

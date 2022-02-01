@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    mergeCustomStyles,
+    mergeStyleOverrides,
     TKUICustomStyles,
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
@@ -116,7 +116,7 @@ export function replaceStyle<ST,PR extends TKUIWithClasses<ST, PR>>
     const resultConfig = Object.assign({}, config);
     const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
     const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
-    resultComponent.styles = resultComponent.styles ? mergeCustomStyles(resultComponent.styles, styles) : styles;
+    resultComponent.styles = resultComponent.styles ? mergeStyleOverrides(resultComponent.styles, styles) : styles;
     resultConfig[componentKey] = resultComponent;
     return resultConfig;
 }
