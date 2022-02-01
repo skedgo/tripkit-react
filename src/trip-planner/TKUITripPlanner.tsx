@@ -2,7 +2,6 @@ import * as React from "react";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
-import WaiAriaUtil from "../util/WaiAriaUtil";
 import GATracker from "../analytics/GATracker";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
@@ -61,6 +60,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     userLocationPromise?: Promise<LatLng>;
     renderTopRight?: () => React.ReactNode;
+    transportSettingsUI?: "BRIEF" | "FULL" | "BRIEF_TO_FULL";
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext { }
@@ -94,6 +94,10 @@ const modalContainerId = "mv-modal-panel";
 const mainContainerId = "mv-main-panel";
 
 class TKUITripPlanner extends React.Component<IProps, IState> {
+
+    public static defaultProps: Partial<IProps> = {
+        transportSettingsUI: "BRIEF_TO_FULL"
+    };
 
     private ref: any;
     private appMainRef: any;
@@ -271,7 +275,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 showTransportsBtn={this.props.landscape}
                 showTimeSelect={this.props.landscape}
                 sideDropdown={DeviceUtil.isTablet}
-                onShowTransportOptions={this.onShowTransportSettings}
+                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                onShowTransportOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
                 resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
                 onClearClicked={() => {
                     this.props.onQueryChange(RoutingQuery.create());
@@ -337,7 +342,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips ?
             <TKUIRoutingResultsView
                 onDetailsClicked={() => this.props.onTripDetailsView(true)}
-                onShowOptions={this.onShowTransportSettings}
+                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     position: this.isShowTripDetail() ? TKUISlideUpPosition.HIDDEN :

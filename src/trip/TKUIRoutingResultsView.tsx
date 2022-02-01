@@ -67,6 +67,12 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     onDetailsClicked?: () => void;
 
     /**
+     * Function that will be run when the user clicks on button to show transport options.
+     * @ctype
+     */
+    onTransportButtonClick?: () => void;
+
+    /**
      * Function that will be run when the user clicks on button to show full transport options.
      * @ctype
      */
@@ -351,11 +357,12 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                         }
                         {showTransportsBtn &&
                             <button className={classes.transportsBtn}
-                                onClick={() => this.setState({ showTransportSwitches: !this.state.showTransportSwitches })}
+                                onClick={this.props.onTransportButtonClick ?? (() => this.setState({ showTransportSwitches: !this.state.showTransportSwitches }))}
                                 aria-expanded={this.state.showTransportSwitches}
                             >
                                 {t("Transport")}
-                                <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined} />
+                                {!this.props.onTransportButtonClick &&
+                                    <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined} />}
                             </button>}
                     </div>
                     {showTransportsBtn && this.state.showTransportSwitches && <TKUITransportSwitchesView inline={true} />}

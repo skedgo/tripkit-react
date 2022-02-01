@@ -52,6 +52,12 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
     showTransportsBtn?: boolean;
 
     /**
+     * Function that will be run when the user clicks on button to show transport options.
+     * @ctype
+     */
+     onTransportButtonClick?: () => void;
+
+    /**
      * Function that will be run when the user clicks on button to show full transport options.
      * @ctype
      */
@@ -471,7 +477,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         destroyTooltipOnHide={true} // Needed so TKUICard unmounts and focus is returned to transports btn.
                     >
                         <button className={classes.transportsBtn}
-                                onClick={() => this.setState({showTransportSwitches: true})}
+                                onClick={this.props.onTransportButtonClick ?? (() => this.setState({showTransportSwitches: true}))}
                         >
                             {t("Transport")}
                         </button>
