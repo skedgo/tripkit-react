@@ -12,6 +12,7 @@ export interface TKUISlideUpOptions {
     draggable?: boolean;
     zIndex?: number;
     showHandle?: boolean;
+    containerClass?: string;
 }
 
 export default TKUISlideUpOptions;

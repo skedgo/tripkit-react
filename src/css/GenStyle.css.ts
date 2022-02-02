@@ -439,5 +439,7 @@ const otherStyles = {
 
 jss.createStyleSheet(otherStyles as any).attach();
 
+export const TK_FOCUS_TARGET_CLASS = 'tk-focus-target'
+
 export default genStyles;
 export {genClassNames};

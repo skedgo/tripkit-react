@@ -52,6 +52,12 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
     showTransportsBtn?: boolean;
 
     /**
+     * Defining the _transports_ button text.
+     * @default 'Transport'
+     */
+     transportBtnText?: string
+
+    /**
      * Function that will be run when the user clicks on button to show transport options.
      * @ctype
      */
@@ -479,7 +485,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         <button className={classes.transportsBtn}
                                 onClick={this.props.onTransportButtonClick ?? (() => this.setState({showTransportSwitches: true}))}
                         >
-                            {t("Transport")}
+                            {this.props.transportBtnText ?? t("Transport")}
                         </button>
                     </TKUITooltip>}
                 </div>

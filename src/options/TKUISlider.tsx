@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Slider, SliderProps, withStyles} from '@material-ui/core';
 import Constants from "../util/Constants";
-import genStyles from "../css/GenStyle.css";
+import genStyles, {TK_FOCUS_TARGET_CLASS} from "../css/GenStyle.css";
 import {TKUITheme, white} from "../jss/TKUITheme";
 
 export type TKUISliderProps = SliderProps &
@@ -54,7 +54,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
         const {thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps} = this.props;
         return (
             <div style={genStyles.fontS as any}>
-                <this.WithStyle {...sliderProps}/>
+                <this.WithStyle {...sliderProps} classes={{thumb: TK_FOCUS_TARGET_CLASS}}/>
                 <div style={{...genStyles.flex, ...genStyles.spaceBetween, ...theme.textColorDefault} as any}>
                     <span style={{minWidth: '100px'}}>{this.props.leftLabel}</span>
                     <span>{this.props.label}</span>
