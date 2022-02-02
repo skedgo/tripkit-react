@@ -126,9 +126,11 @@ export const TKStyleOverride = (props: {componentKey: string, stylesOverride: an
         {(config: TKUIConfig) => {
             const configOverride = replaceStyle(config, props.componentKey, props.stylesOverride);
             return (
-                <TKUIConfigProvider config={configOverride}>
+                // <TKUIConfigProvider config={configOverride}> // Replace this since re-injects styles
+                    <TKUIConfigContext.Provider value={configOverride}>
                     {props.children}
-                </TKUIConfigProvider>
+                    </TKUIConfigContext.Provider>
+                // </TKUIConfigProvider>
             )
         }}
     </TKUIConfigContext.Consumer>
@@ -159,9 +161,11 @@ export const TKPropsOverride = (props: {componentKey: string, propsOverride: any
         {(config: TKUIConfig) => {
             const configOverride = replaceProps(config, props.componentKey, props.propsOverride);
             return (
-                <TKUIConfigProvider config={configOverride}>
+                // <TKUIConfigProvider config={configOverride}> // Replace this since re-injects styles
+                    <TKUIConfigContext.Provider value={configOverride}>
                     {props.children}
-                </TKUIConfigProvider>
+                    </TKUIConfigContext.Provider>
+                // </TKUIConfigProvider>
             )
         }}
     </TKUIConfigContext.Consumer>

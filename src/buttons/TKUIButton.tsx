@@ -86,9 +86,9 @@ class TKUIButton extends React.Component<IProps, {}> {
     };
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const { type, text, icon, role, tabIndex, onKeyDown, name } = this.props;
+        const { type, text, icon, role, tabIndex, onKeyDown, name, classes, ...nativeButtonProps } = this.props;
         const buttonProps = {
+            ...nativeButtonProps,
             ['aria-hidden']: this.props['aria-hidden'],
             ['aria-pressed']: this.props['aria-pressed'],
             ['aria-label']: this.props['aria-label'],
