@@ -8,7 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import Util from "../util/Util";
-import 'rc-tooltip/assets/bootstrap_white.css';
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";

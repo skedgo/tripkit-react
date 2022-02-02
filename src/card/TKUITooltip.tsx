@@ -3,11 +3,12 @@ import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import Tooltip from "rc-tooltip";
-import {RCTooltip} from "rc-tooltip";
 import {tKUITooltipDefaultStyle} from "./TKUITooltip.css";
 import classNames from "classnames";
 import {ReactComponent as IconRemove} from '../images/ic-cross2.svg';
 import {genClassNames} from "../css/GenStyle.css";
+import {TooltipProps} from "rc-tooltip/lib/Tooltip";
+import 'rc-tooltip/assets/bootstrap_white.css';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placement?: string;
@@ -63,6 +64,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
         if (props.reference) {
             props.reference(this);
         }
+        console.log("TKUITooltip constructor");
     }
 
     private isVisible(): boolean | undefined {
@@ -99,7 +101,7 @@ class TKUITooltip extends React.Component<IProps, IState> {
             </div>;
         return (
             <Tooltip
-                {...this.props as RCTooltip.Props}
+                {...this.props as TooltipProps}
                 overlay={overlay}
                 // Have to do the following because passing visible={undefined} is not the same as not passing visible property.
                 {...this.isVisible() ? {visible: this.isVisible()} : undefined}
