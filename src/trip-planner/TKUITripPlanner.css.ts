@@ -1,7 +1,7 @@
-import {TKUITKUITripPlannerProps} from "./TKUITripPlanner";
+import { TKUITKUITripPlannerProps } from "./TKUITripPlanner";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
-import {cardSpacing, queryWidth, TKUITheme} from "../jss/TKUITheme";
-import genStyles from "../css/GenStyle.css";
+import { cardSpacing, queryWidth, TKUITheme } from "../jss/TKUITheme";
+import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
 
 export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     modalMain: {
@@ -113,15 +113,18 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '1px'
     },
     ariaFocusEnabled: {
-        ['& input[type=text]:focus,' +
-        '& input[type=email]:focus,' +
-        '& input[aria-autocomplete=list]:focus,' +
-        '& button:focus,' +
-        '& a:focus,' +
-        '& select:focus,' +
-        '& textarea:focus,' +
-        '& div:focus,' +
-        '&:focus']: {
+        [
+            '& input[type=text]:focus,' +
+            '& input[type=email]:focus,' +
+            '& input[aria-autocomplete=list]:focus,' +
+            '& button:focus,' +
+            '& a:focus,' +
+            '& select:focus,' +
+            '& textarea:focus,' +
+            '& div:focus,' +
+            '&:focus,' +
+            '& .' + TK_FOCUS_TARGET_CLASS + ':focus'
+        ]: {
             boxShadow: '0px 0px 3px 3px #024dff!important'  // To prevail to boxShadow: none of resetStyles.
         }
     }

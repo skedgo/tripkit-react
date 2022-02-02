@@ -147,6 +147,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * By default is true for presentation === CardPresentation.MODAL, or false otherwise.
      */
     focusTrap?: boolean;
+
+    className?: string;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext { }
@@ -240,7 +242,7 @@ class TKUICard extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { title, subtitle, onRequestClose, closeAriaLabel, children, presentation, classes } = this.props;
+        const { title, subtitle, onRequestClose, closeAriaLabel, className, children, presentation, classes } = this.props;
         if (presentation === CardPresentation.CONTENT) {
             return children;
         }
@@ -262,7 +264,7 @@ class TKUICard extends React.Component<IProps, IState> {
         const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props} />);
         const showHandle = hasHandle(this.props);
         const bodyContent =
-            <div className={classNames(classes.main, genClassNames.root,
+            <div className={classNames(classes.main, genClassNames.root, className,
                 DeviceUtil.isTouch() && (presentation === CardPresentation.SLIDE_UP || this.props.slideUpOptions) && classes.mainForSlideUp)}
                 aria-label={presentation === CardPresentation.NONE ? cardAriaLabel : undefined}
                 ref={(ref: any) => this.bodyRef = ref}
@@ -310,7 +312,7 @@ class TKUICard extends React.Component<IProps, IState> {
                 <TKUISlideUp
                     {...this.props.slideUpOptions}
                     handleRef={this.state.handleRef}
-                    containerClass={classNames(classes.modalContainer, genClassNames.root)}
+                    containerClass={classNames(classes.modalContainer, genClassNames.root, this.props.slideUpOptions?.containerClass)}
                     open={this.props.open}
                     onPositionChange={(position: TKUISlideUpPosition) => this.setState({ slideUpPosition: position })}
                     cardOnTop={(onTop: boolean) => this.setState({ cardOnTop: onTop })}
