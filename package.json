@@ -40,8 +40,6 @@
         "iplocation": "^6.1.0",
         "jquery": "^3.5.0",
         "json2typescript": "1.0.5",
-        "jss-plugin-camel-case": "^10.0.0",
-        "jss-plugin-isolate": "^10.0.0",
         "leaflet": "^1.6.0",
         "leaflet-css": "^0.1.0",
         "mapbox-gl": "^1.11.1",
