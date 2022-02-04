@@ -1,6 +1,6 @@
 import * as React from "react";
 import Trip from "../model/trip/Trip";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyleProp} from "../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {tKUITripTimeDefaultStyle} from "./TKUITripTime.css";
 import TripUtil from "./TripUtil";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";

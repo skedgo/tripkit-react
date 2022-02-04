@@ -1,11 +1,8 @@
 import {TKUITheme} from "../../../jss/TKUITheme";
-import {TKUIStyles} from "../../../jss/StyleHelper";
-import {TGUIEditApiKeyViewProps, TGUIEditApiKeyViewStyle} from "./TGUIEditApiKeyView";
 import genStyles from "../../../css/GenStyle.css";
 import {tGUIFeedbackFormDefaultStyle} from "../feedback/TGUIFeedbackForm.css";
 
-export const tGUIEditApiKeyViewDefaultStyle: TKUIStyles<TGUIEditApiKeyViewStyle, TGUIEditApiKeyViewProps> =
-    (theme: TKUITheme) => ({
+export const tGUIEditApiKeyViewDefaultStyle = (theme: TKUITheme) => ({
         ...(tGUIFeedbackFormDefaultStyle as any)(theme),
         newApiKey: {
             ...genStyles.flex,

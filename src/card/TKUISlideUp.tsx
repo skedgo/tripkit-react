@@ -2,12 +2,13 @@ import React from "react";
 import injectSheet from "react-jss";
 import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
 import classNames from "classnames";
-import {cardSpacing} from "../jss/TKUITheme";
+import {cardSpacing, TKUITheme} from "../jss/TKUITheme";
 import ReactDOM from 'react-dom';
 import {setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
 import DeviceUtil from "../util/DeviceUtil";
 import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
 import { Classes } from "jss";
+import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -15,20 +16,22 @@ import { Classes } from "jss";
  * https://github.com/STRML/react-draggable/blob/HEAD/CHANGELOG.md#430-apr-10-2020
  */
 
-const styles = {
+const stylesJss = (theme: TKUITheme) => ({
     container: {
         position: 'absolute',
         top: 0,
-        zIndex: (props: IProps) => props.zIndex !== undefined ? props.zIndex : '1002',
+        zIndex: props => props.zIndex !== undefined ? props.zIndex : '1002',
         // TODO!: test if this cause an issue on mobile.
         // height: '100%'
     }
-};
+});
 
 // Did this to avoid refactor after moving TKUISlideUpOptions to a separate file.
 export type TKUISlideUpOptions = TKUISlideUpOptionsForExport;
 
-interface IProps extends TKUISlideUpOptions {
+type IStyle = ReturnType<typeof stylesJss>;
+
+interface IProps extends TKUISlideUpOptions, TKUIWithClasses<IProps, IStyle> {
     containerClass?: string;
     classes: Classes<any>;
     open?: boolean;
@@ -263,4 +266,5 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     }
 }
 
-export default injectSheet(styles)(TKUISlideUp);
+export default injectSheet(stylesJss)(TKUISlideUp);
+// export default withStyles(TKUISlideUp, stylesJss as any);

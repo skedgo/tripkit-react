@@ -1,13 +1,16 @@
 import * as React from "react";
 import { Classes } from "jss";
-import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
+import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyles} from "../../jss/StyleHelper";
 import {tKUIOccupancyInfoDefaultStyle} from "./TKUIOccupancyInfo.css";
 import {OccupancyStatus} from "../../model/service/VehicleComponent";
 import {ReactComponent as IconPassenger} from '../../images/ic-passenger.svg';
 import classNames from "classnames";
 import {TKI18nContextProps, TKI18nContext, TranslationFunction} from "../../i18n/TKI18nProvider";
+import {connect, mapperFromFunction, PropsMapper} from "../../config/TKConfigHelper";
+import {Subtract} from "utility-types";
+import {TKComponentDefaultConfig} from "../../config/TKUIConfig";
 
-export interface ITKUIOccupancyInfoProps {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     status: OccupancyStatus;
     brief?: boolean;
     tabIndex?: number;
@@ -17,17 +20,26 @@ interface IConsumedProps {
     t: TranslationFunction;
 }
 
-interface IProps extends ITKUIOccupancyInfoProps, IConsumedProps {
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
     classes: Classes<keyof ITKUIOccupancyInfoStyle>
 }
 
-export interface ITKUIOccupancyInfoStyle {
+export interface IStyle {
     main: CSSProps<ITKUIOccupancyInfoProps>;
     passengers: CSSProps<ITKUIOccupancyInfoProps>;
     passengerSlot: CSSProps<ITKUIOccupancyInfoProps>;
     passenger: CSSProps<ITKUIOccupancyInfoProps>;
     text: CSSProps<ITKUIOccupancyInfoProps>;
 }
+
+export type ITKUIOccupancyInfoStyle = IStyle;
+export type ITKUIOccupancyInfoProps = IProps;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIOccupancyInfo {...props}/>,
+    styles: tKUIOccupancyInfoDefaultStyle,
+    classNamePrefix: "TKUIOccupancyInfo"
+};
 
 class TKUIOccupancyInfo extends React.Component<IProps, {}> {
 
@@ -89,13 +101,5 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
     }
 }
 
-const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIOccupancyInfo");
-    return (props: ITKUIOccupancyInfoProps) =>
-        <TKI18nContext.Consumer>
-            {(i18nProps: TKI18nContextProps) =>
-                <RawComponentStyled {...props} t={i18nProps.t} styles={tKUIOccupancyInfoDefaultStyle}/>}
-        </TKI18nContext.Consumer>
-};
-
-export default Connect(TKUIOccupancyInfo);
+export default connect(() => undefined, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

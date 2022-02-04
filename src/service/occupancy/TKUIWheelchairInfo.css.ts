@@ -3,7 +3,7 @@ import {black, tKUIColors, TKUITheme} from "../../jss/TKUITheme";
 import genStyles from "../../css/GenStyle.css";
 import {ITKUIWheelchairInfoProps, ITKUIWheelchairInfoStyle} from "./TKUIWheelchairInfo";
 
-export const tKUIWheelchairInfoDefaultStyle: TKUIStyles<ITKUIWheelchairInfoStyle, ITKUIWheelchairInfoProps> =
+export const tKUIWheelchairInfoDefaultStyle =
     (theme: TKUITheme) => ({
         main: {
             ...theme.textColorGray,

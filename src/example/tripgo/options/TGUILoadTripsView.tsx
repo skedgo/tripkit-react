@@ -1,5 +1,5 @@
 import React, {useState, ChangeEvent, useEffect} from 'react';
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
+import {TKUIWithClasses, TKUIWithStyle} from "../../../jss/StyleHelper";
 import {TKComponentDefaultConfig} from "../../../config/TKUIConfig";
 import {connect, PropsMapper} from "../../../config/TKConfigHelper";
 import {CardPresentation, default as TKUICard} from "../../../card/TKUICard";
@@ -7,7 +7,6 @@ import {TKUIViewportUtilProps, TKUIViewportUtil} from "../../../util/TKUIRespons
 import TKUIButton, {TKUIButtonType} from "../../../buttons/TKUIButton";
 import {Subtract} from "utility-types";
 import {TKUISlideUpOptions} from "../../../card/TKUISlideUp";
-import {TGUIFeedbackFormStyle} from "../feedback/TGUIFeedbackForm";
 import {tGUILoadTripsViewDefaultStyle} from "./TGUILoadTripsView.css";
 import TKStateConsumer from "../../../config/TKStateConsumer";
 import {TKState} from "../../../config/TKState";
@@ -25,11 +24,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     tKState: TKState;
 }
 
-export interface IStyle extends TGUIFeedbackFormStyle {
-    main: CSSProps<any>;
-    fieldError: CSSProps<any>;
-    content: CSSProps<any>;
-}
+export type IStyle = ReturnType<typeof tGUILoadTripsViewDefaultStyle>;
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 

@@ -1,25 +1,29 @@
 import * as React from "react";
-import { Classes } from "jss";
-import {CSSProps, withStyleProp} from "../../jss/StyleHelper";
+import {
+    CSSProps,
+    TKUIWithClasses,
+    withStyles
+} from "../../jss/StyleHelper";
 import {tKUIWheelchairInfoDefaultStyle} from "./TKUIWheelchairInfo.css";
 import {ReactComponent as IconWCAccessible} from '../../images/service/ic_wheelchair_accessible.svg';
 import {ReactComponent as IconWCInaccessible} from '../../images/service/ic_wheelchair_inaccessible.svg';
 import {ReactComponent as IconWCUnknown} from '../../images/service/ic_wheelchair_unknown.svg';
 
-export interface ITKUIWheelchairInfoProps {
+export interface IClientProps {
     accessible?: boolean;
     brief?: boolean;
 }
 
-interface IProps extends ITKUIWheelchairInfoProps {
-    classes: Classes<keyof ITKUIWheelchairInfoStyle>
-}
-
-export interface ITKUIWheelchairInfoStyle {
+export interface IStyle {
     main: CSSProps<ITKUIWheelchairInfoProps>;
     icon: CSSProps<ITKUIWheelchairInfoProps>;
     text: CSSProps<ITKUIWheelchairInfoProps>;
 }
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+
+export type ITKUIWheelchairInfoStyle = IStyle;
+export type ITKUIWheelchairInfoProps = IProps;
 
 class TKUIWheelchairInfo extends React.Component<IProps, {}> {
 
@@ -56,11 +60,4 @@ class TKUIWheelchairInfo extends React.Component<IProps, {}> {
     }
 }
 
-const Connect = (RawComponent: React.ComponentType<IProps>) => {
-    const RawComponentStyled = withStyleProp(RawComponent, "TKUIWheelchairInfo");
-    return (props: ITKUIWheelchairInfoProps) => {
-        return <RawComponentStyled {...props} styles={tKUIWheelchairInfoDefaultStyle}/>;
-    };
-};
-
-export default Connect(TKUIWheelchairInfo);
+export default withStyles(TKUIWheelchairInfo, tKUIWheelchairInfoDefaultStyle);

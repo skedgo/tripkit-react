@@ -1,5 +1,5 @@
 import React from "react";
-import injectSheet, { JssProvider, useTheme } from "react-jss";
+import { JssProvider, useTheme, createUseStyles } from "react-jss";
 import { Subtract } from "utility-types";
 import { Classes } from "jss";
 // import { JssStyle } from "react-jss/node_modules/jss";
@@ -183,7 +183,7 @@ export function withStyleInjection<
 
     return class WithStyleProp extends React.Component<P, {}> {
 
-        public StyledComponent: any;
+        // public StyledComponent: any;
         public generateClassName: ((rule: any, sheet: any) => string) | undefined;
         public stylesToInject: StyleCreator<keyof STYLE, TKUITheme, IMPL_PROPS>;
         public WithTheme: React.FC<any> = () => null;
@@ -207,12 +207,13 @@ export function withStyleInjection<
          */
         public onRefreshStyles(forceUpdate: boolean = false) {
             const props = this.props;
-            this.StyledComponent = injectSheet(this.stylesToInject)(Consumer as any);
+            const useStyles = createUseStyles(this.stylesToInject)
             const prefix = props.classNamePrefix!;
             this.generateClassName = generateClassNameFactory(prefix);
             const WithTheme = props =>
                 {
-                    const theme = useTheme() as TKUITheme;
+                    const theme = useTheme<TKUITheme>();
+                    const classes = useStyles({...props, theme})
                     return <JssProvider
                         classNamePrefix={Environment.isDev() ? prefix : undefined}
                         generateId={this.props.randomizeClassNames === false ? this.generateClassName :
@@ -220,8 +221,9 @@ export function withStyleInjection<
                                 (rule: any, sheet: any) => {
                                     return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
                                 } : generateClassNameSeed}>
-                        <this.StyledComponent {...props}
-                            injectedStyles={this.stylesToInject(theme as TKUITheme)}
+                        <Consumer {...props}
+                            classes={classes}
+                            injectedStyles={this.stylesToInject(theme)}
                             refreshStyles={() => this.onRefreshStyles(true)}
                             theme={theme} />
                     </JssProvider>;
@@ -241,11 +243,13 @@ export function withStyleInjection<
 export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     Consumer: React.ComponentType<PROPS>,
     stylesJss: (theme: TKUITheme) => STYLE) {
-    const StyledComponent: any = injectSheet(stylesJss)(Consumer as any);
+    const useStyles = createUseStyles(stylesJss)
     const WithTheme = props => {
-        const theme = useTheme() as TKUITheme;
-        return <StyledComponent
+        const theme = useTheme<TKUITheme>();
+        const classes = useStyles({...props, theme});
+        return <Consumer
             {...props}
+            classes={classes}
             injectedStyles={stylesJss(theme)}
             refreshStyles={() => { }}
             theme={theme} />;
@@ -256,37 +260,7 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     };
 }
 
-// Deprecated
-function withStyleProp<
-    ST,
-    CP extends { classes: Classes<keyof ST> },
-    ExtS extends string,
-    P extends Subtract<CP, { classes: Classes<keyof ST> }>
-    & { styles: TKUIStyles<ST, CP>, randomizeClassNames?: boolean, classNamePrefix?: string }>
-    (Consumer: React.ComponentType<CP>, classPrefix?: string) { // TODO: remove classPrefix and make classNamePrefix required
-
-    return class WithStyleProp extends React.Component<P, {}> {
-
-        public StyledComponent: any;
-        public generateClassName: ((rule: any, sheet: any) => string) | undefined;
-
-        constructor(props: P) {
-            super(props);
-            this.StyledComponent = injectSheet(this.props.styles as TKUIStyles<ST, CP>)(Consumer as any);
-            this.generateClassName = generateClassNameFactory(classPrefix ? classPrefix : props.classNamePrefix!);
-        }
-
-        public render(): React.ReactNode {
-            const props = this.props;
-            return <JssProvider generateId={this.props.randomizeClassNames !== false ?
-                generateClassNameSeed : this.generateClassName}>
-                <this.StyledComponent {...props} />
-            </JssProvider>
-        }
-    }
-}
-
-function emptyValues<T>(sample: T): T {
+export function emptyValues<T>(sample: T): T {
     const emptyValues = {};
     for (const key of Object.keys(sample)) {
         emptyValues[key] = {};
@@ -301,5 +275,3 @@ export function overrideClass(propsOverride: any) {
         ...propsOverride
     });
 }
-
-export { withStyleProp, emptyValues };
