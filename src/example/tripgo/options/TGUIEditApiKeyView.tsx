@@ -32,14 +32,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps extends TKUIViewportUtilProps {}
 
-export interface IStyle extends TGUIFeedbackFormStyle {
-    // TODO: see how to return to a more typed version
-    // newApiKey: CSSProps<IProps>;
-    newApiKey: CSSProps<any>;
-    newApiKeyRow: CSSProps<any>;
-    newApiKeyButtons: CSSProps<any>;
-    fieldError: CSSProps<any>;
-}
+export type IStyle = ReturnType<typeof tGUIEditApiKeyViewDefaultStyle>;
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
 

@@ -2,11 +2,6 @@
 // to get rid of @types/react-jss
 // import {createUseStyles} from 'react-jss';
 import { jss } from 'react-jss';
-// For some reason everything works without next lines, and when included, function values break.
-// import camelCase from 'jss-plugin-camel-case';
-// import nested from 'jss-plugin-nested';
-// import global from 'jss-plugin-global';
-// jss.use(camelCase(), nested(), global());
 
 interface ITKUIGenStyleClasses {
     // TODO: see how to return to a typed version

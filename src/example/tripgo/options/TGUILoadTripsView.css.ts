@@ -1,12 +1,9 @@
-import {tKUIColors, TKUITheme} from "../../../jss/TKUITheme";
-import {TKUIStyles} from "../../../jss/StyleHelper";
+import {TKUITheme} from "../../../jss/TKUITheme";
 import genStyles from "../../../css/GenStyle.css";
 import {tGUIFeedbackFormDefaultStyle} from "../feedback/TGUIFeedbackForm.css";
-import {TGUILoadTripsViewProps, TGUILoadTripsViewStyle} from "./TGUILoadTripsView";
 import DeviceUtil from "../../../util/DeviceUtil";
 
-export const tGUILoadTripsViewDefaultStyle: TKUIStyles<TGUILoadTripsViewStyle, TGUILoadTripsViewProps> =
-    (theme: TKUITheme) => ({
+export const tGUILoadTripsViewDefaultStyle = (theme: TKUITheme) => ({
         ...(tGUIFeedbackFormDefaultStyle as any)(theme),
         main: {
             ...genStyles.flex,

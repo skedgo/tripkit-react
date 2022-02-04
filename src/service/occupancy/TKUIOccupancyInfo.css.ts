@@ -3,8 +3,7 @@ import {ITKUIOccupancyInfoProps, ITKUIOccupancyInfoStyle} from "./TKUIOccupancyI
 import {black, TKUITheme} from "../../jss/TKUITheme";
 import genStyles from "../../css/GenStyle.css";
 
-export const tKUIOccupancyInfoDefaultStyle: TKUIStyles<ITKUIOccupancyInfoStyle, ITKUIOccupancyInfoProps> =
-    (theme: TKUITheme) => ({
+export const tKUIOccupancyInfoDefaultStyle = (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
             ...genStyles.alignCenter
