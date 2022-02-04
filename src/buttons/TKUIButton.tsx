@@ -1,9 +1,9 @@
 import React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import classNames from "classnames";
-import {tKUIButtonDefaultStyle} from "./TKUIButton.css";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { tKUIButtonDefaultStyle } from "./TKUIButton.css";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 
 export enum TKUIButtonType {
     PRIMARY, SECONDARY, PRIMARY_VERTICAL, SECONDARY_VERTICAL, PRIMARY_LINK
@@ -58,7 +58,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     name?: string;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -73,7 +73,7 @@ export type TKUIButtonProps = IProps;
 export type TKUIButtonStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIButton {...props}/>,
+    render: props => <TKUIButton {...props} />,
     styles: tKUIButtonDefaultStyle,
     classNamePrefix: "TKUIButton"
 };
@@ -85,26 +85,24 @@ class TKUIButton extends React.Component<IProps, {}> {
     };
 
     public render(): React.ReactNode {
-        const { type, text, icon, role, tabIndex, onKeyDown, name, classes, ...nativeButtonProps } = this.props;
-        const buttonProps = {
-            ...nativeButtonProps,
-            ['aria-hidden']: this.props['aria-hidden'],
-            ['aria-pressed']: this.props['aria-pressed'],
-            ['aria-label']: this.props['aria-label'],
-            role,
-            tabIndex,
-            onKeyDown,
-            name
-        };
+        const {
+            type, text, icon, classes, injectedStyles, theme, refreshStyles, styles, t, 
+            ...otherProps
+        } = this.props;
+        // Remove all other properties that are not part of HTMLButtonElement.
+        const {
+            defaultStyles, propStyles, configStyles, randomizeClassNames, classNamePrefix, verboseClassNames, i18nOverridden, 
+            ...nativeButtonProps
+        } = otherProps as any;
         const secondary = type === TKUIButtonType.SECONDARY || type === TKUIButtonType.SECONDARY_VERTICAL;
         const vertical = type === TKUIButtonType.PRIMARY_VERTICAL || type === TKUIButtonType.SECONDARY_VERTICAL;
         const link = type === TKUIButtonType.PRIMARY_LINK;
         if (link) {
             return (
                 <button className={classNames(classes.main, classes.link)}
-                        onClick={this.props.onClick}
-                        disabled={this.props.disabled}
-                        {...buttonProps}
+                    onClick={this.props.onClick}
+                    disabled={this.props.disabled}
+                    {...nativeButtonProps}
                 >
                     {text}
                 </button>
@@ -113,28 +111,28 @@ class TKUIButton extends React.Component<IProps, {}> {
         return (
             vertical ?
                 <button className={classNames(classes.main, classes.vertical)}
-                        onClick={this.props.onClick}
-                        disabled={this.props.disabled}
-                        {...buttonProps}
+                    onClick={this.props.onClick}
+                    disabled={this.props.disabled}
+                    {...nativeButtonProps}
                 >
                     <div className={classNames(secondary ? classes.secondary : classes.primary)}>
                         {icon &&
-                        <div className={classes.iconContainer}>
-                            {icon}
-                        </div>}
+                            <div className={classes.iconContainer}>
+                                {icon}
+                            </div>}
                     </div>
                     {text}
                 </button>
                 :
                 <button className={classNames(classes.main, secondary ? classes.secondary : classes.primary)}
-                        onClick={this.props.onClick}
-                        disabled={this.props.disabled}
-                        {...buttonProps}
+                    onClick={this.props.onClick}
+                    disabled={this.props.disabled}
+                    {...nativeButtonProps}
                 >
                     {icon &&
-                    <div className={classes.iconContainer}>
-                        {icon}
-                    </div>}
+                        <div className={classes.iconContainer}>
+                            {icon}
+                        </div>}
                     {text}
                 </button>
         );
