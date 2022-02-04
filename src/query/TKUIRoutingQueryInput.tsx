@@ -8,7 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {Moment} from "moment";
 import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
 import Util from "../util/Util";
-import 'rc-tooltip/assets/bootstrap_white.css';
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";
@@ -50,6 +49,18 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
      * @default true
      */
     showTransportsBtn?: boolean;
+
+    /**
+     * Defining the _transports_ button text.
+     * @default 'Transport'
+     */
+     transportBtnText?: string
+
+    /**
+     * Function that will be run when the user clicks on button to show transport options.
+     * @ctype
+     */
+     onTransportButtonClick?: () => void;
 
     /**
      * Function that will be run when the user clicks on button to show full transport options.
@@ -471,9 +482,9 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         destroyTooltipOnHide={true} // Needed so TKUICard unmounts and focus is returned to transports btn.
                     >
                         <button className={classes.transportsBtn}
-                                onClick={() => this.setState({showTransportSwitches: true})}
+                                onClick={this.props.onTransportButtonClick ?? (() => this.setState({showTransportSwitches: true}))}
                         >
-                            {t("Transport")}
+                            {this.props.transportBtnText ?? t("Transport")}
                         </button>
                     </TKUITooltip>}
                 </div>
@@ -487,8 +498,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         if (TKErrorHelper.hasErrorCode(error, ERROR_UNABLE_TO_RESOLVE_ADDRESS)) {
             errorMessage = "Cannot resolve address, try another search and pick a result from the autocomplete list."
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_INACCURATE)) {
-            // Alternatively can show more specific: "Could not get your location accurately. Please set manually"
-            errorMessage = t("Could.not.determine.your.current.location.");
+            errorMessage = t("Could.not.determine.your.location.accurately..Please.set.manually.");
         } else if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
             errorMessage = DeviceUtil.browser === BROWSER.SAFARI ?
                 t("You.blocked.this.site.access.to.your.location,.either.at.browser.or.system.level") :

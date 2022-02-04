@@ -54,6 +54,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     'aria-label'?: string;
 
     onKeyDown?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+
+    name?: string;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -83,15 +85,16 @@ class TKUIButton extends React.Component<IProps, {}> {
     };
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const { type, text, icon, role, tabIndex, onKeyDown } = this.props;
+        const { type, text, icon, role, tabIndex, onKeyDown, name, classes, ...nativeButtonProps } = this.props;
         const buttonProps = {
+            ...nativeButtonProps,
             ['aria-hidden']: this.props['aria-hidden'],
             ['aria-pressed']: this.props['aria-pressed'],
             ['aria-label']: this.props['aria-label'],
             role,
             tabIndex,
-            onKeyDown
+            onKeyDown,
+            name
         };
         const secondary = type === TKUIButtonType.SECONDARY || type === TKUIButtonType.SECONDARY_VERTICAL;
         const vertical = type === TKUIButtonType.PRIMARY_VERTICAL || type === TKUIButtonType.SECONDARY_VERTICAL;

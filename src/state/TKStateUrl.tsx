@@ -292,8 +292,8 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
                     if (location !== null) {
                         const routingQuery = queryMap.at ? RoutingQuery.create(null,
-                            location, TimePreference.ARRIVE,
-                            DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
+                                location, TimePreference.ARRIVE,
+                                DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
                             RoutingQuery.create(null, location);
                         tKState.onQueryChange(routingQuery);
                         if (queryMap.at) {
@@ -310,6 +310,15 @@ class TKStateUrl extends React.Component<IProps, {}> {
             if (transports) {
                 const update = Util.iAssign(tKState.userProfile, {transportOptions: transports});
                 tKState.onUserProfileChange(update);
+            }
+            const settings = TKShareHelper.parseSettingsQueryParam();
+            if (settings) {
+                const update = Util.iAssign(tKState.userProfile, settings);
+                tKState.onUserProfileChange(update);
+                // Since default trip sort is loaded into RoutingResultsContext before this update,
+                // the next line is required to update the context with the coming value.
+                update.defaultTripSort && tKState.userProfile.defaultTripSort !== update.defaultTripSort
+                && tKState.onSortChange(update.defaultTripSort);
             }
             const query = TKShareHelper.parseSharedQueryLink();
             const viewport = TKShareHelper.parseViewport();

@@ -48,7 +48,17 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             WebkitBorderRadius: '0 10px 10px 0',
             MozBorderRadius: '0 10px 10px 0',
             borderRadius: '0 10px 10px 0',
-            zIndex: '-1'
+            zIndex: '-1',
+            ...genStyles.flex,
+            ...genStyles.alignCenter
+        },
+        realtimeIcon: {
+            width: '12px',
+            height: '12px',
+            marginRight: '3px',
+            '& path': {
+                fill: white(0, theme.isDark)
+            }
         },
         base: {
             marginTop: '-12px'

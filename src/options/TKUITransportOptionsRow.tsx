@@ -184,6 +184,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     max={100}
                     isDarkMode={this.props.theme.isDark}
                     aria-label={t("Min.transfer.time")}
+                    theme={this.props.theme}
                 />
             </div>;
         const concessionPricingOption = mode.isPT() && regionInfo?.transitConcessionPricing &&

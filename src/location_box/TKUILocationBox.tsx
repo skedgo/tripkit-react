@@ -68,7 +68,8 @@ interface IConsumedProps {
     geocodingOptions: TKGeocodingOptions;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+}
 
 export type TKUILocationBoxProps = IProps;
 export type TKUILocationBoxStyle = IStyle;
@@ -110,9 +111,6 @@ class TKUILocationBox extends Component<IProps, IState> {
             waiting: false
         };
         const geocodingOptions = this.props.geocodingOptions;
-        if (this.props.showCurrLoc === false) {
-            delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
-        }
         this.geocodingData = new MultiGeocoder(geocodingOptions);
         this.handleAutocompleteResults = this.handleAutocompleteResults.bind(this);
         this.renderInput = this.renderInput.bind(this);
@@ -315,7 +313,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private refreshResults(inputText: string) {
-        this.setState({ waiting: true });
+        this.setState({waiting: true});
         this.getLimitBounds().then(limitBounds =>
             this.geocodingData.geocode(inputText, true, limitBounds, this.props.focus ? this.props.focus : null,
                 this.handleAutocompleteResults));
@@ -327,7 +325,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         if (query !== this.state.inputText) {   // A previous request arrived
             return;
         }
-        this.setState({ waiting: false });
+        this.setState({waiting: false});
         const items: object[] = [];
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
@@ -390,7 +388,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                        className={classes.input}
                     // autoFocus={true}
                 />
-                {   this.state.waiting || this.state.waitingResolveFor ?
+                {this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false"/> :
                     (this.state.inputText ?
                         <button onClick={this.onClearClicked}
@@ -448,7 +446,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             const menu =
                 <div
                     style={
-                        { ...style,
+                        {
+                            ...style,
                             position: "absolute",
                             top: "initial",
                             left: "0",
@@ -586,7 +585,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     tabIndex: 0,
                     "aria-live": "polite"
                 }}
-                wrapperStyle = {{
+                wrapperStyle={{
                     position: "relative",
                     ...this.props.style
                 }}
@@ -598,14 +597,19 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
-    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
         return (
             <TKUIConfigContext.Consumer>
-                {(config: TKUIConfig) =>
-                    props.children!({
-                        geocodingOptions: getGeocodingOptions(config.geocoding)
-                    })
+                {(config: TKUIConfig) => {
+                    const geocodingOptions = getGeocodingOptions(config.geocoding);
+                    if (props.showCurrLoc === false) {
+                        delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
+                    }
+                    return props.children!({
+                        geocodingOptions: geocodingOptions
+                    });
+                }
                 }
             </TKUIConfigContext.Consumer>
         );
@@ -613,7 +617,7 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({inputProps, children}) =>
-        <Consumer>
+        <Consumer showCurrLoc={inputProps.showCurrLoc}>
             {(consumedProps: IConsumedProps) =>
                 children!({...inputProps, ...consumedProps})}
         </Consumer>;

@@ -14,7 +14,7 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             cursor: 'pointer',
             ...theme.divider,
             margin: '0 5px',
-            color:  theme.isLight ? '#4d4c4d' : colorWithOpacity(tKUIColors.white, .9),
+            ...theme.textColorDefault,
             '&:last-child': {
                 borderBottom: 'none'
             }

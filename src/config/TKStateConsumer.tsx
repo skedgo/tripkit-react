@@ -1,17 +1,17 @@
 import * as React from "react";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
-import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
-import {Moment} from "moment-timezone";
-import {TKUIConfig} from "./TKUIConfig";
-import {TKUIConfigContext} from "./TKUIConfigProvider";
-import {TKState} from "./TKState";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
+import { TKUIConfig } from "./TKUIConfig";
+import { TKUIConfigContext } from "./TKUIConfigProvider";
+import { TKState } from "./TKState";
+import { TKAccessibilityContext } from "./TKAccessibilityProvider";
 
 interface IProps {
     children: (state: TKState) => React.ReactNode;
 }
 
-class TKStateConsumer extends React.Component<IProps,{}> {
+class TKStateConsumer extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         return (
@@ -19,21 +19,26 @@ class TKStateConsumer extends React.Component<IProps,{}> {
                 {(config: TKUIConfig) =>
                     <OptionsContext.Consumer>
                         {(optionsContext: IOptionsContext) =>
-                            <RoutingResultsContext.Consumer>
-                                {(routingContext: IRoutingResultsContext) =>
-                                    <ServiceResultsContext.Consumer>
-                                        {(serviceContext: IServiceResultsContext) => {
-                                            const state: TKState = {
-                                                ...routingContext,
-                                                ...serviceContext,
-                                                ...optionsContext,
-                                                config: config
-                                            };
-                                            return (this.props.children as ((state: TKState) => React.ReactNode))(state);
-                                        }}
-                                    </ServiceResultsContext.Consumer>
+                            <TKAccessibilityContext.Consumer>
+                                {accessibilityContext =>
+                                    <RoutingResultsContext.Consumer>
+                                        {(routingContext: IRoutingResultsContext) =>
+                                            <ServiceResultsContext.Consumer>
+                                                {(serviceContext: IServiceResultsContext) => {
+                                                    const state: TKState = {
+                                                        ...routingContext,
+                                                        ...serviceContext,
+                                                        ...optionsContext,
+                                                        ...accessibilityContext,
+                                                        config: config
+                                                    };
+                                                    return (this.props.children as ((state: TKState) => React.ReactNode))(state);
+                                                }}
+                                            </ServiceResultsContext.Consumer>
+                                        }
+                                    </RoutingResultsContext.Consumer>
                                 }
-                            </RoutingResultsContext.Consumer>
+                            </TKAccessibilityContext.Consumer>
                         }
                     </OptionsContext.Consumer>
                 }

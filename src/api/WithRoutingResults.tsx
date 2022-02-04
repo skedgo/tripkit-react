@@ -17,12 +17,12 @@ import Util from "../util/Util";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
-import RegionInfo from "../model/region/RegionInfo";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
 import {TKUIMapViewClass} from "../map/TKUIMapView";
+import {TripSort} from "../model/trip/TripSort";
 
 export interface IWithRoutingResultsProps {
     initViewport?: {center?: LatLng, zoom?: number};
@@ -55,14 +55,6 @@ interface IWithRoutingResultsState {
     mapRef?: TKUIMapViewClass;
 }
 
-export enum TripSort {
-    OVERALL = "Preferred",
-    TIME = "Arrival",
-    DURATION = "Duration",
-    PRICE = "Price",
-    CARBON = "Greener"
-}
-
 function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
     return class WithRoutingResults extends React.Component<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps, IWithRoutingResultsState> {
@@ -85,7 +77,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 query: RoutingQuery.create(),
                 inputTextFrom: "",
                 inputTextTo: "",
-                sort: TripSort.OVERALL,
+                sort: props.options.defaultTripSort ?? TripSort.OVERALL,
                 waiting: false,
                 waitingTripUpdate: false,
                 viewport: {center: MapUtil.worldCoords, zoom: 2},
@@ -130,6 +122,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     case TripSort.CARBON: {
                         return t1.carbonCost - t2.carbonCost;
                     }
+                    case TripSort.CALORIES: {
+                        return t2.caloriesCost - t1.caloriesCost;
+                    }
                     default: return t1.weightedScore - t2.weightedScore;
                 }
             });
@@ -147,7 +142,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     // onQueryChange. In that case trips will be computed when
                     // this.onDirectionsView(true) is called.
                     if (alreadyOnDirectionsView &&
-                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) { // Avoid requesting routing again if query url didn't change, e.g. dropped location resolved.
+                        !query.from?.isDroppedPin() && !query.to?.isDroppedPin() &&
+                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options))
+                    {   // Avoid requesting routing if:
+                        // - from or to are dropped pins, since we want to delay it until they are resolved
+                        // - queries urls didn't change (queries are the same in practice. Check if this makes sense now
+                        // that location address is included in query, and so reverse geocoding of dropped pin locations
+                        // actually will make this false, triggering trips refresh. For what other calls to onQueryChange
+                        // I want to avoid triggering trips refresh?
                         this.refreshTrips();
                     }
                 } else {
@@ -549,10 +551,16 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
-                const from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
+                let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
                     firstTrip && firstTrip.segments[0].from;
-                const to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
+                if (from && !from.address) { // Set address (to some string) to avoid location box to reverse geocode it and trips computation to be triggered after that.
+                    from.address = "Location "; // Trailing space to avoid accidentally making isDroppedPin true.
+                }
+                let to = routingResults.resultsQuery ? routingResults.resultsQuery.to :
                     firstTrip && firstTrip.segments[firstTrip.segments.length - 1].to;
+                if (to && !to.address) {    // Idem from.
+                    to.address = "Location ";
+                }
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
                     firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);

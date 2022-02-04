@@ -2,8 +2,9 @@ import {TKUIConfig} from "./TKUIConfig";
 import {IRoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {IServiceResultsContext} from "../service/ServiceResultsProvider";
 import {IOptionsContext} from "../options/OptionsProvider";
+import { IAccessibilityContext } from "./TKAccessibilityProvider";
 
-export interface TKState extends IRoutingResultsContext, IServiceResultsContext, IOptionsContext {
+export interface TKState extends IRoutingResultsContext, IServiceResultsContext, IOptionsContext, IAccessibilityContext {
     /**
      * @ctype
      */

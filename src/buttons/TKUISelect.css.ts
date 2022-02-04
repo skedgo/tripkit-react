@@ -53,6 +53,7 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
             backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
         },
         singleValue: {
+            ...theme.textColorDefault,
             ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
         },
         multiValue: {

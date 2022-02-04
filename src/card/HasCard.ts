@@ -5,7 +5,8 @@ export enum HasCardKeys {
     title = "title",
     onRequestClose = "onRequestClose",
     cardPresentation = "cardPresentation",
-    slideUpOptions = "slideUpOptions"
+    slideUpOptions = "slideUpOptions",
+    cardContainerClass = "cardContainerClass"
 }
 
 interface HasCard {
@@ -34,6 +35,8 @@ interface HasCard {
      * @ctype
      */
     [HasCardKeys.slideUpOptions]?: TKUISlideUpOptions;
+
+    [HasCardKeys.cardContainerClass]?: string;
 
 }
 

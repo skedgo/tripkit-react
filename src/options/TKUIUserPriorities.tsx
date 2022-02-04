@@ -12,14 +12,12 @@ import iconHassle from "../images/badges/ic-badge-like.svg";
 import {CardPresentation, default as TKUICard} from "../card/TKUICard";
 import {Subtract} from "utility-types";
 import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import HasCard, { HasCardKeys } from "../card/HasCard";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
     value: TKWeightingPreferences;
     onChange: (update: TKWeightingPreferences) => void;
-    onRequestClose?: () => void;
-    slideUpOptions?: TKUISlideUpOptions;
 }
 
 export interface IConsumedProps extends TKUIViewportUtilProps {}
@@ -42,13 +40,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUIUserPriorities extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const priorities = this.props.value;
-        const t = this.props.t;
+        const { classes, t, value: priorities, cardPresentation } = this.props;
         return (
             <TKUICard
                 title={t("My.Priorities")}
-                presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                presentation={cardPresentation ?? (this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP)}
                 focusTrap={true}
                 onRequestClose={this.props.onRequestClose}
                 slideUpOptions={this.props.slideUpOptions}
@@ -72,6 +68,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         // valueLabelFormat={(value: number) => "Money"}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("rQd-ri-hHa.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.time * 100}
@@ -85,6 +82,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("o4h-JW-YBy.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.carbon * 100}
@@ -98,6 +96,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("EzB-oD-wvZ.text")}
+                        theme={this.props.theme}
                     />
                     <TKUISlider
                         value={priorities.hassle * 100}
@@ -111,6 +110,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         max={200}
                         isDarkMode={this.props.theme.isDark}
                         aria-label={t("brC-tq-EEG.text")}
+                        theme={this.props.theme}
                     />
                     <TKUIButton text={t("Reset")}
                                 type={TKUIButtonType.SECONDARY}
