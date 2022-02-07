@@ -26,6 +26,7 @@ import TKUIBookingActions from "../booking/TKUIBookingActions";
 import {TKError} from "../error/TKError";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
+import Trip from '../model/trip/Trip';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -34,6 +35,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: () => void;
     refreshSelectedTrip: () => Promise<boolean>;
     onSuccess?: (bookingTripUpdateURL: string) => void;
+    trip?: Trip;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -168,7 +170,7 @@ const BookingInput: React.SFC<BookingInputProps> =
             </div>)
     };
 
-const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles}) => {
+const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, trip, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles}) => {
     const booking = segment.booking!;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
@@ -288,8 +290,14 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, onRequestClose, onSucce
                         TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
                         // For testing without performing booking.
                         // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
-                            .then((bookingForm) => onSuccess?.(bookingForm.refreshURLForSourceObject))
-                            .then(refreshSelectedTrip)
+                            .then(bookingForm => {
+                                onSuccess?.(bookingForm.refreshURLForSourceObject);
+                                // Workaround for (selected) trip with empty ("") updateUrl.
+                                if (trip && !trip.updateURL) {
+                                    trip.updateURL = bookingForm.refreshURLForSourceObject
+                                }
+                                return refreshSelectedTrip();
+                            })
                             .catch((e) => setError(e))
                             .finally(() => setWaiting(false))
                     }}
