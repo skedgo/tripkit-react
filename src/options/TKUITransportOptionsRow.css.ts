@@ -1,4 +1,4 @@
-import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, important, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "./TKUITransportOptionsRow";
 import genStyles from "../css/GenStyle.css";
@@ -27,8 +27,8 @@ export const tKUITransportOptionsRowStyle: TKUIStyles<TKUITransportOptionsRowSty
         },
         expansionPanel: {
             ...theme.divider,
-            background: white(0, theme.isDark),
-            ...theme.textColorDefault,
+            background: white(0, theme.isDark) + "!important",
+            ...important(theme.textColorDefault),
             '&:before': {
                 display: 'none'
             }
