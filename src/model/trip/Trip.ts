@@ -37,7 +37,7 @@ class Trip {
     @JsonProperty("saveURL", String, true)
     private _saveURL: string = "";
     @JsonProperty("updateURL", String, true)
-    private _updateURL: string = "";
+    public updateURL: string = "";
     @JsonProperty("temporaryURL", String, true)
     private _temporaryURL: string = "";
     @JsonProperty("plannedURL", String, true)
@@ -92,10 +92,6 @@ class Trip {
 
     get saveURL(): string {
         return this._saveURL;
-    }
-
-    get updateURL(): string {
-        return this._updateURL;
     }
 
     get temporaryURL(): string {

@@ -62,6 +62,7 @@ interface SegmentMxMCardsProps {
     landscape: boolean;
     refreshSelectedTrip: () => Promise<boolean>;
     mapAsync: Promise<TKUIMapViewClass>;
+    trip?: Trip;
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
@@ -131,7 +132,7 @@ function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
 }
 
 function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
-    const {segment, onClose, refreshSelectedTrip} = props;
+    const {segment, onClose, refreshSelectedTrip, trip} = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
     } else if (segment.isWalking() || segment.isBicycle()) {
@@ -142,6 +143,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 segment={segment}
                 onRequestClose={onClose}
                 refreshSelectedTrip={refreshSelectedTrip}
+                trip={trip}
                 key={segment.id}/>
         ];
     } else {
@@ -199,7 +201,8 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
             options: props.options,
             landscape: props.landscape,
             refreshSelectedTrip,
-            mapAsync
+            mapAsync,
+            trip
         }));
         return map;
     }, new Map<Segment, JSX.Element[]>());
