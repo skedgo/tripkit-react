@@ -260,6 +260,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, trip, onRequestClose, o
                     setWaiting={setWaiting}
                     setError={setError}
                     requestRefresh={() => refreshSelectedTrip().then(() => {})}
+                    trip={trip}
                 />}
             </Fragment>
         )
@@ -294,7 +295,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({segment, trip, onRequestClose, o
                                 onSuccess?.(bookingForm.refreshURLForSourceObject);
                                 // Workaround for (selected) trip with empty ("") updateUrl.
                                 if (trip && !trip.updateURL) {
-                                    trip.updateURL = bookingForm.refreshURLForSourceObject
+                                    trip.updateURL = bookingForm.refreshURLForSourceObject;
                                 }
                                 return refreshSelectedTrip();
                             })

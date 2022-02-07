@@ -8,12 +8,14 @@ import TripGoApi from "../api/TripGoApi";
 import {BookingAction} from "../model/trip/BookingInfo";
 import {tKUIBookingActionsDefaultStyle} from "./TKUIBookingActions.css";
 import UIUtil from "../util/UIUtil";
+import Trip from '../model/trip/Trip';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
     setWaiting?: (waiting: boolean) => void;
     setError?: (error: any) => void;
     requestRefresh: () => Promise<void>;
+    trip?: Trip;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
@@ -30,7 +32,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingAction: React.SFC<IProps & {action: BookingAction}> = props => {
-    const {action, setWaiting, setError, requestRefresh, t} = props;
+    const {action, setWaiting, setError, requestRefresh, trip} = props;
     return (
         <TKUIButton
             text={action.title}
@@ -43,7 +45,14 @@ const TKUIBookingAction: React.SFC<IProps & {action: BookingAction}> = props => 
                             setWaiting?.(true);
                             TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
                             // NetworkUtil.delayPromise(10)({})     // For testing
-                                .then(requestRefresh)
+                                .then(bookingForm => {
+                                    // Workaround for (selected) trip with empty ("") updateUrl.
+                                    if (trip && !trip.updateURL 
+                                        && bookingForm?.refreshURLForSourceObject) {    // Not sure if it always came a booking form.
+                                        trip.updateURL = bookingForm.refreshURLForSourceObject;
+                                    }
+                                    return requestRefresh();
+                                })
                                 .catch((e) => setError?.(e))
                                 .finally(() => setWaiting?.(false));
                         }
