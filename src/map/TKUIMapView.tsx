@@ -1,6 +1,6 @@
 import * as React from "react";
-import {Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps} from "react-leaflet";
-import L, {FitBoundsOptions} from "leaflet";
+import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
+import L, { FitBoundsOptions } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
@@ -10,54 +10,54 @@ import Trip from "../model/trip/Trip";
 import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
-import {MapLocationType} from "../model/location/MapLocationType";
+import { MapLocationType } from "../model/location/MapLocationType";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
-import {Visibility} from "../model/trip/SegmentTemplate";
+import { Visibility } from "../model/trip/SegmentTemplate";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";
-import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
+import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
 import StopLocation from "../model/StopLocation";
-import {renderToStaticMarkup} from "react-dom/server";
+import { renderToStaticMarkup } from "react-dom/server";
 import TKUIMapLocations from "./TKUIMapLocations";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUIMapViewDefaultStyle} from "./TKUIMapView.css";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { tKUIMapViewDefaultStyle } from "./TKUIMapView.css";
 import "./TKUIMapViewCss.css";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { Subtract } from "utility-types";
 import classNames from "classnames";
-import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
+import { TKUIViewportUtilProps, TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
-import {ReactComponent as IconCurrentLocation} from "../images/location/ic-curr-loc.svg";
+import { ReactComponent as IconCurrentLocation } from "../images/location/ic-curr-loc.svg";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
-import {TKUIConfigContext, default as TKUIConfigProvider} from "../config/TKUIConfigProvider";
-import {ERROR_GEOLOC_DENIED, TKUserPosition} from "../util/GeolocationUtil";
+import { TKUIConfigContext, default as TKUIConfigProvider } from "../config/TKUIConfigProvider";
+import { ERROR_GEOLOC_DENIED, TKUserPosition } from "../util/GeolocationUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
-import {TileLayer} from "react-leaflet";
-import TKGeocodingOptions, {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
-import {MapboxGlLayer} from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
+import { TileLayer } from "react-leaflet";
+import TKGeocodingOptions, { getGeocodingOptions } from "../geocode/TKGeocodingOptions";
+import { MapboxGlLayer } from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
 import Color from "../model/trip/Color";
 import Features from "../env/Features";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import ModeLocation from "../model/location/ModeLocation";
 import TKTransportOptions from "../model/options/TKTransportOptions";
-import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 import RegionsData from "../data/RegionsData";
-import {tKUIColors} from "../jss/TKUITheme";
+import { tKUIColors } from "../jss/TKUITheme";
 
-export type TKUIMapPadding = {top?: number, right?: number, bottom?: number, left?: number};
+export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -179,7 +179,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @ctype
      * @default {@link TKState#onViewportChange}
      */
-    onViewportChange?: (viewport: {center?: LatLng, zoom?: number}) => void;
+    onViewportChange?: (viewport: { center?: LatLng, zoom?: number }) => void;
 
     /**
      * States if the environment is in _directions mode_, which implies that it automatically compute trips for
@@ -214,13 +214,13 @@ interface MapboxGLLayerProps {
     attribution: string;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIMapView {...props}/>,
+    render: props => <TKUIMapView {...props} />,
     styles: tKUIMapViewDefaultStyle,
     classNamePrefix: "TKUIMapView",
     props: {
@@ -282,7 +282,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // WithRoutingResults.sameApiQueries will also be false, since now it also sends addresses).
                     // Alternatively, to force WithRoutingResults.sameApiQueries to be false can set query from / to
                     // to null before setting loc.
-                    const loc = result ?? Util.iAssign(mapLocation, {address: mapLocation.address + " "});
+                    const loc = result ?? Util.iAssign(mapLocation, { address: mapLocation.address + " " });
                     // Need to use onQueryUpdate instead of onQueryChange since
                     // routingContext.query can be outdated at the time this callback is
                     // executed. OnQueryUpdate always use the correct query (the one on
@@ -354,7 +354,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.fitBounds(LeafletUtil.createBBoxArray(fitSet));
     }
 
-    private onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
+    private onViewportChange(viewport: { center?: LatLng, zoom?: number }) {
         this.props.onViewportChange?.(viewport);
     }
 
@@ -370,19 +370,19 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 (userPosition?: TKUserPosition) => {
                     this.setState((prev: IState) => {
                         fit && !prev.userLocation && userPosition && this.fitMap(Location.create(userPosition.latLng, "", "", ""), null);
-                        return {userLocation: userPosition}
+                        return { userLocation: userPosition }
                     });
                 },
                 (error: Error) => {
                     this.userLocationSubscription && this.userLocationSubscription.unsubscribe();
                     this.userLocationSubscription = undefined;
-                    this.setState({userLocation: undefined});
+                    this.setState({ userLocation: undefined });
                     onError && onError(error);
                 });
     }
 
     private showUserLocTooltip(text: string | undefined) {
-        this.setState({userLocationTooltip: text});
+        this.setState({ userLocationTooltip: text });
         if (!text) {
             this.userLocTooltipRef && this.userLocTooltipRef.setVisibleFor(undefined);
         } else {
@@ -420,40 +420,40 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 // (generates infinite (or a lot) setState calls) since it seems the viewport
                 // doesn't stabilizes. Fix it.
                 autoPan={false}
-                onClose={() => this.setState({menuPopupPosition: undefined})}
+                onClose={() => this.setState({ menuPopupPosition: undefined })}
             >
                 <div className={classes.menuPopupContent}>
                     <div className={classes.menuPopupItem}
-                         onClick={() => {
-                             this.onMapLocChanged(true, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
-                             this.props.onDirectionsView(true);
-                             this.setState({menuPopupPosition: undefined});
-                         }}
+                        onClick={() => {
+                            this.onMapLocChanged(true, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                            this.props.onDirectionsView(true);
+                            this.setState({ menuPopupPosition: undefined });
+                        }}
                     >
                         {this.props.fromHereText || "Directions from here"}
                     </div>
                     <div className={classes.menuPopupItem}
-                         onClick={() => {
-                             this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
-                             this.props.onDirectionsView(true);
-                             this.setState({menuPopupPosition: undefined});
-                         }}
+                        onClick={() => {
+                            this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                            this.props.onDirectionsView(true);
+                            this.setState({ menuPopupPosition: undefined });
+                        }}
                     >
                         {this.props.toHereText || "Directions to here"}
                     </div>
                     {!this.props.directionsView &&
-                    <div className={classes.menuPopupItem}
-                         onClick={() => {
-                             this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
-                             this.setState({menuPopupPosition: undefined});
-                         }}
-                    >
-                        What's here?
-                    </div>}
+                        <div className={classes.menuPopupItem}
+                            onClick={() => {
+                                this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                                this.setState({ menuPopupPosition: undefined });
+                            }}
+                        >
+                            What's here?
+                        </div>}
                 </div>
             </Popup>;
-        const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
-        const paddingOptions = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
+        const padding = Object.assign({ top: 20, right: 20, bottom: 20, left: 20 }, this.props.padding);
+        const paddingOptions = { paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom] } as FitBoundsOptions;
         const service = this.props.service;
         const t = this.props.t;
         return (
@@ -500,7 +500,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     attributionControl={this.props.attributionControl !== false}
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
                         if (!this.props.readonly) {
-                            this.setState({menuPopupPosition: e});
+                            this.setState({ menuPopupPosition: e });
                         }
                     }}
                     tap={true} // It should make a long tap to trigger oncontextmenu on iOS, but it doesn't work.
@@ -514,55 +514,67 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     {this.props.mapboxGlLayerProps !== undefined ?
                         !this.state.refreshTiles &&
                         <MapboxGlLayer {...this.props.mapboxGlLayerProps}
-                                       ref={(ref: any) => {
-                                           if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
-                                               this.mapboxGlMap = ref.leafletElement.getMapboxMap();
-                                               this.mapboxGlMap.on('load', () =>
-                                                   RegionsData.instance.requireRegions().then(() => {
-                                                       try {
-                                                           if (!this.mapboxGlMap.getSource('coverage')) {
-                                                               this.mapboxGlMap.addSource('coverage', {
-                                                                   'type': 'geojson',
-                                                                   'data': {
-                                                                       'type': 'Feature',
-                                                                       'geometry': RegionsData.instance.getCoverageGeoJson()
-                                                                   }
-                                                               });
-                                                               // Add a new layer to visualize the polygon.
-                                                               this.mapboxGlMap.addLayer({
-                                                                   'id': 'coverageLayer',
-                                                                   'type': 'fill',
-                                                                   'source': 'coverage', // reference the data source
-                                                                   'layout': {},
-                                                                   'paint': {
-                                                                       'fill-color': '#212A33',
-                                                                       'fill-opacity': 0.4
-                                                                   }
-                                                               });
-                                                           }
-                                                       } catch (e) {
-                                                           // Catch exception inside getSource call probably caused by
-                                                           // using mode specific tiles.
-                                                           console.log(e);
-                                                       }
-                                                   })
-                                               );
-                                           }
-                                           if (this.mapboxGlMap) {
-                                               // Since this could be a consequence of a complete style change
-                                               // (switch dark / light appearance).
-                                               this.refreshModeSpecificTiles();
-                                           }
-                                       }}
+                            ref={(ref: any) => {
+                                if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
+                                    this.mapboxGlMap = ref.leafletElement.getMapboxMap();
+                                    this.mapboxGlMap.on('load', () =>
+                                        RegionsData.instance.requireRegions().then(() => {
+                                            try {
+                                                if (!this.mapboxGlMap.getSource('coverage')) {
+                                                    this.mapboxGlMap.addSource('coverage', {
+                                                        'type': 'geojson',
+                                                        'data': {
+                                                            'type': 'Feature',
+                                                            'geometry': RegionsData.instance.getCoverageGeoJson()
+                                                        }
+                                                    });
+                                                    // Add a new layer to visualize the polygon.
+                                                    this.mapboxGlMap.addLayer({
+                                                        'id': 'coverageLayer',
+                                                        'type': 'fill',
+                                                        'source': 'coverage', // reference the data source
+                                                        'layout': {},
+                                                        'paint': {
+                                                            'fill-color': '#212A33',
+                                                            'fill-opacity': 0.4
+                                                        }
+                                                    });
+                                                    if (this.props.locale && this.props.locale !== 'en')
+                                                        this.mapboxGlMap.getStyle().layers.forEach(thisLayer => {
+                                                            if (thisLayer.type == 'symbol') {
+                                                                this.mapboxGlMap.setLayoutProperty(thisLayer.id, 'text-field', [
+                                                                    "coalesce", // Evaluates each expression in turn until the first valid value is obtained. Invalid values are null...
+                                                                    ['get', 'name_' + this.props.locale],
+                                                                    ['get', 'name_en'],  // default to english if not found
+                                                                    ['get', 'name']  // default country language if not found. Original value: [['get', 'name_en'], ['get', 'name']]
+                                                                    // confirmed by looking at this.mapboxGlMap.getLayoutProperty(thisLayer.id, 'text-field').
+                                                                ]);
+                                                            }
+                                                        });
+                                                }
+                                            } catch (e) {
+                                                // Catch exception inside getSource call probably caused by
+                                                // using mode specific tiles.
+                                                console.log(e);
+                                            }
+                                        })
+                                    );
+                                }
+                                if (this.mapboxGlMap) {
+                                    // Since this could be a consequence of a complete style change
+                                    // (switch dark / light appearance).
+                                    this.refreshModeSpecificTiles();
+                                }
+                            }}
                         /> :
-                        <TileLayer {...this.props.tileLayerProps!}/>}
-                    {this.props.landscape && <ZoomControl position={"topright"}/>}
+                        <TileLayer {...this.props.tileLayerProps!} />}
+                    {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
-                    <Marker position={this.state.userLocation.latLng}
+                        <Marker position={this.state.userLocation.latLng}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
                                     <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIMyLocationMapIcon/>
+                                        <TKUIMyLocationMapIcon />
                                     </TKUIConfigProvider>
                                 ),
                                 iconSize: [20, 20],
@@ -571,16 +583,16 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             })}
                             riseOnHover={true}
                             keyboard={false}
-                    >
-                        {this.getLocationPopup(this.currentLocation)}
-                    </Marker>}
+                        >
+                            {this.getLocationPopup(this.currentLocation)}
+                        </Marker>}
                     {!this.props.trip && this.props.from && this.props.from.isResolved() &&
-                    !(this.props.from.isCurrLoc() && this.state.userLocation) &&
-                    <Marker position={this.props.from!}
+                        !(this.props.from.isCurrLoc() && this.state.userLocation) &&
+                        <Marker position={this.props.from!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
                                     <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIMapLocationIcon location={this.props.from!} from={true}/>
+                                        <TKUIMapLocationIcon location={this.props.from!} from={true} />
                                     </TKUIConfigProvider>
                                 ),
                                 iconSize: [26, 39],
@@ -595,15 +607,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             }}
                             keyboard={false}
                             onadd={event => event.target.openPopup()}
-                    >
-                        {this.getLocationPopup(this.props.from!)}
-                    </Marker>}
+                        >
+                            {this.getLocationPopup(this.props.from!)}
+                        </Marker>}
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
-                    <Marker position={this.props.to!}
+                        <Marker position={this.props.to!}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
                                     <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIMapLocationIcon location={this.props.to!}/>
+                                        <TKUIMapLocationIcon location={this.props.to!} />
                                     </TKUIConfigProvider>
                                 ),
                                 iconSize: [26, 39],
@@ -618,40 +630,40 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             }}
                             keyboard={false}
                             onadd={event => event.target.openPopup()}
-                    >
-                        {this.getLocationPopup(this.props.to!)}
-                    </Marker>}
+                        >
+                            {this.getLocationPopup(this.props.to!)}
+                        </Marker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
-                    <TKUIMapLocations
-                        bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
-                        zoom={this.leafletElement.getZoom()}
-                        onClick={(loc: Location) => {
-                            this.onClick(loc);
-                        }}
-                        omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
-                        isDarkMode={this.props.theme.isDark}
-                        config={this.props.config}
-                        transportOptions={this.props.transportOptions}
-                    />
+                        <TKUIMapLocations
+                            bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
+                            zoom={this.leafletElement.getZoom()}
+                            onClick={(loc: Location) => {
+                                this.onClick(loc);
+                            }}
+                            omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
+                            isDarkMode={this.props.theme.isDark}
+                            config={this.props.config}
+                            transportOptions={this.props.transportOptions}
+                        />
                     }
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
-                                               ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
-                                                   (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
-                                               segmentIconClassName={classes.segmentIconClassName}
-                                               vehicleClassName={classes.vehicleClassName}
-                                               key={i}
-                                               t={this.props.t}
+                            ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
+                                (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
+                            segmentIconClassName={classes.segmentIconClassName}
+                            vehicleClassName={classes.vehicleClassName}
+                            key={i}
+                            t={this.props.t}
                         />;
                     })}
                     {service &&
-                    <MapService
-                        serviceDeparture={service}
-                        segmentIconClassName={classes.segmentIconClassName}
-                    />}
+                        <MapService
+                            serviceDeparture={service}
+                            segmentIconClassName={classes.segmentIconClassName}
+                        />}
                     {service && service.realtimeVehicle &&
-                    (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&
-                    <Marker position={service.realtimeVehicle.location}
+                        (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&
+                        <Marker position={service.realtimeVehicle.location}
                             icon={L.divIcon({
                                 html: renderToStaticMarkup(
                                     <TKUIConfigProvider config={this.props.config}>
@@ -668,27 +680,27 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             })}
                             riseOnHover={true}
                             keyboard={false}
-                    >
-                        {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
-                    </Marker>}
+                        >
+                            {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
+                        </Marker>}
                     {menuPopup}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
-                                     onResize={() => this.onResize()}
+                    onResize={() => this.onResize()}
                 />
                 {this.props.showCurrLocBtn !== false &&
-                <TKUITooltip
-                    overlayContent={this.state.userLocationTooltip}
-                    arrowColor={this.props.theme.isLight ? tKUIColors.black2 : tKUIColors.black1}
-                    visible={false}
-                    placement={"right"}
-                    reference={(ref: any) => this.userLocTooltipRef = ref}
-                    onRequestClose={() => this.showUserLocTooltip(undefined)}
-                    role={"alert"}
-                >
-                    <button className={classNames(classes.currentLocBtn,
-                        this.props.landscape ? classes.currentLocBtnLandscape : classes.currentLocBtnPortrait,
-                        this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
+                    <TKUITooltip
+                        overlayContent={this.state.userLocationTooltip}
+                        arrowColor={this.props.theme.isLight ? tKUIColors.black2 : tKUIColors.black1}
+                        visible={false}
+                        placement={"right"}
+                        reference={(ref: any) => this.userLocTooltipRef = ref}
+                        onRequestClose={() => this.showUserLocTooltip(undefined)}
+                        role={"alert"}
+                    >
+                        <button className={classNames(classes.currentLocBtn,
+                            this.props.landscape ? classes.currentLocBtnLandscape : classes.currentLocBtnPortrait,
+                            this.userLocationSubscription && !this.state.userLocation && classes.resolvingCurrLoc)}
                             onClick={() => this.onTrackUserLocation(true, (error: Error) => {
                                 if (TKErrorHelper.hasErrorCode(error, ERROR_GEOLOC_DENIED)) {
                                     this.showUserLocTooltip(t("You.blocked.this.site.access.to.your.location"));
@@ -697,10 +709,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 }
                             })}
                             aria-label="Show my location on map"
-                    >
-                        <IconCurrentLocation/>
-                    </button>
-                </TKUITooltip>}
+                        >
+                            <IconCurrentLocation />
+                        </button>
+                    </TKUITooltip>}
             </div>
         )
     }
@@ -712,7 +724,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             className="LeafletMap-mapLocPopup"
             autoPan={false}
         >
-            <TKUIRealtimeVehiclePopup value={realTimeVehicle} title={title}/>
+            <TKUIRealtimeVehiclePopup value={realTimeVehicle} title={title} />
         </Popup>;
     }
 
@@ -736,15 +748,15 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.wasDoubleClick = true;
         });
         setTimeout(() => {
-            WaiAriaUtil.apply(".mapboxgl-canvas", {tabIndex: -1, ariaHidden: true});
-            WaiAriaUtil.apply(".mapboxgl-ctrl-logo", {tabIndex: -1, ariaHidden: true});
-            WaiAriaUtil.apply(".leaflet-control-zoom-in", {ariaLabel: "Zoom in map"});
-            WaiAriaUtil.apply(".leaflet-control-zoom-out", {ariaLabel: "Zoom out map"});
-            WaiAriaUtil.apply(".leaflet-marker-pane", {ariaHidden: true});
-            WaiAriaUtil.apply(".leaflet-popup-pane", {ariaHidden: true});
+            WaiAriaUtil.apply(".mapboxgl-canvas", { tabIndex: -1, ariaHidden: true });
+            WaiAriaUtil.apply(".mapboxgl-ctrl-logo", { tabIndex: -1, ariaHidden: true });
+            WaiAriaUtil.apply(".leaflet-control-zoom-in", { ariaLabel: "Zoom in map" });
+            WaiAriaUtil.apply(".leaflet-control-zoom-out", { ariaLabel: "Zoom out map" });
+            WaiAriaUtil.apply(".leaflet-marker-pane", { ariaHidden: true });
+            WaiAriaUtil.apply(".leaflet-popup-pane", { ariaHidden: true });
             const leafletControlAttribution = WaiAriaUtil.getElementByQuerySelector(".leaflet-control-attribution");
             leafletControlAttribution && leafletControlAttribution.children.length > 0 &&
-            leafletControlAttribution.children[0].setAttribute("tabindex", "-1");
+                leafletControlAttribution.children[0].setAttribute("tabindex", "-1");
         }, 1000);
         if (this.props.from || this.props.to) {
             this.fitMap(this.props.from ? this.props.from : null, this.props.to ? this.props.to : null);
@@ -779,7 +791,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             // This line is to display user location spot immediately, and avoid green pin showing first to be replaced
             // by user location spot. Alternatively can make this.onTrackUserLocation() to use cached user position
             // the first time, so spot also should show immediately.
-            this.setState({userLocation: {latLng: this.props.from}});
+            this.setState({ userLocation: { latLng: this.props.from } });
         }
 
         const trip = this.props.trip;
@@ -812,8 +824,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // and light).
         if (this.props.mapboxGlLayerProps && prevProps.mapboxGlLayerProps &&
             this.props.mapboxGlLayerProps.style !== prevProps.mapboxGlLayerProps.style) {
-            this.setState({refreshTiles: true});
-            setTimeout(() => this.setState({refreshTiles: undefined}));
+            this.setState({ refreshTiles: true });
+            setTimeout(() => this.setState({ refreshTiles: undefined }));
         }
 
         // Highlight walk paths for walking only trips.
@@ -831,7 +843,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
                 this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
             }
-            const {trip, tripSegment} = this.props;
+            const { trip, tripSegment } = this.props;
             const isWalkTrip = trip && trip.isWalkTrip() || tripSegment && tripSegment.isWalking();
             this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
                 isWalkTrip ? 'visible' : 'none');
@@ -871,11 +883,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     public fitBounds(bounds: BBox) {
         if (this.leafletElement) {
-            const padding = Object.assign({top: 20, right: 20, bottom: 20, left: 20}, this.props.padding);
-            const options = {paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom]} as FitBoundsOptions;
+            const padding = Object.assign({ top: 20, right: 20, bottom: 20, left: 20 }, this.props.padding);
+            const options = { paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom] } as FitBoundsOptions;
             try {
                 this.leafletElement.fitBounds(L.latLngBounds([bounds.sw, bounds.ne]), options);
-            } catch(error) {
+            } catch (error) {
                 // TODO: fix it
                 console.log("Prevent bounds exception : ");
                 console.error(error);
@@ -884,7 +896,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public alreadyFits(bounds: BBox): boolean {
-        const padding = Object.assign({top: 0, right: 0, bottom: 0, left: 0}, this.props.padding);
+        const padding = Object.assign({ top: 0, right: 0, bottom: 0, left: 0 }, this.props.padding);
         return this.leafletElement ?
             MapUtil.alreadyFits(LeafletUtil.toBBox(this.leafletElement.getBounds()), padding, bounds,
                 this.leafletElement.getContainer().offsetWidth, this.leafletElement.getContainer().offsetHeight)
@@ -907,8 +919,8 @@ function getGeocodingData(geocodingConfig?: Partial<TKGeocodingOptions> | ((defa
 
 let avoidFitLatLng: LatLng | undefined;
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
-    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
@@ -965,10 +977,10 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
     };
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...consumedProps, ...inputProps})}
+                children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
 
 /**
@@ -979,254 +991,254 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
  */
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
-export {TKUIMapView as TKUIMapViewClass};
+export { TKUIMapView as TKUIMapViewClass };
 
 const WALK_PATH_COLOR = "rgb(0, 220, 0)";
 
 const ROAD_PEDESTRIAN_HIGHLIGHT =
-    {
-        "id": "road-pedestrian-highlight",
-        "type": "line",
-        "source": "composite",
-        "source-layer": "road",
-        "minzoom": 12,
-        "filter": [
-            "all",
+{
+    "id": "road-pedestrian-highlight",
+    "type": "line",
+    "source": "composite",
+    "source-layer": "road",
+    "minzoom": 12,
+    "filter": [
+        "all",
+        [
+            "==",
             [
-                "==",
-                [
-                    "get",
-                    "class"
-                ],
-                "pedestrian"
+                "get",
+                "class"
             ],
-            [
-                "match",
-                [
-                    "get",
-                    "structure"
-                ],
-                [
-                    "none",
-                    "ford"
-                ],
-                true,
-                false
-            ],
-            [
-                "==",
-                [
-                    "geometry-type"
-                ],
-                "LineString"
-            ]
+            "pedestrian"
         ],
-        "layout": {
-            "line-join": [
-                "step",
-                [
-                    "zoom"
-                ],
-                "miter",
-                14,
-                "round"
+        [
+            "match",
+            [
+                "get",
+                "structure"
             ],
-            "visibility": "none"
-        },
-        "paint": {
-            "line-width": [
-                "interpolate",
-                [
-                    "exponential",
-                    1.5
-                ],
-                [
-                    "zoom"
-                ],
-                14,
-                0.5,
-                18,
-                12
+            [
+                "none",
+                "ford"
             ],
-            "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(.5),
-            "line-dasharray": [
-                "step",
+            true,
+            false
+        ],
+        [
+            "==",
+            [
+                "geometry-type"
+            ],
+            "LineString"
+        ]
+    ],
+    "layout": {
+        "line-join": [
+            "step",
+            [
+                "zoom"
+            ],
+            "miter",
+            14,
+            "round"
+        ],
+        "visibility": "none"
+    },
+    "paint": {
+        "line-width": [
+            "interpolate",
+            [
+                "exponential",
+                1.5
+            ],
+            [
+                "zoom"
+            ],
+            14,
+            0.5,
+            18,
+            12
+        ],
+        "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(.5),
+        "line-dasharray": [
+            "step",
+            [
+                "zoom"
+            ],
+            [
+                "literal",
                 [
-                    "zoom"
-                ],
+                    1,
+                    0
+                ]
+            ],
+            15,
+            [
+                "literal",
                 [
-                    "literal",
-                    [
-                        1,
-                        0
-                    ]
-                ],
-                15,
+                    1.5,
+                    0.4
+                ]
+            ],
+            16,
+            [
+                "literal",
                 [
-                    "literal",
-                    [
-                        1.5,
-                        0.4
-                    ]
-                ],
-                16,
-                [
-                    "literal",
-                    [
-                        1,
-                        0.2
-                    ]
+                    1,
+                    0.2
                 ]
             ]
-        },
-        "metadata": {
-            "mapbox:featureComponent": "walking-cycling",
-            "mapbox:group": "Walking, cycling, etc., surface"
-        }
-    };
+        ]
+    },
+    "metadata": {
+        "mapbox:featureComponent": "walking-cycling",
+        "mapbox:group": "Walking, cycling, etc., surface"
+    }
+};
 
 const ROAD_PATH_HIGHLIGHT =
-    {
-        "id": "road-path-highlight",
-        "type": "line",
-        "source": "composite",
-        "source-layer": "road",
-        "minzoom": 12,
-        "filter": [
-            "all",
+{
+    "id": "road-path-highlight",
+    "type": "line",
+    "source": "composite",
+    "source-layer": "road",
+    "minzoom": 12,
+    "filter": [
+        "all",
+        [
+            "==",
             [
-                "==",
-                [
-                    "get",
-                    "class"
-                ],
-                "path"
+                "get",
+                "class"
+            ],
+            "path"
+        ],
+        [
+            "step",
+            [
+                "zoom"
             ],
             [
-                "step",
+                "!",
                 [
-                    "zoom"
-                ],
-                [
-                    "!",
-                    [
-                        "match",
-                        [
-                            "get",
-                            "type"
-                        ],
-                        [
-                            "steps",
-                            "sidewalk",
-                            "crossing"
-                        ],
-                        true,
-                        false
-                    ]
-                ],
-                16,
-                [
-                    "!=",
+                    "match",
                     [
                         "get",
                         "type"
                     ],
-                    "steps"
+                    [
+                        "steps",
+                        "sidewalk",
+                        "crossing"
+                    ],
+                    true,
+                    false
                 ]
             ],
+            16,
             [
-                "match",
+                "!=",
                 [
                     "get",
-                    "structure"
+                    "type"
                 ],
-                [
-                    "none",
-                    "ford"
-                ],
-                true,
-                false
-            ],
-            [
-                "==",
-                [
-                    "geometry-type"
-                ],
-                "LineString"
+                "steps"
             ]
         ],
-        "layout": {
-            "line-join": [
-                "step",
-                [
-                    "zoom"
-                ],
-                "miter",
-                14,
-                "round"
+        [
+            "match",
+            [
+                "get",
+                "structure"
             ],
-            "visibility": "none"
-        },
-        "paint": {
-            "line-width": [
-                "interpolate",
-                [
-                    "exponential",
-                    1.5
-                ],
-                [
-                    "zoom"
-                ],
-                13,
-                0.5,
-                14,
-                1,
-                15,
-                1,
-                18,
-                4
+            [
+                "none",
+                "ford"
             ],
-            "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(1),
-            "line-dasharray": [
-                "step",
+            true,
+            false
+        ],
+        [
+            "==",
+            [
+                "geometry-type"
+            ],
+            "LineString"
+        ]
+    ],
+    "layout": {
+        "line-join": [
+            "step",
+            [
+                "zoom"
+            ],
+            "miter",
+            14,
+            "round"
+        ],
+        "visibility": "none"
+    },
+    "paint": {
+        "line-width": [
+            "interpolate",
+            [
+                "exponential",
+                1.5
+            ],
+            [
+                "zoom"
+            ],
+            13,
+            0.5,
+            14,
+            1,
+            15,
+            1,
+            18,
+            4
+        ],
+        "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(1),
+        "line-dasharray": [
+            "step",
+            [
+                "zoom"
+            ],
+            [
+                "literal",
                 [
-                    "zoom"
-                ],
+                    1,
+                    0
+                ]
+            ],
+            15,
+            [
+                "literal",
                 [
-                    "literal",
-                    [
-                        1,
-                        0
-                    ]
-                ],
-                15,
+                    1.75,
+                    1
+                ]
+            ],
+            16,
+            [
+                "literal",
                 [
-                    "literal",
-                    [
-                        1.75,
-                        1
-                    ]
-                ],
-                16,
+                    1,
+                    0.75
+                ]
+            ],
+            17,
+            [
+                "literal",
                 [
-                    "literal",
-                    [
-                        1,
-                        0.75
-                    ]
-                ],
-                17,
-                [
-                    "literal",
-                    [
-                        1,
-                        0.5
-                    ]
+                    1,
+                    0.5
                 ]
             ]
-        },
-        "metadata": {
-            "mapbox:featureComponent": "walking-cycling",
-            "mapbox:group": "Walking, cycling, etc., surface"
-        }
-    };
+        ]
+    },
+    "metadata": {
+        "mapbox:featureComponent": "walking-cycling",
+        "mapbox:group": "Walking, cycling, etc., surface"
+    }
+};

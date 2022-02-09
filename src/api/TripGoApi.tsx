@@ -1,10 +1,9 @@
 import RoutingQuery from "../model/RoutingQuery";
 import RoutingResults from "../model/trip/RoutingResults";
 import NetworkUtil from "../util/NetworkUtil";
-import {JsonConvert} from "json2typescript";
 import Trip from "../model/trip/Trip";
 import StopLocation from "../model/StopLocation";
-import Environment, {Env} from "../env/Environment";
+import { Env } from "../env/Environment";
 import Util from "../util/Util";
 
 class TripGoApi {
@@ -19,6 +18,7 @@ class TripGoApi {
     public static userToken?: string = undefined;
     public static accountAccessToken?: string = undefined;
     public static userID?: string = undefined;
+    public static locale?: Promise<string> = undefined;
 
     public static getServer(): string {
         return this.server;
@@ -46,27 +46,32 @@ class TripGoApi {
 
     public static apiCallUrl(url: string, method: string, body?: any, cache: boolean = false): Promise<any> {
         // TODO: Fetch with chacé, just for development, to avoid doing so much api calls and accelerating answers.
-        return NetworkUtil.fetch(url, {
-            method: method,
-            headers: {
-                'X-TripGo-Version': 'w3.2018.12.20',
-                'X-TripGo-Key': this.apiKey,
-                'referer': 'https://tripgo.com',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                ...this.userToken && {
-                    'userToken': this.userToken
+        return Promise.resolve(this.locale).then(locale =>
+            NetworkUtil.fetch(url, {
+                method: method,
+                headers: {
+                    'X-TripGo-Version': 'w3.2018.12.20',
+                    'X-TripGo-Key': this.apiKey,
+                    'referer': 'https://tripgo.com',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    ...this.userToken && {
+                        'userToken': this.userToken
+                    },
+                    ...this.accountAccessToken && {
+                        'X-Account-Access-Token': this.accountAccessToken
+                    },
+                    ...this.userID && {
+                        'userID': this.userID
+                    },
+                    ...locale && locale !== 'en' && {
+                        'accept-language': [locale, 'en'].join(',')
+                    }
                 },
-                ...this.accountAccessToken && {
-                    'X-Account-Access-Token': this.accountAccessToken
-                },
-                ...this.userID && {
-                    'userID': this.userID
-                }
-            },
-            body: body ? JSON.stringify(body) : undefined
-        }, cache)
+                body: body ? JSON.stringify(body) : undefined
+            }, cache)
             // .then(NetworkUtil.jsonCallback); // TODO: Comment since NetworkUtil.fetch already calls jsonCallback.
+        )
     }
 
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
@@ -95,7 +100,7 @@ class TripGoApi {
 
     public static findStopFromCode(regionCode: string, stopCode: string): Promise<StopLocation> {
         return this.apiCall("stopFinder.json", NetworkUtil.MethodType.POST,
-            {region: regionCode, code: stopCode})
+            { region: regionCode, code: stopCode })
             .then((stopJson: any) => {
                 return Util.deserialize(stopJson, StopLocation);
             });

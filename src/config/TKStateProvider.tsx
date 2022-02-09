@@ -21,6 +21,10 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (props.config.server) {
             TripGoApi.server = props.config.server;
         }
+        if (props.config.i18n) {
+            TripGoApi.locale = Promise.resolve(props.config.i18n)
+                .then(({ locale }) => locale);
+        }
     }
 
     public render(): React.ReactNode {
