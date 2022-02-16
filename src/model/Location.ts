@@ -2,6 +2,7 @@ import LatLng from '../model/LatLng';
 import Util from "../util/Util";
 import {JsonObject, JsonProperty} from "json2typescript";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import {TranslationFunction} from "../i18n/TKI18nProvider";
 // import RegionsData from "../data/RegionsData";
 
 @JsonObject
@@ -46,10 +47,10 @@ class Location extends LatLng {
         return this.create(new LatLng(), this.currLocText, "", "", TKDefaultGeocoderNames.geolocation);
     }
 
-    private static readonly droppedPinText = "Location";
+    private static readonly droppedPinId = "dropped";
 
-    public static createDroppedPin(latLng: LatLng) {
-        return this.create(latLng, this.droppedPinText, "", "")
+    public static createDroppedPin(latLng: LatLng, t: TranslationFunction) {
+        return this.create(latLng, t("Location"), this.droppedPinId, "")
     }
 
     /**
@@ -120,7 +121,7 @@ class Location extends LatLng {
     }
 
     public isDroppedPin(): boolean {
-        return this.address === Location.droppedPinText;
+        return this.id === Location.droppedPinId;
     }
 
     public toJson(): object {

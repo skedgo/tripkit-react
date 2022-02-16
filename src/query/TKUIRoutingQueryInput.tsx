@@ -269,8 +269,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const routingQuery = this.props.value;
         const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
         const t = this.props.t;
-        const fromPlaceholder = t("Where.are.you.going.from?");
-        const toPlaceholder = t("Where.do.you.want.to.go?");
+        const fromPlaceholder = t("Start.location");
+        const toPlaceholder = t("End.location");
         const ariaLabelFrom = routingQuery.from !== null ?
             "From " + routingQuery.from.getDisplayString() :
             this.state.fromTooltipText ? this.state.fromTooltipText + " " + fromPlaceholder :

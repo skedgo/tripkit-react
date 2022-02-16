@@ -108,7 +108,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
-        const placeholder = this.props.t("Where.do.you.want.to.go?");
+        const placeholder = this.props.t("Search.for.destination");
         const inputId = "input-search";
         const ariaLabel = this.props.value ?
             "To " + this.props.value.getDisplayString() : placeholder;

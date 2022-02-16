@@ -1,20 +1,6 @@
 {
-    "Appearance": "Appearance",
-    "Match.OS": "Match OS",
-    "Dark": "Dark",
-    "Light": "Light",
-    "Get.mobile.app": "Get mobile app",
-    "Copied.to.clipboard": "Copied to clipboard",
-    "See.it.on.your.mobile.device": "See it on your mobile device",
-    "Scan.the.QR.code.with.your.device.camera": "Scan the QR code with your device camera",
-    "You.blocked.this.site.access.to.your.location": "You blocked this site access to your location",
     "You.blocked.this.site.access.to.your.location,.either.at.browser.or.system.level": "You blocked this site access to your location, either at browser or system level",
     "Could.not.determine.your.location.accurately..Please.set.manually.": "Could not determine your location accurately. Please set manually.",
-
     "Something.went.wrong.": "Something went wrong.",
-
-    "Share": "Share",
-    "More.options": "More options",
-    "More": "More",
-    "Less": "Less"
+    "More.options": "More options"
 }

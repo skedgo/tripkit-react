@@ -175,12 +175,12 @@ class TKUITripRow extends React.Component<IProps, {}> {
     private ref: any;
 
     public render(): React.ReactNode {
-        const trip = this.props.value;
+        const {value: trip, t} = this.props;
         const currencySymbol = trip.currencySymbol || "$";
         const cost = trip.moneyCost === null ? undefined :
-            (trip.moneyCost === 0 ? "Free" : currencySymbol + trip.moneyCost);
+            (trip.moneyCost === 0 ? t("Free") : currencySymbol + trip.moneyCost);
         const calories = trip.caloriesCost > 0 ? trip.caloriesCost + " kcal" : undefined;
-        const carbon = trip.carbonCost === 0 ? " No CO2" : trip.carbonCost + " kg CO2";
+        const carbon = trip.carbonCost === 0 ? " " + t("No.CO₂") : trip.carbonCost + " kg CO2";
         let info = cost || "";
         if (calories) {
             info += (info ? " · " : "") + calories;
@@ -214,7 +214,6 @@ class TKUITripRow extends React.Component<IProps, {}> {
         }
         const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
         const classes = this.props.classes;
-        const t = this.props.t;
         const collapsed = !this.props.expanded;
         const bookingSegment = trip.segments.find(segment => segment.booking);
         return (
