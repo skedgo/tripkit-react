@@ -191,7 +191,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             onClick={() => this.setState({showMyBookings: true})}
                         />
                     </TKUISettingSection>}
-                    <TKUISettingSection title={t("My.Transport")}>
+                    <TKUISettingSection>
                         <TKUISettingLink
                             text={t("Transport")}
                             onClick={() => this.setState({showTransports: true})}

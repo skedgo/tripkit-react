@@ -151,9 +151,7 @@
 
         var language = navigator.language;
         var tKI18nPromise;
-        if (language === 'en') {
-            tKI18nPromise = Promise.reject(new Error("Use default language"));
-        } else {
+        if (language !== 'en') {
             tKI18nPromise = fetch("/i18n/i18n_" + language + ".json")
                 .then(jsonCallback)
                 .catch(() => {

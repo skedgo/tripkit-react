@@ -82,10 +82,10 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
+        const { classes, t } = this.props;
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
-        const classes = this.props.classes;
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
         const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.DATE_TIME_FORMAT) + ". Open date time picker";
@@ -179,6 +179,8 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                 }}
                 customInput={CustomInput ? <CustomInput/> : <DatePickerInput/>}
                 popperPlacement={this.props.popperPlacement}
+                timeCaption={t("o4h-JW-YBy.text")}
+                timeInputLabel={t("o4h-JW-YBy.text")}
             /></div> :
             (CustomInput ?
                 <div className={classes.face}>

@@ -64,7 +64,6 @@ class TKUITooltip extends React.Component<IProps, IState> {
         if (props.reference) {
             props.reference(this);
         }
-        console.log("TKUITooltip constructor");
     }
 
     private isVisible(): boolean | undefined {

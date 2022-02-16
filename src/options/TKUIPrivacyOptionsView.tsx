@@ -105,7 +105,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         {t("Trip.selections")}
                                     </div>
                                     <div className={classes.optionDescription}>
-                                        {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anomymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
+                                        {t("Help.improve.transport.services.in.your.area.by.allowing.us.to.collect.information.about.which.trips.you.select.in.the.app.\nWe.aggregate.the.anonymised.data.and.provide.it.to.researchers,.regulators,.and.transport.providers.")}
                                     </div>
                                 </div>
                                 <this.GreenCheckbox

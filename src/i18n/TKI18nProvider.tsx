@@ -16,7 +16,7 @@ export interface TKI18nContextProps {
     t: TranslationFunction;
     // So components can know i18n promise resolved and transaltions were overridden, and
     // explicitly update string that are not (re)translated on (re)render (e.g. those translations
-    // performed on component construction.
+    // performed on component construction).
     i18nOverridden: boolean;
 }
 

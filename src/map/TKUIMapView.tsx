@@ -259,7 +259,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
         const mapLocation = latLng instanceof ModeLocation ? latLng as ModeLocation :
-            Location.createDroppedPin(latLng);
+            Location.createDroppedPin(latLng, this.props.t);
         if (isFrom) {
             // If from is already set then remove it so when setting it again the
             // Marker onadd event is triggered again, and popup is displayed.
@@ -904,7 +904,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public onResize() {
-        this.leafletElement!.invalidateSize();
+        try {
+            this.leafletElement!.invalidateSize();
+        } catch (e) {
+            console.log(e);
+        }
     }
 }
 
