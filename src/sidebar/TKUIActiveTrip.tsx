@@ -1,8 +1,7 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React from 'react';
 import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {Subtract} from 'utility-types';
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
 import TKUIRow from "../options/TKUIRow";
@@ -59,8 +58,8 @@ const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
             </div>;
     } else {
         const icon = activeTrip === undefined ? <IconSunClock/> : <IconTicket/>;
-        const title = activeTrip === undefined ? "Getting your active trip..." : "Your active trip will be shown here.";
-        const subtitle = activeTrip === undefined ? "Please wait while we look for your active trip." : "You currently have no active trip.";
+        const title = activeTrip === undefined ? t("Getting.your.active.trip…") : t("Your.active.trip.will.be.shown.here.");
+        const subtitle = activeTrip === undefined ? t("Please.wait.while.we.look.for.your.active.trip.") : t("You.currently.have.no.active.trip.");
         content =
             <div className={classes.info}>
                 <div className={classes.icon}>
@@ -75,7 +74,7 @@ const TKUIActiveTrip: React.SFC<IProps> = (props: IProps) => {
     return (
         <div className={classes.main}>
             <div className={classes.activeTripHeader}>
-                <div className={classes.activeTripTitle}>Active trip</div>
+                <div className={classes.activeTripTitle}>{t("Active.trip")}</div>
                 <TKUIButton text={t("My.Bookings")}
                             type={TKUIButtonType.PRIMARY_LINK}
                             onClick={() => onMyBookings()}
