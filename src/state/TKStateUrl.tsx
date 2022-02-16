@@ -19,6 +19,7 @@ import Trip from "../model/trip/Trip";
 import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 import {TKAccountContext} from "../account/TKAccountContext";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {
     tKState: TKState;
@@ -313,7 +314,10 @@ class TKStateUrl extends React.Component<IProps, {}> {
             }
             const settings = TKShareHelper.parseSettingsQueryParam();
             if (settings) {
-                const update = Util.iAssign(tKState.userProfile, settings);
+                const update = Util.deserialize({...Util.serialize(tKState.userProfile), ...Util.serialize(settings)}, TKUserProfile);
+                // If doing instead
+                // const update = Util.iAssign(tKState.userProfile, settings);
+                // the undefined properties in settings override those in userProfile.
                 tKState.onUserProfileChange(update);
                 // Since default trip sort is loaded into RoutingResultsContext before this update,
                 // the next line is required to update the context with the coming value.
