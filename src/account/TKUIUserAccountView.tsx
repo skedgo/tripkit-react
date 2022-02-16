@@ -1,13 +1,14 @@
-import React, {useContext} from 'react';
-import {TKAccountContext} from "./TKAccountContext";
-import {TKUITheme} from "../jss/TKUITheme";
+import React, { useContext } from 'react';
+import { TKAccountContext } from "./TKAccountContext";
+import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
-import {TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import {TKUISlideUpPosition} from "../card/TKUISlideUp";
+import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
+import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
+import { TKUISlideUpPosition } from "../card/TKUISlideUp";
 import TKUISettingSection from "../options/TKUISettingSection";
 import TKUIRow from "../options/TKUIRow";
+import { TKI18nContext } from '../i18n/TKI18nProvider';
 
 const userAccountViewJss = (theme: TKUITheme) => ({
     main: {
@@ -24,7 +25,8 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
 }
 
 const TKUIUserAccountView: React.SFC<IProps> = (props) => {
-    const {userAccount} = useContext(TKAccountContext);
+    const { userAccount } = useContext(TKAccountContext);
+    const { t } = useContext(TKI18nContext);
     if (!userAccount) {
         return null;
     }
@@ -35,27 +37,27 @@ const TKUIUserAccountView: React.SFC<IProps> = (props) => {
         <TKUIViewportUtil>
             {(viewportProps) =>
                 <TKUICard
-                    title={"Your account"}
+                    title={t("My.Account")}
                     presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                     onRequestClose={props.onRequestClose}
                     slideUpOptions={{
                         initPosition: TKUISlideUpPosition.UP,
-                        modalUp: {top: 5, unit: 'px'},
+                        modalUp: { top: 5, unit: 'px' },
                         draggable: false
                     }}
                 >
                     <div className={classes.main}>
-                    <TKUISettingSection>
-                        {name &&
-                        <TKUIRow
-                            title={"Name"}
-                            subtitle={name}
-                        />}
-                        <TKUIRow
-                            title={"Email"}
-                            subtitle={userAccount.email}
-                        />
-                    </TKUISettingSection>
+                        <TKUISettingSection>
+                            {name &&
+                                <TKUIRow
+                                    title={t("Name")}
+                                    subtitle={name}
+                                />}
+                            <TKUIRow
+                                title={t("Email")}
+                                subtitle={userAccount.email}
+                            />
+                        </TKUISettingSection>
                     </div>
                 </TKUICard>}
         </TKUIViewportUtil>
