@@ -107,6 +107,7 @@ export {components as reactSelectComponents} from "react-select";
 export {default as TKUISelect} from "./buttons/TKUISelect";
 export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
 export type TKSelectOption = SelectOption;
+export {default as TKGeolocationData} from "./geocode/GeolocationData";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.

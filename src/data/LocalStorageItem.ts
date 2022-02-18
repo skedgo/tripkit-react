@@ -37,6 +37,10 @@ class LocalStorageItem<T> {
         }
     }
 
+    public existsInLS(): boolean {
+        return localStorage.getItem(this.localStorageKey) !== null;
+    }
+
     protected deserialize(itemJson: any): T {
         return Util.deserialize(itemJson, this.classRef);
     }
