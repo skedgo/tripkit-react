@@ -73,6 +73,7 @@ import {TKUIHomeCardProps, TKUIHomeCardStyle} from "../sidebar/TKUIHomeCard";
 import {TKUIActiveTripProps, TKUIActiveTripStyle} from "../sidebar/TKUIActiveTrip";
 import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
 import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
+import TKUserProfile from "../model/options/TKUserProfile";
 
 /**
  * SDK configuration
@@ -97,6 +98,8 @@ interface ITKUIConfigOptional {
     onUpdateState: (state: TKState, prevState: TKState) => void;
     /** @ctype */
     initViewport: {center?: LatLng, zoom?: number};
+    /** @ctype */
+    defaultUserProfile: TKUserProfile;
     /**
      * @ctype
      * If true then region in global state will be fixed to that one of the initial

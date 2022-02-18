@@ -1,8 +1,7 @@
 import {JsonConvert} from "json2typescript";
 import Environment, {Env} from "../env/Environment";
-import {useMemo} from "react";
 
-type Update<T> = {
+export type Update<T> = {
     [P in keyof T]?: T[P]
 }
 

@@ -21,12 +21,19 @@ export const OptionsContext = React.createContext<IOptionsContext>({
     }
 });
 
-class OptionsProvider extends React.Component<{}, {value: TKUserProfile, show: boolean}> {
+interface IProps {
+    defaultValue?: TKUserProfile;
+}
+
+class OptionsProvider extends React.Component<IProps, {value: TKUserProfile, show: boolean}> {
 
     eventSubscription: EventSubscription;
 
-    constructor(props: {}) {
+    constructor(props: IProps) {
         super(props);
+        if (props.defaultValue && !OptionsData.instance.existsInLS()) {
+            OptionsData.instance.save(props.defaultValue);
+        }
         this.state = {
             value: OptionsData.instance.get(),
             show: false

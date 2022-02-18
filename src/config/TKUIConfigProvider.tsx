@@ -34,7 +34,7 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const customThemeCreator = this.props.config && this.props.config.theme;
         return (
-            <OptionsProvider>
+            <OptionsProvider defaultValue={this.props.config.defaultUserProfile}>
                 <OptionsContext.Consumer>
                     {(optionsContext: IOptionsContext) => {
                         // Make isDarkDefault to override the user setting (should not be called 'Default').
