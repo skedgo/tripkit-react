@@ -30,6 +30,7 @@ import {TKUIWithStyle as TKUIWithStyleForExport, TKUIWithClasses as TKUIWithClas
 import {default as TKGeocodingOptionsForExport} from "./geocode/TKGeocodingOptions";
 import {TKUISlideUpPosition} from "./card/TKUISlideUp";
 import {SelectOption} from "./buttons/TKUISelect";
+import {PeliasGeocoderOptions as PeliasGeocoderOptionsForExport} from "./geocode/PeliasGeocoder";
 export {default as TKUITripPlanner} from "./trip-planner/TKUITripPlanner";
 export {default as TKStateProvider} from "./config/TKStateProvider";
 export {default as TKStateConsumer} from "./config/TKStateConsumer";
@@ -108,6 +109,7 @@ export {default as TKUISelect} from "./buttons/TKUISelect";
 export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
 export type TKSelectOption = SelectOption;
 export {default as TKGeolocationData} from "./geocode/GeolocationData";
+export type PeliasGeocoderOptions = PeliasGeocoderOptionsForExport;
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.

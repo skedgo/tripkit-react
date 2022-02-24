@@ -10,27 +10,23 @@ import GeocoderOptions from "./GeocoderOptions";
 import {Env} from "../env/Environment";
 import Region from "../model/region/Region";
 
-class PeliasGeocoder implements IGeocoder {
-
-    private geocodeServer: string;
-    private apiKey: string;
+export interface PeliasGeocoderOptions extends GeocoderOptions {
+    server: string;
+    apiKey: string;
+    restrictToBounds?: boolean;
     // Allow to pass region as constructor parameter to use it's polygon to restrict results.
     // TODO: make geocode method to receive a polygon instead of a bounding box (or both things).
-    private region?: Region;
+    region?: Region;
+    sources?: string;
+}
+class PeliasGeocoder implements IGeocoder {
 
-    private options: GeocoderOptions;
+    private options: PeliasGeocoderOptions;
     private cache: GeocodingCache;
 
-    // Added as constructor parameter, just for this geocoder, instead of a new option field, general for any geocoder.
-    private restrictToBounds: boolean;
-
-    constructor(geocodeServer: string, apiKey: string, restrictToBounds: boolean = false, region?: Region) {
-        this.geocodeServer = geocodeServer;
-        this.apiKey = apiKey;
-        this.restrictToBounds = restrictToBounds;
-        this.options = new GeocoderOptions();
+    constructor(options: PeliasGeocoderOptions) {
+        this.options = options;
         this.cache = new GeocodingCache();
-        this.region = region;
     }
 
     public getOptions(): GeocoderOptions {
@@ -52,8 +48,8 @@ class PeliasGeocoder implements IGeocoder {
             }
         }
         if (autocomplete) {
-            const url = this.geocodeServer + "/autocomplete?api_key=" + this.apiKey
-                + (bounds && this.restrictToBounds ?
+            const url = this.options.server + "/autocomplete?api_key=" + this.options.apiKey
+                + (bounds && this.options.restrictToBounds ?
                         "&boundary.rect.min_lat=" + bounds.minLat +
                         "&boundary.rect.max_lat=" + bounds.maxLat +
                         "&boundary.rect.min_lon=" + bounds.minLng +
@@ -61,6 +57,7 @@ class PeliasGeocoder implements IGeocoder {
                 )
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
                 + (this.options.resultsLimit !== undefined ? "&size=" + this.options.resultsLimit : "")
+                + (this.options.sources ? "&sources=" + this.options.sources : "")
                 + "&text=" + query;
 
             fetch(url, {
@@ -69,8 +66,8 @@ class PeliasGeocoder implements IGeocoder {
                 const features = (json as FeatureCollection).features;
                 let locationResults = !features ? [] : features
                     .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
-                if (this.restrictToBounds) {
-                    locationResults = locationResults.filter(result => !this.region || this.region.contains(result as any))
+                if (this.options.restrictToBounds) {
+                    locationResults = locationResults.filter(result => !this.options.region || this.options.region.contains(result as any))
                 }
                 if (center) {
                     this.cache.addResults(query, autocomplete, center, locationResults);
@@ -81,7 +78,7 @@ class PeliasGeocoder implements IGeocoder {
                 callback([]);
             });
         } else {
-            const url = this.geocodeServer + "/search?api_key=" + this.apiKey
+            const url = this.options.server + "/search?api_key=" + this.options.apiKey
                 + (bounds ?
                         "&boundary.rect.min_lat=" + bounds.minLat +
                         "&boundary.rect.max_lat=" + bounds.maxLat +
@@ -109,7 +106,7 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public resolve(unresolvedLocation: Location): Promise<Location> {
-        const url = this.geocodeServer + "/place?api_key=" + this.apiKey + "&ids=" + unresolvedLocation.id;
+        const url = this.options.server + "/place?api_key=" + this.options.apiKey + "&ids=" + unresolvedLocation.id;
         return fetch(url, {
             method: NetworkUtil.MethodType.GET
         }).then(NetworkUtil.jsonCallback).then((json: any) => {
@@ -123,7 +120,7 @@ class PeliasGeocoder implements IGeocoder {
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
-        const url = this.geocodeServer + "/reverse?api_key=" + this.apiKey +
+        const url = this.options.server + "/reverse?api_key=" + this.options.apiKey +
             "&point.lat="+ coord.lat + "&point.lon=" + coord.lng;
         fetch(url, {
             method: NetworkUtil.MethodType.GET

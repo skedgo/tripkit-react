@@ -20,8 +20,11 @@ function TKDocComponent(props: TKDocComponentProps & { classes: Classes<keyof ty
     const classes = props.classes;
     const [cssExpanded, setCssExpanded] = useState(true);
     const [demoExpanded, setDemoExpanded] = useState(true);
-    const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8");
-    geocodeEarth.getOptions().resultsLimit = 5;
+    const geocodeEarth = new TKPeliasGeocoder({
+        server: "https://api.geocode.earth/v1",
+        apiKey: "ge-63f76914953caba8",
+        resultsLimit: 5
+    });
     const config = {
         apiKey: '790892d5eae024712cfd8616496d7317',
         isDarkDefault: false,

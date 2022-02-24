@@ -1,23 +1,24 @@
 import React from "react";
 import IGeocoder from "./IGeocoder";
 import GeocoderOptions from "./GeocoderOptions";
-import {ReactComponent as IconCurrLoc} from '../images/location/ic-curr-loc.svg';
+import { ReactComponent as IconCurrLoc } from '../images/location/ic-curr-loc.svg';
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import Util from "../util/Util";
 import GeolocationData from "./GeolocationData";
-import {ERROR_GEOLOC_INACCURATE, TKUserPosition} from "../util/GeolocationUtil";
-import {TKError} from "../error/TKError";
+import { ERROR_GEOLOC_INACCURATE, TKUserPosition } from "../util/GeolocationUtil";
+import { TKError } from "../error/TKError";
 
 class CurrentLocationGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;
 
-
-    constructor() {
-        this.options = new GeocoderOptions();
-        this.options.renderIcon = () => <IconCurrLoc/>
+    constructor(options: GeocoderOptions = {}) {
+        this.options = options;
+        if (!this.options.renderIcon) {
+            this.options.renderIcon = () => <IconCurrLoc />
+        }
     }
 
     geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {

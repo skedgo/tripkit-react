@@ -7,12 +7,12 @@ import NetworkUtil from "../util/NetworkUtil";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import TripGoApi from "../api/TripGoApi";
-import {LocationConverter} from "../model/location/LocationConverter";
+import { LocationConverter } from "../model/location/LocationConverter";
 import Util from "../util/Util";
-import {tKUIColors} from "../jss/TKUITheme";
+import { tKUIColors } from "../jss/TKUITheme";
 import StopLocation from "../model/StopLocation";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
-import {ReactComponent as IconPin} from '../images/ic-pin-start.svg';
+import { ReactComponent as IconPin } from '../images/ic-pin-start.svg';
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import CarParkLocation from "../model/location/CarParkLocation";
@@ -22,23 +22,26 @@ import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import CarPodLocation from "../model/location/CarPodLocation";
 
+const defaultRenderIcon = (location: Location) =>
+    location instanceof StopLocation ?
+        <TKUIModeLocationIcon
+            stop={location as StopLocation}
+            style={{
+                width: undefined,
+                height: undefined,
+                background: tKUIColors.black1,
+            }}
+        /> : <IconPin />;
 class SkedgoGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;
     private cache: GeocodingCache;
 
-    constructor() {
-        this.options = new GeocoderOptions();
-        this.options.renderIcon =
-            (location: Location) => location instanceof StopLocation ?
-                <TKUIModeLocationIcon
-                    stop={location as StopLocation}
-                    style={{
-                        width: undefined,
-                        height: undefined,
-                        background: tKUIColors.black1,
-                    }}
-                /> : <IconPin/>;
+    constructor(options: GeocoderOptions = {}) {
+        this.options = options;
+        if (!this.options.renderIcon) {
+            this.options.renderIcon = defaultRenderIcon;
+        }
         this.cache = new GeocodingCache();
     }
 
@@ -118,7 +121,7 @@ class SkedgoGeocoder implements IGeocoder {
                         resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
                         resolvedLocation.name = locInfo.carPark.name;
                         resolvedLocation.carPark = locInfo.carPark;
-                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "parking"});
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), { localIcon: "parking" });
                         // Need this to force TKUILocationBox to resolve the location.
                         resolvedLocation.hasDetail = true;
                     } else if (locInfo.carRental) {
@@ -127,7 +130,7 @@ class SkedgoGeocoder implements IGeocoder {
                         resolvedLocation = Util.iAssign(new CarParkLocation(), unresolvedLocation);
                         resolvedLocation.name = locInfo.carRental.company.name;
                         resolvedLocation.carRental = locInfo.carRental;
-                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "car-share"});
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), { localIcon: "car-share" });
                         // Need this to force TKUILocationBox to resolve the location.
                         resolvedLocation.hasDetail = true;
                     } else if (locInfo.carPod) {
@@ -136,14 +139,14 @@ class SkedgoGeocoder implements IGeocoder {
                         resolvedLocation = Util.iAssign(new CarPodLocation(), unresolvedLocation);
                         resolvedLocation.name = locInfo.carPod.operator.name;
                         resolvedLocation.carPod = locInfo.carPod;
-                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "car-share"});
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), { localIcon: "car-share" });
                         // Need this to force TKUILocationBox to resolve the location.
                         resolvedLocation.hasDetail = true;
                     } else if (locInfo.bikePod) {
                         resolvedLocation = Util.iAssign(new BikePodLocation(), unresolvedLocation);
                         resolvedLocation.name = locInfo.bikePod.operator.name;
                         resolvedLocation.bikePod = locInfo.bikePod;
-                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), {localIcon: "bicycle-share"});
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), { localIcon: "bicycle-share" });
                         // Need this to force TKUILocationBox to resolve the location.
                         resolvedLocation.hasDetail = true;
                     } else if (unresolvedLocation.isResolved()) { // TODO: implement resolution for the other kind of locations.
@@ -154,13 +157,13 @@ class SkedgoGeocoder implements IGeocoder {
                     }
                     return resolvedLocation;
                 }).catch((e) => {
-                if (unresolvedLocation.isResolved()) {
-                    unresolvedLocation.hasDetail = true;
-                    return unresolvedLocation;
-                } else {
-                    throw e;
-                }
-            }));
+                    if (unresolvedLocation.isResolved()) {
+                        unresolvedLocation.hasDetail = true;
+                        return unresolvedLocation;
+                    } else {
+                        throw e;
+                    }
+                }));
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
