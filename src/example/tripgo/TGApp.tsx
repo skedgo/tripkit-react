@@ -60,8 +60,12 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
         }
     } : undefined;
 
-    const geocodeEarth = new TKPeliasGeocoder("https://api.geocode.earth/v1", "ge-63f76914953caba8", isTfGMReferrer());
-    geocodeEarth.getOptions().resultsLimit = 5;
+    const geocodeEarth = new TKPeliasGeocoder({
+        server: "https://api.geocode.earth/v1",
+        apiKey: "ge-63f76914953caba8",
+        restrictToBounds: isTfGMReferrer(),
+        resultsLimit: 5
+    });
 
     const hostname = window.location.hostname;
     const devSettings = hostname.includes("tripkit.") || hostname.includes("beta.") || hostname.includes("localhost");

@@ -10,9 +10,9 @@ import Util from "../util/Util";
 import FavouritesData from "../data/FavouritesData";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
-import {ReactComponent as IconFavourite} from '../images/ic-fav-star.svg';
-import {ReactComponent as IconCity} from '../images/location/ic-city.svg';
-import {ReactComponent as IconClock} from '../images/ic-clock.svg';
+import { ReactComponent as IconFavourite } from '../images/ic-fav-star.svg';
+import { ReactComponent as IconCity } from '../images/location/ic-city.svg';
+import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 import City from "../model/location/City";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import CurrentLocationGeocoder from "./CurrentLocationGeocoder";
@@ -46,15 +46,15 @@ interface TKGeocodingOptions {
 function getDefaultGeocodingOptions(): TKGeocodingOptions {
     const currLocGeocoder = new CurrentLocationGeocoder();
 
-    const skedgoGeocoder = new SkedgoGeocoder();
-    skedgoGeocoder.getOptions().resultsLimit = 2;
+    const skedgoGeocoder = new SkedgoGeocoder({ resultsLimit: 2 });
 
-    const citiesGeocoder = new StaticGeocoder();
-    citiesGeocoder.getOptions().resultsLimit = 5;
-    citiesGeocoder.getOptions().renderIcon = () => <IconCity/>;
+    const citiesGeocoder = new StaticGeocoder({ 
+        resultsLimit: 5, 
+        renderIcon: () => <IconCity />
+    });
     RegionsData.instance.requireRegions().then(() => {
         citiesGeocoder.setValues(RegionsData.instance.getCities()!
-            .map((city: City) => Util.iAssign(city, {source: TKDefaultGeocoderNames.cities})));
+            .map((city: City) => Util.iAssign(city, { source: TKDefaultGeocoderNames.cities })));
     });
 
     const favToLocations = (favourites: Favourite[], recent: boolean) => {
@@ -74,21 +74,22 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
                     e1 === null ? e2 === null : e1.equals(e2));
     };
 
-    const recentGeocoder = new StaticGeocoder(true);
-    recentGeocoder.getOptions().resultsLimit = 3;
-    recentGeocoder.getOptions().renderIcon =
-        (location: Location) => {
-            return FavouritesData.instance.getLocations()
-                .find((loc: Location) => location.equals(loc)) ? <IconFavourite/> : <IconClock/>;
-        };
+    const recentGeocoder = new StaticGeocoder({
+        emptyMatchAll: true, 
+        resultsLimit: 3,
+        renderIcon: (location: Location) => FavouritesData.instance.getLocations()
+            .find((loc: Location) => location.equals(loc)) ? <IconFavourite /> : <IconClock />
+    });
     const recLocations = favToLocations(FavouritesData.recInstance.get(), true);
     recentGeocoder.setValues(recLocations);
     FavouritesData.recInstance.addChangeListener((update: Favourite[]) =>
         recentGeocoder.setValues(favToLocations(update, true)));
 
-    const favouritesGeocoder = new StaticGeocoder(true);
-    favouritesGeocoder.getOptions().resultsLimit = 5;
-    favouritesGeocoder.getOptions().renderIcon = () => <IconFavourite/>;
+    const favouritesGeocoder = new StaticGeocoder({
+        emptyMatchAll: true,
+        resultsLimit: 5,
+        renderIcon: () => <IconFavourite />
+    });
     const favLocations = favToLocations(FavouritesData.instance.get(), false);
     favouritesGeocoder.setValues(favLocations);
     FavouritesData.instance.addChangeListener((update: Favourite[]) =>
@@ -144,7 +145,7 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     // It's used to remove duplicates from different sources. We assume results returned
     // by each source is free of duplicates (is responsibility of the source to ensure that)
     const analogResults = (r1: Location, r2: Location) => {
-        const relevance = Math.max(LocationUtil.relevance(r1.address || "", r2.address || "") , LocationUtil.relevance(r2.address || "", r1.address || ""));
+        const relevance = Math.max(LocationUtil.relevance(r1.address || "", r2.address || ""), LocationUtil.relevance(r2.address || "", r1.address || ""));
         const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
         if (r1.source !== r2.source) {
             Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);
@@ -174,8 +175,8 @@ function getGeocodingOptions(configOptions?: Partial<TKGeocodingOptions> | ((def
     const configOptionsObj = Util.isFunction(configOptions) ?
         (configOptions as ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>))(defaultOptions) :
         configOptions;
-    return !configOptions ? defaultOptions : {...defaultOptions, ...configOptionsObj};
+    return !configOptions ? defaultOptions : { ...defaultOptions, ...configOptionsObj };
 }
 
 export default TKGeocodingOptions;
-export {getGeocodingOptions}
+export { getGeocodingOptions }

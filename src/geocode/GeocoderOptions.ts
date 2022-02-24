@@ -1,11 +1,9 @@
 import Location from "../model/Location";
 
-class GeocoderOptions {
-
-    public blockAutocompleteResults = true;
-    public resultsLimit?: number;
-    public renderIcon?: (location: Location) => JSX.Element;
-
+interface GeocoderOptions {
+    blockAutocompleteResults?: boolean;  // default true
+    resultsLimit?: number;
+    renderIcon?: (location: Location) => JSX.Element;
 }
 
 export default GeocoderOptions;

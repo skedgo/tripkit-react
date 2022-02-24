@@ -28,7 +28,7 @@ class MultiGeocoder {
                 geocoderResults.set(geocoderId, results);
                 for (const geocoderId1 of Object.keys(this._options.geocoders)) {
                     const geocoder1 = this._options.geocoders[geocoderId1];
-                    if (geocoder1.getOptions().blockAutocompleteResults && geocoderResults.get(geocoderId1) === undefined) {
+                    if (geocoder1.getOptions().blockAutocompleteResults !== false && geocoderResults.get(geocoderId1) === undefined) {
                         return;
                     }
                 }

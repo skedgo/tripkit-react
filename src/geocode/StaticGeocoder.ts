@@ -5,16 +5,16 @@ import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LocationUtil from "../util/LocationUtil";
 
+interface StaticGeocoderOptions extends GeocoderOptions {
+    emptyMatchAll?: boolean;
+}
 class StaticGeocoder implements IGeocoder {
 
-    private options: GeocoderOptions;
+    private options: StaticGeocoderOptions;
     private values: Location[] = [];
 
-    emptyMatchAll: boolean;
-
-    constructor(emptyMatchAll: boolean = false) {
-        this.emptyMatchAll = emptyMatchAll;
-        this.options = new GeocoderOptions();
+    constructor(options: StaticGeocoderOptions = {}) {
+        this.options = options;
     }
 
     public setValues(values: Location[]) {
@@ -28,7 +28,7 @@ class StaticGeocoder implements IGeocoder {
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
         if (!query) {
-            if (this.emptyMatchAll) {
+            if (this.options.emptyMatchAll) {
                 callback(this.values.slice(0, this.options.resultsLimit));
             } else {
                 callback([]);
