@@ -1,4 +1,5 @@
 import {JsonObject, JsonProperty} from "json2typescript";
+import Util from "../../util/Util";
 
 export enum WeightingPreference {
     money = "money",
@@ -10,24 +11,19 @@ export enum WeightingPreference {
 
 @JsonObject
 class TKWeightingPreferences {
-    @JsonProperty("money", Number)
+    @JsonProperty(WeightingPreference.money, Number)
     public money: number = 1;    // Range: [0,2]
-    @JsonProperty("time", Number)
+    @JsonProperty(WeightingPreference.time, Number)
     public time: number = 1;    // Range: [0,2]
-    @JsonProperty("carbon", Number)
+    @JsonProperty(WeightingPreference.carbon, Number)
     public carbon: number = 1;    // Range: [0,2]
-    @JsonProperty("hassle", Number)
+    @JsonProperty(WeightingPreference.hassle, Number)
     public hassle: number = 1;    // Range: [0,2]
-    @JsonProperty("exercise", Number)
+    @JsonProperty(WeightingPreference.exercise, Number)
     public exercise: number = 1;    // Range: [0,2]
 
-    public static create(money: number = 1, time: number = 1, carbon: number = 1, hassle: number = 1) {
-        const instance = new TKWeightingPreferences();
-        instance.money = money;
-        instance.time = time;
-        instance.carbon = carbon;
-        instance.hassle = hassle;
-        return instance;
+    public static create({ money = 1, time = 1, carbon = 1, hassle = 1, exercise = 1 } = {}) {
+        return Util.iAssign(new TKWeightingPreferences(), {money, time, carbon, hassle, exercise});
     }
 
     public toUrlParam(): string {
