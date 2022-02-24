@@ -2,12 +2,12 @@ import React from "react";
 import TripGoApi from "./TripGoApi";
 import TripGroup from "../model/trip/TripGroup";
 import Trip from "../model/trip/Trip";
-import {IRoutingResultsContext as RResultsConsumerProps} from "../trip-planner/RoutingResultsProvider";
-import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
-import {Subtract} from "utility-types";
+import { IRoutingResultsContext as RResultsConsumerProps } from "../trip-planner/RoutingResultsProvider";
+import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
+import { Subtract } from "utility-types";
 import RegionsData from "../data/RegionsData";
 import NetworkUtil from "../util/NetworkUtil";
-import Environment, {Env} from "../env/Environment";
+import Environment, { Env } from "../env/Environment";
 import RoutingResults from "../model/trip/RoutingResults";
 import Location from "../model/Location";
 import Region from "../model/region/Region";
@@ -19,13 +19,14 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import MapUtil from "../util/MapUtil";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Segment from "../model/trip/Segment";
-import {TKError} from "../error/TKError";
+import { TKError } from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
-import {TKUIMapViewClass} from "../map/TKUIMapView";
-import {TripSort} from "../model/trip/TripSort";
+import { TKUIMapViewClass } from "../map/TKUIMapView";
+import { TripSort } from "../model/trip/TripSort";
+import GATracker from "../analytics/GATracker";
 
 export interface IWithRoutingResultsProps {
-    initViewport?: {center?: LatLng, zoom?: number};
+    initViewport?: { center?: LatLng, zoom?: number };
     fixToInitViewportRegion?: boolean;
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
@@ -38,7 +39,7 @@ interface IWithRoutingResultsState {
     preTo?: Location;
     inputTextFrom: string;
     inputTextTo: string
-    viewport?: {center?: LatLng, zoom?: number};
+    viewport?: { center?: LatLng, zoom?: number };
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
@@ -80,7 +81,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 sort: props.options.defaultTripSort ?? TripSort.OVERALL,
                 waiting: false,
                 waitingTripUpdate: false,
-                viewport: {center: MapUtil.worldCoords, zoom: 2},
+                viewport: { center: MapUtil.worldCoords, zoom: 2 },
                 directionsView: false,
                 tripDetailsView: false,
                 waitingStateLoad: false
@@ -139,18 +140,19 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 // In that execute next code after refreshRegion took effect on state.
                 if (query.isComplete(true)) {
                     // Just refresh trips if already on directions view when called
-                    // onQueryChange. In that case trips will be computed when
+                    // onQueryChange. If not, trips will be computed when
                     // this.onDirectionsView(true) is called.
                     if (alreadyOnDirectionsView &&
                         !query.from?.isDroppedPin() && !query.to?.isDroppedPin() &&
-                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options))
-                    {   // Avoid requesting routing if:
+                        !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) {
+                        // Avoid requesting routing if:
                         // - from or to are dropped pins, since we want to delay it until they are resolved
                         // - queries urls didn't change (queries are the same in practice. Check if this makes sense now
                         // that location address is included in query, and so reverse geocoding of dropped pin locations
                         // actually will make this false, triggering trips refresh. For what other calls to onQueryChange
                         // I want to avoid triggering trips refresh?
                         this.refreshTrips();
+                        this.trackComputeTrips(query, this.props.options, prevQuery, this.props.options);
                     }
                 } else {
                     if (this.state.trips !== undefined) {
@@ -161,6 +163,32 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         });
                     }
                 }
+            });
+        }
+
+        public trackComputeTrips(query: RoutingQuery, options: TKUserProfile, prevQuery: RoutingQuery | undefined, prevOptions: TKUserProfile) {
+            let label: string | undefined;
+            if (!prevQuery) {
+                label = 'init query';
+            } else {
+                if (query.from !== prevQuery.from) {
+                    label = 'from';
+                } else if (query.to !== prevQuery.to) {
+                    label = 'to';
+                } else if (query.timePref !== prevQuery.timePref) {
+                    label = 'time pref';
+                } else if (query.timePref !== TimePreference.NOW && query.time !== prevQuery.time) {
+                    label = 'time';
+                } else {
+                    label = 'options';
+                }
+                label += " change";
+            }
+            console.log(label);
+            GATracker.event({
+                category: "trip results",
+                action: "compute trips",
+                label: label
             });
         }
 
@@ -191,18 +219,20 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }));
         }
 
-        public onViewportChange(viewport: {center?: LatLng, zoom?: number}) {
+        public onViewportChange(viewport: { center?: LatLng, zoom?: number }) {
             if (!viewport.center || !viewport.zoom) {
                 return;
             }
-            this.setState({viewport: viewport}, () => this.refreshRegion());
+            this.setState({ viewport: viewport }, () => this.refreshRegion());
         }
 
         public onDirectionsView(directionsView: boolean) {
             if (this.state.directionsView !== directionsView) {
-                this.setState({directionsView: directionsView}, () => {
-                    if (this.state.query.isComplete(true) && this.state.directionsView) {
+                this.setState({ directionsView: directionsView }, () => {
+                    if (this.state.query.isComplete(true) && this.state.directionsView &&
+                        !this.state.query.from?.isDroppedPin() && !this.state.query.to?.isDroppedPin()) {
                         this.refreshTrips();
+                        this.trackComputeTrips(this.state.query, this.props.options, undefined, this.props.options);
                     }
                 });
             }
@@ -222,7 +252,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (this.state.region === region) {
                             return;
                         }
-                        this.setState({region: region});
+                        this.setState({ region: region });
                     });
                 });
                 return;
@@ -235,8 +265,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 (query.to && query.to.isResolved() ? query.to :
                     // The viewport center is worldCoords initially, don't use it as reference
                     (viewport && viewport.center
-                    && JSON.stringify(viewport.center) !== JSON.stringify(MapUtil.worldCoords)
-                    && viewport.zoom && viewport.zoom > 6 ? // avoids region change when moving map zoomed out, including on initial world zoom.
+                        && JSON.stringify(viewport.center) !== JSON.stringify(MapUtil.worldCoords)
+                        && viewport.zoom && viewport.zoom > 6 ? // avoids region change when moving map zoomed out, including on initial world zoom.
                         viewport.center : undefined));
             RegionsData.instance.requireRegions().then(() => {
                 if (referenceLatLng) {
@@ -247,11 +277,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         if (this.state.region === region) {
                             return;
                         }
-                        this.setState({region: region});
+                        this.setState({ region: region });
                     });
                 } else if (RegionsData.instance.getRegionList()!.length === 1 // Singleton region
                     && this.state.region !== RegionsData.instance.getRegionList()![0]) {
-                    this.setState({region: RegionsData.instance.getRegionList()![0]});
+                    this.setState({ region: RegionsData.instance.getRegionList()![0] });
                 }
             });
         }
@@ -267,7 +297,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.computeTrips(query)
                 .then((tripPromises: Array<Promise<Trip[]>>) => {
                     if (tripPromises.length === 0) {
-                        this.setState({waiting: false});
+                        this.setState({ waiting: false });
                         return;
                     }
                     const waitingState = {
@@ -283,13 +313,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                             trips = trips.filter((trip: Trip) => !this.alreadyAnEquivalent(trip, this.state.trips!))
                         }
                         this.setState(prevState => {
-                            return {trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort)}
+                            return { trips: this.sortTrips(prevState.trips!.concat(trips), this.state.sort) }
                         });
                         this.checkWaiting(waitingState)
                     }).catch((error: TKError) => {
                         Util.log(error, Env.PRODUCTION);
                         this.checkWaiting(waitingState);
-                        this.setState({routingError: error});
+                        this.setState({ routingError: error });
                     }))
                 });
         }
@@ -300,11 +330,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
             waitingState.remaining--;
             if (waitingState.remaining === 0) {
-                this.setState({waiting: false});
+                this.setState({ waiting: false });
             }
         }
 
-        public alreadyAnEquivalent(newTrip: Trip, trips:Trip[]): boolean {
+        public alreadyAnEquivalent(newTrip: Trip, trips: Trip[]): boolean {
             return !!trips.find((trip: Trip) => this.equivalentTrips(trip, newTrip));
         }
 
@@ -388,7 +418,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
 
             // Compute trip involving service through waypoints.json endpoint.
-            this.setState({waitingTripUpdate: true, tripUpdateError: undefined});
+            this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
             const waypointSegments: any[] = [];
             for (const tripSegment of selectedTrip.segments) {
                 if (!tripSegment.modeIdentifier) {
@@ -422,7 +452,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waypointSegments.push(waypointSegment);
             }
             const requestBody = {
-                config: {v: 11},
+                config: { v: 11 },
                 segments: waypointSegments
             };
             let segmentReplacement;
@@ -451,7 +481,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         segmentReplacement = selectedTripGroup.segments.find(segment => TripUtil.sameService(segment, service));
                         this.setSelectedSegment(segmentReplacement);
                     }
-                    this.setState({waitingTripUpdate: false});
+                    this.setState({ waitingTripUpdate: false });
                 })
                 .catch(() => {
                     this.setState({
@@ -482,18 +512,18 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 preTo={this.state.preTo}
                 onPreChange={(from: boolean, location?: Location) => {
                     if (from) {
-                        this.setState({preFrom: location})
+                        this.setState({ preFrom: location })
                     } else {
-                        this.setState({preTo: location})
+                        this.setState({ preTo: location })
                     }
                 }}
                 inputTextFrom={this.state.inputTextFrom}
                 inputTextTo={this.state.inputTextTo}
                 onInputTextChange={(from: boolean, text: string) => {
                     if (from) {
-                        this.setState({inputTextFrom: text});
+                        this.setState({ inputTextFrom: text });
                     } else {
-                        this.setState({inputTextTo: text});
+                        this.setState({ inputTextTo: text });
                     }
                 }}
                 region={this.state.region}
@@ -588,11 +618,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
-                                  prevState: Readonly<IWithRoutingResultsState>): void {
+            prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
                 this.state.query.isComplete(true) && this.state.directionsView &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
+                this.trackComputeTrips(this.state.query, this.props.options, this.state.query, prevProps.options);
             }
             // Clear selected
             if (prevState.trips !== this.state.trips) {
@@ -657,8 +688,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
             const modes = region.modes;
             const enabledModes = modes.filter((mode: string) =>
-                (options.transportOptions.isModeEnabled(mode)
-                    || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
+            (options.transportOptions.isModeEnabled(mode)
+                || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();

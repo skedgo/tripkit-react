@@ -1,38 +1,39 @@
 import * as React from "react";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUIUserPrioritiesDefaultStyle} from "./TKUIUserPriorities.css";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import TKWeightingPreferences, {WeightingPreference} from "../model/options/TKWeightingPreferences";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { tKUIUserPrioritiesDefaultStyle } from "./TKUIUserPriorities.css";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import TKWeightingPreferences, { WeightingPreference } from "../model/options/TKWeightingPreferences";
 import TKUISlider from "./TKUISlider";
 import iconMoney from "../images/badges/ic-badge-money.svg";
 import iconCarbon from "../images/badges/ic-badge-leaf.svg";
 import iconTime from "../images/ic-clock.svg";
 import iconHassle from "../images/badges/ic-badge-like.svg";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
-import {Subtract} from "utility-types";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import { CardPresentation, default as TKUICard } from "../card/TKUICard";
+import { Subtract } from "utility-types";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import HasCard, { HasCardKeys } from "../card/HasCard";
+import { TKUIConfigContext } from "../config/TKUIConfigProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
     value: TKWeightingPreferences;
     onChange: (update: TKWeightingPreferences) => void;
 }
-
-export interface IConsumedProps extends TKUIViewportUtilProps {}
-
+export interface IConsumedProps extends TKUIViewportUtilProps {
+    config: TKUIConfig;
+}
 export interface IStyle {
     main: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIUserPrioritiesProps = IProps;
 export type TKUIUserPrioritiesStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIUserPriorities {...props}/>,
+    render: props => <TKUIUserPriorities {...props} />,
     styles: tKUIUserPrioritiesDefaultStyle,
     classNamePrefix: "TKUIUserPriorities"
 };
@@ -40,7 +41,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUIUserPriorities extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const { classes, t, value: priorities, cardPresentation } = this.props;
+        const { classes, t, value: priorities, cardPresentation, config } = this.props;
         return (
             <TKUICard
                 title={t("My.Priorities")}
@@ -56,7 +57,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         // outside.
                         value={priorities.money * 100}
                         onChange={((event: any, value: any) => {
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value/100));
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value / 100));
                         }) as any}
                         thumbIcon={iconMoney}
                         label={t("rQd-ri-hHa.text")}
@@ -73,7 +74,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     <TKUISlider
                         value={priorities.time * 100}
                         onChange={((event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value/100))) as any}
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value / 100))) as any}
                         thumbIcon={iconTime}
                         label={t("o4h-JW-YBy.text")}
                         leftLabel={t("I.dont.care")}
@@ -87,7 +88,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     <TKUISlider
                         value={priorities.carbon * 100}
                         onChange={((event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value/100))) as any}
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value / 100))) as any}
                         thumbIcon={iconCarbon}
                         label={t("EzB-oD-wvZ.text")}
                         leftLabel={t("I.dont.care")}
@@ -101,7 +102,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     <TKUISlider
                         value={priorities.hassle * 100}
                         onChange={((event: any, value: any) =>
-                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value/100))) as any}
+                            this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value / 100))) as any}
                         thumbIcon={iconHassle}
                         label={t("brC-tq-EEG.text")}
                         leftLabel={t("I.dont.care")}
@@ -113,13 +114,13 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         theme={this.props.theme}
                     />
                     <TKUIButton text={t("Reset")}
-                                type={TKUIButtonType.SECONDARY}
-                                styles={{
-                                    main: overrideClass({
-                                        marginTop: '20px'
-                                    })
-                                }}
-                                onClick={() => this.props.onChange(TKWeightingPreferences.create())}
+                        type={TKUIButtonType.SECONDARY}
+                        styles={{
+                            main: overrideClass({
+                                marginTop: '20px'
+                            })
+                        }}
+                        onClick={() => this.props.onChange(TKWeightingPreferences.create(config.defaultUserProfile?.weightingPrefs))}
                     />
                 </div>
             </TKUICard>
@@ -128,10 +129,13 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
 }
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
-        <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) =>
-                children!({...inputProps, ...viewportProps})}
-        </TKUIViewportUtil>;
+    ({ inputProps, children }) =>
+        <TKUIConfigContext.Consumer>
+            {(config: TKUIConfig) =>
+                <TKUIViewportUtil>
+                    {(viewportProps: TKUIViewportUtilProps) =>
+                        children!({ ...inputProps, ...viewportProps, config })}
+                </TKUIViewportUtil>}
+        </TKUIConfigContext.Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIUserPriorities, config, Mapper);
