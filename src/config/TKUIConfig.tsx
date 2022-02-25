@@ -100,6 +100,8 @@ interface ITKUIConfigOptional {
     initViewport: {center?: LatLng, zoom?: number};
     /** @ctype */
     defaultUserProfile: TKUserProfile;
+    /** @ctype */
+    resetUserProfile: boolean;
     /**
      * @ctype
      * If true then region in global state will be fixed to that one of the initial

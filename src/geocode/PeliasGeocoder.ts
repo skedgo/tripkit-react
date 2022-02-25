@@ -1,13 +1,13 @@
 import IGeocoder from "./IGeocoder";
 import Location from "../model/Location";
-import {Feature, FeatureCollection, Point} from "geojson";
+import { Feature, FeatureCollection, Point } from "geojson";
 import NetworkUtil from "../util/NetworkUtil";
 import GeocodingCache from "./GeocodingCache";
 import LatLng from "../model/LatLng";
 import Util from "../util/Util";
 import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
-import {Env} from "../env/Environment";
+import { Env } from "../env/Environment";
 import Region from "../model/region/Region";
 
 export interface PeliasGeocoderOptions extends GeocoderOptions {
@@ -18,6 +18,14 @@ export interface PeliasGeocoderOptions extends GeocoderOptions {
     // TODO: make geocode method to receive a polygon instead of a bounding box (or both things).
     region?: Region;
     sources?: string;
+    
+}
+
+const absorbs = (r1: Location, r2: Location) => {
+    // Make localities absorb any other location with the same name.
+    const absorbs = r1.address === r2.address && r1.suggestion?.properties?.layer === "locality";
+    absorbs && Util.log(r1.address + " " + r1.suggestion?.properties?.gid + " absorbs " + r2.address + " " + r2.suggestion?.properties?.gid, Env.PRODUCTION);
+    return absorbs;    
 }
 class PeliasGeocoder implements IGeocoder {
 
@@ -31,6 +39,16 @@ class PeliasGeocoder implements IGeocoder {
 
     public getOptions(): GeocoderOptions {
         return this.options;
+    }
+
+    private applyAbsorb(locations: Location[]): Location[] {
+        return locations
+            .reduce((prevailed: Location[], curr: Location) => {
+                if (!prevailed.some(prevail => absorbs(prevail, curr))) {
+                    prevailed.push(curr);
+                }
+                return prevailed;
+            }, []);
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
@@ -50,10 +68,10 @@ class PeliasGeocoder implements IGeocoder {
         if (autocomplete) {
             const url = this.options.server + "/autocomplete?api_key=" + this.options.apiKey
                 + (bounds && this.options.restrictToBounds ?
-                        "&boundary.rect.min_lat=" + bounds.minLat +
-                        "&boundary.rect.max_lat=" + bounds.maxLat +
-                        "&boundary.rect.min_lon=" + bounds.minLng +
-                        "&boundary.rect.max_lon=" + bounds.maxLng : ""
+                    "&boundary.rect.min_lat=" + bounds.minLat +
+                    "&boundary.rect.max_lat=" + bounds.maxLat +
+                    "&boundary.rect.min_lon=" + bounds.minLng +
+                    "&boundary.rect.max_lon=" + bounds.maxLng : ""
                 )
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
                 + (this.options.resultsLimit !== undefined ? "&size=" + this.options.resultsLimit : "")
@@ -69,6 +87,7 @@ class PeliasGeocoder implements IGeocoder {
                 if (this.options.restrictToBounds) {
                     locationResults = locationResults.filter(result => !this.options.region || this.options.region.contains(result as any))
                 }
+                locationResults = this.applyAbsorb(locationResults);
                 if (center) {
                     this.cache.addResults(query, autocomplete, center, locationResults);
                 }
@@ -80,10 +99,10 @@ class PeliasGeocoder implements IGeocoder {
         } else {
             const url = this.options.server + "/search?api_key=" + this.options.apiKey
                 + (bounds ?
-                        "&boundary.rect.min_lat=" + bounds.minLat +
-                        "&boundary.rect.max_lat=" + bounds.maxLat +
-                        "&boundary.rect.min_lon=" + bounds.minLng +
-                        "&boundary.rect.max_lon=" + bounds.maxLng : ""
+                    "&boundary.rect.min_lat=" + bounds.minLat +
+                    "&boundary.rect.max_lat=" + bounds.maxLat +
+                    "&boundary.rect.min_lon=" + bounds.minLng +
+                    "&boundary.rect.max_lon=" + bounds.maxLng : ""
                 )
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
                 + "&size=1"
@@ -92,6 +111,7 @@ class PeliasGeocoder implements IGeocoder {
                 method: NetworkUtil.MethodType.GET
             }).then(NetworkUtil.jsonCallback).then((json: any) => {
                 const features = (json as FeatureCollection).features;
+
                 const locationResults = !features ? [] : features
                     .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
                 if (center) {
@@ -121,7 +141,7 @@ class PeliasGeocoder implements IGeocoder {
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
         const url = this.options.server + "/reverse?api_key=" + this.options.apiKey +
-            "&point.lat="+ coord.lat + "&point.lon=" + coord.lng;
+            "&point.lat=" + coord.lat + "&point.lon=" + coord.lng;
         fetch(url, {
             method: NetworkUtil.MethodType.GET
         }).then(NetworkUtil.jsonCallback).then((json: any) => {
@@ -143,13 +163,13 @@ class PeliasGeocoder implements IGeocoder {
         const id = result.properties !== null ? result.properties.gid : "";
         const point = result.geometry as Point;
         const latLng = LatLng.createLatLng(point.coordinates[1], point.coordinates[0]);
-        const {label, street, housenumber} = result.properties!
+        const { label, street, housenumber } = result.properties!
         let address = label || "";
         if (street && !address.includes(street)) {
             const numAndStreet = (housenumber || "") + " " + street;
             address = !address ? numAndStreet :
-            !address.includes(',') ? address + ", " + numAndStreet :
-            [address.slice(0, address.indexOf(',')), ', ', numAndStreet, address.slice(address.indexOf(','))].join('');
+                !address.includes(',') ? address + ", " + numAndStreet :
+                    [address.slice(0, address.indexOf(',')), ', ', numAndStreet, address.slice(address.indexOf(','))].join('');
         }
         const name = '';
         const location = Location.create(latLng, address, id, name);

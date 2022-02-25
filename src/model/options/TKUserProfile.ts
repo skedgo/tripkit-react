@@ -55,7 +55,7 @@ class TKUserProfile {
     @JsonProperty('cyclingSpeed', WalkingSpeedConverter, true)
     public cyclingSpeed: WalkingSpeed = WalkingSpeed.AVERAGE;
     @JsonProperty('trackTripSelections', Boolean, true)
-    public trackTripSelections?: boolean;
+    public trackTripSelections?: boolean = undefined;
     @JsonProperty('isDarkMode', Boolean, true)
     public isDarkMode?: boolean = undefined;
     @JsonProperty('customData', Any, true)

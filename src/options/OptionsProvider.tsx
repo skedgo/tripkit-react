@@ -23,17 +23,25 @@ export const OptionsContext = React.createContext<IOptionsContext>({
 
 interface IProps {
     defaultValue?: TKUserProfile;
+    reset?: boolean;
 }
 
 class OptionsProvider extends React.Component<IProps, {value: TKUserProfile, show: boolean}> {
 
     eventSubscription: EventSubscription;
+    
+    private static didReset: boolean = false;
 
     constructor(props: IProps) {
         super(props);
-        if (props.defaultValue && !OptionsData.instance.existsInLS()) {
+        
+        if (props.reset && !OptionsProvider.didReset && OptionsData.instance.existsInLS()) {
+            OptionsProvider.didReset = true;
+            OptionsData.instance.save(props.defaultValue ?? new TKUserProfile());
+        } else if (!OptionsData.instance.existsInLS() && props.defaultValue) {
             OptionsData.instance.save(props.defaultValue);
         }
+        
         this.state = {
             value: OptionsData.instance.get(),
             show: false
