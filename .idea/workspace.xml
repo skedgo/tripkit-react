@@ -4,18 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Temporary disable GA tracking until implement cookies consent banner to comply with GDPR.">
+    <list default="true" id="d8ba0a4f-514d-4de8-ad08-bf7f55172e18" name="Default" comment="Feature #16681: Web app localization to Japanese (2)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.npmignore" beforeDir="false" afterPath="$PROJECT_DIR$/.npmignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/card/TKUISlideUp.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/GenStyle.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/GenStyle.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/ResetStyle.css.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/ResetStyle.css.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/doc/TKDocConfig.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/StyleHelper.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jss/TKUITheme.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/jss/TKUITheme.ts" afterDir="false" />
     </list>
     <list id="52c5f816-37cc-44da-8a4f-93861a057cf7" name="Client LCC" comment="" />
     <list id="9b3fa8cd-e60d-4ebe-b32a-6ebd45a477be" name="Do not commit" comment="" />
@@ -152,7 +142,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="client/feonix-react" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -173,23 +163,30 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/.npmignore" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/trip/ModeInfo.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/config/TKUIConfig.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/map/TKUIMapView.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/i18n/i18n_en.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/index.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/package.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/package-lock.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/geocode/CurrentLocationGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/geocode/SkedgoGeocoder.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package-lock.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/util/GeolocationUtil.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/query/TKUIRoutingQueryInput.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/css/ResetStyle.css.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/css/GenStyle.css.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/node_modules/react-jss/package.json" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/doc/TKDocConfig.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/sidebar/TKUISidebar.css.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/sidebar/TKUISidebar.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/data/RegionsData.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/location_box/TKUILocationBox.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/trip/ModeInfo.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.babelrc" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.npmignore" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/Region.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/example/tripgo/tripgo-sample.tsx" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/ModeIdentifier.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model/region/RegionResults.ts" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/jss/StyleHelper.tsx" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -351,7 +348,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="jdk.selected.JAVA_MODULE" value="1.7" />
     <property name="js.last.introduce.type" value="CONST" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/images/modeicons/ondark" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/i18n" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -372,18 +369,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/i18n" />
       <recent name="$PROJECT_DIR$/public/images/modeicons/ondark" />
       <recent name="$PROJECT_DIR$/public/images/modeicons" />
       <recent name="$PROJECT_DIR$/src/booking" />
       <recent name="$PROJECT_DIR$/src/images" />
-      <recent name="$PROJECT_DIR$/src/images/directions" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/i18n" />
+      <recent name="$PROJECT_DIR$/public/i18n" />
+      <recent name="$PROJECT_DIR$/src/images" />
       <recent name="$PROJECT_DIR$/src/images/logo" />
       <recent name="$PROJECT_DIR$/src/example/tripgo/images" />
-      <recent name="$PROJECT_DIR$/src/model/location" />
-      <recent name="$PROJECT_DIR$/src/doc/components" />
-      <recent name="$PROJECT_DIR$/src/doc/md" />
     </key>
     <key name="es6.move.members.recent.items">
       <recent name="$PROJECT_DIR$/src/util/PolylineUtil.ts" />
@@ -630,20 +627,31 @@
       <workItem from="1639691937791" duration="3918000" />
       <workItem from="1640636840654" duration="37000" />
       <workItem from="1640642668642" duration="615000" />
-    </task>
-    <task id="LOCAL-00437" summary="Feature #13578: TripKit React - Mode by Mode flow:&#10;- more work on service detail">
-      <created>1628627803624</created>
-      <option name="number" value="00437" />
-      <option name="presentableId" value="LOCAL-00437" />
-      <option name="project" value="LOCAL" />
-      <updated>1628627803624</updated>
-    </task>
-    <task id="LOCAL-00438" summary="Feature #13578: TripKit React - Mode by Mode flow:&#10;- display real-time info on service detail view.">
-      <created>1628710456389</created>
-      <option name="number" value="00438" />
-      <option name="presentableId" value="LOCAL-00438" />
-      <option name="project" value="LOCAL" />
-      <updated>1628710456392</updated>
+      <workItem from="1644234243059" duration="2705000" />
+      <workItem from="1644259676414" duration="2553000" />
+      <workItem from="1644320970977" duration="3148000" />
+      <workItem from="1644344629752" duration="2164000" />
+      <workItem from="1644407396320" duration="1201000" />
+      <workItem from="1644432260600" duration="599000" />
+      <workItem from="1644494157998" duration="599000" />
+      <workItem from="1644605170204" duration="598000" />
+      <workItem from="1644834426737" duration="599000" />
+      <workItem from="1644924431125" duration="599000" />
+      <workItem from="1644950666280" duration="5788000" />
+      <workItem from="1645015101450" duration="7664000" />
+      <workItem from="1645034982518" duration="5132000" />
+      <workItem from="1645102030512" duration="2848000" />
+      <workItem from="1645185387555" duration="1202000" />
+      <workItem from="1645207276747" duration="1200000" />
+      <workItem from="1645442599401" duration="1196000" />
+      <workItem from="1645471646297" duration="1239000" />
+      <workItem from="1645529556163" duration="1501000" />
+      <workItem from="1645550227422" duration="1216000" />
+      <workItem from="1645616920663" duration="1379000" />
+      <workItem from="1645640593646" duration="598000" />
+      <workItem from="1645649126507" duration="611000" />
+      <workItem from="1645704599221" duration="1879000" />
+      <workItem from="1645789892429" duration="1411000" />
     </task>
     <task id="LOCAL-00439" summary="Feature #13578: TripKit React - Mode by Mode flow:&#10;- fit map to segment.&#10;- imperative async access to map.">
       <created>1629312570753</created>
@@ -974,7 +982,21 @@
       <option name="project" value="LOCAL" />
       <updated>1639692459951</updated>
     </task>
-    <option name="localTasksCounter" value="486" />
+    <task id="LOCAL-00486" summary="Feature #16681: Web app localization to Japanese">
+      <created>1645022839065</created>
+      <option name="number" value="00486" />
+      <option name="presentableId" value="LOCAL-00486" />
+      <option name="project" value="LOCAL" />
+      <updated>1645022839066</updated>
+    </task>
+    <task id="LOCAL-00487" summary="Feature #16681: Web app localization to Japanese (2)">
+      <created>1645039860228</created>
+      <option name="number" value="00487" />
+      <option name="presentableId" value="LOCAL-00487" />
+      <option name="project" value="LOCAL" />
+      <updated>1645039860228</updated>
+    </task>
+    <option name="localTasksCounter" value="488" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -1112,8 +1134,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Add a reset method to RegionsData to force regions to be fetched again if, for instance, the api key changed." />
-    <MESSAGE value="Parameterize privacy policy URL." />
     <MESSAGE value="- Feature #15690: Display multiple notes for a booking (Web)&#10;- Match booking confirmation MxM card with iOS" />
     <MESSAGE value="- Feature #15691: My Bookings view - Match iOS UI" />
     <MESSAGE value="More work on:&#10;- Feature #15691: My Bookings view - Match iOS UI" />
@@ -1137,7 +1157,9 @@
     <MESSAGE value="- Enable MxM for mobile.&#10;- add temporal collect / return icons." />
     <MESSAGE value="Add headers to TripGoApi.tsx" />
     <MESSAGE value="Comment TripGo web-app import." />
-    <option name="LAST_COMMIT_MESSAGE" value="Comment TripGo web-app import." />
+    <MESSAGE value="Feature #16681: Web app localization to Japanese" />
+    <MESSAGE value="Feature #16681: Web app localization to Japanese (2)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Feature #16681: Web app localization to Japanese (2)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
