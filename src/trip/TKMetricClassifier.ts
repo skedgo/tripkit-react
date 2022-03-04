@@ -18,7 +18,7 @@ class TKMetricClassifier {
                 weighted: {min: Number.MAX_SAFE_INTEGER, max: 0},
                 hassles: {min: Number.MAX_SAFE_INTEGER, max: 0},
                 durations: {min: Number.MAX_SAFE_INTEGER, max: 0},
-                calories: {min: Number.MAX_SAFE_INTEGER, max: 0},
+                calories: {min: Number.MAX_SAFE_INTEGER, max: -Number.MAX_SAFE_INTEGER},    // Since it's inverted (negative range).
                 carbons: {min: Number.MAX_SAFE_INTEGER, max: 0},
                 cheapest: {min: Number.MAX_SAFE_INTEGER, max: 0, anyUnknown: false}
             };
@@ -92,7 +92,7 @@ class TKMetricClassifier {
             return false;
         }
         // max has to be more than 25% of min, i.e., don't give the label if everything is so close
-        return range.max > range.min * 1.25;
+        return range.min > 0 ? range.max > range.min * 1.25 : range.max * 1.25 > range.min; // To contemplate the case of calories, which comes with negative values.
     }
 
 }

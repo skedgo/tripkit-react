@@ -80,7 +80,7 @@ class SkedgoGeocoder implements IGeocoder {
                 Util.log("query " + query + " timed out ");
                 callback(results);
             }
-        }, 1500); // Tolerance
+        }, 3000); // Tolerance
 
         TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET).then((json: any) => {
             if (timedOut) {
