@@ -1,19 +1,19 @@
 import React, { UIEventHandler } from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
-import {Subtract} from "utility-types";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUICardDefaultStyle} from "./TKUICard.css";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {TKUISlideUpOptions, TKUISlideUpPosition} from "./TKUISlideUp";
+import { Subtract } from "utility-types";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUICardDefaultStyle } from "./TKUICard.css";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { TKUISlideUpOptions, TKUISlideUpPosition } from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
 import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
-import {genClassNames} from "../css/GenStyle.css";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
-import {markForFocusLater, returnFocus} from "./FocusManagerHelper";
-import TKUICardHeader, {TKUICardHeaderClientProps} from "./TKUICardHeader";
+import { genClassNames } from "../css/GenStyle.css";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { markForFocusLater, returnFocus } from "./FocusManagerHelper";
+import TKUICardHeader, { TKUICardHeaderClientProps } from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 
@@ -287,7 +287,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     </div>}
                 {(showHandle || showHeader || this.props.renderSubHeader) &&
                     <div className={classes.divider} />}
-                {this.props.scrollable !== false ?
+                {this.props.scrollable !== false && draggable ?
                     <TKUIScrollForCard
                         className={classes.body}
                         // So dragging the card from its content, instead of scrolling it, will drag the card.
@@ -297,7 +297,17 @@ class TKUICard extends React.Component<IProps, IState> {
                         onScroll={this.props.onScroll}
                     >
                         {this.props.children}
-                    </TKUIScrollForCard> : this.props.children
+                    </TKUIScrollForCard> :
+                    this.props.scrollable !== false ?
+                        <div className={classes.body}
+                            style={{
+                                overflowY: 'auto',
+                                overflowX: 'hidden'
+                            }}
+                        >
+                            {this.props.children}
+                        </div> :
+                        this.props.children
                 }
             </div>;
         const focusTrap = this.props.focusTrap !== undefined ? this.props.focusTrap : this.props.presentation === CardPresentation.MODAL;

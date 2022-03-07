@@ -21,6 +21,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     children?: any;
     showControls?: boolean;
     parentElement?: any;
+    swipeable?: boolean; // default true
 }
 
 interface IConsumedPros extends TKUIViewportUtilProps {}
@@ -105,7 +106,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                             setTimeout(() => this.setState({hideOtherPages: true}), 1000);
                         }}
                         // emulateTouch={true}
-                        swipeable={!this.state.freezeCarousel}
+                        swipeable={this.props.swipeable !== false && !this.state.freezeCarousel}
                         useKeyboardArrows={DeviceUtil.isDesktop}
                     >
                         {React.Children.map(children, (child: any, i: number) =>

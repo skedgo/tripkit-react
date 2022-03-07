@@ -25,6 +25,7 @@ import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
 import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIStreetStep from "../trip/TKUIStreetStep";
+import DeviceUtil from '../util/DeviceUtil';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     parentElement?: any;
@@ -251,11 +252,16 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
                     setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
                 }}
                 slideUpOptions={{
-                    position: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    ...DeviceUtil.isTouch() ? {
+                        initPosition: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP
+                    } : {
+                        position: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                    },
                     modalDown: {top: (window as any).document.body.offsetHeight - 200, unit: 'px'},
                     modalUp: {top: MODAL_UP_TOP, unit: 'px'},
-                    draggable: false
+                    draggable: DeviceUtil.isTouch()
                 }}
+                swipeable={false}
                 showControls={true}
                 parentElement={props.parentElement}
             >
