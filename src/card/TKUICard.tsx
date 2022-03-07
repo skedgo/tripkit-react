@@ -1,8 +1,6 @@
 import React, { UIEventHandler } from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
-import { CSSProperties } from 'react-jss';
-import * as CSS from 'csstype';
 import { Subtract } from "utility-types";
 import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUICardDefaultStyle } from "./TKUICard.css";
@@ -289,7 +287,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     </div>}
                 {(showHandle || showHeader || this.props.renderSubHeader) &&
                     <div className={classes.divider} />}
-                {this.props.scrollable !== false ?
+                {this.props.scrollable !== false && draggable ?
                     <TKUIScrollForCard
                         className={classes.body}
                         // So dragging the card from its content, instead of scrolling it, will drag the card.
@@ -299,7 +297,17 @@ class TKUICard extends React.Component<IProps, IState> {
                         onScroll={this.props.onScroll}
                     >
                         {this.props.children}
-                    </TKUIScrollForCard> : this.props.children
+                    </TKUIScrollForCard> :
+                    this.props.scrollable !== false ?
+                        <div className={classes.body}
+                            style={{
+                                overflowY: 'auto',
+                                overflowX: 'hidden'
+                            }}
+                        >
+                            {this.props.children}
+                        </div> :
+                        this.props.children
                 }
             </div>;
         const focusTrap = this.props.focusTrap !== undefined ? this.props.focusTrap : this.props.presentation === CardPresentation.MODAL;
