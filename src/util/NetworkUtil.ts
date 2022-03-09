@@ -23,7 +23,7 @@ class NetworkUtil {
                     if (jsonData.error) {
                         const tkError = new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
                         tkError.title = jsonData.title;
-                        tkError.title = jsonData.subtitle;
+                        tkError.subtitle = jsonData.subtitle;
                         throw tkError;
                     } else {
                         return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
@@ -43,7 +43,7 @@ class NetworkUtil {
             if (jsonData.error) {
                 const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
                 tkError.title = jsonData.title;
-                tkError.title = jsonData.subtitle;
+                tkError.subtitle = jsonData.subtitle;
                 throw tkError;
             }
             return jsonData;

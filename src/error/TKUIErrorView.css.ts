@@ -17,10 +17,20 @@ export const tKUIErrorViewDefaultStyle: TKUIStyles<TKUIErrorViewStyle, TKUIError
         },
         message: {
             ...genStyles.flex,
-            ...genStyles.center,
+            ...genStyles.column,
             ...genStyles.alignCenter,
             margin: '24px 0',
-            ...genStyles.fontM,
+            ...genStyles.fontM
+        },
+        title: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            color: black(1, theme.isDark),
+            textAlign: 'center'
+        },
+        subtitle: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
             color: black(2, theme.isDark),
             textAlign: 'center'
         },
