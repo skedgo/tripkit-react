@@ -18,7 +18,7 @@ export interface PeliasGeocoderOptions extends GeocoderOptions {
     // TODO: make geocode method to receive a polygon instead of a bounding box (or both things).
     region?: Region;
     sources?: string;
-    
+    lang?: string;    
 }
 
 const absorbs = (r1: Location, r2: Location) => {
@@ -76,6 +76,7 @@ class PeliasGeocoder implements IGeocoder {
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
                 + (this.options.resultsLimit !== undefined ? "&size=" + this.options.resultsLimit : "")
                 + (this.options.sources ? "&sources=" + this.options.sources : "")
+                + (this.options.lang ? "&lang=" + this.options.lang : "")
                 + "&text=" + query;
 
             fetch(url, {
@@ -106,6 +107,7 @@ class PeliasGeocoder implements IGeocoder {
                 )
                 + (focus ? "&focus.point.lat=" + focus.lat + "&focus.point.lon=" + focus.lng : "")
                 + "&size=1"
+                + (this.options.lang ? "&lang=" + this.options.lang : "")
                 + "&text=" + query;
             fetch(url, {
                 method: NetworkUtil.MethodType.GET
@@ -141,7 +143,9 @@ class PeliasGeocoder implements IGeocoder {
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
         const url = this.options.server + "/reverse?api_key=" + this.options.apiKey +
-            "&point.lat=" + coord.lat + "&point.lon=" + coord.lng;
+            "&point.lat=" + coord.lat + "&point.lon=" + coord.lng
+            + "&size=1"
+            + (this.options.lang ? "&lang=" + this.options.lang : "");
         fetch(url, {
             method: NetworkUtil.MethodType.GET
         }).then(NetworkUtil.jsonCallback).then((json: any) => {
