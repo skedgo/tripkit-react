@@ -30,34 +30,34 @@ export class StreetInstructionsConverter implements JsonCustomConvert<StreetInst
     }
 }
 
-export enum RoadTags {
-    "CYCLE-LANE",
-    "CYCLE-TRACK",
-    "CYCLE-NETWORK",
-    "BICYCLE-DESIGNATED",
-    "BICYCLE-BOULEVARD",
-    "SIDE-WALK",
-    "MAIN-ROAD",
-    "SIDE-ROAD",
-    "SHARED-ROAD",
-    "UNPAVED/UNSEALED"
-}
+type RoadTags = 
+    "CYCLE-LANE" | 
+    "CYCLE-TRACK" |
+    "CYCLE-NETWORK" |
+    "BICYCLE-DESIGNATED" |
+    "BICYCLE-BOULEVARD" |
+    "SIDE-WALK" |
+    "MAIN-ROAD" |
+    "SIDE-ROAD" |
+    "SHARED-ROAD" |
+    "UNPAVED/UNSEALED" |
+    "SERVICE-ROAD";
 
 export function roadTagDisplayS(tag: RoadTags) {
-    return Util.kebabCaseToSpaced(RoadTags[tag].toLowerCase());
+    return Util.kebabCaseToSpaced(tag.toLowerCase());
 }
 
 export function roadTagColor(tag: RoadTags) {
     switch (tag) {
-        case RoadTags["MAIN-ROAD"]:
+        case "MAIN-ROAD":
             return '#fcbb1d';
-        case RoadTags["CYCLE-LANE"]:
-        case RoadTags["CYCLE-NETWORK"]:    
+        case "CYCLE-LANE":
+        case "CYCLE-NETWORK":    
             return '#0600ff';
-        case RoadTags["CYCLE-TRACK"]:
-        case RoadTags["BICYCLE-DESIGNATED"]:    
+        case "CYCLE-TRACK":
+        case "BICYCLE-DESIGNATED":    
             return '#23b05e';
-        case RoadTags["SIDE-ROAD"]:
+        case "SIDE-ROAD":
             return '#78d6f9';   
         default:
             return 'gray';
@@ -65,7 +65,7 @@ export function roadTagColor(tag: RoadTags) {
 }
 
 export function roadTagTextColor(tag: RoadTags) {
-    return tag === RoadTags["MAIN-ROAD"] || tag === RoadTags["SIDE-ROAD"] ? black() : white();
+    return tag === "MAIN-ROAD" || tag === "SIDE-ROAD" ? black() : white();
 }
 
 @JsonConverter
@@ -74,7 +74,7 @@ export class RoadTagsConverter implements JsonCustomConvert<RoadTags[]> {
         return value;
     }
     public deserialize(obj: any): RoadTags[] {
-        return obj.map(tag => RoadTags[tag]);
+        return obj.map(tag => tag);
     }
 }
 
