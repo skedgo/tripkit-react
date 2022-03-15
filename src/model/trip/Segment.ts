@@ -9,6 +9,7 @@ import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 import {Booking} from "./BookingInfo";
+import TKI18nProvider from "../../i18n/TKI18nProvider";
 
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
@@ -290,7 +291,7 @@ class Segment extends SegmentTemplate {
             result = result.replace("<LINE_NAME>", this.serviceName)
         }
         if (result.includes("<STOPS>")) { // Don't want to instantiate stops for ACT, so replace whole note with duration.
-            result = result.replace("<STOPS>", this.stops !== undefined ? this.stops.toString() + " stops" : "")
+            result = result.replace("<STOPS>", this.stops !== undefined ? TKI18nProvider.tStatic("X.stops", {0: this.stops.toString()}) : "");
         }
         if (result.includes("<DURATION>")) {
             result = result.replace("<DURATION>", DateTimeUtil.durationToBriefString(this.getDurationInMinutes()))

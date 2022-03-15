@@ -38,9 +38,11 @@ const TKUIBookingAction: React.SFC<IProps & {action: BookingAction}> = props => 
             text={action.title}
             type={TKUIButtonType.PRIMARY_LINK}
             onClick={() => {
-                if (action.internalURL) {
+                if (action.confirmationMessage) {
                     UIUtil.confirmMsg({
-                        message: "Do you want to cancel the booking?",
+                        message: action.confirmationMessage,
+                        confirmLabel: "Yes",
+                        cancelLabel: "No",
                         onConfirm: () => {
                             setWaiting?.(true);
                             TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)

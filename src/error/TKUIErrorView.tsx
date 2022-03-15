@@ -36,8 +36,8 @@ class TKUIErrorView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const { error, message, actions, classes } = this.props;
-        const title = message || error.title || error.message || error.subtitle || "Something went wrong."
-        const subtitle = (message || error.title || error.message) ? error.subtitle : undefined;
+        const title = message || error.message || error.title || error.subtitle || "Something went wrong."
+        const subtitle = (message || error.message || error.title) ? error.subtitle : undefined;
         const messageToDisplay =
             <div className={classes.message}>
                 <div className={classes.title}>

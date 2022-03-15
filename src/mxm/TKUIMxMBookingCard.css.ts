@@ -248,6 +248,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignEnd,
         marginTop: '10px',
         position: 'relative',   // To display above shuttle / person images
-        zIndex: '1'
+        zIndex: '1',
+        minHeight: '64px'       // To make room for shuttle / person images
     }
 });

@@ -88,7 +88,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
-        const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.DATE_TIME_FORMAT) + ". Open date time picker";
+        const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.dateTimeFormat().replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")) + ". Open date time picker";
         // Display date picker as a button instead of a input text field, given that entering date as text is very
         // limited and confusing in react-datepicker, and also is confusing the way it's red by screenreaders.
         const DatePickerInput = React.forwardRef(((props: {value?: any, onClick?: any, onKeyDown?: any}, ref: any) =>
@@ -140,8 +140,8 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                 // showTimeSelect={true}
                 showTimeInput={true}
                 customTimeInput={customTimeInput}
-                timeFormat={this.props.timeFormat}
-                dateFormat={this.props.dateFormat}
+                timeFormat={this.props.timeFormat?.replace("A", "a")}
+                dateFormat={this.props.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")}
                 className={classes.datePicker}
                 popperClassName={classes.calendarPopper}
                 calendarClassName={classes.calendar}

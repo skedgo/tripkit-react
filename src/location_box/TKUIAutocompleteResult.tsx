@@ -84,7 +84,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
         }
         if (location instanceof StopLocation && location.services) {
             addressComponent =
-                <div className={classNames(genClassNames.flex, genClassNames.column, genClassNames.grow)}>
+                <div className={classNames(genClassNames.flex, genClassNames.column, genClassNames.grow, genClassNames.overflowEllipsis)}>
                     {addressComponent}
                     {location.services}
                 </div>

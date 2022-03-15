@@ -58,7 +58,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
             TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark);
         const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, wantIconForDark, false);
         const isTransIconForDark = segment.arrival || (isInvertedWrtMode ? !wantIconForDark : wantIconForDark);
-        const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.timeFormat(false));
         return <TKUITransportPinConnected
             icon={transIcon}
             label={timeS}
@@ -80,7 +80,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const transIcon = TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark);
         const isInvertedWrtMode = transIcon !== TransportUtil.getTransportIcon(modeInfo, false, wantIconForDark, false);
         const isTransIconForDark = isInvertedWrtMode ? !wantIconForDark : wantIconForDark;
-        const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.TIME_FORMAT_TRIP);
+        const timeS = DateTimeUtil.momentFromTimeTZ(serviceDeparture.actualStartTime * 1000, serviceDeparture.startStop!.timezone).format(DateTimeUtil.timeFormat(false));
         return <TKUITransportPinConnected icon={transIcon} iconForDark={isTransIconForDark} label={timeS} rotation={rotation}/>
     }
 

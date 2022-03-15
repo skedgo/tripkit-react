@@ -28,6 +28,7 @@ export const TKI18nContext = React.createContext<TKI18nContextProps> ({
 
 const WithTranslate = translate()(
     (props: {t: TranslationFunction, children: any}) => {
+        TKI18nProvider.tStatic = props.t;
         return props.children({t: props.t});
     }
 );
@@ -47,18 +48,24 @@ interface IState {
 
 class TKI18nProvider extends React.Component<IProps, IState> {
 
+    // To facilitate access from static methods (helpers / utils).
+    static tStatic: TranslationFunction;
+    static localeStatic: string;
+
     constructor(props: IProps) {
         super(props);
         // Compose messages by overriding untranslated with messages_en.
         const messages = Object.assign({}, untranslated, messages_en);
+        const defaultLocale = 'en';
         this.state = {
-            locale: 'en',
+            locale: defaultLocale,
             messages: messages,
             overridden: false
         }
     }
 
     public render(): React.ReactNode {
+        TKI18nProvider.localeStatic = this.state.locale;
         return (
             <I18n locale={this.state.locale}
                   messages={this.state.messages}

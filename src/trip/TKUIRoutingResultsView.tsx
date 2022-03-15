@@ -254,7 +254,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                         label = t("sorted_by_duration");
                         break;
                     case TripSort.CALORIES:
-                        label = "Sorted by Healthiest";
+                        label = t("sorted_by_healthiest");
                         break;
                 }
                 return { value: value, label: label };
@@ -350,8 +350,8 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                 value={routingQuery.time}
                                 timeZone={this.props.timezone}
                                 onChange={(date: Moment) => this.updateQuery({ time: date })}
-                                timeFormat={DateTimeUtil.TIME_FORMAT}
-                                dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                                timeFormat={DateTimeUtil.timeFormat()}
+                                dateFormat={DateTimeUtil.dateTimeFormat()}
                                 disabled={datePickerDisabled}
                             />
                         }
@@ -523,6 +523,13 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         if (this.props.query.to !== prevProps.query.to) {
             this.setState({ toLocInfo: undefined });
             this.refreshAlert();
+        }
+
+        // To refresh translations of time pref strings after i18n promise resolves (i18nOverridden turn true),
+        // which are computed on component constructor, and so do not automatically update on re-render.
+        if (this.props.i18nOverridden !== prevProps.i18nOverridden) {
+            this.timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
+            this.sortOptions = this.getSortOptions(this.props.t);
         }
     }
 

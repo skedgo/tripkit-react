@@ -1,25 +1,24 @@
 import {default as moment} from 'moment-timezone';
 import {Moment} from "moment-timezone";
+import TKI18nProvider from '../i18n/TKI18nProvider';
 import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class DateTimeUtil {
 
-    public static readonly DATE_FORMAT = "dd/MM/yyyy";
-    public static readonly TIME_FORMAT = "h:mm a";
-    public static readonly TIME_FORMAT_TRIP = "h:mma";
-    public static readonly DATE_TIME_FORMAT = DateTimeUtil.DATE_FORMAT + ", " + DateTimeUtil.TIME_FORMAT;
     public static readonly HTML5_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
-    public static timeFormat = () => {
-        return "h:mm A";
+    public static timeFormat = (spaced: boolean = true) => {
+        return TKI18nProvider.localeStatic === "ja" ? "HH:mm" : `h:mm${spaced ? " " : ""}A`;
     };
 
     public static dateFormat = () => {
-        return navigator.language === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
+        return TKI18nProvider.localeStatic === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
     };
 
+    public static dateTimeFormat = () => DateTimeUtil.dateFormat() + ", " + DateTimeUtil.timeFormat();
+
     public static dayMonthFormat = () => {
-        return navigator.language === 'en-US' ? "MMM DD" : "DD MMM";
+        return TKI18nProvider.localeStatic === 'en-US' ? "MMM DD" : "DD MMM";
     };
 
     public static defaultTZ = "Etc/UTC";
@@ -49,6 +48,7 @@ class DateTimeUtil {
     }
 
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {
+        const t = TKI18nProvider.tStatic;
         durationInMinutes = Math.floor(durationInMinutes);
         if (durationInMinutes === 0) {
             return "0" + (space ? " " : "") + "mins";
@@ -78,29 +78,30 @@ class DateTimeUtil {
                 result += " ";
             }
             if (decimal && (justHours > 1 || justMinutes % 30 === 0)) {
-                return twiceTheHours % 2 === 0 ? result += Math.floor(twiceTheHours / 2) + (space ? " " : "") + "h" :
-                    result + (twiceTheHours / 2).toFixed(1) + (space ? " " : "") + "h";
+                return twiceTheHours % 2 === 0 ? result += Math.floor(twiceTheHours / 2) + (space ? " " : "") + t("hr") :
+                    result + (twiceTheHours / 2).toFixed(1) + (space ? " " : "") + t("hr");
             }
-            result += justHours + (space ? " " : "") + "h";
+            result += justHours + (space ? " " : "") + t("hr");
         }
 
         if (result.length !== 0) {
             result += " ";
         }
-        result += justMinutes + (space ? " " : "") + "min";
+        result += justMinutes + (space ? " " : "") + t("min");
 
         return result;
     }
 
     public static minutesToDepartToString(minutes: number) {
+        const t = TKI18nProvider.tStatic;
         minutes = Math.floor(minutes);
         if (0 <= minutes && minutes < 2) {
             return "Now";
         } else if (-60 <= minutes && minutes < 60) {
-            return Math.floor(minutes) + "min";
+            return Math.floor(minutes) + t("min");
         } else if (-24*60 <= minutes && minutes < 24*60) {
             const durationInHours = Math.floor(minutes / 60);
-            return durationInHours + "h";
+            return durationInHours + t("hr");
         } else {
             const durationInDays = Math.floor(minutes / (24*60));
             return durationInDays + "d";

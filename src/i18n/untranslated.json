@@ -2,5 +2,8 @@
     "You.blocked.this.site.access.to.your.location,.either.at.browser.or.system.level": "You blocked this site access to your location, either at browser or system level",
     "Could.not.determine.your.location.accurately..Please.set.manually.": "Could not determine your location accurately. Please set manually.",
     "Something.went.wrong.": "Something went wrong.",
-    "More.options": "More options"
+    "More.options": "More options",
+    "min": "min",
+    "hr": "hr",
+    "sorted_by_healthiest": "Sorted by Healthiest"
 }

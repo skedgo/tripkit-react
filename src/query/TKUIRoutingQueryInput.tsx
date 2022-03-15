@@ -454,8 +454,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         value={routingQuery.time}
                         timeZone={this.props.timezone}
                         onChange={(date: Moment) => this.updateQuery({time: date})}
-                        timeFormat={DateTimeUtil.TIME_FORMAT}
-                        dateFormat={DateTimeUtil.DATE_TIME_FORMAT}
+                        timeFormat={DateTimeUtil.timeFormat()}
+                        dateFormat={DateTimeUtil.dateTimeFormat()}
                         disabled={datePickerDisabled}
                         styles={(theme: TKUITheme) => ({
                             datePicker: overrideClass({

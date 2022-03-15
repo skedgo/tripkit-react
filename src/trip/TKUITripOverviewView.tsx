@@ -1,26 +1,26 @@
-import React, {CSSProperties} from "react";
+import React from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {default as TKUISegmentOverview} from "./TKUISegmentOverview";
-import {tKUITripOverviewViewDefaultStyle} from "./TKUITripOverviewView.css";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { default as TKUISegmentOverview } from "./TKUISegmentOverview";
+import { tKUITripOverviewViewDefaultStyle } from "./TKUITripOverviewView.css";
 import TripUtil from "./TripUtil";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
-import {TKUIButtonType} from "../buttons/TKUIButton";
-import {Visibility} from "../model/trip/SegmentTemplate";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { TKUIButtonType } from "../buttons/TKUIButton";
+import { Visibility } from "../model/trip/SegmentTemplate";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import TKShareHelper from "../share/TKShareHelper";
 import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
-import HasCard, {HasCardKeys} from "../card/HasCard";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
+import HasCard, { HasCardKeys } from "../card/HasCard";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -67,13 +67,13 @@ export interface IStyle {
     actionsPanel: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUITripOverviewViewProps = IProps;
 export type TKUITripOverviewViewStyle = IStyle;
 
 export const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITripOverviewView {...props}/>,
+    render: props => <TKUITripOverviewView {...props} />,
     styles: tKUITripOverviewViewDefaultStyle,
     classNamePrefix: "TKUITripOverviewView"
 };
@@ -121,29 +121,29 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
         const props = this.props;
         return segment.arrival ? [
             <TKUIShareAction title={props.t("Share.Arrival")}
-                             link={TKShareHelper.getShareSegmentArrival(segment)}
-                             message={""}
-                             buttonType={TKUIButtonType.PRIMARY_LINK}
-                             style={{
-                                 paddingLeft: 0,
-                                 ...genStyles.justifyStart
-                             }}
-                             key={"actionShareArrival"}
+                link={TKShareHelper.getShareSegmentArrival(segment)}
+                message={""}
+                buttonType={TKUIButtonType.PRIMARY_LINK}
+                style={{
+                    paddingLeft: 0,
+                    ...genStyles.justifyStart
+                }}
+                key={"actionShareArrival"}
             />
         ] : []
     }
 
     public render(): React.ReactNode {
         const segments = this.props.value.getSegments(Visibility.IN_DETAILS);
-        const trip = this.props.value;
-        const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(trip);
+        const { value: trip, t } = this.props;
+        const { departureTime, arrivalTime, duration, hasPT } = TripUtil.getTripTimeData(trip);
         const title = hasPT ? departureTime + " - " + arrivalTime : duration;
-        const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? "Arrives " + arrivalTime : "Departs " + departureTime);
+        const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? t("arrives.X", { 0: arrivalTime }) : t("departs.X", { 0: departureTime }));
         const classes = this.props.classes;
         const defaultActions = this.getDefaultActions(trip);
         const actions = this.props.actions ? this.props.actions(trip, defaultActions) : defaultActions;
         const subHeader = actions ?
-            () => <TKUIActionsView actions={actions} className={classes.actionsPanel}/> : undefined;
+            () => <TKUIActionsView actions={actions} className={classes.actionsPanel} /> : undefined;
         const segmentsAndArrival = segments.concat(this.props.value.arrivalSegment);
         return (
             <TKUICard
@@ -160,17 +160,17 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
             >
                 <div className={classes.main}>
                     {segmentsAndArrival.map((segment: Segment, index: number) => {
-                            const defaultSegmentActions = this.getDefaultSegmentActions(segment);
-                            const segmentActions = this.props.segmentActions ?
-                                this.props.segmentActions(segment, defaultSegmentActions) : defaultSegmentActions;
-                            return <TKUISegmentOverview
-                                value={segment}
-                                key={index}
-                                actions={segmentActions}
-                                onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
-                                onClick={() => this.props.setSelectedTripSegment && this.props.setSelectedTripSegment(segment)}
-                            />;
-                        }
+                        const defaultSegmentActions = this.getDefaultSegmentActions(segment);
+                        const segmentActions = this.props.segmentActions ?
+                            this.props.segmentActions(segment, defaultSegmentActions) : defaultSegmentActions;
+                        return <TKUISegmentOverview
+                            value={segment}
+                            key={index}
+                            actions={segmentActions}
+                            onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
+                            onClick={() => this.props.setSelectedTripSegment && this.props.setSelectedTripSegment(segment)}
+                        />;
+                    }
                     )}
                 </div>
             </TKUICard>

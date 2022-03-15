@@ -42,7 +42,7 @@ class BookingInfo {
 @JsonObject
 export class BookingAction {
     @JsonProperty("type", String, true)
-    public type: string = "";   // values: CANCEL
+    public type: string = "";   // values: CANCEL, CONFIRM
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("internalURL", String, true)
@@ -51,6 +51,8 @@ export class BookingAction {
     public externalURL: string = "";
     @JsonProperty("isDestructive", Boolean, true)
     public isDestructive: boolean = false;
+    @JsonProperty("confirmationMessage", String, true)
+    public confirmationMessage?: string = undefined;
 }
 
 @JsonObject
