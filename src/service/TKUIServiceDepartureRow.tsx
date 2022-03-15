@@ -110,9 +110,9 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
         if (departure.actualEndTime) {
             const endTime = DateTimeUtil.momentFromTimeTZ(departure.actualEndTime * 1000, timezone);
-            serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP) + " - " + endTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
+            serviceTime = departureTime.format(DateTimeUtil.timeFormat(false)) + " - " + endTime.format(DateTimeUtil.timeFormat(false));
         } else {
-            serviceTime = departureTime.format(DateTimeUtil.TIME_FORMAT_TRIP);
+            serviceTime = departureTime.format(DateTimeUtil.timeFormat(false));
         }
         return {status, modifier, statusClassname, serviceTime};
     }

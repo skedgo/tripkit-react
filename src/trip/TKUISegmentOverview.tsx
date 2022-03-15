@@ -80,21 +80,19 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 function platformText(platformS: string): string {
     return platformS.toLowerCase().startsWith("stop") ? platformS : "Platform " + platformS;
-} 
+}
 
 class TKUISegmentOverview extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const segment = this.props.value;
+        const { value: segment, t, classes } = this.props;
         const modeInfo = segment.modeInfo!;
-        const from = (segment.isFirst() ? "Leave " : segment.arrival ? "Arrive " : "")
-            + (segment.type === SegmentType.stationary ? segment.location.getDisplayString() : segment.from.getDisplayString());
+        const fromLocS = segment.type === SegmentType.stationary ? segment.location.getDisplayString() : segment.from.getDisplayString();
+        const from = segment.isFirst() ? t("Leave.X", { 0: fromLocS }) : segment.arrival ? t("Arrive.X", { 0: fromLocS }) : fromLocS;
         const iconOnDark = isIconOnDark(segment);
         const hasBusOccupancy = segment.isPT() && segment.realtimeVehicle && segment.realtimeVehicle.components &&
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
             segment.realtimeVehicle.components[0][0].occupancy;
-        const classes = this.props.classes;
-        const t = this.props.t;
         const showWheelchair = (this.props.options.wheelchair || segment.wheelchairAccessible === false) &&
             segment.isPT();
         const wheelchairInfo = showWheelchair &&
@@ -120,9 +118,9 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             const arrivePlatform = prevSegment && prevSegment.type === SegmentType.scheduled ? prevSegment.endPlatform : undefined;
             const transferAction = nextSegment && nextSegment.type === SegmentType.scheduled ? (nextSegment.startPlatform && platformText(nextSegment.startPlatform)) : segment.getAction();
             const arriveTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-                .format(DateTimeUtil.TIME_FORMAT_TRIP);
+                .format(DateTimeUtil.timeFormat(false));
             const departTime = DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone)
-                .format(DateTimeUtil.TIME_FORMAT_TRIP);
+                .format(DateTimeUtil.timeFormat(false));
             const betweenScheduled = prevSegment && prevSegment.type === SegmentType.scheduled && nextSegment && nextSegment.type === SegmentType.scheduled;
             header =
                 <div className={classes.header}>
@@ -155,7 +153,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         } else {    // Header of a non-stationary segment.
             const startTime = segment.isContinuation ? undefined :
                 DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-                    .format(DateTimeUtil.TIME_FORMAT_TRIP);
+                    .format(DateTimeUtil.timeFormat(false));
             const startPlatform = segment.type === SegmentType.scheduled && !segment.isContinuation ? segment.startPlatform :
                 prevSegment?.type === SegmentType.scheduled ? prevSegment.endPlatform : undefined;
             header =

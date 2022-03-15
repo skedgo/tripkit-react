@@ -50,8 +50,8 @@ class TKUIServiceSteps extends React.Component<IProps, {}> {
         });
         const stepElements = stops.map((stop: ServiceStopLocation, stopI: number) => {
             const leftLabel = stop.departure ?
-                DateTimeUtil.momentFromTimeTZ(stop.departure * 1000, timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) :
-                stop.arrival ? DateTimeUtil.momentFromTimeTZ(stop.arrival * 1000, timezone).format(DateTimeUtil.TIME_FORMAT_TRIP) : "";
+                DateTimeUtil.momentFromTimeTZ(stop.departure * 1000, timezone).format(DateTimeUtil.timeFormat(false)) :
+                stop.arrival ? DateTimeUtil.momentFromTimeTZ(stop.arrival * 1000, timezone).format(DateTimeUtil.timeFormat(false)) : "";
             const ariaLabel = stop.name + ", " + t("At.X", {0: leftLabel}) + ". ";
             const travelledStop = travelledStops[stopI];
             const firstStop = stopI === 0;

@@ -172,7 +172,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                     {location.bikePod.lastUpdate &&
                         <div className={classes.availabilityUpdated}>
                             {"Updated: " +
-                                DateTimeUtil.momentFromTimeTZ(location.bikePod.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                                DateTimeUtil.momentFromTimeTZ(location.bikePod.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.timeFormat())}
                         </div>}
                 </div>);
             operator = location.bikePod.operator;
@@ -205,7 +205,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                     {vehicle.lastUpdate &&
                         <div className={classes.availabilityUpdated}>
                             {"Updated: " +
-                                DateTimeUtil.momentFromTimeTZ(vehicle.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                                DateTimeUtil.momentFromTimeTZ(vehicle.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.timeFormat())}
                         </div>}
                 </div>);
             operator = vehicle.operator;
@@ -244,7 +244,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                     {location.carPark.lastUpdate &&
                         <div className={classes.availabilityUpdated}>
                             {"Updated: " +
-                                DateTimeUtil.momentFromTimeTZ(location.carPark.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.TIME_FORMAT)}
+                                DateTimeUtil.momentFromTimeTZ(location.carPark.lastUpdate * 1000, location.timezone).format("DD MMM YYYY " + DateTimeUtil.timeFormat())}
                         </div>}
                 </div>);
             operator = location.carPark.operator;
