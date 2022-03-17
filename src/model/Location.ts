@@ -44,7 +44,7 @@ class Location extends LatLng {
     private static readonly currLocText = "My location";
 
     public static createCurrLoc() {
-        return this.create(new LatLng(), this.currLocText, "", "", TKDefaultGeocoderNames.geolocation);
+        return this.create(new LatLng(), "", "", this.currLocText, TKDefaultGeocoderNames.geolocation);
     }
 
     private static readonly droppedPinId = "dropped";

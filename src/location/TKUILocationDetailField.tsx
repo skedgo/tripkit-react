@@ -5,7 +5,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import {tKUILocationDetailFieldDefaultStyle} from "./TKUILocationDetailField.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    title: string;
+    title: React.ReactNode;
     subtitle?: React.ReactNode;
     icon: React.ReactNode;
 }
@@ -59,7 +59,7 @@ class TKUILocationDetailField extends React.Component<IProps, {}> {
                 </div>
                 <div className={classes.details}>
                     <div className={classes.title}>
-                        {this.toAnchor(this.props.title)}
+                        {typeof this.props.title === 'string' ? this.toAnchor(this.props.title as string) : this.props.title}
                     </div>
                     {this.props.subtitle &&
                     <div className={classes.subtitle}>

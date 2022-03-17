@@ -43,6 +43,20 @@ class MultiGeocoder {
             this._options.geocoders[unresolvedLocation.source]!.resolve(unresolvedLocation)
                 .then((resLoc: Location) => {
                     resLoc.source = unresolvedLocation.source;
+                    // Reverse geocode current location so address is sent to routing.json, for booking.
+                    if (resLoc.source === TKDefaultGeocoderNames.geolocation && !resLoc.address) {
+                        return new Promise<Location>((resolve, reject) => {
+                            this.reverseGeocode(resLoc, resLocGeocoded => {
+                                if (resLocGeocoded) {
+                                    resLocGeocoded.name = resLoc.name;  // So it preserves the 'My Location' name (though LocationUtil.getMainText displays a different string).
+                                    resLocGeocoded.source = resLoc.source // So isCurrLoc() method returns true.
+                                    resolve(resLocGeocoded);
+                                } else {
+                                    resolve(resLoc);
+                                }
+                            });
+                        });
+                    }
                     return resLoc;
                 }) :
             Promise.reject(new Error('Unable to resolve location with unknown source'));

@@ -74,6 +74,7 @@ import {TKUIActiveTripProps, TKUIActiveTripStyle} from "../sidebar/TKUIActiveTri
 import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
 import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
+import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
 
 /**
  * SDK configuration
@@ -147,6 +148,7 @@ interface ITKUIConfigOptional {
     TKUIServiceView: TKComponentConfig<TKUIServiceViewProps, TKUIServiceViewStyle>;
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
+    TKUILocationDetail: TKComponentConfig<TKUILocationDetailProps, TKUILocationDetailStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUILocationDetailField: TKComponentConfig<TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
