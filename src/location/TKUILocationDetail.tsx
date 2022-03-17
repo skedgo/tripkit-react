@@ -24,6 +24,7 @@ import { OpeningHours, PricingTable } from "../model/location/CarParkInfo";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
 import { renderBatteryIcon } from "../map/TKUIMapLocationPopup";
 import { tKUILocationDetailDefaultStyle } from "./TKUILocationDetail.css";
+import DeviceUtil from "../util/DeviceUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -181,15 +182,24 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
         operator = location.carPark.operator;
     }
     if (operator) {
-        if (operator.appInfo?.deepLink) {
+        let storeUrl;
+        if (DeviceUtil.isIOS && operator?.appInfo?.appURLiOS) {
+            storeUrl = operator?.appInfo?.appURLiOS;
+        } else if (DeviceUtil.isAndroid && operator?.appInfo?.appURLAndroid) {
+            storeUrl = operator?.appInfo?.appURLAndroid;
+        }
+        if (storeUrl) {
             moreInfoItems.push(
                 <TKUILocationDetailField
-                    title={<a href={operator.appInfo.deepLink}>Open app</a>}
+                    title={<a href={storeUrl}>Open app</a>}
                     icon={<IconWebsite />}
                     key={"open_app"}
                 />
-            );
+            )
         }
+        // window.location.assign("intent://instagram.com/#Intent;scheme=https;package=com.instagram.android;end");
+        // window.location.assign("intent://www.rideneuron.com/#Intent;scheme=nss;package=com.hhyu.neuron;end");        
+
         operator.phone &&
             moreInfoItems.push(
                 <TKUILocationDetailField title={'tel:' + operator.phone}
