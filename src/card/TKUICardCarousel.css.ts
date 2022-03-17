@@ -54,7 +54,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
                 opacity: '1'
             },
             '& > *, .carousel-slider, .slider-wrapper, .slider': {
-                height: '100%'
+                height: props => props.animated !== false ? '100%' : undefined
             },
             '& .carousel .slide > *': {
                 textAlign: 'initial'

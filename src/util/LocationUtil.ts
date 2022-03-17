@@ -4,11 +4,11 @@ import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 class LocationUtil {
     public static getMainText(loc: Location, t?: TranslationFunction): string {
-        if (loc.name) {
-            return loc.name;
-        }
         if (loc.isCurrLoc() && t) {
             return t("Current.Location");
+        }
+        if (loc.name) {
+            return loc.name;
         }
         const address = loc.address;
         return address ?

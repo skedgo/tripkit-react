@@ -10,6 +10,7 @@ import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 import {Booking} from "./BookingInfo";
 import TKI18nProvider from "../../i18n/TKI18nProvider";
+import VehicleInfo from "../location/VehicleInfo";
 
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
@@ -80,6 +81,8 @@ class Segment extends SegmentTemplate {
     public timetableStartPlatform?: string = undefined;
     @JsonProperty("timetableEndPlatform", String, true)
     public timetableEndPlatform?: string = undefined;
+    @JsonProperty("sharedVehicle", VehicleInfo, true)
+    public sharedVehicle?: VehicleInfo = undefined;
 
     public alerts: RealTimeAlert[] = [];
 

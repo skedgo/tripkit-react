@@ -255,7 +255,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     });
                 }
             }
-        } else if (locationValue.isResolved() && !locationValue.address && !locationValue.name) {
+        } else if (locationValue.isResolved() && !locationValue.address && !locationValue.name && !locationValue.isCurrLoc()) {
             // Coordinate without address nor name, so reverse geocode it.
             this.setState({waitingResolveFor: locationValue});
             this.geocodingData.reverseGeocode(locationValue, location => {

@@ -11,6 +11,9 @@ class AppInfo {
 
     @JsonProperty("appURLAndroid", String, true)
     public appURLAndroid?: string = undefined;
+
+    @JsonProperty("deepLink", String, true)
+    public deepLink?: string = undefined;
 }
 
 @JsonObject

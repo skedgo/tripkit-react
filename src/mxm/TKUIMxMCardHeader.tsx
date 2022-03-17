@@ -29,7 +29,10 @@ const TKUIMxMCardHeader: React.SFC<IProps> = (props: IProps) => {
     return (
         <div className={classes.main}>
             <img
-                src={TransportUtil.getTransportIcon(segment.modeInfo!, segment.realTime === true, theme.isDark)}
+                src={TransportUtil.getTransIcon(segment.modeInfo!, {
+                    isRealtime: segment.realTime === true,
+                    onDark: theme.isDark
+                })}
                 className={classes.transIcon}
                 aria-hidden={true}
             />

@@ -314,7 +314,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                     }
                     {bookingSegment &&
                     <TKUIButton
-                        text={t("Book")}
+                        text={bookingSegment?.booking?.title ?? t("Book")}
                         type={TKUIButtonType.PRIMARY_LINK}
                         onClick={(e: any) => {
                             this.props.onSegmentSelected?.(bookingSegment);
