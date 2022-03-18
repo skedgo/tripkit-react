@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -63,7 +64,9 @@
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Array.prototype.findIndex,Math.trunc"></script>
 
     <style>
-        html, body, #tripgo-sample-root {
+        html,
+        body,
+        #tripgo-sample-root {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -71,7 +74,7 @@
             display: flex;
             overflow-x: hidden;
         }
-
+        
         html {
             height: 100%;
             /* Prevent overscroll/bounce effect on main element. See
@@ -79,10 +82,11 @@
             position: fixed;
             overflow: hidden;
         }
+        
         @font-face {
             font-family: 'ProximaNova';
             src: url('/fonts/269860_3_0.eot');
-            src: url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'),url('/fonts/269860_3_0.woff') format('woff'),url('/fonts/269860_3_0.ttf') format('truetype');
+            src: url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype');
         }
     </style>
     <script>
@@ -90,28 +94,35 @@
 
         function tKRequestIPLocation() {
             return fetch("https://ipapi.co/json/")
-                .then(function(response){ return response.json() })
+                .then(function(response) {
+                    return response.json()
+                })
                 .then(function(responseJson) {
                     return [responseJson.latitude, responseJson.longitude];
                 });
         }
 
         function tKRequestCurrentLocationHTML5() {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
-                        function (result) { resolve([result.coords.latitude, result.coords.longitude]) },
-                        function (error) { reject(error) });
-                }});
+                        function(result) {
+                            resolve([result.coords.latitude, result.coords.longitude])
+                        },
+                        function(error) {
+                            reject(error)
+                        });
+                }
+            });
         }
 
         function tKCheckGeolocationPermission() {
-            return new Promise(function (resolve, reject) {
+            return new Promise(function(resolve, reject) {
                 navigator.permissions ?
                     // Permission API is supported
                     navigator.permissions.query({
                         name: 'geolocation'
-                    }).then(function (permission) {
+                    }).then(function(permission) {
                         // is geolocation granted?
                         resolve(permission.state === "granted")
                     }) :
@@ -123,18 +134,18 @@
         function tKRequestCurrentLocation(dontAskUser) {
             if (dontAskUser) {
                 return tKCheckGeolocationPermission()
-                    .then(function (granted) {
+                    .then(function(granted) {
                         // Permission API is supported
                         return granted ? tKRequestCurrentLocationHTML5() : tKRequestIPLocation();
                     })
-                    .catch(function () {
+                    .catch(function() {
                         // Permission API is not supported
                         return tKRequestIPLocation();
                     });
                 // return requestCurrentLocationGMaps();
             }
             return tKRequestCurrentLocationHTML5()
-                .catch(function () {
+                .catch(function() {
                     return tKRequestIPLocation();
                 });
         }
@@ -158,12 +169,14 @@
                     if (language.indexOf('-') !== -1) {
                         language = language.split('-')[0];
                         if (language === 'en') {
-                            return Promise.reject(new Error("Use default language"));
+                            // return Promise.reject(new Error("Use default language"))
+                            return Promise.resolve({});
                         }
                         return fetch("/i18n/i18n_" + language + ".json")
                             .then(jsonCallback);
                     } else {
-                        return Promise.reject(new Error("No matching translations found for " + language))
+                        // return Promise.reject(new Error("No matching translations found for " + language))
+                        return Promise.resolve({});
                     }
                 })
                 .then((messagesJson) => {
@@ -178,9 +191,10 @@
         }
     </script>
 </head>
+
 <body>
-<div id="tripgo-sample-root" role="none"></div>
-<!--
+    <div id="tripgo-sample-root" role="none"></div>
+    <!--
   This HTML file is a template.
   If you open it directly in the browser, you will see an empty page.
 
@@ -191,4 +205,5 @@
   To create a production bundle, use `npm run build` or `yarn build`.
 -->
 </body>
+
 </html>

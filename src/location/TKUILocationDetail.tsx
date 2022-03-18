@@ -17,6 +17,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import iconW3w from "../images/location/ic-what3words.png";
 import { ReactComponent as IconPhone } from "../images/location/ic-phone.svg";
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
+import { ReactComponent as IconOpenApp } from "../images/location/ic-open-app.svg";
 import CarParkLocation from "../model/location/CarParkLocation";
 import CompanyInfo from "../model/location/CompanyInfo";
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
@@ -192,10 +193,25 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
             moreInfoItems.push(
                 <TKUILocationDetailField
                     title={<a href={storeUrl}>Open app</a>}
-                    icon={<IconWebsite />}
+                    icon={<IconOpenApp />}
                     key={"open_app"}
                 />
             )
+        }
+        if (operator?.appInfo?.deepLink) {
+            moreInfoItems.push(
+                <TKUILocationDetailField
+                    title={<a onClick={() => {
+                        var now = new Date().valueOf();
+                        setTimeout(() => {
+                            if (new Date().valueOf() - now > 2000) return;
+                            window.location.assign(operator?.appInfo?.appURLiOS!);
+                        }, 200);
+                        window.location.assign(operator?.appInfo?.deepLink!);
+                    }}>Open app</a>}
+                    icon={<IconOpenApp />}
+                    key={"open_app2"}
+                />);
         }
         // window.location.assign("intent://instagram.com/#Intent;scheme=https;package=com.instagram.android;end");
         // window.location.assign("intent://www.rideneuron.com/#Intent;scheme=nss;package=com.hhyu.neuron;end");        
