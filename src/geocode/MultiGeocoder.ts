@@ -2,7 +2,7 @@ import Location from "../model/Location";
 import LatLng from "../model/LatLng";
 import BBox from "../model/BBox";
 import LocationUtil from "../util/LocationUtil";
-import Environment from "../env/Environment";
+import { Env } from "../env/Environment";
 import TKGeocodingOptions from "./TKGeocodingOptions";
 import Util from "../util/Util";
 import TKDefaultGeocoderNames from "./TKDefaultGeocoderNames";
@@ -74,6 +74,21 @@ class MultiGeocoder {
         });
     }
 
+    /**
+     * Parameterize as a geocoding option (as the compare). Used just to compare
+     * duplicates.
+     */
+
+    private compareDuplicates(l1: Location, l2: Location, query: string): -1 | 0 | 1 {
+        return (l1.source !== TKDefaultGeocoderNames.skedgo &&
+            l2.source === TKDefaultGeocoderNames.skedgo &&
+            LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) < 0.1) ? 1 :
+            (l1.source === TKDefaultGeocoderNames.skedgo &&
+            l2.source !== TKDefaultGeocoderNames.skedgo &&
+            LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) > -0.1) ? -1 :
+            0;
+    }
+
     private merge(query: string, results: Map<string, Location[]>): Location[] {
         // let mergedResults: Location[] = [];
         const suggestionListsFromSources: Location[][] = [];
@@ -91,19 +106,23 @@ class MultiGeocoder {
         Util.log("Remove repeated results: \n", null);
         Util.log("------------------------ \n", null);
         const depuratedResults: Location[] = [];
-        for (const result of mergedResults) {
-            let relevant = true;
-            for (const depuratedResult of depuratedResults) {
+        mergedResults.forEach(result => {
+            // Some of the depurated results is analogous to result, so don't add result to depurated;
+            const analogous = depuratedResults.some((depuratedResult, j) => {
                 if (this._options.analogResults(result, depuratedResult)) {
-                    relevant = false;
-                    Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".", null);
-                    break;
+                    if (this.compareDuplicates(result, depuratedResult, query) === -1) {
+                        depuratedResults[j] = result;
+                        Util.log("Removing " + depuratedResult.address + " in favor of " + result.address + ".", Env.PRODUCTION);
+                    } else {
+                        Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".", Env.PRODUCTION);
+                    }
+                    return true;    // found analogous, so don't add to depurated    
                 }
-            }
-            if (relevant) {
+            });
+            if (!analogous) { // if didn't find analogous, add to depurated
                 depuratedResults.push(result);
             }
-        }
+        });
         return depuratedResults;
     }
 
@@ -117,7 +136,7 @@ class MultiGeocoder {
         Util.log("------------------------ \n", null);
         Util.log("Relevance to query: " + query + "\n", null);
         Util.log("------------------------ \n", null);
-        for (let firsts = MultiGeocoder.getFirsts(suggestionListsFromSources) ; firsts.length !== 0 ; firsts = MultiGeocoder.getFirsts(suggestionListsFromSources)) {
+        for (let firsts = MultiGeocoder.getFirsts(suggestionListsFromSources); firsts.length !== 0; firsts = MultiGeocoder.getFirsts(suggestionListsFromSources)) {
             firsts.sort((l1: Location, l2: Location) => {
                 return this._options.compare(l1, l2, query);
             });
