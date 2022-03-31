@@ -367,7 +367,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                     const selectedTGroup = trip as TripGroup;
                     selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
-                    this.setState({});
+                    // Update the selected segment since it's a different object, and it causes an index mismatch on MxM view.
+                    if (this.state.selectedSegment) {
+                        const segmentReplacement = selectedTGroup.segments.find(segment => segment.id === this.state.selectedSegment?.id);
+                        this.setSelectedSegment(segmentReplacement);
+                    } else {
+                        // Force update anyway
+                        this.setState({});
+                    }
                     return true;
                 });
         }

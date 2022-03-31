@@ -5,10 +5,10 @@ import Trip from "../../model/trip/Trip";
 @JsonObject
 class PlannedTrip {
 
-    public static create(source: string, trips: Trip[], selected: Trip) {
+    public static create(source: string, trips: Trip[], selected: Trip, anonymous: boolean) {
         const instance = new PlannedTrip();
         instance._source = source;
-        instance._choiceSet = trips.map((trip: Trip) => TripChoice.create(trip, trip === selected));
+        instance._choiceSet = trips.map((trip: Trip) => TripChoice.create(trip, trip === selected, anonymous));
         return instance;
     }
 

@@ -42,6 +42,9 @@ class SkedgoGeocoder implements IGeocoder {
         if (!this.options.renderIcon) {
             this.options.renderIcon = defaultRenderIcon;
         }
+        if (this.options.reverseGeocoding === undefined) {  // Default reverseGeocoding to true.
+            this.options.reverseGeocoding = true;
+        }
         this.cache = new GeocodingCache();
     }
 

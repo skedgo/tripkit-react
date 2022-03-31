@@ -1,6 +1,6 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
+import TKI18nProvider, { TranslationFunction } from "../i18n/TKI18nProvider";
 
 class LocationUtil {
     public static getMainText(loc: Location, t?: TranslationFunction): string {
@@ -12,7 +12,10 @@ class LocationUtil {
         }
         const address = loc.address;
         return address ?
-            (address.includes(",") ? address.substr(0, address.indexOf(",")) : address) :
+            (address.includes(",") ?
+                (TKI18nProvider.localeStatic === 'ja' ? address.substring(address.lastIndexOf(",") + 1).trim() :
+                    address.substr(0, address.indexOf(",")))
+                : address) :
             loc.getLatLngDisplayString();
     }
 
@@ -21,7 +24,9 @@ class LocationUtil {
         if (loc.name && address && !address.includes(loc.name)) {
             return address;
         }
-        return address && address.includes(",") ? address.substr(address.indexOf(",") + 1, address.length) : undefined;
+        return address && address.includes(",") ?
+            (TKI18nProvider.localeStatic === 'ja' ? address.substring(0, address.lastIndexOf(",")).trim() :
+                address.substr(address.indexOf(",") + 1).trim()) : undefined;
     }
 
     public static equal<T extends LatLng>(loc1: T | null, loc2: T | null) {
@@ -45,7 +50,8 @@ class LocationUtil {
                 distance[i][j] = Math.min(
                     distance[i - 1][j] + 1,
                     distance[i][j - 1] + 1,
-                    distance[i - 1][j - 1] + ((str1.charAt(i - 1) === str2.charAt(j - 1)) ? 0 : 1));}
+                    distance[i - 1][j - 1] + ((str1.charAt(i - 1) === str2.charAt(j - 1)) ? 0 : 1));
+            }
         }
         return distance[str1.length][str2.length];
     }
@@ -61,7 +67,7 @@ class LocationUtil {
         }
         const searchResultWords = searchResult.split(" ");
         if (searchResult.startsWith(query)) {
-            return .85 * (preferShorter ? 40/(40 + searchResultWords.length) : 1);
+            return .85 * (preferShorter ? 40 / (40 + searchResultWords.length) : 1);
         }
         let relevance = 0;
         const queryWords = query.split(" ");
@@ -92,11 +98,11 @@ class LocationUtil {
                 relevance += .5 / (queryWords.length + minDistance);
             }
         }
-        return relevance * (preferShorter ? 40/(40 + searchResultWords.length) : 1);
+        return relevance * (preferShorter ? 40 / (40 + searchResultWords.length) : 1);
     }
 
     private static readonly earthRadius = 6371000;
-    private static readonly radians = 3.14159/180;
+    private static readonly radians = 3.14159 / 180;
 
     /* This is the Equirectangular approximation. It's a little slower than the Region.distanceInMetres() formula. */
     public static distanceInMetres(c1: LatLng, c2: LatLng): number {
@@ -106,7 +112,7 @@ class LocationUtil {
         }
         const p1 = lngDelta * Math.cos(0.5 * this.radians * (c1.lat + c2.lat));
         const p2 = (c1.lat - c2.lat);
-        return this.earthRadius * this.radians * Math.sqrt(p1*p1 + p2*p2);
+        return this.earthRadius * this.radians * Math.sqrt(p1 * p1 + p2 * p2);
     }
 }
 

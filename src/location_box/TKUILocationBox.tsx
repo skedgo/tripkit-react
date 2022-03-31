@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import Autocomplete from 'react-autocomplete';
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg'
-import {ReactComponent as IconSpin} from '../images/ic-loading2.svg'
+import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
+import { ReactComponent as IconSpin } from '../images/ic-loading2.svg'
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import Location from '../model/Location';
 import TKUIAutocompleteResult from "./TKUIAutocompleteResult";
@@ -10,19 +10,19 @@ import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
-import {resetStyles} from "../css/ResetStyle.css";
+import { resetStyles } from "../css/ResetStyle.css";
 import * as CSS from 'csstype';
 import RegionsData from "../data/RegionsData";
-import {TKError} from "../error/TKError";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {tKUILocationBoxDefaultStyle} from "./TKUILocationBox.css";
-import {genClassNames} from "../css/GenStyle.css";
-import TKGeocodingOptions, {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
-import {Subtract} from 'utility-types';
-import {TKUIConfigContext} from "../config/TKUIConfigProvider";
-import {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
+import { TKError } from "../error/TKError";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { tKUILocationBoxDefaultStyle } from "./TKUILocationBox.css";
+import { genClassNames } from "../css/GenStyle.css";
+import TKGeocodingOptions, { getGeocodingOptions } from "../geocode/TKGeocodingOptions";
+import { Subtract } from 'utility-types';
+import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import LocationUtil from "../util/LocationUtil";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
@@ -75,7 +75,7 @@ export type TKUILocationBoxProps = IProps;
 export type TKUILocationBoxStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUILocationBox {...props}/>,
+    render: props => <TKUILocationBox {...props} />,
     styles: tKUILocationBoxDefaultStyle,
     classNamePrefix: "TKUILocationBox"
 };
@@ -178,7 +178,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 items: [],
                 // Stop waiting spinner if changed location we are waiting for.
                 waitingResolveFor: prevState.locationValue && !prevState.locationValue.equals(locationValue)
-                && prevState.waitingResolveFor === prevState.locationValue ? undefined : prevState.waitingResolveFor
+                    && prevState.waitingResolveFor === prevState.locationValue ? undefined : prevState.waitingResolveFor
             }), setStateCallback);
         } else {
             this.setState({
@@ -192,7 +192,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     private resolve(locationValue: Location) {
         if (locationValue && (!locationValue.isResolved() || locationValue.hasDetail === false) &&
             (!locationValue.isCurrLoc() || this.props.resolveCurr)) {
-            this.setState({waitingResolveFor: locationValue});
+            this.setState({ waitingResolveFor: locationValue });
             if (locationValue.source) {
                 this.geocodingData.resolveLocation(locationValue)
                     .then((resolvedLocation: Location) => {
@@ -218,31 +218,31 @@ class TKUILocationBox extends Component<IProps, IState> {
             } else {
                 const searchAddress = () => {
                     this.getLimitBounds().then(limitBounds => {
-                            if (!locationValue.address) {
-                                return;
-                            }
-                            this.geocodingData.geocode(locationValue.address!, false, limitBounds, this.props.focus ? this.props.focus : null,
-                                (query: string, results: Location[]) => {
-                                    if (this.state.waitingResolveFor === locationValue) {
-                                        this.setState({
-                                            waitingResolveFor: undefined
-                                        });
-                                    }
-                                    if (locationValue === this.state.locationValue) {
-                                        if (results.length > 0) {
-                                            this.setValue(results[0], false, true,
-                                                () => {
-                                                    this.updateResolvedItem(locationValue, results[0]);
-                                                    console.log("Resolved: " + JSON.stringify(results[0]));
-                                                });
-                                        } else {
-                                            this.props.onFailedToResolve && this.props.onFailedToResolve(
-                                                locationValue === this.state.highlightedValue,
-                                                new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
-                                        }
-                                    }
-                                });
+                        if (!locationValue.address) {
+                            return;
                         }
+                        this.geocodingData.geocode(locationValue.address!, false, limitBounds, this.props.focus ? this.props.focus : null,
+                            (query: string, results: Location[]) => {
+                                if (this.state.waitingResolveFor === locationValue) {
+                                    this.setState({
+                                        waitingResolveFor: undefined
+                                    });
+                                }
+                                if (locationValue === this.state.locationValue) {
+                                    if (results.length > 0) {
+                                        this.setValue(results[0], false, true,
+                                            () => {
+                                                this.updateResolvedItem(locationValue, results[0]);
+                                                console.log("Resolved: " + JSON.stringify(results[0]));
+                                            });
+                                    } else {
+                                        this.props.onFailedToResolve && this.props.onFailedToResolve(
+                                            locationValue === this.state.highlightedValue,
+                                            new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
+                                    }
+                                }
+                            });
+                    }
                     )
                 };
                 if (this.props.bounds) {
@@ -257,13 +257,16 @@ class TKUILocationBox extends Component<IProps, IState> {
             }
         } else if (locationValue.isResolved() && !locationValue.address && !locationValue.name && !locationValue.isCurrLoc()) {
             // Coordinate without address nor name, so reverse geocode it.
-            this.setState({waitingResolveFor: locationValue});
+            this.setState({ waitingResolveFor: locationValue });
             this.geocodingData.reverseGeocode(locationValue, location => {
                 if (locationValue === this.state.locationValue) {
                     if (location) {
+                        if (!location.address) {
+                            location.address = "Unknown";
+                        }
                         this.setValue(location, false, true, () =>
                             this.updateResolvedItem(locationValue, location));
-                    }
+                    } 
                 }
                 if (this.state.waitingResolveFor === locationValue) {
                     this.setState({
@@ -278,7 +281,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         const itemsUpdate = this.state.items
             .map((item) => {
                 if (item.location === unresolved) {
-                    return {...item, location: resolved}
+                    return { ...item, location: resolved }
                 }
                 return item;
             });
@@ -288,7 +291,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private onChange(inputText: string) {
-        this.setState({inputText: inputText}, () => {
+        this.setState({ inputText: inputText }, () => {
             if (inputText === '') {
                 this.refreshResults(this.state.inputText);
             } else {
@@ -313,7 +316,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private refreshResults(inputText: string) {
-        this.setState({waiting: true});
+        this.setState({ waiting: true });
         this.getLimitBounds().then(limitBounds =>
             this.geocodingData.geocode(inputText, true, limitBounds, this.props.focus ? this.props.focus : null,
                 this.handleAutocompleteResults));
@@ -325,7 +328,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         if (query !== this.state.inputText) {   // A previous request arrived
             return;
         }
-        this.setState({waiting: false});
+        this.setState({ waiting: false });
         const items: object[] = [];
         for (const i in results) {
             if (results.hasOwnProperty(i)) {
@@ -338,7 +341,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         }
         // Reset highlighted item, except that more results arrived for the same query.
         if (query !== this.resultsArrivedForQuery && this.autocompleteRef.current) {
-            this.autocompleteRef.current.setState({highlightedIndex: null});
+            this.autocompleteRef.current.setState({ highlightedIndex: null });
         }
         this.resultsArrivedForQuery = query;
         this.setState({
@@ -379,24 +382,24 @@ class TKUILocationBox extends Component<IProps, IState> {
         return (
             <div className={classes.main} role="none">
                 <input type="text"
-                       spellCheck={false}
-                       autoComplete="off"
-                       autoCorrect="off"
-                       autoCapitalize="off"
-                       {...props}
-                       style={this.props.inputStyle}
-                       className={classes.input}
-                    // autoFocus={true}
+                    spellCheck={false}
+                    autoComplete="off"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    {...props}
+                    style={this.props.inputStyle}
+                    className={classes.input}
+                // autoFocus={true}
                 />
                 {this.state.waiting || this.state.waitingResolveFor ?
-                    <IconSpin className={classes.iconLoading} focusable="false"/> :
+                    <IconSpin className={classes.iconLoading} focusable="false" /> :
                     (this.state.inputText ?
                         <button onClick={this.onClearClicked}
-                                className={classes.btnClear}
-                                style={resetStyles.button as any}
-                                aria-hidden={true}
-                                tabIndex={-1}>
-                            <IconRemove aria-hidden={true} className={classes.iconClear} focusable="false"/>
+                            className={classes.btnClear}
+                            style={resetStyles.button as any}
+                            aria-hidden={true}
+                            tabIndex={-1}>
+                            <IconRemove aria-hidden={true} className={classes.iconClear} focusable="false" />
                         </button> :
                         this.props.iconEmpty || "")
                 }
@@ -424,12 +427,12 @@ class TKUILocationBox extends Component<IProps, IState> {
                 role="listbox"
                 id={this.getPopupId()}
                 className={genClassNames.root}
-                style={{width: "250px"}}
+                style={{ width: "250px" }}
             />;
             return <Tooltip
                 placement={this.props.inputId === "input-to" ? "right" : "rightTop"}
                 overlay={overlay}
-                arrowContent={<div className="rc-tooltip-arrow-inner"/>}
+                arrowContent={<div className="rc-tooltip-arrow-inner" />}
                 visible={true}
                 overlayClassName={classes.sideMenu}
             >
@@ -553,10 +556,10 @@ class TKUILocationBox extends Component<IProps, IState> {
                     // before, since menu hiding may cause click target to move, missing the click.
                     if ((DeviceUtil.isTablet || this.props.menuContainer) && !isOpen) {
                         setTimeout(() => {
-                            this.setState({focus: isOpen})
+                            this.setState({ focus: isOpen })
                         }, 40);
                     } else {
-                        this.setState({focus: isOpen});
+                        this.setState({ focus: isOpen });
                     }
                 }}
                 open={this.isDDOpen()}
@@ -616,10 +619,10 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
     };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer showCurrLoc={inputProps.showCurrLoc}>
             {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
+                children!({ ...inputProps, ...consumedProps })}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);
