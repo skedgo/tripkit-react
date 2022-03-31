@@ -9,7 +9,7 @@ class ChoiceSegment {
     @JsonProperty('duration', Number)
     private _duration: number = 0; /* In secs. */
 
-    public static create(segment: Segment): ChoiceSegment {
+    public static create(segment: Segment, anonymous: boolean): ChoiceSegment {
         const instance = new ChoiceSegment();
         const modeInfo = segment.modeInfo;
         instance._mode = modeInfo ?

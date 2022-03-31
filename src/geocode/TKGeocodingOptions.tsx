@@ -41,6 +41,7 @@ interface TKGeocodingOptions {
      * Otherwise, current region bounds are used.
      */
     restrictToCoverageBounds?: boolean;
+    reverseGeocoderId?: string;
 }
 
 function getDefaultGeocodingOptions(): TKGeocodingOptions {

@@ -191,9 +191,7 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
         const tKState = this.props.tKState;
         if (tKState.selectedTrip !== prevProps.tKState.selectedTrip) {
             PlannedTripsTracker.instance.selected = tKState.selectedTrip;
-            if (tKState.userProfile.trackTripSelections) {
-                PlannedTripsTracker.instance.scheduleTrack(true);
-            }
+            PlannedTripsTracker.instance.scheduleTrack({long: true, anonymous: !tKState.userProfile.trackTripSelections});
         }
 
         if (tKState.trips !== prevProps.tKState.trips) {

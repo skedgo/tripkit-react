@@ -64,9 +64,10 @@ class MultiGeocoder {
 
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
         // TODO: fix. It maybe de case that neither Pelias nor Skedgo geocoders were included.
-        let reverseGeocoderId = this._options.geocoders["geocodeEarth"] ? "geocodeEarth" : // TODO: remove hardcoding
-            TKDefaultGeocoderNames.skedgo;
-        this._options.geocoders[reverseGeocoderId]!.reverseGeocode(coord, (location: Location | null) => {
+        let reverseGeocoderId = this._options.reverseGeocoderId ?? 
+        (this._options.geocoders["geocodeEarth"] ? "geocodeEarth" : // TODO: remove hardcoding
+            TKDefaultGeocoderNames.skedgo);
+        this._options.geocoders[reverseGeocoderId]?.reverseGeocode(coord, (location: Location | null) => {
             if (location) {
                 location.source = reverseGeocoderId;
             }
@@ -80,13 +81,12 @@ class MultiGeocoder {
      */
 
     private compareDuplicates(l1: Location, l2: Location, query: string): -1 | 0 | 1 {
-        return (l1.source !== TKDefaultGeocoderNames.skedgo &&
-            l2.source === TKDefaultGeocoderNames.skedgo &&
-            LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) < 0.1) ? 1 :
-            (l1.source === TKDefaultGeocoderNames.skedgo &&
-            l2.source !== TKDefaultGeocoderNames.skedgo &&
-            LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) > -0.1) ? -1 :
-            0;
+        if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {
+            return LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) < 0.2 ? 1 : -1            
+        } else if (l1.source === TKDefaultGeocoderNames.skedgo && l2.source !== TKDefaultGeocoderNames.skedgo) {
+            return LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) > -0.2 ? -1 : 1
+        }
+        return 0;
     }
 
     private merge(query: string, results: Map<string, Location[]>): Location[] {

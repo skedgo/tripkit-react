@@ -110,6 +110,7 @@ export {default as TKUIProfileSelect} from "./buttons/TKUIProfileSelect";
 export type TKSelectOption = SelectOption;
 export {default as TKGeolocationData} from "./geocode/GeolocationData";
 export type PeliasGeocoderOptions = PeliasGeocoderOptionsForExport;
+export {default as TKMapboxGeocoder} from "./geocode/TKMapboxGeocoder";
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.

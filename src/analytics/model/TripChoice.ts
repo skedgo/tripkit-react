@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import ChoiceSegment from "./ChoiceSegment";
 import Trip from "../../model/trip/Trip";
 import Segment from "../../model/trip/Segment";
@@ -16,25 +16,27 @@ class TripChoice {
     private _hassle: number = 0;
     @JsonProperty('calories', Number)
     private _calories: number = 0;
-    @JsonProperty('arrivalTime', Number)
-    private _arrivalTime: number = 0; /* In secs. since epoch */
-    @JsonProperty('departureTime', Number)
-    private _departureTime: number = 0;
+    @JsonProperty('arrivalTime', Number, true)
+    public arrivalTime?: number = undefined; /* In secs. since epoch */
+    @JsonProperty('departureTime', Number, true)
+    public departureTime?: number = undefined;
     @JsonProperty('segments', [ChoiceSegment])
     private _segments: ChoiceSegment[] = [];
     @JsonProperty('selected', Boolean)
     private _selected: boolean = false;
 
-    public static create(trip: Trip, selected: boolean): TripChoice {
+    public static create(trip: Trip, selected: boolean, anonymous: boolean): TripChoice {
         const instance = new TripChoice();
         instance._price = trip.moneyUSDCost ? trip.moneyUSDCost : undefined;
         instance._score = trip.weightedScore;
         instance._carbon = trip.carbonCost;
         instance._hassle = trip.hassleCost;
         instance._calories = trip.caloriesCost;
-        instance._arrivalTime = trip.arrive;
-        instance._departureTime = trip.depart;
-        instance._segments = trip.segments.map((segment: Segment) => ChoiceSegment.create(segment));
+        if (!anonymous) {
+            instance.arrivalTime = trip.arrive;
+            instance.departureTime = trip.depart;
+        }
+        instance._segments = trip.segments.map((segment: Segment) => ChoiceSegment.create(segment, anonymous));
         instance._selected = selected;
         return instance;
     }
@@ -58,14 +60,6 @@ class TripChoice {
 
     get calories(): number {
         return this._calories;
-    }
-
-    get arrivalTime(): number {
-        return this._arrivalTime;
-    }
-
-    get departureTime(): number {
-        return this._departureTime;
     }
 
     get segments(): ChoiceSegment[] {

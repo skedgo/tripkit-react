@@ -3,6 +3,7 @@ import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUICardCarouselProps, TKUICardCarouselStyle} from "./TKUICardCarousel";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import DeviceUtil from "../util/DeviceUtil";
+import genStyles from "../css/GenStyle.css";
 
 export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKUICardCarouselProps> =
     (theme: TKUITheme) => ({
@@ -25,6 +26,8 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
         main: {
             width: '100%',
             height: '100%',
+            ...genStyles.flex,
+            ...genStyles.column,
             '& .slider.animated .slide, .carousel .slide': {
                 padding: '35px 0 0',
                 height: '100%',

@@ -34,6 +34,9 @@ class PeliasGeocoder implements IGeocoder {
 
     constructor(options: PeliasGeocoderOptions) {
         this.options = options;
+        if (this.options.reverseGeocoding === undefined) {  // Default reverseGeocoding to true.
+            this.options.reverseGeocoding = true;
+        }
         this.cache = new GeocodingCache();
     }
 

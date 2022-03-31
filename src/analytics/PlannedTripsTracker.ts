@@ -34,18 +34,19 @@ class PlannedTripsTracker {
         this._selected = value;
     }
 
-    public scheduleTrack(long: boolean) {
+    public scheduleTrack(props: {long?: boolean, anonymous?: boolean}) {
+        const {long, anonymous} = props;
         if (this.timeoutId !== null) {
             clearTimeout(this.timeoutId);
         }
-        this.timeoutId = setTimeout(this.track, long ? 10000 : 2000);
+        this.timeoutId = setTimeout(() => this.track(!!anonymous), long ? 10000 : 2000);
     }
 
-    private track() {
+    private track(anonymous: boolean) {
         if (!this._trips || !this._selected) {
             return
         }
-        const trackData = PlannedTrip.create("manual", this._trips, this._selected);
+        const trackData = PlannedTrip.create("manual", this._trips, this._selected, anonymous);
         const jsonConvert = new JsonConvert();
         const body = jsonConvert.serialize(trackData);
         if (Environment.isProd()) {
