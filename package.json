@@ -64,6 +64,7 @@
         "react-jss": "^8.6.1",
         "react-leaflet": "^2.0.1",
         "react-leaflet-control": "^2.0.0",
+        "react-leaflet-google-layer": "^1.1.6",
         "react-modal": "^3.14.3",
         "react-polyglot": "^0.6.1",
         "react-resize-detector": "^3.1.3",
