@@ -55,6 +55,7 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 import RegionsData from "../data/RegionsData";
 import { tKUIColors } from "../jss/TKUITheme";
+import ReactLeafletGoogleLayer from 'react-leaflet-google-layer';
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -510,7 +511,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                     keyboard={false}
                 >
-                    {this.props.mapboxGlLayerProps !== undefined ?
+                    {/* {this.props.mapboxGlLayerProps !== undefined ?
                         !this.state.refreshTiles &&
                         <MapboxGlLayer {...this.props.mapboxGlLayerProps}
                             ref={(ref: any) => {
@@ -566,7 +567,12 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 }
                             }}
                         /> :
-                        <TileLayer {...this.props.tileLayerProps!} />}
+                        <TileLayer {...this.props.tileLayerProps!} />} */}
+                    {/* https://maps.googleapis.com/maps/api/js?key=AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao&libraries=places,geometry&sensor=false */}
+                    <ReactLeafletGoogleLayer
+                        googleMapsLoaderConf={{ KEY: 'AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao' }}
+                        // type={'satellite'}
+                    />
                     {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
                         <Marker position={this.state.userLocation.latLng}
