@@ -9,6 +9,7 @@ import { generateClassNameFactory, generateClassNameSeed, TKUITheme } from "./TK
 import Util from "../util/Util";
 import { TKI18nContextProps } from "../i18n/TKI18nProvider";
 import Environment from "../env/Environment";
+import { renderToStaticMarkup as renderToStaticMarkupDomServer } from "react-dom/server";
 
 type StyleCreator<
 Name extends string | number | symbol = string,
@@ -274,4 +275,9 @@ export function overrideClass(propsOverride: any) {
         ...defaultStyle,
         ...propsOverride
     });
+}
+
+export function renderToStaticMarkup(elem) {
+    // return renderToStaticMarkupDomServer(elem);
+    return Environment.isDev() ? '<div />' : renderToStaticMarkupDomServer(elem);
 }

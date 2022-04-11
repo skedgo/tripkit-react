@@ -4,7 +4,6 @@ import {Marker, Popup} from "react-leaflet";
 import {Visibility} from "../model/trip/SegmentTemplate";
 import L from "leaflet";
 import LatLng from "../model/LatLng";
-import {renderToStaticMarkup} from "react-dom/server";
 import TKUIMapStreets from "./TKUIMapStreets";
 import TKUIMapShapes from "./TKUIMapShapes";
 import {TKUIMapViewClass} from "./TKUIMapView";
@@ -15,6 +14,7 @@ import {TKUITransportPin} from "./TKUITransportPin";
 import {TKUITheme} from "../jss/TKUITheme";
 import SegmentPopup from "./SegmentPopup";
 import {TranslationFunction} from "../i18n/TKI18nProvider";
+import { renderToStaticMarkup } from "../jss/StyleHelper";
 
 interface IProps {
     segment: Segment;

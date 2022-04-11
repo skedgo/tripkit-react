@@ -2,11 +2,9 @@ import * as React from "react";
 import BBox from "../model/BBox";
 import LocationsData from "../data/LocationsData";
 import Location from "../model/Location";
-import {MapLocationType} from "../model/location/MapLocationType";
 import StopLocation from "../model/StopLocation";
 import {Marker, Popup} from "react-leaflet";
 import L from "leaflet";
-import {renderToStaticMarkup} from "react-dom/server";
 import TKUIModeLocationIcon from "./TKUIModeLocationIcon";
 import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
@@ -15,6 +13,7 @@ import {EventSubscription} from "fbemitter";
 import LocationUtil from "../util/LocationUtil";
 import {TKUIConfig} from "../config/TKUIConfig";
 import TKTransportOptions from "../model/options/TKTransportOptions";
+import { renderToStaticMarkup } from "../jss/StyleHelper";
 
 interface IProps {
     zoom: number,
