@@ -3,7 +3,6 @@ import {Marker} from "react-leaflet";
 import ServiceShape from "../model/trip/ServiceShape";
 import TKUIMapShapes from "./TKUIMapShapes";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {renderToStaticMarkup} from "react-dom/server";
 import L from "leaflet";
 import {IServiceResultsContext, ServiceResultsContext} from "../service/ServiceResultsProvider";
 import {TKUIConfig} from "../config/TKUIConfig";
@@ -11,6 +10,7 @@ import {TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer} fro
 import {TKUITransportPin} from "./TKUITransportPin";
 import {TKUITheme} from "../jss/TKUITheme";
 import TransportUtil from "../trip/TransportUtil";
+import { renderToStaticMarkup } from "../jss/StyleHelper";
 
 interface IProps {
     serviceDeparture: ServiceDeparture;

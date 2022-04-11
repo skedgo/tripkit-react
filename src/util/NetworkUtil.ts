@@ -21,7 +21,7 @@ class NetworkUtil {
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json().then(jsonData => {
                     if (jsonData.error) {
-                        const tkError = new TKError(jsonData.error, jsonData.errorCode.toString(), jsonData.usererror);
+                        const tkError = new TKError(jsonData.error, jsonData.errorCode?.toString(), jsonData.usererror);
                         tkError.title = jsonData.title;
                         tkError.subtitle = jsonData.subtitle;
                         throw tkError;
