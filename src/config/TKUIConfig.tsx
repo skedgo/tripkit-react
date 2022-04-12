@@ -75,6 +75,7 @@ import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
 import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
+import { TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
 
 /**
  * SDK configuration
@@ -189,6 +190,7 @@ interface ITKUIConfigOptional {
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
+    TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
