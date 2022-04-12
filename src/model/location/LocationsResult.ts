@@ -54,6 +54,7 @@ class LocationsResult {
      * from LS caché, reflecting it's old and will require a refresh. It is reset to now when it comes from a request (the first one
      * or a refresh).
      */
+     @JsonProperty("requestTime", Number, true)
     public requestTime: number = 0;
 
     /**
