@@ -276,7 +276,11 @@ export function overrideClass(propsOverride: any) {
         ...propsOverride
     });
 }
-
+/**
+ * To avoid warn / error about useLayoutEffect in dev mode. It's caused due to react-jss useStyles hook using
+ * useLayoutEffect to dynamically update styles (e.g. on props change), and react doesn't like it happening inside
+ * a renderToStaticMarkup, since it assumes we are puting dynamic logic on server side rendering.
+ */
 export function renderToStaticMarkup(elem) {
     // return renderToStaticMarkupDomServer(elem);
     return Environment.isDev() ? '<div />' : renderToStaticMarkupDomServer(elem);

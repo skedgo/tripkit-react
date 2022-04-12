@@ -326,6 +326,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                 <div className={classes.loadingPanel}>
                     <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />
                 </div>}
+            {/* <TKUIStripePaymentCard />     */}
         </TKUICard>
     );
 };
