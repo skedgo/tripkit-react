@@ -49,15 +49,15 @@ class LocationsData {
                 cachedResults.add(cellResults);
             }
             if (!cellResults ||
-                (!modes.every((mode: string) => cellResults.modes.includes(mode)) || 
-                (Math.floor(DateTimeUtil.getNow().valueOf() / 1000) - cellResults.requestTime) > 300) && !cellResults.requesting) {   // More than 5 minutes old.
+                !modes.every((mode: string) => cellResults.modes.includes(mode)) || 
+                ((Math.floor(DateTimeUtil.getNow().valueOf() / 1000) - cellResults.requestTime) > 300 && !cellResults.requesting)) {   // More than 5 minutes old.
                 if (!cellResults || !modes.every((mode: string) => cellResults.modes.includes(mode))) {
                     requestCells.push(cellID);
                 } else { // !cellResults.fresh
                     refreshCells[cellID] = cellResults.hashCode;
                 }
                 // To register we are awaiting for cellIDs, avoiding requesting again the same cellID in the meanwhile.
-                const waitingCellResults = cellResults || new LocationsResult(level);
+                const waitingCellResults = cellResults || new LocationsResult(level, modes);
                 waitingCellResults.requesting = true;
                 this.cache.set(region, cellID, waitingCellResults);
             }
@@ -87,7 +87,9 @@ class LocationsData {
                         // and so came in the response, then they would be already marked as fresh by previous iteration,
                         // but this is necessary to mark as fresh the results that didn't change, and so didn't come in
                         // the response.
-                        this.cache.get(region, refreshed)!.requestTime = Math.floor(DateTimeUtil.getNow().valueOf() / 1000);
+                        const refreshedCell = this.cache.get(region, refreshed)!
+                        refreshedCell.requestTime = Math.floor(DateTimeUtil.getNow().valueOf() / 1000);
+                        this.cache.set(region, refreshed, refreshedCell);
                     }
                     // Refresh just if results came.
                     if (groups.length > 0) {
