@@ -55,7 +55,6 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 import RegionsData from "../data/RegionsData";
 import { tKUIColors } from "../jss/TKUITheme";
-import ReactLeafletGoogleLayer from 'react-leaflet-google-layer';
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -97,6 +96,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype [MapboxGLLayerProps](https://github.com/mongodb-js/react-mapbox-gl-leaflet#usage)
      */
     mapboxGlLayerProps?: MapboxGLLayerProps;
+
+    renderLayer?: () => JSX.Element;
 
     fromHereText?: string;
 
@@ -511,68 +512,64 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                     keyboard={false}
                 >
-                    {/* {this.props.mapboxGlLayerProps !== undefined ?
-                        !this.state.refreshTiles &&
-                        <MapboxGlLayer {...this.props.mapboxGlLayerProps}
-                            ref={(ref: any) => {
-                                if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
-                                    this.mapboxGlMap = ref.leafletElement.getMapboxMap();
-                                    this.mapboxGlMap.on('load', () =>
-                                        RegionsData.instance.requireRegions().then(() => {
-                                            try {
-                                                if (!this.mapboxGlMap.getSource('coverage')) {
-                                                    this.mapboxGlMap.addSource('coverage', {
-                                                        'type': 'geojson',
-                                                        'data': {
-                                                            'type': 'Feature',
-                                                            'geometry': RegionsData.instance.getCoverageGeoJson()
-                                                        }
-                                                    });
-                                                    // Add a new layer to visualize the polygon.
-                                                    this.mapboxGlMap.addLayer({
-                                                        'id': 'coverageLayer',
-                                                        'type': 'fill',
-                                                        'source': 'coverage', // reference the data source
-                                                        'layout': {},
-                                                        'paint': {
-                                                            'fill-color': '#212A33',
-                                                            'fill-opacity': 0.4
-                                                        }
-                                                    });
-                                                    if (this.props.locale && this.props.locale !== 'en')
-                                                        this.mapboxGlMap.getStyle().layers.forEach(thisLayer => {
-                                                            if (thisLayer.type == 'symbol') {
-                                                                this.mapboxGlMap.setLayoutProperty(thisLayer.id, 'text-field', [
-                                                                    "coalesce", // Evaluates each expression in turn until the first valid value is obtained. Invalid values are null...
-                                                                    ['get', 'name_' + this.props.locale],
-                                                                    ['get', 'name_en'],  // default to english if not found
-                                                                    ['get', 'name']  // default country language if not found. Original value: [['get', 'name_en'], ['get', 'name']]
-                                                                    // confirmed by looking at this.mapboxGlMap.getLayoutProperty(thisLayer.id, 'text-field').
-                                                                ]);
+                    {this.props.renderLayer ? this.props.renderLayer() :
+                        this.props.mapboxGlLayerProps !== undefined ?
+                            !this.state.refreshTiles &&
+                            <MapboxGlLayer {...this.props.mapboxGlLayerProps}
+                                ref={(ref: any) => {
+                                    if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
+                                        this.mapboxGlMap = ref.leafletElement.getMapboxMap();
+                                        this.mapboxGlMap.on('load', () =>
+                                            RegionsData.instance.requireRegions().then(() => {
+                                                try {
+                                                    if (!this.mapboxGlMap.getSource('coverage')) {
+                                                        this.mapboxGlMap.addSource('coverage', {
+                                                            'type': 'geojson',
+                                                            'data': {
+                                                                'type': 'Feature',
+                                                                'geometry': RegionsData.instance.getCoverageGeoJson()
                                                             }
                                                         });
+                                                        // Add a new layer to visualize the polygon.
+                                                        this.mapboxGlMap.addLayer({
+                                                            'id': 'coverageLayer',
+                                                            'type': 'fill',
+                                                            'source': 'coverage', // reference the data source
+                                                            'layout': {},
+                                                            'paint': {
+                                                                'fill-color': '#212A33',
+                                                                'fill-opacity': 0.4
+                                                            }
+                                                        });
+                                                        if (this.props.locale && this.props.locale !== 'en')
+                                                            this.mapboxGlMap.getStyle().layers.forEach(thisLayer => {
+                                                                if (thisLayer.type == 'symbol') {
+                                                                    this.mapboxGlMap.setLayoutProperty(thisLayer.id, 'text-field', [
+                                                                        "coalesce", // Evaluates each expression in turn until the first valid value is obtained. Invalid values are null...
+                                                                        ['get', 'name_' + this.props.locale],
+                                                                        ['get', 'name_en'],  // default to english if not found
+                                                                        ['get', 'name']  // default country language if not found. Original value: [['get', 'name_en'], ['get', 'name']]
+                                                                        // confirmed by looking at this.mapboxGlMap.getLayoutProperty(thisLayer.id, 'text-field').
+                                                                    ]);
+                                                                }
+                                                            });
+                                                    }
+                                                } catch (e) {
+                                                    // Catch exception inside getSource call probably caused by
+                                                    // using mode specific tiles.
+                                                    console.log(e);
                                                 }
-                                            } catch (e) {
-                                                // Catch exception inside getSource call probably caused by
-                                                // using mode specific tiles.
-                                                console.log(e);
-                                            }
-                                        })
-                                    );
-                                }
-                                if (this.mapboxGlMap) {
-                                    // Since this could be a consequence of a complete style change
-                                    // (switch dark / light appearance).
-                                    this.refreshModeSpecificTiles();
-                                }
-                            }}
-                        /> :
-                        <TileLayer {...this.props.tileLayerProps!} />} */}
-                    {/* https://maps.googleapis.com/maps/api/js?key=AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao&libraries=places,geometry&sensor=false */}
-                    <ReactLeafletGoogleLayer
-                        googleMapsLoaderConf={{ KEY: 'AIzaSyBNHDLhhQ3XCeu-mD8CsVqH1woeMncu7Ao' }}
-                        // type={'satellite'}
-                    />
+                                            })
+                                        );
+                                    }
+                                    if (this.mapboxGlMap) {
+                                        // Since this could be a consequence of a complete style change
+                                        // (switch dark / light appearance).
+                                        this.refreshModeSpecificTiles();
+                                    }
+                                }}
+                            /> :
+                            <TileLayer {...this.props.tileLayerProps!} />}
                     {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
                         <Marker position={this.state.userLocation.latLng}

@@ -12,10 +12,7 @@ class LocationUtil {
         }
         const address = loc.address;
         return address ?
-            (address.includes(",") ?
-                (TKI18nProvider.localeStatic === 'ja' ? address.substring(address.lastIndexOf(",") + 1).trim() :
-                    address.substr(0, address.indexOf(",")))
-                : address) :
+            (address.includes(",") ? address.substring(0, address.indexOf(",")) : address) :
             loc.getLatLngDisplayString();
     }
 
@@ -24,9 +21,7 @@ class LocationUtil {
         if (loc.name && address && !address.includes(loc.name)) {
             return address;
         }
-        return address && address.includes(",") ?
-            (TKI18nProvider.localeStatic === 'ja' ? address.substring(0, address.lastIndexOf(",")).trim() :
-                address.substr(address.indexOf(",") + 1).trim()) : undefined;
+        return address && address.includes(",") ? address.substring(address.indexOf(",") + 1).trim() : undefined;
     }
 
     public static equal<T extends LatLng>(loc1: T | null, loc2: T | null) {
