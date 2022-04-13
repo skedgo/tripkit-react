@@ -145,7 +145,8 @@ class TKGoogleGeocoder implements IGeocoder {
     }
 
     private static locationFromAutocompleteResult(result: google.maps.places.AutocompletePrediction): Location {
-        const address = result.structured_formatting.main_text + ', ' + result.structured_formatting.secondary_text;
+        const address = result.structured_formatting.main_text +
+            (result.structured_formatting.secondary_text ? ', ' + result.structured_formatting.secondary_text : "");
         const name = '';
         const location = Location.create(new LatLng(), address, result.place_id, name);
         return location;
