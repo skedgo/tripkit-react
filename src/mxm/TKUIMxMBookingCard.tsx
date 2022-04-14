@@ -27,6 +27,7 @@ import { TKError } from "../error/TKError";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import Trip from '../model/trip/Trip';
+import { confirmAlert } from 'react-confirm-alert';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -149,6 +150,17 @@ const BookingInput: React.SFC<BookingInputProps> =
                                 value={inputField.value}
                                 onChange={e => changeHandler(e.target.value)}
                             />
+                    } else if (inputField.type === "NUMBER") {
+                        valueElem = readonly ? inputField.value
+                            :
+                            <input
+                                type='number'
+                                value={inputField.value ?? inputField.minValue ?? 1}
+                                min={inputField.minValue ?? 1}
+                                max={inputField.maxValue ?? 10}
+                                onChange={e => changeHandler(e.target.value)}
+                                className={classes.numberInput}
+                            />
                     }
                     return (valueElem &&
                         <div className={classes.group} key={i}>
@@ -176,6 +188,19 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(!confirmation);
     const [error, setError] = useState<TKError | undefined>(undefined);
+    const onError = e => {
+        confirmAlert({
+            message: e.message || e.title || e.subtitle,
+            buttons: [
+                {
+                    label: t("OK"),
+                    onClick: () => { }
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true
+        });
+    }
     useEffect(() => {
         if (!confirmation) {
             const bookingInfosUrl = booking.quickBookingsUrl!;
@@ -258,7 +283,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                     <TKUIBookingActions
                         actions={confirmation.actions}
                         setWaiting={setWaiting}
-                        setError={setError}
+                        setError={onError}
                         requestRefresh={() => refreshSelectedTrip().then(() => { })}
                         trip={trip}
                     />}
@@ -301,7 +326,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                                 }
                                 return refreshSelectedTrip();
                             })
-                            .catch((e) => setError(e))
+                            .catch((e) => onError(e))
                             .finally(() => setWaiting(false))
                     }}
                     disabled={!canBook(requestBookingForm)}
@@ -326,7 +351,6 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                 <div className={classes.loadingPanel}>
                     <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />
                 </div>}
-            {/* <TKUIStripePaymentCard />     */}
         </TKUICard>
     );
 };

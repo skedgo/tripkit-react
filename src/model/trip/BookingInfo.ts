@@ -24,7 +24,10 @@ class BookingField {
     public values?: string[] = undefined;
     @JsonProperty("value", String, true)
     public value?: string = undefined;
-
+    @JsonProperty("minValue", Number, true)
+    public minValue?: number = undefined;
+    @JsonProperty("maxValue", Number, true)
+    public maxValue?: number = undefined;
 }
 
 @JsonObject
