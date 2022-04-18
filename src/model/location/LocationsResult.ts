@@ -2,8 +2,6 @@ import {JsonObject, JsonProperty} from "json2typescript";
 import BikePodLocation from "./BikePodLocation";
 import FacilityLocation from "./FacilityLocation";
 import CarParkLocation from "./CarParkLocation";
-import {MapLocationType} from "./MapLocationType";
-import Location from "../Location";
 import StopLocation from "../StopLocation";
 import ModeIdentifier from "../region/ModeIdentifier";
 import ModeLocation from "./ModeLocation";
@@ -36,6 +34,7 @@ class LocationsResult {
             case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
             case ModeFields.freeFloating: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
             case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+            case ModeFields.facilities: return true;
             default: return false;
         }
     }
@@ -142,25 +141,6 @@ class LocationsResult {
 
     public isEmpty(): boolean {
         return !this.bikePods && !this.facilities;
-    }
-
-    public getByType(type: MapLocationType): Location[] {
-        switch (type) {
-            case MapLocationType.BIKE_POD:
-                return this.bikePods ? this.bikePods : [];
-            case MapLocationType.PARK_AND_RIDE_FACILITY:
-                return this.facilities ? this.facilities.filter((facility: FacilityLocation) =>
-                    facility.facilityType.toLowerCase() === "park-and-ride") : [];
-            case MapLocationType.MY_WAY_FACILITY:
-                return this.facilities ? this.facilities.filter((facility: FacilityLocation) =>
-                    facility.facilityType.toLowerCase() === "myway-retail-agent") : [];
-            case MapLocationType.CAR_PARK:
-                return this.carParks ? this.carParks : [];
-            case MapLocationType.STOP:
-                return this.stops ? this.stops : [];
-            default: // TODO Complete with other location types.
-                return [];
-        }
     }
 }
 

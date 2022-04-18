@@ -7,7 +7,7 @@ import Util from "../../util/Util";
 @JsonObject
 class ModeLocation extends Location {
 
-    @JsonProperty("modeInfo", ModeInfo)
+    @JsonProperty("modeInfo", ModeInfo, true)
     public modeInfo: ModeInfo = Util.iAssign(new ModeInfo(), {localIcon: "parking"});
     @JsonProperty('source', String, true)
     public source: string | undefined = TKDefaultGeocoderNames.skedgo;

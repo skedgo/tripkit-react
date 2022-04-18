@@ -113,6 +113,8 @@ class TransportUtil {
                 return "#0c9588";
             case "parking":
                 return "#418bee"
+            case "water-fountain":
+                return "#418bee"
             default:
                 return null;
         }
