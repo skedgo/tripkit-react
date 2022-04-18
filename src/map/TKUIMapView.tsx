@@ -10,7 +10,6 @@ import Trip from "../model/trip/Trip";
 import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
-import { MapLocationType } from "../model/location/MapLocationType";
 import LocationUtil from "../util/LocationUtil";
 import GATracker from "../analytics/GATracker";
 import { Visibility } from "../model/trip/SegmentTemplate";
@@ -233,7 +232,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 interface IState {
-    mapLayers: Map<MapLocationType, Location[]>;
     menuPopupPosition?: L.LeafletMouseEvent;
     userLocation?: TKUserPosition;
     userLocationTooltip?: string;
@@ -249,9 +247,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     constructor(props: Readonly<IProps>) {
         super(props);
-        this.state = {
-            mapLayers: new Map<MapLocationType, Location[]>()
-        };
+        this.state = {};
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
