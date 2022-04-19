@@ -27,7 +27,7 @@ import { TKError } from "../error/TKError";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import Trip from '../model/trip/Trip';
-import { confirmAlert } from 'react-confirm-alert';
+import UIUtil from '../util/UIUtil';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -188,19 +188,6 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(!confirmation);
     const [error, setError] = useState<TKError | undefined>(undefined);
-    const onError = e => {
-        confirmAlert({
-            message: e.message || e.title || e.subtitle,
-            buttons: [
-                {
-                    label: t("OK"),
-                    onClick: () => { }
-                }
-            ],
-            closeOnEscape: true,
-            closeOnClickOutside: true
-        });
-    }
     useEffect(() => {
         if (!confirmation) {
             const bookingInfosUrl = booking.quickBookingsUrl!;
@@ -283,7 +270,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                     <TKUIBookingActions
                         actions={confirmation.actions}
                         setWaiting={setWaiting}
-                        setError={onError}
+                        setError={UIUtil.errorMsg}
                         requestRefresh={() => refreshSelectedTrip().then(() => { })}
                         trip={trip}
                     />}
@@ -326,7 +313,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                                 }
                                 return refreshSelectedTrip();
                             })
-                            .catch((e) => onError(e))
+                            .catch(UIUtil.confirmMsg)
                             .finally(() => setWaiting(false))
                     }}
                     disabled={!canBook(requestBookingForm)}

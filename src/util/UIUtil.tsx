@@ -1,5 +1,6 @@
-import React from "react";
 import {confirmAlert} from 'react-confirm-alert';
+import { TKError } from "../error/TKError";
+import TKI18nProvider from "../i18n/TKI18nProvider";
 
 export interface MsgOptions {
     title?: string,
@@ -38,6 +39,21 @@ class UIUtil {
             ],
             closeOnEscape: options.closeOnEscape,
             closeOnClickOutside: options.closeOnClickOutside
+        });
+    }
+
+    public static errorMsg(e: TKError, options?: {onClose?: () => void}) {
+        confirmAlert({
+            message: e.message || e.title || e.subtitle,
+            buttons: [
+                {
+                    label: TKI18nProvider.tStatic("OK"),
+                    onClick: () => { options?.onClose?.(); }
+                    
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true
         });
     }
 

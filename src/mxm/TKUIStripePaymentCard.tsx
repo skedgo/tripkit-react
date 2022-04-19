@@ -13,6 +13,10 @@ import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
 import PaymentOption from '../model/trip/PaymentOption';
 import TKLoading from '../card/TKLoading';
+import UIUtil from '../util/UIUtil';
+import { TKError } from '../error/TKError';
+import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
+import { TranslationFunction } from '../i18n/TKI18nProvider';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -36,50 +40,55 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const stripePromise = loadStripe('pk_test_pcFz1IPSJed68tco8okyFcaw');
 
-const CheckoutForm: React.FunctionComponent<{ onRequestClose: (success: boolean) => void, setWaiting: (waiting: boolean) => void }> = ({ onRequestClose, setWaiting }) => {
-    const stripe = useStripe();
-    const elements = useElements();
+const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting: (waiting: boolean) => void, t: TranslationFunction }> =
+    ({ onSuccess, setWaiting, t }) => {
+        const stripe = useStripe();
+        const elements = useElements();
 
-    const handleSubmit = async (event) => {
-        // We don't want to let default form submission happen here,
-        // which would refresh the page.
-        event.preventDefault();
-        if (!stripe || !elements) {
-            // Stripe.js has not yet loaded.
-            // Make sure to disable form submission until Stripe.js has loaded.
-            return;
-        }
-        setWaiting(true);
-        const result = await stripe.confirmPayment({
-            //`Elements` instance that was used to create the Payment Element
-            elements,
-            confirmParams: {
-                return_url: "https://example.com/order/123/complete",
-            },
-            redirect: 'if_required'
-        });
-        if (result.error) {
-            // Show error to your customer (for example, payment details incomplete)
-            console.log(result.error.message);
-        } else {
-            // Your customer will be redirected to your `return_url`. For some payment
-            // methods like iDEAL, your customer will be redirected to an intermediate
-            // site first to authorize the payment, then redirected to the `return_url`.
-            onRequestClose(true);
-        }
-        setWaiting(false);
-    };
+        const handleSubmit = async (event) => {
+            // We don't want to let default form submission happen here,
+            // which would refresh the page.
+            event.preventDefault();
+            if (!stripe || !elements) {
+                // Stripe.js has not yet loaded.
+                // Make sure to disable form submission until Stripe.js has loaded.
+                return;
+            }
+            setWaiting(true);
+            const result = await stripe.confirmPayment({
+                //`Elements` instance that was used to create the Payment Element
+                elements,
+                confirmParams: {
+                    return_url: "https://example.com/order/123/complete",
+                },
+                redirect: 'if_required'
+            });
+            if (result.error) {
+                // Show error to your customer (for example, payment details incomplete)
+                console.log(result.error.message);
+            } else {
+                onSuccess();
+            }
+            setWaiting(false);
+        };
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <PaymentElement />
-            <button disabled={!stripe}>Submit</button>
-        </form>
-    )
-}
+        return (
+            <form onSubmit={handleSubmit}>
+                <PaymentElement />
+                <div style={{marginTop: '20px', display: 'flex', justifyContent: 'center'}}>
+                <TKUIButton
+                    text={t("Confirm")}
+                    type={TKUIButtonType.PRIMARY}
+                    disabled={!stripe}
+                />
+                </div>
+            </form>
+        )
+    }
 
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t }) => {
     const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
+    const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
     useEffect(() => {
@@ -90,33 +99,42 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                 if (firstPaymentOption) {
                     const initPaymentUrl = firstPaymentOption.url;
                     return TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
-                        .then(({ clientSecret }) => {
+                        .then(({ clientSecret, paymentIntentID }) => {
+                            if (!clientSecret || !paymentIntentID) {
+                                throw new TKError("Unexpected error. Contact SkedGo support");
+                            }
                             setPaymentOption(firstPaymentOption);
-                            setPaymentIntent(clientSecret);
+                            setPaymentIntent(paymentIntentID);
+                            setPaymentIntentSecret(clientSecret);
                             setWaiting(false);
                         });
                 }
             })
-        // .catch((e) => setError?.(e))
+            .catch((e) => {
+                UIUtil.errorMsg(e, {
+                    onClose: () => onRequestClose(false)
+                });
+            });
     }, []);
     const options = {
-        // passing the client secret obtained from the server
-        // clientSecret: '{{CLIENT_SECRET}}',
-        // clientSecret: 'cus_LUMVWZNxY79kVv_secret_ek_test_YWNjdF8xNVNxdTZKTVNrc2pYdDNlLE5iY0FIVFFQTlN0cTVYY0h1QXNrQWQ5bWJ4a1JySHU_00PkxUXaXD',
-        // clientSecret: 'cus_LUMVWZNxY79kVv_secret_ek_test_YWNjdF8xNVNxdTZKTVNrc2pYdDNlLHBRb05QT2JGVWxMRk9xRXQ5anJvenVYTE5XeGFhclE_00OJGtQCmV',
-        // clientSecret: 'pi_3KoDQfJMSksjXt3e0fi3cV8w_secret_zPz4WLhO8aMe4p7BZ5QK6Eok8',
-        clientSecret: paymentIntent
+        clientSecret: paymentIntentSecret
     };
-    const form = paymentIntent &&
+    const form = paymentIntentSecret &&
         <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm onRequestClose={onRequestClose} setWaiting={setWaiting} />
+            <CheckoutForm
+                onSuccess={() => TripGoApi.apiCall(`payment/booking/paid/${paymentIntent}?psb=false`, NetworkUtil.MethodType.GET)
+                    .then(() => onRequestClose(true))
+                    .catch(UIUtil.errorMsg)}
+                setWaiting={setWaiting}
+                t={t}
+            />
         </Elements>
     return (
         <TKUICard
             title={title}
-            // subtitle={segment.to.getDisplayString()}
             onRequestClose={() => onRequestClose(false)}
             presentation={CardPresentation.MODAL}
+            focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
         >
             <div className={classes.main}>
                 {paymentOption &&
