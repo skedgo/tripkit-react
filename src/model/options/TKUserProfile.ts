@@ -1,5 +1,4 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
-import {MapLocationType, MapLocationTypeConverter} from "../location/MapLocationType";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
 import TKTransportOptions, {DisplayConf} from "./TKTransportOptions";
