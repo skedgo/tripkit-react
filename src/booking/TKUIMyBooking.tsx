@@ -66,7 +66,6 @@ const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
             <TKUIBookingActions
                 actions={confirmation.actions}
                 setWaiting={setWaiting}
-                // setError={setError}
                 requestRefresh={requestRefresh}
             />}
             {waiting &&

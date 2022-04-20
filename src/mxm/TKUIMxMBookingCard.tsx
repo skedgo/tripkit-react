@@ -270,7 +270,6 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                     <TKUIBookingActions
                         actions={confirmation.actions}
                         setWaiting={setWaiting}
-                        setError={UIUtil.errorMsg}
                         requestRefresh={() => refreshSelectedTrip().then(() => { })}
                         trip={trip}
                     />}
@@ -313,7 +312,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                                 }
                                 return refreshSelectedTrip();
                             })
-                            .catch(UIUtil.confirmMsg)
+                            .catch(UIUtil.errorMsg)
                             .finally(() => setWaiting(false))
                     }}
                     disabled={!canBook(requestBookingForm)}
