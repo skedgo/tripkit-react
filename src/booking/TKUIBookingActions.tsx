@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKUIConfig";
@@ -9,13 +9,11 @@ import { BookingAction } from "../model/trip/BookingInfo";
 import { tKUIBookingActionsDefaultStyle } from "./TKUIBookingActions.css";
 import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
-import TKUIStripePaymentCard from '../mxm/TKUIStripePaymentCard';
-import Environment from '../env/Environment';
+import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
     setWaiting?: (waiting: boolean) => void;
-    setError?: (error: any) => void;
     requestRefresh: () => Promise<void>;
     trip?: Trip;
 }
@@ -34,8 +32,13 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
-    const { action, setWaiting, setError, requestRefresh, trip } = props;
+    const { action, setWaiting, requestRefresh, trip } = props;
     const [showPaymentCard, setShowPaymentCard] = useState<boolean>(false);
+    const config = useContext(TKUIConfigContext);
+    
+    if (action.type === "WAITINGPAYMENT" && !config.payment) {
+        return null;    // Unsupported action
+    }
     return (
         <Fragment>
             <TKUIButton
@@ -59,28 +62,30 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                                         }
                                         return requestRefresh();
                                     })
-                                    .catch((e) => setError?.(e))
+                                    .catch(UIUtil.errorMsg)
                                     .finally(() => setWaiting?.(false));
                             }
                         })
-                    } else if (!Environment.isProd() && action.type === "WAITINGPAYMENT") {
+                    } else if (action.type === "WAITINGPAYMENT") {
                         setShowPaymentCard(true);
                     } else if (action.externalURL) {
                         window.open(action.externalURL, "_self");
                     }
                 }}
             />
-            {showPaymentCard &&
-                <TKUIStripePaymentCard
-                    title={action.title}
-                    initPaymentUrl={action.internalURL}
-                    onRequestClose={success => {
-                        if (success) {
-                            requestRefresh();
-                        }
-                        setShowPaymentCard(false);
-                    }}
-                />}
+            {showPaymentCard && config.payment?.renderPaymentCard({
+                title: action.title,
+                initPaymentUrl: action.internalURL,
+                onRequestClose: success => {
+                    setWaiting?.(true)
+                    if (success) {
+                        requestRefresh()
+                        .catch(UIUtil.errorMsg)
+                        .finally(() => setWaiting?.(false));
+                    }
+                    setShowPaymentCard(false);
+                }
+            })}
         </Fragment>
     );
 };

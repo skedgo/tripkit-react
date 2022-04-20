@@ -75,7 +75,7 @@ import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
 import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
-import { TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
+import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
 
 /**
  * SDK configuration
@@ -116,17 +116,20 @@ interface ITKUIConfigOptional {
      */
     i18n: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>;
     isDarkDefault: boolean,
-    analytics?: {google?: {
+    analytics: {google?: {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;
         // It's checked before every GA event, allowing to enable / disable tracking
         // dynamically, e.g. depending con cookies / tracking consent.
         isEnabled?: () => boolean;  // () => true; by default
     }};
+    payment: {
+        renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
+    }
     /**
      * @ctype
      */
-    geocoding?: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>);
+    geocoding: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>);
     TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
     TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;

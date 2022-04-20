@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { tKUIStripePaymentCardDefaultStyle } from "./TKUIStripePaymentCard.css";
-import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
-import TKUIErrorView from "../error/TKUIErrorView";
-import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { Elements, useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
@@ -31,6 +28,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIStripePaymentCardProps = IProps;
 export type TKUIStripePaymentCardStyle = IStyle;
+export type TKUIStripePaymentCardClientProps = IClientProps;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIStripePaymentCard {...props} />,
@@ -54,7 +52,7 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
                 // Make sure to disable form submission until Stripe.js has loaded.
                 return;
             }
-            setWaiting(true);
+            setWaiting(true);   // The setWaiting(false) is called by the parent component, after taking additional actions on success.
             const result = await stripe.confirmPayment({
                 //`Elements` instance that was used to create the Payment Element
                 elements,
@@ -69,7 +67,6 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
             } else {
                 onSuccess();
             }
-            setWaiting(false);
         };
 
         return (
@@ -122,9 +119,13 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     const form = paymentIntentSecret &&
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm
-                onSuccess={() => TripGoApi.apiCall(`payment/booking/paid/${paymentIntent}?psb=false`, NetworkUtil.MethodType.GET)
-                    .then(() => onRequestClose(true))
-                    .catch(UIUtil.errorMsg)}
+                onSuccess={() => {
+                    setWaiting(true);
+                    TripGoApi.apiCall(`payment/booking/paid/${paymentIntent}?psb=false`, NetworkUtil.MethodType.GET)
+                        .then(() => onRequestClose(true))
+                        .catch(UIUtil.errorMsg)
+                        .finally(() => setWaiting(false));
+                }}
                 setWaiting={setWaiting}
                 t={t}
             />
