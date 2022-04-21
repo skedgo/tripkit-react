@@ -101,5 +101,8 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             '& path': {
                 fill: black(1, theme.isDark)
             }
+        },
+        datePicker: {
+            color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
         }
     });

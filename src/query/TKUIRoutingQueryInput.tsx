@@ -3,35 +3,35 @@ import TKUILocationBox from "../location_box/TKUILocationBox";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
 import LatLng from "../model/LatLng";
-import {ReactComponent as IconSwap} from '../images/ic-swap.svg';
+import { ReactComponent as IconSwap } from '../images/ic-swap.svg';
 import 'react-datepicker/dist/react-datepicker.css';
-import {Moment} from "moment";
-import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
+import { Moment } from "moment";
+import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import Util from "../util/Util";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GATracker from "../analytics/GATracker";
-import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
+import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUIRoutingQueryInputDefaultStyle} from "./TKUIRoutingQueryInput.css";
-import {ReactComponent as IconArrowBack} from '../images/ic-arrow-back.svg';
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUIRoutingQueryInputDefaultStyle } from "./TKUIRoutingQueryInput.css";
+import { ReactComponent as IconArrowBack } from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
-import {TKUIViewportUtil, TKUIViewportUtilProps} from "../util/TKUIResponsiveUtil";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { Subtract } from "utility-types";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
-import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
-import {ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE} from "../util/GeolocationUtil";
-import TKErrorHelper, {ERROR_UNABLE_TO_RESOLVE_ADDRESS} from "../error/TKErrorHelper";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import HasCard, {HasCardKeys} from "../card/HasCard";
-import {tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import { TranslationFunction } from "../i18n/TKI18nProvider";
+import { ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE } from "../util/GeolocationUtil";
+import TKErrorHelper, { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
+import HasCard, { HasCardKeys } from "../card/HasCard";
+import { tKUIColors, TKUITheme, white } from "../jss/TKUITheme";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -54,13 +54,13 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
      * Defining the _transports_ button text.
      * @default 'Transport'
      */
-     transportBtnText?: string
+    transportBtnText?: string
 
     /**
      * Function that will be run when the user clicks on button to show transport options.
      * @ctype
      */
-     onTransportButtonClick?: () => void;
+    onTransportButtonClick?: () => void;
 
     /**
      * Function that will be run when the user clicks on button to show full transport options.
@@ -138,7 +138,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     timezone?: string;
 }
 
-interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     btnBack: CSSProps<IProps>;
@@ -153,13 +153,14 @@ interface IStyle {
     footer: CSSProps<IProps>;
     transportsBtn: CSSProps<IProps>;
     timePrefSelect: CSSProps<IProps>;
+    datePicker: CSSProps<IProps>;
 }
 
 export type TKUIRoutingQueryInputProps = IProps;
 export type TKUIRoutingQueryInputStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIRoutingQueryInput {...props}/>,
+    render: props => <TKUIRoutingQueryInput {...props} />,
     styles: tKUIRoutingQueryInputDefaultStyle,
     classNamePrefix: "TKUIRoutingQueryInput"
 };
@@ -237,14 +238,14 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private showTooltip(from: boolean, text: string | undefined) {
         if (from) {
-            this.setState({fromTooltipText: text});
+            this.setState({ fromTooltipText: text });
             if (!text) {
                 this.fromTooltipRef && this.fromTooltipRef.setVisibleFor(undefined);
             } else {
                 this.fromTooltipRef && this.fromTooltipRef.setVisibleFor(10000);
             }
         } else {
-            this.setState({toTooltipText: text});
+            this.setState({ toTooltipText: text });
             if (!text) {
                 this.toTooltipRef && this.toTooltipRef.setVisibleFor(undefined);
             } else {
@@ -262,7 +263,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
     }
 
     public static getTimePrefOptions(t: TranslationFunction): SelectOption[] {
-        return Object.values(TimePreference).map((value) => ({value: value, label: this.timePrefString(value, t)}));
+        return Object.values(TimePreference).map((value) => ({ value: value, label: this.timePrefString(value, t) }));
     }
 
     public render(): React.ReactNode {
@@ -274,11 +275,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const ariaLabelFrom = routingQuery.from !== null ?
             "From " + routingQuery.from.getDisplayString() :
             this.state.fromTooltipText ? this.state.fromTooltipText + " " + fromPlaceholder :
-            fromPlaceholder;
+                fromPlaceholder;
         const ariaLabelTo = routingQuery.to !== null ?
             "To " + routingQuery.to.getDisplayString() :
             this.state.toTooltipText ? this.state.toTooltipText + " " + toPlaceholder :
-            toPlaceholder;
+                toPlaceholder;
         const classes = this.props.classes;
         const inputToId = "input-to";
         const inputFromId = "input-from";
@@ -294,8 +295,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                 mainFocusElemId={!routingQuery.from ? inputFromId : !routingQuery.to ? inputToId : undefined}
                 shouldFocusAfterRender={this.props.shouldFocusAfterRender}
                 styles={{
-                    main: overrideClass({overflow: 'visible'}),
-                    divider: overrideClass({borderBottom: 'none'})
+                    main: overrideClass({ overflow: 'visible' }),
+                    divider: overrideClass({ borderBottom: 'none' })
                 }}
                 role="form"
             >
@@ -303,17 +304,17 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                     {this.props.portrait ?
                         this.props.onClearClicked &&
                         <button className={classes.btnBack}
-                                onClick={this.props.onClearClicked}
-                                aria-label="Back to quick search view"
+                            onClick={this.props.onClearClicked}
+                            aria-label="Back to quick search view"
                         >
-                            <IconArrowBack/>
+                            <IconArrowBack />
                         </button> :
                         <div className={classes.locSelector}>
-                            <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)}/>
-                            <div className={classes.dotIcon}/>
-                            <div className={classes.dotIcon}/>
-                            <div className={classes.dotIcon}/>
-                            <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)}/>
+                            <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)} />
+                            <div className={classes.dotIcon} />
+                            <div className={classes.dotIcon} />
+                            <div className={classes.dotIcon} />
+                            <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)} />
                         </div>}
                     <div className={classes.fromToInputsPanel}>
                         <TKUITooltip
@@ -333,7 +334,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 placeholder={fromPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
                                     if (!highlighted) {
-                                        this.updateQuery({from: value});
+                                        this.updateQuery({ from: value });
                                         if (this.props.onPreChange) {
                                             this.props.onPreChange(true, undefined);
                                         }
@@ -369,7 +370,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 }}
                             />
                         </TKUITooltip>
-                        <div className={classes.divider}/>
+                        <div className={classes.divider} />
                         <TKUITooltip
                             overlayContent={this.state.toTooltipText}
                             arrowColor={tKUIColors.black2}
@@ -387,7 +388,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 placeholder={toPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
                                     if (!highlighted) {
-                                        this.updateQuery({to: value});
+                                        this.updateQuery({ to: value });
                                         if (this.props.onPreChange) {
                                             this.props.onPreChange(false, undefined);
                                         }
@@ -425,69 +426,67 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </TKUITooltip>
                     </div>
                     <button className={classes.swap} onClick={this.onSwapClicked} aria-label={"swap from and to"}>
-                        <IconSwap aria-hidden={true} focusable="false"/>
+                        <IconSwap aria-hidden={true} focusable="false" />
                     </button>
                 </div>
                 {(showTimeSelect || showTransportsBtn) &&
-                <div className={classes.footer}
-                     style={!showTimeSelect && showTransportsBtn ? {
-                         justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
-                     } : undefined}
-                >
-                    {showTimeSelect &&
-                    <TKUISelect
-                        options={this.timePrefOptions}
-                        value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
-                        onChange={(option) => this.onPrefChange(option.value)}
-                        styles={() => ({
-                            // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
-                            // a theme update would not be reflected (e.g. switch dark / light mode).
-                            // This will not be needed anymore when get dynamic style updates working.
-                            main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                            menu: overrideClass({ marginTop: '3px' }),
-                            container: overrideClass({ minWidth: '100%' }),
-                        })}
-                        ariaLabel={"Time preference"}
-                    />}
-                    {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
-                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                        value={routingQuery.time}
-                        timeZone={this.props.timezone}
-                        onChange={(date: Moment) => this.updateQuery({time: date})}
-                        timeFormat={DateTimeUtil.timeFormat()}
-                        dateFormat={DateTimeUtil.dateTimeFormat()}
-                        disabled={datePickerDisabled}
-                        styles={(theme: TKUITheme) => ({
-                            datePicker: overrideClass({
-                                color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
-                            })
-                        })}
-                    />
-                    }
-                    {showTransportsBtn &&
-                    <TKUITooltip
-                        placement="right"
-                        overlay={
-                            <TKUITransportSwitchesView
-                                onMoreOptions={this.props.onShowTransportOptions ?
-                                    () => {
-                                        this.setState({showTransportSwitches: false});
-                                        this.props.onShowTransportOptions!();
-                                    } : undefined}
-                                onRequestClose={() => this.setState({showTransportSwitches: false})}
+                    <div className={classes.footer}
+                        style={!showTimeSelect && showTransportsBtn ? {
+                            justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
+                        } : undefined}
+                    >
+                        {showTimeSelect &&
+                            <TKUISelect
+                                options={this.timePrefOptions}
+                                value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                                onChange={(option) => this.onPrefChange(option.value)}
+                                styles={() => ({
+                                    // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
+                                    // a theme update would not be reflected (e.g. switch dark / light mode).
+                                    // This will not be needed anymore when get dynamic style updates working.
+                                    main: overrideClass(this.props.injectedStyles.timePrefSelect),
+                                    menu: overrideClass({ marginTop: '3px' }),
+                                    container: overrideClass({ minWidth: '100%' }),
+                                })}
+                                ariaLabel={"Time preference"}
+                            />}
+                        {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
+                            <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                value={routingQuery.time}
+                                timeZone={this.props.timezone}
+                                onChange={(date: Moment) => this.updateQuery({ time: date })}
+                                timeFormat={DateTimeUtil.timeFormat()}
+                                dateFormat={DateTimeUtil.dateTimeFormat()}
+                                disabled={datePickerDisabled}
+                                styles={(theme: TKUITheme) => ({
+                                    datePicker: overrideClass(this.props.injectedStyles.datePicker)
+                                })}
                             />
                         }
-                        visible={this.state.showTransportSwitches}
-                        onVisibleChange={(visible?: boolean) => !visible && this.setState({showTransportSwitches: false})}
-                        destroyTooltipOnHide={true} // Needed so TKUICard unmounts and focus is returned to transports btn.
-                    >
-                        <button className={classes.transportsBtn}
-                                onClick={this.props.onTransportButtonClick ?? (() => this.setState({showTransportSwitches: true}))}
-                        >
-                            {this.props.transportBtnText ?? t("Transport")}
-                        </button>
-                    </TKUITooltip>}
-                </div>
+                        {showTransportsBtn &&
+                            <TKUITooltip
+                                placement="right"
+                                overlay={
+                                    <TKUITransportSwitchesView
+                                        onMoreOptions={this.props.onShowTransportOptions ?
+                                            () => {
+                                                this.setState({ showTransportSwitches: false });
+                                                this.props.onShowTransportOptions!();
+                                            } : undefined}
+                                        onRequestClose={() => this.setState({ showTransportSwitches: false })}
+                                    />
+                                }
+                                visible={this.state.showTransportSwitches}
+                                onVisibleChange={(visible?: boolean) => !visible && this.setState({ showTransportSwitches: false })}
+                                destroyTooltipOnHide={true} // Needed so TKUICard unmounts and focus is returned to transports btn.
+                            >
+                                <button className={classes.transportsBtn}
+                                    onClick={this.props.onTransportButtonClick ?? (() => this.setState({ showTransportSwitches: true }))}
+                                >
+                                    {this.props.transportBtnText ?? t("Transport")}
+                                </button>
+                            </TKUITooltip>}
+                    </div>
                 }
             </TKUICard>
         );
@@ -511,10 +510,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
         if (!prevProps.value.from && this.props.value.from) {
-            this.showTooltip(true,undefined);
+            this.showTooltip(true, undefined);
         }
         if (!prevProps.value.to && this.props.value.to) {
-            this.showTooltip(false,undefined);
+            this.showTooltip(false, undefined);
         }
         // To refresh translations of time pref strings after i18n promise resolves (i18nOverridden turn true),
         // which are computed on component constructor, and so do not automatically update on re-render.
@@ -525,7 +524,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = props => {
+const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {
     return (
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
@@ -554,10 +553,10 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 };
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
+                children!({ ...inputProps, ...consumedProps })}
         </Consumer>;
 
 /**
@@ -572,4 +571,4 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
  */
 export default connect((config: TKUIConfig) => config.TKUIRoutingQueryInput, config, Mapper);
 
-export {TKUIRoutingQueryInput as TKUIRoutingQueryInputClass}
+export { TKUIRoutingQueryInput as TKUIRoutingQueryInputClass }
