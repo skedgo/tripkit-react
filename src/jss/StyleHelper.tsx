@@ -12,10 +12,10 @@ import Environment from "../env/Environment";
 import { renderToStaticMarkup as renderToStaticMarkupDomServer } from "react-dom/server";
 
 type StyleCreator<
-Name extends string | number | symbol = string,
-Theme = undefined,
-Props = unknown
-> = ((theme: Theme) => Styles<Name, Props>);
+    Name extends string | number | symbol = string,
+    Theme = undefined,
+    Props = unknown
+    > = ((theme: Theme) => Styles<Name, Props>);
 
 type FcValues<PR> = ((props: PR) => CSS.Properties);
 type CSSProperties<PR> = FcValues<PR>;
@@ -211,24 +211,23 @@ export function withStyleInjection<
             const useStyles = createUseStyles(this.stylesToInject)
             const prefix = props.classNamePrefix!;
             this.generateClassName = generateClassNameFactory(prefix);
-            const WithTheme = props =>
-                {
-                    const theme = useTheme<TKUITheme>();
-                    const classes = useStyles({...props, theme})
-                    return <JssProvider
-                        classNamePrefix={Environment.isDev() ? prefix : undefined}
-                        generateId={this.props.randomizeClassNames === false ? this.generateClassName :
-                            this.props.verboseClassNames === true ?
-                                (rule: any, sheet: any) => {
-                                    return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
-                                } : generateClassNameSeed}>
-                        <Consumer {...props}
-                            classes={classes}
-                            injectedStyles={this.stylesToInject(theme)}
-                            refreshStyles={() => this.onRefreshStyles(true)}
-                            theme={theme} />
-                    </JssProvider>;
-                };
+            const WithTheme = props => {
+                const theme = useTheme<TKUITheme>();
+                const classes = useStyles({ ...props, theme })
+                return <JssProvider
+                    classNamePrefix={Environment.isDev() ? prefix : undefined}
+                    generateId={this.props.randomizeClassNames === false ? this.generateClassName :
+                        this.props.verboseClassNames === true ?
+                            (rule: any, sheet: any) => {
+                                return prefix + "-" + rule.key + "-" + generateClassNameSeed(rule, sheet);
+                            } : generateClassNameSeed}>
+                    <Consumer {...props}
+                        classes={classes}
+                        injectedStyles={this.stylesToInject(theme)}
+                        refreshStyles={() => this.onRefreshStyles(true)}
+                        theme={theme} />
+                </JssProvider>;
+            };
             this.WithTheme = WithTheme;
             if (forceUpdate) {
                 this.forceUpdate();
@@ -247,7 +246,7 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     const useStyles = createUseStyles(stylesJss)
     const WithTheme = props => {
         const theme = useTheme<TKUITheme>();
-        const classes = useStyles({...props, theme});
+        const classes = useStyles({ ...props, theme });
         return <Consumer
             {...props}
             classes={classes}
@@ -269,12 +268,19 @@ export function emptyValues<T>(sample: T): T {
     return emptyValues as T;
 }
 
-// export function overrideClass(propsOverride: CSSProps<any>) {
+function isObject(x): boolean {
+    return typeof x === 'object' && x !== null;
+}
+
+/**
+ * Support override of nested selectors (just 1 level).
+ */
 export function overrideClass(propsOverride: any) {
-    return (defaultStyle) => ({
-        ...defaultStyle,
-        ...propsOverride
-    });
+    return (defaultStyle) =>
+        Object.keys(propsOverride ?? {}).reduce((acc, key) => {
+            acc[key] = isObject(acc[key]) && isObject(propsOverride[key]) ? { ...acc[key], ...propsOverride[key] } : propsOverride[key];
+            return acc;
+        }, defaultStyle);
 }
 /**
  * To avoid warn / error about useLayoutEffect in dev mode. It's caused due to react-jss useStyles hook using
