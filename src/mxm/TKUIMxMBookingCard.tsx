@@ -232,6 +232,8 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                                 {confirmation.provider.subtitle}
                             </a>
                         </div>}
+                    {confirmation.purchase &&
+                    <div className={classes.price}>{confirmation.purchase.currency + confirmation.purchase.price}</div>}    
                 </div>
                 <div className={classes.bookingFormMain}>
                     <BookingInput

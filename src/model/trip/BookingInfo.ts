@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
+import { JsonObject, JsonProperty, Any } from "json2typescript";
 
 @JsonObject
 class BookingFieldOption {
@@ -96,10 +96,14 @@ export class BookingNote {
     public provider?: string = undefined;
 }
 
-@JsonObject
-class BookingPurchase {
-    @JsonProperty("id", String, true)
-    public id: string = "";
+interface BookingPurchase {
+    id: string;
+    currency: string;
+    price: number;
+    productName: string,
+    productType: string,
+    valid: boolean,
+    validFromTimestamp: string
 }
 
 @JsonObject
@@ -116,7 +120,7 @@ class BookingConfirmation {
     public vehicle?: BookingVehicle = undefined;
     @JsonProperty("notes", [BookingNote], true)
     public notes?: BookingNote[] = undefined;
-    @JsonProperty("purchase", BookingPurchase, true)
+    @JsonProperty("purchase", Any, true)
     public purchase?: BookingPurchase = undefined;
 }
 
@@ -131,4 +135,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export {Booking, BookingField, BookingFieldOption, BookingConfirmation}
+export { Booking, BookingField, BookingFieldOption, BookingConfirmation }
