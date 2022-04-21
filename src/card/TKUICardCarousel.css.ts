@@ -92,6 +92,7 @@ export const tKUICardCarouselDefaultStyle: TKUIStyles<TKUICardCarouselStyle, TKU
         },
         pageWrapper: {
             height: '100%',
+            overflowY: 'hidden',
             ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
                 padding: '0 '+ cardSpacing() +'px'
             },
