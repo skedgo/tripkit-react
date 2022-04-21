@@ -54,7 +54,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
      * Defining the _transports_ button text.
      * @default 'Transport'
      */
-    transportBtnText?: string
+    transportBtnText?: string;
 
     /**
      * Function that will be run when the user clicks on button to show transport options.

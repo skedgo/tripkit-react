@@ -172,6 +172,8 @@ interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext {
     timezone?: string;
 
     setSelectedTripSegment: (segment?: Segment) => void;
+
+    transportBtnText?: string;
 }
 
 export interface IStyle {
@@ -360,7 +362,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                 onClick={this.props.onTransportButtonClick ?? (() => this.setState({ showTransportSwitches: !this.state.showTransportSwitches }))}
                                 aria-expanded={this.state.showTransportSwitches}
                             >
-                                {t("Transport")}
+                                {this.props.transportBtnText ?? t("Transport")}
                                 {!this.props.onTransportButtonClick &&
                                     <SelectDownArrow className={this.state.showTransportSwitches ? genClassNames.rotate180 : undefined} />}
                             </button>}
