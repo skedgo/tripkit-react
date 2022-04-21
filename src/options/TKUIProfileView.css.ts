@@ -43,8 +43,7 @@ export const tKUIProfileViewDefaultStyle: TKUIStyles<TKUIProfileViewStyle, TKUIP
             border: '2px solid ' + black(4, theme.isDark),
             borderRadius: '30px',
             '& *': {
-                ...theme.textSizeCaption,
-                ...theme.textWeightSemibold,
+                ...theme.textWeightSemibold,                
                 ...important(theme.textColorDefault)
             },
             '& path': {

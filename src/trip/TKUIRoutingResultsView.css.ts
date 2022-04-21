@@ -3,7 +3,6 @@ import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "./TKUIRo
 import {black, important, TKUITheme, white} from "../jss/TKUITheme";
 import {TKUIStyles} from "../jss/StyleHelper";
 import {resetStyles} from "../css/ResetStyle.css";
-import DeviceUtil from "../util/DeviceUtil";
 import Constants from "../util/Constants";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TKUIRoutingResultsViewProps> =
@@ -64,7 +63,6 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
         timePrefSelect: {
             minWidth: '92px',
             '& *': {
-                ...DeviceUtil.isPhone ? {...genStyles.fontM} : theme.textSizeCaption,
                 ...theme.textWeightSemibold,
                 ...important(theme.textColorGray)
             },

@@ -13,6 +13,9 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
                 ...genStyles.grow,
                 opacity: '1',
                 cursor: 'pointer'
+            },
+            '& *': {
+                ...DeviceUtil.isPhone ? {...genStyles.fontM} : theme.textSizeCaption
             }
         },
         container: {
@@ -37,7 +40,6 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
                 '0 0 4px 0 rgba(255,255,255,.2), 0 6px 12px 0 rgba(255,255,255,.08)'
         },
         option: {
-            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption,
             ...theme.textWeightSemibold,
             ...theme.textColorGray,
             cursor: 'pointer',
@@ -53,10 +55,9 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
             backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
         },
         singleValue: {
-            ...theme.textColorDefault,
-            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
+            ...theme.textColorDefault
         },
         multiValue: {
-            ...DeviceUtil.isPhone ? genStyles.fontM : theme.textSizeCaption
+            
         }
     });
