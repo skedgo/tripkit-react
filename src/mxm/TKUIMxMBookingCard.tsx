@@ -28,6 +28,7 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import Trip from '../model/trip/Trip';
 import UIUtil from '../util/UIUtil';
+import FormatUtil from '../util/FormatUtil';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -233,7 +234,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                             </a>
                         </div>}
                     {confirmation.purchase &&
-                    <div className={classes.price}>{confirmation.purchase.currency + confirmation.purchase.price}</div>}    
+                    <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, {currency: confirmation.purchase.currency, forceDecimals: true})}</div>}    
                 </div>
                 <div className={classes.bookingFormMain}>
                     <BookingInput

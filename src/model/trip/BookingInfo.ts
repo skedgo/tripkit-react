@@ -1,4 +1,5 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
+import Color from "./Color";
 
 @JsonObject
 class BookingFieldOption {
@@ -96,6 +97,13 @@ export class BookingNote {
     public provider?: string = undefined;
 }
 
+interface BookingBrand {
+    name: string,
+    website: string,
+    phone: string,
+    color: Color
+}
+
 interface BookingPurchase {
     id: string;
     currency: string;
@@ -103,7 +111,8 @@ interface BookingPurchase {
     productName: string,
     productType: string,
     valid: boolean,
-    validFromTimestamp: string
+    validFromTimestamp: string,
+    brand: BookingBrand
 }
 
 @JsonObject

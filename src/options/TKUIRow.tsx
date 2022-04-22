@@ -1,7 +1,9 @@
 import * as React from "react";
-import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from "../css/GenStyle.css";
-import {important, TKUITheme} from "../jss/TKUITheme";
+import { important, TKUITheme } from "../jss/TKUITheme";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { TKComponentDefaultConfig } from "../config/TKComponentConfig";
 
 const tKUIRowJss = (theme: TKUITheme) => ({
     main: {
@@ -21,13 +23,19 @@ const tKUIRowJss = (theme: TKUITheme) => ({
     }
 });
 
-
 type IStyle = ReturnType<typeof tKUIRowJss>
-
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title: string;
     subtitle?: React.ReactNode;
 }
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIRow {...props} />,
+    styles: tKUIRowJss,
+    classNamePrefix: "TKUIRow"
+};
 
 const TKUIRow: React.SFC<IProps> = (props: IProps) => {
     const classes = props.classes;
@@ -37,11 +45,12 @@ const TKUIRow: React.SFC<IProps> = (props: IProps) => {
                 {props.title}
             </div>
             {props.subtitle &&
-            <div className={classes.subtitle}>
-                {props.subtitle}
-            </div>}
+                <div className={classes.subtitle}>
+                    {props.subtitle}
+                </div>}
         </div>
     );
 };
 
-export default withStyles(TKUIRow, tKUIRowJss);
+export default connect(() => undefined, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));
