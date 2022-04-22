@@ -77,8 +77,8 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                 title: action.title,
                 initPaymentUrl: action.internalURL,
                 onRequestClose: success => {
-                    setWaiting?.(true)
                     if (success) {
+                        setWaiting?.(true);
                         requestRefresh()
                         .catch(UIUtil.errorMsg)
                         .finally(() => setWaiting?.(false));

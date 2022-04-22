@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import React, { Fragment, useEffect, useState } from 'react';
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { tKUIStripePaymentCardDefaultStyle } from "./TKUIStripePaymentCard.css";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -14,6 +14,9 @@ import UIUtil from '../util/UIUtil';
 import { TKError } from '../error/TKError';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TranslationFunction } from '../i18n/TKI18nProvider';
+import FormatUtil from '../util/FormatUtil';
+import { BookingConfirmation } from '../model/trip/BookingInfo';
+import TKUIRow from '../options/TKUIRow';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -72,12 +75,12 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
         return (
             <form onSubmit={handleSubmit}>
                 <PaymentElement />
-                <div style={{marginTop: '20px', display: 'flex', justifyContent: 'center'}}>
-                <TKUIButton
-                    text={t("Confirm")}
-                    type={TKUIButtonType.PRIMARY}
-                    disabled={!stripe}
-                />
+                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                    <TKUIButton
+                        text={t("Confirm")}
+                        type={TKUIButtonType.PRIMARY}
+                        disabled={!stripe}
+                    />
                 </div>
             </form>
         )
@@ -85,6 +88,7 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
 
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t }) => {
     const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
+    const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
@@ -101,6 +105,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                                 throw new TKError("Unexpected error. Contact SkedGo support");
                             }
                             setPaymentOption(firstPaymentOption);
+                            setConfirmation(bookingForm.booking.confirmation);
                             setPaymentIntent(paymentIntentID);
                             setPaymentIntentSecret(clientSecret);
                             setWaiting(false);
@@ -138,8 +143,21 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
             focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
         >
             <div className={classes.main}>
-                {paymentOption &&
-                    <div>{paymentOption.currency + " " + paymentOption.fullPrice}</div>}
+                {confirmation?.purchase &&
+                    <Fragment>
+                        <TKUIRow
+                            title={confirmation.purchase.productName}
+                            subtitle={confirmation.purchase.brand.phone}
+                            styles={{
+                                main: overrideClass({
+                                    padding: '16px 0'
+                                })
+                            }}
+                        />
+                        <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>
+                    </Fragment>}
+                {/* {paymentOption &&
+                    <div>{FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency + " ", nInCents: true, forceDecimals: true })}</div>} */}
                 <div className={classes.paymentForm}>
                     {form}
                 </div>
