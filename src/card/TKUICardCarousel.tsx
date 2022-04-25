@@ -13,6 +13,7 @@ import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { tKUICardCarouselDefaultStyle } from "./TKUICardCarousel.css";
 import { Subtract } from "utility-types";
 import WaiAriaUtil from "../util/WaiAriaUtil";
+import { cardHandleClass } from "./TKUICard";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: number;
@@ -89,6 +90,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                 onDragEnd={() => {
                     this.setState({ freezeCarousel: false });
                 }}
+                handleSelector={"." + cardHandleClass}
                 handleRef={this.props.selected !== undefined && this.state.handles.get(this.props.selected)}
                 parentElement={this.props.parentElement}
             >

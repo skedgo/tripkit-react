@@ -1,14 +1,14 @@
 import React from "react";
 import injectSheet from "react-jss";
-import Draggable, {DraggableData, DraggableEvent} from 'react-draggable';
+import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import classNames from "classnames";
-import {cardSpacing, TKUITheme} from "../jss/TKUITheme";
+import { cardSpacing, TKUITheme } from "../jss/TKUITheme";
 import ReactDOM from 'react-dom';
-import {setupScopedFocus, teardownScopedFocus} from "./FocusManagerHelper";
+import { setupScopedFocus, teardownScopedFocus } from "./FocusManagerHelper";
 import DeviceUtil from "../util/DeviceUtil";
-import {TKUISlideUpOptions as TKUISlideUpOptionsForExport} from "./TKUISlideUpOptions";
+import { TKUISlideUpOptions as TKUISlideUpOptionsForExport } from "./TKUISlideUpOptions";
 import { Classes } from "jss";
-import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
+import { TKUIWithClasses } from "../jss/StyleHelper";
 
 /**
  * Important: use react-draggable@4.2.0, since react-draggable@4.3.1 has a change involving touch events that breaks
@@ -37,6 +37,7 @@ interface IProps extends TKUISlideUpOptions, TKUIWithClasses<IProps, IStyle> {
     open?: boolean;
     onDrag?: () => void;
     onDragEnd?: () => void;
+    handleSelector?: string;
     handleRef?: any;
     draggable?: boolean;
     cardOnTop?: (onTop: boolean) => void;
@@ -47,7 +48,7 @@ interface IProps extends TKUISlideUpOptions, TKUIWithClasses<IProps, IStyle> {
 
 interface IState {
     position: TKUISlideUpPosition;
-    touching: boolean;
+    dragging: boolean;
     top: number;
     deltaTop: number;
 }
@@ -64,9 +65,9 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 
     public static defaultProps: Partial<IProps> = {
         initPosition: TKUISlideUpPosition.UP,
-        modalUp: {top: cardSpacing(), unit: 'px'},
-        modalMiddle: {top: 325, unit: 'px'},
-        modalDown: {top: 650, unit: 'px'},
+        modalUp: { top: cardSpacing(), unit: 'px' },
+        modalMiddle: { top: 325, unit: 'px' },
+        modalDown: { top: 650, unit: 'px' },
         open: true,
         draggable: true
     };
@@ -76,7 +77,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         const position = this.props.position !== undefined ? this.props.position : props.initPosition!;
         this.state = {
             position: props.initPosition!,
-            touching: false,
+            dragging: false,
             top: this.getTopFromPosition(position),
             deltaTop: 0
 
@@ -96,7 +97,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
     }
 
     private refreshTop() {
-        this.setState({top: this.getTopFromPosition(this.getPosition())});
+        this.setState({ top: this.getTopFromPosition(this.getPosition()) });
     }
 
     private getTopFromPosition(position: TKUISlideUpPosition): number {
@@ -117,6 +118,9 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         if (this.props.position) {
             return false;
         }
+        this.setState({
+            dragging: true
+        });
     }
 
     private onDrag(e: DraggableEvent, data: DraggableData): void | false {
@@ -152,7 +156,8 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         // To reflect card reached a definite position (user is not dragging it), so next a tap doesn't trigger a card
         // position change
         this.setState({
-            deltaTop: 0
+            deltaTop: 0,
+            dragging: false
         });
         this.onPositionChange(targetPos);
     }
@@ -181,53 +186,56 @@ class TKUISlideUp extends React.Component<IProps, IState> {
         const parentElement = this.props.parentElement ? this.props.parentElement : document.getElementsByTagName("BODY")[0];
         return (
             ReactDOM.createPortal(
-            <Draggable
-                axis="y"
-                bounds={{
-                    top: this.getTopFromPosition(TKUISlideUpPosition.UP),
-                    bottom: this.getTopFromPosition(TKUISlideUpPosition.DOWN),
-                    left: 0,
-                    right: 0
-                }}
-                position={{x: 0, y: this.state.top}}
-                onStart={this.onStart}
-                onDrag={this.onDrag}
-                onStop={this.onStop}
-                disabled={this.props.draggable === false}
-            >
-                <div className={classNames(classes.container, this.props.containerClass)}
-                     ref={(ref: any) => {
-                         if (ref) {
-                             this.elem = ref;
-                         }
-                         if (ref && ref.parentElement !== this.containerElem) {
-                             this.containerElem = ref.parentElement;
-                             this.onPositionChange(this.getPosition());
-                         }
-                     }}
-                     aria-label={this.props.ariaLabel}
-                     role={this.props.role}
+                <Draggable
+                    axis="y"
+                    bounds={{
+                        top: this.getTopFromPosition(TKUISlideUpPosition.UP),
+                        bottom: this.getTopFromPosition(TKUISlideUpPosition.DOWN),
+                        left: 0,
+                        right: 0
+                    }}
+                    position={{ x: 0, y: this.state.top }}
+                    onStart={this.onStart}
+                    onDrag={this.onDrag}
+                    onStop={this.onStop}
+                    disabled={this.props.draggable === false}
+                    handle={this.props.handleSelector}
                 >
-                    <div style={{
-                        height: this.containerElem ?
-                            (this.props.draggable !== false ?
-                                this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
-                                this.containerElem.offsetHeight - this.state.top + "px") :
-                            "100%",
-                        // Moved from TKUICard.css to here since needs to consider position which changes dinamically
-                        // (until I implement refresh of styles on props change).
-                        paddingBottom: !DeviceUtil.isTouch() && this.props.position !== TKUISlideUpPosition.HIDDEN ? '16px' : 0,
-                        boxSizing: 'border-box',
-                        // Actually hide it since if not it causes on mobile devices, allowing to scroll the entire
-                        // screen making the slide up we want to hide to scroll into view.
-                        ...this.props.position === TKUISlideUpPosition.HIDDEN && {
-                            display: 'none'
-                        }
-                    }}>
-                    {this.props.children}
+                    <div className={classNames(classes.container, this.props.containerClass)}
+                        ref={(ref: any) => {
+                            if (ref) {
+                                this.elem = ref;
+                            }
+                            if (ref && ref.parentElement !== this.containerElem) {
+                                this.containerElem = ref.parentElement;
+                                this.onPositionChange(this.getPosition());
+                            }
+                        }}
+                        aria-label={this.props.ariaLabel}
+                        role={this.props.role}
+                    >
+                        <div style={{
+                            height: this.containerElem ?
+                                (
+                                    this.state.dragging ?
+                                        this.containerElem.offsetHeight - this.getTopFromPosition(TKUISlideUpPosition.UP) + "px" :
+                                        this.containerElem.offsetHeight - this.state.top + "px"
+                                ) :
+                                "100%",
+                            // Moved from TKUICard.css to here since needs to consider position which changes dinamically
+                            // (until I implement refresh of styles on props change).
+                            paddingBottom: !DeviceUtil.isTouch() && this.props.position !== TKUISlideUpPosition.HIDDEN ? '16px' : 0,
+                            boxSizing: 'border-box',
+                            // Actually hide it since if not it causes on mobile devices, allowing to scroll the entire
+                            // screen making the slide up we want to hide to scroll into view.
+                            ...this.props.position === TKUISlideUpPosition.HIDDEN && {
+                                display: 'none'
+                            }
+                        }}>
+                            {this.props.children}
+                        </div>
                     </div>
-                </div>
-            </Draggable>, parentElement)
+                </Draggable>, parentElement)
         );
     }
 
@@ -267,4 +275,3 @@ class TKUISlideUp extends React.Component<IProps, IState> {
 }
 
 export default injectSheet(stylesJss)(TKUISlideUp);
-// export default withStyles(TKUISlideUp, stylesJss as any);

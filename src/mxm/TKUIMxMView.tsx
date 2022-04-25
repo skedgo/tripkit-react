@@ -100,6 +100,9 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 main: overrideClass({ height: '100%' })
             }}
             key={segment.id + "b"}
+            slideUpOptions={{
+                showHandle: true
+            }}
         >
             {segment.shapes &&
                 <TKUIServiceSteps
@@ -122,6 +125,9 @@ function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
             onRequestClose={onClose}
             styles={{
                 main: overrideClass({ height: '100%' })
+            }}
+            slideUpOptions={{
+                showHandle: true
             }}
         >
             {segment.streets && segment.streets.map(street => {
@@ -152,6 +158,9 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                     main: overrideClass({ height: '100%' })
                 }}
                 key={segment.id}
+                slideUpOptions={{
+                    showHandle: true
+                }}
             >
                 <TKUILocationDetail location={freeFloatingVehicleLoc} />
             </TKUICard>
@@ -178,6 +187,9 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                     main: overrideClass({ height: '100%' })
                 }}
                 key={segment.id}
+                slideUpOptions={{
+                    showHandle: true
+                }}
             >
                 <div style={{ height: '100%' }} />
             </TKUICard>

@@ -27,7 +27,10 @@ const TKUIMxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => v
                                         styles: {
                                             main: overrideClass({height: '100%'})
                                         },
-                                        presentation: CardPresentation.NONE
+                                        presentation: CardPresentation.NONE,
+                                        slideUpOptions: {
+                                            showHandle: true
+                                        }
                                     }}
                                     showSearch={false}
                                 />

@@ -333,6 +333,9 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                 main: overrideClass({ height: '100%', position: 'relative' })
             }}
             key={segment.id}
+            slideUpOptions={{
+                showHandle: true
+            }}
         >
             {error && <TKUIErrorView error={error} />}
             {content}

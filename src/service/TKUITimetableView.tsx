@@ -1,19 +1,19 @@
-import React, {ChangeEvent} from "react";
+import React, { ChangeEvent } from "react";
 import {
     IServiceResultsContext,
     ServiceResultsContext
 } from "../service/ServiceResultsProvider";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {ReactComponent as IconClock} from "../images/ic-clock.svg";
+import { ReactComponent as IconClock } from "../images/ic-clock.svg";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
-import {Moment} from "moment";
-import TKUICard, {CardPresentation, TKUICardClientProps} from "../card/TKUICard";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUITimetableDefaultStyle} from "./TKUITimetableView.css";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
+import { Moment } from "moment";
+import TKUICard, { CardPresentation, TKUICardClientProps } from "../card/TKUICard";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUITimetableDefaultStyle } from "./TKUITimetableView.css";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { Subtract } from "utility-types";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
@@ -22,18 +22,17 @@ import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import TKUIRouteToLocationAction from "../action/TKUIRouteToLocationAction";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
-import {TKUIButtonType} from "../buttons/TKUIButton";
-import TKUIScrollForCard from "../card/TKUIScrollForCard";
+import { TKUIButtonType } from "../buttons/TKUIButton";
 import TransportUtil from "../trip/TransportUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
-import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
-import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
+import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
+import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import TKUIErrorView from "../error/TKUIErrorView";
-import {TKError} from "../error/TKError";
-import {serviceTextColor} from "./TKUIServiceDepartureRow.css";
-import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
-import HasCard, {HasCardKeys} from "../card/HasCard";
+import { TKError } from "../error/TKError";
+import { serviceTextColor } from "./TKUIServiceDepartureRow.css";
+import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
+import HasCard, { HasCardKeys } from "../card/HasCard";
 import Segment from "../model/trip/Segment";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
@@ -157,13 +156,13 @@ interface IStyle {
     noResults: CSSProps<IProps>;
 }
 
-export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUITimetableViewProps = IProps;
 export type TKUITimetableViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITimetableView {...props}/>,
+    render: props => <TKUITimetableView {...props} />,
     styles: tKUITimetableDefaultStyle,
     classNamePrefix: "TKUITimetableView"
 };
@@ -181,8 +180,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     private getDefaultActions(stop: StopLocation) {
         return [
-            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"}/>,
-            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"}/>,
+            <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"} />,
+            <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"} />,
             <TKI18nContext.Consumer key={"actionShare"}>
                 {(i18nProps: TKI18nContextProps) =>
                     <TKUIShareAction
@@ -238,8 +237,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         const renderCustomInput = (value: any, onClick: any, onKeyDown: any, ref: any) => (
             // Pass onKeyDown to preserve keyboard navigation when using react-datepicker.
             <button className={classes.faceButtonClass} onClick={onClick} onKeyDown={onKeyDown} ref={ref}
-                    aria-label="Show datetime picker">
-                <IconClock/>
+                aria-label="Show datetime picker">
+                <IconClock />
             </button>
         );
         let error: JSX.Element | undefined = undefined;
@@ -262,11 +261,11 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                             {serviceListSamples.map((service: ServiceDeparture, i: number) => {
                                 return service.serviceNumber &&
                                     <div className={classes.serviceNumber}
-                                         style={{
-                                             backgroundColor: TransportUtil.getServiceDepartureColor(service),
-                                             color: serviceTextColor(service)
-                                         }}
-                                         key={i}
+                                        style={{
+                                            backgroundColor: TransportUtil.getServiceDepartureColor(service),
+                                            color: serviceTextColor(service)
+                                        }}
+                                        key={i}
                                     >
                                         {service.serviceNumber}
                                     </div>
@@ -280,40 +279,41 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 slideUpOptions={slideUpOptions}
                 // Timetable should not scroll at body, but at panel below filter, on body content. Next is just required
                 // for Safari so div below filter can actually get a height and scroll happens there.
-                styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({height: '100%'}) } : undefined}
+                styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({ height: '100%' }) } : undefined}
                 {...this.props.cardProps}
             >
                 {error ? error :
                     <div className={classes.main}>
                         {this.props.showSearch !== false &&
-                        <div className={classes.secondaryBar}>
-                            <input type="text"
-                                   spellCheck={false}
-                                   autoComplete="off"
-                                   autoCorrect="off"
-                                   autoCapitalize="off"
-                                   className={classes.filterInput}
-                                   placeholder={t("Search")}
-                                   value={this.props.timetableFilter}
-                                   onChange={this.onFilterChange}/>
-                            <TKUIDateTimePicker
-                                value={this.props.timetableInitTime}
-                                timeZone={stop && stop.timezone}
-                                onChange={this.props.onInitTimeChange}
-                                renderCustomInput={renderCustomInput}
-                                popperPlacement="bottom-end"
-                                popperModifiers={{
-                                    offset: {
-                                        enabled: true,
-                                        offset: "15px, 0px"
-                                    }
-                                }}
-                            />
-                        </div>}
+                            <div className={classes.secondaryBar}>
+                                <input type="text"
+                                    spellCheck={false}
+                                    autoComplete="off"
+                                    autoCorrect="off"
+                                    autoCapitalize="off"
+                                    className={classes.filterInput}
+                                    placeholder={t("Search")}
+                                    value={this.props.timetableFilter}
+                                    onChange={this.onFilterChange} />
+                                <TKUIDateTimePicker
+                                    value={this.props.timetableInitTime}
+                                    timeZone={stop && stop.timezone}
+                                    onChange={this.props.onInitTimeChange}
+                                    renderCustomInput={renderCustomInput}
+                                    popperPlacement="bottom-end"
+                                    popperModifiers={{
+                                        offset: {
+                                            enabled: true,
+                                            offset: "15px, 0px"
+                                        }
+                                    }}
+                                />
+                            </div>}
                         <div className={classes.listPanel}>
-                            <TKUIScrollForCard className={classes.containerPanel}
-                                               onScroll={this.onScroll}
-                                               scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
+                            <div
+                                className={classes.containerPanel}
+                                onScroll={this.onScroll}
+                                ref={(scrollRef: any) => this.scrollRef = scrollRef}
                             >
                                 {this.props.departures.reduce((elems: JSX.Element[], departure: ServiceDeparture, i: number) => {
                                     const showDayLabel = i === 0 ||
@@ -321,9 +321,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                         DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop && stop.timezone).format("ddd D");
                                     if (showDayLabel) {
                                         elems.push(<DaySeparator date={DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, stop && stop.timezone)}
-                                                                 key={"day-" + i}
-                                                                 scrollRef={this.scrollRef}
-                                                                 isDark={this.props.theme.isDark}
+                                            key={"day-" + i}
+                                            scrollRef={this.scrollRef}
+                                            isDark={this.props.theme.isDark}
                                         />)
                                     }
                                     elems.push(
@@ -333,7 +333,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                 onClick={() => {
                                                     if (this.props.onServiceSelection) {
                                                         this.props.onServiceSelection(departure)
-                                                    }}}
+                                                    }
+                                                }}
                                                 selected={departure === this.props.selectedService}
                                             />
                                         </div>
@@ -341,10 +342,10 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                     return elems;
                                 }, [])}
                                 {this.props.waiting || !stop ?
-                                    <IconSpin className={classes.iconLoading} focusable="false"/> : null}
+                                    <IconSpin className={classes.iconLoading} focusable="false" /> : null}
                                 {!this.props.waiting && stop && !this.props.serviceError && this.props.departures.length === 0
-                                && <div className={classes.noResults}>{"No results"}</div>}
-                            </TKUIScrollForCard>
+                                    && <div className={classes.noResults}>{"No results"}</div>}
+                            </div>
                         </div>
                     </div>}
             </TKUICard>
@@ -361,9 +362,9 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
         if (prevProps.departures.length === 0 && this.props.departures.length > 0) {
-            const now = DateTimeUtil.getNow().valueOf()/60000; // In minutes, with decimals
+            const now = DateTimeUtil.getNow().valueOf() / 60000; // In minutes, with decimals
             const nextDepartureIndex = this.props.departures.findIndex((departure: ServiceDeparture) => {
-                const actualStartTime = departure.actualStartTime/60; // In minutes, with decimals
+                const actualStartTime = departure.actualStartTime / 60; // In minutes, with decimals
                 let timeToDepart = actualStartTime - now;   // In minutes
                 // Round negative up, so less than a minute in the past from now is considered 'Now'.
                 timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
@@ -380,7 +381,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
 }
 
-const Consumer: React.SFC<{children: (props: IServiceResultsContext) => React.ReactNode}> = (props: {children: (props: IServiceResultsContext) => React.ReactNode}) => {
+const Consumer: React.SFC<{ children: (props: IServiceResultsContext) => React.ReactNode }> = (props: { children: (props: IServiceResultsContext) => React.ReactNode }) => {
     return (
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (
@@ -391,10 +392,10 @@ const Consumer: React.SFC<{children: (props: IServiceResultsContext) => React.Re
 };
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IServiceResultsContext) =>
-                children!({...consumedProps, ...inputProps})}
+                children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUITimetableView, config, Mapper);
