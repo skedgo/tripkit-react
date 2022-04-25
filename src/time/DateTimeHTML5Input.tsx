@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Moment} from "moment-timezone";
+import { Moment } from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
 // import * as $ from "jquery";
 
@@ -33,16 +33,18 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
         const displayValue = this.props.value.tz(timeZone);
         return (
             <input type={"datetime-local"}
-                   value={displayValue.format(DateTimeUtil.HTML5_DATE_TIME_FORMAT)}
-                   onChange={() => {
-                       if (this.inputRef && this.props.onChange) {
-                           this.props.onChange(DateTimeUtil.momentFromStringTZ(this.inputRef.value, timeZone));
-                       }
-                   }}
-                   disabled={this.props.disabled}
-                   ref={(el: any) => this.inputRef = el}
-                   id="query-datetime-picker"
-                   className={this.props.className}
+                value={displayValue.format(DateTimeUtil.HTML5_DATE_TIME_FORMAT)}
+                onChange={() => {
+                    if (this.inputRef && this.props.onChange) {
+                        // Handle 'Clear' button click on Android Chrome
+                        this.props.onChange(this.inputRef.value ? DateTimeUtil.momentFromStringTZ(this.inputRef.value, timeZone) : DateTimeUtil.getNow());
+                    }
+                }}
+                disabled={this.props.disabled}
+                ref={(el: any) => this.inputRef = el}
+                id="query-datetime-picker"
+                className={this.props.className}
+                required
             />
         )
     }
