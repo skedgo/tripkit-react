@@ -8,7 +8,6 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { TKUISlideUpOptions, TKUISlideUpPosition } from "./TKUISlideUp";
 import DeviceUtil from "../util/DeviceUtil";
-import TKUIScrollForCard from "./TKUIScrollForCard";
 import TKUISlideUp from "./TKUISlideUp";
 import { genClassNames } from "../css/GenStyle.css";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
@@ -89,11 +88,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     scrollRef?: (instance: HTMLDivElement | null) => void;
-
-    /**
-     * @ignore
-     */
-    onScroll?: UIEventHandler<HTMLDivElement>;
 
     /**
      * Describing if the card body should be scrollable.
@@ -178,7 +172,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 function hasHandle(props: IProps): boolean {
-    return (props.presentation === CardPresentation.SLIDE_UP || (!!props.slideUpOptions && !!props.slideUpOptions.showHandle))
+    return (props.presentation === CardPresentation.SLIDE_UP || !!props.slideUpOptions?.showHandle)
         && DeviceUtil.isTouch() && !(props.slideUpOptions && props.slideUpOptions.draggable === false);
 }
 
@@ -187,6 +181,8 @@ interface IState {
     slideUpPosition: TKUISlideUpPosition;
     cardOnTop: boolean;
 }
+
+export const cardHandleClass = "TKUICard-handleSelector";
 
 class TKUICard extends React.Component<IProps, IState> {
 
@@ -269,45 +265,40 @@ class TKUICard extends React.Component<IProps, IState> {
                 tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
                 role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
             >
-                {(showHandle || showHeader) &&
-                    <div ref={(ref: any) => {
-                        this.state.handleRef === undefined && this.setState({ handleRef: ref });
-                        this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
-                    }}>
-                        {showHandle &&
-                            <div className={classes.handle}>
-                                <div className={classes.handleLine} />
-                            </div>}
-                        {showHeader &&
-                            renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
-                    </div>}
-                {this.props.renderSubHeader &&
-                    <div className={classes.subHeader}>
-                        {this.props.renderSubHeader()}
-                    </div>}
                 {(showHandle || showHeader || this.props.renderSubHeader) &&
-                    <div className={classes.divider} />}
-                {this.props.scrollable !== false && draggable ?
-                    <TKUIScrollForCard
+                    <div className={cardHandleClass}>
+                        {(showHandle || showHeader) &&
+                            <div ref={(ref: any) => {
+                                this.state.handleRef === undefined && this.setState({ handleRef: ref });
+                                this.state.handleRef === undefined && this.props.handleRef && this.props.handleRef(ref);
+                            }}
+                            >
+                                {showHandle &&
+                                    <div className={classes.handle}>
+                                        <div className={classes.handleLine} />
+                                    </div>}
+                                {showHeader &&
+                                    renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
+                            </div>}
+                        {this.props.renderSubHeader &&
+                            <div className={classes.subHeader}>
+                                {this.props.renderSubHeader()}
+                            </div>}
+                        {(showHandle || showHeader || this.props.renderSubHeader) &&
+                            <div className={classes.divider} />}
+                    </div>}
+                {this.props.scrollable !== false ?
+                    <div
                         className={classes.body}
-                        // So dragging the card from its content, instead of scrolling it, will drag the card.
-                        // Just freeze if draggable, since if not you will want to be able to scroll in MIDDLE position.
-                        freezeScroll={draggable && !this.state.cardOnTop}
-                        scrollRef={this.props.scrollRef}
-                        onScroll={this.props.onScroll}
+                        style={{
+                            overflowY: 'auto',
+                            overflowX: 'hidden'
+                        }}
+                        ref={this.props.scrollRef}
                     >
                         {this.props.children}
-                    </TKUIScrollForCard> :
-                    this.props.scrollable !== false ?
-                        <div className={classes.body}
-                            style={{
-                                overflowY: 'auto',
-                                overflowX: 'hidden'
-                            }}
-                        >
-                            {this.props.children}
-                        </div> :
-                        this.props.children
+                    </div> :
+                    this.props.children
                 }
             </div>;
         const focusTrap = this.props.focusTrap !== undefined ? this.props.focusTrap : this.props.presentation === CardPresentation.MODAL;
@@ -319,6 +310,7 @@ class TKUICard extends React.Component<IProps, IState> {
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
                     {...this.props.slideUpOptions}
+                    handleSelector={"." + cardHandleClass}
                     handleRef={this.state.handleRef}
                     containerClass={classNames(classes.modalContainer, genClassNames.root, this.props.slideUpOptions?.containerClass)}
                     open={this.props.open}
