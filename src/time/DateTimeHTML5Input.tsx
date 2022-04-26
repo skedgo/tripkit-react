@@ -44,7 +44,6 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
                 ref={(el: any) => this.inputRef = el}
                 id="query-datetime-picker"
                 className={this.props.className}
-                required
             />
         )
     }
