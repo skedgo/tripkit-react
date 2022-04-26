@@ -4,8 +4,6 @@ import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
 import {tKUILocationSearchDefaultStyle} from "./TKUILocationSearch.css";
 import {connect, PropsMapper} from "../config/TKConfigHelper";
 import Location from "../model/Location";
-import BBox from "../model/BBox";
-import LatLng from "../model/LatLng";
 import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
 import {Subtract} from "utility-types";
 import Util from "../util/Util";
@@ -61,20 +59,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     onInputTextChange?: (text: string) => void;
 
-    /**
-     * Bounding box to restrict from / to location search.
-     * @ctype
-     * @default Bounds of the current region: {@link TKState#region}.bounds
-     */
-    bounds?: BBox;
-
-    /**
-     * Coordinates to focus location search.
-     * @ctype
-     * @default The center of the main city of current region ({@link TKState#region})
-     */
-    focusLatLng?: LatLng;
-
     onLocationBoxRef?: (ref: TKUILocationBoxRef) => void;
 
     menuContainer?: HTMLElement;
@@ -129,8 +113,6 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                             </button>
                             <TKUILocationBox
                                 showCurrLoc={false}
-                                bounds={this.props.bounds}
-                                focus={this.props.focusLatLng}
                                 value={this.props.value}
                                 placeholder={placeholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
@@ -184,9 +166,6 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
             {(viewportProps: TKUIViewportUtilProps) =>
                 <RoutingResultsContext.Consumer>
                     {(routingContext: IRoutingResultsContext) => {
-                        const region = routingContext.region;
-                        const bounds = region ? region.bounds : undefined;
-                        const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
                         const consumerProps: IConsumedProps = {
                             value: routingContext.query.to,
                             onChange: (value: Location | null) => {
@@ -200,8 +179,6 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
                             ((location?: Location) => routingContext.onPreChange!(false, location)),
                             onInputTextChange: routingContext.onInputTextChange &&
                             ((text: string) => routingContext.onInputTextChange!(false, text)),
-                            bounds: bounds,
-                            focusLatLng: focusLatLng,
                             ...viewportProps
                         };
                         return props.children!(consumerProps);

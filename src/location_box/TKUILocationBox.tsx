@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import Autocomplete from 'react-autocomplete';
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
@@ -25,12 +25,11 @@ import { TKUIConfigContext } from "../config/TKUIConfigProvider";
 import { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import LocationUtil from "../util/LocationUtil";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
+import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     showCurrLoc?: boolean,
     placeholder?: string,
-    bounds?: BBox,
-    focus?: LatLng,
     value: Location | null,
     onChange?: (value: Location | null, highlighted: boolean) => void,
     onInputTextChange?: (text: string) => void,
@@ -66,6 +65,18 @@ interface IStyle {
 
 interface IConsumedProps {
     geocodingOptions: TKGeocodingOptions;
+    /**
+     * Coordinates to focus from / to location search.
+     * @ctype
+     * @default The center of the main city of current region ({@link TKState#region})
+     */
+    focus?: LatLng;
+    /**
+     * Bounding box to restrict from / to location search.
+     * @ctype
+     * @default Bounds of the current region: {@link TKState#region}.bounds
+     */
+    bounds?: BBox;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
@@ -266,7 +277,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                         }
                         this.setValue(location, false, true, () =>
                             this.updateResolvedItem(locationValue, location));
-                    } 
+                    }
                 }
                 if (this.state.waitingResolveFor === locationValue) {
                     this.setState({
@@ -602,6 +613,7 @@ class TKUILocationBox extends Component<IProps, IState> {
 
 const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
+        const routingContext = useContext(RoutingResultsContext);
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) => {
@@ -609,11 +621,15 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                     if (props.showCurrLoc === false) {
                         delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
                     }
+                    const calculateFocus = geocodingOptions.getFocus ??
+                        (({ selectedRegion }) =>
+                            selectedRegion ? (selectedRegion.cities.length !== 0 ? selectedRegion.cities[0] : selectedRegion.bounds.getCenter()) : undefined);
                     return props.children!({
-                        geocodingOptions: geocodingOptions
+                        geocodingOptions: geocodingOptions,
+                        focus: calculateFocus({selectedRegion: routingContext.region, mapViewport: routingContext.viewport}),
+                        bounds: routingContext.region ? routingContext.region.bounds : undefined
                     });
-                }
-                }
+                }}
             </TKUIConfigContext.Consumer>
         );
     };

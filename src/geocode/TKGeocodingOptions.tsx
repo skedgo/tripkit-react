@@ -17,6 +17,9 @@ import City from "../model/location/City";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import CurrentLocationGeocoder from "./CurrentLocationGeocoder";
 import TKDefaultGeocoderNames from "./TKDefaultGeocoderNames";
+import LatLng from "../model/LatLng";
+import TKMapViewport from "../map/TKMapViewport";
+import Region from "../model/region/Region";
 
 export const TKGeocodingOptionsForDoc = (props: Partial<TKGeocodingOptions>) => null;
 TKGeocodingOptionsForDoc.displayName = 'TKGeocodingOptions';
@@ -41,6 +44,12 @@ interface TKGeocodingOptions {
      * Otherwise, current region bounds are used.
      */
     restrictToCoverageBounds?: boolean;
+    /**
+     * Calculate coordinates to focus location search.
+     * @ctype
+     * @default The center of the main city of current region ({@link TKState#region})
+     */
+    getFocus?: (props: { selectedRegion?: Region, mapViewport?: TKMapViewport }) => LatLng | undefined;
     reverseGeocoderId?: string;
 }
 
@@ -49,8 +58,8 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
 
     const skedgoGeocoder = new SkedgoGeocoder({ resultsLimit: 2 });
 
-    const citiesGeocoder = new StaticGeocoder({ 
-        resultsLimit: 5, 
+    const citiesGeocoder = new StaticGeocoder({
+        resultsLimit: 5,
         renderIcon: () => <IconCity />
     });
     RegionsData.instance.requireRegions().then(() => {
@@ -76,7 +85,7 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     };
 
     const recentGeocoder = new StaticGeocoder({
-        emptyMatchAll: true, 
+        emptyMatchAll: true,
         resultsLimit: 3,
         renderIcon: (location: Location) => FavouritesData.instance.getLocations()
             .find((loc: Location) => location.equals(loc)) ? <IconFavourite /> : <IconClock />

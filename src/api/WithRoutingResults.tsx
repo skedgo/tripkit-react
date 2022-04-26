@@ -24,9 +24,10 @@ import TripUtil from "../trip/TripUtil";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
 import GATracker from "../analytics/GATracker";
+import TKMapViewport from "../map/TKMapViewport";
 
 export interface IWithRoutingResultsProps {
-    initViewport?: { center?: LatLng, zoom?: number };
+    initViewport?: TKMapViewport;
     fixToInitViewportRegion?: boolean;
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
@@ -39,7 +40,7 @@ interface IWithRoutingResultsState {
     preTo?: Location;
     inputTextFrom: string;
     inputTextTo: string
-    viewport?: { center?: LatLng, zoom?: number };
+    viewport?: TKMapViewport;
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
     directionsView: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
@@ -219,7 +220,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }));
         }
 
-        public onViewportChange(viewport: { center?: LatLng, zoom?: number }) {
+        public onViewportChange(viewport: TKMapViewport) {
             if (!viewport.center || !viewport.zoom) {
                 return;
             }
