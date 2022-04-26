@@ -1,8 +1,6 @@
 import * as React from "react";
 import TKUILocationBox from "../location_box/TKUILocationBox";
 import Location from "../model/Location";
-import BBox from "../model/BBox";
-import LatLng from "../model/LatLng";
 import { ReactComponent as IconSwap } from '../images/ic-swap.svg';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Moment } from "moment";
@@ -116,20 +114,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default {@link TKState#onInputTextChange}
      */
     onInputTextChange?: (from: boolean, text: string) => void;
-
-    /**
-     * Bounding box to restrict from / to location search.
-     * @ctype
-     * @default Bounds of the current region: {@link TKState#region}.bounds
-     */
-    bounds?: BBox;
-
-    /**
-     * Coordinates to focus from / to location search.
-     * @ctype
-     * @default The center of the main city of current region ({@link TKState#region})
-     */
-    focusLatLng?: LatLng;
 
     /**
      * Id of timezone to consider for time display / input.
@@ -328,8 +312,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             reference={(ref: any) => this.fromTooltipRef = ref}
                         >
                             <TKUILocationBox
-                                bounds={this.props.bounds}
-                                focus={this.props.focusLatLng}
                                 value={routingQuery.from}
                                 placeholder={fromPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
@@ -382,8 +364,6 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             reference={(ref: any) => this.toTooltipRef = ref}
                         >
                             <TKUILocationBox
-                                bounds={this.props.bounds}
-                                focus={this.props.focusLatLng}
                                 value={routingQuery.to}
                                 placeholder={toPlaceholder}
                                 onChange={(value: Location | null, highlighted: boolean) => {
@@ -531,16 +511,12 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                 <RoutingResultsContext.Consumer>
                     {(routingContext: IRoutingResultsContext) => {
                         const region = routingContext.region;
-                        const bounds = region ? region.bounds : undefined;
-                        const focusLatLng = region ? (region.cities.length !== 0 ? region.cities[0] : region.bounds.getCenter()) : undefined;
                         const timezone = region ? region.timezone : undefined;
                         const consumerProps: IConsumedProps = {
                             value: routingContext.query,
                             onChange: routingContext.onQueryChange,
                             onPreChange: routingContext.onPreChange,
                             onInputTextChange: routingContext.onInputTextChange,
-                            bounds: bounds,
-                            focusLatLng: focusLatLng,
                             timezone: timezone,
                             ...viewportProps
                         };
