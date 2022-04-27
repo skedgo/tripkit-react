@@ -1,4 +1,4 @@
-import React, { Component, useContext } from 'react';
+import React, { Component, Fragment, useContext, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 import Autocomplete from 'react-autocomplete';
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg'
@@ -611,26 +611,29 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
         const routingContext = useContext(RoutingResultsContext);
+        const config = useContext(TKUIConfigContext);
+        const geocodingOptions = getGeocodingOptions(config.geocoding);
+        const calculateFocus = geocodingOptions.getFocus ??
+            (({ selectedRegion }) =>
+                selectedRegion ? (selectedRegion.cities.length !== 0 ? selectedRegion.cities[0] : selectedRegion.bounds.getCenter()) : undefined);
+        // calculateFocus can be expensive (e.g. find region containing map viewport), so call it just if one of its inputs changed
+        // (and not when, for instance, inputTexsFrom / inputTexstTo changed, which happens on each user type.)
+        const focus = useMemo(() => calculateFocus({ selectedRegion: routingContext.region, mapViewport: routingContext.viewport }),
+            [routingContext.region, routingContext.viewport]);
+        if (props.showCurrLoc === false) {
+            delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
+        }
         return (
-            <TKUIConfigContext.Consumer>
-                {(config: TKUIConfig) => {
-                    const geocodingOptions = getGeocodingOptions(config.geocoding);
-                    if (props.showCurrLoc === false) {
-                        delete geocodingOptions.geocoders[TKDefaultGeocoderNames.geolocation];
-                    }
-                    const calculateFocus = geocodingOptions.getFocus ??
-                        (({ selectedRegion }) =>
-                            selectedRegion ? (selectedRegion.cities.length !== 0 ? selectedRegion.cities[0] : selectedRegion.bounds.getCenter()) : undefined);
-                    return props.children!({
-                        geocodingOptions: geocodingOptions,
-                        focus: calculateFocus({selectedRegion: routingContext.region, mapViewport: routingContext.viewport}),
-                        bounds: routingContext.region ? routingContext.region.bounds : undefined
-                    });
-                }}
-            </TKUIConfigContext.Consumer>
+            <Fragment>
+                {props.children({
+                    geocodingOptions: geocodingOptions,
+                    focus: focus,
+                    bounds: routingContext.region ? routingContext.region.bounds : undefined
+                })}
+            </Fragment>
         );
     };
 
