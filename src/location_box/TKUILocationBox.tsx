@@ -637,11 +637,11 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
         );
     };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({ inputProps, children }) =>
         <Consumer showCurrLoc={inputProps.showCurrLoc}>
             {(consumedProps: IConsumedProps) =>
-                children!({ ...inputProps, ...consumedProps })}
+                children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);
