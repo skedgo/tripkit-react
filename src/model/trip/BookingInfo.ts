@@ -20,7 +20,7 @@ class BookingField {
     @JsonProperty("type", String, true)
     public type?: string = undefined;
     @JsonProperty("options", [BookingFieldOption], true)
-    public options: BookingFieldOption[] = [];
+    public options?: BookingFieldOption[] = undefined;
     @JsonProperty("values", [Any], true)
     public values?: string[] = undefined;
     @JsonProperty("value", String, true)

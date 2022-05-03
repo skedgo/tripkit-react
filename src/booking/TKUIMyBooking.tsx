@@ -31,7 +31,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMyBooking"
 };
 
-const TKUIMyBooking: React.SFC<IProps> = (props: IProps) => {
+const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
     const { onShowTrip, requestRefresh, classes, theme } = props;
     const { confirmation, mode, trips, time, timeZone, tripsInfo } = props.booking;
     const [waiting, setWaiting] = useState<boolean>(false);
