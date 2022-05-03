@@ -103,10 +103,10 @@ const BookingInput: React.SFC<BookingInputProps> =
                         onChange!(inputFieldsUpdate);
                     };
                     if (inputField.type === "SINGLE_CHOICE") {
-                        const options = inputField.options.map((option: BookingFieldOption) => ({
+                        const options = inputField.options?.map((option: BookingFieldOption) => ({
                             value: option.id,
                             label: option.title
-                        }));
+                        })) || [];  // inputField.options shouldn't be undefined for "SINGLE_CHOICE" type
                         valueElem = readonly ?
                             inputField.value
                             :
@@ -122,10 +122,10 @@ const BookingInput: React.SFC<BookingInputProps> =
                                 }}
                             />;
                     } else if (inputField.type === "MULTIPLE_CHOICE") {
-                        const multiSelectOptions = inputField.options.map((option: BookingFieldOption) => ({
+                        const multiSelectOptions = inputField.options?.map((option: BookingFieldOption) => ({
                             value: option.id,
                             label: option.title
-                        }));
+                        })) || [];  // inputField.options shouldn't be undefined for "MULTIPLE_CHOICE" type
                         valueElem = readonly ?
                             inputField.values!.map((value, i) => <div key={i}>{Util.camelCaseToSpaced(value)}</div>)
                             :
