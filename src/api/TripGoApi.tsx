@@ -10,7 +10,7 @@ class TripGoApi {
 
     public static SATAPP = "https://api.tripgo.com/v1";
     public static SATAPP_STAGING = "https://api.tripgo.com/v1";
-    public static SATAPP_BETA = "https://bigbang.skedgo.com/satapp-beta";
+    public static SATAPP_BETA = "https://galaxies.skedgo.com/lab/beta/satapp";
 
     public static isBetaServer = false;
     public static apiKey = "";
