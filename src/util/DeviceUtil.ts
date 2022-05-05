@@ -122,11 +122,14 @@ class DeviceUtil {
 
     public static isIE = DeviceUtil.findBrowser() === BROWSER.IE;
 
+    public static forceTouch?: boolean;
+
     public static isTouch() {
-        return ( 'ontouchstart' in window ) ||
-            ( navigator.maxTouchPoints > 0 ) ||
-            // @ts-ignore: avoid TS2551
-            ( navigator.msMaxTouchPoints > 0 );
+        return this.forceTouch ??
+            (('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0) ||
+                // @ts-ignore: avoid TS2551
+                (navigator.msMaxTouchPoints > 0));
     }
 
     public static initCss() {

@@ -67,6 +67,7 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
             if (result.error) {
                 // Show error to your customer (for example, payment details incomplete)
                 console.log(result.error.message);
+                setWaiting(false);
             } else {
                 onSuccess();
             }
@@ -89,9 +90,10 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t }) => {
     const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
     const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
-    const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
+    const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);    
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
+    // const [stripePromise, setStripePromise] = useState<any>(false);
     useEffect(() => {
         setWaiting(true);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
@@ -118,9 +120,13 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                 });
             });
     }, []);
+    // useEffect(() => {
+    //     setStripePromise(loadStripe(stripeKey));
+    // }, []);
     const options = {
         clientSecret: paymentIntentSecret
     };
+    // const form = stripePromise && paymentIntentSecret &&
     const form = paymentIntentSecret &&
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm

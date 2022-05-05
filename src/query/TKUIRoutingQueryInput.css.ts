@@ -1,7 +1,7 @@
 import {TKUIStyles} from "../jss/StyleHelper";
 import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
-import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, colorWithOpacity, important, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
 export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
@@ -89,20 +89,20 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             whiteSpace: 'nowrap',
             ...theme.textSizeCaption,
             ...theme.textWeightSemibold,
-            color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
+            ...theme.textColorDefault
         },
         timePrefSelect: {
             minWidth: '97px',
             '& *': {
                 ...theme.textSizeCaption,
                 ...theme.textWeightSemibold,
-                color: (theme.isLight ? '#666d71' : white(1)) + "!important"    // 4.50:1 contrast for AA
+                ...important(theme.textColorDefault)
             },
             '& path': {
                 fill: black(1, theme.isDark)
             }
         },
         datePicker: {
-            color: theme.isLight ? '#666d71' : white(1)    // 4.50:1 contrast for AA
+            ...theme.textColorDefault
         }
     });
