@@ -41,7 +41,7 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
         },
         option: {
             ...theme.textWeightSemibold,
-            ...theme.textColorGray,
+            ...theme.textColorDefault,
             cursor: 'pointer',
             '&:active': {
                 backgroundColor: colorWithOpacity(theme.colorPrimary, .4)
@@ -51,8 +51,8 @@ export const tKUISelectDefaultStyle: TKUIStyles<TKUISelectStyle, TKUISelectProps
             backgroundColor: colorWithOpacity(theme.colorPrimary, .2)
         },
         optionSelected: {
-            color: 'white',
-            backgroundColor: colorWithOpacity(theme.colorPrimary, .5)
+            color: 'white!important',
+            backgroundColor: theme.colorPrimary
         },
         singleValue: {
             ...theme.textColorDefault
