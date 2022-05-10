@@ -3,7 +3,7 @@ import {Moment} from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
 import RegionInfo from "./region/RegionInfo";
-import ModeInfo from "./trip/ModeInfo";
+import Environment from "../env/Environment";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -105,6 +105,7 @@ class RoutingQuery {
             minTransferTimeParam +
             walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
             "&unit=auto&v=11&ir=1&includeStops=true" +
+            (Environment.isBeta() ? "&bsb=true" : "") +
             wheelchairParam;
     }
 
