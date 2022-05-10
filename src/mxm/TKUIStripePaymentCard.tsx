@@ -17,6 +17,7 @@ import { TranslationFunction } from '../i18n/TKI18nProvider';
 import FormatUtil from '../util/FormatUtil';
 import { BookingConfirmation } from '../model/trip/BookingInfo';
 import TKUIRow from '../options/TKUIRow';
+import Environment from '../env/Environment';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -92,17 +93,19 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);    
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
+    const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
     const [stripePromise, setStripePromise] = useState<any>(false);
     useEffect(() => {
         setWaiting(true);
+        TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
             .then(bookingForm => {
                 const firstPaymentOption = bookingForm.paymentOptions?.[0];
                 if (firstPaymentOption) {
                     const initPaymentUrl = firstPaymentOption.url;
                     return TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
-                        .then(({ clientSecret, paymentIntentID }) => {
+                        .then(({ clientSecret, paymentIntentID, url: paidUrl }) => {
                             if (!clientSecret || !paymentIntentID) {
                                 throw new TKError("Unexpected error. Contact SkedGo support");
                             }
@@ -110,6 +113,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                             setConfirmation(bookingForm.booking.confirmation);
                             setPaymentIntent(paymentIntentID);
                             setPaymentIntentSecret(clientSecret);
+                            setPaidUrl(paidUrl);
                             setWaiting(false);
                         });
                 }
@@ -132,7 +136,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
             <CheckoutForm
                 onSuccess={() => {
                     setWaiting(true);
-                    TripGoApi.apiCall(`payment/booking/paid/${paymentIntent}?psb=false`, NetworkUtil.MethodType.GET)
+                    TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
                         .then(() => onRequestClose(true))
                         .catch(UIUtil.errorMsg)
                         .finally(() => setWaiting(false));
