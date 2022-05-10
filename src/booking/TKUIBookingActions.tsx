@@ -84,7 +84,8 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                         .finally(() => setWaiting?.(false));
                     }
                     setShowPaymentCard(false);
-                }
+                },
+                publicKey: config.payment.stripePublicKey
             })}
         </Fragment>
     );

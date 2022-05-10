@@ -125,6 +125,7 @@ interface ITKUIConfigOptional {
     }};
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
+        stripePublicKey: string;
     }
     /**
      * @ctype

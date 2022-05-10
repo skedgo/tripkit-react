@@ -25,6 +25,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     title: string;
     initPaymentUrl: string;
     onRequestClose: (success: boolean) => void;
+    publicKey: string;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -38,8 +39,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     styles: tKUIStripePaymentCardDefaultStyle,
     classNamePrefix: "TKUIStripePaymentCard"
 };
-
-const stripePromise = loadStripe('pk_test_pcFz1IPSJed68tco8okyFcaw');
 
 const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting: (waiting: boolean) => void, t: TranslationFunction }> =
     ({ onSuccess, setWaiting, t }) => {
@@ -87,13 +86,14 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
         )
     }
 
-const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t }) => {
+const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t, publicKey }) => {
+    // const stripePromise = useState(loadStripe(publicKey));
     const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
     const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);    
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
-    // const [stripePromise, setStripePromise] = useState<any>(false);
+    const [stripePromise, setStripePromise] = useState<any>(false);
     useEffect(() => {
         setWaiting(true);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
@@ -120,14 +120,14 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                 });
             });
     }, []);
-    // useEffect(() => {
-    //     setStripePromise(loadStripe(stripeKey));
-    // }, []);
+    useEffect(() => {
+        setStripePromise(loadStripe(publicKey));
+    }, []);
     const options = {
         clientSecret: paymentIntentSecret
     };
-    // const form = stripePromise && paymentIntentSecret &&
-    const form = paymentIntentSecret &&
+    const form = stripePromise && paymentIntentSecret &&
+    // const form = paymentIntentSecret &&
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm
                 onSuccess={() => {
