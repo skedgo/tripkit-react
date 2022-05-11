@@ -9,7 +9,7 @@ import TripUtil from "./TripUtil";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
-import { TKUIButtonType } from "../buttons/TKUIButton";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { Visibility } from "../model/trip/SegmentTemplate";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -21,6 +21,7 @@ import TKUIShareAction from "../action/TKUIShareAction";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import HasCard, { HasCardKeys } from "../card/HasCard";
+import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -87,15 +88,18 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     private getDefaultActions(trip: Trip) {
         return [
-            // <TKI18nContext.Consumer key={"actionGo"}>
-            //    {(i18nProps: TKI18nContextProps) =>
-            //        <TKUIButton text={i18nProps.t("Go")}
-            //                    icon={<IconDirections/>}
-            //                    type={TKUIButtonType.PRIMARY_VERTICAL}
-            //                    style={{minWidth: '90px'}}
-            //        />
-            //    }
-            //</TKI18nContext.Consumer>,
+            <TKI18nContext.Consumer key={"actionGo"}>
+                {(i18nProps: TKI18nContextProps) =>
+                    <RoutingResultsContext.Consumer key={"actionFavourite"}>
+                        {(routingResultsContext: IRoutingResultsContext) =>
+                            <TKUIButton text={i18nProps.t("Go")}
+                                icon={<IconNavigation />}
+                                type={TKUIButtonType.SECONDARY_VERTICAL}
+                                onClick={() => routingResultsContext.setSelectedTripSegment(this.props.value.getSegments(Visibility.IN_DETAILS)[0])}
+                            />}
+                    </RoutingResultsContext.Consumer>
+                }
+            </TKI18nContext.Consumer>,
             <RoutingResultsContext.Consumer key={"actionFavourite"}>
                 {(routingResultsContext: IRoutingResultsContext) =>
                     routingResultsContext.query.from && routingResultsContext.query.to &&
