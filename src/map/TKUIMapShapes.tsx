@@ -17,6 +17,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     toPolylineProps?: (shapes: ServiceShape[], color: string) => PolylineProps | PolylineProps[];
     id: string; // Since cannot pass key prop. See https://reactjs.org/warnings/special-props.html
     eventBus?: EventEmitter;
+    travelledOnly?: boolean;
 }
 
 export interface IStyle {}
@@ -55,14 +56,15 @@ class TKUIMapShapes extends React.Component<IProps, {}> {
      * Shapes to polylineProps
      */
     private toPolylineProps(shapes: ServiceShape[], color: string): PolylineProps | PolylineProps[] {
-        return shapes.map((shape: ServiceShape) => {
+        const shapesToDisplay = this.props.travelledOnly ? shapes.filter(shape => shape.travelled) : shapes;
+        return shapesToDisplay.map((shape: ServiceShape) => {
             return {
                 positions: shape.waypoints,
                 weight: 9,
                 color: shape.travelled ? (this.props.theme.isDark ? "white" : "black") : "lightgray",
                 opacity: shape.travelled ? 1 : .5,
             } as PolylineProps
-        }).concat(shapes.map((shape: ServiceShape) => {
+        }).concat(shapesToDisplay.map((shape: ServiceShape) => {
             return {
                 positions: shape.waypoints,
                 weight: 7,
@@ -81,7 +83,7 @@ class TKUIMapShapes extends React.Component<IProps, {}> {
         const stopMarkers: any[] = [];
         if (this.props.shapes) {
             for (const shape of this.props.shapes) {
-                if (shape.stops) {
+                if (shape.stops && (!this.props.travelledOnly || shape.travelled)) {
                     const stops = shape.stops.slice(1, shape.stops.length - 1);
                     stopMarkers.push(stops.map((stop: ServiceStopLocation, iStop: number) => {
                         const element =
