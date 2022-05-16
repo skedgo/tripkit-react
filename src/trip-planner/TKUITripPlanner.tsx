@@ -525,6 +525,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 this.setState({ showTransportSettings: true });
                 e.preventDefault();
             }
+            if (e.shiftKey && e.metaKey && e.key === "b") {
+                this.setState({ showMyBookings: true });
+                e.preventDefault();
+            }
         });
 
         setTimeout(() => GATracker.pageview(window.location.pathname + window.location.search), 1000);

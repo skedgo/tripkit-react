@@ -9,6 +9,21 @@ import BBox from "../model/BBox";
 import GeocoderOptions from "./GeocoderOptions";
 import { Env } from "../env/Environment";
 import Region from "../model/region/Region";
+import LocationUtil from "../util/LocationUtil";
+
+export interface ResultAmmendments {
+    remove?: {
+        id?: string,
+        label?: string
+    }[],
+    update?: {
+        id?: string,
+        label?: string,
+        lat: number,
+        lng: number
+    }[],
+    add?: { address: string, lat: number, lng: number }[]
+}
 
 export interface PeliasGeocoderOptions extends GeocoderOptions {
     server: string;
@@ -18,14 +33,15 @@ export interface PeliasGeocoderOptions extends GeocoderOptions {
     // TODO: make geocode method to receive a polygon instead of a bounding box (or both things).
     region?: Region;
     sources?: string;
-    lang?: string;    
+    lang?: string;
+    ammendments?: ResultAmmendments;
 }
 
 const absorbs = (r1: Location, r2: Location) => {
     // Make localities absorb any other location with the same name.
     const absorbs = r1.address === r2.address && r1.suggestion?.properties?.layer === "locality";
     absorbs && Util.log(r1.address + " " + r1.suggestion?.properties?.gid + " absorbs " + r2.address + " " + r2.suggestion?.properties?.gid, Env.PRODUCTION);
-    return absorbs;    
+    return absorbs;
 }
 class PeliasGeocoder implements IGeocoder {
 
@@ -88,6 +104,30 @@ class PeliasGeocoder implements IGeocoder {
                 const features = (json as FeatureCollection).features;
                 let locationResults = !features ? [] : features
                     .map(result => PeliasGeocoder.locationFromAutocompleteResult(result));
+                if (this.options.ammendments) {
+                    const remove = this.options.ammendments?.remove || [];
+                    locationResults = locationResults.filter(result => {
+                        const matchRemove = remove.find(u => u.id ? u.id === result.id : u.label ? u.label === LocationUtil.getMainText(result) : false)
+                        return !matchRemove;
+                    });
+                    const update = this.options.ammendments?.update || [];
+                    locationResults = locationResults.map(result => {
+                        const matchUpdate = update.find(u => u.id ? u.id === result.id : u.label ? u.label === LocationUtil.getMainText(result) : false)
+                        if (matchUpdate && matchUpdate.lat && matchUpdate.lng) {
+                            result.lat = matchUpdate.lat;
+                            result.lng = matchUpdate.lng;
+                        }
+                        return result;
+                    });
+                    const add = this.options.ammendments?.add?.filter(add => {
+                        return query.length > 3 && add.address.toLowerCase().startsWith(query.toLowerCase());
+                    });
+                    if (add) {
+                        locationResults = add.map(a => Location.create(LatLng.createLatLng(a.lat, a.lng), a.address, "" + a.lat + a.lng, ""))
+                            .concat(locationResults);
+                    }
+
+                }
                 if (this.options.restrictToBounds) {
                     locationResults = locationResults.filter(result => !this.options.region || this.options.region.contains(result as any))
                 }
