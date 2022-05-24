@@ -29,6 +29,7 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import Trip from '../model/trip/Trip';
 import UIUtil from '../util/UIUtil';
 import FormatUtil from '../util/FormatUtil';
+import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -59,6 +60,7 @@ interface BookingInputProps {
     onChange?: (update: BookingField[]) => void;
     classes: Classes<keyof IStyle>;
     injectedStyles: Styles<keyof IStyle, IProps>;
+    segment?: Segment;
 }
 
 const inputIcon = (inputId: string) => {
@@ -69,23 +71,25 @@ const inputIcon = (inputId: string) => {
             return <IconFlag />;
         case "notes":
             return <IconEdit />;
+        case "returnTrip":
+            return <IconEdit />;
         default:
             return null;
     }
 };
 
-const BookingInput: React.SFC<BookingInputProps> =
-    ({ inputFields, onChange, classes, injectedStyles }) => {
+const BookingInput: React.FunctionComponent<BookingInputProps> =
+    ({ inputFields, onChange, classes, injectedStyles, segment }) => {
         const readonly = !onChange;
-        const selectOverrideStyle = {
-            main: overrideClass(injectedStyles.optionSelect),
+        const selectOverrideStyle = (minWidth: number = 200) => ({
+            main: overrideClass({ ...injectedStyles.optionSelect as any, minWidth: minWidth }),
             menu: overrideClass(injectedStyles.selectMenu),
             control: overrideClass(injectedStyles.selectControl),
             valueContainer: overrideClass(injectedStyles.selectValueContainer),
             placeholder: overrideClass(injectedStyles.link),
             singleValue: overrideClass(injectedStyles.selectSingleValue),
             multiValue: overrideClass(injectedStyles.selectMultiValue)
-        };
+        });
         const valueToOption = (value, options) => options.find((option: any) => option.value === value);
         return (
             <div className={classes.form}>
@@ -112,7 +116,7 @@ const BookingInput: React.SFC<BookingInputProps> =
                             :
                             <TKUISelect
                                 options={options}
-                                styles={selectOverrideStyle}
+                                styles={selectOverrideStyle()}
                                 value={valueToOption(inputField.value, options)}
                                 onChange={update => changeHandler(update.value)}
                                 placeholder={"Select"}
@@ -132,7 +136,7 @@ const BookingInput: React.SFC<BookingInputProps> =
                             <TKUISelect
                                 options={multiSelectOptions}
                                 isMulti
-                                styles={selectOverrideStyle}
+                                styles={selectOverrideStyle()}
                                 value={inputField.values!.map(value => valueToOption(value, multiSelectOptions))}
                                 onChange={(update: SelectOption[]) => // update is null if no option is selected.
                                     changeHandler((update || []).map(option => option.value))}
@@ -162,6 +166,44 @@ const BookingInput: React.SFC<BookingInputProps> =
                                 onChange={e => changeHandler(e.target.value)}
                                 className={classes.numberInput}
                             />
+                    } else if (inputField.type === "RETURN_TRIP" && segment) {
+                        const ONE_WAY_ONLY_OPTION = { value: "One-way only", label: "One-way only" };
+                        const DATE_OPTION = { value: "Date", label: "Date" };
+                        const options = [
+                            ONE_WAY_ONLY_OPTION,
+                            DATE_OPTION
+                        ];
+                        const returnValueToOption = value =>
+                            // Leave undefined when required to force the user to explicitly pick an option,
+                            // or default to "One-way only" when field is optional (since placeholder makes no sense in that case.)
+                            value === "" ? (inputField.required ? undefined : ONE_WAY_ONLY_OPTION) :
+                                value === ONE_WAY_ONLY_OPTION.value ? ONE_WAY_ONLY_OPTION : DATE_OPTION;
+                        valueElem = readonly ?
+                            returnValueToOption(inputField.value)?.label ?? "-"
+                            :
+                            <div className={classes.returnTripInput}>
+                                <TKUISelect
+                                    options={options}
+                                    styles={selectOverrideStyle(150)}
+                                    value={returnValueToOption(inputField.value)}
+                                    onChange={update => changeHandler((update.value === ONE_WAY_ONLY_OPTION.value) ? ONE_WAY_ONLY_OPTION.value :
+                                        DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.to.timezone).toISOString())}
+                                    placeholder={"Select one-way or enter a return trip date."}
+                                    components={{
+                                        IndicatorsContainer: () => null
+                                    }}
+                                />
+                                {returnValueToOption(inputField.value) === DATE_OPTION &&
+                                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                        value={DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone)}
+                                        timeZone={segment.to.timezone}
+                                        onChange={date => changeHandler(date.toISOString())}
+                                        timeFormat={DateTimeUtil.timeFormat()}
+                                        dateFormat={DateTimeUtil.dateTimeFormat()}
+                                        disabled={readonly}
+                                        popperPlacement={'top-end'}
+                                    />}
+                            </div>;
                     }
                     return (valueElem &&
                         <div className={classes.group} key={i}>
@@ -234,7 +276,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                             </a>
                         </div>}
                     {confirmation.purchase &&
-                    <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, {currency: confirmation.purchase.currency, forceDecimals: true})}</div>}    
+                        <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>}
                 </div>
                 <div className={classes.bookingFormMain}>
                     <BookingInput
@@ -297,6 +339,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                         setRequestBookingForm(Util.iAssign(requestBookingForm, { input: inputUpdate }))}
                     classes={classes}
                     injectedStyles={injectedStyles}
+                    segment={segment}
                 />
                 <TKUIButton
                     text={t("Book")}
