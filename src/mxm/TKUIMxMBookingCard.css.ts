@@ -69,13 +69,16 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         minWidth: '46px',
         maxWidth: '60px'
     },
+    returnTripInput: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter
+    },
     value: {
         ...genStyles.flex,
         ...genStyles.column,
         marginTop: '10px'
     },
     optionSelect: {
-        minWidth: '200px',
         borderRadius: '12px',
         '& path': {
             fill: black(0, theme.isDark)
