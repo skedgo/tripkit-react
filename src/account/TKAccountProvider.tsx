@@ -112,7 +112,8 @@ const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React
                 status: status,
                 userAccount,
                 login,
-                logout: logoutHandler
+                logout: logoutHandler,
+                accountsSupported: true
             })}
         </React.Fragment>
     );
