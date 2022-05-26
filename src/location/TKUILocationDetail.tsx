@@ -198,21 +198,26 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
                 />
             )
         }
-        if (operator?.appInfo?.deepLink) {
-            moreInfoItems.push(
-                <TKUILocationDetailField
-                    title={<a onClick={() => {
-                        var now = new Date().valueOf();
-                        setTimeout(() => {
-                            if (new Date().valueOf() - now > 2000) return;
-                            window.location.assign(operator?.appInfo?.appURLiOS!);
-                        }, 200);
-                        window.location.assign(operator?.appInfo?.deepLink!);
-                    }}>Open app</a>}
-                    icon={<IconOpenApp />}
-                    key={"open_app2"}
-                />);
-        }
+        // if (operator?.appInfo?.deepLink) {
+        //     moreInfoItems.push(
+        //         <TKUILocationDetailField
+        //             title={
+        //                 <a onClick={() => {
+        //                     var now = new Date().valueOf();
+        //                     setTimeout(() => {
+        //                         if (new Date().valueOf() - now > 2000) return;
+        //                         window.location.assign(operator?.appInfo?.appURLiOS!);
+        //                     }, 200);
+        //                     window.location.assign(operator?.appInfo?.deepLink!);
+        //                 }}
+        //                     style={{ cursor: "pointer" }}>
+        //                     Open app
+        //                 </a>
+        //                 }
+        //             icon={<IconOpenApp />}
+        //             key={"open_app2"}
+        //         />);
+        // }
         // window.location.assign("intent://instagram.com/#Intent;scheme=https;package=com.instagram.android;end");
         // window.location.assign("intent://www.rideneuron.com/#Intent;scheme=nss;package=com.hhyu.neuron;end");        
 
