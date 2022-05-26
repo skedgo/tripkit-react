@@ -77,8 +77,8 @@ const TKUIStreetStep: React.SFC<IProps> = (props: IProps) => {
                     {"Along " + (street.name || "unnamed street")}
                 </div>
                 <div className={classes.tags}>
-                    {street.roadTags.map(tag =>
-                        <div className={classes.tag} style={{background: roadTagColor(tag), color: roadTagTextColor(tag)}}>
+                    {street.roadTags.map((tag, i) =>
+                        <div className={classes.tag} style={{background: roadTagColor(tag), color: roadTagTextColor(tag)}} key={i}>
                             {roadTagDisplayS(tag)}
                         </div>)}
                 </div>
