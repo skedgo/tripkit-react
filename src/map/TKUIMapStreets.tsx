@@ -1,11 +1,11 @@
 import * as React from "react";
-import {Polyline, PolylineProps} from "react-leaflet";
+import { Polyline, PolylineProps } from "react-leaflet";
 import Street, { roadTagColor } from "../model/trip/Street";
 import ModeInfo from "../model/trip/ModeInfo";
-import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {tKUIFriendlinessColors} from "../trip/TKUIWCSegmentInfo.css";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { tKUIFriendlinessColors } from "../trip/TKUIWCSegmentInfo.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     streets: Street[];
@@ -15,15 +15,15 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     id: string;
 }
 
-export interface IStyle {}
+export interface IStyle { }
 
 export type TKUIMapStreetsProps = IProps;
 export type TKUIMapStreetsStyle = IStyle;
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIMapStreets {...props}/>,
+    render: props => <TKUIMapStreets {...props} />,
     styles: {},
     classNamePrefix: "TKUIMapStreets"
 };
@@ -49,11 +49,11 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
             return {
                 positions: street.waypoints,
                 weight: 7,
-                color: color ? color : 
-                street.roadTags.length > 0 ? roadTagColor(street.roadTags[0]) : // This happens just when modeInfo?.isBicycle()
-                street.safe ? tKUIFriendlinessColors.safe :
-                    street.safe === false ? tKUIFriendlinessColors.unsafe :
-                        street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
+                color: color ? color :
+                    street.roadTags.length > 0 ? roadTagColor(street.roadTags[0]) : // This happens just when modeInfo?.isBicycle()
+                        street.safe ? tKUIFriendlinessColors.safe :
+                            street.safe === false ? tKUIFriendlinessColors.unsafe :
+                                street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
                 opacity: 1,  // Disable safe distinction for now
                 ...modeInfo?.isBicycle() && {
                     dashArray: '20 20'
@@ -67,7 +67,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
             this.streetsRenderer(this.props.streets, this.props.modeInfo, this.props.color);
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         return polylineOptionsArray
-            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
+            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i} />);
     }
 }
 
