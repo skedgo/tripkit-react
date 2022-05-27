@@ -1,4 +1,4 @@
-Location search component (TKUILocationBox, used by TKUIRoutingQueryInput and TKUILocationSearch) provides 
+The location search component (TKUILocationBox, used by TKUIRoutingQueryInput and TKUILocationSearch) provides 
 autocompletion of addresses and POIs based on a customizable set of data sources.
 The set of geocoding sources to consider can be specified through the ```geocoding``` property on [](TKUIConfig), 
 as well as a custom compare function to sort and prioritize results coming from different sources, and a function 

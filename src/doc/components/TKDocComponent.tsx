@@ -8,6 +8,7 @@ import { TKRandomizeClassNamesOverride } from "../../config/TKConfigHelper";
 import TKDocTabButton from "./TKDocTabButton";
 import TKGeocodingOptions from "../../geocode/TKGeocodingOptions";
 import { default as TKPeliasGeocoder } from "../../geocode/PeliasGeocoder";
+import { commonConfig } from "./TKDocHelper";
 
 export interface TKDocComponentProps {
     compName: string;
@@ -26,8 +27,7 @@ function TKDocComponent(props: TKDocComponentProps & { classes: Classes<keyof ty
         resultsLimit: 5
     });
     const config = {
-        apiKey: '790892d5eae024712cfd8616496d7317',
-        isDarkDefault: false,
+        ...commonConfig,
         geocoding: (defaultOptions: TKGeocodingOptions) => ({
             geocoders: {
                 ...defaultOptions.geocoders,

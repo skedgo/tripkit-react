@@ -116,7 +116,7 @@ TripGoApi.isBetaServer = queryMap["beta-server"] !== "false";
 // Render app based on 'app' query param when hitting deploy root
 const elementId = "tripgo-sample-root";
 if (document.getElementById(elementId)) {
-    renderTripPlanner(elementId, '790892d5eae024712cfd8616496d7317');
+    renderTripPlanner(elementId, '424353266689764a5f15b5dc7e619aa1');
 }
 
 unregister();

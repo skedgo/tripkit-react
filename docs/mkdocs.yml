@@ -1,0 +1,19 @@
+site_name: TripKit SDK for React
+site_author: SkedGo Pty Ltd
+site_description: Documentation of TripKit React - the React SDK of the TripGo API.
+docs_dir: src_mkdocs
+
+nav:
+- Getting Started: index.md
+- SDK Reference:
+  - 'Main SDK Component: TKRoot': reference/#/Main%20SDK%20component%3A%20TKRoot
+  - Customization: reference/#/Customization
+  - Example Use Cases: reference/#/Example%20Use%20Cases
+  - Components API: reference/#/Components%20API
+- TripGo API: https://developer.tripgo.com
+
+theme:
+  name: null
+  custom_dir: 'skedgo_theme'
+  highlightjs: True
+

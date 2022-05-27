@@ -48,14 +48,15 @@ See [TKComponentConfig reference](TKComponentConfig) for more information.
 
 [//]: # "- randomizeClassNames: allows to specify if class names should be randomized, and it's true by default. 
 Randomizing class names is in general a good practice (to prevent class name clashes), but you may want to disable it 
-if you want to style an SDK component using an external (traditional) css stylesheets.
-- classNamePrefix: allows to specify a custom prefix for component style classnames."
+if you want to style an SDK component using an external (traditional) css stylesheets."
+
+[//]: # "- classNamePrefix: allows to specify a custom prefix for component style classnames."
 
 [//]: # "[ ] Allow a way to reset styles, e.g. by passing a reset stylesheet to the component (one overriding all classes with empty objects), or provide an additional attribute to specify that."
 
-### Pass styles directly to component
+### Pass styles directly to a component
 
-Alternatively to specify a styles override for a component through SDK config you can pass it directly to the component
+Alternatively to specify a styles override for a component through the SDK config, you can pass it directly to the component
 using styles property.
 
 ```jsx static
@@ -80,6 +81,6 @@ const stylesOverride = {
 
 ```
 
-Passing the styles override through component property is just possible if you use that component directly, while you 
-need the global root level scheme if not, that is, if you use a higher level component (e.g. TKUITripPlanner) that in
-turn uses, at some point below in the components hierarchy, the component whose styles you want to override.
+Passing the styles override through component property is just possible if you render that component directly, while you 
+need the global root level scheme if instad you use a higher level component (e.g. TKUITripPlanner) that in
+turn renders at some point below the component whose styles you want to override.
