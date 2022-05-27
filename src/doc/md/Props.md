@@ -4,9 +4,9 @@ You can also specify a function receiving the original props passed to the compo
 in terms of the props you are overriding.
 For instance, in the following example we override the title of [query input component](TKUIRoutingQueryInput). We also 
 add a collateral effect to the click of the clear (cross) button, in this case show an alert, but we could do something 
-useful like track an event on google analytics. When overriding ```onClearClicked``` handler it's fundamental to forward 
-the call to the original handler (```origProps.onClearClicked```) to preserve the original behaviour of clearing query 
-input and closing card.
+useful like track an event on google analytics. When overriding the `onClearClicked` handler, it's fundamental to forward 
+the call to the original handler (```origProps.onClearClicked```) to preserve the original behaviour of clearing the query 
+input and closing the card.
 
 ```jsx
 import {TKRoot, TKUITripPlanner} from 'tripkit-react';

@@ -1,5 +1,7 @@
-const commonConfig = {
-    apiKey: '790892d5eae024712cfd8616496d7317',
+import { tKRequestCurrentLocation } from '../../index';
+
+export const commonConfig = {
+    apiKey: '424353266689764a5f15b5dc7e619aa1',
     isDarkDefault: false,
 };
 
@@ -18,3 +20,7 @@ export const overridePropsConfig = {
         state.onDirectionsView(true);
     }
 };
+
+export const queryMapConfig = {
+    ...commonConfig
+}

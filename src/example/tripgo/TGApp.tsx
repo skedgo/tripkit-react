@@ -38,7 +38,7 @@ export interface IStyle {
 
 interface IProps { }
 
-const TGApp: React.SFC<IProps> = (props: IProps) => {
+const TGApp: React.FunctionComponent<IProps> = (props: IProps) => {
 
     const analyticsConfig = Environment.isProd() ? {
         google: {
@@ -57,7 +57,7 @@ const TGApp: React.SFC<IProps> = (props: IProps) => {
 
     const hostname = window.location.hostname;
     const config: TKUIConfig = {
-        apiKey: '790892d5eae024712cfd8616496d7317',
+        apiKey: '424353266689764a5f15b5dc7e619aa1',
         theme: {
             fontFamily: 'ProximaNova, sans-serif'
         },

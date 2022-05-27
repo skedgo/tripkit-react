@@ -1,4 +1,4 @@
-The ```render``` property of component config allows to replace component implementation with a custom one.
+The ```render``` property of the component config allows to replace the component implementation with a custom one.
 Each component has a specific props interface, so the render property allows to specify a function mapping from 
 component's properties to a JSX.Element.
 
@@ -28,8 +28,10 @@ const config = {
 };
 
 <TKRoot config={config}>
-    <div style={{height: '500px'}}>
+    <div style={{height: '500px', position: 'relative'}}>
         <TKUITripPlanner/>
     </div>
 </TKRoot>
 ```
+
+You can remove the entire TKUITripRow config object to see the default UI and compare them.
