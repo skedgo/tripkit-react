@@ -11,6 +11,7 @@ export interface IAccountContext {
     returnToAfterLogin?: string;
     login: () => void;
     logout: () => void;
+    accountsSupported?: boolean
 }
 
 export const TKAccountContext = React.createContext<IAccountContext>({

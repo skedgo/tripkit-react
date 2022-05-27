@@ -24,7 +24,8 @@ module.exports = {
     ).parse,
 
     moduleAliases: {
-        'tripkit-react': path.resolve(__dirname, 'src')
+        'tripkit-react': path.resolve(__dirname, 'src'),
+        'doc-helper': path.resolve(__dirname, 'src/doc/components/TKDocHelper')
     }
 
 };

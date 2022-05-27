@@ -141,6 +141,8 @@ class Booking {
     public confirmation?: BookingConfirmation = undefined;
     @JsonProperty("quickBookingsUrl", String, true)
     public quickBookingsUrl: string = "";
+    @JsonProperty("externalActions", [String], true)
+    public externalActions?: string[] = undefined;
 }
 
 export default BookingInfo;

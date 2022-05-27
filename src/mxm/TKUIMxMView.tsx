@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIMxMViewDefaultStyle } from "./TKUIMxMView.css";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
@@ -29,6 +29,9 @@ import DeviceUtil from '../util/DeviceUtil';
 import TKUILocationDetail from '../location/TKUILocationDetail';
 import FreeFloatingVehicleLocation from '../model/location/FreeFloatingVehicleLocation';
 import Util from '../util/Util';
+import { TKAccountContext } from '../account/TKAccountContext';
+import TKUILocationDetailField from '../location/TKUILocationDetailField';
+import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     parentElement?: any;
@@ -67,6 +70,12 @@ interface SegmentMxMCardsProps {
     refreshSelectedTrip: () => Promise<boolean>;
     mapAsync: Promise<TKUIMapViewClass>;
     trip?: Trip;
+    accountsSupported?: boolean;
+}
+
+const cardStyles = {
+    main: overrideClass({ height: '100%' }),
+    divider: {}
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
@@ -96,9 +105,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 />
             )}
             onRequestClose={onClose}
-            styles={{
-                main: overrideClass({ height: '100%' })
-            }}
+            styles={cardStyles}
             key={segment.id + "b"}
             slideUpOptions={{
                 showHandle: true
@@ -123,9 +130,7 @@ function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
             subtitle={segment.to.getDisplayString()}
             renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
             onRequestClose={onClose}
-            styles={{
-                main: overrideClass({ height: '100%' })
-            }}
+            styles={cardStyles}
             slideUpOptions={{
                 showHandle: true
             }}
@@ -142,7 +147,7 @@ function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
 }
 
 function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
-    const { segment, onClose, refreshSelectedTrip, trip } = props;
+    const { segment, onClose, refreshSelectedTrip, trip, accountsSupported } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
@@ -154,9 +159,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 subtitle={segment.to.getDisplayString()}
                 onRequestClose={onClose}
                 renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
-                styles={{
-                    main: overrideClass({ height: '100%' })
-                }}
+                styles={cardStyles}
                 key={segment.id}
                 slideUpOptions={{
                     showHandle: true
@@ -167,7 +170,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         ];
     } else if (segment.isWalking() || segment.isBicycle()) {
         return [getStreetMxMCard(props)]
-    } else if (segment.booking && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+    } else if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
         return [
             <TKUIMxMBookingCard
                 segment={segment}
@@ -177,21 +180,29 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 key={segment.id} />
         ];
     } else {
+        const externalActionUrl = segment.booking?.externalActions?.find(action => action.startsWith("https"));
         return ([
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
                 onRequestClose={onClose}
                 renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
-                styles={{
-                    main: overrideClass({ height: '100%' })
-                }}
+                styles={cardStyles}
                 key={segment.id}
                 slideUpOptions={{
                     showHandle: true
                 }}
             >
-                <div style={{ height: '100%' }} />
+                <div style={{ height: '100%', padding: '20px' }}>
+                    {externalActionUrl &&
+                        <TKUILocationDetailField
+                            title={<a href={externalActionUrl} {...DeviceUtil.isDesktop && { target: "_blank" }}>
+                                {segment.booking?.title || "Open app"}
+                            </a>}
+                            icon={<IconWebsite />}
+                            key={"open_app"}
+                        />}
+                </div>
             </TKUICard>
         ]);
     }
@@ -219,8 +230,9 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
     segments.slice(segments.indexOf(selectedSegment))
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
-const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
+const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { refreshSelectedTrip, mapAsync, t } = props;
+    const accountContext = useContext(TKAccountContext);
     const trip = props.selectedTrip!;
     const segments = trip.getSegments();
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
@@ -235,7 +247,8 @@ const TKUIMxMView: React.SFC<IProps> = (props: IProps) => {
             landscape: props.landscape,
             refreshSelectedTrip,
             mapAsync,
-            trip
+            trip,
+            accountsSupported: accountContext.accountsSupported
         }));
         return map;
     }, new Map<Segment, JSX.Element[]>());
