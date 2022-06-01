@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Polyline, PolylineProps } from "react-leaflet";
-import Street, { roadTagColor } from "../model/trip/Street";
+import { Polyline, PolylineProps, Tooltip } from "react-leaflet";
+import Street, { roadTagColor, roadTagDisplayS } from "../model/trip/Street";
 import ModeInfo from "../model/trip/ModeInfo";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -10,7 +10,7 @@ import { tKUIFriendlinessColors } from "../trip/TKUIWCSegmentInfo.css";
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     streets: Street[];
     color?: string;
-    toPolylineProps?: (streets: Street[], color?: string) => PolylineProps | PolylineProps[];
+    toPolylineProps?: (streets: Street[], color?: string) => PathProps | PathProps[];
     modeInfo?: ModeInfo;
     id: string;
 }
@@ -28,14 +28,17 @@ export const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMapStreets"
 };
 
+export type PathProps = PolylineProps & { tooltip?: string; }
 
 class TKUIMapStreets extends React.Component<IProps, {}> {
 
     /**
      * if color === null show friendliness (which makes sense for bicycle and wheelchair segments)
+     * TODO: make MapTripSegment to override this (by sending toPolylineProps) for bicycle and wheelchair modes.
+     * MapTripSegment may know if we should display friendliness or road tags for cycle paths.
      */
     private streetsRenderer(streets: Street[], modeInfo?: ModeInfo, color?: string) {
-        return streets.map((street: Street) => {
+        let result = streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
                 weight: 9,
@@ -44,7 +47,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
                 ...modeInfo?.isBicycle() && {
                     dashArray: '20 20'
                 }
-            } as PolylineProps
+            } as PathProps
         }).concat(streets.map((street: Street) => {
             return {
                 positions: street.waypoints,
@@ -58,16 +61,31 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
                 ...modeInfo?.isBicycle() && {
                     dashArray: '20 20'
                 }
-            } as PolylineProps
+            } as PathProps
         }));
+        // if (modeInfo?.isBicycle()) {
+        //     result = result.concat(streets.map((street: Street) => {
+        //         return {
+        //             positions: street.waypoints,
+        //             weight: 20,
+        //             opacity: 0,
+        //             dashArray: '20 20',
+        //             tooltip: street.roadTags[0] && roadTagDisplayS(street.roadTags[0])
+        //         } as PathProps
+        //     }))
+        // }
+        return result;
     }
 
     public render(): React.ReactNode {
         const polylineOptions = this.props.toPolylineProps ? this.props.toPolylineProps(this.props.streets, this.props.color) :
             this.streetsRenderer(this.props.streets, this.props.modeInfo, this.props.color);
-        const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
+        const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PathProps[];
         return polylineOptionsArray
-            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i} />);
+            .map((options: PathProps, i: number) =>
+                <Polyline {...options} key={this.props.id + "-" + i}>
+                    {options.tooltip && <Tooltip sticky>{options.tooltip}</Tooltip>}
+                </Polyline>)
     }
 }
 
