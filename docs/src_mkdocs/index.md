@@ -11,8 +11,8 @@ npm install tripkit-react
 
 ## Usage
 
-[Get a TriGo API key](https://tripgo.3scale.net/signup?plan_ids[]=2357356192718) and pass it to 
-[TKRoot component](reference/#/Components%20API/TKRoot) through [config object](reference/#/Model/TKUIConfig).
+[Get a TriGo API key](https://tripgo.3scale.net/signup?plan_ids[]=2357356192718) and pass it to the
+[TKRoot component](reference/#/Components%20API/TKRoot) through the [config object](reference/#/Model/TKUIConfig).
 
 
 ```
