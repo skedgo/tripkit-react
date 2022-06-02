@@ -74,7 +74,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
             if (segment.realTime) {
                 infoTitle = infoSubtitle;
                 infoSubtitle = t("Live.traffic");
-            } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && modeInfo.description && !brief) {    // Put modeInfo description as title if not brief.
+            } else if (modeInfo.description && !brief) {    // Put modeInfo description as title if not brief.
                 infoTitle = modeInfo.description
             }
         }
