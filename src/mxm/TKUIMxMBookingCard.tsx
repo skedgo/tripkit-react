@@ -179,7 +179,9 @@ const BookingInput: React.FunctionComponent<BookingInputProps> =
                             value === "" ? (inputField.required ? undefined : ONE_WAY_ONLY_OPTION) :
                                 value === ONE_WAY_ONLY_OPTION.value ? ONE_WAY_ONLY_OPTION : DATE_OPTION;
                         valueElem = readonly ?
-                            returnValueToOption(inputField.value)?.label ?? "-"
+                            returnValueToOption(inputField.value) === DATE_OPTION ?
+                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat()) :
+                                returnValueToOption(inputField.value)?.label ?? "-"
                             :
                             <div className={classes.returnTripInput}>
                                 <TKUISelect
@@ -283,6 +285,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                         inputFields={confirmation.input}
                         classes={classes}
                         injectedStyles={injectedStyles}
+                        segment={segment}
                     />
                     {confirmation.notes &&
                         <div className={classes.group}>
