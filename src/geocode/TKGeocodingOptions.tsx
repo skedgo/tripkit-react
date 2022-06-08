@@ -38,6 +38,12 @@ interface TKGeocodingOptions {
     compare: (l1: Location, l2: Location, query: string) => number;
     /** @ctype */
     analogResults: (r1: Location, r2: Location) => boolean;
+    /** 
+     * @ctype 
+     * If specified and returs false, then the location is not included.
+     * 
+    */
+    filter?: (l: Location, context: {query: string}) => boolean;
     maxResults?: number;
     /**
      * If true then the coverage bounds will be used to restrict geocoding results.
