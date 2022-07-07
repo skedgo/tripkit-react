@@ -13,7 +13,7 @@ import NetworkUtil from "../util/NetworkUtil";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import { Styles } from "react-jss";
 import { Classes } from "jss";
-import { ReactComponent as IconUser } from '../images/ic-user.svg';
+import { ReactComponent as IconMobilityOptions } from '../images/ic-mobility-options.svg';
 import { ReactComponent as IconFlag } from '../images/ic-flag.svg';
 import { ReactComponent as IconEdit } from '../images/ic-edit.svg';
 import { ReactComponent as IconNote } from '../images/ic-note.svg';
@@ -30,6 +30,8 @@ import Trip from '../model/trip/Trip';
 import UIUtil from '../util/UIUtil';
 import FormatUtil from '../util/FormatUtil';
 import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
+import TKUITicketSelect from './TKUITicketSelect';
+import Environment from '../env/Environment';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -66,7 +68,7 @@ interface BookingInputProps {
 const inputIcon = (inputId: string) => {
     switch (inputId) {
         case "mobilityOptions":
-            return <IconUser />;
+            return <IconMobilityOptions />;
         case "purpose":
             return <IconFlag />;
         case "notes":
@@ -78,7 +80,7 @@ const inputIcon = (inputId: string) => {
     }
 };
 
-const BookingInput: React.FunctionComponent<BookingInputProps> =
+const BookingInputForm: React.FunctionComponent<BookingInputProps> =
     ({ inputFields, onChange, classes, injectedStyles, segment }) => {
         const readonly = !onChange;
         const selectOverrideStyle = (minWidth: number = 200) => ({
@@ -151,7 +153,6 @@ const BookingInput: React.FunctionComponent<BookingInputProps> =
                             inputField.value || "None provided"
                             :
                             <textarea
-                                placeholder={inputField.title}
                                 value={inputField.value}
                                 onChange={e => changeHandler(e.target.value)}
                             />
@@ -213,10 +214,9 @@ const BookingInput: React.FunctionComponent<BookingInputProps> =
                                 {inputIcon(inputField.id)}
                             </div>
                             <div className={classes.groupRight}>
-                                {(inputField.type !== "LONG_TEXT" || readonly) &&
-                                    <div className={classes.label}>
-                                        {inputField.title + (!readonly && inputField.required ? " (required)" : "")}
-                                    </div>}
+                                <div className={classes.label}>
+                                    {inputField.title + (!readonly && inputField.required ? " (required)" : "")}
+                                </div>
                                 <div className={readonly ? classes.value : classes.input}>
                                     {valueElem}
                                 </div>
@@ -227,7 +227,7 @@ const BookingInput: React.FunctionComponent<BookingInputProps> =
             </div>)
     };
 
-const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles, t }) => {
+const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles, t }) => {
     const booking = segment.booking!;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
@@ -240,6 +240,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                 .then((bookingsInfoJsonArray) => {
                     const bookingsInfo = bookingsInfoJsonArray.map(infoJson => Util.deserialize(infoJson, BookingInfo));
                     setRequestBookingForm(bookingsInfo[0]);
+                    Environment.isLocal() && setRequestBookingForm(Util.deserialize(require("../tmp/tickets.json")[0], BookingInfo));
                     setWaiting(false);
                 })
                 .catch((e) => setError(e))
@@ -281,7 +282,7 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                         <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>}
                 </div>
                 <div className={classes.bookingFormMain}>
-                    <BookingInput
+                    <BookingInputForm
                         inputFields={confirmation.input}
                         classes={classes}
                         injectedStyles={injectedStyles}
@@ -336,10 +337,18 @@ const TKUIMxMBookingCard: React.SFC<IProps> = ({ segment, trip, onRequestClose, 
                         to={segment.to}
                     />
                 </div>
-                <BookingInput
+                {requestBookingForm.tickets &&
+                    <Fragment>
+                        <div className={classes.separator} />
+                        <TKUITicketSelect
+                            tickets={requestBookingForm.tickets}
+                            onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { tickets: update }))}
+                        />
+                    </Fragment>}
+                <div className={classes.separator} />
+                <BookingInputForm
                     inputFields={requestBookingForm.input}
-                    onChange={(inputUpdate) =>
-                        setRequestBookingForm(Util.iAssign(requestBookingForm, { input: inputUpdate }))}
+                    onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { input: update }))}
                     classes={classes}
                     injectedStyles={injectedStyles}
                     segment={segment}

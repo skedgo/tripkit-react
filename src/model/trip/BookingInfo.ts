@@ -1,5 +1,6 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
 import Color from "./Color";
+import Ticket from "./Ticket";
 
 @JsonObject
 class BookingFieldOption {
@@ -41,6 +42,8 @@ class BookingInfo {
     public bookingTitle: string = "";
     @JsonProperty("input", [BookingField], true)
     public input: BookingField[] = [];
+    @JsonProperty("tickets", [Ticket], true)
+    public tickets: Ticket[] = [];
 }
 
 @JsonObject

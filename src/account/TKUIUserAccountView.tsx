@@ -24,7 +24,7 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     onRequestClose?: () => void;
 }
 
-const TKUIUserAccountView: React.SFC<IProps> = (props) => {
+const TKUIUserAccountView: React.FunctionComponent<IProps> = (props) => {
     const { userAccount } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     if (!userAccount) {

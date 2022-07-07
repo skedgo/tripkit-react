@@ -5,7 +5,6 @@ import Color from "./Color";
 import TransportUtil from "../../trip/TransportUtil";
 import DateTimeUtil from "../../util/DateTimeUtil";
 import ModeIdentifier from "../region/ModeIdentifier";
-import Ticket from "./Ticket";
 import RealTimeVehicle from "../service/RealTimeVehicle";
 import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
 import {Booking} from "./BookingInfo";
@@ -67,10 +66,7 @@ class Segment extends SegmentTemplate {
     @JsonProperty("wheelchairAccessible", Boolean, true)
     public wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)
-    private _bicycleAccessible: boolean | null = null;
-    @JsonProperty("ticket", Ticket, true)
-    private _ticket: Ticket | null = null;
-
+    private _bicycleAccessible: boolean | null = null;    
     @JsonProperty("stops", Number, true)
     public stops?: number = undefined;
     @JsonProperty("startPlatform", String, true)
@@ -147,10 +143,6 @@ class Segment extends SegmentTemplate {
         return this._bicycleAccessible;
     }
 
-    get ticket(): Ticket | null {
-        return this._ticket;
-    }
-
     get trip(): Trip {
         return this._trip;
     }
@@ -220,11 +212,6 @@ class Segment extends SegmentTemplate {
     public hasContinuation(): boolean {
         const nextSegment = this.nextSegment();
         return nextSegment !== undefined && nextSegment.isContinuation
-    }
-
-    public isMyWay(): boolean {
-        return (this.ticket !== null && this.ticket.name.toLowerCase().includes("myway"))
-            || this.notes.toLowerCase().includes("myway");
     }
 
     public getDuration(): number {
