@@ -47,6 +47,10 @@ class Environment {
         return this.isDev() && cond;
     }
 
+    public static isLocal(): boolean {
+        return window.location.hostname.includes("localhost");
+    }
+
 }
 
 Environment.initialize();

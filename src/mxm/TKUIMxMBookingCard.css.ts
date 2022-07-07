@@ -14,23 +14,29 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     form: {
         ...genStyles.flex,
         ...genStyles.column,
-        '&>*': {
+        '&>*:not(:last-child)': {
             ...theme.divider
         }
     },
     group: {
         ...genStyles.flex,
-        ...genStyles.alignCenter,
-        paddingBottom: '20px',
-        marginBottom: '20px'
+        ...genStyles.alignStart,
+        paddingBottom: '20px',        
+        '&:not(:last-child)': {
+            marginBottom: '20px'
+        }
     },
     fromTo: {
-        paddingBottom: '20px',
-        marginBottom: '20px',
-        ...theme.divider
+        paddingBottom: '20px'        
     },
     icon: {
         marginRight: '16px',
+        width: '20px',
+        height: '20px',
+        '& svg': {
+            width: '20px',
+            height: '20px',
+        },
         '& path': {
             fill: theme.colorPrimary
         }
@@ -264,5 +270,10 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     price: {
         ...genStyles.flex,
         ...genStyles.justifyEnd
+    },
+    separator: {
+        height: '8px',
+        background: '#F2F2F7',
+        margin: '0 -16px 20px'
     }
 });
