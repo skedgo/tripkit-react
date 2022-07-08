@@ -55,7 +55,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const canBook = (bookingInfo: BookingInfo) =>
-    bookingInfo.input.every((field: BookingField) => !field.required || field.value || (field.values && field.values.length > 0));
+    bookingInfo.input.every((field: BookingField) => !field.required || field.value || (field.values && field.values.length > 0))
+    && (!bookingInfo.tickets || bookingInfo.tickets.length === 0 || bookingInfo.tickets.some(ticket => ticket.value > 0));
 
 interface BookingInputProps {
     inputFields: BookingField[];
@@ -337,7 +338,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         to={segment.to}
                     />
                 </div>
-                {requestBookingForm.tickets &&
+                {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
                     <Fragment>
                         <div className={classes.separator} />
                         <TKUITicketSelect

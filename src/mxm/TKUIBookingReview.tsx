@@ -106,7 +106,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                                                 {ticket.value + " x " + ticket.name}
                                             </div>
                                             <div className={classes.ticketPrice}>
-                                                {FormatUtil.toMoney(ticket.price, { currency: review.currency + " ", forceDecimals: true })}
+                                                {FormatUtil.toMoney(ticket.price, { currency: review.currency + " ", forceDecimals: true, nInCents: true })}
                                             </div>
                                         </div>
                                     );
@@ -122,7 +122,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                         Total
                     </div>
                     <div className={classes.totalPrice}>
-                        {FormatUtil.toMoney(paymentOptions[0]?.fullPrice, { currency: paymentOptions[0]?.currency + " ", forceDecimals: true })}
+                        {FormatUtil.toMoney(paymentOptions[0]?.fullPrice, { currency: paymentOptions[0]?.currency + " ", forceDecimals: true, nInCents: true })}
                     </div>
                 </div>
                 <TKUIButton text={"Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />

@@ -4,7 +4,7 @@ import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { tKUIStripePaymentCardDefaultStyle } from "./TKUIStripePaymentCard.css";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
-import { Elements, useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
@@ -12,13 +12,12 @@ import PaymentOption from '../model/trip/PaymentOption';
 import TKLoading from '../card/TKLoading';
 import UIUtil from '../util/UIUtil';
 import { TKError } from '../error/TKError';
-import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
-import { TranslationFunction } from '../i18n/TKI18nProvider';
 import { BookingConfirmation } from '../model/trip/BookingInfo';
 import Environment from '../env/Environment';
 import BookingReview from '../model/trip/BookingReview';
 import Util from '../util/Util';
 import TKUIBookingReview from './TKUIBookingReview';
+import TKUICheckoutForm from './TKUICheckoutForm';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -42,59 +41,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIStripePaymentCard"
 };
 
-const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting: (waiting: boolean) => void, t: TranslationFunction }> =
-    ({ onSuccess, setWaiting, t }) => {
-        const stripe = useStripe();
-        const elements = useElements();
 
-        const handleSubmit = async (event) => {
-            // We don't want to let default form submission happen here,
-            // which would refresh the page.
-            event.preventDefault();
-            if (!stripe || !elements) {
-                // Stripe.js has not yet loaded.
-                // Make sure to disable form submission until Stripe.js has loaded.
-                return;
-            }
-            setWaiting(true);   // The setWaiting(false) is called by the parent component, after taking additional actions on success.
-            const result = await stripe.confirmPayment({
-                //`Elements` instance that was used to create the Payment Element
-                elements,
-                confirmParams: {
-                    return_url: "https://example.com/order/123/complete",
-                },
-                redirect: 'if_required'
-            });
-            if (result.error) {
-                // Show error to your customer (for example, payment details incomplete)
-                console.log(result.error.message);
-                setWaiting(false);
-            } else {
-                onSuccess();
-            }
-        };
-
-        return (
-            <form onSubmit={handleSubmit}>
-                <PaymentElement />
-                <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-                    <TKUIButton
-                        text={t("Back")}
-                        type={TKUIButtonType.SECONDARY}                        
-                        onClick={(e) => {
-                            console.log("clicked");
-                            e.preventDefault();                            
-                        }}
-                    />
-                    <TKUIButton
-                        text={t("Confirm")}
-                        type={TKUIButtonType.PRIMARY}
-                        disabled={!stripe}
-                    />
-                </div>
-            </form>
-        )
-    }
 
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t, publicKey }) => {
     // const stripePromise = useState(loadStripe(publicKey));
@@ -103,6 +50,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
+    const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
     const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
     const [stripePromise, setStripePromise] = useState<any>(false);
@@ -111,8 +59,10 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
         TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
             .then(bookingForm => {
-                setPaymentOptions(bookingForm.paymentOptions);
+                setPaymentOptions(bookingForm.paymentOptions);                
                 setReviews(Util.deserialize(bookingForm.review, BookingReview) as unknown as BookingReview[]);
+                // Environment.isLocal() && setPaymentOptions(require("../tmp/reviews.json").paymentOptions);
+                // Environment.isLocal() && setReviews(Util.deserialize(require("../tmp/reviews.json").review, BookingReview) as unknown as BookingReview[]);
                 setWaiting(false);
             })
             .catch((e) => {
@@ -124,23 +74,6 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     useEffect(() => {
         setStripePromise(loadStripe(publicKey));
     }, []);
-    const options = {
-        clientSecret: paymentIntentSecret
-    };
-    const paymentForm = stripePromise && paymentIntentSecret &&        
-        <Elements stripe={stripePromise} options={options}>
-            <CheckoutForm
-                onSuccess={() => {
-                    setWaiting(true);
-                    TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
-                        .then(() => onRequestClose(true))
-                        .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting(false));
-                }}
-                setWaiting={setWaiting}
-                t={t}
-            />
-        </Elements>
     const onPayOption = (payOption: PaymentOption) => {
         const initPaymentUrl = payOption.url;
         setWaiting(true);
@@ -149,13 +82,22 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                 if (!clientSecret || !paymentIntentID) {
                     throw new TKError("Unexpected error. Contact SkedGo support");
                 }
-                // setPaymentOption(firstPaymentOption);
-                // setConfirmation(bookingForm.booking.confirmation);
                 setPaymentIntent(paymentIntentID);
                 setPaymentIntentSecret(clientSecret);
                 setPaidUrl(paidUrl);
                 setWaiting(false);
+                setShowPaymentForm(true);
             });
+    };
+    const options = {
+        clientSecret: paymentIntentSecret
+    };
+    const onPaySuccess = () => {
+        setWaiting(true);
+        TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
+            .then(() => onRequestClose(true))
+            .catch(UIUtil.errorMsg)
+            .finally(() => setWaiting(false));
     };
     return (
         <TKUICard
@@ -165,27 +107,21 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
             focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
         >
             <div className={classes.main}>
-                {reviews && paymentOptions && !paymentIntent &&
+                {reviews && paymentOptions && !showPaymentForm &&
                     <TKUIBookingReview reviews={reviews} paymentOptions={paymentOptions} onPayOption={onPayOption} />}
-                {/* {confirmation?.purchase &&
-                    <Fragment>
-                        <TKUIRow
-                            title={confirmation.purchase.productName}
-                            subtitle={confirmation.purchase.brand.phone}
-                            styles={{
-                                main: overrideClass({
-                                    padding: '16px 0'
-                                })
+                {showPaymentForm && stripePromise && paymentIntentSecret &&
+                    <Elements stripe={stripePromise} options={options}>
+                        <TKUICheckoutForm
+                            onClose={(success) =>  {
+                                if (!success) {
+                                    setShowPaymentForm(false);
+                                } else {
+                                    onPaySuccess();
+                                }                                                                
                             }}
+                            setWaiting={setWaiting}                            
                         />
-                        <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>
-                    </Fragment>} */}
-                {/* {paymentOption &&
-                    <div>{FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency + " ", nInCents: true, forceDecimals: true })}</div>} */}
-                {paymentForm &&
-                    <div className={classes.paymentForm}>
-                        {paymentForm}
-                    </div>}
+                    </Elements>}
             </div>
             {waiting &&
                 <div className={classes.loadingPanel}>

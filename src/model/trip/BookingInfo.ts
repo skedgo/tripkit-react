@@ -43,7 +43,7 @@ class BookingInfo {
     @JsonProperty("input", [BookingField], true)
     public input: BookingField[] = [];
     @JsonProperty("tickets", [TicketOption], true)
-    public tickets: TicketOption[] = [];
+    public tickets: TicketOption[] | undefined = undefined;
 }
 
 @JsonObject
