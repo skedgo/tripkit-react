@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { JssProvider, useTheme, createUseStyles } from "react-jss";
 import { Subtract } from "utility-types";
 import { Classes } from "jss";
@@ -7,7 +7,7 @@ import { Styles } from "react-jss";
 import * as CSS from 'csstype';
 import { generateClassNameFactory, generateClassNameSeed, TKUITheme } from "./TKUITheme";
 import Util from "../util/Util";
-import { TKI18nContextProps } from "../i18n/TKI18nProvider";
+import { TKI18nContext, TKI18nContextProps } from "../i18n/TKI18nProvider";
 import Environment from "../env/Environment";
 import { renderToStaticMarkup as renderToStaticMarkupDomServer } from "react-dom/server";
 
@@ -247,12 +247,14 @@ export function withStyles<PROPS extends TKUIWithClasses<STYLE, PROPS>, STYLE>(
     const WithTheme = props => {
         const theme = useTheme<TKUITheme>();
         const classes = useStyles({ ...props, theme });
+        const i18nContext = useContext(TKI18nContext);
         return <Consumer
             {...props}
             classes={classes}
             injectedStyles={stylesJss(theme)}
             refreshStyles={() => { }}
-            theme={theme} />;
+            theme={theme}
+            {...i18nContext} />;
     };
     return (props: Subtract<PROPS, TKUIWithClasses<STYLE, PROPS>>) => {
         const consumerProps = { ...props } as PROPS; // See why I need to do this.
