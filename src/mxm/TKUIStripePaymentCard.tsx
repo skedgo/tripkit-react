@@ -1,5 +1,5 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import React, { useEffect, useState } from 'react';
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { tKUIStripePaymentCardDefaultStyle } from "./TKUIStripePaymentCard.css";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -14,10 +14,11 @@ import UIUtil from '../util/UIUtil';
 import { TKError } from '../error/TKError';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TranslationFunction } from '../i18n/TKI18nProvider';
-import FormatUtil from '../util/FormatUtil';
 import { BookingConfirmation } from '../model/trip/BookingInfo';
-import TKUIRow from '../options/TKUIRow';
 import Environment from '../env/Environment';
+import BookingReview from '../model/trip/BookingReview';
+import Util from '../util/Util';
+import TKUIBookingReview from './TKUIBookingReview';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -78,6 +79,14 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
                 <PaymentElement />
                 <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
                     <TKUIButton
+                        text={t("Back")}
+                        type={TKUIButtonType.SECONDARY}                        
+                        onClick={(e) => {
+                            console.log("clicked");
+                            e.preventDefault();                            
+                        }}
+                    />
+                    <TKUIButton
                         text={t("Confirm")}
                         type={TKUIButtonType.PRIMARY}
                         disabled={!stripe}
@@ -89,9 +98,10 @@ const CheckoutForm: React.FunctionComponent<{ onSuccess: () => void, setWaiting:
 
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t, publicKey }) => {
     // const stripePromise = useState(loadStripe(publicKey));
-    const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
+    const [paymentOptions, setPaymentOptions] = useState<PaymentOption[] | undefined>(undefined);
+    const [reviews, setReviews] = useState<BookingReview[] | undefined>(undefined);
     const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
-    const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);    
+    const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
@@ -101,22 +111,9 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
         TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
             .then(bookingForm => {
-                const firstPaymentOption = bookingForm.paymentOptions?.[0];
-                if (firstPaymentOption) {
-                    const initPaymentUrl = firstPaymentOption.url;
-                    return TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
-                        .then(({ clientSecret, paymentIntentID, url: paidUrl }) => {
-                            if (!clientSecret || !paymentIntentID) {
-                                throw new TKError("Unexpected error. Contact SkedGo support");
-                            }
-                            setPaymentOption(firstPaymentOption);
-                            setConfirmation(bookingForm.booking.confirmation);
-                            setPaymentIntent(paymentIntentID);
-                            setPaymentIntentSecret(clientSecret);
-                            setPaidUrl(paidUrl);
-                            setWaiting(false);
-                        });
-                }
+                setPaymentOptions(bookingForm.paymentOptions);
+                setReviews(Util.deserialize(bookingForm.review, BookingReview) as unknown as BookingReview[]);
+                setWaiting(false);
             })
             .catch((e) => {
                 UIUtil.errorMsg(e, {
@@ -130,8 +127,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     const options = {
         clientSecret: paymentIntentSecret
     };
-    const form = stripePromise && paymentIntentSecret &&
-    // const form = paymentIntentSecret &&
+    const paymentForm = stripePromise && paymentIntentSecret &&        
         <Elements stripe={stripePromise} options={options}>
             <CheckoutForm
                 onSuccess={() => {
@@ -145,6 +141,22 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                 t={t}
             />
         </Elements>
+    const onPayOption = (payOption: PaymentOption) => {
+        const initPaymentUrl = payOption.url;
+        setWaiting(true);
+        return TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
+            .then(({ clientSecret, paymentIntentID, url: paidUrl }) => {
+                if (!clientSecret || !paymentIntentID) {
+                    throw new TKError("Unexpected error. Contact SkedGo support");
+                }
+                // setPaymentOption(firstPaymentOption);
+                // setConfirmation(bookingForm.booking.confirmation);
+                setPaymentIntent(paymentIntentID);
+                setPaymentIntentSecret(clientSecret);
+                setPaidUrl(paidUrl);
+                setWaiting(false);
+            });
+    };
     return (
         <TKUICard
             title={title}
@@ -153,7 +165,9 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
             focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
         >
             <div className={classes.main}>
-                {confirmation?.purchase &&
+                {reviews && paymentOptions && !paymentIntent &&
+                    <TKUIBookingReview reviews={reviews} paymentOptions={paymentOptions} onPayOption={onPayOption} />}
+                {/* {confirmation?.purchase &&
                     <Fragment>
                         <TKUIRow
                             title={confirmation.purchase.productName}
@@ -165,18 +179,19 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                             }}
                         />
                         <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>
-                    </Fragment>}
+                    </Fragment>} */}
                 {/* {paymentOption &&
                     <div>{FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency + " ", nInCents: true, forceDecimals: true })}</div>} */}
-                <div className={classes.paymentForm}>
-                    {form}
-                </div>
+                {paymentForm &&
+                    <div className={classes.paymentForm}>
+                        {paymentForm}
+                    </div>}
             </div>
             {waiting &&
                 <div className={classes.loadingPanel}>
                     <TKLoading />
                 </div>}
-        </TKUICard>
+        </TKUICard >
     );
 };
 

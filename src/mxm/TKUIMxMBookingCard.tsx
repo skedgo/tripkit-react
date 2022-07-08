@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { overrideClass, TKUIWithClasses, TKUIWithStyle, withStyles } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Segment from "../model/trip/Segment";
 import TKUICard from "../card/TKUICard";
 import TripGoApi from "../api/TripGoApi";
@@ -240,7 +240,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 .then((bookingsInfoJsonArray) => {
                     const bookingsInfo = bookingsInfoJsonArray.map(infoJson => Util.deserialize(infoJson, BookingInfo));
                     setRequestBookingForm(bookingsInfo[0]);
-                    Environment.isLocal() && setRequestBookingForm(Util.deserialize(require("../tmp/tickets.json")[0], BookingInfo));
+                    // Environment.isLocal() && setRequestBookingForm(Util.deserialize(require("../tmp/tickets.json")[0], BookingInfo));
                     setWaiting(false);
                 })
                 .catch((e) => setError(e))

@@ -1,5 +1,5 @@
 import React from 'react';
-import Ticket from '../model/trip/Ticket';
+import TicketOption from '../model/trip/TicketOption';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from '../css/GenStyle.css';
 import { ReactComponent as IconPassenger } from '../images/ic-booking-passenger.svg';
@@ -50,8 +50,8 @@ const ticketSelectJss = (theme: TKUITheme) => ({
 });
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    tickets: Ticket[];
-    onChange?: (update: Ticket[]) => void;
+    tickets: TicketOption[];
+    onChange?: (update: TicketOption[]) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }

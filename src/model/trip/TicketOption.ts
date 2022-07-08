@@ -1,7 +1,16 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
+
+export interface ITicketOption {
+    id: string;
+    name: string;
+    description: string;
+    price: number;
+    currency: string;
+    value: number;
+}
 
 @JsonObject
-class Ticket {
+class TicketOption implements ITicketOption {
     @JsonProperty("id", String, true)
     public id: string = "";
     @JsonProperty("name", String, true)
@@ -16,4 +25,4 @@ class Ticket {
     public value: number = 0;
 }
 
-export default Ticket;
+export default TicketOption;

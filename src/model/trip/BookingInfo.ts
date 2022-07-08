@@ -1,6 +1,6 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
 import Color from "./Color";
-import Ticket from "./Ticket";
+import TicketOption from "./TicketOption";
 
 @JsonObject
 class BookingFieldOption {
@@ -42,8 +42,8 @@ class BookingInfo {
     public bookingTitle: string = "";
     @JsonProperty("input", [BookingField], true)
     public input: BookingField[] = [];
-    @JsonProperty("tickets", [Ticket], true)
-    public tickets: Ticket[] = [];
+    @JsonProperty("tickets", [TicketOption], true)
+    public tickets: TicketOption[] = [];
 }
 
 @JsonObject
@@ -73,13 +73,10 @@ class BookingConfirmationStatus {
     @JsonProperty("value", String, true)
     public value: string = ""; // e.g. "PROCESSING"
 }
-
-@JsonObject
-class BookingProvider {
-    @JsonProperty("title", String, true)
-    public title: string = "";
-    @JsonProperty("subtitle", String, true)
-    public subtitle: string = "";
+export interface BookingProvider {    
+    title: string;    
+    subtitle: string;
+    imageURL: string;
 }
 
 @JsonObject
@@ -126,7 +123,7 @@ class BookingConfirmation {
     public actions: BookingAction[] = [];
     @JsonProperty("status", BookingConfirmationStatus, true)
     public status?: BookingConfirmationStatus = undefined;
-    @JsonProperty("provider", BookingProvider, true)
+    @JsonProperty("provider", Any, true)
     public provider?: BookingProvider = undefined;
     @JsonProperty("vehicle", BookingVehicle, true)
     public vehicle?: BookingVehicle = undefined;

@@ -1,9 +1,9 @@
-import { black, important, TKUITheme, white } from "../jss/TKUITheme";
+import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIStripePaymentCardDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        padding: '15px'
+        padding: '16px'
     },
     paymentForm: {
         marginTop: '20px'
