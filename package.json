@@ -78,7 +78,7 @@
     },
     "scripts": {
         "start": "react-app-rewired start",
-        "build": "react-app-rewired build",
+        "_build": "react-app-rewired build",
         "test": "react-scripts-ts test --env=jsdom",
         "eject": "react-scripts-ts eject",
         "build:lib": "npm run build:babel && npm run build:types && node ./scripts/copyFiles.js",

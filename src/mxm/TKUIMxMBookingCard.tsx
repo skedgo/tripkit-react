@@ -16,6 +16,7 @@ import { Classes } from "jss";
 import { ReactComponent as IconMobilityOptions } from '../images/ic-mobility-options.svg';
 import { ReactComponent as IconFlag } from '../images/ic-flag.svg';
 import { ReactComponent as IconEdit } from '../images/ic-edit.svg';
+import { ReactComponent as IconEditNote } from '../images/ic-add-note.svg';
 import { ReactComponent as IconNote } from '../images/ic-note.svg';
 import { ReactComponent as IconPerson } from '../images/ic-person-circle.svg';
 import { ReactComponent as IconShuttle } from '../images/ic-shuttle-circle.svg';
@@ -73,7 +74,7 @@ const inputIcon = (inputId: string) => {
         case "purpose":
             return <IconFlag />;
         case "notes":
-            return <IconEdit />;
+            return <IconEditNote />;
         case "returnTrip":
             return <IconEdit />;
         default:
@@ -81,7 +82,7 @@ const inputIcon = (inputId: string) => {
     }
 };
 
-const BookingInputForm: React.FunctionComponent<BookingInputProps> =
+export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
     ({ inputFields, onChange, classes, injectedStyles, segment }) => {
         const readonly = !onChange;
         const selectOverrideStyle = (minWidth: number = 200) => ({
