@@ -3,6 +3,9 @@ import genStyles from "../css/GenStyle.css";
 
 export const tKUIStripePaymentCardDefaultStyle = (theme: TKUITheme) => ({
     main: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        height: '100%',
         padding: '16px'
     },
     paymentForm: {

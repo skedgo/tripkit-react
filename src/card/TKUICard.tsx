@@ -1,8 +1,8 @@
-import React, { UIEventHandler } from "react";
+import React from "react";
 import Modal from 'react-modal';
 import classNames from "classnames";
 import { Subtract } from "utility-types";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUICardDefaultStyle } from "./TKUICard.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
@@ -24,6 +24,7 @@ export enum CardPresentation {
     CONTENT // Just displays children. Possibly rename NONE to INLINE and CONTENT to NONE.
 }
 
+type IStyle = ReturnType<typeof tKUICardDefaultStyle>
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     /**
@@ -144,19 +145,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext { }
-
-interface IStyle {
-    modalContainer: CSSProps<IProps>;
-    modalOverlay: CSSProps<IProps>;
-    main: CSSProps<IProps>;
-    mainForSlideUp: CSSProps<IProps>;
-    innerMain: CSSProps<IProps>;
-    subHeader: CSSProps<IProps>;
-    body: CSSProps<IProps>;
-    divider: CSSProps<IProps>;
-    handle: CSSProps<IProps>;
-    handleLine: CSSProps<IProps>;
-}
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -328,14 +316,7 @@ class TKUICard extends React.Component<IProps, IState> {
                     <Modal
                         isOpen={this.props.open!}
                         style={{
-                            content: {
-                                background: 'none',
-                                border: 'none',
-                                padding: '5px',
-                                transform: 'translate(-50%, 0)',
-                                left: '50%',
-                                width: '500px'
-                            },
+                            content: this.props.injectedStyles.modalContent,
                             ...(!this.firstModal ?
                                 { overlay: { background: 'none' } } :
                                 { overlay: this.props.injectedStyles.modalOverlay }

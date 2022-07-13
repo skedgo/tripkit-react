@@ -8,12 +8,13 @@ import PaymentOption from '../model/trip/PaymentOption';
 import TransportUtil from '../trip/TransportUtil';
 import FormatUtil from '../util/FormatUtil';
 import { ReactComponent as IconPassenger } from '../images/ic-booking-passenger.svg';
-import TKUIButton from '../buttons/TKUIButton';
+import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 
 const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        height: '100%'
     },
     review: {
         ...genStyles.flex,
@@ -69,6 +70,14 @@ const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
     },
     totalPrice: {
         ...theme.textWeightSemibold
+    },
+    buttonsPanel: {        
+        marginTop: 'auto', 
+        display: 'flex',
+        ...genStyles.justifyEnd,        
+        '&>*:not(:first-child)': {
+            marginLeft: '20px'
+        }
     }
 })
 
@@ -78,10 +87,11 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     reviews: BookingReview[];
     paymentOptions: PaymentOption[];
     onPayOption: (option: PaymentOption) => void;
+    onClose: () => void;
 }
 
 const TKUIBookingReview: React.FunctionComponent<IProps> =
-    ({ reviews, paymentOptions, classes, theme, onPayOption }) => {
+    ({ reviews, paymentOptions, classes, theme, onPayOption, onClose, t }) => {
         return (
             <div className={classes.main}>
                 {reviews.map(review => {
@@ -125,7 +135,14 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                         {FormatUtil.toMoney(paymentOptions[0]?.fullPrice, { currency: paymentOptions[0]?.currency + " ", forceDecimals: true, nInCents: true })}
                     </div>
                 </div>
-                <TKUIButton text={"Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />
+                <div className={classes.buttonsPanel}>
+                    <TKUIButton
+                        text={t("Cancel")}
+                        type={TKUIButtonType.SECONDARY}
+                        onClick={() => onClose()}
+                    />
+                    <TKUIButton text={"Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />
+                </div>
             </div>
         );
     };

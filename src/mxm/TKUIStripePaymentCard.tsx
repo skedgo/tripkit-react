@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { tKUIStripePaymentCardDefaultStyle } from "./TKUIStripePaymentCard.css";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -18,6 +18,7 @@ import BookingReview from '../model/trip/BookingReview';
 import Util from '../util/Util';
 import TKUIBookingReview from './TKUIBookingReview';
 import TKUICheckoutForm from './TKUICheckoutForm';
+import { TKUIViewportUtil } from '../util/TKUIResponsiveUtil';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -59,7 +60,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
         TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);
         TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
             .then(bookingForm => {
-                setPaymentOptions(bookingForm.paymentOptions);                
+                setPaymentOptions(bookingForm.paymentOptions);
                 setReviews(Util.deserialize(bookingForm.review, BookingReview) as unknown as BookingReview[]);
                 // Environment.isLocal() && setPaymentOptions(require("../tmp/reviews.json").paymentOptions);
                 // Environment.isLocal() && setReviews(Util.deserialize(require("../tmp/reviews.json").review, BookingReview) as unknown as BookingReview[]);
@@ -100,34 +101,44 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
             .finally(() => setWaiting(false));
     };
     return (
-        <TKUICard
-            title={title}
-            onRequestClose={() => onRequestClose(false)}
-            presentation={CardPresentation.MODAL}
-            focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
-        >
-            <div className={classes.main}>
-                {reviews && paymentOptions && !showPaymentForm &&
-                    <TKUIBookingReview reviews={reviews} paymentOptions={paymentOptions} onPayOption={onPayOption} />}
-                {showPaymentForm && stripePromise && paymentIntentSecret &&
-                    <Elements stripe={stripePromise} options={options}>
-                        <TKUICheckoutForm
-                            onClose={(success) =>  {
-                                if (!success) {
-                                    setShowPaymentForm(false);
-                                } else {
-                                    onPaySuccess();
-                                }                                                                
-                            }}
-                            setWaiting={setWaiting}                            
-                        />
-                    </Elements>}
-            </div>
-            {waiting &&
-                <div className={classes.loadingPanel}>
-                    <TKLoading />
-                </div>}
-        </TKUICard >
+        <TKUIViewportUtil>
+            {(viewportProps) =>
+                <TKUICard
+                    title={title}
+                    onRequestClose={() => onRequestClose(false)}
+                    presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                    slideUpOptions={{ draggable: false }}
+                    focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
+                    styles={{
+                        modalContent: overrideClass({                            
+                            width: '800px'                            
+                        })
+                    }}                    
+                >
+                    <div className={classes.main}>
+                        {reviews && paymentOptions && !showPaymentForm &&
+                            <TKUIBookingReview reviews={reviews} paymentOptions={paymentOptions} onPayOption={onPayOption} onClose={() => onRequestClose(false)} />}
+                        {showPaymentForm && stripePromise && paymentIntentSecret &&
+                            <Elements stripe={stripePromise} options={options}>
+                                <TKUICheckoutForm
+                                    onClose={(success) => {
+                                        if (!success) {
+                                            setShowPaymentForm(false);
+                                        } else {
+                                            onPaySuccess();
+                                        }
+                                    }}
+                                    setWaiting={setWaiting}
+                                />
+                            </Elements>}
+                    </div>
+                    {waiting &&
+                        <div className={classes.loadingPanel}>
+                            <TKLoading />
+                        </div>}
+                </TKUICard >
+            }
+        </TKUIViewportUtil >
     );
 };
 

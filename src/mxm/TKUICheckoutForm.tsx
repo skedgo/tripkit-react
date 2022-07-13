@@ -4,13 +4,21 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
 import { TKUITheme } from '../jss/TKUITheme';
+import genStyles from '../css/GenStyle.css';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
-    buttonsPanel: {
-        marginTop: '20px', display: 'flex', justifyContent: 'center',
+    main: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        height: '100%'
+    },
+    buttonsPanel: {        
+        marginTop: 'auto', 
+        display: 'flex',
+        ...genStyles.justifyEnd,        
         '&>*:not(:first-child)': {
             marginLeft: '20px'
-        } 
+        }
     }
 });
 
@@ -54,14 +62,13 @@ const TKUICheckoutForm: React.FunctionComponent<IProps> =
         };
 
         return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={classes.main}>
                 <PaymentElement />
                 <div className={classes.buttonsPanel}>
                     <TKUIButton
                         text={t("Back")}
                         type={TKUIButtonType.SECONDARY}
-                        onClick={(e) => {
-                            console.log("clicked");
+                        onClick={(e) => {                            
                             e.preventDefault();
                             onClose();
                         }}

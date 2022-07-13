@@ -34,7 +34,7 @@ const TKUICardHeader: React.SFC<IProps> = (props: IProps) => {
     return (
         <div className={classes.main}>
             <div className={classes.headerTop}>
-                <div className={classes.title}>
+                <div className={classes.title} id={"tkui-card-title"}>
                     {title}
                 </div>
                 {onRequestClose &&
