@@ -131,6 +131,8 @@ class BookingConfirmation {
     public notes?: BookingNote[] = undefined;
     @JsonProperty("purchase", Any, true)
     public purchase?: BookingPurchase = undefined;
+    @JsonProperty("tickets", [TicketOption], true)
+    public tickets: TicketOption[] | undefined = undefined;
 }
 
 @JsonObject

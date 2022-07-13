@@ -31,7 +31,7 @@ import UIUtil from '../util/UIUtil';
 import FormatUtil from '../util/FormatUtil';
 import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
 import TKUITicketSelect from './TKUITicketSelect';
-import Environment from '../env/Environment';
+import classNames from 'classnames';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -280,9 +280,15 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                             </a>
                         </div>}
                     {confirmation.purchase &&
-                        <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>}
+                        <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency + " ", forceDecimals: true })}</div>}
                 </div>
                 <div className={classes.bookingFormMain}>
+                    {confirmation.tickets && confirmation.tickets?.length > 0 &&
+                        <div className={classNames(classes.group, classes.divider)}>
+                            <TKUITicketSelect
+                                tickets={confirmation.tickets}
+                            />
+                        </div>}
                     <BookingInputForm
                         inputFields={confirmation.input}
                         classes={classes}
