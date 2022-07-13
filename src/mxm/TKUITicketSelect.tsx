@@ -46,6 +46,19 @@ const ticketSelectJss = (theme: TKUITheme) => ({
     formButton: {
         padding: '4px 16px',
         color: theme.colorPrimary
+    },
+    mainReadOnly: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.grow
+    },
+    ticketsReadonly: {
+        ...genStyles.grow,
+        ...genStyles.flex,
+        ...genStyles.column,
+        '&>*:not(:first-child)': {
+            marginTop: '5px'
+        }
     }
 });
 
@@ -68,23 +81,37 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
     ({ tickets, onChange, classes, injectedStyles }) => {
         const readonly = !onChange;
         return (
-            <div className={classes.main}>
-                <div className={classes.title}>
-                    Select tickets
+            readonly ?
+                <div className={classes.mainReadOnly}>
+                    <IconPassenger className={classes.icon} />
+                    <div className={classes.ticketsReadonly}>
+                        {tickets.map((ticket, i) =>
+                            <div>
+                                {ticket.value + " x " + ticket.name}
+                            </div>)}
+                    </div>
+                    <div>
+                        {FormatUtil.toMoney(tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price, 0),
+                            { currency: tickets[0].currency + " ", nInCents: true })}
+                    </div>
                 </div>
-                <div className={classes.form}>
-                    {tickets.map((ticket, i) =>
-                        <div className={classes.option}>
-                            <IconPassenger className={classes.icon} />
-                            <TKUIRow
-                                title={ticket.name}
-                                subtitle={FormatUtil.toMoney(ticket.price, { currency: ticket.currency + " ", nInCents: true })}
-                                styles={{
-                                    main: overrideClass(injectedStyles.row)
-                                }}
-                            />
-                            {readonly ? "x " + ticket.value :
-                                ticket.value === 0 ?
+                :
+                <div className={classes.main}>
+                    <div className={classes.title}>
+                        Select tickets
+                    </div>
+                    <div className={classes.form}>
+                        {tickets.map((ticket, i) =>
+                            <div className={classes.option} key={i}>
+                                <IconPassenger className={classes.icon} />
+                                <TKUIRow
+                                    title={ticket.name}
+                                    subtitle={FormatUtil.toMoney(ticket.price, { currency: ticket.currency + " ", nInCents: true })}
+                                    styles={{
+                                        main: overrideClass(injectedStyles.row)
+                                    }}
+                                />
+                                {ticket.value === 0 ?
                                     <TKUIButton
                                         text={"Select"}
                                         onClick={() => {
@@ -124,11 +151,11 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                             }}
                                         />
                                     </span>
-                            }
-                        </div>
-                    )}
+                                }
+                            </div>
+                        )}
+                    </div>
                 </div>
-            </div>
         );
     };
 
