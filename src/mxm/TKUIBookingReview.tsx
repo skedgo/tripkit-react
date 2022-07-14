@@ -116,9 +116,9 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
     ({ reviews, paymentOptions, classes, theme, onPayOption, onClose, t, viewportProps }) => {
         return (
             <div className={classes.main}>
-                {reviews.map(review => {
+                {reviews.map((review, i) => {
                     return (
-                        <div className={classes.review}>
+                        <div className={classes.review} key={i}>
                             <div className={classes.reviewHeader}>
                                 <img
                                     src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(review.mode), false, theme.isDark)}
@@ -133,9 +133,9 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                                 {review.origin && review.destination &&
                                     <TKUIFromTo from={review.origin} to={review.destination} />}
                                 <div className={classes.tickets}>
-                                    {review.tickets.map(ticket => {
+                                    {review.tickets.map((ticket, i) => {
                                         return (
-                                            <div className={classes.ticket}>
+                                            <div className={classes.ticket} key={i}>
                                                 <IconPassenger className={classes.iconPassenger} />
                                                 <div className={classes.ticketValueName}>
                                                     {ticket.value + " x " + ticket.name}

@@ -104,7 +104,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                     <IconPassenger className={classes.icon} />
                     <div className={classes.ticketsReadonly}>
                         {tickets.map((ticket, i) =>
-                            <div>
+                            <div key={i}>
                                 {ticket.value + " x " + ticket.name}
                             </div>)}
                     </div>

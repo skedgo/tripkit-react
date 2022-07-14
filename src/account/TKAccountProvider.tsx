@@ -26,7 +26,7 @@ function usePrevious(value) {
     return ref.current;
 }
 
-const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean}> = (props) => {
+const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean}> = (props) => {
     const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user} = useAuth0();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = (isLoading || isAuthenticated || userToken) ? SignInStatus.loading :
@@ -55,7 +55,11 @@ const Auth0ToTKAccount: React.SFC<{children: (context: IAccountContext) => React
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
+        // TODO: see why isAuthenticated, which comes from useAuth0() above, turns false, causing the web-app to logout due to next line.
+        // What happens if I remove the '|| prevIsAuthenticated !== isAuthenticated' in condition below? It will avoid losing the session?
+        // Do I lose something? The logoutHandler method below already puts status in signedOut.
         if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {
+            console.log("Session lost");            
             setStatus(SignInStatus.signedOut)
         }
     });
