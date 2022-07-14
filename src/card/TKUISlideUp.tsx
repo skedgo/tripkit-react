@@ -224,7 +224,7 @@ class TKUISlideUp extends React.Component<IProps, IState> {
                                 "100%",
                             // Moved from TKUICard.css to here since needs to consider position which changes dinamically
                             // (until I implement refresh of styles on props change).
-                            paddingBottom: !DeviceUtil.isTouch() && this.props.position !== TKUISlideUpPosition.HIDDEN ? '16px' : 0,
+                            paddingBottom: !DeviceUtil.isTouch() && this.props.position !== TKUISlideUpPosition.HIDDEN ? cardSpacing() : 0,
                             boxSizing: 'border-box',
                             // Actually hide it since if not it causes on mobile devices, allowing to scroll the entire
                             // screen making the slide up we want to hide to scroll into view.

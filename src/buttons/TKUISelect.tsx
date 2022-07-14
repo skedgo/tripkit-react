@@ -89,7 +89,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 // (from TKUIRoutingQueryInput and TKUIRoutingResultsView).
 
 export interface SelectOption {
-    value: any;
+    value?: any;
     label: string;
 }
 

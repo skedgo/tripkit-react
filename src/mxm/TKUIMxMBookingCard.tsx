@@ -157,6 +157,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                             <textarea
                                 value={inputField.value}
                                 onChange={e => changeHandler(e.target.value)}
+                                placeholder={"Enter text here"}
                             />
                     } else if (inputField.type === "NUMBER") {
                         valueElem = readonly ? inputField.value
@@ -171,7 +172,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                             />
                     } else if (inputField.type === "RETURN_TRIP" && segment) {
                         const ONE_WAY_ONLY_OPTION = { value: "One-way only", label: "One-way only" };
-                        const DATE_OPTION = { value: "Date", label: "Date" };
+                        const DATE_OPTION = { value: "Round trip", label: "Round trip" };
                         const options = [
                             ONE_WAY_ONLY_OPTION,
                             DATE_OPTION
@@ -361,6 +362,13 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     injectedStyles={injectedStyles}
                     segment={segment}
                 />
+                <div className={classes.separator} />
+                {requestBookingForm.tickets && requestBookingForm.tickets?.length &&
+                    <div className={classes.paySummary}>
+                        <div>{requestBookingForm.tickets.reduce((totalTickets, ticket) => totalTickets + ticket.value, 0) + " tickets"}</div>
+                        <div>{FormatUtil.toMoney(requestBookingForm.tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
+                            { currency: requestBookingForm.tickets[0].currency + " ", nInCents: true, forceDecimals: true })}</div>
+                    </div>}
                 <TKUIButton
                     text={t("Book")}
                     onClick={() => {

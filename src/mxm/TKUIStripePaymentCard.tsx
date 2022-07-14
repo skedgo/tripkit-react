@@ -110,14 +110,20 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                     slideUpOptions={{ draggable: false }}
                     focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
                     styles={{
-                        modalContent: overrideClass({                            
-                            width: '800px'                            
+                        modalContent: overrideClass({
+                            width: '800px'
                         })
-                    }}                    
+                    }}
                 >
                     <div className={classes.main}>
                         {reviews && paymentOptions && !showPaymentForm &&
-                            <TKUIBookingReview reviews={reviews} paymentOptions={paymentOptions} onPayOption={onPayOption} onClose={() => onRequestClose(false)} />}
+                            <TKUIBookingReview
+                                reviews={reviews}
+                                paymentOptions={paymentOptions}
+                                onPayOption={onPayOption}
+                                onClose={() => onRequestClose(false)}
+                                viewportProps={viewportProps}
+                            />}
                         {showPaymentForm && stripePromise && paymentIntentSecret &&
                             <Elements stripe={stripePromise} options={options}>
                                 <TKUICheckoutForm
