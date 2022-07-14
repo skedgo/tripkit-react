@@ -39,7 +39,7 @@ class TransportUtil {
             return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
         }
 
-        const iconRemote = this.getTransportIconRemote(modeInfo, onDark);
+        const iconRemote = this.getTransportIconRemote(modeInfo);
         if (iconRemote) {
             return iconRemote;
         }

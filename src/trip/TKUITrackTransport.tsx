@@ -2,38 +2,29 @@ import * as React from "react";
 import Segment from "../model/trip/Segment";
 import TransportUtil from "./TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
-import {Visibility} from "../model/trip/SegmentTemplate";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUITrackTransportDefaultStyle} from "./TKUITrackTransport.css";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
-import {ReactComponent as RealtimeIcon} from "../images/ic-realtime.svg";
+import { Visibility } from "../model/trip/SegmentTemplate";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { tKUITrackTransportDefaultStyle } from "./TKUITrackTransport.css";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
+import { ReactComponent as RealtimeIcon } from "../images/ic-realtime.svg";
+import classNames from "classnames";
 
+type IStyle = ReturnType<typeof tKUITrackTransportDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
     brief?: boolean;
     info?: boolean;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
-
-interface IStyle {
-    main: CSSProps<IProps>;
-    compositeIcon: CSSProps<IProps>;
-    icon: CSSProps<IProps>;
-    alertIcon: CSSProps<IProps>;
-    realtimeIcon: CSSProps<IProps>;
-    info: CSSProps<IProps>;
-    title: CSSProps<IProps>;
-    subtitle: CSSProps<IProps>;
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUITrackTransportProps = IProps;
 export type TKUITrackTransportStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITrackTransport {...props}/>,
+    render: props => <TKUITrackTransport {...props} />,
     styles: tKUITrackTransportDefaultStyle,
     classNamePrefix: "TKUITrackTransport"
 };
@@ -60,7 +51,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
             const friendlinessPct = (segment.metresSafe !== undefined && segment.metres !== undefined) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
             if (friendlinessPct) {
                 infoTitle = mainInfo;
-                infoSubtitle = segment.isBicycle() ? t("X.cycle.friendly", {0: friendlinessPct + "%"}) : t("X.wheelchair.friendly", {0: friendlinessPct + "%"});
+                infoSubtitle = segment.isBicycle() ? t("X.cycle.friendly", { 0: friendlinessPct + "%" }) : t("X.wheelchair.friendly", { 0: friendlinessPct + "%" });
             } else {
                 infoSubtitle = mainInfo;
             }
@@ -79,29 +70,31 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
             }
         }
         const classes = this.props.classes;
-            const ariaLabel = modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + (infoSubtitle ? " " + infoSubtitle : "") +
-                (!segment.isLast(Visibility.IN_SUMMARY) ? ", then " : "");
+        const ariaLabel = modeInfo.alt + (infoTitle ? " " + infoTitle : "") + " " + (infoSubtitle ? " " + infoSubtitle : "") +
+            (!segment.isLast(Visibility.IN_SUMMARY) ? ", then " : "");
+        const transportIconUrl = TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime ?? false, onDark: this.props.theme.isDark });
+        const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
         return (
             <div className={classes.main}>
-                <div className={classes.compositeIcon}>
-                    <img src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, this.props.theme.isDark)}
-                         alt={modeInfo.alt}
-                         role="img" // Needed to be read by iOS VoiceOver
-                         className={classes.icon}
-                         aria-label={ariaLabel}
+                <div className={classNames(classes.compositeIcon, isRemote && classes.circleWhite)}>
+                    <img src={transportIconUrl}
+                        alt={modeInfo.alt}
+                        role="img" // Needed to be read by iOS VoiceOver
+                        className={classes.icon}
+                        aria-label={ariaLabel}
                     />
-                    {segment.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
+                    {segment.hasAlerts && <AlertIcon className={classes.alertIcon} />}
                 </div>
-                { (infoTitle || infoSubtitle || segment.realTime) ?
+                {(infoTitle || infoSubtitle || segment.realTime) ?
                     <div className={classes.info}
-                         aria-hidden={true}
+                        aria-hidden={true}
                     >
                         {infoTitle ? <div className={classes.title}>{infoTitle}</div> : null}
                         <div className={classes.subtitle}>
                             {infoSubtitle}
-                            {segment.realTime && <RealtimeIcon className={classes.realtimeIcon}/>}
+                            {segment.realTime && <RealtimeIcon className={classes.realtimeIcon} />}
                         </div>
-                    </div> : null }
+                    </div> : null}
             </div>
         );
     }
