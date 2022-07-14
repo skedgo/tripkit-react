@@ -275,5 +275,17 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         height: '8px',
         background: '#F2F2F7',
         margin: '0 -16px 20px'
+    },
+    paySummary: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        '&>*:first-child': {
+            ...theme.textColorGray
+        },
+        '&>*:last-child': {
+            ...genStyles.fontL,
+            ...theme.textWeightBold
+        },
+        marginBottom: '20px'
     }
 });

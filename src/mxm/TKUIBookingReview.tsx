@@ -9,6 +9,7 @@ import TransportUtil from '../trip/TransportUtil';
 import FormatUtil from '../util/FormatUtil';
 import { ReactComponent as IconPassenger } from '../images/ic-booking-passenger.svg';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
+import { TKUIViewportUtilProps } from '../util/TKUIResponsiveUtil';
 
 const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
     main: {
@@ -20,17 +21,36 @@ const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         border: '1px solid ' + black(4, theme.isDark),
-        padding: '16px',
         marginBottom: '16px',
+        ...genStyles.borderRadius(8),
         '&>*:not(:last-child)': {
-            ...theme.divider,
-            paddingBottom: '10px',
-            marginBottom: '10px'
+            ...theme.divider
         }
     },
-    modeAndPrice: {
+    reviewHeader: {
         ...genStyles.flex,
-        ...genStyles.alignCenter
+        ...genStyles.alignCenter,
+        padding: '16px',
+    },
+    reviewBody: {
+        ...genStyles.flex,
+        '&>*': {
+            padding: '16px',
+            width: '50%'            
+        },
+        '&>*:nth-child(2)': {
+            borderLeft: '1px solid ' + black(4, theme.isDark),
+        }
+    },
+    reviewBodyPortrait: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        '&>*': {
+            padding: '16px'         
+        },
+        '&>*:nth-child(1)': {
+            ...theme.divider            
+        }
     },
     modeIcon: {
         marginRight: '16px'
@@ -66,15 +86,16 @@ const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
         padding: '16px',
         ...genStyles.flex,
         ...genStyles.spaceBetween,
-        marginBottom: '32px'
+        marginBottom: '32px',
+        ...genStyles.borderRadius(8)
     },
     totalPrice: {
         ...theme.textWeightSemibold
     },
-    buttonsPanel: {        
-        marginTop: 'auto', 
+    buttonsPanel: {
+        marginTop: 'auto',
         display: 'flex',
-        ...genStyles.justifyEnd,        
+        ...genStyles.justifyEnd,
         '&>*:not(:first-child)': {
             marginLeft: '20px'
         }
@@ -88,16 +109,17 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     paymentOptions: PaymentOption[];
     onPayOption: (option: PaymentOption) => void;
     onClose: () => void;
+    viewportProps: TKUIViewportUtilProps;
 }
 
 const TKUIBookingReview: React.FunctionComponent<IProps> =
-    ({ reviews, paymentOptions, classes, theme, onPayOption, onClose, t }) => {
+    ({ reviews, paymentOptions, classes, theme, onPayOption, onClose, t, viewportProps }) => {
         return (
             <div className={classes.main}>
                 {reviews.map(review => {
                     return (
                         <div className={classes.review}>
-                            <div className={classes.modeAndPrice}>
+                            <div className={classes.reviewHeader}>
                                 <img
                                     src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(review.mode), false, theme.isDark)}
                                     className={classes.modeIcon}
@@ -107,23 +129,25 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                                 </div>
                                 <div>{FormatUtil.toMoney(review.price, { currency: review.currency + " ", forceDecimals: true })}</div>
                             </div>
-                            <div className={classes.tickets}>
-                                {review.tickets.map(ticket => {
-                                    return (
-                                        <div className={classes.ticket}>
-                                            <IconPassenger className={classes.iconPassenger} />
-                                            <div className={classes.ticketValueName}>
-                                                {ticket.value + " x " + ticket.name}
+                            <div className={viewportProps.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
+                                {review.origin && review.destination &&
+                                    <TKUIFromTo from={review.origin} to={review.destination} />}
+                                <div className={classes.tickets}>
+                                    {review.tickets.map(ticket => {
+                                        return (
+                                            <div className={classes.ticket}>
+                                                <IconPassenger className={classes.iconPassenger} />
+                                                <div className={classes.ticketValueName}>
+                                                    {ticket.value + " x " + ticket.name}
+                                                </div>
+                                                <div className={classes.ticketPrice}>
+                                                    {FormatUtil.toMoney(ticket.price * ticket.value, { currency: review.currency + " ", forceDecimals: true, nInCents: true })}
+                                                </div>
                                             </div>
-                                            <div className={classes.ticketPrice}>
-                                                {FormatUtil.toMoney(ticket.price, { currency: review.currency + " ", forceDecimals: true, nInCents: true })}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                </div>
                             </div>
-                            {review.origin && review.destination &&
-                                <TKUIFromTo from={review.origin} to={review.destination} />}
                         </div>
                     );
                 })}

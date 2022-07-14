@@ -15,6 +15,7 @@ import { markForFocusLater, returnFocus } from "./FocusManagerHelper";
 import TKUICardHeader, { TKUICardHeaderClientProps } from "./TKUICardHeader";
 import FocusTrap from "focus-trap-react";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
+import { cardSpacing } from "../jss/TKUITheme";
 
 // TODO: Maybe call it CardBehaviour, or CardType (more general in case we want to contemplate behaviour + style).
 export enum CardPresentation {
@@ -297,7 +298,7 @@ class TKUICard extends React.Component<IProps, IState> {
         return (
             presentation === CardPresentation.SLIDE_UP ?
                 <TKUISlideUp
-                    {...this.props.slideUpOptions}
+                    {...{ modalUp: { top: cardSpacing(this.props.landscape), unit: 'px' }, ...this.props.slideUpOptions }}
                     handleSelector={"." + cardHandleClass}
                     handleRef={this.state.handleRef}
                     containerClass={classNames(classes.modalContainer, genClassNames.root, this.props.slideUpOptions?.containerClass)}
