@@ -55,11 +55,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
-        // TODO: see why isAuthenticated, which comes from useAuth0() above, turns false, causing the web-app to logout due to next line.
-        // What happens if I remove the '|| prevIsAuthenticated !== isAuthenticated' in condition below? It will avoid losing the session?
-        // Do I lose something? The logoutHandler method below already puts status in signedOut.
-        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {
-            console.log("Session lost");            
+        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {         
             setStatus(SignInStatus.signedOut)
         }
     });

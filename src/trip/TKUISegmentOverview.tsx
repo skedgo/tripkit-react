@@ -25,6 +25,7 @@ import { SegmentType } from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
 import DeviceUtil from "../util/DeviceUtil";
 
+type IStyle = ReturnType<typeof tKUISegmentOverviewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
     actions?: JSX.Element[];
@@ -37,36 +38,6 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
-
-interface IStyle {
-    main: CSSProps<IProps>;
-    header: CSSProps<IProps>;
-    title: CSSProps<IProps>;
-    subtitle: CSSProps<IProps>;
-    time: CSSProps<IProps>;
-    timeBottom: CSSProps<IProps>;
-    preTime: CSSProps<IProps>;
-    track: CSSProps<IProps>;
-    body: CSSProps<IProps>;
-    preLine: CSSProps<IProps>;
-    longLine: CSSProps<IProps>;
-    nextLine: CSSProps<IProps>;
-    line: CSSProps<IProps>;
-    circle: CSSProps<IProps>;
-    nextCircle: CSSProps<IProps>;
-    prevCircle: CSSProps<IProps>;
-    iconPin: CSSProps<IProps>;
-    icon: CSSProps<IProps>;
-    description: CSSProps<IProps>;
-    action: CSSProps<IProps>;
-    notes: CSSProps<IProps>;
-    occupancy: CSSProps<IProps>;
-    alertsSummary: CSSProps<IProps>;
-    cancelledBanner: CSSProps<IProps>;
-    cancelledMsg: CSSProps<IProps>;
-    separation: CSSProps<IProps>;
-    circleSeparation: CSSProps<IProps>;
-}
 
 export type TKUISegmentOverviewProps = IProps;
 export type TKUISegmentOverviewStyle = IStyle;
@@ -177,6 +148,16 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     </div>
                 </div>;
         }
+        const renderTransportIcon = () => {            
+            const isOnDark = isIconOnDark(segment);
+            const transportIconUrl = TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime ?? false, onDark: isOnDark || this.props.theme.isDark });            
+            const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
+            return (
+                <div className={isRemote ? classes.iconCircledWhite : isOnDark ? classes.iconCircledColor : classes.icon}>
+                    <img src={transportIconUrl} aria-hidden={true} />
+                </div>
+            );
+        };
         return (
             <div className={classes.main}
                 tabIndex={0}
@@ -188,12 +169,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     <div className={classes.body}>
                         <div className={classes.track}>
                             <div className={classes.line} />
-                            {!segment.isContinuation &&
-                                <img
-                                    src={TransportUtil.getTransportIcon(modeInfo, segment.realTime === true, iconOnDark || this.props.theme.isDark)}
-                                    className={classes.icon}
-                                    aria-hidden={true}
-                                />}
+                            {!segment.isContinuation && renderTransportIcon()}
                             <div className={classes.line} />
                         </div>
                         <div className={classes.description}>
