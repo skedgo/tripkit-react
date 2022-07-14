@@ -4,7 +4,7 @@ import { ReactComponent as IconLoading } from "../images/ic-spin-bar.svg";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKI18nContext } from '../i18n/TKI18nProvider';
 
-const TKUISignInBtn: React.SFC<{}> = () => {
+const TKUISignInBtn: React.FunctionComponent<{}> = () => {
     const { status, login, logout } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     return (

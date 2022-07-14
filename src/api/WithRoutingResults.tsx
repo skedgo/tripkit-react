@@ -184,8 +184,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     label = 'options';
                 }
                 label += " change";
-            }
-            console.log(label);
+            }            
             GATracker.event({
                 category: "trip results",
                 action: "compute trips",
