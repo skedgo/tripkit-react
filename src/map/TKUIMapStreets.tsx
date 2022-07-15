@@ -42,7 +42,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
             return {
                 positions: street.waypoints,
                 weight: 9,
-                color: "black",
+                color: this.props.theme.isDark ? "white" : "black",
                 opacity: 1,  // Disable safe distinction for now
                 ...modeInfo?.isBicycle() && {
                     dashArray: '20 20'

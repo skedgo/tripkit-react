@@ -4,7 +4,7 @@ import Location from "../model/Location";
 import TransportUtil from "../trip/TransportUtil";
 import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
 import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
+import {isRemoteIcon, tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
 import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 import classNames from "classnames";
 import ModeLocation from "../model/location/ModeLocation";
@@ -79,13 +79,7 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
                     onDark: wantIconForDark,
                     useLocal: wantLocalIcon
                 });
-            invertedWrtMode = transIcon !== TransportUtil.getTransIcon(modeInfo,
-                {
-                    isRealtime: false,
-                    onDark: wantIconForDark,
-                    useLocal: wantLocalIcon,
-                    remoteOverOnDark: false
-                });
+            invertedWrtMode = isRemoteIcon(modeInfo);
         }
         const classes = this.props.classes;
         const icon = transIcon &&

@@ -3,7 +3,7 @@ import Segment from "../model/trip/Segment";
 import TransportUtil from "./TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import { Visibility } from "../model/trip/SegmentTemplate";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUITrackTransportDefaultStyle } from "./TKUITrackTransport.css";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -32,11 +32,9 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUITrackTransport extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const segment = this.props.segment;
-        const t = this.props.t;
+        const { segment, t, theme, brief } = this.props;        
         let infoTitle: string | undefined;
-        let infoSubtitle: string | undefined;
-        const brief = this.props.brief;
+        let infoSubtitle: string | undefined;        
         const modeInfo = segment.modeInfo!;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
@@ -76,7 +74,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
         return (
             <div className={classes.main}>
-                <div className={classNames(classes.compositeIcon, isRemote && classes.circleWhite)}>
+                <div className={classNames(classes.compositeIcon, theme.isDark && isRemote && classes.circleWhite)}>
                     <img src={transportIconUrl}
                         alt={modeInfo.alt}
                         role="img" // Needed to be read by iOS VoiceOver
