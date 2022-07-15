@@ -1,10 +1,7 @@
 import {black, TKUITheme, white} from "../jss/TKUITheme";
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUITransportPinProps, TKUITransportPinStyle} from "./TKUITransportPin";
 import genStyles from "../css/GenStyle.css";
 
-export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKUITransportPinProps> =
-    (theme: TKUITheme) => ({
+export const tKUITransportPinDefaultStyle = (theme: TKUITheme) => ({
         main: {
             ...genStyles.flex,
             ...genStyles.column,
@@ -16,8 +13,8 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             width: '48px',
             outline: 'none!important',
             '& circle, path': {
-                fill: white(0, theme.isDark),
-                stroke: black(0, theme.isDark)
+                fill: props => white(0, props.isIconForDark),
+                stroke: props => black(0, props.isIconForDark)
             }
         },
         transport: {
@@ -31,11 +28,7 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
             OTransform: 'translate(-50%)',
             transform: 'translate(-50%)',
             width: '24px',
-            height: '24px',
-            background: (props: TKUITransportPinProps) => props.iconForDark !== theme.isDark && !props.arriveSegment ?
-                white(0, props.iconForDark) : undefined,
-            border: (props: TKUITransportPinProps) => props.iconForDark !== theme.isDark && !props.arriveSegment ?
-                '1px solid ' + white(1, props.iconForDark) : undefined
+            height: '24px'            
         },
         timeLabel: {
             position: 'absolute',
@@ -79,8 +72,8 @@ export const tKUITransportPinDefaultStyle: TKUIStyles<TKUITransportPinStyle, TKU
         },
         arriveSegment: {
             '& circle': {
-                fill: '#f66967',
-                stroke: '#dc5553'
+                fill: '#f66967!important',
+                stroke: '#dc5553!important'
             },
             '& $transport:hover, $pin:hover~$transport': {
                 display: 'none'

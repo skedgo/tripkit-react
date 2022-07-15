@@ -1,9 +1,9 @@
 import * as React from "react";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {tKUITransportOptionsRowStyle} from "./TKUITransportOptionsRow.css";
-import {DisplayConf} from "../model/options/TKTransportOptions";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { tKUITransportOptionsRowStyle } from "./TKUITransportOptionsRow.css";
+import { DisplayConf } from "../model/options/TKTransportOptions";
 import ModeIdentifier from "../model/region/ModeIdentifier";
 import TransportUtil from "../trip/TransportUtil";
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -11,18 +11,18 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
 import { withStyles } from '@material-ui/core/styles';
-import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import {black} from "../jss/TKUITheme";
+import { ReactComponent as IconAngleDown } from "../images/ic-angle-down.svg";
+import { black } from "../jss/TKUITheme";
 import ModeInfo from "../model/trip/ModeInfo";
-import {Subtract} from "utility-types";
+import { Subtract } from "utility-types";
 import Util from "../util/Util";
-import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import TKUserProfile, {WalkingSpeed} from "../model/options/TKUserProfile";
+import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import TKUserProfile, { WalkingSpeed } from "../model/options/TKUserProfile";
 import TKUISlider from "./TKUISlider";
 import RegionInfo from "../model/region/RegionInfo";
-import TKUISelect, {SelectOption} from "../buttons/TKUISelect";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
-import DeviceUtil, {BROWSER} from "../util/DeviceUtil";
+import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import { TranslationFunction } from "../i18n/TKI18nProvider";
+import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mode: ModeIdentifier;
@@ -34,7 +34,7 @@ interface IConsumedProps {
     getRegionInfoP: () => (Promise<RegionInfo> | undefined);
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -56,7 +56,7 @@ export type TKUITransportOptionsRowProps = IProps;
 export type TKUITransportOptionsRowStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUITransportOptionsRow {...props}/>,
+    render: props => <TKUITransportOptionsRow {...props} />,
     styles: tKUITransportOptionsRowStyle,
     classNamePrefix: "TKUITransportOptionsRow"
 };
@@ -90,11 +90,11 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const t = this.props.t;
         this.walkSpeedOptions = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
             .map((value) => {
-                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
+                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t) };
             });
         this.cycleSpeedOptions = (Object.values(WalkingSpeed).filter(value => typeof value === 'number'))
             .map((value) => {
-                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t)};
+                return { value: value, label: TKUITransportOptionsRow.walkingSpeedString(value as WalkingSpeed, t) };
             });
     }
 
@@ -129,7 +129,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         this.props.onChange(update);
                     }}
                     value="primary"
-                    inputProps={{'aria-label': 'primary checkbox'}}
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
             </div>;
         const preferredTransportOption = mode.isPT() &&
@@ -140,9 +140,9 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 <div className={classes.sectionBody}>
                     {transitModes && transitModes.map((transMode: ModeInfo, i: number) =>
                         <div className={classes.checkboxRow} key={i}>
-                            <img src={TransportUtil.getTransportIcon(transMode, false, this.props.theme.isDark)}
-                                 className={classes.transIcon}
-                                 aria-hidden={true}
+                            <img src={TransportUtil.getTransIcon(transMode, { onDark: this.props.theme.isDark })}
+                                className={classes.transIcon}
+                                aria-hidden={true}
                             />
                             <div className={classes.prefModeTitle}>
                                 {transMode.alt}
@@ -200,7 +200,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                         userProfileUpdate.transitConcessionPricing = checked;
                         this.props.onChange(userProfileUpdate);
                     }}
-                    inputProps={{'aria-label': "Concession pricing"}}
+                    inputProps={{ 'aria-label': "Concession pricing" }}
                 />
             </div>;
         const wheelchairOption = mode.isPT() &&
@@ -277,17 +277,17 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     if (displayValue === DisplayConf.HIDDEN || !hasContent) {
                         return;
                     }
-                    this.setState({expanded: expanded})
+                    this.setState({ expanded: expanded })
                 }}
                 classes={{
                     root: classes.expansionPanel
                 }}
             >
                 <ExpansionPanelSummary
-                    expandIcon={displayValue !== DisplayConf.HIDDEN && hasContent ? <IconAngleDown className={classes.iconExpand}/> : undefined}
+                    expandIcon={displayValue !== DisplayConf.HIDDEN && hasContent ? <IconAngleDown className={classes.iconExpand} /> : undefined}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
-                    {...(displayValue === DisplayConf.HIDDEN || !hasContent) ? {role: undefined, tabIndex: -1} : undefined}
+                    {...(displayValue === DisplayConf.HIDDEN || !hasContent) ? { role: undefined, tabIndex: -1 } : undefined}
                 >
                     <div className={classes.main}>
                         <this.GreenCheckbox
@@ -304,8 +304,8 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                             inputProps={{ 'aria-label': mode.title }}
                         />
                         <img src={TransportUtil.getTransportIconModeId(mode, false, this.props.theme.isDark)}
-                             className={classes.transIcon}
-                             aria-hidden="true"
+                            className={classes.transIcon}
+                            aria-hidden="true"
                         />
                         {mode.title}
                     </div>
@@ -339,24 +339,24 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         const prevDisplayValue = prevProps.value.transportOptions.getTransportOption(prevProps.mode.identifier);
         const displayValue = this.props.value.transportOptions.getTransportOption(this.props.mode.identifier);
         if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
-            this.setState({expanded: false});
+            this.setState({ expanded: false });
         }
         if (this.state.expanded && !prevState.expanded && !this.regionInfoP && this.props.mode.isPT()) {
             this.regionInfoP = this.props.getRegionInfoP();
-            this.regionInfoP?.then(regionInfo => this.setState({regionInfo}));
+            this.regionInfoP?.then(regionInfo => this.setState({ regionInfo }));
         }
     }
 
 }
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <RoutingResultsContext.Consumer>
             {(routingContext: IRoutingResultsContext) => {
                 const consumedProps: IConsumedProps = {
                     getRegionInfoP: routingContext.getRegionInfoP
                 };
-                return children!({...inputProps, ...consumedProps})
+                return children!({ ...inputProps, ...consumedProps })
             }}
         </RoutingResultsContext.Consumer>;
 

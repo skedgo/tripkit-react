@@ -3,17 +3,17 @@ import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import moment from "moment-timezone";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUIServiceDepartureRowDefaultStyle} from "./TKUIServiceDepartureRow.css";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUIServiceDepartureRowDefaultStyle } from "./TKUIServiceDepartureRow.css";
 import classNames from "classnames";
 import TKUIOccupancySign from "./occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
-import {Subtract} from "utility-types";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { Subtract } from "utility-types";
 import TKUserProfile from "../model/options/TKUserProfile";
-import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
+import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import DeviceUtil from "../util/DeviceUtil";
 
@@ -29,7 +29,7 @@ interface IConsumedProps {
     options: TKUserProfile;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -59,11 +59,11 @@ export type TKUIServiceDepartureRowProps = IProps;
 export type TKUIServiceDepartureRowStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIServiceDepartureRow {...props}/>,
+    render: props => <TKUIServiceDepartureRow {...props} />,
     styles: tKUIServiceDepartureRowDefaultStyle,
     classNamePrefix: "TKUIServiceDepartureRow",
     randomizeClassNames: true // This needs to be true since multiple instances are rendered,
-                              // each with a different service color.
+    // each with a different service color.
 };
 
 interface UIStrings {
@@ -97,10 +97,10 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                 // const origStartS = DateTimeUtil.momentFromTimeTZ(departure.startTime * 1000).format(DateTimeUtil.TIME_FORMAT_TRIP);
                 if (realtimeDiffInMinutes < 0) {
                     // status = "Early";    // Comment until localized for iOS
-                    modifier = t("X1$@.early", {0: diffS});
+                    modifier = t("X1$@.early", { 0: diffS });
                 } else {
                     // status = "Delayed";  // Comment until localized for iOS
-                    modifier = t("X1$@.late", {0: diffS});
+                    modifier = t("X1$@.late", { 0: diffS });
                     statusClassname = classes.delayed;
                 }
             }
@@ -114,7 +114,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         } else {
             serviceTime = departureTime.format(DateTimeUtil.timeFormat(false));
         }
-        return {status, modifier, statusClassname, serviceTime};
+        return { status, modifier, statusClassname, serviceTime };
     }
 
     public render(): React.ReactNode {
@@ -122,7 +122,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const departure = this.props.value;
         const timezone = departure.startTimezone;
         const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
-        const transIcon = TransportUtil.getTransportIcon(departure.modeInfo, false, this.props.theme.isDark);
+        const transIcon = TransportUtil.getTransIcon(departure.modeInfo, { onDark: this.props.theme.isDark });
         const origin = departure.startStop && departure.startStop.shortName && departure.startStop.shortName.trim() ? departure.startStop.shortName : undefined;
         const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;
         const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;
@@ -133,14 +133,14 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
         // const timeToDepart = Math.floor(departureTime.valueOf() / 60000) - Math.ceil(DateTimeUtil.getNow().valueOf() / 60000);
         const timeToDepartS = cancelled ? t("Cancelled") : DateTimeUtil.minutesToDepartToString(timeToDepart);
-        const {status, statusClassname, modifier, serviceTime} = this.getUIStrings(departure);
+        const { status, statusClassname, modifier, serviceTime } = this.getUIStrings(departure);
         const time =
             <div className={classNames(classes.time, statusClassname)}>
                 {status &&
-                [<span key={"status"}>{status}</span>,
+                    [<span key={"status"}>{status}</span>,
                     <span className={classes.separatorDot} key={"statusSeparator"} aria-hidden="true">⋅</span>]}
                 {modifier &&
-                [<span key={"modifier"}>{modifier}</span>,
+                    [<span key={"modifier"}>{modifier}</span>,
                     <span className={classes.separatorDot} key={"modifierSeparator"} aria-hidden="true">⋅</span>]}
                 <span>
                     {serviceTime}
@@ -149,10 +149,10 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const detailed = this.props.detailed;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
         const briefOccupancy = !detailed && occupancy ?
-            <TKUIOccupancySign status={occupancy} brief={true}/> : undefined;
+            <TKUIOccupancySign status={occupancy} brief={true} /> : undefined;
         const briefWheelchair = !detailed &&
             (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&
-            <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true}/>;
+            <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true} />;
         let ariaLabel = "";
         if (departure.serviceNumber) {
             ariaLabel += departure.serviceNumber + " ";
@@ -160,7 +160,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         if (!cancelled) {
             ariaLabel += (timeToDepartS === "Now" ? t("Leave.now") : t("Leave.in") + " " + timeToDepartS) + ", ";
         }
-        ariaLabel += t("At.X", {0: serviceTime}) + ", ";
+        ariaLabel += t("At.X", { 0: serviceTime }) + ", ";
         if (status || modifier) {
             ariaLabel += (status || modifier) + ". ";
         }
@@ -173,22 +173,22 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,
                 !detailed && classes.row, this.props.selected && classes.rowSelected)}
-                 onClick={this.props.onClick}
-                 onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
-                 tabIndex={0}
-                 aria-label={ariaLabel}
-                 role={DeviceUtil.isTouch() ? "button" : undefined}
+                onClick={this.props.onClick}
+                onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
+                tabIndex={0}
+                aria-label={ariaLabel}
+                role={DeviceUtil.isTouch() ? "button" : undefined}
             >
                 <div className={classes.leftPanel}>
                     <div className={classes.header}>
-                        <img src={transIcon} className={classes.transIcon}/>
+                        <img src={transIcon} className={classes.transIcon} />
                         {departure.serviceNumber &&
-                        <div className={classes.serviceNumber}>
-                            {departure.serviceNumber}
-                        </div>}
+                            <div className={classes.serviceNumber}>
+                                {departure.serviceNumber}
+                            </div>}
                         {briefWheelchair}
                         {briefOccupancy}
-                        {departure.hasAlerts && <AlertIcon className={classes.alertIcon}/>}
+                        {departure.hasAlerts && <AlertIcon className={classes.alertIcon} />}
                     </div>
                     <div className={classes.timeAndOccupancy}>
                         {time}
@@ -198,7 +198,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                 {this.props.renderRight ? this.props.renderRight() :
                     <div
                         className={classNames(classes.timeToDepart,
-                            cancelled && classes.timeToDepartCancelled, timeToDepart < 0 &&  classes.timeToDepartPast)}>
+                            cancelled && classes.timeToDepartCancelled, timeToDepart < 0 && classes.timeToDepartPast)}>
                         {timeToDepartS}
                     </div>
                 }
@@ -208,7 +208,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 }
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>
                 children!({

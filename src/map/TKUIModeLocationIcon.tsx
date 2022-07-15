@@ -42,13 +42,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
         const transportIconIsRemote = !wantLocalIcon && isRemoteIcon(modeInfo);
         // If the obtained icon changes if we don't prefer remote over appearance mode (dark / light), then it means
         // transIcon is inverted w.r.t. mode.
-        const invertedWrtMode = transIcon !== TransportUtil.getTransIcon(modeInfo,
-            {
-                isRealtime: false,
-                onDark: wantIconForDark,
-                useLocal: wantLocalIcon,
-                remoteOverOnDark: false
-            });
+        const invertedWrtMode = isRemoteIcon(modeInfo);
         const transIconOnDark = invertedWrtMode ? !wantIconForDark : wantIconForDark;
         const style =
             {
