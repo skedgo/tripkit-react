@@ -15,7 +15,7 @@ export const tKUIColors = {
     black4: '#212a331f',
     black5: '#212a3314',
     white:  '#ffffff',
-    white1: '#ffffff99',
+    white1: '#ffffffa6',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
     white4: '#ffffff1f',

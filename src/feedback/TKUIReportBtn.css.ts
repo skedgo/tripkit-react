@@ -9,7 +9,7 @@ export const tKUIReportBtnDefaultStyle: TKUIStyles<TKUIReportBtnStyle, TKUIRepor
         main: {
             ...resetStyles.button,
             '& path': {
-                fill: black(0, theme.isDark)
+                fill: black(1, theme.isDark)
             },
             '&>*': {
                 maxHeight: '100%',
