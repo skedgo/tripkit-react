@@ -1,6 +1,6 @@
 import { TKUITKUITripPlannerProps } from "./TKUITripPlanner";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
-import { cardSpacing, queryWidth, TKUITheme } from "../jss/TKUITheme";
+import { cardSpacing, queryWidth, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
 
 export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
@@ -68,11 +68,13 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column
     },
     reportBtn: {
-        position: 'absolute',
-        right: '12px',
-        width: '30px',
-        height: '30px',
-        opacity: '.5',
+        position: 'absolute',                
+        background: white(0, theme.isDark) + '!important',
+        ...genStyles.borderRadius(50, '%'),
+        right: '10px',
+        padding: '3px!important',
+        width: '35px',
+        height: '26px',        
         cursor: 'pointer',
         // TODO: replaced next props by two separate classes below until making
         // a props update refresh injected css. See comment in StyleHelper.onRefreshStyles
