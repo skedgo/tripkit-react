@@ -68,14 +68,8 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column
     },
     reportBtn: {
-        position: 'absolute',                
-        background: white(0, theme.isDark) + '!important',
-        ...genStyles.borderRadius(50, '%'),
-        right: '10px',
-        padding: '3px!important',
-        width: '35px',
-        height: '26px',        
-        cursor: 'pointer',
+        position: 'absolute',                        
+        right: '10px'            
         // TODO: replaced next props by two separate classes below until making
         // a props update refresh injected css. See comment in StyleHelper.onRefreshStyles
         // Increase z-index just on landscape to avoid button getting behind modal background.
