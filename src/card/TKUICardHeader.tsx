@@ -29,7 +29,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 
-const TKUICardHeader: React.SFC<IProps> = (props: IProps) => {
+const TKUICardHeader: React.FunctionComponent<IProps> = (props: IProps) => {
     const {title, subtitle, onRequestClose, classes, closeAriaLabel} = props;
     return (
         <div className={classes.main}>
