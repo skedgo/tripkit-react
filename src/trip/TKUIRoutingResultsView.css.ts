@@ -1,9 +1,10 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "./TKUIRoutingResultsView";
-import {black, important, TKUITheme, white} from "../jss/TKUITheme";
-import {TKUIStyles} from "../jss/StyleHelper";
-import {resetStyles} from "../css/ResetStyle.css";
+import { TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle } from "./TKUIRoutingResultsView";
+import { black, important, TKUITheme, white } from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { resetStyles } from "../css/ResetStyle.css";
 import Constants from "../util/Constants";
+import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TKUIRoutingResultsViewProps> =
     (theme: TKUITheme) => ({
@@ -39,7 +40,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
             ...genStyles.grow
         },
         sortSelectControl: {
-            backgroundImage: 'url('+ Constants.absUrl(theme.isLight ? "/images/ic-sort.svg" : "/images/ic-sort-dark.svg") + ')!important',
+            backgroundImage: 'url(' + Constants.absUrl(theme.isLight ? "/images/ic-sort.svg" : "/images/ic-sort-dark.svg") + ')!important',
             backgroundRepeat: 'no-repeat!important',
             backgroundPosition: '10px 50%!important',
             backgroundSize: '18px',
@@ -48,7 +49,13 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
         footer: {
             ...genStyles.flex,
             ...genStyles.alignCenter,
-            ...genStyles.spaceBetween
+            ...genStyles.spaceBetween,
+            ...DeviceUtil.isAndroid && {
+                ...genStyles.wrap,
+                '&>*:not(:first-child)': {
+                    marginLeft: 'auto'
+                }
+            }
         },
         transportsBtn: {
             ...resetStyles.button,

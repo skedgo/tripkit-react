@@ -1,0 +1,197 @@
+[
+    {
+        "bookingURLIsDeepLink": false,
+        "bookingURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/ecc2be90-9de9-4c47-abe0-0fb94ff84a59/1pvf8w6o/quick/1?bsb=1",
+        "tripUpdateURL": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/ecc2be90-9de9-4c47-abe0-0fb94ff84a59/1pvf8w6o/update/1?bsb=1",
+        "input": [
+            {
+                "id": "mobilityOptions",
+                "required": false,
+                "type": "MULTIPLE_CHOICE",
+                "options": [
+                    {
+                        "id": "guest",
+                        "title": "Guest",
+                        "codeCategory": "AER",
+                        "codeNumber": "04"
+                    },
+                    {
+                        "id": "braces",
+                        "title": "Braces",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "canePhysicalAid",
+                        "title": "Cane Physical Aid",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "caneVisualAid",
+                        "title": "Cane Visual Aid",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "crutches",
+                        "title": "Crutches",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "doorToDoor",
+                        "title": "Door To Door",
+                        "codeCategory": "AB",
+                        "codeNumber": "02"
+                    },
+                    {
+                        "id": "hearingAid",
+                        "title": "Hearing Aid",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "bracesLeg",
+                        "title": "Braces Leg",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "liftNeeded",
+                        "title": "Lift Needed",
+                        "codeCategory": "HV",
+                        "codeNumber": "06"
+                    },
+                    {
+                        "id": "messageBoard",
+                        "title": "Message Board",
+                        "codeCategory": "K",
+                        "codeNumber": "06"
+                    },
+                    {
+                        "id": "oxygen",
+                        "title": "Oxygen",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "personalCareAssistant",
+                        "title": "Personal Care Assistant",
+                        "codeCategory": "AER",
+                        "codeNumber": "01"
+                    },
+                    {
+                        "id": "prosthesis",
+                        "title": "Prosthesis",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "reasonableModifications",
+                        "title": "Reasonable Modifications",
+                        "codeCategory": "ZR",
+                        "codeNumber": "25"
+                    },
+                    {
+                        "id": "scooter",
+                        "title": "Scooter",
+                        "codeCategory": "HR",
+                        "codeNumber": "09"
+                    },
+                    {
+                        "id": "scooterLarge",
+                        "title": "Scooter Large",
+                        "codeCategory": "HR",
+                        "codeNumber": "10"
+                    },
+                    {
+                        "id": "segway",
+                        "title": "Segway",
+                        "codeCategory": "HR",
+                        "codeNumber": "11"
+                    },
+                    {
+                        "id": "serviceAnimal",
+                        "title": "Service Animal",
+                        "codeCategory": "HR",
+                        "codeNumber": "12"
+                    },
+                    {
+                        "id": "stroller",
+                        "title": "Stroller",
+                        "codeCategory": "HR",
+                        "codeNumber": "03"
+                    },
+                    {
+                        "id": "walker",
+                        "title": "Walker",
+                        "codeCategory": "HR",
+                        "codeNumber": "07"
+                    },
+                    {
+                        "id": "wheelchair",
+                        "title": "Wheelchair",
+                        "codeCategory": "HR",
+                        "codeNumber": "01"
+                    },
+                    {
+                        "id": "wheelchairElectric",
+                        "title": "Electric Wheelchair",
+                        "codeCategory": "HR",
+                        "codeNumber": "02"
+                    },
+                    {
+                        "id": "wheelchairLarge",
+                        "title": "Large Wheelchair",
+                        "codeCategory": "HR",
+                        "codeNumber": "06"
+                    }
+                ],
+                "title": "Mobility options",
+                "values": []
+            },
+            {
+                "id": "returnTrip",
+                "required": false,
+                "type": "RETURN_TRIP",
+                "title": "Return trip",
+                "value": ""
+            },
+            {
+                "id": "notes",
+                "required": false,
+                "type": "LONG_TEXT",
+                "title": "Add note",
+                "value": ""
+            }
+        ],
+        "tickets": [
+            {
+                "id": "default",
+                "name": "Regular",
+                "description": "Regular ticket, for single ride trips",
+                "price": 100,
+                "currency": "USD"
+            },
+            {
+                "id": "default",
+                "name": "Business",
+                "description": "Business ticket, for single ride trips",
+                "price": 200,
+                "currency": "USD"
+            },
+            {
+                "id": "default",
+                "name": "Plus",
+                "description": "Plus ticket, for single ride trips",
+                "price": 300,
+                "currency": "USD"
+            }
+        ],
+        "index": 1,
+        "count": 1,
+        "title": "DRT",
+        "bookingTitle": "Take Pyramid Lake Paiute Tribal Transit"
+    }
+]
