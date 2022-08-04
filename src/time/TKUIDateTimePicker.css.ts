@@ -7,6 +7,7 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
     datePicker: {
         ...resetStyles.input,
         ...resetStyles.button,
+        width: 'initial',   // Since Chrome on android sets an arbitrary width.
         fontFamily: theme.fontFamily,
         fontSize: '13px',
         ...theme.textColorGray
