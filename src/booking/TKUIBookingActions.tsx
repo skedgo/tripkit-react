@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useState } from 'react';
+import React, { Fragment } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKUIConfig";
@@ -9,7 +9,6 @@ import { BookingAction } from "../model/trip/BookingInfo";
 import { tKUIBookingActionsDefaultStyle } from "./TKUIBookingActions.css";
 import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
-import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
@@ -32,13 +31,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
-    const { action, setWaiting, requestRefresh, trip } = props;
-    const [showPaymentCard, setShowPaymentCard] = useState<boolean>(false);
-    const config = useContext(TKUIConfigContext);
-    
-    if (action.type === "WAITINGPAYMENT" && !config.payment) {
-        return null;    // Unsupported action
-    }
+    const { action, setWaiting, requestRefresh, trip } = props;        
     return (
         <Fragment>
             <TKUIButton
@@ -65,33 +58,17 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                                     .catch(UIUtil.errorMsg)
                                     .finally(() => setWaiting?.(false));
                             }
-                        })
-                    } else if (action.type === "WAITINGPAYMENT") {
-                        setShowPaymentCard(true);
+                        })                    
                     } else if (action.externalURL) {
                         window.open(action.externalURL, "_self");
                     }
                 }}
-            />
-            {showPaymentCard && config.payment?.renderPaymentCard({
-                title: action.title,
-                initPaymentUrl: action.internalURL,
-                onRequestClose: success => {
-                    if (success) {
-                        setWaiting?.(true);
-                        requestRefresh()
-                        .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting?.(false));
-                    }
-                    setShowPaymentCard(false);
-                },
-                publicKey: config.payment.stripePublicKey
-            })}
+            />            
         </Fragment>
     );
 };
 
-const TKUIBookingActions: React.SFC<IProps> = (props: IProps) => {
+const TKUIBookingActions: React.FunctionComponent<IProps> = (props: IProps) => {
     const { actions, classes } = props;
     return (
         <div className={classes.actions}>

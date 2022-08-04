@@ -110,7 +110,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                     </div>
                     <div>
                         {FormatUtil.toMoney(tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
-                            { currency: tickets[0].currency + " ", nInCents: true })}
+                            { currency: tickets[0].currency ? tickets[0].currency + " " : undefined, nInCents: true })}
                     </div>
                 </div>
                 :
