@@ -12,10 +12,8 @@ import PaymentOption from '../model/trip/PaymentOption';
 import TKLoading from '../card/TKLoading';
 import UIUtil from '../util/UIUtil';
 import { TKError } from '../error/TKError';
-import { BookingConfirmation } from '../model/trip/BookingInfo';
 import Environment from '../env/Environment';
 import BookingReview from '../model/trip/BookingReview';
-import Util from '../util/Util';
 import TKUIBookingReview from './TKUIBookingReview';
 import TKUICheckoutForm from './TKUICheckoutForm';
 import { TKUIViewportUtil } from '../util/TKUIResponsiveUtil';
@@ -23,9 +21,9 @@ import { TKUIViewportUtil } from '../util/TKUIResponsiveUtil';
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    title: string;
-    initPaymentUrl: string;
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {    
+    paymentOptions: PaymentOption[];
+    reviews: BookingReview[];
     onRequestClose: (success: boolean) => void;
     publicKey: string;
 }
@@ -44,33 +42,16 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 
 
-const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, title, initPaymentUrl, classes, injectedStyles, t, publicKey }) => {
-    // const stripePromise = useState(loadStripe(publicKey));
-    const [paymentOptions, setPaymentOptions] = useState<PaymentOption[] | undefined>(undefined);
-    const [reviews, setReviews] = useState<BookingReview[] | undefined>(undefined);
-    const [confirmation, setConfirmation] = useState<BookingConfirmation | undefined>(undefined);
+const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, paymentOptions, reviews, classes, injectedStyles, t, publicKey }) => {
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
     const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
     const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
     const [stripePromise, setStripePromise] = useState<any>(false);
-    useEffect(() => {
-        setWaiting(true);
-        TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);
-        TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
-            .then(bookingForm => {
-                setPaymentOptions(bookingForm.paymentOptions);
-                setReviews(Util.deserialize(bookingForm.review, BookingReview) as unknown as BookingReview[]);
-                // Environment.isLocal() && setPaymentOptions(require("../tmp/reviews.json").paymentOptions);
-                // Environment.isLocal() && setReviews(Util.deserialize(require("../tmp/reviews.json").review, BookingReview) as unknown as BookingReview[]);
-                setWaiting(false);
-            })
-            .catch((e) => {
-                UIUtil.errorMsg(e, {
-                    onClose: () => onRequestClose(false)
-                });
-            });
+    const title = showPaymentForm ? "Payment" : "Review booking";
+    useEffect(() => {        
+        TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);        
     }, []);
     useEffect(() => {
         setStripePromise(loadStripe(publicKey));
@@ -116,7 +97,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                     }}
                 >
                     <div className={classes.main}>
-                        {reviews && paymentOptions && !showPaymentForm &&
+                        {!showPaymentForm &&
                             <TKUIBookingReview
                                 reviews={reviews}
                                 paymentOptions={paymentOptions}

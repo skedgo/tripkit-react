@@ -13,7 +13,8 @@ export const tKUIMxMCardHeaderJss = (theme: TKUITheme) => ({
     transIconCircled: {
         ...genStyles.flex,
         ...genStyles.center,
-        ...genStyles.alignCenter,        
+        ...genStyles.alignCenter,
+        ...genStyles.noShrink,        
         border: '2px solid lightgray!important',
         borderRadius: '50%',        
         marginLeft: '16px',

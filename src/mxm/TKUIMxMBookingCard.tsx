@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useContext } from 'react';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Segment from "../model/trip/Segment";
 import TKUICard from "../card/TKUICard";
@@ -33,6 +33,9 @@ import FormatUtil from '../util/FormatUtil';
 import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
 import TKUITicketSelect from './TKUITicketSelect';
 import classNames from 'classnames';
+import { TKUIConfigContext } from '../config/TKUIConfigProvider';
+import PaymentOption from '../model/trip/PaymentOption';
+import BookingReview from '../model/trip/BookingReview';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -234,8 +237,10 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
     const booking = segment.booking!;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
+    const [reviewAndPaymentForm, setReviewAndPaymentForm] = useState<{ paymentOptions: PaymentOption[]; review: BookingReview[] } | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(!confirmation);
     const [error, setError] = useState<TKError | undefined>(undefined);
+    const config = useContext(TKUIConfigContext);
     useEffect(() => {
         if (!confirmation) {
             const bookingInfosUrl = booking.quickBookingsUrl!;
@@ -282,7 +287,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                             </a>
                         </div>}
                     {confirmation.purchase &&
-                        <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency + " ", forceDecimals: true })}</div>}
+                        <div className={classes.price}>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency ? confirmation.purchase.currency + " " : undefined, forceDecimals: true })}</div>}
                 </div>
                 <div className={classes.bookingFormMain}>
                     {confirmation.tickets && confirmation.tickets?.length > 0 &&
@@ -363,7 +368,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     segment={segment}
                 />
                 <div className={classes.separator} />
-                {requestBookingForm.tickets && requestBookingForm.tickets?.length &&
+                {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
                     <div className={classes.paySummary}>
                         <div>{requestBookingForm.tickets.reduce((totalTickets, ticket) => totalTickets + ticket.value, 0) + " tickets"}</div>
                         <div>{FormatUtil.toMoney(requestBookingForm.tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
@@ -376,15 +381,23 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
                             // For testing without performing booking.
                             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
-                            .then(bookingForm => {
-                                if (bookingForm.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
-                                    onSuccess?.(bookingForm.refreshURLForSourceObject);
+                            .then(result => {                                
+                                if (result.paymentOptions && result.review) {
+                                    setReviewAndPaymentForm({
+                                        paymentOptions: result.paymentOptions,
+                                        review: Util.jsonConvert().deserializeArray(result.review, BookingReview)
+                                    });
+                                } else { // result is a booking form:                                    
+                                    if (result.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
+                                        // TODO: check if onSuccess is still necessary
+                                        onSuccess?.(result.refreshURLForSourceObject);
+                                    }
+                                    // Workaround for (selected) trip with empty ("") updateUrl.
+                                    if (trip && !trip.updateURL) {
+                                        trip.updateURL = result.refreshURLForSourceObject;
+                                    }
+                                    return refreshSelectedTrip();
                                 }
-                                // Workaround for (selected) trip with empty ("") updateUrl.
-                                if (trip && !trip.updateURL) {
-                                    trip.updateURL = bookingForm.refreshURLForSourceObject;
-                                }
-                                return refreshSelectedTrip();
                             })
                             .catch(UIUtil.errorMsg)
                             .finally(() => setWaiting(false))
@@ -394,6 +407,20 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
             </div>
         );
     }
+    const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({        
+        paymentOptions: reviewAndPaymentForm.paymentOptions,
+        reviews: reviewAndPaymentForm.review,
+        onRequestClose: success => {
+            if (success) {
+                setWaiting?.(true);
+                refreshSelectedTrip()
+                    .catch(UIUtil.errorMsg)
+                    .finally(() => setWaiting?.(false));
+            }
+            setReviewAndPaymentForm(undefined);
+        },
+        publicKey: config.payment.stripePublicKey
+    });
     return (
         <TKUICard
             title={segment.getAction()}
@@ -410,6 +437,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
         >
             {error && <TKUIErrorView error={error} />}
             {content}
+            {reviewAndPaymentUI}
             {waiting &&
                 <div className={classes.loadingPanel}>
                     <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />
