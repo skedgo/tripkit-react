@@ -34,8 +34,6 @@ export class TripSortConverter implements JsonCustomConvert<TripSort> {
 @JsonObject
 class TKUserProfile {
 
-    // Modes disabled by default, can be changed by user, recorded in local storage.
-    private static readonly defaultDisabled = [ModeIdentifier.SCHOOLBUS_ID, ModeIdentifier.TAXI_ID, ModeIdentifier.UBER_ID, ModeIdentifier.CAR_RENTAL_SW_ID];
     // Modes forced as disabled, not recorded in local storage.
     public static get overrideDisabled(): string[] {
         return [ModeIdentifier.SCHOOLBUS_ID].concat(Features.instance.lightRail() ? [] : [ModeIdentifier.TRAM_ID]);
@@ -61,6 +59,8 @@ class TKUserProfile {
     public customData?: any = undefined;
     @JsonProperty('defaultTripSort', TripSortConverter, true)
     public defaultTripSort?: TripSort = undefined;
+    @JsonProperty('routingQueryParams', Any, true)
+    public routingQueryParams?: any = undefined;
 
     get wheelchair(): boolean {
         return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);
