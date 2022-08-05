@@ -55,7 +55,10 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
             <div className={classes.main}>
                 {alerts.length === 1 ?
                     <button className={classes.header}
-                         onClick={() => this.setState({showAlertsView: true})}
+                         onClick={e => {
+                             this.setState({ showAlertsView: true });
+                             e.stopPropagation();
+                         }}
                          role="link"
                          tabIndex={0}>
                         <AlertIcon className={classes.alertIcon}/>
@@ -64,7 +67,10 @@ class TKUIAlertsSummary extends React.Component<IProps, IState> {
                     </button>
                     :
                     <div>
-                        <button className={classes.header} onClick={() => this.setState({showAlertsView: true})}>
+                        <button className={classes.header} onClick={e => {
+                            this.setState({ showAlertsView: true });
+                            e.stopPropagation();
+                        }}>
                             <AlertIcon className={classes.alertIcon}/>
                             <span className={classes.numOfAlerts}>{t("X.alerts", {0: alerts.length})}</span>
                             <IconRightArrow className={classes.rightArrowIcon}/>

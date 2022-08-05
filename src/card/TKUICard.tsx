@@ -253,6 +253,11 @@ class TKUICard extends React.Component<IProps, IState> {
                 ref={(ref: any) => this.bodyRef = ref}
                 tabIndex={presentation !== CardPresentation.MODAL ? 0 : undefined}
                 role={presentation === CardPresentation.NONE ? this.props.role || "group" : undefined}
+                // To avoid a click on modal or slide up content to bubble-up and trigger a handler on an ancestor element in the render tree.
+                // E.g. TKUISegmentOverview registers a click handler to go to MxM view in its main panel, and renders TKUIAlertsSummary, which in turn renders
+                // TKUIAlertsView in a TKUICard, so this avoids a click on that card content to trigger the handler in TKUISegmentOverview.
+                onClick={presentation === CardPresentation.MODAL || presentation === CardPresentation.SLIDE_UP ?
+                    e => e.stopPropagation() : undefined}
             >
                 {(showHandle || showHeader || this.props.renderSubHeader) &&
                     <div className={cardHandleClass}>

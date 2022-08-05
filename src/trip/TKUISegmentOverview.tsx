@@ -2,7 +2,7 @@ import * as React from "react";
 import Segment, { TripAvailability } from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import {
     isIconOnDark,
     isUnconnected,

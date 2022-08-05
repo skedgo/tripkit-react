@@ -416,9 +416,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                             visibility: 'hidden'
                                         })
                                     });
-                                const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);
-                                // TODO delete next line
-                                // this.state.toLocInfo!.alerts[0].severity = AlertSeverity.info;
+                                const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);                                
                                 return (<TKUIConfigProvider config={configOverride}>
                                     <TKUIAlertsSummary
                                         alerts={this.state.toLocInfo!.alerts}
