@@ -269,7 +269,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const queryInput = this.props.directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
-            !(this.props.selectedTripSegment) &&    // not displaying MxM view
+            !this.props.selectedTripSegment &&    // not displaying MxM view
             <TKUIRoutingQueryInput
                 title={t("Route")}
                 showTransportsBtn={this.props.landscape}

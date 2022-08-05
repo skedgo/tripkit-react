@@ -1,40 +1,24 @@
 import * as React from "react";
 import Segment from "../model/trip/Segment";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUIWCSegmentInfoDefaultStyle} from "./TKUIWCSegmentInfo.css";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUIWCSegmentInfoDefaultStyle } from "./TKUIWCSegmentInfo.css";
 import TransportUtil from "./TransportUtil";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+
+type IStyle = ReturnType<typeof tKUIWCSegmentInfoDefaultStyle>;
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Segment;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
-
-export interface IStyle {
-    main: CSSProps<IProps>;
-    references: CSSProps<IProps>;
-    safeRef: CSSProps<IProps>;
-    unsafeRef: CSSProps<IProps>;
-    dismountRef: CSSProps<IProps>;
-    unknownRef: CSSProps<IProps>;
-    bar: CSSProps<IProps>;
-    safeBar: CSSProps<IProps>;
-    unsafeBar: CSSProps<IProps>;
-    dismountBar: CSSProps<IProps>;
-    mtsLabels: CSSProps<IProps>;
-    safeMtsLabel: CSSProps<IProps>;
-    unsafeMtsLabel: CSSProps<IProps>;
-    dismountMtsLabel: CSSProps<IProps>;
-    unknownMtsLabel: CSSProps<IProps>;
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIWCSegmentInfoProps = IProps;
 export type TKUIWCSegmentInfoStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIWCSegmentInfo {...props}/>,
+    render: props => <TKUIWCSegmentInfo {...props} />,
     styles: tKUIWCSegmentInfoDefaultStyle,
     classNamePrefix: "TKUIWCSegmentInfo",
 };
@@ -56,52 +40,58 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
         const dismountPct = ((metresDismount / metres) * 100);
         const unknownPct = ((metresUnknown / metres) * 100);
         const classes = this.props.classes;
+        const barWidthPct = .8;
         return (
             <div className={classes.main}>
                 <div className={classes.references}>
                     {safePct > 0 &&
-                    <div>
-                        <div className={classes.safeRef}/>
-                        Friendly
-                    </div>}
+                        <div>
+                            <div className={classes.safeRef} />
+                            Friendly
+                        </div>}
                     {unsafePct > 0 &&
-                    <div>
-                        <div className={classes.unsafeRef}/>
-                        Unfriendly
-                    </div>}
+                        <div>
+                            <div className={classes.unsafeRef} />
+                            Unfriendly
+                        </div>}
                     {dismountPct > 0 &&
-                    <div>
-                        <div className={classes.dismountRef}/>
-                        Dismount
-                    </div>}
-                    {unknownPct> 0 &&
-                    <div>
-                        <div className={classes.unknownRef}/>
-                        Unknown
-                    </div>}
+                        <div>
+                            <div className={classes.dismountRef} />
+                            Dismount
+                        </div>}
+                    {unknownPct > 0 &&
+                        <div>
+                            <div className={classes.unknownRef} />
+                            Unknown
+                        </div>}
                 </div>
                 <div className={classes.bar}>
-                    <div className={classes.safeBar} style={{width: safePct + "%"}}/>
-                    <div className={classes.unsafeBar} style={{width: unsafePct + "%"}}/>
-                    <div className={classes.dismountBar} style={{width: dismountPct + "%"}}/>
+                    <div className={classes.safeBar} style={{ width: safePct + "%" }} />
+                    <div className={classes.unsafeBar} style={{ width: unsafePct + "%" }} />
+                    <div className={classes.dismountBar} style={{ width: dismountPct + "%" }} />
                 </div>
                 <div className={classes.mtsLabels}>
                     {safePct > 0 &&
-                    <div className={classes.safeMtsLabel} style={{minWidth: safePct * .85 + "%"}}>
-                        {TransportUtil.distanceToBriefString(metresSafe)}
-                    </div>}
+                        <div className={classes.safeMtsLabel}
+                            style={{
+                                flexGrow: 1 // Don't set a width percentage to use this label as escape for the other label widths. So it grows to the remaining space, 
+                                            // which will ideally match the remaining percentage, but may be less if some of the other labels have percentages that are 
+                                            // not enough to fit their content (labels will span to fit it's content, always).
+                            }}>
+                            {TransportUtil.distanceToBriefString(metresSafe)}
+                        </div>}
                     {unsafePct > 0 &&
-                    <div className={classes.unsafeMtsLabel} style={{minWidth: unsafePct * .85 + "%"}}>
-                        {TransportUtil.distanceToBriefString(metresUnsafe)}
-                    </div>}
+                        <div className={classes.unsafeMtsLabel} style={{ minWidth: unsafePct * barWidthPct + "%" }}>
+                            {TransportUtil.distanceToBriefString(metresUnsafe)}
+                        </div>}
                     {dismountPct > 0 &&
-                    <div className={classes.dismountMtsLabel} style={{minWidth: dismountPct * .85 + "%"}}>
-                        {TransportUtil.distanceToBriefString(metresDismount)}
-                    </div>}
+                        <div className={classes.dismountMtsLabel} style={{ minWidth: dismountPct * barWidthPct + "%" }}>
+                            {TransportUtil.distanceToBriefString(metresDismount)}
+                        </div>}
                     {unknownPct > 0 &&
-                    <div className={classes.unknownMtsLabel} style={{minWidth: unknownPct * .85 + "%"}}>
-                        {TransportUtil.distanceToBriefString(metresUnknown)}
-                    </div>}
+                        <div className={classes.unknownMtsLabel} style={{ minWidth: unknownPct * barWidthPct + "%" }}>
+                            {TransportUtil.distanceToBriefString(metresUnknown)}
+                        </div>}
                 </div>
             </div>
         );
