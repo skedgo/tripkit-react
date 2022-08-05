@@ -636,6 +636,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (prevState.trips !== this.state.trips) {
                 if (!this.state.trips || this.state.trips.length === 0) {
                     this.onChange(undefined);
+                    this.setSelectedSegment(undefined);
                 }
             }
         }
