@@ -20,16 +20,16 @@ export interface TKI18nContextProps {
     i18nOverridden: boolean;
 }
 
-export const TKI18nContext = React.createContext<TKI18nContextProps> ({
+export const TKI18nContext = React.createContext<TKI18nContextProps>({
     t: (key: string, params?: any) => "",
     locale: 'en',
     i18nOverridden: false
 });
 
 const WithTranslate = translate()(
-    (props: {t: TranslationFunction, children: any}) => {
+    (props: { t: TranslationFunction, children: any }) => {
         TKI18nProvider.tStatic = props.t;
-        return props.children({t: props.t});
+        return props.children({ t: props.t });
     }
 );
 
@@ -37,7 +37,7 @@ const messages_en = require("./i18n_en.json");
 const untranslated = require("./untranslated.json");
 
 interface IProps {
-    dataPromise?: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>
+    dataPromise?: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>
 }
 
 interface IState {
@@ -51,6 +51,7 @@ class TKI18nProvider extends React.Component<IProps, IState> {
     // To facilitate access from static methods (helpers / utils).
     static tStatic: TranslationFunction;
     static localeStatic: string;
+    static distanceUnit: () => "metric" | "imperial" = () => TKI18nProvider.localeStatic === "en-US" ? "imperial" : "metric";
 
     constructor(props: IProps) {
         super(props);
@@ -68,20 +69,20 @@ class TKI18nProvider extends React.Component<IProps, IState> {
         TKI18nProvider.localeStatic = this.state.locale;
         return (
             <I18n locale={this.state.locale}
-                  messages={this.state.messages}
-                  allowMissing={Environment.isDev()}
-                  onMissingKey={Environment.isDev() ?
-                      (key: string, options?: any, locale?: string) =>
-                      // If a used key is missing.
-                      // Notice messages are completed as much as possible by overriding sources. See componentDidMount.
-                      key + " (hey, you missed this key)" :
-                      undefined
-                  }
+                messages={this.state.messages}
+                allowMissing={Environment.isDev()}
+                onMissingKey={Environment.isDev() ?
+                    (key: string, options?: any, locale?: string) =>
+                        // If a used key is missing.
+                        // Notice messages are completed as much as possible by overriding sources. See componentDidMount.
+                        key + " (hey, you missed this key)" :
+                    undefined
+                }
             >
                 <WithTranslate>
                     {(props: { t: TranslationFunction }) =>
                         <TKI18nContext.Provider
-                            value={{locale: this.state.locale, i18nOverridden: this.state.overridden, ...props}}
+                            value={{ locale: this.state.locale, i18nOverridden: this.state.overridden, ...props }}
                         >
                             {this.props.children}
                         </TKI18nContext.Provider>
@@ -94,7 +95,7 @@ class TKI18nProvider extends React.Component<IProps, IState> {
     public componentDidMount() {
         if (this.props.dataPromise) {
             Promise.resolve(this.props.dataPromise)
-                .then((data: {locale: string, translations: TKI18nMessages}) => {
+                .then((data: { locale: string, translations: TKI18nMessages }) => {
                     // Compose messages by overriding untranslated, with messages_en, and then with data.translations
                     // TODO: maybe it makes sense to compose also language-only resource when language+country is
                     // available (e.g. es when es-AR is available), so missing terms on language+country first fallback

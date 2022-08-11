@@ -12,11 +12,11 @@ import PaymentOption from '../model/trip/PaymentOption';
 import TKLoading from '../card/TKLoading';
 import UIUtil from '../util/UIUtil';
 import { TKError } from '../error/TKError';
-import Environment from '../env/Environment';
 import BookingReview from '../model/trip/BookingReview';
 import TKUIBookingReview from './TKUIBookingReview';
 import TKUICheckoutForm from './TKUICheckoutForm';
 import { TKUIViewportUtil } from '../util/TKUIResponsiveUtil';
+import EphemeralResult from '../model/payment/EphemeralResult';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -45,14 +45,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, paymentOptions, reviews, classes, injectedStyles, t, publicKey }) => {
     const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
     const [paymentIntent, setPaymentIntent] = useState<string | undefined>(undefined);
+    const [ephemeralResult, setEphemeralResult] = useState<EphemeralResult | undefined>(undefined);
     const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
     const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(false);
     const [stripePromise, setStripePromise] = useState<any>(false);
-    const title = showPaymentForm ? "Payment" : "Review booking";
-    useEffect(() => {        
-        TripGoApi.apiCall(`payment/ephemeral-key?stripe-api-version=2020-08-27${Environment.isBeta() ? "&psb=true" : ""}`, NetworkUtil.MethodType.GET);        
-    }, []);
+    const title = showPaymentForm ? "Payment" : "Review booking";    
     useEffect(() => {
         setStripePromise(loadStripe(publicKey));
     }, []);
@@ -108,6 +106,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                         {showPaymentForm && stripePromise && paymentIntentSecret &&
                             <Elements stripe={stripePromise} options={options}>
                                 <TKUICheckoutForm
+                                    paymentIntentSecret={paymentIntentSecret}
                                     onClose={(success) => {
                                         if (!success) {
                                             setShowPaymentForm(false);
