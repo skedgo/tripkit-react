@@ -5,6 +5,7 @@ import Constants from "../util/Constants";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import ServiceDeparture from "../model/service/ServiceDeparture";
+import TKI18nProvider from "../i18n/TKI18nProvider";
 
 class TransportUtil {
 
@@ -22,11 +23,11 @@ class TransportUtil {
              */
             isRealtime?: boolean;
             onDark?: boolean;
-            useLocal?: boolean;            
+            useLocal?: boolean;
         } = {}): string {
         const isRealtime = false;
         const onDark = options.onDark !== undefined ? options.onDark : false;
-        const useLocal = options.useLocal ? options.useLocal : false;        
+        const useLocal = options.useLocal ? options.useLocal : false;
 
         if (useLocal) {
             return this.getTransportIconLocal(modeInfo.localIcon, isRealtime, onDark);
@@ -41,7 +42,7 @@ class TransportUtil {
     public static getTransportIconRemote(modeInfo: ModeInfo): string | undefined {
         if (modeInfo.remoteIcon) {
             return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteIcon + ".svg";
-        }        
+        }
         return undefined;
     }
 
@@ -164,13 +165,34 @@ class TransportUtil {
     }
 
     public static distanceToBriefString(distInMetres: number): string {
-        if (distInMetres < 50) {
-            return distInMetres + " m";
+        if (TKI18nProvider.distanceUnit() === "imperial") {
+            const distInFeet = distInMetres * 3.28084;
+            if (distInFeet < 100) {  // a quarter of a mile
+                return Math.floor(distInFeet) + " ft";
+            }
+            const feetsInMile = 5280;
+            if (distInFeet < feetsInMile / 4) {
+                return Math.floor(distInFeet / 50) * 50 + " ft";
+            }
+            let milesFraction = Math.floor((distInFeet % feetsInMile) / (feetsInMile / 4));
+            let miles = Math.floor(distInFeet / feetsInMile);
+            if (milesFraction === 4) {
+                milesFraction = 0;
+                miles++;
+            }
+            const singular = miles === 1 && milesFraction === 0;
+            return (miles !== 0 ? miles + " " : "") +
+                ((milesFraction === 1 || milesFraction === 3) ? milesFraction + "/4 " :
+                    milesFraction === 2 ? "1/2 " : "") + (singular ? "mile" : "miles");
+        } else {
+            if (distInMetres < 50) {
+                return distInMetres + " m";
+            }
+            if (distInMetres < 1000) {
+                return Math.floor(distInMetres / 50) * 50 + " m";
+            }
+            return (distInMetres / 1000).toFixed(1) + " km";
         }
-        if (distInMetres < 1000) {
-            return Math.floor(distInMetres / 50) * 50 + " m";
-        }
-        return (distInMetres / 1000).toFixed(1) + " km";
     }
 
     public static getRepresentativeColor(trip: Trip): string | null {

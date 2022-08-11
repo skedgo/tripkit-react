@@ -4,6 +4,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
 import RegionInfo from "./region/RegionInfo";
 import Environment from "../env/Environment";
+import TKI18nProvider from "../i18n/TKI18nProvider";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -99,18 +100,18 @@ class RoutingQuery {
             Object.keys(options.routingQueryParams).reduce((params, key) =>
                 params + '&' + key + '=' + options.routingQueryParams[key], "") : "";
 
-        return "routing.json" +
-            `?from=(${this.from.lat}, ${this.from.lng})"${this.from.address}"` +
-            `&to=(${this.to.lat}, ${this.to.lng})"${this.to.address}"` +
+        return encodeURI("routing.json" +
+            `?from=(${this.from.lat},${this.from.lng})"${this.from.address}"` +
+            `&to=(${this.to.lat},${this.to.lng})"${this.to.address}"` +
             `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}` +
             modeParams + avoidModeParams +
             weightingPreferencesParam +
             minTransferTimeParam +
-            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
-            "&unit=auto&v=11&ir=1&includeStops=true" +
+            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +            
+            `&unit=${TKI18nProvider.distanceUnit()}&v=11&ir=1&includeStops=true` +
             (Environment.isBeta() ? "&bsb=true" : "") +
             wheelchairParam +
-            profileParams;
+            profileParams);
     }
 
     public isEmpty(): boolean {
