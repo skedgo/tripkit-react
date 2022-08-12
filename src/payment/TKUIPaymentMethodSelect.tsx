@@ -12,6 +12,7 @@ import { ReactComponent as IconRemove } from "../images/ic-clear-circle.svg";
 import Radio from '@material-ui/core/Radio';
 import { withStyles as muiWithStyles } from '@material-ui/core/styles';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
+import { resetStyles } from '../css/ResetStyle.css';
 
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -25,6 +26,7 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     card: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
+        ...genStyles.grow,
         cursor: 'pointer',
         '& span': {
             ...theme.textWeightBold,
@@ -33,7 +35,24 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         '& svg': {
             marginRight: '10px',
             width: '36px'
+        },
+        '&:hover': {
+            // background: '#e2733833'
+            background: '#80808033'
         }
+    },
+    btnContainer: {
+        ...genStyles.alignSelfStart,
+        margin: '10px 0 0 18px'
+    },
+    btnRemove: {
+        ...resetStyles.button,
+        ...genStyles.noShrink,
+        height: '40px',
+        width: '40px',
+        padding: '6px',
+        cursor: 'pointer',
+        marginLeft: '10px'
     }
 });
 
@@ -42,7 +61,8 @@ type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     value: PaymentMethod;
     options: PaymentMethod[];
-    onChange: (value: any) => void;
+    onChange: (value: PaymentMethod) => void;
+    onRemove: (value: PaymentMethod) => void;
 }
 
 function iconFromBrand(brand: string) {
@@ -55,7 +75,7 @@ function iconFromBrand(brand: string) {
 }
 
 const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
-    ({ value, options, onChange, classes, theme }) => {
+    ({ value, options, onChange, onRemove, classes, theme }) => {
         const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
             root: {
                 marginLeft: '0',
@@ -84,18 +104,29 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                                 <span>ending in</span>
                                 <span>{last4}</span>
                             </div>
-                            {editing && <IconRemove />}
+                            {editing &&
+                                <button
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        onRemove(paymentMethod);
+                                    }}
+                                    className={classes.btnRemove}
+                                >
+                                    <IconRemove />
+                                </button>}
                         </div>
                     );
                 })}
-                <TKUIButton
-                    type={TKUIButtonType.PRIMARY_LINK}
-                    text={editing ? "Editing done" : "Edit"}
-                    onClick={e => {
-                        e.preventDefault();
-                        setEditing(!editing);
-                    }}
-                />
+                <div className={classes.btnContainer}>
+                    <TKUIButton
+                        type={TKUIButtonType.PRIMARY_LINK}
+                        text={editing ? "Editing done" : "Edit"}
+                        onClick={e => {
+                            e.preventDefault();
+                            setEditing(!editing);
+                        }}
+                    />
+                </div>
             </div>
         );
     }
