@@ -115,7 +115,7 @@ interface ITKUIConfigOptional {
      * @ctype
      */
     i18n: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>;
-    isDarkDefault: boolean,
+    isDarkDefault: boolean;
     analytics: {google?: {
         tracker: TrackerOptions | TrackerOptions[];
         initOptions?: InitializeOptions;
@@ -123,10 +123,11 @@ interface ITKUIConfigOptional {
         // dynamically, e.g. depending con cookies / tracking consent.
         isEnabled?: () => boolean;  // () => true; by default
     }};
+    modePriorities: string[][];
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
         stripePublicKey: string;
-    }
+    };
     /**
      * @ctype
      */

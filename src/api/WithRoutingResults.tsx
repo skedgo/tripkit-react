@@ -25,6 +25,7 @@ import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
 import GATracker from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
+import TransportUtil from "../trip/TransportUtil";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -32,6 +33,7 @@ export interface IWithRoutingResultsProps {
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
+    modePriorities?: string[][];
 }
 
 interface IWithRoutingResultsState {
@@ -127,7 +129,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     case TripSort.CALORIES: {
                         return t2.caloriesCost - t1.caloriesCost;
                     }
-                    default: return t1.weightedScore - t2.weightedScore;
+                    default: {
+                        if (this.props.modePriorities) {                            
+                            const bucketT1 = TransportUtil.matchingBucketIndex(t1, this.props.modePriorities as any);                            
+                            const bucketT2 = TransportUtil.matchingBucketIndex(t2, this.props.modePriorities as any);                            
+                            return bucketT1 === bucketT2 ? t1.weightedScore - t2.weightedScore : bucketT1 - bucketT2;
+                        } else {
+                            return t1.weightedScore - t2.weightedScore;
+                        }
+                    }
                 }
             });
         }
@@ -184,7 +194,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     label = 'options';
                 }
                 label += " change";
-            }            
+            }
             GATracker.event({
                 category: "trip results",
                 action: "compute trips",

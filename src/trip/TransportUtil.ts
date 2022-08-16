@@ -219,6 +219,29 @@ class TransportUtil {
     public static isCycle(modeId: string) {
         return modeId.startsWith("cy_bic");
     }
+
+    public static isSubMode(mode1: string, mode2: string) {
+        return mode2.split("_").every((m2part, i) => m2part === mode1.split("_")[i]);
+    }
+
+    public static bucketMatchesTrip(bucket: string[], trip: Trip): boolean {
+        const tripModes = trip.segments.map(segment => segment.modeInfo?.identifier ?? segment.modeIdentifier)
+            .filter(mode => mode && (mode !== "wa_wal" || trip.isWalkTrip()));  // remove undefined / nulls, and wa_wal mode except for walk-only trips, since wa_wal is in all trips.
+        console.log(tripModes);
+        return bucket.some(bmode => tripModes.some(mode => TransportUtil.isSubMode(mode!, bmode)));
+    }
+
+    /**
+    * Returns the index of the priority bucket capturing the mode, or priorityBuckets.length() if there is no such bucket.
+    * @param mode 
+    * @param priorityBuckets 
+    */
+    public static matchingBucketIndex(trip: Trip, priorityBuckets: string[][]): number {        
+        // Find the index of the first priority bucket containing some mode (bmode) that captures some of the trip modes (mode)
+        const matchingBucket = priorityBuckets.findIndex(bucket => this.bucketMatchesTrip(bucket, trip));
+        return matchingBucket !== -1 ? matchingBucket : priorityBuckets.length;
+    }
+
 }
 
 export default TransportUtil;
