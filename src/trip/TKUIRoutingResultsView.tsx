@@ -43,6 +43,7 @@ import { ReactComponent as IconTriangleDown } from '../images/ic-triangle-down.s
 import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
+import { useContext } from "react";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -174,6 +175,8 @@ interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext {
     setSelectedTripSegment: (segment?: Segment) => void;
 
     transportBtnText?: string;
+
+    config: TKUIConfig;
 }
 
 export interface IStyle {
@@ -489,7 +492,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 
     private refreshBadges() {
-        this.setState({ tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values) });
+        this.setState({ tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values, this.props.config.modePriorities) });
     }
 
     private automaticSelectionTimeout: any;
@@ -552,8 +555,9 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> =
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+        const config = useContext(TKUIConfigContext);
         return (
             <TKAccessibilityContext.Consumer>
                 {accessibilityContext =>
@@ -579,7 +583,8 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                                         timezone: routingContext.region ? routingContext.region.timezone : undefined,
                                         setSelectedTripSegment: routingContext.setSelectedTripSegment,
                                         ...viewportProps,
-                                        ...accessibilityContext
+                                        ...accessibilityContext,
+                                        config
                                     };
                                     return props.children!(consumerProps);
                                 }}

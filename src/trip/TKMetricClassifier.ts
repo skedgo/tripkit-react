@@ -1,5 +1,6 @@
 import Trip from "../model/trip/Trip";
 import TripGroup from "../model/trip/TripGroup";
+import TransportUtil from "./TransportUtil";
 
 export enum Badges {
     CHEAPEST = "Cheapest",
@@ -12,18 +13,27 @@ export enum Badges {
 
 class TKMetricClassifier {
 
-    public static getTripClassifications(trips: Trip[]): Map<Trip, Badges> {
+    public static getTripClassifications(trips: Trip[], modePriorities?: string[][]): Map<Trip, Badges> {
         const ranges =
-            {
-                weighted: {min: Number.MAX_SAFE_INTEGER, max: 0},
-                hassles: {min: Number.MAX_SAFE_INTEGER, max: 0},
-                durations: {min: Number.MAX_SAFE_INTEGER, max: 0},
-                calories: {min: Number.MAX_SAFE_INTEGER, max: -Number.MAX_SAFE_INTEGER},    // Since it's inverted (negative range).
-                carbons: {min: Number.MAX_SAFE_INTEGER, max: 0},
-                cheapest: {min: Number.MAX_SAFE_INTEGER, max: 0, anyUnknown: false}
-            };
+        {
+            priorityBucket: { min: Number.MAX_SAFE_INTEGER },
+            weighted: { min: Number.MAX_SAFE_INTEGER, max: 0 },
+            hassles: { min: Number.MAX_SAFE_INTEGER, max: 0 },
+            durations: { min: Number.MAX_SAFE_INTEGER, max: 0 },
+            calories: { min: Number.MAX_SAFE_INTEGER, max: -Number.MAX_SAFE_INTEGER },    // Since it's inverted (negative range).
+            carbons: { min: Number.MAX_SAFE_INTEGER, max: 0 },
+            cheapest: { min: Number.MAX_SAFE_INTEGER, max: 0, anyUnknown: false }
+        };
+        // Find the first bucket matching some trip.
+        let firstNonemptyBucket = modePriorities?.findIndex(bucket => trips.some(trip => TransportUtil.bucketMatchesTrip(bucket, trip)));
+        if (firstNonemptyBucket === -1) {
+            firstNonemptyBucket = modePriorities?.length;
+        }
         for (const trip of trips) {
-            ranges.weighted.min = Math.min(ranges.weighted.min, trip.weightedScore);
+            // If mode priorities were specified, just consider for setting the weighted.min those trips in the first non-empty bucket.            
+            if (!modePriorities || TransportUtil.matchingBucketIndex(trip, modePriorities) === firstNonemptyBucket) {
+                ranges.weighted.min = Math.min(ranges.weighted.min, trip.weightedScore);
+            }
             ranges.weighted.max = Math.max(ranges.weighted.max, trip.weightedScore);
             ranges.hassles.min = Math.min(ranges.hassles.min, trip.hassleCost);
             ranges.hassles.max = Math.max(ranges.hassles.max, trip.hassleCost);
@@ -42,7 +52,7 @@ class TKMetricClassifier {
         }
         const tripToBadge: Map<Trip, Badges> = new Map<Trip, Badges>();
         for (const trip of trips) {
-            const classification = this.classification(trip, ranges);
+            const classification = this.classification(trip, ranges, modePriorities, firstNonemptyBucket);
             if (classification) {
                 tripToBadge.set(trip, classification);
             }
@@ -50,20 +60,20 @@ class TKMetricClassifier {
         return tripToBadge;
     }
 
-    private static classification(trip: Trip, ranges: any): Badges | undefined {
+    private static classification(trip: Trip, ranges: any, modePriorities?: string[][], firstNonemptyBucket?: number): Badges | undefined {
         // TODO: Order this by what the user cares about
         // recommended > fast > cheap > healthy > easy > green
-
-        // guard let trip = tripGroup.visibleTrip else { return nil }
-
+        
         // Don't give any badge to groups which only have cancellations (see #13016).
         // TODO check: if I want the badge to be reused by another trip maybe also need to exclude
         // cancelled groups from ranges calculation (getTripClassifications()).
         if (trip instanceof TripGroup && trip.allCancelled()) {
             return undefined;
         }
-
-        if (this.matches(ranges.weighted, trip.weightedScore)) {
+        // If mode priorities was specified, just consider for recommended badge those trips in the first non-empty bucket
+        // (notice a trip in other bucket may casually match the ranges.weighted.min score, but shouldn't be considered).
+        if ((!modePriorities || TransportUtil.matchingBucketIndex(trip, modePriorities) === firstNonemptyBucket) &&
+            this.matches(ranges.weighted, trip.weightedScore)) {
             return Badges.RECOMMENDED;
         }
         if (this.matches(ranges.durations, trip.duration)) {
@@ -84,7 +94,7 @@ class TKMetricClassifier {
         return undefined;
     }
 
-    private static matches(range: {min: number, max: number, anyUnknown?: boolean}, value?: number): boolean {
+    private static matches(range: { min: number, max: number, anyUnknown?: boolean }, value?: number): boolean {
         if (!value || range.anyUnknown) {
             return false;
         }
