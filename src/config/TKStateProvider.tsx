@@ -8,6 +8,7 @@ import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import TKAccessibilityProvider from "./TKAccessibilityProvider";
+import TransportUtil from "../trip/TransportUtil";
 
 interface IProps {
     config: TKUIConfig;
@@ -42,7 +43,7 @@ class TKStateProvider extends React.Component<IProps, {}> {
                                             fixToInitViewportRegion={config.fixToInitViewportRegion}
                                             options={optionsContext && optionsContext.userProfile}
                                             locale={i18nProps.locale}
-                                            modePriorities={config.modePriorities}                                            
+                                            preferredTripSortingFc={config.modePriorities ? TransportUtil.priorityBucketsSortFcBuilder(config.modePriorities) : undefined}                                            
                                         >
                                             <RoutingResultsContext.Consumer>
                                                 {(routingResultsContext: IRoutingResultsContext) =>

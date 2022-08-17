@@ -33,7 +33,7 @@ export interface IWithRoutingResultsProps {
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
-    modePriorities?: string[][];
+    preferredTripSortingFc?: (trip1: Trip, trip2: Trip) => number;    
 }
 
 interface IWithRoutingResultsState {
@@ -130,10 +130,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         return t2.caloriesCost - t1.caloriesCost;
                     }
                     default: {
-                        if (this.props.modePriorities) {                            
-                            const bucketT1 = TransportUtil.matchingBucketIndex(t1, this.props.modePriorities as any);                            
-                            const bucketT2 = TransportUtil.matchingBucketIndex(t2, this.props.modePriorities as any);                            
-                            return bucketT1 === bucketT2 ? t1.weightedScore - t2.weightedScore : bucketT1 - bucketT2;
+                        if (this.props.preferredTripSortingFc) {
+                            return this.props.preferredTripSortingFc(t1, t2);                            
                         } else {
                             return t1.weightedScore - t2.weightedScore;
                         }
