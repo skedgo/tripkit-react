@@ -44,6 +44,7 @@ import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import { useContext } from "react";
+import TransportUtil from "./TransportUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -419,7 +420,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                             visibility: 'hidden'
                                         })
                                     });
-                                const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);                                
+                                const configOverride = replaceStyle(config, "TKUIAlertsSummary", stylesOverride);
                                 return (<TKUIConfigProvider config={configOverride}>
                                     <TKUIAlertsSummary
                                         alerts={this.state.toLocInfo!.alerts}
@@ -492,7 +493,10 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 
     private refreshBadges() {
-        this.setState({ tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values, this.props.config.modePriorities) });
+        this.setState({
+            tripToBadge: TKMetricClassifier.getTripClassificationsThroughSort(this.props.values,
+                this.props.config.modePriorities ? TransportUtil.priorityBucketsSortFcBuilder(this.props.config.modePriorities) : undefined)
+        });
     }
 
     private automaticSelectionTimeout: any;
