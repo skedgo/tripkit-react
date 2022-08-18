@@ -27,7 +27,7 @@ function metricSortBuilder(badge: Badges): ((trip1: Trip, trip2: Trip) => number
 
 class TKMetricClassifier {
 
-    public static getTripClassificationsThroughSort(trips: Trip[], preferredTripSortingFc?: (t1: Trip, t2: Trip) => number): Map<Trip, Badges> {
+    public static getTripClassifications(trips: Trip[], preferredTripCompareFc?: (t1: Trip, t2: Trip) => number): Map<Trip, Badges> {
         const tripToBadge: Map<Trip, Badges> = new Map<Trip, Badges>();
         if (trips.length === 0) {
             return tripToBadge;
@@ -43,20 +43,25 @@ class TKMetricClassifier {
             if (trips.some(trip => tripMetricForBadge(trip, badge) === undefined)) {
                 continue;
             }
-            // Sort trips by metric associated to the badge.
-            const sorted = trips.slice().sort((preferredTripSortingFc && badge === Badges.RECOMMENDED) ? preferredTripSortingFc : metricSortBuilder(badge));
-            const best = sorted[0];            
+            // Sort trips by the metric associated to the badge.
+            const sorted = trips.slice().sort((preferredTripCompareFc && badge === Badges.RECOMMENDED) ? preferredTripCompareFc : metricSortBuilder(badge));
+            const best = sorted[0];
             const worst = sorted[sorted.length - 1];
             const metricForBest = tripMetricForBadge(best, badge) ?? Number.MAX_SAFE_INTEGER;
             const metricForWorst = tripMetricForBadge(worst, badge) ?? Number.MAX_SAFE_INTEGER;
-            // If there's already a trip with a badge assigned with the same value than the best for the current metric, 
+            // If there's a trip with a badge that is as good w.r.t. the current metric (also with value metricForBest), 
             // then don't assign the badge.
-            if (Array.from(tripToBadge.keys()).some(key => tripMetricForBadge(key, badge) === tripMetricForBadge(best, badge))) {
+            if (Array.from(tripToBadge.keys()).some(key => tripMetricForBadge(key, badge) === metricForBest)) {
                 continue;
             }
-            // Don't give the label if everything is so close, except for Badges.RECOMMENDED when a preferred trip sorting function was specified.
+            // Don't assign a badge if there's just one trip and we are using a custom preferred sorting (if no custom sorting
+            // then this single trip case is contemplated by the condition below)
+            if (preferredTripCompareFc && badge === Badges.RECOMMENDED && trips.length === 1) {
+                continue;
+            }
+            // Don't give the label if everything is so close, except for Badges.RECOMMENDED when a preferred trip sorting function was specified,
             // in which case we have no concept of "so close", since an arbitrary compare function has been specified.
-            if ((preferredTripSortingFc && badge === Badges.RECOMMENDED) ||     // Don't filter when Badges.RECOMMENDED and a preferred trip sorting function was specified.
+            if (preferredTripCompareFc && badge === Badges.RECOMMENDED ||
                 metricForBest > 0 && metricForWorst > metricForBest * 1.25 ||
                 metricForBest <= 0 && metricForWorst * 1.25 > metricForBest) {
                 tripToBadge.set(best, badge);

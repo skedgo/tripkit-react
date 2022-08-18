@@ -494,8 +494,8 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
     private refreshBadges() {
         this.setState({
-            tripToBadge: TKMetricClassifier.getTripClassificationsThroughSort(this.props.values,
-                this.props.config.modePriorities ? TransportUtil.priorityBucketsSortFcBuilder(this.props.config.modePriorities) : undefined)
+            tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values,
+                this.props.config.modePriorities ? TransportUtil.priorityBucketsTripCompareFcBuilder(this.props.config.modePriorities) : undefined)
         });
     }
 

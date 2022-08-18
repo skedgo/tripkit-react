@@ -134,6 +134,10 @@ class Trip {
         return this.isSingleSegment() && this.segments[0].isWalking();
     }
 
+    public isWheelchairTrip(): boolean {
+        return this.isSingleSegment() && this.segments[0].isWheelchair();
+    }
+
     public getWheelchairAccessible(): boolean | null {
         if (!this.hasPublicTransport()) {
             return null;

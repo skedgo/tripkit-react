@@ -226,7 +226,7 @@ class TransportUtil {
 
     public static bucketMatchesTrip(bucket: string[], trip: Trip): boolean {
         const tripModes = trip.segments.map(segment => segment.modeInfo?.identifier ?? segment.modeIdentifier)
-            .filter(mode => mode && (mode !== "wa_wal" || trip.isWalkTrip()));  // remove undefined / nulls, and wa_wal mode except for walk-only trips, since wa_wal is in all trips.        
+            .filter(mode => mode && (mode !== "wa_wal" || trip.isWalkTrip()) && (mode !== "wa_whe" || trip.isWheelchairTrip()));  // remove undefined / nulls, and wa_wal mode except for walk-only trips, since wa_wal is in all trips.        
         return bucket.some(bmode => tripModes.some(mode => TransportUtil.isSubMode(mode!, bmode)));
     }
 
@@ -241,7 +241,7 @@ class TransportUtil {
         return matchingBucket !== -1 ? matchingBucket : priorityBuckets.length;
     }
 
-    public static priorityBucketsSortFcBuilder = (modePriorities: string[][]) =>
+    public static priorityBucketsTripCompareFcBuilder = (modePriorities: string[][]) =>
         (t1: Trip, t2: Trip) => {
             const bucketT1 = TransportUtil.matchingBucketIndex(t1, modePriorities);
             const bucketT2 = TransportUtil.matchingBucketIndex(t2, modePriorities);
