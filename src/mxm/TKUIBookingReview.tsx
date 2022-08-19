@@ -127,7 +127,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                                 <div className={classes.modeName}>
                                     {review.provider?.title}
                                 </div>
-                                <div>{FormatUtil.toMoney(review.price, { currency: review.currency ? review.currency + " " : undefined, forceDecimals: true })}</div>
+                                <div>{FormatUtil.toMoney(review.price, { currency: review.currency ? review.currency + " " : undefined, forceDecimals: true, nInCents: true })}</div>
                             </div>
                             <div className={viewportProps.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
                                 {review.origin && review.destination &&
