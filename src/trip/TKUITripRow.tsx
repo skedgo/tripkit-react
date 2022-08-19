@@ -335,9 +335,9 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         aria-label={metricsS.replace(/ · /gi, ". ")}
                     >
                         {info}
-                        <div className={classes.footerButtons}>
-                            {book}
+                        <div className={classes.footerButtons}>                        
                             {more}
+                            {book}
                         </div>
                     </div>
                 }
