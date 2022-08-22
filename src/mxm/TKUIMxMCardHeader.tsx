@@ -24,7 +24,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMCardHeader"
 };
 
-const TKUIMxMCardHeader: React.SFC<IProps> = (props: IProps) => {
+const TKUIMxMCardHeader: React.FunctionComponent<IProps> = (props: IProps) => {
     const { segment, title, subtitle, onRequestClose, classes, closeAriaLabel, theme } = props;
     return (
         <div className={classes.main}>

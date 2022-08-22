@@ -5,7 +5,8 @@ export const tKUIMxMIndexDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
         ...genStyles.column,
-        margin: '10px',
+        ...genStyles.alignCenter,
+        margin: '10px 10px 5px'
     },
     track: {
         ...genStyles.flex,
@@ -22,6 +23,7 @@ export const tKUIMxMIndexDefaultStyle = (theme: TKUITheme) => ({
     tripTime: {
         ...theme.textColorGray,
         ...genStyles.flex,
-        ...genStyles.center
+        ...genStyles.center,
+        marginTop: '5px'
     }
 });

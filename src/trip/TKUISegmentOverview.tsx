@@ -57,10 +57,10 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const { value: segment, t, classes } = this.props;
+        const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;
         const modeInfo = segment.modeInfo!;
         const fromLocS = segment.type === SegmentType.stationary ? segment.location.getDisplayString() : segment.from.getDisplayString();
         const from = segment.isFirst() ? t("Leave.X", { 0: fromLocS }) : segment.arrival ? t("Arrive.X", { 0: fromLocS }) : fromLocS;
-        const iconOnDark = isIconOnDark(segment);
         const hasBusOccupancy = segment.isPT() && segment.realtimeVehicle && segment.realtimeVehicle.components &&
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
             segment.realtimeVehicle.components[0][0].occupancy;
@@ -90,7 +90,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             const transferAction = nextSegment && nextSegment.type === SegmentType.scheduled ? (nextSegment.startPlatform && platformText(nextSegment.startPlatform)) : segment.getAction();
             const arriveTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
                 .format(DateTimeUtil.timeFormat(false));
-            const departTime = DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone)
+            const departTime = hideTimes ? undefined : DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone)
                 .format(DateTimeUtil.timeFormat(false));
             const betweenScheduled = prevSegment && prevSegment.type === SegmentType.scheduled && nextSegment && nextSegment.type === SegmentType.scheduled;
             header =
@@ -122,7 +122,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     </div>
                 </div>;
         } else {    // Header of a non-stationary segment.
-            const startTime = segment.isContinuation ? undefined :
+            const startTime = segment.isContinuation || hideTimes ? undefined :
                 DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
                     .format(DateTimeUtil.timeFormat(false));
             const startPlatform = segment.type === SegmentType.scheduled && !segment.isContinuation ? segment.startPlatform :

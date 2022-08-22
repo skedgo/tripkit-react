@@ -46,6 +46,8 @@ class Trip {
     private _segments: Segment[] = [];
     @JsonProperty("mainSegmentHashCode", Number, true)  // Required according to spec, need to mark as optional since
     public mainSegmentHashCode: number = 0;             // TripGroup extends Trip, but it should always be present.
+    @JsonProperty("hideExactTimes", Boolean, true)
+    public hideExactTimes?: boolean = false;     
 
     private _satappQuery: string = "";
     private _arrivalSegment: Segment | undefined;

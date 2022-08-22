@@ -2,10 +2,9 @@ import React from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { default as TKUISegmentOverview } from "./TKUISegmentOverview";
 import { tKUITripOverviewViewDefaultStyle } from "./TKUITripOverviewView.css";
-import TripUtil from "./TripUtil";
 import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
@@ -22,7 +21,11 @@ import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/R
 import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
+import TKUITripTime from "./TKUITripTime";
+import TripRowTrack from "./TripRowTrack";
+import TKUICardHeader from "../card/TKUICardHeader";
 
+type IStyle = ReturnType<typeof tKUITripOverviewViewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
 
@@ -61,11 +64,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     doNotStack?: boolean;
     selectedTripSegment?: Segment;
     setSelectedTripSegment?: (segment: Segment) => void;
-}
-
-export interface IStyle {
-    main: CSSProps<IProps>;
-    actionsPanel: CSSProps<IProps>;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -139,20 +137,34 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segments = this.props.value.getSegments(Visibility.IN_DETAILS);
-        const { value: trip, t } = this.props;
-        const { departureTime, arrivalTime, duration, hasPT } = TripUtil.getTripTimeData(trip);
-        const title = hasPT ? departureTime + " - " + arrivalTime : duration;
-        const subtitle = hasPT ? duration : (trip.queryIsLeaveAfter ? t("arrives.X", { 0: arrivalTime }) : t("departs.X", { 0: departureTime }));
+        const { value: trip } = this.props;
         const classes = this.props.classes;
         const defaultActions = this.getDefaultActions(trip);
         const actions = this.props.actions ? this.props.actions(trip, defaultActions) : defaultActions;
-        const subHeader = actions ?
-            () => <TKUIActionsView actions={actions} className={classes.actionsPanel} /> : undefined;
+        const hideTimes = trip.hideExactTimes;
+        const subHeader = () =>
+            <div className={classes.header}>
+                <div style={{ marginLeft: '10px' }}>
+                    <TripRowTrack value={trip} />
+                </div>
+                {actions &&
+                    <TKUIActionsView actions={actions} className={classes.actionsPanel} />}
+            </div>;
         const segmentsAndArrival = segments.concat(this.props.value.arrivalSegment);
         return (
             <TKUICard
-                title={title}
-                subtitle={subtitle}
+                renderHeader={props =>
+                    <TKUICardHeader {...props}
+                        title={!hideTimes &&
+                            <TKUITripTime
+                                styles={{
+                                    timePrimary: overrideClass({ lineHeight: '28px' }),
+                                    timeSecondary: overrideClass({ lineHeight: '28px' })
+                                }}
+                                value={trip}
+                            />
+                        }
+                    />}
                 renderSubHeader={subHeader}
                 onRequestClose={this.props.onRequestClose}
                 presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}

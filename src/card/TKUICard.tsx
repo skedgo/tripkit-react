@@ -243,7 +243,7 @@ class TKUICard extends React.Component<IProps, IState> {
         if (cardAriaLabel && presentation !== CardPresentation.MODAL) {
             cardAriaLabel += " Card";
         }
-        const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose;
+        const showHeader = this.props.title || this.props.subtitle || this.props.onRequestClose || this.props.renderHeader;
         const renderHeader = this.props.renderHeader || (props => <TKUICardHeader{...props} />);
         const showHandle = hasHandle(this.props);
         const bodyContent =
