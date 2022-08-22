@@ -17,6 +17,7 @@ export const tKUITripTimeDefaultStyle: TKUIStyles<TKUITripTimeStyle, TKUITripTim
 
         timeSecondary: {
             ...genStyles.fontM,
-            ...theme.textColorGray
+            ...theme.textColorGray,
+            marginLeft: '10px'
         }
     });

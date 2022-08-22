@@ -39,16 +39,6 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.spaceBetween,
         marginTop: '10px'
     },
-    track: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        flexWrap: 'wrap',
-        overflowX: 'hidden',
-        textOverflow: 'ellipsis',
-        '& > *': {
-            marginRight: '3px'
-        }
-    },
     footer: {
         ...genStyles.flex,
         ...genStyles.spaceBetween,

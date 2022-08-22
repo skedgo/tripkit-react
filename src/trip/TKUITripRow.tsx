@@ -196,6 +196,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const { value: trip, tripMetricsToShow, classes, t } = this.props;
+        const hideTimes = trip.hideExactTimes;
         const alternatives = (trip as TripGroup).trips
             // create a copy to preserve original sorting of trip.trips.
             .slice()
@@ -307,14 +308,13 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         >
                             <div
                                 className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
-                                <TKUITripTime value={altTrip} brief={this.props.brief} />
+                                {!hideTimes &&
+                                    <TKUITripTime value={altTrip} brief={this.props.brief} />}
                                 <div className={classes.trackAndAction}>
                                     <div style={{ position: 'relative' }}>
                                         {trip.isCancelled() &&
                                             <div className={classes.crossOut} />}
-                                        <TripRowTrack value={altTrip}
-                                            className={classes.track}
-                                        />
+                                        <TripRowTrack value={altTrip} />
                                     </div>
                                     {this.props.onDetailClick &&
                                         <TKUIButton
@@ -335,7 +335,7 @@ class TKUITripRow extends React.Component<IProps, {}> {
                         aria-label={metricsS.replace(/ · /gi, ". ")}
                     >
                         {info}
-                        <div className={classes.footerButtons}>                        
+                        <div className={classes.footerButtons}>
                             {more}
                             {book}
                         </div>
