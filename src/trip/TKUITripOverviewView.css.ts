@@ -1,8 +1,7 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "./TKUITripOverviewView";
 import genStyles from "../css/GenStyle.css";
+import { TKUITheme } from "../jss/TKUITheme";
 
-export const tKUITripOverviewViewDefaultStyle: TKUIStyles<TKUITripOverviewViewStyle, TKUITripOverviewViewProps> = {
+export const tKUITripOverviewViewDefaultStyle = (theme: TKUITheme) => ({
     main: {
         padding: '15px 0'
     },
@@ -10,5 +9,9 @@ export const tKUITripOverviewViewDefaultStyle: TKUIStyles<TKUITripOverviewViewSt
         margin: '24px 0 16px',
         ...genStyles.flex,
         ...genStyles.spaceAround
+    },
+    header: {
+        ...genStyles.flex,
+        ...genStyles.column
     }
-};
+});

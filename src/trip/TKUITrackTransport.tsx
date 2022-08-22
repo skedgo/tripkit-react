@@ -32,20 +32,21 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUITrackTransport extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const { segment, t, theme, brief } = this.props;        
+        const { segment, t, theme, brief } = this.props;
+        const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;        
         let infoTitle: string | undefined;
         let infoSubtitle: string | undefined;        
         const modeInfo = segment.modeInfo!;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
-            if (!brief) {
+            if (!brief && !hideTimes) {
                 infoSubtitle = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.timeFormat(false));
             }
         } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && (segment.isBicycle() || segment.isWheelchair())) {
             // TODO getDurationWithContinuation
             const mainInfo = segment.metres !== undefined ?
                 TransportUtil.distanceToBriefString(segment.metres) :
-                DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
+                !hideTimes ? DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false) : undefined;
             const friendlinessPct = (segment.metresSafe !== undefined && segment.metres !== undefined) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
             if (friendlinessPct) {
                 infoTitle = mainInfo;
@@ -56,11 +57,11 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         } else {
             if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && segment.metres !== undefined) {
                 infoSubtitle = TransportUtil.distanceToBriefString(segment.metres);
-            } else if (!brief) {
+            } else if (!brief && !hideTimes) {
                 infoSubtitle = DateTimeUtil.durationToBriefString(segment.getDurationInMinutes(), false);
             }
             // At this point we don't have title.
-            if (segment.realTime) {
+            if (segment.realTime && !hideTimes) {
                 infoTitle = infoSubtitle;
                 infoSubtitle = t("Live.traffic");
             } else if (modeInfo.description && !brief) {    // Put modeInfo description as title if not brief.

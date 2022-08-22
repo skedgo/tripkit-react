@@ -8,7 +8,7 @@ import {connect, mapperFromFunction} from "../config/TKConfigHelper";
 type IStyle = ReturnType<typeof tKUICardHeaderJss>
 
 export interface TKUICardHeaderClientProps {
-    title?: string;
+    title?: React.ReactNode;
     subtitle?: React.ReactNode;
     onRequestClose?: () => void;
     closeAriaLabel?: string;

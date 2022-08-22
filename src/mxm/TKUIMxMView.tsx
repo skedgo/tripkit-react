@@ -303,7 +303,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
                         position: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     },
                     modalDown: { top: (window as any).document.body.offsetHeight - 200, unit: 'px' },
-                    modalUp: { top: MODAL_UP_TOP, unit: 'px' },
+                    modalUp: { top: MODAL_UP_TOP - (trip.hideExactTimes ? 25 : 0), unit: 'px' },
                     draggable: DeviceUtil.isTouch()
                 }}
                 swipeable={false}

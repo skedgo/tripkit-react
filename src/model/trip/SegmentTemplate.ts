@@ -100,6 +100,8 @@ class SegmentTemplate {
     private _mini: any = {};
     @JsonProperty("mapTiles", MapTiles, true)
     public mapTiles?: MapTiles = undefined;
+    @JsonProperty("hideExactTimes", Boolean, true)
+    public hideExactTimes?: boolean = false;
 
     private _stop: StopLocation | null = null;
     private _notesList: string[] | null = null;

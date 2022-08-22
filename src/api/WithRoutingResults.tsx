@@ -25,7 +25,6 @@ import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
 import GATracker from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
-import TransportUtil from "../trip/TransportUtil";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -33,7 +32,7 @@ export interface IWithRoutingResultsProps {
     options: TKUserProfile;
     computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
-    preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;    
+    preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
 }
 
 interface IWithRoutingResultsState {
@@ -131,7 +130,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                     default: {
                         if (this.props.preferredTripCompareFc) {
-                            return this.props.preferredTripCompareFc(t1, t2);                            
+                            return this.props.preferredTripCompareFc(t1, t2);
                         } else {
                             return t1.weightedScore - t2.weightedScore;
                         }
