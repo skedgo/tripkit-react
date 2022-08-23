@@ -1,81 +1,83 @@
-import {TKUITripRowStyle, TKUITripRowProps} from "../trip/TKUITripRow";
-import {TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle} from "../trip/TKUIRoutingResultsView";
-import {TKUITheme} from "../jss/TKUITheme";
-import {TKUICardProps, TKUICardStyle} from "../card/TKUICard";
+import { TKUITripRowStyle, TKUITripRowProps } from "../trip/TKUITripRow";
+import { TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle } from "../trip/TKUIRoutingResultsView";
+import { TKUITheme } from "../jss/TKUITheme";
+import { TKUICardProps, TKUICardStyle } from "../card/TKUICard";
 import {
     TKUITripOverviewViewProps,
     TKUITripOverviewViewStyle
 } from "../trip/TKUITripOverviewView";
-import {TKUISegmentOverviewProps, TKUISegmentOverviewStyle} from "../trip/TKUISegmentOverview";
-import {TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle} from "../trip/TKUIWCSegmentInfo";
-import {TKUITimetableViewProps, TKUITimetableViewStyle} from "../service/TKUITimetableView";
-import {TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle} from "../service/TKUIServiceDepartureRow";
-import {TKUIServiceViewProps, TKUIServiceViewStyle} from "../service/TKUIServiceView";
-import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "../query/TKUIRoutingQueryInput";
-import {TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle} from "../trip-planner/TKUITripPlanner";
-import {TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle} from "../service/occupancy/TKUITrainOccupancyInfo";
-import {TKUIShareViewProps, TKUIShareViewStyle} from "../share/TKUIShareView";
-import {TKUILocationSearchProps, TKUILocationSearchStyle} from "../query/TKUILocationSearch";
-import {TKUILocationDetailViewProps, TKUILocationDetailViewStyle} from "../location/TKUILocationDetailView";
-import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "../favourite/TKUIFavouritesView";
-import {TKUIFavouriteRowProps, TKUIFavouriteRowStyle} from "../favourite/TKUIFavouriteRow";
-import {TKUIMapViewProps, TKUIMapViewStyle} from "../map/TKUIMapView";
-import {TKUISidebarProps, TKUISidebarStyle} from "../sidebar/TKUISidebar";
-import {TKUIProfileViewProps, TKUIProfileViewStyle} from "../options/TKUIProfileView";
-import {TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle} from "../options/TKUIUserPriorities";
-import {TKUIMapLocationIconProps, TKUIMapLocationIconStyle} from "../map/TKUIMapLocationIcon";
-import {TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle} from "../map/TKUIMyLocationMapIcon";
-import {TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle} from "../map/TKUIRealtimeVehicle";
-import {TKUIDateTimePickerProps, TKUIDateTimePickerStyle} from "../time/TKUIDateTimePicker";
-import {TKUITransportPinProps, TKUITransportPinStyle} from "../map/TKUITransportPin";
+import { TKUISegmentOverviewProps, TKUISegmentOverviewStyle } from "../trip/TKUISegmentOverview";
+import { TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle } from "../trip/TKUIWCSegmentInfo";
+import { TKUITimetableViewProps, TKUITimetableViewStyle } from "../service/TKUITimetableView";
+import { TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle } from "../service/TKUIServiceDepartureRow";
+import { TKUIServiceViewProps, TKUIServiceViewStyle } from "../service/TKUIServiceView";
+import { TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle } from "../query/TKUIRoutingQueryInput";
+import { TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle } from "../trip-planner/TKUITripPlanner";
+import { TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle } from "../service/occupancy/TKUITrainOccupancyInfo";
+import { TKUIShareViewProps, TKUIShareViewStyle } from "../share/TKUIShareView";
+import { TKUILocationSearchProps, TKUILocationSearchStyle } from "../query/TKUILocationSearch";
+import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
+import { TKUIFavouritesViewProps, TKUIFavouritesViewStyle } from "../favourite/TKUIFavouritesView";
+import { TKUIFavouriteRowProps, TKUIFavouriteRowStyle } from "../favourite/TKUIFavouriteRow";
+import { TKUIMapViewProps, TKUIMapViewStyle } from "../map/TKUIMapView";
+import { TKUISidebarProps, TKUISidebarStyle } from "../sidebar/TKUISidebar";
+import { TKUIProfileViewProps, TKUIProfileViewStyle } from "../options/TKUIProfileView";
+import { TKUIUserPrioritiesProps, TKUIUserPrioritiesStyle } from "../options/TKUIUserPriorities";
+import { TKUIMapLocationIconProps, TKUIMapLocationIconStyle } from "../map/TKUIMapLocationIcon";
+import { TKUIMyLocationMapIconProps, TKUIMyLocationMapIconStyle } from "../map/TKUIMyLocationMapIcon";
+import { TKUIRealtimeVehicleProps, TKUIRealtimeVehicleStyle } from "../map/TKUIRealtimeVehicle";
+import { TKUIDateTimePickerProps, TKUIDateTimePickerStyle } from "../time/TKUIDateTimePicker";
+import { TKUITransportPinProps, TKUITransportPinStyle } from "../map/TKUITransportPin";
 import LatLng from "../model/LatLng";
-import {TKUITooltipProps, TKUITooltipStyle} from "../card/TKUITooltip";
-import {TKUIReportBtnProps, TKUIReportBtnStyle} from "../feedback/TKUIReportBtn";
-import {TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle} from "../options/TKUITransportOptionsView";
-import {TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle} from "../options/TKUITransportOptionsRow";
-import {TKUIButtonProps, TKUIButtonStyle} from "../buttons/TKUIButton";
-import {TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle} from "../options/TKUITransportSwitchesView";
-import {TKUISelectProps, TKUISelectStyle} from "../buttons/TKUISelect";
-import {TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle} from "../options/TKUIPrivacyOptionsView";
-import {TKI18nMessages} from "../i18n/TKI18nProvider";
-import {TKUITripTimeProps, TKUITripTimeStyle} from "../trip/TKUITripTime";
-import {TKUITrackTransportProps, TKUITrackTransportStyle} from "../trip/TKUITrackTransport";
-import {TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle} from "../location/TKUILocationDetailField";
-import {TKUICookiesBannerProps, TKUICookiesBannerStyle} from "../privacy/TKUICookiesBanner";
-import {TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle} from "../alerts/TKUIAlertsSummary";
-import {TKUIAlertsViewProps, TKUIAlertsViewStyle} from "../alerts/TKUIAlertsView";
-import {TKUIWaitingRequestProps, TKUIWaitingRequestStyle} from "../card/TKUIWaitingRequest";
-import {TKUIMapPopupProps, TKUIMapPopupStyle} from "../map/TKUIMapPopup";
-import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "../location_box/TKUIAutocompleteResult";
-import {TKUILocationBoxProps, TKUILocationBoxStyle} from "../location_box/TKUILocationBox";
-import {TKUICardCarouselProps, TKUICardCarouselStyle} from "../card/TKUICardCarousel";
-import {TKUIAlertRowProps, TKUIAlertRowStyle} from "../alerts/TKUIAlertRow";
-import {Tracker, InitializeOptions} from 'react-ga';
-import {TrackerOptions} from "../analytics/GATracker";
-import {TKUIErrorViewProps, TKUIErrorViewStyle} from "../error/TKUIErrorView";
-import {TKState} from "./TKState";
+import { TKUITooltipProps, TKUITooltipStyle } from "../card/TKUITooltip";
+import { TKUIReportBtnProps, TKUIReportBtnStyle } from "../feedback/TKUIReportBtn";
+import { TKUITransportOptionsViewProps, TKUITransportOptionsViewStyle } from "../options/TKUITransportOptionsView";
+import { TKUITransportOptionsRowProps, TKUITransportOptionsRowStyle } from "../options/TKUITransportOptionsRow";
+import { TKUIButtonProps, TKUIButtonStyle } from "../buttons/TKUIButton";
+import { TKUITransportSwitchesViewProps, TKUITransportSwitchesViewStyle } from "../options/TKUITransportSwitchesView";
+import { TKUISelectProps, TKUISelectStyle } from "../buttons/TKUISelect";
+import { TKUIPrivacyOptionsViewProps, TKUIPrivacyOptionsViewStyle } from "../options/TKUIPrivacyOptionsView";
+import { TKI18nMessages } from "../i18n/TKI18nProvider";
+import { TKUITripTimeProps, TKUITripTimeStyle } from "../trip/TKUITripTime";
+import { TKUITrackTransportProps, TKUITrackTransportStyle } from "../trip/TKUITrackTransport";
+import { TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle } from "../location/TKUILocationDetailField";
+import { TKUICookiesBannerProps, TKUICookiesBannerStyle } from "../privacy/TKUICookiesBanner";
+import { TKUIAlertsSummaryProps, TKUIAlertsSummaryStyle } from "../alerts/TKUIAlertsSummary";
+import { TKUIAlertsViewProps, TKUIAlertsViewStyle } from "../alerts/TKUIAlertsView";
+import { TKUIWaitingRequestProps, TKUIWaitingRequestStyle } from "../card/TKUIWaitingRequest";
+import { TKUIMapPopupProps, TKUIMapPopupStyle } from "../map/TKUIMapPopup";
+import { TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle } from "../location_box/TKUIAutocompleteResult";
+import { TKUILocationBoxProps, TKUILocationBoxStyle } from "../location_box/TKUILocationBox";
+import { TKUICardCarouselProps, TKUICardCarouselStyle } from "../card/TKUICardCarousel";
+import { TKUIAlertRowProps, TKUIAlertRowStyle } from "../alerts/TKUIAlertRow";
+import { Tracker, InitializeOptions } from 'react-ga';
+import { TrackerOptions } from "../analytics/GATracker";
+import { TKUIErrorViewProps, TKUIErrorViewStyle } from "../error/TKUIErrorView";
+import { TKState } from "./TKState";
 import TKGeocodingOptions from "../geocode/TKGeocodingOptions";
-import {TKComponentConfig} from "./TKComponentConfig";
-import {TKComponentDefaultConfig as TKComponentDefaultConfigForExport} from "./TKComponentConfig";
-import {TKUIWithClasses} from "../jss/StyleHelper";
-import {TKUIServiceStepsProps, TKUIServiceStepsStyle} from "../trip/TKUIServiceSteps";
-import {TKUIMapShapesProps, TKUIMapShapesStyle} from "../map/TKUIMapShapes";
-import {TKUIMapStreetsProps, TKUIMapStreetsStyle} from "../map/TKUIMapStreets";
-import {TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle} from "../map/TKUIMapLocationPopup";
-import {TKUIMxMViewProps, TKUIMxMViewStyle} from "../mxm/TKUIMxMView";
-import {TKUIMxMIndexProps, TKUIMxMIndexStyle} from "../mxm/TKUIMxMIndex";
-import {TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle} from "../service/TKUIServiceRealtimeInfo";
-import {TKUICardHeaderProps, TKUICardHeaderStyle} from "../card/TKUICardHeader";
-import {TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle} from "../mxm/TKUIMxMCardHeader";
-import {TKUIMyBookingsProps, TKUIMyBookingsStyle} from "../booking/TKUIMyBookings";
-import {TKUIMyBookingProps, TKUIMyBookingStyle} from "../booking/TKUIMyBooking";
-import {TKUIHomeCardProps, TKUIHomeCardStyle} from "../sidebar/TKUIHomeCard";
-import {TKUIActiveTripProps, TKUIActiveTripStyle} from "../sidebar/TKUIActiveTrip";
-import {TKUIStreetStepProps, TKUIStreetStepStyle} from "../trip/TKUIStreetStep";
-import {TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle} from "../mxm/TKUIMxMBookingCard";
+import { TKComponentConfig } from "./TKComponentConfig";
+import { TKComponentDefaultConfig as TKComponentDefaultConfigForExport } from "./TKComponentConfig";
+import { TKUIWithClasses } from "../jss/StyleHelper";
+import { TKUIServiceStepsProps, TKUIServiceStepsStyle } from "../trip/TKUIServiceSteps";
+import { TKUIMapShapesProps, TKUIMapShapesStyle } from "../map/TKUIMapShapes";
+import { TKUIMapStreetsProps, TKUIMapStreetsStyle } from "../map/TKUIMapStreets";
+import { TKUIMapLocationPopupProps, TKUIMapLocationPopupStyle } from "../map/TKUIMapLocationPopup";
+import { TKUIMxMViewProps, TKUIMxMViewStyle } from "../mxm/TKUIMxMView";
+import { TKUIMxMIndexProps, TKUIMxMIndexStyle } from "../mxm/TKUIMxMIndex";
+import { TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle } from "../service/TKUIServiceRealtimeInfo";
+import { TKUICardHeaderProps, TKUICardHeaderStyle } from "../card/TKUICardHeader";
+import { TKUIMxMCardHeaderProps, TKUIMxMCardHeaderStyle } from "../mxm/TKUIMxMCardHeader";
+import { TKUIMyBookingsProps, TKUIMyBookingsStyle } from "../booking/TKUIMyBookings";
+import { TKUIMyBookingProps, TKUIMyBookingStyle } from "../booking/TKUIMyBooking";
+import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
+import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
+import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
+import { TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
 import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
+import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
+import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 
 /**
  * SDK configuration
@@ -99,7 +101,7 @@ interface ITKUIConfigOptional {
     /** @ctype */
     onUpdateState: (state: TKState, prevState: TKState) => void;
     /** @ctype */
-    initViewport: {center?: LatLng, zoom?: number};
+    initViewport: { center?: LatLng, zoom?: number };
     /** @ctype */
     defaultUserProfile: TKUserProfile;
     /** @ctype */
@@ -114,15 +116,17 @@ interface ITKUIConfigOptional {
     /**
      * @ctype
      */
-    i18n: {locale: string, translations: TKI18nMessages} | Promise<{locale: string, translations: TKI18nMessages}>;
+    i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
     isDarkDefault: boolean;
-    analytics: {google?: {
-        tracker: TrackerOptions | TrackerOptions[];
-        initOptions?: InitializeOptions;
-        // It's checked before every GA event, allowing to enable / disable tracking
-        // dynamically, e.g. depending con cookies / tracking consent.
-        isEnabled?: () => boolean;  // () => true; by default
-    }};
+    analytics: {
+        google?: {
+            tracker: TrackerOptions | TrackerOptions[];
+            initOptions?: InitializeOptions;
+            // It's checked before every GA event, allowing to enable / disable tracking
+            // dynamically, e.g. depending con cookies / tracking consent.
+            isEnabled?: () => boolean;  // () => true; by default
+        }
+    };
     modePriorities: string[][];
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
@@ -193,6 +197,8 @@ interface ITKUIConfigOptional {
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
+    TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
+    TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
     TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
@@ -201,4 +207,4 @@ interface ITKUIConfigOptional {
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
 
 // Did this to avoid refactor affecting all components after re-locating TKComponentDefaultConfig for documentation.
-export type TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>,S> = TKComponentDefaultConfigForExport<P,S>;
+export type TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> = TKComponentDefaultConfigForExport<P, S>;

@@ -32,6 +32,7 @@ import Util from '../util/Util';
 import { TKAccountContext } from '../account/TKAccountContext';
 import TKUILocationDetailField from '../location/TKUILocationDetailField';
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
+import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     parentElement?: any;
@@ -154,6 +155,10 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         const freeFloatingVehicleLoc = Util.iAssign(new FreeFloatingVehicleLocation(), segment.location);
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
         return [
+            <TKUIMxMCollectNearbyCard
+                segment={segment}
+                onRequestClose={onClose}
+            />,
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
