@@ -18,7 +18,7 @@ export const tKUIResultsDefaultStyle: TKUIStyles<TKUIRoutingResultsViewStyle, TK
             marginBottom: '15px',
         },
         iconLoading: {
-            margin: '0 5px',
+            margin: '5px',
             width: '20px',
             height: '20px',
             color: black(1, theme.isDark),
