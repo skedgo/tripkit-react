@@ -114,11 +114,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     isUserTabbing?: boolean;
 
     /**
-     * Set this to select which trip metrics to show for each trip group in the routing results card.
-     * It is important to note that, while you may specify a trip metric to be shown, if
-     * such metric is unavailable in the response of the routing request, it will not be
-     * shown. In addition, the order specified here is the order in which the metrics will be displayed.
-     * The default metrics to show are `price`, `calories` and `carbon`.
+     * See {@link TKUIRoutingResultsView#tripMetricsToShow}
      */
     tripMetricsToShow?: TKTripCostType[];
 }

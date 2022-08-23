@@ -7,7 +7,7 @@ import TripGroup from "../model/trip/TripGroup";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
-import { default as TKUITripRow } from "./TKUITripRow";
+import { default as TKUITripRow, TKTripCostType } from "./TKUITripRow";
 import TKMetricClassifier, { Badges } from "./TKMetricClassifier";
 import { Subtract } from "utility-types";
 import { TKUIConfig, TKComponentDefaultConfig } from "../config/TKUIConfig";
@@ -87,6 +87,30 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * @default _Plan a new trip_ action, which clears current query, that led to the error.
      */
     errorActions?: (error: TKError, defaultAtions: JSX.Element[]) => JSX.Element[];
+
+    /**
+     * Set this to select which trip metrics to show for each trip group in the routing results card.
+     * It is important to note that, while you may specify a trip metric to be shown, if
+     * such metric is unavailable in the response of the routing request, it will not be
+     * shown. In addition, the order specified here is the order in which the metrics will be displayed.
+     * The default metrics to show are `price`, `calories` and `carbon`.
+     */
+    tripMetricsToShow?: TKTripCostType[];
+
+    /**
+     * Set this to the allowed badges to show on a trip group
+     * Badges will only be shown if the related scores for that metric are sufficiently different for the trips.
+     * Badges order matters: a trip matching two or more badges will get the first matching badge according to the specified order.
+     * This setting is independent of `tripMetricsToShow`.
+     * By default all badges are shown.
+     */
+    tripBadgesToShow?: Badges[];
+
+    /**
+     * Set this to the specify the trip sortings to show. The order of the elements in this array determine the order of the
+     * options in the sort select.
+     */
+    tripSortingsToShow?: TripSort[];
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext {
@@ -217,6 +241,10 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     private timePrefOptions: SelectOption[];
     private sortOptions: SelectOption[];
 
+    static defaultProps: Partial<IProps> = {
+        tripSortingsToShow: Object.values(TripSort).filter((value: TripSort) => value !== TripSort.CARBON)
+    };
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -228,6 +256,12 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         this.sortOptions = this.getSortOptions(this.props.t);
         this.getDefaultErrorActions = this.getDefaultErrorActions.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        // This is necessary since default trip sort is selected in WithRoutingResults, based on 
+        // TKUserProfile.defaultTripSort, with fallback to TripSort.OVERALL, and so the default trip
+        // sort may not be among the tripSortingsToShow. Improve the sync of this.
+        if (props.tripSortingsToShow!.length > 0 && !props.tripSortingsToShow!.includes(props.sort)) {
+            props.onSortChange(props.tripSortingsToShow![0]);
+        }
     }
 
     private getDefaultErrorActions(error: TKError) {
@@ -241,30 +275,28 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 
     private getSortOptions(t: TranslationFunction): SelectOption[] {
-        return Object.values(TripSort)
-            .filter((value: TripSort) => value !== TripSort.CARBON)
-            .map((value: TripSort) => {
-                let label;
-                switch (value) {
-                    case TripSort.OVERALL:
-                        label = t("sorted_by_preferred");
-                        break;
-                    case TripSort.TIME:
-                        label = this.props.query.timePref === TimePreference.ARRIVE ?
-                            t("sorted_by_departure") : t("sorted_by_arrival");
-                        break;
-                    case TripSort.PRICE:
-                        label = t("sorted_by_price");
-                        break;
-                    case TripSort.DURATION:
-                        label = t("sorted_by_duration");
-                        break;
-                    case TripSort.CALORIES:
-                        label = t("sorted_by_healthiest");
-                        break;
-                }
-                return { value: value, label: label };
-            });
+        return this.props.tripSortingsToShow!.map((value: TripSort) => {
+            let label;
+            switch (value) {
+                case TripSort.OVERALL:
+                    label = t("sorted_by_preferred");
+                    break;
+                case TripSort.TIME:
+                    label = this.props.query.timePref === TimePreference.ARRIVE ?
+                        t("sorted_by_departure") : t("sorted_by_arrival");
+                    break;
+                case TripSort.PRICE:
+                    label = t("sorted_by_price");
+                    break;
+                case TripSort.DURATION:
+                    label = t("sorted_by_duration");
+                    break;
+                case TripSort.CALORIES:
+                    label = t("sorted_by_healthiest");
+                    break;
+            }
+            return { value: value, label: label };
+        });
     }
 
     private onKeyDown(e: any) {
@@ -433,7 +465,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                             }}
                         </TKUIConfigContext.Consumer>
                     }
-                    {(!error || this.props.values.length > 0) &&
+                    {this.props.tripSortingsToShow!.length > 1 && (!error || this.props.values.length > 0) &&
                         <div className={classes.sortBar}>
                             <TKUISelect
                                 options={this.sortOptions}
@@ -480,6 +512,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                 })}
                             onSegmentSelected={this.props.setSelectedTripSegment}
                             isUserTabbing={this.props.isUserTabbing}
+                            tripMetricsToShow={this.props.tripMetricsToShow}
                         />
                     )}
                     {error}
@@ -495,7 +528,10 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     private refreshBadges() {
         this.setState({
             tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values,
-                this.props.config.modePriorities ? TransportUtil.priorityBucketsTripCompareFcBuilder(this.props.config.modePriorities) : undefined)
+                {
+                    badges: this.props.tripBadgesToShow,
+                    preferredTripCompareFc: this.props.config.modePriorities ? TransportUtil.priorityBucketsTripCompareFcBuilder(this.props.config.modePriorities) : undefined
+                })
         });
     }
 
