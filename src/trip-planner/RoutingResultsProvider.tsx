@@ -13,6 +13,7 @@ import Segment from "../model/trip/Segment";
 import {TKError} from "../error/TKError";
 import {TKUIMapViewClass} from "../map/TKUIMapView";
 import {TripSort} from "../model/trip/TripSort";
+import ModeLocation from "../model/location/ModeLocation";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -57,6 +58,7 @@ export interface IRoutingResultsContext {
     refreshSelectedTrip: () => Promise<boolean>;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
+    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => void;
 
     // This is general, not routing specific.
     waitingStateLoad: boolean;
@@ -88,6 +90,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     refreshSelectedTrip: () => Promise.resolve(false),
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => {},
+    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => {},
     inputTextFrom: "",
     inputTextTo:  "",
     getRegionInfoP: () => undefined,

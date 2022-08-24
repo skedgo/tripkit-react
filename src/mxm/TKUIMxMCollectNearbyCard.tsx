@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import TripGoApi from '../api/TripGoApi';
 import TKUICard from '../card/TKUICard';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -11,6 +11,9 @@ import Util from '../util/Util';
 import { tKUIMxMCollectNearbyCardDefaultStyle } from './TKUIMxMCollectNearbyCard.css';
 import ModeLocation from '../model/location/ModeLocation';
 import TKUIModeLocationRow from './TKUIModeLocationRow';
+import GeolocationData from '../geocode/GeolocationData';
+import { TKUserPosition } from '../util/GeolocationUtil';
+import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 
 type IStyle = ReturnType<typeof tKUIMxMCollectNearbyCardDefaultStyle>
 
@@ -32,12 +35,18 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, onRequestClose, classes, injectedStyles, t }) => {
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
+    const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
     useEffect(() => {
         const mode = segment.modeIdentifier ?? segment.modeInfo?.identifier;
         TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=500&modes=${mode}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
             .then(groupsJSON => Util.deserialize(groupsJSON.groups[0], LocationsResult))
             .then(locationsResult => setAlternatives(locationsResult.getLocations()));
-    }, [segment])
+        // Use an observable instead.    
+        GeolocationData.instance.requestCurrentLocation(true)
+            .then(setUserPosition)
+            .catch(() => { });  // Don't throw an exception if access was previously denied by the user.
+    }, [segment]);
+    const routingContext = useContext(RoutingResultsContext);
     return (
         <TKUICard
             title={segment.getAction()}
@@ -45,10 +54,14 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, on
                 main: overrideClass({ height: '100%', position: 'relative' })
             }}
         >
-            {/* <div className={classes.main}> */}
-                {alternatives?.map((alt, i) =>
-                    <TKUIModeLocationRow location={alt} key={i} />)}
-            {/* </div> */}
+            {alternatives?.map((alt, i) =>
+                <TKUIModeLocationRow
+                    location={alt}
+                    userPosition={userPosition}
+                    selected={alt.id === segment.sharedVehicle?.identifier}
+                    key={i}
+                    onClick={() => routingContext.onSegmentCollectChange(segment, alt)}
+                />)}
         </TKUICard>
     )
 }
