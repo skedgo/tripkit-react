@@ -1,15 +1,23 @@
 import React from 'react';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from '../config/TKUIConfig';
-import { TKUIWithClasses, TKUIWithStyle } from '../jss/StyleHelper';
+import { TKUIWithClasses, TKUIWithStyle, overrideClass } from '../jss/StyleHelper';
 import { tKUIModeLocationRowDefaultStyle } from './TKUIModeLocationRow.css';
 import ModeLocation from '../model/location/ModeLocation';
 import TKUIRow from '../options/TKUIRow';
+import TransportUtil from '../trip/TransportUtil';
+import { TKUserPosition } from '../util/GeolocationUtil';
+import LocationUtil from '../util/LocationUtil';
+import { ReactComponent as IconCurrLoc } from '../images/location/ic-curr-loc.svg';
+import classNames from 'classnames';
 
 type IStyle = ReturnType<typeof tKUIModeLocationRowDefaultStyle>
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    location: ModeLocation;    
+    location: ModeLocation;
+    userPosition?: TKUserPosition;
+    selected?: boolean;
+    onClick?: () => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -23,12 +31,24 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMBookingCard"
 };
 
-const TKUIModeLocationRow: React.FunctionComponent<IProps> = ({ location, classes, injectedStyles, t }) => {    
+const TKUIModeLocationRow: React.FunctionComponent<IProps> = ({ location, userPosition, selected, onClick, classes, injectedStyles, t }) => {
+    const icon = TransportUtil.getTransIcon(location.modeInfo);
     return (
-        <TKUIRow
-            title={location.name}
-            subtitle={location.address}
-        />
+        <div className={classNames(classes.main, selected && classes.selected)} onClick={onClick}>
+            <img src={icon} className={classes.transport} />
+            <TKUIRow
+                title={location.name}
+                subtitle={location.address}
+                styles={{
+                    main: overrideClass(injectedStyles.row)
+                }}
+            />
+            {userPosition &&
+                <div className={classes.distance}>
+                    <IconCurrLoc />
+                    {TransportUtil.distanceToBriefString(LocationUtil.distanceInMetres(userPosition.latLng, location))}
+                </div>}
+        </div>
     )
 }
 

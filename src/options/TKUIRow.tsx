@@ -37,7 +37,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIRow"
 };
 
-const TKUIRow: React.SFC<IProps> = (props: IProps) => {
+const TKUIRow: React.FunctionComponent<IProps> = (props: IProps) => {
     const classes = props.classes;
     return (
         <div className={classes.main}>

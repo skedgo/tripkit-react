@@ -25,6 +25,7 @@ import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
 import GATracker from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
+import ModeLocation from "../model/location/ModeLocation";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -103,6 +104,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onReqRealtimeFor = this.onReqRealtimeFor.bind(this);
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
+            this.onSegmentCollectChange = this.onSegmentCollectChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
         }
@@ -507,6 +509,71 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 .finally(() => callback && callback(segmentReplacement));
         };
 
+        public onSegmentCollectChange(segment: Segment, location: ModeLocation) {
+            const selectedTrip = this.state.selected;
+            if (!selectedTrip) {
+                return;
+            }
+            // Compute trip involving service through waypoints.json endpoint.
+            this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
+            const tripSegments = selectedTrip.segments
+                .filter(tripSegment => tripSegment.modeIdentifier);
+            const waypointSegments: any[] = tripSegments
+                .map((tripSegment, i) => {
+                    if (tripSegment === segment) {
+                        const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
+                        return {
+                            start: `(${location.lat},${location.lng})`,
+                            end: `(${location.lat},${location.lng})`,
+                            modes: [location.modeInfo.identifier],
+                            startTime: segment.startTime,
+                            endTime: segment.endTime,
+                            sharedVehicleID: location.id,
+                            region: segmentRegions[0].name,
+                            ...segmentRegions[0] !== segmentRegions[1] ? {
+                                disembarkationRegion: segmentRegions[1].name
+                            } : undefined
+                        };
+                    } else {
+                        // The end location of the previous segment and the start location of the next segment should be the new location.
+                        const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
+                        const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? segment.from : tripSegment.to;
+                        return {
+                            start: "(" + startLoc.lat + "," + startLoc.lng + ")",
+                            end: "(" + endLoc.lat + "," + endLoc.lng + ")",
+                            modes: [tripSegment.modeIdentifier]
+                        };
+                    }
+                })
+            const requestBody = {
+                config: { v: 11 },
+                segments: waypointSegments
+            };
+            TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
+                .then((result: RoutingResults) => {
+                    const updatedTrip = result.groups[0];
+                    // Compare by id (instead of equiality between trips) since segment.trip is Trip, while prevState.trips and prevState.selected are TripGroups.
+                    this.setState(prevState => {
+                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment.trip.id)) {
+                            return null;
+                        }
+                        const stateUpdate = {
+                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
+                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
+                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
+                        }
+                        return stateUpdate;
+                    });
+                    this.setState({ waitingTripUpdate: false });
+                })
+                .catch(() => {
+                    this.setState({
+                        waitingTripUpdate: false,
+                        tripUpdateError: new TKError("Error updating trip")
+                    });
+                });
+        }
+
         public onWaitingStateLoad(waiting: boolean, error?: Error) {
             this.setState({
                 waitingStateLoad: waiting,
@@ -563,6 +630,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 refreshSelectedTrip={this.refreshSelectedTrip}
                 onAlternativeChange={this.onAlternativeChange}
                 onSegmentServiceChange={this.onSegmentServiceChange}
+                onSegmentCollectChange={this.onSegmentCollectChange}
                 waitingStateLoad={this.state.waitingStateLoad}
                 stateLoadError={this.state.stateLoadError}
                 onWaitingStateLoad={this.onWaitingStateLoad}

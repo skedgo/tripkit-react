@@ -4,6 +4,9 @@ import VehicleTypeInfo from "./VehicleTypeInfo";
 
 @JsonObject
 class VehicleInfo {
+    @JsonProperty("identifier", String, true)
+    public identifier?: string = undefined;
+
     @JsonProperty("batteryLevel", Number, true)
     public batteryLevel?: number = undefined;
 

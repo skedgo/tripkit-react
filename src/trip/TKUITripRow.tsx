@@ -3,7 +3,7 @@ import TripGroup from "../model/trip/TripGroup";
 import TripRowTrack from "./TripRowTrack";
 import TKUITripTime from "./TKUITripTime";
 import Trip from "../model/trip/Trip";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUITripRowDefaultStyle } from "./TKUITripRow.css";
 import { ReactComponent as IconBadgeCheapest } from '../images/badges/ic-badge-money.svg';
 import { ReactComponent as IconBadgeEasiest } from '../images/badges/ic-badge-like.svg';
