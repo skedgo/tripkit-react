@@ -34,7 +34,15 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
     const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
     useEffect(() => {
-        const mode = segment.modeIdentifier ?? segment.modeInfo?.identifier;
+        let mode: string | undefined;
+        if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
+            mode = "me_car"
+        } else {
+            mode = segment.modeIdentifier ?? undefined;  // segment.modeInfo?.identifier === "stationary_vehicle-collect";
+        }
+        if (!mode) {
+            return;
+        }
         TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=500&modes=${mode}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
             .then(groupsJSON => Util.deserialize(groupsJSON.groups[0], LocationsResult))
             .then(locationsResult => {
