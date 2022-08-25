@@ -2,19 +2,45 @@ import * as React from "react";
 import BBox from "../model/BBox";
 import LocationsData from "../data/LocationsData";
 import Location from "../model/Location";
-import StopLocation from "../model/StopLocation";
-import {Marker, Popup} from "react-leaflet";
+import { Marker } from "react-leaflet";
 import L from "leaflet";
 import TKUIModeLocationIcon from "./TKUIModeLocationIcon";
 import MapUtil from "../util/MapUtil";
 import LocationsResult from "../model/location/LocationsResult";
 import RegionsData from "../data/RegionsData";
-import {EventSubscription} from "fbemitter";
+import { EventSubscription } from "fbemitter";
 import LocationUtil from "../util/LocationUtil";
-import {TKUIConfig} from "../config/TKUIConfig";
+import { TKUIConfig } from "../config/TKUIConfig";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import { renderToStaticMarkup } from "../jss/StyleHelper";
+import ModeLocation from "../model/location/ModeLocation";
 
+interface TKUIModeLocationMarkerProps {
+    loc: ModeLocation;
+    onClick?: () => void;
+    isDarkMode?: boolean;
+}
+
+export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMarkerProps> =
+    ({ loc, onClick, isDarkMode }) => {
+        const key = loc.getKey();
+        const transIconHTML = renderToStaticMarkup(
+            <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
+        );
+        const icon = L.divIcon({
+            html: transIconHTML,
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+            className: ""
+        });
+        return <Marker
+            position={loc}
+            icon={icon}
+            onclick={onClick}
+            key={key}
+            keyboard={false}
+        />;
+    }
 interface IProps {
     zoom: number,
     bounds: BBox,
@@ -25,7 +51,6 @@ interface IProps {
     config: TKUIConfig;
     transportOptions: TKTransportOptions;
 }
-
 class TKUIMapLocations extends React.Component<IProps, {}> {
 
     public static defaultProps: Partial<IProps> = {
@@ -42,27 +67,6 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         this.locListenerSubscription = LocationsData.instance.addChangeListener((locResult: LocationsResult) => this.forceUpdate());
     }
 
-    private getLocMarker(loc: Location): React.ReactNode {
-        const clickHandler = () => this.props.onClick && this.props.onClick(loc);
-        const key = loc.getKey();
-        const transIconHTML = renderToStaticMarkup(
-            <TKUIModeLocationIcon stop={loc as StopLocation} isDarkMode={this.props.isDarkMode}/>
-        );
-        const icon = L.divIcon({
-            html: transIconHTML,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-            className: ""
-        });
-        return <Marker
-            position={loc}
-            icon={icon}
-            onclick={clickHandler}
-            key={key}
-            keyboard={false}
-        />;
-    }
-
     private enabledModes(props: IProps = this.props): string[] {
         const region = RegionsData.instance.getRegion(props.bounds.getCenter());
         if (!region) {
@@ -77,7 +81,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
         if (!region) {
             return null;
         }
-        let locations: Location[] = [];
+        let locations: ModeLocation[] = [];
         const omit = this.props.omit || [];
         const enabledModes = this.enabledModes();
         if (enabledModes.length > 0) {
@@ -90,8 +94,8 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
                 locations.push(...LocationsData.instance.getRequestLocations(region.name, 2, enabledModes, bounds).getLocations());
             }
         }
-        return locations.filter((loc: Location) => !omit.find((omitLoc) => LocationUtil.equal(omitLoc, loc)))
-            .map((loc: Location) => this.getLocMarker(loc));
+        return locations.filter(loc => !omit.find(omitLoc => LocationUtil.equal(omitLoc, loc)))
+            .map(loc => <TKUIModeLocationMarker loc={loc} onClick={() => this.props.onClick?.(loc)} isDarkMode={this.props.isDarkMode} />);
     }
 
     public shouldComponentUpdate(nextProps: IProps): boolean {

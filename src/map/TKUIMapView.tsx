@@ -21,7 +21,7 @@ import ReactResizeDetector from "react-resize-detector";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
 import StopLocation from "../model/StopLocation";
-import TKUIMapLocations from "./TKUIMapLocations";
+import TKUIMapLocations, { TKUIModeLocationMarker } from "./TKUIMapLocations";
 import { CSSProps, renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIMapViewDefaultStyle } from "./TKUIMapView.css";
@@ -236,6 +236,8 @@ interface IState {
     userLocation?: TKUserPosition;
     userLocationTooltip?: string;
     refreshTiles?: boolean;
+    modeLocations?: ModeLocation[];
+    onModeLocationClick?: (location: ModeLocation) => void;
 }
 
 class TKUIMapView extends React.Component<IProps, IState> {
@@ -252,6 +254,13 @@ class TKUIMapView extends React.Component<IProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+    }
+
+    public setModeLocations(locations?: ModeLocation[], onClick?: (location: ModeLocation) => void) {
+        this.setState({
+            modeLocations: locations,
+            onModeLocationClick: onClick
+        });
     }
 
     private onMapLocChanged(isFrom: boolean, latLng: LatLng) {
@@ -644,6 +653,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             transportOptions={this.props.transportOptions}
                         />
                     }
+                    {this.state.modeLocations?.map(location =>
+                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} />
+                    )}
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
                             ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
@@ -792,8 +804,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.setState({ userLocation: { latLng: this.props.from } });
         }
 
-        const trip = this.props.trip;
-        if ((trip !== prevProps.trip || paddingChanged) && trip) {
+        const { trip, tripSegment } = this.props;
+        if (!tripSegment && // Not in MxM view
+            (trip !== prevProps.trip || paddingChanged) && trip) {
             const fitBounds = MapUtil.getTripBounds(trip);
             // TODO: analize better when to force fit bounds.
             if (!this.alreadyFits(fitBounds) || paddingChanged) {

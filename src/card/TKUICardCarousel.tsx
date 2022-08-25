@@ -7,13 +7,15 @@ import { TKUISlideUpOptions } from "./TKUISlideUp";
 import classNames from "classnames";
 import Util from "../util/Util";
 import TKUISlideUp from "./TKUISlideUp";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { tKUICardCarouselDefaultStyle } from "./TKUICardCarousel.css";
 import { Subtract } from "utility-types";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import { cardHandleClass } from "./TKUICard";
+
+type IStyle = ReturnType<typeof tKUICardCarouselDefaultStyle>;
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: number;
@@ -24,17 +26,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     parentElement?: any;
     swipeable?: boolean; // default true
     animated?: boolean; // default true
+    renderJustSelected?: boolean // default false
 }
 
 interface IConsumedPros extends TKUIViewportUtilProps { }
-
-interface IStyle {
-    modalContainer: CSSProps<IProps>;
-    main: CSSProps<IProps>;
-    lotOfPages: CSSProps<IProps>;
-    pageWrapper: CSSProps<IProps>;
-    hidden: CSSProps<IProps>;
-}
 
 interface IProps extends IClientProps, IConsumedPros, TKUIWithClasses<IStyle, IProps> { }
 
@@ -79,7 +74,7 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
         const children = Util.isFunction(this.props.children) ?
             (this.props.children as (registerHandle: (index: number, handle: any) => void) => JSX.Element)(this.registerHandle) :
             this.props.children;
-        const { classes, animated } = this.props;
+        const { classes, animated, renderJustSelected } = this.props;
         return (
             <TKUISlideUp
                 {...this.props.slideUpOptions}
@@ -115,14 +110,18 @@ class TKUICardCarousel extends React.Component<IProps, IState> {
                         {React.Children.map(children, (child: any, i: number) =>
                             animated !== false ?
                                 <div className={classNames(classes.pageWrapper,
-                                    i !== this.props.selected && this.state.hideOtherPages && classes.hidden)} key={i}>
+                                    i !== this.props.selected && this.state.hideOtherPages && classes.hiddenChildren)} key={i}>
                                     {child}
                                 </div>
                                 :
                                 <div></div>
                         )}
                     </Carousel>
-                    {animated === false &&
+                    {animated === false && !renderJustSelected && React.Children.map(children, (child: any, i: number) =>
+                        <div className={classNames(classes.pageWrapper, i !== this.props.selected && classes.hidden)} key={i}>
+                            {child}
+                        </div>)}
+                    {animated === false && renderJustSelected &&
                         <div className={classNames(classes.pageWrapper)}>
                             {children[this.props.selected ?? 0]}
                         </div>}

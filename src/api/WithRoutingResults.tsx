@@ -537,11 +537,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     } else {
                         // The end location of the previous segment and the start location of the next segment should be the new location.
                         const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
-                        const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? segment.from : tripSegment.to;
+                        const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
                         return {
-                            start: "(" + startLoc.lat + "," + startLoc.lng + ")",
-                            end: "(" + endLoc.lat + "," + endLoc.lng + ")",
-                            modes: [tripSegment.modeIdentifier]
+                            start: `(${startLoc.lat},${startLoc.lng})`,
+                            end: `(${endLoc.lat},${endLoc.lng})`,
+                            modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
+                                location.modeInfo.identifier : tripSegment.modeIdentifier]
                         };
                     }
                 })

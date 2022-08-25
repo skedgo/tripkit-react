@@ -50,7 +50,7 @@ class TKUIFavouriteRow extends React.Component<IProps, {}> {
         if (value instanceof FavouriteStop) {
             icon =
                 <TKUIModeLocationIcon
-                    stop={value.stop}
+                    location={value.stop}
                     style={{
                         width: '20px',
                         height: '20px',
