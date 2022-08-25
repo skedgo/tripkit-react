@@ -19,7 +19,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         marginRight: '3px',
     },
     icon: {
-        width: '24px',
+        width: '24px!important',
         height: '24px',
         ...theme.isDark && {
             opacity: (props: TKUITrackTransportProps) =>

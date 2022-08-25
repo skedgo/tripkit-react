@@ -8,7 +8,7 @@ import ModeLocation from "../model/location/ModeLocation";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
 
 interface IProps {
-    stop: ModeLocation;
+    location: ModeLocation;
     style?: CSS.Properties;
     isDarkMode?: boolean;
 }
@@ -16,8 +16,8 @@ interface IProps {
 class TKUIModeLocationIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        if (this.props.stop instanceof FreeFloatingVehicleLocation) {
-            let providerColor = TransportUtil.getTransportColor(this.props.stop.modeInfo) || black(0);
+        if (this.props.location instanceof FreeFloatingVehicleLocation) {
+            let providerColor = TransportUtil.getTransportColor(this.props.location.modeInfo) || black(0);
             return <div style={{
                 width: '12px',
                 height: '12px',
@@ -26,7 +26,7 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
                 border: '2px solid ' + white(0)
             } as any}/>
         }
-        const modeInfo = this.props.stop.modeInfo;
+        const modeInfo = this.props.location.modeInfo;
         const wantIconForDark = true;
         const wantLocalIcon = !!modeInfo.identifier && modeInfo.identifier.startsWith("me_car-s");
         const transIcon = TransportUtil.getTransIcon(modeInfo,

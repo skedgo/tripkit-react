@@ -62,9 +62,9 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const MODAL_UP_TOP = 100;
 
-interface SegmentMxMCardsProps {
+export interface SegmentMxMCardsProps {
     segment: Segment;
-    onClose: () => void;
+    onRequestClose: () => void;
     t: TranslationFunction;
     options: TKUserProfile;
     landscape: boolean;
@@ -72,6 +72,7 @@ interface SegmentMxMCardsProps {
     mapAsync: Promise<TKUIMapViewClass>;
     trip?: Trip;
     accountsSupported?: boolean;
+    isSelectedCard: () => boolean;
 }
 
 const cardStyles = {
@@ -80,10 +81,10 @@ const cardStyles = {
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
-    const { segment, onClose, t, options, landscape } = props;
+    const { segment, onRequestClose, t, options, landscape } = props;
     let cards: JSX.Element[] = [];
     cards.push(
-        <TKUIMxMTimetableCard segment={segment} onRequestClose={onClose} key={segment.id + "a"} />
+        <TKUIMxMTimetableCard segment={segment} onRequestClose={onRequestClose} key={segment.id + "a"} />
     );
     const timezone = segment.from.timezone;
     cards.push(
@@ -105,7 +106,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                     alertsSlideUpOptions={{ modalUp: { top: cardSpacing(landscape), unit: 'px' }, zIndex: 1010 }}
                 />
             )}
-            onRequestClose={onClose}
+            onRequestClose={onRequestClose}
             styles={cardStyles}
             key={segment.id + "b"}
             slideUpOptions={{
@@ -124,13 +125,13 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
 }
 
 function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
-    const { segment, onClose, mapAsync } = props;
+    const { segment, onRequestClose, mapAsync } = props;
     return (
         <TKUICard
             title={segment.getAction()}
             subtitle={segment.to.getDisplayString()}
             renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
-            onRequestClose={onClose}
+            onRequestClose={onRequestClose}
             styles={cardStyles}
             slideUpOptions={{
                 showHandle: true
@@ -148,7 +149,7 @@ function getStreetMxMCard(props: SegmentMxMCardsProps): JSX.Element {
 }
 
 function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
-    const { segment, onClose, refreshSelectedTrip, trip, accountsSupported } = props;
+    const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, isSelectedCard } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props);
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
@@ -157,12 +158,14 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         return [
             <TKUIMxMCollectNearbyCard
                 segment={segment}
-                onRequestClose={onClose}
+                onRequestClose={onRequestClose}
+                mapAsync={mapAsync}
+                isSelectedCard={isSelectedCard}
             />,
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
-                onRequestClose={onClose}
+                onRequestClose={onRequestClose}
                 renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
                 styles={cardStyles}
                 key={segment.id}
@@ -179,7 +182,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
         return [
             <TKUIMxMBookingCard
                 segment={segment}
-                onRequestClose={onClose}
+                onRequestClose={onRequestClose}
                 refreshSelectedTrip={refreshSelectedTrip}
                 trip={trip}
                 key={segment.id} />
@@ -190,7 +193,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
-                onRequestClose={onClose}
+                onRequestClose={onRequestClose}
                 renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
                 styles={cardStyles}
                 key={segment.id}
@@ -240,28 +243,36 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const accountContext = useContext(TKAccountContext);
     const trip = props.selectedTrip!;
     const segments = trip.getSegments();
-    const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
+    const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);    
+    const classes = props.classes;
+    const selectedSegment = props.selectedTripSegment!;
+    // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
+    const selectedSegmentInSummary = findNextInSummary(selectedSegment, segments);
+    const selectedIndexInSummary = segmentsInSummary.indexOf(selectedSegmentInSummary);
+
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
+    let cardCount = 0;
     const segmentToCards = segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
+        const cardIndex = cardCount;
         map.set(segment, getSegmentMxMCards({
             segment,
-            onClose: () => props.setSelectedTripSegment(undefined),
+            onRequestClose: () => props.setSelectedTripSegment(undefined),
             t,
             options: props.options,
             landscape: props.landscape,
             refreshSelectedTrip,
             mapAsync,
             trip,
-            accountsSupported: accountContext.accountsSupported
+            accountsSupported: accountContext.accountsSupported,
+            // Pass a function since we need to deferr this calculation, given it's based on the selectedCardIndex, which is calculated using
+            // the segmentToCards map. Also need to freeze the cardCount into a cardIndex constant.
+            isSelectedCard: () => cardIndex === selectedCardIndex
         }));
+        cardCount++;
         return map;
     }, new Map<Segment, JSX.Element[]>());
-    const classes = props.classes;
-    const selectedSegment = props.selectedTripSegment!;
-    // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
-    const selectedSegmentInSummary = findNextInSummary(selectedSegment, segments);
-    const selectedIndexInSummary = segmentsInSummary.indexOf(selectedSegmentInSummary);
+
     // Since a segment may have 2 or more cards (e.g. PT or Collect segments), we use this offset to keep track of
     // which of the cards of the segment is currently visible in the cards carousel.
     const [selectedCardOffset, setSelectedCardOffset] = useState<number>(0);
@@ -272,15 +283,18 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
                 map.fitBounds(MapUtil.getShapesBounds(selectedSegment.shapes, true));
             } else {
-                const zoom = map.getZoom();
-                const newZoom = zoom !== undefined && zoom >= 15 ? zoom : 15; // zoom in if zoom < 10.
+                const zoom = map.getZoom();                
+                const newZoom = zoom !== undefined && zoom >= 16 ? zoom : 16; // zoom in if zoom < 15.
                 map.setViewport(selectedSegment.from, newZoom);
             }
-        });
+        });        
+    }, [selectedSegment, selectedCardOffset]);
+    useEffect(() => {
         return () => {
+            // Return map to fit the trip on unmount
             props.mapAsync.then(map => map.fitBounds(MapUtil.getTripBounds(trip)))
         };
-    }, [selectedSegment, selectedCardOffset]);
+    }, []);
     return (
         <Fragment>
             <div className={classes.trackIndexPanel}>

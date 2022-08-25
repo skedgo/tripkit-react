@@ -25,7 +25,7 @@ import CarPodLocation from "../model/location/CarPodLocation";
 const defaultRenderIcon = (location: Location) =>
     location instanceof StopLocation ?
         <TKUIModeLocationIcon
-            stop={location as StopLocation}
+            location={location as StopLocation}
             style={{
                 width: undefined,
                 height: undefined,
