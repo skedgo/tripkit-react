@@ -518,34 +518,66 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
             const tripSegments = selectedTrip.segments
                 .filter(tripSegment => tripSegment.modeIdentifier);
-            const waypointSegments: any[] = tripSegments
-                .map((tripSegment, i) => {
-                    if (tripSegment === segment) {
-                        const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
-                        return {
-                            start: `(${location.lat},${location.lng})`,
-                            end: `(${location.lat},${location.lng})`,
-                            modes: [location.modeInfo.identifier],
-                            startTime: segment.startTime,
-                            endTime: segment.endTime,
-                            sharedVehicleID: location.id,
-                            region: segmentRegions[0].name,
-                            ...segmentRegions[0] !== segmentRegions[1] ? {
-                                disembarkationRegion: segmentRegions[1].name
-                            } : undefined
-                        };
-                    } else {
-                        // The end location of the previous segment and the start location of the next segment should be the new location.
-                        const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
-                        const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
-                        return {
-                            start: `(${startLoc.lat},${startLoc.lng})`,
-                            end: `(${endLoc.lat},${endLoc.lng})`,
-                            modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
-                                location.modeInfo.identifier : tripSegment.modeIdentifier]
-                        };
-                    }
-                })
+            let waypointSegments: any[];
+            if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
+                waypointSegments = tripSegments
+                    .map((tripSegment, i) => {
+                        if (tripSegment === segment) {
+                            const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
+                            return {
+                                start: `(${location.lat},${location.lng})`,
+                                end: `(${location.lat},${location.lng})`,
+                                modes: [tripSegment.modeIdentifier],
+                                startTime: segment.startTime,
+                                endTime: segment.endTime,
+                                sharedVehicleID: location.id,
+                                region: segmentRegions[0].name,
+                                ...segmentRegions[0] !== segmentRegions[1] ? {
+                                    disembarkationRegion: segmentRegions[1].name
+                                } : undefined
+                            };
+                        } else {
+                            // The end location of the previous segment and the start location of the next segment should be the new location.
+                            const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
+                            const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
+                            return {
+                                start: `(${startLoc.lat},${startLoc.lng})`,
+                                end: `(${endLoc.lat},${endLoc.lng})`,                                
+                                modes: [tripSegment.modeIdentifier]
+                            };
+                        }
+                    });
+            } else {    // segment.modeInfo?.identifier === "stationary_vehicle-collect";
+                waypointSegments = tripSegments
+                    .map((tripSegment, i) => {
+                        if (tripSegment === segment) {
+                            const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
+                            return {
+                                start: `(${location.lat},${location.lng})`,
+                                end: `(${location.lat},${location.lng})`,
+                                modes: [location.modeInfo.identifier],
+                                startTime: segment.startTime,
+                                endTime: segment.endTime,
+                                sharedVehicleID: location.id,
+                                region: segmentRegions[0].name,
+                                ...segmentRegions[0] !== segmentRegions[1] ? {
+                                    disembarkationRegion: segmentRegions[1].name
+                                } : undefined
+                            };
+                        } else {
+                            // The end location of the previous segment and the start location of the next segment should be the new location.
+                            const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
+                            const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
+                            return {
+                                start: `(${startLoc.lat},${startLoc.lng})`,
+                                end: `(${endLoc.lat},${endLoc.lng})`,
+                                // If changed of vehicle provider, then also need to update all trip segments that also have the original modeIdentifier.
+                                modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
+                                location.modeInfo.identifier : tripSegment.modeIdentifier]                                
+                            };
+                        }
+                    });
+            }
             const requestBody = {
                 config: { v: 11 },
                 segments: waypointSegments

@@ -176,6 +176,29 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps): JSX.Element[] {
                 <TKUILocationDetail location={freeFloatingVehicleLoc} />
             </TKUICard>
         ];
+    } else if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
+        const location = segment.location;
+        return [
+            <TKUIMxMCollectNearbyCard
+                segment={segment}
+                onRequestClose={onRequestClose}
+                mapAsync={mapAsync}
+                isSelectedCard={isSelectedCard}
+            />,
+            <TKUICard
+                title={segment.getAction()}
+                subtitle={segment.to.getDisplayString()}
+                onRequestClose={onRequestClose}
+                renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
+                styles={cardStyles}
+                key={segment.id}
+                slideUpOptions={{
+                    showHandle: true
+                }}
+            >
+                <TKUILocationDetail location={location} />
+            </TKUICard>
+        ];
     } else if (segment.isWalking() || segment.isBicycle()) {
         return [getStreetMxMCard(props)]
     } else if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
