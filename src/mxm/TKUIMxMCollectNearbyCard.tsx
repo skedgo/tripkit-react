@@ -30,7 +30,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMBookingCard"
 };
 
-const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard: selectedCard, classes, injectedStyles, t }) => {
+const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard }) => {
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
     const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
     useEffect(() => {
@@ -57,13 +57,21 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         // TODO: See if can avoid the imperative access to the map, and access through props, instead. Maybe keep this as is for now, and then make a unified
         // scheme that also contemplate map locations. Probably should provide a context and access it from here and TKUIMapView.
         mapAsync.then(map => {
-            if (selectedCard() && alternatives) {
-                map.setModeLocations(alternatives, location => routingContext.onSegmentCollectChange(segment, location))
+            if (isSelectedCard!() && alternatives) {
+                map.setModeLocations(alternatives, location => routingContext.onSegmentCollectChange(segment, location));
             } else {
                 map.setModeLocations(undefined);
             }
         });
-    }, [selectedCard(), alternatives]);
+    }, [isSelectedCard!(), alternatives]);
+    useEffect(() => {
+        // Clear map also on unmount (close card or trip update after picking an alternative)
+        return () => {
+            mapAsync.then(map => {
+                map.setModeLocations(undefined);
+            });
+        }
+    }, []);
     const routingContext = useContext(RoutingResultsContext);
     return (
         <TKUICard
