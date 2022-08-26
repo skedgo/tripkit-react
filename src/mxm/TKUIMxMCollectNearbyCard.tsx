@@ -14,6 +14,11 @@ import GeolocationData from '../geocode/GeolocationData';
 import { TKUserPosition } from '../util/GeolocationUtil';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import { SegmentMxMCardsProps } from './TKUIMxMView';
+import TKUIMxMCardHeader from './TKUIMxMCardHeader';
+import FacilityLocation from '../model/location/FacilityLocation';
+import ModeInfo from '../model/trip/ModeInfo';
+import TransportUtil from '../trip/TransportUtil';
+import classNames from 'classnames';
 
 type IStyle = ReturnType<typeof tKUIMxMCollectNearbyCardDefaultStyle>
 
@@ -30,7 +35,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMBookingCard"
 };
 
-const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard }) => {
+const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard, theme, classes }) => {
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
     const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
     useEffect(() => {
@@ -43,10 +48,10 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         if (!mode) {
             return;
         }
-        TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=500&modes=${mode}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
+        TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=1000&modes=${mode}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
             .then(groupsJSON => Util.deserialize(groupsJSON.groups[0], LocationsResult))
             .then(locationsResult => {
-                setAlternatives(locationsResult.getLocations());
+                setAlternatives(locationsResult.getLocations().filter(location => !(location instanceof FacilityLocation)));
             });
         // Use an observable instead.    
         GeolocationData.instance.requestCurrentLocation(true)
@@ -58,7 +63,8 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         // scheme that also contemplate map locations. Probably should provide a context and access it from here and TKUIMapView.
         mapAsync.then(map => {
             if (isSelectedCard!() && alternatives) {
-                map.setModeLocations(alternatives, location => routingContext.onSegmentCollectChange(segment, location));
+                // Display alternatives on map except for the selected one, since it's already signaled with the segment pin. 
+                map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier), location => routingContext.onSegmentCollectChange(segment, location));
             } else {
                 map.setModeLocations(undefined);
             }
@@ -73,6 +79,40 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         }
     }, []);
     const routingContext = useContext(RoutingResultsContext);
+    const modeInfos = alternatives?.reduce((modeInfos, alt) => {
+        if (!modeInfos.some(modeInfo => modeInfo.identifier === alt.modeInfo.identifier)) {
+            modeInfos.push(alt.modeInfo);
+        }
+        return modeInfos;
+    }, [] as ModeInfo[]);
+    const [disabledModes, setDisabledModes] = useState<string[]>([]);
+    const filter = modeInfos && modeInfos.length > 0 &&
+        <div className={classes.filter}>
+            {modeInfos.map(modeInfo => {
+                const modeId = modeInfo.identifier!;
+                const disabled = disabledModes.includes(modeId);
+                return (
+                    <div
+                        className={classNames(classes.toggle, disabled && classes.disabled)}
+                        onClick={() => {
+                            const disabledModesUpdate = disabledModes.slice();
+                            if (disabled) {
+                                disabledModesUpdate.splice(disabledModesUpdate.indexOf(modeId), 1);
+                            } else {
+                                disabledModesUpdate.push(modeId);
+                            }
+                            setDisabledModes(disabledModesUpdate);
+                        }}
+                    >
+                        {modeInfo.remoteIconIsBranding &&
+                            <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark, useLocal: true })}
+                                className={classes.icon} />}
+                        <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark })}
+                            className={classes.icon} />
+                    </div>
+                );
+            })}
+        </div>
     return (
         <TKUICard
             title={segment.getAction()}
@@ -80,15 +120,18 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                 main: overrideClass({ height: '100%', position: 'relative' })
             }}
             onRequestClose={onRequestClose}
+            renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
+            renderSubHeader={filter ? () => filter : undefined}
         >
-            {alternatives?.map((alt, i) =>
-                <TKUIModeLocationRow
-                    location={alt}
-                    userPosition={userPosition}
-                    selected={alt.id === segment.sharedVehicle?.identifier}
-                    key={i}
-                    onClick={() => routingContext.onSegmentCollectChange(segment, alt)}
-                />)}
+            {alternatives?.filter(alt => !disabledModes.includes(alt.modeInfo.identifier ?? ""))
+                .map((alt, i) =>
+                    <TKUIModeLocationRow
+                        location={alt}
+                        userPosition={userPosition}
+                        selected={alt.id === segment.sharedVehicle?.identifier}
+                        key={i}
+                        onClick={() => routingContext.onSegmentCollectChange(segment, alt)}
+                    />)}
         </TKUICard>
     )
 }

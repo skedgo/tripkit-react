@@ -16,7 +16,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
     },
     compositeIcon: {
         position: 'relative',
-        marginRight: '3px',
+        marginRight: '3px'
     },
     icon: {
         width: '24px!important',
@@ -24,6 +24,9 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         ...theme.isDark && {
             opacity: (props: TKUITrackTransportProps) =>
                 (!props.segment.modeInfo || !isRemoteIcon(props.segment.modeInfo)) ? '.8' : undefined
+        },
+        '&:not(:first-child)': {
+            marginLeft: '5px'
         }
     },
     circleWhite: {
