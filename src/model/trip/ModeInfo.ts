@@ -37,6 +37,13 @@ class ModeInfo {
 
     @JsonProperty("color", Color, true) private _color: Color | undefined = undefined;
 
+    /**
+     * Whether the remote icon is a representing the brand not the mode. 
+     * If this is true it's a good idea to show the brand icon plus an icon indicating the mode.
+     */
+    @JsonProperty("remoteIconIsBranding", Boolean, true) 
+    public remoteIconIsBranding: boolean = false;
+
 
     get identifier(): string | undefined {
         return this._identifier;

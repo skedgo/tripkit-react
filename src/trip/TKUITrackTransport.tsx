@@ -33,9 +33,9 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const { segment, t, theme, brief } = this.props;
-        const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;        
+        const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;
         let infoTitle: string | undefined;
-        let infoSubtitle: string | undefined;        
+        let infoSubtitle: string | undefined;
         const modeInfo = segment.modeInfo!;
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
@@ -76,6 +76,10 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 <div className={classNames(classes.compositeIcon, theme.isDark && isRemote && classes.circleWhite)}>
+                    {modeInfo.remoteIconIsBranding &&
+                        <img src={TransportUtil.getTransIcon(modeInfo, { onDark: this.props.theme.isDark, useLocal: true })}
+                            className={classes.icon}
+                        />}
                     <img src={transportIconUrl}
                         alt={modeInfo.alt}
                         role="img" // Needed to be read by iOS VoiceOver

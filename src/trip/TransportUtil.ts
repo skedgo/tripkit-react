@@ -11,9 +11,7 @@ class TransportUtil {
 
     /**
      * @param {ModeInfo} modeInfo
-     * @param {boolean} isRealtime @deprecated realtime icon is displayed separately.
-     * @param {boolean} onDark
-     * @param {boolean} remoteOverOnDark indicates we prefer the remote icon, even if it doesn't match onDark requirement.
+     * @param options     
      * @returns {string}
      */
     public static getTransIcon(modeInfo: ModeInfo,

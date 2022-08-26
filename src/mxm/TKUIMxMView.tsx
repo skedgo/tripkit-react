@@ -154,6 +154,8 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () =
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
+        // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
+        // matches fields of VehicleInfo, and not CarPodVehicle.
         const freeFloatingVehicleLoc = Util.iAssign(new FreeFloatingVehicleLocation(), segment.location);
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
         const collectCardIndex = generateCardIndex();

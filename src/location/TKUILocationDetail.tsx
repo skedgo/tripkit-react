@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Location from "../model/Location";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -122,18 +122,21 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
                             <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, theme.isDark)} className={classes.availabilityImage} />
                         </div>
                     </div>
-                    <div className={classes.availabilityDivider} />
-                    <div className={classes.availabilitySection}>
-                        <div className={classes.availabilityLabel}>
-                            {t("Battery")}
-                        </div>
-                        <div className={classes.availabilityValueCont}>
-                            {renderBatteryIcon(vehicle?.batteryLevel || 0)}
-                            <div className={classes.availabilityValue}>
-                                {vehicle?.batteryLevel !== undefined ? vehicle.batteryLevel + "%" : "?"}
+                    {(vehicle.vehicleTypeInfo.propulsionType === "ELECTRIC" || vehicle.vehicleTypeInfo.propulsionType === "ELECTRIC_ASSIST") &&
+                        <Fragment>
+                            <div className={classes.availabilityDivider} />
+                            <div className={classes.availabilitySection}>
+                                <div className={classes.availabilityLabel}>
+                                    {t("Battery")}
+                                </div>
+                                <div className={classes.availabilityValueCont}>
+                                    {renderBatteryIcon(vehicle?.batteryLevel || 0)}
+                                    <div className={classes.availabilityValue}>
+                                        {vehicle?.batteryLevel !== undefined ? vehicle.batteryLevel + "%" : "?"}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </Fragment>}
                 </div>
                 {vehicle.lastUpdate &&
                     <div className={classes.availabilityUpdated}>
