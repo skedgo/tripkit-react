@@ -276,12 +276,13 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
 /**
- * Need to define this global version of onSelectedCardIndex since the moveToNext function, which uses it, that is
- * passed down to the componets, has an old version of onSelectedCardIndex when called, I mean, an old context, so
- * uses the old selected segment, which causes the problem. Despite the delayed promise on WithRoutingResults, it's already
- * an old version when called, it doesn't get the state update.
+ * Need to define moveToNext global to the render method, and pass down to the componets an arrow function calling it,
+ * to ensure when that arrow function is called the latest version of moveToNext function is called, with the latest
+ * context (in particular, the latest version of props.selectedTripSegment). If not doing this, then the moveToNext 
+ * is called with an old context (viz., old selected segment - the context gets fixed at the moment the function is 
+ * declared and passed) while already displaying the new / updated trip, which causes problems (on next index calculation).
  */
-let onSelectedCardIndexGlobal: (index: number) => void;
+let moveToNext: () => void;
 
 const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { refreshSelectedTrip, mapAsync, t } = props;
@@ -305,7 +306,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     }
     const isSelectedCardBuilder = (cardIndex: number) => () => cardIndex === selectedCardIndex;
 
-    const moveToNext = () => onSelectedCardIndexGlobal(selectedCardIndex + 1);    
+    moveToNext = () => onSelectedCardIndex(selectedCardIndex + 1);    
 
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
@@ -320,7 +321,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             mapAsync,
             trip,
             accountsSupported: accountContext.accountsSupported,
-        }, generateCardIndex, isSelectedCardBuilder, moveToNext));
+        }, generateCardIndex, isSelectedCardBuilder, () => moveToNext()));
         return map;
     }, new Map<Segment, JSX.Element[]>());
 
@@ -334,7 +335,6 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
         props.setSelectedTripSegment(segment);
         setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
     };
-    onSelectedCardIndexGlobal = onSelectedCardIndex;    
     useEffect(() => {
         props.mapAsync.then(map => {
             if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
