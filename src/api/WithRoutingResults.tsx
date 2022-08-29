@@ -509,10 +509,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 .finally(() => callback && callback(segmentReplacement));
         };
 
-        public onSegmentCollectChange(segment: Segment, location: ModeLocation) {
+        public onSegmentCollectChange(segment: Segment, location: ModeLocation): Promise<Trip | undefined> {
             const selectedTrip = this.state.selected;
             if (!selectedTrip) {
-                return;
+                return Promise.resolve(undefined);
             }
             // Compute trip involving service through waypoints.json endpoint.
             this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
@@ -542,7 +542,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                             const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
                             return {
                                 start: `(${startLoc.lat},${startLoc.lng})`,
-                                end: `(${endLoc.lat},${endLoc.lng})`,                                
+                                end: `(${endLoc.lat},${endLoc.lng})`,
                                 modes: [tripSegment.modeIdentifier]
                             };
                         }
@@ -573,7 +573,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 end: `(${endLoc.lat},${endLoc.lng})`,
                                 // If changed of vehicle provider, then also need to update all trip segments that also have the original modeIdentifier.
                                 modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
-                                location.modeInfo.identifier : tripSegment.modeIdentifier]                                
+                                    location.modeInfo.identifier : tripSegment.modeIdentifier]
                             };
                         }
                     });
@@ -582,7 +582,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 config: { v: 11 },
                 segments: waypointSegments
             };
-            TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
+            return TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
                 .then((result: RoutingResults) => {
                     const updatedTrip = result.groups[0];
                     // Compare by id (instead of equiality between trips) since segment.trip is Trip, while prevState.trips and prevState.selected are TripGroups.
@@ -592,18 +592,20 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         }
                         const stateUpdate = {
                             trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
-                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
-                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
+                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,                            
+                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment                            
                         }
                         return stateUpdate;
                     });
                     this.setState({ waitingTripUpdate: false });
+                    return updatedTrip;
                 })
                 .catch(() => {
                     this.setState({
                         waitingTripUpdate: false,
                         tripUpdateError: new TKError("Error updating trip")
                     });
+                    return undefined;
                 });
         }
 

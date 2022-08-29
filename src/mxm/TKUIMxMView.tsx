@@ -133,23 +133,28 @@ function getStreetMxMCard(props: SegmentMxMCardsProps, generateCardIndex: () => 
             renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
             onRequestClose={onRequestClose}
             styles={cardStyles}
-            key={generateCardIndex()}        
+            key={generateCardIndex()}
             slideUpOptions={{
                 showHandle: true
             }}
         >
-            {segment.streets && segment.streets.map(street => {
+            {segment.streets && segment.streets.map((street, i) => {
                 const onStepClick = () => {
                     mapAsync.then((map) =>
                         map.fitBounds(MapUtil.getStreetBounds([street])));
                 };
-                return <TKUIStreetStep street={street} onClick={onStepClick} />;
+                return <TKUIStreetStep street={street} onClick={onStepClick} key={i} />;
             })}
         </TKUICard>
     );
 }
 
-function getSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () => number, isSelectedCardBuilder: (cardIndex: number) => () => boolean): JSX.Element[] {
+function getSegmentMxMCards(
+    props: SegmentMxMCardsProps,
+    generateCardIndex: () => number,
+    isSelectedCardBuilder: (cardIndex: number) => () => boolean,
+    moveToNext: () => void
+): JSX.Element[] {
     const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
@@ -166,6 +171,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () =
                 mapAsync={mapAsync}
                 key={collectCardIndex}
                 isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
+                onAlternativeCollected={moveToNext}
             />,
             <TKUICard
                 title={segment.getAction()}
@@ -201,7 +207,7 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () =
                 key={generateCardIndex()}
                 slideUpOptions={{
                     showHandle: true
-                }}                
+                }}
             >
                 <TKUILocationDetail location={location} />
             </TKUICard>
@@ -215,11 +221,11 @@ function getSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () =
                 onRequestClose={onRequestClose}
                 refreshSelectedTrip={refreshSelectedTrip}
                 trip={trip}
-                key={generateCardIndex()}                
+                key={generateCardIndex()}
             />
         ];
     } else {
-        const externalActionUrl = segment.booking?.externalActions?.find(action => action.startsWith("https"));        
+        const externalActionUrl = segment.booking?.externalActions?.find(action => action.startsWith("https"));
         return ([
             <TKUICard
                 title={segment.getAction()}
@@ -269,6 +275,14 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
     segments.slice(segments.indexOf(selectedSegment))
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
+/**
+ * Need to define this global version of onSelectedCardIndex since the moveToNext function, which uses it, that is
+ * passed down to the componets, has an old version of onSelectedCardIndex when called, I mean, an old context, so
+ * uses the old selected segment, which causes the problem. Despite the delayed promise on WithRoutingResults, it's already
+ * an old version when called, it doesn't get the state update.
+ */
+let onSelectedCardIndexGlobal: (index: number) => void;
+
 const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { refreshSelectedTrip, mapAsync, t } = props;
     const accountContext = useContext(TKAccountContext);
@@ -291,9 +305,11 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     }
     const isSelectedCardBuilder = (cardIndex: number) => () => cardIndex === selectedCardIndex;
 
+    const moveToNext = () => onSelectedCardIndexGlobal(selectedCardIndex + 1);    
+
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
-    const segmentToCards = segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {        
+    const segmentToCards = segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
         map.set(segment, getSegmentMxMCards({
             segment,
             onRequestClose: () => props.setSelectedTripSegment(undefined),
@@ -303,8 +319,8 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             refreshSelectedTrip,
             mapAsync,
             trip,
-            accountsSupported: accountContext.accountsSupported            
-        }, generateCardIndex, isSelectedCardBuilder));        
+            accountsSupported: accountContext.accountsSupported,
+        }, generateCardIndex, isSelectedCardBuilder, moveToNext));
         return map;
     }, new Map<Segment, JSX.Element[]>());
 
@@ -313,6 +329,12 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const [selectedCardOffset, setSelectedCardOffset] = useState<number>(0);
     // Index of selected card in carousel.
     const selectedCardIndex = cardIndexForSegment(selectedSegment, segments, segmentToCards) + selectedCardOffset;
+    const onSelectedCardIndex = (selectedCardIndex: number): void => {
+        const segment = cardIndexToSegment(selectedCardIndex, segments, segmentToCards);        
+        props.setSelectedTripSegment(segment);
+        setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
+    };
+    onSelectedCardIndexGlobal = onSelectedCardIndex;    
     useEffect(() => {
         props.mapAsync.then(map => {
             if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
@@ -343,13 +365,14 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
                     }}
                 />
             </div>
+            {/* {console.log(segmentToCards.get(selectedSegment))}
+            {console.log(selectedSegment)}
+            {console.log(trip)}
+            {console.log(segmentToCards)}
+            {segmentToCards.get(selectedSegment)?.[selectedCardOffset]} */}
             <TKUICardCarousel
                 selected={selectedCardIndex}
-                onChange={(selectedCardIndex) => {
-                    const segment = cardIndexToSegment(selectedCardIndex, segments, segmentToCards);
-                    props.setSelectedTripSegment(segment);
-                    setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
-                }}
+                onChange={onSelectedCardIndex}
                 slideUpOptions={{
                     ...DeviceUtil.isTouch() ? {
                         initPosition: props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP

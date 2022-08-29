@@ -22,7 +22,9 @@ import classNames from 'classnames';
 
 type IStyle = ReturnType<typeof tKUIMxMCollectNearbyCardDefaultStyle>
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<SegmentMxMCardsProps, "segment" | "onRequestClose" | "mapAsync" | "isSelectedCard"> { }
+interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<SegmentMxMCardsProps, "segment" | "onRequestClose" | "mapAsync" | "isSelectedCard"> {
+    onAlternativeCollected?: () => void;
+}
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -35,7 +37,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMBookingCard"
 };
 
-const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard, theme, classes }) => {
+const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard, onAlternativeCollected, theme, classes }) => {
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
     const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
     useEffect(() => {
@@ -64,7 +66,9 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         mapAsync.then(map => {
             if (isSelectedCard!() && alternatives) {
                 // Display alternatives on map except for the selected one, since it's already signaled with the segment pin. 
-                map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier), location => routingContext.onSegmentCollectChange(segment, location));
+                map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier),
+                    location => routingContext.onSegmentCollectChange(segment, location)
+                        .then(tripUpdate => tripUpdate && onAlternativeCollected?.()));
             } else {
                 map.setModeLocations(undefined);
             }
@@ -79,8 +83,9 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         }
     }, []);
     const routingContext = useContext(RoutingResultsContext);
+    const getModeType = (mode: ModeInfo) => mode.remoteIcon ?? mode.localIcon;
     const modeInfos = alternatives?.reduce((modeInfos, alt) => {
-        if (!modeInfos.some(modeInfo => modeInfo.identifier === alt.modeInfo.identifier)) {
+        if (!modeInfos.some(modeInfo => getModeType(modeInfo) === getModeType(alt.modeInfo))) {
             modeInfos.push(alt.modeInfo);
         }
         return modeInfos;
@@ -88,21 +93,22 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
     const [disabledModes, setDisabledModes] = useState<string[]>([]);
     const filter = modeInfos && modeInfos.length > 0 &&
         <div className={classes.filter}>
-            {modeInfos.map(modeInfo => {
-                const modeId = modeInfo.identifier!;
-                const disabled = disabledModes.includes(modeId);
+            {modeInfos.map((modeInfo, i) => {
+                const modeType = getModeType(modeInfo);
+                const disabled = disabledModes.includes(modeType);
                 return (
                     <div
                         className={classNames(classes.toggle, disabled && classes.disabled)}
                         onClick={() => {
                             const disabledModesUpdate = disabledModes.slice();
                             if (disabled) {
-                                disabledModesUpdate.splice(disabledModesUpdate.indexOf(modeId), 1);
+                                disabledModesUpdate.splice(disabledModesUpdate.indexOf(modeType), 1);
                             } else {
-                                disabledModesUpdate.push(modeId);
+                                disabledModesUpdate.push(modeType);
                             }
                             setDisabledModes(disabledModesUpdate);
                         }}
+                        key={i}
                     >
                         {modeInfo.remoteIconIsBranding &&
                             <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark, useLocal: true })}
@@ -123,14 +129,15 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
             renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
             renderSubHeader={filter ? () => filter : undefined}
         >
-            {alternatives?.filter(alt => !disabledModes.includes(alt.modeInfo.identifier ?? ""))
+            {alternatives?.filter(alt => !disabledModes.includes(getModeType(alt.modeInfo)))
                 .map((alt, i) =>
                     <TKUIModeLocationRow
                         location={alt}
                         userPosition={userPosition}
                         selected={alt.id === segment.sharedVehicle?.identifier}
                         key={i}
-                        onClick={() => routingContext.onSegmentCollectChange(segment, alt)}
+                        onClick={() => routingContext.onSegmentCollectChange(segment, alt)
+                            .then(tripUpdate => tripUpdate && onAlternativeCollected?.())}
                     />)}
         </TKUICard>
     )

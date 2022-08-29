@@ -58,7 +58,7 @@ export interface IRoutingResultsContext {
     refreshSelectedTrip: () => Promise<boolean>;
     onAlternativeChange: (group: TripGroup, alt: Trip) => void;
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
-    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => void;
+    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => Promise<Trip | undefined>;
 
     // This is general, not routing specific.
     waitingStateLoad: boolean;
@@ -90,7 +90,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     refreshSelectedTrip: () => Promise.resolve(false),
     onAlternativeChange: (group: TripGroup, alt: Trip) => {},
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => {},
-    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => {},
+    onSegmentCollectChange: (segment: Segment, location: ModeLocation) => Promise.resolve(undefined),
     inputTextFrom: "",
     inputTextTo:  "",
     getRegionInfoP: () => undefined,
