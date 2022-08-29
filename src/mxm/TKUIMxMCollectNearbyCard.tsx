@@ -111,7 +111,7 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                         }}
                         key={i}
                     >
-                        {modeInfo.remoteIconIsBranding &&
+                        {modeInfo.remoteIconIsBranding && modeInfo.remoteIcon &&
                             <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark, useLocal: true })}
                                 className={classes.icon} />}
                         <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark })}
