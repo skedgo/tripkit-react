@@ -40,6 +40,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, mapAsync, onRequestClose, isSelectedCard, onAlternativeCollected, theme, classes }) => {
     const [alternatives, setAlternatives] = useState<ModeLocation[] | undefined>(undefined);
     const [userPosition, setUserPosition] = useState<TKUserPosition | undefined>(undefined);
+    const [disabledModes, setDisabledModes] = useState<string[]>([]);
     useEffect(() => {
         let mode: string | undefined;
         if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
@@ -66,14 +67,15 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         mapAsync.then(map => {
             if (isSelectedCard!() && alternatives) {
                 // Display alternatives on map except for the selected one, since it's already signaled with the segment pin. 
-                map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier),
-                    location => routingContext.onSegmentCollectChange(segment, location)
-                        .then(tripUpdate => tripUpdate && onAlternativeCollected?.()));
+                map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier)
+                    .filter(alt => !disabledModes.includes(getModeType(alt.modeInfo))),
+                        location => routingContext.onSegmentCollectChange(segment, location)
+                            .then(tripUpdate => tripUpdate && onAlternativeCollected?.()));
             } else {
                 map.setModeLocations(undefined);
             }
         });
-    }, [isSelectedCard!(), alternatives]);
+    }, [isSelectedCard!(), alternatives, disabledModes]);
     useEffect(() => {
         // Clear map also on unmount (close card or trip update after picking an alternative)
         return () => {
@@ -90,7 +92,6 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         }
         return modeInfos;
     }, [] as ModeInfo[]);
-    const [disabledModes, setDisabledModes] = useState<string[]>([]);
     const filter = modeInfos && modeInfos.length > 0 &&
         <div className={classes.filter}>
             {modeInfos.map((modeInfo, i) => {
