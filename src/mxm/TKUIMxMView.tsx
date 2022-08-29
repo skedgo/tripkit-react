@@ -197,6 +197,7 @@ function getSegmentMxMCards(
                 mapAsync={mapAsync}
                 key={collectCardIndex}
                 isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
+                onAlternativeCollected={moveToNext}
             />,
             <TKUICard
                 title={segment.getAction()}
@@ -263,10 +264,12 @@ const cardIndexForSegment = (segment: Segment, segments: Segment[], map: Map<Seg
 /**
  * Maps the card index in the carousel to the associated segment (this is not a one-to-one correspondence given
  * some segments have 2 or more cards, as PT and Collect segments).
+ * Returns undefined if the index suprasses the number of cards (segments[0] is undefined)
  */
-const cardIndexToSegment = (cardIndex: number, segments: Segment[], map: Map<Segment, JSX.Element[]>) =>
-    cardIndex < map.get(segments[0])!.length ? segments[0] :
-        cardIndexToSegment(cardIndex - map.get(segments[0])!.length, segments.slice(1), map);
+const cardIndexToSegment = (cardIndex: number, segments: Segment[], map: Map<Segment, JSX.Element[]>): Segment | undefined =>
+    segments[0] &&
+    (cardIndex < map.get(segments[0])!.length ? segments[0] :
+        cardIndexToSegment(cardIndex - map.get(segments[0])!.length, segments.slice(1), map));
 
 /**
  * Gets the first segment in segments, from the selected one, that is visible in summary.
@@ -306,7 +309,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     }
     const isSelectedCardBuilder = (cardIndex: number) => () => cardIndex === selectedCardIndex;
 
-    moveToNext = () => onSelectedCardIndex(selectedCardIndex + 1);    
+    moveToNext = () => onSelectedCardIndex(selectedCardIndex + 1);
 
     // Evaluate if building the map on each render is too inefficient, and if so store on field and just
     // update if trip changes (including trip alternative).
@@ -331,9 +334,13 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     // Index of selected card in carousel.
     const selectedCardIndex = cardIndexForSegment(selectedSegment, segments, segmentToCards) + selectedCardOffset;
     const onSelectedCardIndex = (selectedCardIndex: number): void => {
-        const segment = cardIndexToSegment(selectedCardIndex, segments, segmentToCards);        
-        props.setSelectedTripSegment(segment);
-        setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
+        const segment = cardIndexToSegment(selectedCardIndex, segments, segmentToCards);
+        // Segment may come undefined if the passed selected index overflows the cards for the trip,
+        // which may happen when trying to select a card after a trip update (the new trip may have less segments)
+        if (segment) {
+            props.setSelectedTripSegment(segment);
+            setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
+        }
     };
     useEffect(() => {
         props.mapAsync.then(map => {
@@ -365,11 +372,6 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
                     }}
                 />
             </div>
-            {/* {console.log(segmentToCards.get(selectedSegment))}
-            {console.log(selectedSegment)}
-            {console.log(trip)}
-            {console.log(segmentToCards)}
-            {segmentToCards.get(selectedSegment)?.[selectedCardOffset]} */}
             <TKUICardCarousel
                 selected={selectedCardIndex}
                 onChange={onSelectedCardIndex}
