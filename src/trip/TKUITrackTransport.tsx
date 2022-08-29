@@ -76,7 +76,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         return (
             <div className={classes.main}>
                 <div className={classNames(classes.compositeIcon, theme.isDark && isRemote && classes.circleWhite)}>
-                    {modeInfo.remoteIconIsBranding &&
+                    {modeInfo.remoteIconIsBranding && modeInfo.remoteIcon &&
                         <img src={TransportUtil.getTransIcon(modeInfo, { onDark: this.props.theme.isDark, useLocal: true })}
                             className={classes.icon}
                         />}
