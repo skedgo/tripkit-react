@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKUIConfig";
@@ -9,6 +9,8 @@ import { BookingAction } from "../model/trip/BookingInfo";
 import { tKUIBookingActionsDefaultStyle } from "./TKUIBookingActions.css";
 import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
+import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
+import RoutingQuery from '../model/RoutingQuery';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
@@ -31,14 +33,18 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
-    const { action, setWaiting, requestRefresh, trip } = props;        
+    const { action, setWaiting, requestRefresh, trip } = props;
+    const { onQueryChange, onDirectionsView } = useContext(RoutingResultsContext);
     return (
         <Fragment>
             <TKUIButton
                 text={action.title}
                 type={TKUIButtonType.PRIMARY_LINK}
                 onClick={() => {
-                    if (action.confirmationMessage) {
+                    if (action.type === "REQUESTANOTHER") {
+                        onQueryChange(RoutingQuery.create());
+                        onDirectionsView(false);
+                    } else if (action.confirmationMessage) {
                         UIUtil.confirmMsg({
                             message: action.confirmationMessage,
                             confirmLabel: "Yes",
