@@ -346,7 +346,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    position: this.isShowTripDetail() ? TKUISlideUpPosition.HIDDEN :
+                    position: this.isShowTripDetail() || this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
                         DeviceUtil.isTouch() ? undefined :
                             this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),

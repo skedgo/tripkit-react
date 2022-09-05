@@ -30,8 +30,8 @@ class GeolocationData {
      */
 
     public requestIPLocation(): Promise<LatLng> {
-        return iplocation('0.0.0.0', ["https://ipapi.co/json/"]).then((res) => {
-            return LatLng.createLatLng(res.latitude, res.longitude);
+        return iplocation('0.0.0.0').then((res) => {
+            return LatLng.createLatLng((res as any).latitude, (res as any).longitude);
         });
     }
 

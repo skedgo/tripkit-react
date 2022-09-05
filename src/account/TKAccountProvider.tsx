@@ -65,8 +65,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
         // Request user profile
         if (userToken) {
             TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
-                .then((result) => {
-                    console.log(result);
+                .then((result) => {                    
                     setUserAccount(result);
                     setStatus(SignInStatus.signedIn);
                 })
