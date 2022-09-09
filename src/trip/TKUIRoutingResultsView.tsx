@@ -530,7 +530,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
             tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values,
                 {
                     badges: this.props.tripBadgesToShow,
-                    preferredTripCompareFc: this.props.config.modePriorities ? TransportUtil.priorityBucketsTripCompareFcBuilder(this.props.config.modePriorities) : undefined
+                    preferredTripCompareFc: this.props.config.tripCompareFc
                 })
         });
     }
