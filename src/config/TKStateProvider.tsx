@@ -43,7 +43,7 @@ class TKStateProvider extends React.Component<IProps, {}> {
                                             fixToInitViewportRegion={config.fixToInitViewportRegion}
                                             options={optionsContext && optionsContext.userProfile}
                                             locale={i18nProps.locale}
-                                            preferredTripCompareFc={config.modePriorities ? TransportUtil.priorityBucketsTripCompareFcBuilder(config.modePriorities) : undefined}                                            
+                                            preferredTripCompareFc={config.tripCompareFc}                                            
                                         >
                                             <RoutingResultsContext.Consumer>
                                                 {(routingResultsContext: IRoutingResultsContext) =>

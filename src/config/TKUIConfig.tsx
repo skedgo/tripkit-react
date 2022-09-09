@@ -78,6 +78,7 @@ import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TK
 import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
+import Trip from "../model/trip/Trip";
 
 /**
  * SDK configuration
@@ -127,7 +128,7 @@ interface ITKUIConfigOptional {
             isEnabled?: () => boolean;  // () => true; by default
         }
     };
-    modePriorities: string[][];
+    tripCompareFc: (trip1: Trip, trip2: Trip) => number;
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
         stripePublicKey: string;
