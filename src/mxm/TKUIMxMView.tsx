@@ -81,7 +81,7 @@ const cardStyles = {
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () => number): JSX.Element[] {
-    const { segment, onRequestClose, t, options, landscape } = props;
+    const { segment, onRequestClose, t, options, landscape, accountsSupported, refreshSelectedTrip, trip } = props;
     let cards: JSX.Element[] = [];
     cards.push(
         <TKUIMxMTimetableCard segment={segment} onRequestClose={onRequestClose} key={generateCardIndex()} />
@@ -121,6 +121,17 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
                 />}
         </TKUICard>
     );
+    if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+        cards.push(
+            <TKUIMxMBookingCard
+                segment={segment}
+                onRequestClose={onRequestClose}
+                refreshSelectedTrip={refreshSelectedTrip}
+                trip={trip}
+                key={generateCardIndex()}
+            />
+        );
+    }
     return cards;
 }
 
@@ -158,6 +169,16 @@ function getSegmentMxMCards(
     const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
+    } else if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+        return [
+            <TKUIMxMBookingCard
+                segment={segment}
+                onRequestClose={onRequestClose}
+                refreshSelectedTrip={refreshSelectedTrip}
+                trip={trip}
+                key={generateCardIndex()}
+            />
+        ];
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
         // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
         // matches fields of VehicleInfo, and not CarPodVehicle.
@@ -215,16 +236,6 @@ function getSegmentMxMCards(
         ];
     } else if (segment.isWalking() || segment.isBicycle()) {
         return [getStreetMxMCard(props, generateCardIndex)]
-    } else if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
-        return [
-            <TKUIMxMBookingCard
-                segment={segment}
-                onRequestClose={onRequestClose}
-                refreshSelectedTrip={refreshSelectedTrip}
-                trip={trip}
-                key={generateCardIndex()}
-            />
-        ];
     } else {
         const externalActionUrl = segment.booking?.externalActions?.find(action => action.startsWith("https"));
         return ([
@@ -291,8 +302,10 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { refreshSelectedTrip, mapAsync, t } = props;
     const accountContext = useContext(TKAccountContext);
     const trip = props.selectedTrip!;
-    const segments = trip.getSegments();
-    const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY);
+    const segments = trip.getSegments()
+        .filter(segment => !segment.isContinuation);  // Don't display MxM card for continuation segments.
+    const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY)
+        .filter(segment => !segment.isContinuation); // Maybe not necessary as it seems continuation segments are not visible in summary.
     const classes = props.classes;
     const selectedSegment = props.selectedTripSegment!;
     // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
