@@ -34,8 +34,8 @@ import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
 import TKUITicketSelect from './TKUITicketSelect';
 import classNames from 'classnames';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
-import PaymentOption from '../model/trip/PaymentOption';
 import BookingReview from '../model/trip/BookingReview';
+import { TKUIStripePaymentCardClientProps } from './TKUIStripePaymentCard';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -237,7 +237,8 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
     const booking = segment.booking!;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
-    const [reviewAndPaymentForm, setReviewAndPaymentForm] = useState<{ paymentOptions: PaymentOption[]; review: BookingReview[] } | undefined>(undefined);
+    const [reviewAndPaymentForm, setReviewAndPaymentForm] =
+        useState<Pick<TKUIStripePaymentCardClientProps, "paymentOptions" | "reviews" | "publicKey" | "ephemeralKeyObj"> | undefined>(undefined);
     const [waiting, setWaiting] = useState<boolean>(!confirmation);
     const [error, setError] = useState<TKError | undefined>(undefined);
     const config = useContext(TKUIConfigContext);
@@ -381,11 +382,13 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
                             // For testing without performing booking.
                             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
-                            .then(result => {                                
+                            .then(result => {
                                 if (result.paymentOptions && result.review) {
                                     setReviewAndPaymentForm({
                                         paymentOptions: result.paymentOptions,
-                                        review: Util.jsonConvert().deserializeArray(result.review, BookingReview)
+                                        reviews: Util.jsonConvert().deserializeArray(result.review, BookingReview),
+                                        publicKey: result.publishableApiKey,
+                                        ephemeralKeyObj: result.ephemeralKey
                                     });
                                 } else { // result is a booking form:                                    
                                     if (result.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
@@ -407,9 +410,9 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
             </div>
         );
     }
-    const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({        
-        paymentOptions: reviewAndPaymentForm.paymentOptions,
-        reviews: reviewAndPaymentForm.review,
+    const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({
+        ...reviewAndPaymentForm,
+        publicKey: reviewAndPaymentForm.publicKey ?? config.payment.stripePublicKey,        
         onRequestClose: success => {
             if (success) {
                 setWaiting?.(true);
@@ -418,8 +421,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     .finally(() => setWaiting?.(false));
             }
             setReviewAndPaymentForm(undefined);
-        },
-        publicKey: config.payment.stripePublicKey
+        }        
     });
     return (
         <TKUICard

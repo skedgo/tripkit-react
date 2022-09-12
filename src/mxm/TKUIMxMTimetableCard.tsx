@@ -8,7 +8,7 @@ import {IRoutingResultsContext, RoutingResultsContext} from "../trip-planner/Rou
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKStateController from "../config/TKStateController";
 
-const TKUIMxMTimetableCard: React.SFC<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
+const TKUIMxMTimetableCard: React.FunctionComponent<{segment: Segment, onRequestClose: () => void}> = ({segment, onRequestClose}) => {
     return (
         <RoutingResultsContext.Consumer>
             {(routingResultsContext: IRoutingResultsContext) =>

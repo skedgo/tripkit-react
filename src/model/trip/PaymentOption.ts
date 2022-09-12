@@ -1,5 +1,6 @@
-interface PaymentOption {
+interface PaymentOption {    
     url: string;
+    method: "GET" | "POST";
     currency: string;
     discountedPrice: number;
     fullPrice: number;
