@@ -92,6 +92,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
         const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
+        // External payment means that is performed directly by hitting Stripe, as opposed to passing through our BE.
         const isExternalPayment = paymentOption.method === "GET";
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
@@ -99,14 +100,15 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             if (isExternalPayment) {
                 setWaiting(true);
                 TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
-                    .then(({ clientSecret, paymentIntentID, url: paidUrl }) => {
-                        if (!clientSecret || !paymentIntentID) {
+                    .then(({ clientSecret, url: paidUrl }) => {
+                        if (!clientSecret) {
                             throw new TKError("Unexpected error. Contact SkedGo support");
                         }
                         setPaymentIntentSecret(clientSecret);
                         setPaidUrl(paidUrl);
-                        setWaiting(false);
-                    });
+                    })
+                    .catch(UIUtil.errorMsg)
+                    .finally(() => setWaiting(false));;
             }
         }, []);
         if (isExternalPayment && !paymentIntentSecret || !stripePromise) {
@@ -126,14 +128,14 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                 }
                 if (isExternalPayment) {
                     let result;
-                    setWaiting(true);   //??? The setWaiting(false) is called by the parent component, after taking additional actions on success.
+                    setWaiting(true);
                     if (paymentMethod) {
                         result = await stripe.confirmCardPayment(paymentIntentSecret!, {
                             payment_method: paymentMethod!.id
                         })
                     } else {
                         if (elements!.getElement(CardElement)) {
-                            stripe.confirmCardPayment(paymentIntentSecret!, {
+                            result = await stripe.confirmCardPayment(paymentIntentSecret!, {
                                 payment_method: {
                                     card: elements!.getElement(CardElement)!
                                 },
@@ -145,8 +147,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 elements: elements!,
                                 confirmParams: {
                                     return_url: "https://example.com/order/123/complete",
-                                    save_payment_method: saveForFuture,
-                                    // setup_future_usage: "on_session" // See if I need also this.   
+                                    save_payment_method: saveForFuture
                                 },
                                 redirect: 'if_required'
                             });
@@ -210,7 +211,7 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
     onConfirmPayment: (props: { paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
     setWaiting: (waiting: boolean) => void;
-    onClose: (success?: boolean) => void;    
+    onClose: (success?: boolean) => void;
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
@@ -264,7 +265,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             checked: {},
         })(Checkbox));
 
-        const handleSubmit = async () => {            
+        const handleSubmit = async () => {
             if (newPaymentMethodAndPay) {
                 onConfirmPayment({ elements: elements ?? undefined, saveForFuture });
             } else {
