@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useElements, Elements, PaymentElement } from '@stripe/react-stripe-js';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useElements, Elements, PaymentElement, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
 import { black, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
-import TKUIPaymentMethodSelect from '../payment/TKUIPaymentMethodSelect';
+import TKUIPaymentMethodSelect from './TKUIPaymentMethodSelect';
 import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
 import EphemeralResult from '../model/payment/EphemeralResult';
@@ -17,6 +17,7 @@ import UIUtil from '../util/UIUtil';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import PaymentOption from '../model/trip/PaymentOption';
 import { StripeElements } from '@stripe/stripe-js/types/stripe-js/elements-group';
+import TKUINewCardView from './TKUINewCardView';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -189,16 +190,15 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
         const [newCard, setNewCard] = useState<boolean>(false);
-        // TODO: add button to create a new card, investigate how to do that, if there's something in the sdk already done.
         const [newPaymentMethodAndPay, setNewPaymentMethodAndPay] = useState<boolean>(false);
         const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[] | undefined>(undefined);
         const [selectedPM, setSelectedPM] = useState<PaymentMethod | undefined>(undefined);
         const [saveForFuture, setSaveForFuture] = useState<boolean>(true);
         // const [ephemeralKey, setEphemeralKey] = useState<string | undefined>(undefined); // Now it will come from quick/1, so remove it.
 
-        useEffect(() => {
+        const refreshData = () => {
             setWaiting(true);
-            fetch(`https://api.stripe.com/v1/customers/${customerId}/payment_methods?type=card`, {
+            return fetch(`https://api.stripe.com/v1/customers/${customerId}/payment_methods?type=card`, {
                 method: 'get',
                 headers: new Headers({
                     'Accept': 'application/json',
@@ -207,14 +207,16 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                     'Stripe-Version': '2020-08-27'
                 })
             })
-                .then(NetworkUtil.jsonCallback)
-                .then(result => {
-                    setPaymentMethods(result.data);
-                    result.data?.length > 0 && setSelectedPM(result.data[0]);
-                })
-                .finally(() => {
-                    setWaiting(false);
-                });
+                .then(NetworkUtil.jsonCallback)                
+                .finally(() => setWaiting(false));
+        };
+
+        useEffect(() => {
+            refreshData()
+            .then(result => {
+                setPaymentMethods(result.data);
+                result.data?.length > 0 && setSelectedPM(result.data[0]);
+            });
         }, []);
 
         useEffect(() => {
@@ -267,73 +269,102 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 }
             }
         }
-
+        if (newCard) {
+            return (
+                <TKUINewCardView
+                    ephemeralKeyObj={ephemeralKeyObj}
+                    onRequestClose={cardId => {
+                        setNewCard(false);
+                        if (cardId) {
+                            refreshData()
+                            .then(result => {
+                                setPaymentMethods(result.data);
+                                console.log(result.data)
+                                result.data && result.data.length > 0 && setSelectedPM(result.data.find(pm => pm.id === cardId))                      
+                            });                            
+                        }
+                    }}
+                />
+            );
+        }
         return (
-            <form onSubmit={handleSubmit} className={classes.main}>
-                <div className={classes.body}>
-                    <IconCard className={classes.card} />
-                    {paymentMethods && paymentMethods.length > 0 &&
-                        <div className={classes.tabs}>
-                            <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+            <Fragment>
+                <form onSubmit={handleSubmit} className={classes.main}>
+                    <div className={classes.body}>
+                        <IconCard className={classes.card} />
+                        {payAndSaveEnabled && paymentMethods && paymentMethods.length > 0 &&
+                            <div className={classes.tabs}>
+                                <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                    <TKUIButton
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        text={"Existing payment method"}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            setNewPaymentMethodAndPay(false);
+                                        }}
+                                    />
+                                </div>
+                                <div className={classes.tabSeparator} />
+                                <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                    <TKUIButton
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        text={"New payment method"}
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            setNewPaymentMethodAndPay(true);
+                                        }}
+                                    />
+                                </div>
+                            </div>}
+                        {newPaymentMethodAndPay ?
+                            <div className={classes.newPayment}>
+                                <PaymentElement />
+                                <div className={classes.futurePayment}>
+                                    <StyledCheckbox
+                                        checked={saveForFuture}
+                                        onChange={e => setSaveForFuture(e.target.checked)}
+                                    />
+                                    Save for future payments
+                                </div>
+                            </div>
+                            :
+                            <div>
+                                {paymentMethods && selectedPM &&
+                                    <TKUIPaymentMethodSelect
+                                        value={selectedPM}
+                                        options={paymentMethods}
+                                        onChange={value => setSelectedPM(value)}
+                                        onRemove={onRemovePM}
+                                    />}
                                 <TKUIButton
                                     type={TKUIButtonType.PRIMARY_LINK}
-                                    text={"Existing payment method"}
+                                    text={"Add card"}
                                     onClick={e => {
                                         e.preventDefault();
-                                        setNewPaymentMethodAndPay(false);
+                                        setNewCard(true);
                                     }}
                                 />
-                            </div>
-                            <div className={classes.tabSeparator} />
-                            <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                <TKUIButton
-                                    type={TKUIButtonType.PRIMARY_LINK}
-                                    text={"New payment method"}
-                                    onClick={e => {
-                                        e.preventDefault();
-                                        setNewPaymentMethodAndPay(true);
-                                    }}
-                                />
-                            </div>
-                        </div>}
-                    {newPaymentMethodAndPay ?
-                        <div className={classes.newPayment}>
-                            <PaymentElement />
-                            <div className={classes.futurePayment}>
-                                <StyledCheckbox
-                                    checked={saveForFuture}
-                                    onChange={e => setSaveForFuture(e.target.checked)}
-                                />
-                                Save for future payments
-                            </div>
-                        </div>
-                        :
-                        paymentMethods && selectedPM ?
-                            <TKUIPaymentMethodSelect
-                                value={selectedPM}
-                                options={paymentMethods}
-                                onChange={value => setSelectedPM(value)}
-                                onRemove={onRemovePM}
-                            />
-                            : null}
-                </div>
-                <div className={classes.buttonsPanel}>
-                    <TKUIButton
-                        text={t("Back")}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            onClose();
-                        }}
-                    />
-                    <TKUIButton
-                        text={t("Confirm")}
-                        type={TKUIButtonType.PRIMARY}
-                        // disabled={!stripe || !newPaymentMethod && !selectedPM}
-                        disabled={!newPaymentMethodAndPay && !selectedPM}
-                    />
-                </div>
-            </form>
+                            </div>}
+                    </div>
+                    <div className={classes.buttonsPanel}>
+                        <TKUIButton
+                            text={t("Back")}
+                            type={TKUIButtonType.SECONDARY}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onClose();
+                            }}
+                        />
+                        <TKUIButton
+                            text={t("Confirm")}
+                            type={TKUIButtonType.PRIMARY}
+                            // disabled={!stripe || !newPaymentMethod && !selectedPM}
+                            disabled={!newPaymentMethodAndPay && !selectedPM}
+                        />
+                    </div>
+                </form>
+            </Fragment>
+
         )
     }
 
