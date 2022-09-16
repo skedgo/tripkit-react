@@ -75,7 +75,7 @@ import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep
 import { TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
-import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../mxm/TKUIStripePaymentCard";
+import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 import Trip from "../model/trip/Trip";

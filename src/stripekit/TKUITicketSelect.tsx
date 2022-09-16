@@ -11,7 +11,7 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKComponentDefaultConfig } from '../config/TKUIConfig';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Util from '../util/Util';
-import { tKUIMxMBookingCardDefaultStyle } from './TKUIMxMBookingCard.css';
+import { tKUIMxMBookingCardDefaultStyle } from '../mxm/TKUIMxMBookingCard.css';
 import { black, TKUITheme } from '../jss/TKUITheme';
 
 const ticketSelectJss = (theme: TKUITheme) => ({

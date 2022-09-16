@@ -31,11 +31,11 @@ import Trip from '../model/trip/Trip';
 import UIUtil from '../util/UIUtil';
 import FormatUtil from '../util/FormatUtil';
 import TKUIDateTimePicker from '../time/TKUIDateTimePicker';
-import TKUITicketSelect from './TKUITicketSelect';
+import TKUITicketSelect from '../stripekit/TKUITicketSelect';
 import classNames from 'classnames';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 import BookingReview from '../model/trip/BookingReview';
-import { TKUIStripePaymentCardClientProps } from './TKUIStripePaymentCard';
+import { TKUIStripePaymentCardClientProps } from '../stripekit/TKUIStripePaymentCard';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
