@@ -7,6 +7,7 @@ import TKLoading from '../card/TKLoading';
 import { useEffect } from 'react';
 import TripGoApi from '../api/TripGoApi';
 import { PurchasedTicket } from '../model/trip/TicketOption';
+import UIUtil from '../util/UIUtil';
 
 const tKUIHTMLTicketViewPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -40,14 +41,17 @@ const TKUIHTMLTicketView: React.FunctionComponent<IProps> =
                     'Accept': 'text/html'
                 }
             })
-                .then(result => setTicketHTML(result))                
-                .catch(() => onRequestClose?.())
+                .then(result => setTicketHTML(result))
+                .catch(e => {
+                    UIUtil.errorMsg(e, { onClose: onRequestClose });                    
+                })
         }, []);
         return (
             <TKUICard
                 title={"Ticket"}
                 onRequestClose={onRequestClose}
                 presentation={CardPresentation.MODAL}
+                focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
             >
                 {ticketHTML ?
                     <div
