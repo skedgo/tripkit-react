@@ -11,6 +11,7 @@ import TKUIFromTo from "./TKUIFromTo";
 import TKUIBookingActions from "./TKUIBookingActions";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import FormatUtil from '../util/FormatUtil';
+import TKUITicketSelect from '../stripekit/TKUITicketSelect';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
@@ -64,6 +65,11 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                     to={tripsInfo![0].destination!}
                     onClick={tripUrl ? () => onShowTrip(tripUrl) : undefined}
                 />
+                {confirmation.tickets && confirmation.tickets?.length > 0 &&
+                    <TKUITicketSelect
+                        tickets={confirmation.tickets}
+                    />
+                }
             </div>
             {confirmation.actions.length > 0 &&
                 <TKUIBookingActions
