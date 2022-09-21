@@ -1,6 +1,6 @@
 import Util from "./Util";
-import {Env} from "../env/Environment";
-import {TKError} from "../error/TKError";
+import { Env } from "../env/Environment";
+import { TKError } from "../error/TKError";
 
 enum MethodType {
     GET = "GET",
@@ -35,6 +35,9 @@ class NetworkUtil {
         }
     }
 
+    /**
+     * @deprecated Use content
+     */
     public static json(response: any): Promise<any> {
         if (response.status === 204) {  // No content (so, no response.json()).
             return Promise.resolve({});
@@ -50,9 +53,27 @@ class NetworkUtil {
         });
     }
 
+    /**
+     * @deprecated Use fetchApiCallback     
+     */
+
     public static jsonCallback(response: any): Promise<any> {
         return NetworkUtil.status(response)
             .then(NetworkUtil.json);
+    }
+
+    public static content(response: any): Promise<any> {
+        const contentType = response.headers.get("content-type");
+        if (contentType?.includes("text")) {
+            return response.text();
+        } else {
+            return NetworkUtil.json(response);
+        }        
+    }
+
+    public static fetchApiCallback(response: any): Promise<any> {
+        return NetworkUtil.status(response)
+            .then(NetworkUtil.content);
     }
 
     public static deserializer<T>(classRef: { new(): T }): (json: any) => Promise<T> {
@@ -72,7 +93,7 @@ class NetworkUtil {
         const head: any = document.getElementsByTagName('head')[0];
         const link: any = document.createElement('link');
         link.id = 'actTPStyle';
-        link.rel  = 'stylesheet';
+        link.rel = 'stylesheet';
         link.type = 'text/css';
         link.href = url;
         link.media = 'all';
@@ -87,8 +108,8 @@ class NetworkUtil {
 
         const wrappedPromise = new Promise((resolve, reject) => {
             promise.then(
-                val => hasCanceled ? reject({isCanceled: true}) : resolve(val),
-                error => hasCanceled ? reject({isCanceled: true}) : reject(error)
+                val => hasCanceled ? reject({ isCanceled: true }) : resolve(val),
+                error => hasCanceled ? reject({ isCanceled: true }) : reject(error)
             )
         });
 
@@ -125,9 +146,14 @@ class NetworkUtil {
         this.saveCacheToLS(this.fetchCache);
     }
 
-    public static fetch(url: string, options: any, cache: boolean = true): Promise<any>  {
+    // if (!cache) {
+    //     const fetchPromise = fetch(url, options);
+    //     return options.headers?.['Accept']?.contains("html") ? fetchPromise.then(result => result.text()) : fetchPromise.then(NetworkUtil.jsonCallback);
+    // }
+
+    public static fetch(url: string, options: any, cache: boolean = true): Promise<any> {
         if (!cache) {
-            return fetch(url, options).then(NetworkUtil.jsonCallback);
+            return fetch(url, options).then(NetworkUtil.fetchApiCallback);
         }
         const cacheKey = url + JSON.stringify(options);
         if (!NetworkUtil.getCache().has(cacheKey)) {

@@ -1,5 +1,5 @@
-import React from 'react';
-import TicketOption from '../model/trip/TicketOption';
+import React, { useState } from 'react';
+import TicketOption, { PurchasedTicket } from '../model/trip/TicketOption';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from '../css/GenStyle.css';
 import { ReactComponent as IconPassenger } from '../images/ic-booking-passenger.svg';
@@ -13,6 +13,7 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Util from '../util/Util';
 import { tKUIMxMBookingCardDefaultStyle } from '../mxm/TKUIMxMBookingCard.css';
 import { black, TKUITheme } from '../jss/TKUITheme';
+import TKUIHTMLTicketView from './TKUIHTMLTicketView';
 
 const ticketSelectJss = (theme: TKUITheme) => ({
     main: {
@@ -37,6 +38,14 @@ const ticketSelectJss = (theme: TKUITheme) => ({
     },
     mainReadOnly: {
         ...genStyles.flex,
+        ...genStyles.column,
+        ...genStyles.grow,
+        '&>*:not(:first-child)': {
+            marginTop: '10px' 
+        }
+    },
+    infoReadonly: {
+        ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.grow
     },
@@ -47,6 +56,9 @@ const ticketSelectJss = (theme: TKUITheme) => ({
         '&>*:not(:first-child)': {
             marginTop: '5px'
         }
+    },
+    priceReadOnly: {
+        whiteSpace: 'nowrap'
     },
     passengersStepper: {
         ...genStyles.flex,
@@ -98,20 +110,31 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
             update[ticketNumber] = Util.iAssign(update[ticketNumber], { value: newValue });
             onChange!(update);
         }
+        const [showTicket, setShowTicket] = useState<boolean>(false);
+        const purchasedTickets = tickets?.reduce((ptickets, ticket) => ptickets.concat(ticket.purchasedTickets ?? []), [] as PurchasedTicket[]);
         return (
             readonly ?
                 <div className={classes.mainReadOnly}>
-                    <IconPassenger className={classes.icon} />
-                    <div className={classes.ticketsReadonly}>
-                        {tickets.map((ticket, i) =>
-                            <div key={i}>
-                                {ticket.value + " x " + ticket.name}
-                            </div>)}
+                    <div className={classes.infoReadonly}>
+                        <IconPassenger className={classes.icon} />
+                        <div className={classes.ticketsReadonly}>
+                            {tickets.map((ticket, i) =>
+                                <div key={i}>
+                                    {ticket.value + " x " + ticket.name}
+                                </div>)}
+                        </div>
+                        <div className={classes.priceReadOnly}>
+                            {FormatUtil.toMoney(tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
+                                { currency: tickets[0].currency ? tickets[0].currency + " " : undefined, nInCents: true })}
+                        </div>
                     </div>
-                    <div>
-                        {FormatUtil.toMoney(tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
-                            { currency: tickets[0].currency ? tickets[0].currency + " " : undefined, nInCents: true })}
-                    </div>
+                    {((purchasedTickets?.length ?? 0) > 0) &&
+                        <TKUIButton
+                            text={((purchasedTickets?.length ?? 0) > 1) ? "Tickets" : "Ticket"}
+                            onClick={() => setShowTicket(true)}
+                        />}
+                    {showTicket &&
+                        <TKUIHTMLTicketView purchasedTickets={purchasedTickets} onRequestClose={() => setShowTicket(false)} />}
                 </div>
                 :
                 <div className={classes.main}>
@@ -124,7 +147,7 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                                 <IconPassenger className={classes.icon} />
                                 <TKUIRow
                                     title={ticket.name}
-                                    subtitle={FormatUtil.toMoney(ticket.price, { currency: ticket.currency + " ", nInCents: true })}
+                                    subtitle={FormatUtil.toMoney(ticket.price, { currency: ticket.currency + " ", nInCents: true, forceDecimals: true })}
                                     styles={{
                                         main: overrideClass(injectedStyles.row)
                                     }}

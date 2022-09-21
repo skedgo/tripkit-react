@@ -45,10 +45,23 @@ class TripGoApi {
     }
 
     public static apiCallUrl(url: string, method: string, body?: any, cache: boolean = false): Promise<any> {
-        // TODO: Fetch with chacé, just for development, to avoid doing so much api calls and accelerating answers.
+        return this.fetchAPI(url, {
+            method,
+            body,
+            tkcache: cache
+        });
+    }
+
+    public static fetchAPI(
+        url: string,
+        options: RequestInit & {
+            tkcache?: boolean
+        }): Promise<any> {
+        const { tkcache = false, ...fetchOptions } = options
+        // TODO: Fetch with cache, just for development, to avoid doing so much api calls and accelerating answers.
         return Promise.resolve(this.locale).then(locale =>
             NetworkUtil.fetch(url, {
-                method: method,
+                ...fetchOptions,
                 headers: {
                     'X-TripGo-Version': 'w3.2018.12.20',
                     'X-TripGo-Key': this.apiKey,
@@ -66,12 +79,12 @@ class TripGoApi {
                     },
                     ...locale && locale !== 'en' && {
                         'accept-language': [locale, 'en'].join(',')
-                    }
+                    },
+                    ...options.headers
                 },
-                body: body ? JSON.stringify(body) : undefined
-            }, cache)
-            // .then(NetworkUtil.jsonCallback); // TODO: Comment since NetworkUtil.fetch already calls jsonCallback.
-        )
+                body: options.body ? JSON.stringify(options.body) : undefined
+            }, tkcache)
+        );
     }
 
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {

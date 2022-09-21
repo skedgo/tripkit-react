@@ -50,7 +50,7 @@ const TKUINewCardView: React.FunctionComponent<IProps> =
             const payload = await stripe.createPaymentMethod({
                 type: "card",
                 card: elements.getElement(CardElement)!
-            });            
+            });
             console.log("[PaymentMethod]", payload);
             if (!payload.paymentMethod) {
                 return;
@@ -61,11 +61,11 @@ const TKUINewCardView: React.FunctionComponent<IProps> =
                     'Accept': 'application/json',
                     'Authorization': `Bearer ${ephemeralKeyObj.secret}`,
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Stripe-Version': '2020-08-27'                    
+                    'Stripe-Version': '2020-08-27'
                 }),
                 body: `customer=${ephemeralKeyObj.associated_objects[0]?.id}`
             })
-            .then(NetworkUtil.jsonCallback);
+                .then(NetworkUtil.jsonCallback);
             console.log(response);
             onRequestClose?.(payload.paymentMethod?.id);
 
