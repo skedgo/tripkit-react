@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
-import {Auth0Provider, useAuth0} from "@auth0/auth0-react";
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Auth0Provider, useAuth0 } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
 import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
 import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
-import {RoutingResultsContext} from "../trip-planner/RoutingResultsProvider";
-import {IAccountContext, SignInStatus, TKAccountContext} from "./TKAccountContext";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
     private static _instance: AuthStorage;
@@ -26,11 +26,15 @@ function usePrevious(value) {
     return ref.current;
 }
 
-const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean}> = (props) => {
-    const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user} = useAuth0();
+// Doing this with useState have problems when component is re-constructed.
+let finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
+let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.signedOut) => void;
+
+const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean }> = (props) => {
+    const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user } = useAuth0();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = (isLoading || isAuthenticated || userToken) ? SignInStatus.loading :
-            SignInStatus.signedOut;
+        SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
     const prevIsLoading = usePrevious(isLoading);
@@ -55,7 +59,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
-        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {         
+        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {
             setStatus(SignInStatus.signedOut)
         }
     });
@@ -65,7 +69,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
         // Request user profile
         if (userToken) {
             TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
-                .then((result) => {                    
+                .then((result) => {
                     setUserAccount(result);
                     setStatus(SignInStatus.signedIn);
                 })
@@ -82,7 +86,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
             onWaitingStateLoad(true);
         }
         // prompt 'login' to always show login dialog to user if logged out.
-        (props.withPopup ? loginWithPopup({prompt: 'login'}, {timeoutInSeconds: 600}) :
+        (props.withPopup ? loginWithPopup({ prompt: 'login' }, { timeoutInSeconds: 600 }) :
             loginWithRedirect({
                 prompt: 'login',
                 appState: { returnTo: window.location.href }
@@ -105,6 +109,17 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
         setUserToken(undefined);
         setUserAccount(undefined);
     };
+    if (!finishInitLoadingPromise) {
+        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) : 
+        new Promise(resolve => {         
+            finishInitLoadingResolver = resolve; 
+        })
+    }        
+    useEffect(() => {
+        if (status !== SignInStatus.loading) {            
+            finishInitLoadingResolver?.(status);
+        }
+    }, [status]);
     return (
         <React.Fragment>
             {props.children({
@@ -112,7 +127,8 @@ const Auth0ToTKAccount: React.FunctionComponent<{children: (context: IAccountCon
                 userAccount,
                 login,
                 logout: logoutHandler,
-                accountsSupported: true
+                accountsSupported: true,
+                finishInitLoadingPromise
             })}
         </React.Fragment>
     );
@@ -144,7 +160,7 @@ const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
             <Auth0ToTKAccount>
                 {(context: IAccountContext) =>
                     <TKAccountContext.Provider
-                        value={{...context, returnToAfterLogin}}>
+                        value={{ ...context, returnToAfterLogin }}>
                         {props.children}
                     </TKAccountContext.Provider>}
             </Auth0ToTKAccount>

@@ -29,7 +29,7 @@ import DeviceUtil from '../util/DeviceUtil';
 import TKUILocationDetail from '../location/TKUILocationDetail';
 import FreeFloatingVehicleLocation from '../model/location/FreeFloatingVehicleLocation';
 import Util from '../util/Util';
-import { TKAccountContext } from '../account/TKAccountContext';
+import { SignInStatus, TKAccountContext } from '../account/TKAccountContext';
 import TKUILocationDetailField from '../location/TKUILocationDetailField';
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
@@ -72,6 +72,7 @@ export interface SegmentMxMCardsProps {
     mapAsync: Promise<TKUIMapViewClass>;
     trip?: Trip;
     accountsSupported?: boolean;
+    signInStatus?: SignInStatus;
     isSelectedCard?: () => boolean;
 }
 
@@ -81,7 +82,7 @@ const cardStyles = {
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () => number): JSX.Element[] {
-    const { segment, onRequestClose, t, options, landscape, accountsSupported, refreshSelectedTrip, trip } = props;
+    const { segment, onRequestClose, t, options, landscape, accountsSupported, signInStatus, refreshSelectedTrip, trip } = props;
     let cards: JSX.Element[] = [];
     cards.push(
         <TKUIMxMTimetableCard segment={segment} onRequestClose={onRequestClose} key={generateCardIndex()} />
@@ -121,7 +122,8 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
                 />}
         </TKUICard>
     );
-    if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+    if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
+        signInStatus === SignInStatus.signedIn) {
         cards.push(
             <TKUIMxMBookingCard
                 segment={segment}
@@ -337,6 +339,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             mapAsync,
             trip,
             accountsSupported: accountContext.accountsSupported,
+            signInStatus: accountContext.status
         }, generateCardIndex, isSelectedCardBuilder, () => moveToNext()));
         return map;
     }, new Map<Segment, JSX.Element[]>());
