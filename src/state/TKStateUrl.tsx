@@ -1,29 +1,30 @@
-import React, {useContext} from "react";
+import React, { useContext } from "react";
 import TKStateConsumer from "../config/TKStateConsumer";
-import {TKState} from "../config/TKState";
+import { TKState } from "../config/TKState";
 import TKShareHelper from "../share/TKShareHelper";
 import StopLocation from "../model/StopLocation";
 import StopsData from "../data/StopsData";
 import RegionsData from "../data/RegionsData";
 import DateTimeUtil from "../util/DateTimeUtil";
 import Location from "../model/Location";
-import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
+import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import LatLng from "../model/LatLng";
 import * as queryString from "query-string";
 import Util from "../util/Util";
-import {TKError} from "../error/TKError";
-import {ERROR_LOADING_DEEP_LINK} from "../error/TKErrorHelper";
+import { TKError } from "../error/TKError";
+import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import Trip from "../model/trip/Trip";
-import {getGeocodingOptions} from "../geocode/TKGeocodingOptions";
+import { getGeocodingOptions } from "../geocode/TKGeocodingOptions";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
-import {TKAccountContext} from "../account/TKAccountContext";
+import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
 import TKUserProfile from "../model/options/TKUserProfile";
 
 interface IProps {
     tKState: TKState;
     returnToAfterLogin?: string;
+    finishInitLoadingPromise?: Promise<SignInStatus.signedIn | SignInStatus.signedOut>
     useHash?: boolean;
 }
 
@@ -63,7 +64,7 @@ export function loadTimetableState(tKState: TKState, regionCode: string, stopCod
     StopsData.instance.getStopFromCode(regionCode, stopCode)
         .then((stop: StopLocation) =>
             RegionsData.instance.requireRegions().then(() => {
-                tKState.onQueryUpdate({to: stop});
+                tKState.onQueryUpdate({ to: stop });
                 if (!serviceID || !timeInSecs) {
                     filter && tKState.onFilterChange(filter);
                     return tKState.onStopChange(stop);
@@ -219,12 +220,12 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
     private getServiceFieldValue(stop: StopLocation, filter: string, service?: ServiceDeparture): string {
         return RegionsData.instance.getRegion(stop)!.name
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(service && service.startStop? service.startStop.code : stop.code)
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(service && service.startStop ? service.startStop.code : stop.code)
             + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(filter)
             + (service ? URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(service.serviceTripID) + URL_VALUE_COMPONENT_SEPARATOR + service.startTime : "");
     }
 
-    private parseServiceFieldValue(serviceS: string): {regionCode: string, stopCode: string, filter: string, serviceTripID?: string, startTime?: number} {
+    private parseServiceFieldValue(serviceS: string): { regionCode: string, stopCode: string, filter: string, serviceTripID?: string, startTime?: number } {
         const stopComps = serviceS.split(URL_VALUE_COMPONENT_SEPARATOR);
         return {
             regionCode: stopComps[0],
@@ -293,12 +294,12 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 geocodingData.reverseGeocode(arrivalLoc, (location: Location | null) => {
                     if (location !== null) {
                         const routingQuery = queryMap.at ? RoutingQuery.create(null,
-                                location, TimePreference.ARRIVE,
-                                DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
+                            location, TimePreference.ARRIVE,
+                            DateTimeUtil.momentFromTimeTZ(parseInt(queryMap.at) * 1000)) :
                             RoutingQuery.create(null, location);
                         tKState.onQueryChange(routingQuery);
                         if (queryMap.at) {
-                            this.setState({directionsView: true})
+                            this.setState({ directionsView: true })
                         }
                         TKShareHelper.resetToHome();
                     }
@@ -309,12 +310,12 @@ class TKStateUrl extends React.Component<IProps, {}> {
         } else if (TKShareHelper.isSharedQueryLink()) {
             const transports = TKShareHelper.parseTransportsQueryParam();
             if (transports) {
-                const update = Util.iAssign(tKState.userProfile, {transportOptions: transports});
+                const update = Util.iAssign(tKState.userProfile, { transportOptions: transports });
                 tKState.onUserProfileChange(update);
             }
             const settings = TKShareHelper.parseSettingsQueryParam();
             if (settings) {
-                const update = Util.deserialize({...Util.serialize(tKState.userProfile), ...Util.serialize(settings)}, TKUserProfile);
+                const update = Util.deserialize({ ...Util.serialize(tKState.userProfile), ...Util.serialize(settings) }, TKUserProfile);
                 // If doing instead
                 // const update = Util.iAssign(tKState.userProfile, settings);
                 // the undefined properties in settings override those in userProfile.
@@ -322,7 +323,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
                 // Since default trip sort is loaded into RoutingResultsContext before this update,
                 // the next line is required to update the context with the coming value.
                 update.defaultTripSort && tKState.userProfile.defaultTripSort !== update.defaultTripSort
-                && tKState.onSortChange(update.defaultTripSort);
+                    && tKState.onSortChange(update.defaultTripSort);
             }
             const query = TKShareHelper.parseSharedQueryLink();
             const viewport = TKShareHelper.parseViewport();
@@ -341,7 +342,8 @@ class TKStateUrl extends React.Component<IProps, {}> {
     }
 
     private loadTripState(sharedTripJsonUrl: string, selectedSegmentId?: string) {
-        loadTripState(this.props.tKState, sharedTripJsonUrl, selectedSegmentId);
+        (this.props.finishInitLoadingPromise ?? Promise.resolve(SignInStatus.signedOut))
+            .then(() => loadTripState(this.props.tKState, sharedTripJsonUrl, selectedSegmentId));
     }
 
     private loadTimetableState(regionCode: string, stopCode: string, filter?: string, serviceID?: string, timeInSecs?: number) {
@@ -354,13 +356,15 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
 }
 
-export default (props: {useHash?: boolean;}) => {
-    const accountContext = useContext(TKAccountContext);
+export default (props: { useHash?: boolean; }) => {
+    const { returnToAfterLogin, finishInitLoadingPromise } = useContext(TKAccountContext);
     return <TKStateConsumer>
         {(state: TKState) =>
-            <TKStateUrl tKState={state}
-                        returnToAfterLogin={accountContext.returnToAfterLogin}
-                        {...props}
+            <TKStateUrl
+                tKState={state}
+                returnToAfterLogin={returnToAfterLogin}
+                finishInitLoadingPromise={finishInitLoadingPromise}
+                {...props}
             />
         }
     </TKStateConsumer>;

@@ -36,6 +36,7 @@ import classNames from 'classnames';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 import BookingReview from '../model/trip/BookingReview';
 import { TKUIStripePaymentCardClientProps } from '../stripekit/TKUIStripePaymentCard';
+import { SignInStatus, TKAccountContext } from '../account/TKAccountContext';
 
 type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
@@ -242,8 +243,9 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
     const [waiting, setWaiting] = useState<boolean>(!confirmation);
     const [error, setError] = useState<TKError | undefined>(undefined);
     const config = useContext(TKUIConfigContext);
+    const { status } = useContext(TKAccountContext);
     useEffect(() => {
-        if (!confirmation) {
+        if (!confirmation && status === SignInStatus.signedIn) {
             const bookingInfosUrl = booking.quickBookingsUrl!;
             TripGoApi.apiCallUrl(bookingInfosUrl, "GET")
                 .then((bookingsInfoJsonArray) => {
@@ -255,7 +257,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 .catch((e) => setError(e))
                 .finally(() => setWaiting(false));
         }
-    }, []);
+    }, [status]);
     let content;
     if (confirmation) {
         const status = confirmation.status!;
@@ -412,7 +414,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
     }
     const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({
         ...reviewAndPaymentForm,
-        publicKey: reviewAndPaymentForm.publicKey ?? config.payment.stripePublicKey,        
+        publicKey: reviewAndPaymentForm.publicKey ?? config.payment.stripePublicKey,
         onRequestClose: success => {
             if (success) {
                 setWaiting?.(true);
@@ -421,7 +423,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     .finally(() => setWaiting?.(false));
             }
             setReviewAndPaymentForm(undefined);
-        }        
+        }
     });
     return (
         <TKUICard
