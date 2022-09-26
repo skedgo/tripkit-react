@@ -19,6 +19,9 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil from "../util/DeviceUtil";
 import Segment from "../model/trip/Segment";
+import { moveToNext } from "../mxm/TKUIMxMView";
+import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
+import { useRef } from "react";
 
 export enum TKTripCostType {
     price, calories, carbon, score
@@ -75,7 +78,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * Callback reference to be passed to main element.
      * @ctype
      */
-    reference?: (ref: any) => void;
+    reference?: (ref: React.RefObject<HTMLElement>) => void;
 
     /**
      * Badge assigned to this trip. <br>
@@ -182,164 +185,162 @@ function tripMetricString(metric: TKTripCostType, trip: Trip, t: TranslationFunc
     }
 }
 
-class TKUITripRow extends React.Component<IProps, {}> {
-
-    public static defaultProps: Partial<IProps> = {
-        tripMetricsToShow: [TKTripCostType.price, TKTripCostType.calories, TKTripCostType.carbon]
-    };
-
-    private ref: any;
-
-    public render(): React.ReactNode {
-        const { value: trip, tripMetricsToShow, classes, t } = this.props;
-        const hideTimes = trip.hideExactTimes;
-        const alternatives = (trip as TripGroup).trips
-            // create a copy to preserve original sorting of trip.trips.
-            .slice()
-            // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
-            .sort((t1: Trip, t2: Trip) => {
-                return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
-            });
-        const pastAlternatives = alternatives.filter((alt: Trip) =>
-            alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
-            (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) < Math.floor(alt.queryTime / 60) :
-                Math.floor(alt.arrive / 60) > Math.floor(alt.queryTime / 60)));
-        const futureAlternatives = alternatives.filter((alt: Trip) =>
-            alt.queryTime === null || alt.queryIsLeaveAfter === null ||
-            (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) >= Math.floor(alt.queryTime / 60) :
-                Math.floor(alt.arrive / 60) <= Math.floor(alt.queryTime / 60)));
-        const selectedAlt = (trip as TripGroup).getSelectedTrip();
-        const visibleAlternativesCount = this.props.visibleAlternatives ? this.props.visibleAlternatives : 2;
-        const visiblePastAlternatives = this.props.expanded ? pastAlternatives :
-            pastAlternatives.includes(selectedAlt) ? [selectedAlt] : [];
-        const visibleFutureAlternatives = this.props.expanded ? futureAlternatives :
-            futureAlternatives.slice(0, Math.min(futureAlternatives.length, visibleAlternativesCount));
-        if (futureAlternatives.includes(selectedAlt) && !visibleFutureAlternatives.includes(selectedAlt)) {
-            visibleFutureAlternatives.push(selectedAlt);
-        }
-        const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
-        const collapsed = !this.props.expanded;
-        const bookingSegment = trip.segments.find(segment => segment.booking);
-        const metricsS = tripMetricsToShow!
-            .map(metric => tripMetricString(metric, trip, t))
-            .filter(metricS => metricS !== undefined)
-            .join(" · ");
-        const info = metricsS !== "" &&
-            <div className={classes.info}>
-                {metricsS}
-            </div>;
-        const more = (this.props.expanded || alternatives.length > visibleAlternatives.length) &&
-            <TKUIButton
-                text={this.props.expanded ? t("Less") : t("More")}
-                type={TKUIButtonType.PRIMARY_LINK}
-                onClick={(e: any) => {
-                    this.props.onExpand && this.props.onExpand(!this.props.expanded);
+const TKUITripRow: React.FunctionComponent<IProps> = props => {
+    const { value: trip, tripMetricsToShow = [TKTripCostType.price, TKTripCostType.calories, TKTripCostType.carbon], classes, t } = props;
+    const mainRef = useRef<HTMLDivElement>(null);
+    props.reference?.(mainRef);
+    const hideTimes = trip.hideExactTimes;
+    const alternatives = (trip as TripGroup).trips
+        // create a copy to preserve original sorting of trip.trips.
+        .slice()
+        // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
+        .sort((t1: Trip, t2: Trip) => {
+            return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
+        });
+    const pastAlternatives = alternatives.filter((alt: Trip) =>
+        alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
+        (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) < Math.floor(alt.queryTime / 60) :
+            Math.floor(alt.arrive / 60) > Math.floor(alt.queryTime / 60)));
+    const futureAlternatives = alternatives.filter((alt: Trip) =>
+        alt.queryTime === null || alt.queryIsLeaveAfter === null ||
+        (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) >= Math.floor(alt.queryTime / 60) :
+            Math.floor(alt.arrive / 60) <= Math.floor(alt.queryTime / 60)));
+    const selectedAlt = (trip as TripGroup).getSelectedTrip();
+    const visibleAlternativesCount = props.visibleAlternatives ? props.visibleAlternatives : 2;
+    const visiblePastAlternatives = props.expanded ? pastAlternatives :
+        pastAlternatives.includes(selectedAlt) ? [selectedAlt] : [];
+    const visibleFutureAlternatives = props.expanded ? futureAlternatives :
+        futureAlternatives.slice(0, Math.min(futureAlternatives.length, visibleAlternativesCount));
+    if (futureAlternatives.includes(selectedAlt) && !visibleFutureAlternatives.includes(selectedAlt)) {
+        visibleFutureAlternatives.push(selectedAlt);
+    }
+    const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
+    const collapsed = !props.expanded;
+    const bookingSegment = trip.segments.find(segment => segment.booking);
+    const metricsS = tripMetricsToShow!
+        .map(metric => tripMetricString(metric, trip, t))
+        .filter(metricS => metricS !== undefined)
+        .join(" · ");
+    const info = metricsS !== "" &&
+        <div className={classes.info}>
+            {metricsS}
+        </div>;
+    const { status } = React.useContext(TKAccountContext);
+    const more = (props.expanded || alternatives.length > visibleAlternatives.length) &&
+        <TKUIButton
+            text={props.expanded ? t("Less") : t("More")}
+            type={TKUIButtonType.PRIMARY_LINK}
+            onClick={(e: any) => {
+                props.onExpand && props.onExpand(!props.expanded);
+                e.stopPropagation();
+            }}
+            onKeyDown={(e) => {
+                if (e.keyCode === 9 && props.isUserTabbing && props.expanded) {
+                    // If navigating with keyboard, button is focused, alternatives are expanded,
+                    // and press tab, then put focus on main element.
+                    mainRef.current?.focus();
                     e.stopPropagation();
-                }}
-                onKeyDown={(e) => {
-                    if (e.keyCode === 9 && this.props.isUserTabbing && this.props.expanded) {
-                        // If navigating with keyboard, button is focused, alternatives are expanded,
-                        // and press tab, then put focus on main element.
-                        this.ref && this.ref.focus();
-                        e.stopPropagation();
-                        e.preventDefault();
-                    }
-                }}
-                role={"button"}
-                aria-pressed={this.props.expanded}
-                aria-label={this.props.expanded ? "Less alternatives" : "More alternatives"} />;
-        const book = bookingSegment &&
-            <TKUIButton
-                text={bookingSegment?.booking?.title ?? t("Book")}
-                type={TKUIButtonType.PRIMARY_LINK}
-                onClick={(e: any) => {
-                    this.props.onSegmentSelected?.(bookingSegment);
-                    e.stopPropagation();
-                }}
-                role={"button"}
-                aria-label={t("Book")} />;
-        return (
-            <div className={classes.main}
-                onClick={this.props.onClick}
-                tabIndex={0}
-                onFocus={this.props.onFocus}
-                onKeyDown={this.props.onKeyDown}
-                ref={el => {
-                    this.ref = el;
-                    this.props.reference && this.props.reference(el);
-                }}
-                aria-label={collapsed ? undefined : selectedAlt.getAriaDescription(t)}
-            >
-                {!collapsed && !DeviceUtil.isTouch() &&
-                    <div role="status" style={{ height: 0, overflow: 'hidden' }}>To browse alternatives start pressing tab button</div>}
-                {this.props.badge &&
-                    <div className={classes.badge}
-                        key={"badge"}
-                        aria-label={badgeLabel(this.props.badge, this.props.t) + " result."}
-                    >
-                        {badgeIcon(this.props.badge)}
-                        {badgeLabel(this.props.badge, this.props.t)}
-                    </div>
+                    e.preventDefault();
                 }
-                {visibleAlternatives.map((altTrip: Trip, i: number) => {
-                    const isSelectedAlt = altTrip === selectedAlt;
-                    return (
-                        <div className={classNames(classes.alternative,
-                            this.props.selected && isSelectedAlt && classes.selectedAlternative)}
-                            onClick={() => this.props.onAlternativeClick &&
-                                this.props.onAlternativeClick(trip as TripGroup, altTrip)}
-                            onKeyDown={(e) => {
-                                // To get the same effect of a click when user presses enter (pick the alternative).
-                                // Couldn't use a button since a button (Details) inside a button is forbidden.
-                                if (e.keyCode === 13) {
-                                    this.props.onAlternativeClick &&
-                                        this.props.onAlternativeClick(trip as TripGroup, altTrip)
-                                }
-                            }}
-                            key={i}
-                            aria-label={collapsed ? altTrip.getAriaDescription(t) : altTrip.getAriaTimeDescription(t)}
-                            aria-hidden={collapsed && !isSelectedAlt && !DeviceUtil.isTouch()}
-                            tabIndex={collapsed && !DeviceUtil.isTouch() ? -1 : 0}
-                            role={DeviceUtil.isTouch() ? "button" : undefined}
-                        >
-                            <div
-                                className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
-                                {!hideTimes &&
-                                    <TKUITripTime value={altTrip} brief={this.props.brief} />}
-                                <div className={classes.trackAndAction}>
-                                    <div style={{ position: 'relative' }}>
-                                        {trip.isCancelled() &&
-                                            <div className={classes.crossOut} />}
-                                        <TripRowTrack value={altTrip} />
-                                    </div>
-                                    {this.props.onDetailClick &&
-                                        <TKUIButton
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            text={t("Details")}
-                                            onClick={this.props.onDetailClick}
-                                            aria-hidden={!collapsed || !isSelectedAlt}
-                                            tabIndex={!collapsed || !isSelectedAlt ? -1 : undefined}
-                                        />}
+            }}
+            role={"button"}
+            aria-pressed={props.expanded}
+            aria-label={props.expanded ? "Less alternatives" : "More alternatives"} />;
+    const book = bookingSegment &&
+        <TKUIButton
+            text={bookingSegment?.booking?.title ?? t("Book")}
+            type={TKUIButtonType.PRIMARY_LINK}
+            onClick={(e: any) => {
+                props.onSegmentSelected?.(bookingSegment);
+                if (bookingSegment.isPT() && status === SignInStatus.signedIn) {
+                    // Workaround to go to booking MxM card, with #18051 this won't be necessary anymore.
+                    setTimeout(() => {
+                        moveToNext?.();
+                        moveToNext?.();
+                    });
+                }
+                e.stopPropagation();
+            }}
+            role={"button"}
+            aria-label={t("Book")} />;
+    return (
+        <div className={classes.main}
+            onClick={props.onClick}
+            tabIndex={0}
+            onFocus={props.onFocus}
+            onKeyDown={props.onKeyDown}
+            ref={mainRef}
+            aria-label={collapsed ? undefined : selectedAlt.getAriaDescription(t)}
+        >
+            {!collapsed && !DeviceUtil.isTouch() &&
+                <div role="status" style={{ height: 0, overflow: 'hidden' }}>To browse alternatives start pressing tab button</div>}
+            {props.badge &&
+                <div className={classes.badge}
+                    key={"badge"}
+                    aria-label={badgeLabel(props.badge, t) + " result."}
+                >
+                    {badgeIcon(props.badge)}
+                    {badgeLabel(props.badge, t)}
+                </div>
+            }
+            {visibleAlternatives.map((altTrip: Trip, i: number) => {
+                const isSelectedAlt = altTrip === selectedAlt;
+                return (
+                    <div className={classNames(classes.alternative,
+                        props.selected && isSelectedAlt && classes.selectedAlternative)}
+                        onClick={() => props.onAlternativeClick &&
+                            props.onAlternativeClick(trip as TripGroup, altTrip)}
+                        onKeyDown={(e) => {
+                            // To get the same effect of a click when user presses enter (pick the alternative).
+                            // Couldn't use a button since a button (Details) inside a button is forbidden.
+                            if (e.keyCode === 13) {
+                                props.onAlternativeClick &&
+                                    props.onAlternativeClick(trip as TripGroup, altTrip)
+                            }
+                        }}
+                        key={i}
+                        aria-label={collapsed ? altTrip.getAriaDescription(t) : altTrip.getAriaTimeDescription(t)}
+                        aria-hidden={collapsed && !isSelectedAlt && !DeviceUtil.isTouch()}
+                        tabIndex={collapsed && !DeviceUtil.isTouch() ? -1 : 0}
+                        role={DeviceUtil.isTouch() ? "button" : undefined}
+                    >
+                        <div
+                            className={(visiblePastAlternatives.includes(altTrip) || altTrip.isCancelled()) ? classes.pastAlternative : ''}>
+                            {!hideTimes &&
+                                <TKUITripTime value={altTrip} brief={props.brief} />}
+                            <div className={classes.trackAndAction}>
+                                <div style={{ position: 'relative' }}>
+                                    {trip.isCancelled() &&
+                                        <div className={classes.crossOut} />}
+                                    <TripRowTrack value={altTrip} />
                                 </div>
+                                {props.onDetailClick &&
+                                    <TKUIButton
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        text={t("Details")}
+                                        onClick={props.onDetailClick}
+                                        aria-hidden={!collapsed || !isSelectedAlt}
+                                        tabIndex={!collapsed || !isSelectedAlt ? -1 : undefined}
+                                    />}
                             </div>
                         </div>
-                    );
-                })}
-                {(info || more || book) &&
-                    <div className={classes.footer}
-                        key={"footer"}
-                        aria-label={metricsS.replace(/ · /gi, ". ")}
-                    >
-                        {info}
-                        <div className={classes.footerButtons}>
-                            {more}
-                            {book}
-                        </div>
                     </div>
-                }
-            </div>
-        )
-    }
+                );
+            })}
+            {(info || more || book) &&
+                <div className={classes.footer}
+                    key={"footer"}
+                    aria-label={metricsS.replace(/ · /gi, ". ")}
+                >
+                    {info}
+                    <div className={classes.footerButtons}>
+                        {more}
+                        {book}
+                    </div>
+                </div>
+            }
+        </div>
+    )
 }
 
 export default connect((config: TKUIConfig) => config.TKUITripRow, config,
