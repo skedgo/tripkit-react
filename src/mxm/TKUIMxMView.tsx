@@ -298,7 +298,7 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
  * is called with an old context (viz., old selected segment - the context gets fixed at the moment the function is 
  * declared and passed) while already displaying the new / updated trip, which causes problems (on next index calculation).
  */
-let moveToNext: () => void;
+export let moveToNext: () => void;
 
 const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { refreshSelectedTrip, mapAsync, t } = props;

@@ -44,7 +44,7 @@ import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import { useContext } from "react";
-import TransportUtil from "./TransportUtil";
+import { RefObject } from "react";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -237,7 +237,7 @@ interface IState {
 
 class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
-    private rowRefs: any[] = [];
+    private rowRefs: RefObject<HTMLElement>[] = [];
     private timePrefOptions: SelectOption[];
     private sortOptions: SelectOption[];
 
@@ -300,12 +300,12 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 
     private onKeyDown(e: any) {
-        if (e.keyCode === 38 || e.keyCode === 40) {
+        if (e.keyCode === 38 || e.keyCode === 40) { // up / down arrows
             const selectedI = this.props.value ? this.props.values.indexOf(this.props.value) : 0;
             if (this.props.onChange) {
                 const nextIndex = this.nextIndex(selectedI, e.keyCode === 38);
                 this.props.onChange(this.props.values[nextIndex]);
-                this.rowRefs[nextIndex].focus();
+                this.rowRefs[nextIndex]?.current?.focus();
             }
         }
     }
@@ -539,8 +539,8 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
         // Focus first selected trip row.
-        if (this.props.isUserTabbing && !prevProps.value && this.props.value && this.rowRefs[this.props.values.indexOf(this.props.value)]) {
-            this.rowRefs[this.props.values.indexOf(this.props.value)].focus();
+        if (this.props.isUserTabbing && !prevProps.value && this.props.value) {
+            this.rowRefs[this.props.values.indexOf(this.props.value)]?.current?.focus();
         }
 
         // Clear automatic selection timeout when resetting trips
