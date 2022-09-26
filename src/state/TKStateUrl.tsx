@@ -342,6 +342,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
     }
 
     private loadTripState(sharedTripJsonUrl: string, selectedSegmentId?: string) {
+        this.props.tKState.onWaitingStateLoad(true); // This is redundantly called inside loadTripState, but need to also call it here to start load trip spinner from the beggining.
         (this.props.finishInitLoadingPromise ?? Promise.resolve(SignInStatus.signedOut))
             .then(() => loadTripState(this.props.tKState, sharedTripJsonUrl, selectedSegmentId));
     }
