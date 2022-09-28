@@ -48,18 +48,26 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, t, landscape, status, classes } = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     const [waitingForActiveTrip, setWaitingForActiveTrip] = useState<boolean>(false);
+
+    const refreshActiveTrip = () => {
+        // Split the refresh implementation into this function + the useEffect below to ensure the api all is done after the 
+        // setWaitingForActiveTrip(true) took effect, avoiding race conditions that may cause multiple "simultaneous" api calls.
+        if (waitingForActiveTrip) {
+            return;
+        }
+        setWaitingForActiveTrip(true);
+    };
     useEffect(() => {
-        const refreshActiveTrip = () => {
-            if (waitingForActiveTrip) {
-                return;
-            }
-            setWaitingForActiveTrip(true);
+        if (waitingForActiveTrip) {
             TripGoApi.apiCallT("booking/v2/active", NetworkUtil.MethodType.GET, ConfirmedBookingData)
                 .then((result: ConfirmedBookingData) => {
                     setActiveTrip(Util.stringify(result) === Util.stringify(new ConfirmedBookingData()) ? null : result);
                 })
+                .catch(e => console.log(e))
                 .finally(() => setWaitingForActiveTrip(false));
-        };
+        }
+    }, [waitingForActiveTrip]);
+    useEffect(() => {
         if (status === SignInStatus.signedIn) {
             refreshActiveTrip();
             refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 10000);

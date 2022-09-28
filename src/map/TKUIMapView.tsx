@@ -308,8 +308,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (this.props.directionsView) {
             if (!from || !to || clickLatLng instanceof StopLocation) {
                 if (!from && !to) {
-                    // Avoid fit bounds when setting first location on
-                    // directions view.
+                // Avoid fit bounds when setting first location on
+                // directions view.
                     avoidFitLatLng = clickLatLng
                 }
                 // Do nothing if the location is already the from or to.
@@ -654,7 +654,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         />
                     }
                     {this.state.modeLocations?.map((location, i) =>
-                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={i}/>)}
+                        <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={i} />)}
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => {
                         return <MapTripSegment segment={segment}
                             ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
@@ -933,7 +933,7 @@ function getGeocodingData(geocodingConfig?: Partial<TKGeocodingOptions> | ((defa
 
 let avoidFitLatLng: LatLng | undefined;
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> =
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
         return (
             <TKUIConfigContext.Consumer>

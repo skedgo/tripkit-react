@@ -31,7 +31,7 @@ class NetworkUtil {
                     }
                 });
             } else {
-                return Promise.reject(new TKError(TKI18nProvider.tStatic("Something.went.wrong."), response.status, false));                
+                return Promise.reject(new TKError(TKI18nProvider.tStatic("Something.went.wrong."), response.status, false));
             }
         }
     }
@@ -64,12 +64,25 @@ class NetworkUtil {
     }
 
     public static content(response: any): Promise<any> {
-        const contentType = response.headers.get("content-type");
-        if (contentType?.includes("text")) {
-            return response.text();
-        } else {
-            return NetworkUtil.json(response);
-        }        
+        if (response.status === 204) {  // No content (so, no response.json()).
+            return Promise.resolve({});
+        }
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);                
+            } catch (err) {
+                return text;
+            }
+        }).then(content => {
+            if (typeof content === 'object' && content?.error) {
+                const jsonData = content;
+                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
+                tkError.title = jsonData.title;
+                tkError.subtitle = jsonData.subtitle;
+                throw tkError;
+            }
+            return content;
+        });
     }
 
     public static fetchApiCallback(response: any): Promise<any> {
