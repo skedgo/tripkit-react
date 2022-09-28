@@ -120,6 +120,9 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @default Timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
+
+    // Until define interface for TKUIMapViewClass, so to not bundle map with routing query input.
+    map?: any;
 }
 
 interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -332,6 +335,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(true, value ? value : undefined);
                                         }
                                     }
+                                    // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
+                                    // if (value) {
+                                    //     this.props.map?.fitMap(value, routingQuery.to);
+                                    // }
                                 }}
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(true, text);
@@ -384,6 +391,10 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                             this.props.onPreChange(false, value ? value : undefined);
                                         }
                                     }
+                                    // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
+                                    // if (value) {
+                                    //     this.props.map?.fitMap(routingQuery.from, value);
+                                    // }
                                 }}
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(false, text);
@@ -504,7 +515,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {
     return (
         <TKUIViewportUtil>
             {(viewportProps: TKUIViewportUtilProps) =>
@@ -518,6 +529,7 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                             onPreChange: routingContext.onPreChange,
                             onInputTextChange: routingContext.onInputTextChange,
                             timezone: timezone,
+                            map: routingContext.map,
                             ...viewportProps
                         };
                         return props.children!(consumerProps);
