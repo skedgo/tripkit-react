@@ -19,8 +19,9 @@ const tKUIHTMLTicketViewPropsDefaultStyle = (theme: TKUITheme) => ({
     },
     content: {
         position: 'relative',
-        margin: '20px',
-        ...genStyles.grow
+        padding: '20px',
+        ...genStyles.grow,
+        overflowY: 'auto'
     },
     loadingPanel: {
         ...genStyles.flex,
@@ -71,7 +72,7 @@ const TKUIHTMLTicketView: React.FunctionComponent<IProps> =
         }, []);
         return (
             <TKUICard
-                title={"Ticket"}
+                title={((purchasedTickets?.length ?? 0) > 1) ? "Tickets" : "Ticket"}
                 onRequestClose={onRequestClose}
                 presentation={CardPresentation.MODAL}
                 focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
