@@ -1,15 +1,109 @@
 import BBox from "../model/BBox";
 import Trip from "../model/trip/Trip";
-import LeafletUtil from "./LeafletUtil";
 import ServiceShape from "../model/trip/ServiceShape";
 import LatLng from "../model/LatLng";
-import {TKUIMapPadding} from "../map/TKUIMapView";
+import { TKUIMapPadding } from "../map/TKUIMapView";
 import Street from "../model/trip/Street";
+import Segment from "../model/trip/Segment";
+import inside from "point-in-polygon";
+import polyline from "@mapbox/polyline";
+import { lineString, point, BBox as TurfBBox } from "@turf/helpers";
+import bbox from "@turf/bbox";
+import bboxPolygon from "@turf/bbox-polygon";
+import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
 
 class MapUtil {
 
-    public static sydneyCoords = LatLng.createLatLng(-33.8674899,151.2048442);
-    public static worldCoords = LatLng.createLatLng(0,0);
+    public static sydneyCoords = LatLng.createLatLng(-33.8674899, 151.2048442);
+    public static worldCoords = LatLng.createLatLng(0, 0);
+
+    public static toLatLng(llatLng: any): LatLng {      // public static toLatLng(llatLng: LLatLng): LatLng {
+        return LatLng.createLatLng(llatLng.lat, llatLng.lng);
+    }
+
+    public static createBBoxArray(latLngs: LatLng[]): BBox {
+        const turfbbox = bbox(lineString(latLngs.map(latLng => [latLng.lng, latLng.lat])));
+        const [minX, minY, maxX, maxY] = turfbbox;
+        return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
+    }
+
+    public static inBBox(latLng: LatLng, bounds: BBox): boolean {
+        const turfPoint = point([latLng.lng, latLng.lat]);
+        const turfpolygon = bboxPolygon(bbox(lineString([[bounds.minLng, bounds.minLat], [bounds.maxLng, bounds.maxLat]])));
+        return booleanPointInPolygon(turfPoint, turfpolygon);
+    }
+
+    public static getTripBounds(trip: Trip): BBox {
+        const tripCoords = trip.segments.reduce((points, segment) => {
+            const segmentBBox = this.getSegmentBounds(segment);
+            points.push(segmentBBox.sw, segmentBBox.ne);
+            return points;
+        }, [] as LatLng[]);
+        return this.boundsFromLatLngArray(tripCoords);
+    }
+
+    public static getSegmentBounds(segment: Segment): BBox {
+        let coords;
+        if (segment.streets) {
+            const streetBounds = this.getStreetBounds(segment.streets);
+            coords = [streetBounds.sw, streetBounds.ne];
+        } else if (segment.shapes) {
+            const shapeBounds = this.getShapesBounds(segment.shapes, true);
+            coords = [shapeBounds.sw, shapeBounds.ne];
+        } else {
+            coords = [];
+        }
+        coords.push(segment.from);
+        coords.push(segment.to);
+        return this.boundsFromLatLngArray(coords);
+    }
+
+    public static getStreetBounds(streets: Street[]): BBox {
+        const streetPoints = streets.reduce((waypoints: LatLng[], street: Street) => {
+            if (street.waypoints) {
+                waypoints = waypoints.concat(street.waypoints);
+            }
+            return waypoints;
+        }, []);
+        return this.boundsFromLatLngArray(streetPoints);
+    }
+
+    public static getShapesBounds(shapes: ServiceShape[], travelledOnly: boolean = false): BBox {
+        const shapesPoints = shapes.reduce((waypoints: LatLng[], shape: ServiceShape) => {
+            if (shape.waypoints && (!travelledOnly || shape.travelled)) {
+                waypoints = waypoints.concat(shape.waypoints);
+            }
+            return waypoints;
+        }, []);
+        return this.boundsFromLatLngArray(shapesPoints);
+    }
+
+    private static turfBBoxToBBox(turfBBox: TurfBBox): BBox {
+        const [minX, minY, maxX, maxY] = turfBBox;
+        return BBox.createBBox(LatLng.createLatLng(maxY, maxX), LatLng.createLatLng(minY, minX));
+    }
+
+    public static boundsFromLatLngArray(latLngArray: LatLng[]): BBox {
+        return this.turfBBoxToBBox(bbox(lineString(latLngArray.map(latLng => [latLng.lng, latLng.lat]))))
+    }
+
+    public static decodePolylineGeoJson(encoded: string): number[][] {
+        // switch to [Long, Lat] order used by GeoJson
+        return polyline.decode(encoded).map(coord => [coord[1], coord[0]]);
+    }
+
+    public static decodePolyline(encoded: string): LatLng[] {
+        const pointsArray = this.decodePolylineGeoJson(encoded);
+        const decoded: LatLng[] = [];
+        for (const point of pointsArray) {
+            decoded.push(LatLng.createLatLng(point[1], point[0]));
+        }
+        return decoded;
+    }
+
+    public static pointInPolygon(point: LatLng, polygon: LatLng[]): boolean {
+        return inside([point.lat, point.lng], polygon.map((polyPoint: LatLng) => [polyPoint.lat, polyPoint.lng]));
+    }
 
     public static cellsForBounds(bounds: BBox, cellsPerDegree: number): string[] {
         const result: string[] = [];
@@ -19,8 +113,8 @@ class MapUtil {
         let maxCellLong = this.degreeToCellCoordinate(bounds.ne.lng, cellsPerDegree);
 
         const offset = this.degreeToCellCoordinate(360, cellsPerDegree);
-        const minLong = Math.trunc(offset/2*-1);
-        const maxLong = Math.trunc(offset/2-1);
+        const minLong = Math.trunc(offset / 2 * -1);
+        const maxLong = Math.trunc(offset / 2 - 1);
         if (maxCellLong < minCellLong) {
             maxCellLong += offset;
         } else {
@@ -28,8 +122,8 @@ class MapUtil {
         }
         minCellLong = Math.max(minLong, minCellLong);
 
-        for (let cellLat = minCellLat ; cellLat <= maxCellLat ; cellLat++) {
-            for (let cellLong = minCellLong ; cellLong <= maxCellLong ; cellLong++) {
+        for (let cellLat = minCellLat; cellLat <= maxCellLat; cellLat++) {
+            for (let cellLong = minCellLong; cellLong <= maxCellLong; cellLong++) {
                 if (cellLong > offset) {
                     cellLong -= offset;
                 }
@@ -54,18 +148,6 @@ class MapUtil {
         return BBox.createBBox(expandedNE, expandedSW);
     }
 
-    public static getTripBounds(trip: Trip): BBox {
-        return LeafletUtil.toBBox(LeafletUtil.getTripBounds(trip));
-    }
-
-    public static getStreetBounds(streets: Street[]): BBox {
-        return LeafletUtil.toBBox(LeafletUtil.getStreetBounds(streets));
-    }
-
-    public static getShapesBounds(shapes: ServiceShape[], travelledOnly: boolean = false): BBox {
-        return LeafletUtil.toBBox(LeafletUtil.getShapesBounds(shapes, travelledOnly));
-    }
-
     public static toDegrees(radians: number) {
         return radians * 180 / Math.PI;
     }
@@ -80,15 +162,15 @@ class MapUtil {
         if (angle < 0)
             diffLong += 360;
         const diffLat = southLat - northLat;
-        const newWestLong = westLong - (diffLong * left)/100;
-        const newEastLong = eastLong + (diffLong * right)/100;
-        const newNorthLat = northLat - (diffLat * top)/100;
-        const newSouthLat = southLat + (diffLat * bottom)/100;
+        const newWestLong = westLong - (diffLong * left) / 100;
+        const newEastLong = eastLong + (diffLong * right) / 100;
+        const newNorthLat = northLat - (diffLat * top) / 100;
+        const newSouthLat = southLat + (diffLat * bottom) / 100;
         return BBox.createBBox(LatLng.createLatLng(newNorthLat, newEastLong), LatLng.createLatLng(newSouthLat, newWestLong));
     }
 
     public static alreadyFits(currentBounds: BBox, padding: TKUIMapPadding, bounds: BBox, mapWidth: number, mapHeight: number): boolean {
-        Object.assign({left: 0, right: 0, bottom: 0, top: 0}, padding);
+        Object.assign({ left: 0, right: 0, bottom: 0, top: 0 }, padding);
         const leftMargin = padding.left!;
         const rightMargin = padding.right!;
         const topMargin = padding.top!;
@@ -101,13 +183,7 @@ class MapUtil {
         const topReductionPCT = topMargin === 0 ? 0 : topMargin / Math.max(currVisibleBoundsHeight, 30) * 100;
         const bottomReductionPCT = bottomMargin == 0 ? 0 : (bottomMargin) / Math.max(currVisibleBoundsHeight, 30) * 100;
         const reducedBounds = this.expandBoundsByPercent(currentBounds, -leftReductionPCT, -rightReductionPCT, -topReductionPCT, -bottomReductionPCT);
-        // const alreadyFits = GWTLatLngBounds.createFromHasLatLngBounds(currentBounds).resize(.8).toLatLngBounds().contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest()) &&
-        //     reducedBounds.contains(bounds.getNorthEast()) && reducedBounds.contains(bounds.getSouthWest());
-        const reducedLatLngBounds = LeafletUtil.fromBBox(reducedBounds);
-        const alreadyFits =
-            // LeafletUtil.fromBBox(currentBounds).contains(LeafletUtil.fromLatLng(bounds.ne)) &&
-            reducedLatLngBounds.contains(LeafletUtil.fromLatLng(bounds.sw)) &&
-            reducedLatLngBounds.contains(LeafletUtil.fromLatLng(bounds.ne));
+        const alreadyFits = this.inBBox(bounds.sw, reducedBounds) && this.inBBox(bounds.ne, reducedBounds)
         return alreadyFits
     }
 

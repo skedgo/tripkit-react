@@ -4,7 +4,14 @@
     ["@dr.pogodin/babel-preset-svgr", {
       "mimicCreateReactApp": true
     }],
-    "@babel/preset-typescript"
+    "@babel/preset-typescript",
+    ["@babel/preset-env",
+    {
+      "targets": {
+        "esmodules": true
+      },
+      "modules": false
+    }]
   ],
   "ignore": ["**/__snapshots__", "**/*.d.ts", "**/*.test.*", "src/example"],
   "plugins": [
@@ -15,4 +22,4 @@
     "@babel/plugin-proposal-export-default-from",
     "@babel/proposal-object-rest-spread"
   ]
-}
+ }

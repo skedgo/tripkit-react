@@ -121,4 +121,4 @@ if (document.getElementById(elementId)) {
 
 unregister();
 
-Util.global.renderTripPlanner = renderTripPlanner;
+(window as any).renderTripPlanner = renderTripPlanner;

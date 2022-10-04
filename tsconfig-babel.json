@@ -7,28 +7,20 @@
     "lib": [
       "es2017",
       "dom"
-//      "es6",
-//      "dom",
-//      "dom.iterable",
-//      "esnext"
     ],
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "es5",
+    "target": "es6",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true
-
-//    "forceConsistentCasingInFileNames": true,
-//    "resolveJsonModule": true,
-//    "allowJs": true,
-//    "isolatedModules": true
+    "suppressImplicitAnyIndexErrors": true,
+    "resolveJsonModule": true
   },
   "include": [
     "./src/*",

@@ -7,9 +7,6 @@ export type Update<T> = {
 
 class Util {
 
-    // must cast as any to set property on window
-    public static global: any = (window /* browser */ || global /* node */) as any;
-
     public static getWindowHeight(): number {
         return "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     }
