@@ -1,5 +1,5 @@
-import {JsonConvert} from "json2typescript";
-import Environment, {Env} from "../env/Environment";
+import { JsonConvert } from "json2typescript";
+import Environment, { Env } from "../env/Environment";
 
 export type Update<T> = {
     [P in keyof T]?: T[P]
@@ -15,16 +15,16 @@ class Util {
      * Generic clone, requires T to have a default constructor
      */
 
-    public static clone<T extends {constructor: any}>(instance: T): T {
-        return Object.assign(new (instance.constructor as { new (): T })(), instance);
+    public static clone<T extends { constructor: any }>(instance: T): T {
+        return Object.assign(new (instance.constructor as { new(): T })(), instance);
     }
 
     /**
      * Deep clone, works with classes annotated with json2typescript.
      */
 
-    public static deepClone<T extends {constructor: any}>(instance: T): T {
-        return this.transerialize(instance, instance.constructor as { new (): T });
+    public static deepClone<T extends { constructor: any }>(instance: T): T {
+        return this.transerialize(instance, instance.constructor as { new(): T });
     }
 
     // Didn't tried this one:
@@ -37,7 +37,7 @@ class Util {
      * annotated with json2typescript.
      */
 
-    public static transerialize<T,U>(instance: T, classRef: { new(): U }): U {
+    public static transerialize<T, U>(instance: T, classRef: { new(): U }): U {
         return this.deserialize(this.serialize(instance), classRef);
     }
 
@@ -69,8 +69,8 @@ class Util {
     }
 
     public static isEmpty(obj: any): boolean {
-        for(const key in obj) {
-            if(obj.hasOwnProperty(key)) {
+        for (const key in obj) {
+            if (obj.hasOwnProperty(key)) {
                 return false;
             }
         }
@@ -99,14 +99,14 @@ class Util {
     }
 
     public static stringifyJustValues(json: any): string {
-        return JSON.stringify(json).replace(/"([^(")"]+)":/g,"$1:")
+        return JSON.stringify(json).replace(/"([^(")"]+)":/g, "$1:")
     }
 
     public static log(obj: any, level: Environment | null = Env.DEVELOPMENT) {
         if (level !== null &&
             (Environment.isDev()
-            || (Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION))
-            || (Environment.isProd() && level === Env.PRODUCTION))) {
+                || (Environment.isBeta() && (level === Env.BETA || level === Env.PRODUCTION))
+                || (Environment.isProd() && level === Env.PRODUCTION))) {
             console.log(obj);
         }
     }
@@ -137,16 +137,16 @@ class Util {
             // insert a space before all caps
             .replace(/(-[a-z])/g, (str) => ' ' + str.substring(1).toUpperCase())
             // uppercase the first character
-            .replace(/^./, function(str){ return str.toUpperCase(); })
+            .replace(/^./, function (str) { return str.toUpperCase(); })
     }
 
 
     public static camelCaseToSpaced(text: string): string {
         return text
-        // insert a space before all caps
+            // insert a space before all caps
             .replace(/([A-Z])/g, ' $1')
             // uppercase the first character
-            .replace(/^./, function(str){ return str.toUpperCase(); })
+            .replace(/^./, function (str) { return str.toUpperCase(); })
     }
 
     public static toFirstUpperCase(text: string): string {

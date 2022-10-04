@@ -1,6 +1,6 @@
-import {default as moment} from 'moment-timezone';
-import {Moment} from "moment-timezone";
-import TKI18nProvider from '../i18n/TKI18nProvider';
+import { default as moment } from 'moment-timezone';
+import { Moment } from "moment-timezone";
+import { i18n } from '../i18n/TKI18nConstants';
 import ServiceDeparture from "../model/service/ServiceDeparture";
 
 class DateTimeUtil {
@@ -8,17 +8,17 @@ class DateTimeUtil {
     public static readonly HTML5_DATE_TIME_FORMAT = "YYYY-MM-DDTHH:mm";
 
     public static timeFormat = (spaced: boolean = true) => {
-        return TKI18nProvider.localeStatic === "ja" ? "HH:mm" : `h:mm${spaced ? " " : ""}A`;
+        return i18n.locale === "ja" ? "HH:mm" : `h:mm${spaced ? " " : ""}A`;
     };
 
     public static dateFormat = () => {
-        return TKI18nProvider.localeStatic === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
+        return i18n.locale === 'en-US' ? "MM/DD/YYYY" : "DD/MM/YYYY";
     };
 
     public static dateTimeFormat = () => DateTimeUtil.dateFormat() + ", " + DateTimeUtil.timeFormat();
 
     public static dayMonthFormat = () => {
-        return TKI18nProvider.localeStatic === 'en-US' ? "MMM DD" : "DD MMM";
+        return i18n.locale === 'en-US' ? "MMM DD" : "DD MMM";
     };
 
     public static defaultTZ = "Etc/UTC";
@@ -48,15 +48,15 @@ class DateTimeUtil {
     }
 
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {
-        const t = TKI18nProvider.tStatic;
+        const t = i18n.t;
         durationInMinutes = Math.floor(durationInMinutes);
         if (durationInMinutes === 0) {
             return "0" + (space ? " " : "") + "mins";
         }
         let totalMinutes = durationInMinutes;
-        const days = Math.floor(totalMinutes / (60*24));
+        const days = Math.floor(totalMinutes / (60 * 24));
         const twiceTheDays = Math.ceil((2 * totalMinutes / (60 * 24)));
-        totalMinutes -= days*24*60;
+        totalMinutes -= days * 24 * 60;
         const justHours = Math.floor(totalMinutes / 60);
         const twiceTheHours = Math.ceil(2 * (totalMinutes) / 60);
         let justMinutes = totalMinutes % 60;
@@ -68,7 +68,7 @@ class DateTimeUtil {
 
         if (days > 0) {
             if (decimal && (days > 1 || justHours % 12 === 0)) {
-                return twiceTheDays % 2 === 0 ? result + days + "d" : result + (twiceTheDays/2).toFixed(1) + "d";
+                return twiceTheDays % 2 === 0 ? result + days + "d" : result + (twiceTheDays / 2).toFixed(1) + "d";
             }
             result += days + (space ? " " : "") + "d";
         }
@@ -93,17 +93,17 @@ class DateTimeUtil {
     }
 
     public static minutesToDepartToString(minutes: number) {
-        const t = TKI18nProvider.tStatic;
+        const t = i18n.t;
         minutes = Math.floor(minutes);
         if (0 <= minutes && minutes < 2) {
             return "Now";
         } else if (-60 <= minutes && minutes < 60) {
             return Math.floor(minutes) + t("min");
-        } else if (-24*60 <= minutes && minutes < 24*60) {
+        } else if (-24 * 60 <= minutes && minutes < 24 * 60) {
             const durationInHours = Math.floor(minutes / 60);
             return durationInHours + t("hr");
         } else {
-            const durationInDays = Math.floor(minutes / (24*60));
+            const durationInDays = Math.floor(minutes / (24 * 60));
             return durationInDays + "d";
         }
     }

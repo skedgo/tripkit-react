@@ -8,7 +8,6 @@ import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import TKAccessibilityProvider from "./TKAccessibilityProvider";
-import TransportUtil from "../trip/TransportUtil";
 
 interface IProps {
     config: TKUIConfig;

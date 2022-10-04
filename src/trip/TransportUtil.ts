@@ -5,7 +5,7 @@ import Constants from "../util/Constants";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import TKI18nProvider from "../i18n/TKI18nProvider";
+import { i18n } from "../i18n/TKI18nConstants";
 
 class TransportUtil {
 
@@ -163,7 +163,7 @@ class TransportUtil {
     }
 
     public static distanceToBriefString(distInMetres: number): string {
-        if (TKI18nProvider.distanceUnit() === "imperial") {
+        if (i18n.distanceUnit() === "imperial") {
             const distInFeet = distInMetres * 3.28084;
             if (distInFeet < 100) {  // a quarter of a mile
                 return Math.floor(distInFeet) + " ft";

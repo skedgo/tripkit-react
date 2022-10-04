@@ -1,10 +1,10 @@
-import TKI18nProvider from "../i18n/TKI18nProvider";
+import { i18n } from "../i18n/TKI18nConstants";
 
 class FormatUtil {
 
     public static toMoney(n: number, options: { currency?: string, nInCents?: boolean, round?: boolean, forceDecimals?: boolean } = {}): string {
         if (n === 0) {
-            const t = TKI18nProvider.tStatic;
+            const t = i18n.t;
             return t("Free");
         }
         let nInDollars = options.nInCents ? n / 100 : n;
