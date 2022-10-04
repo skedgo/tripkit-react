@@ -1,13 +1,12 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import Color from "../trip/Color";
 import ModeInfo from "../trip/ModeInfo";
 import StopLocation from "../StopLocation";
 import RTServiceDepartureUpdate from "./RTServiceDepartureUpdate";
 import ServiceDetail from "./ServiceDetail";
 import RealTimeVehicle from "./RealTimeVehicle";
-import RealTimeAlert, {AlertSeverity} from "./RealTimeAlert";
-import {alertSeverity} from "../trip/Segment";
-import {TranslationFunction} from "../../i18n/TKI18nProvider";
+import RealTimeAlert, { AlertSeverity } from "./RealTimeAlert";
+import { alertSeverity } from "../trip/Segment";
 
 @JsonObject
 class ServiceDeparture {

@@ -6,7 +6,7 @@ import {tKUIStreetStepDefaultStyle} from "./TKUIStreetStep.css";
 import Street, {
     roadTagColor,
     roadTagDisplayS,
-    roadTagTextColor,
+    RoadTags,    
     StreetInstructions
 } from "../model/trip/Street";
 import {ReactComponent as IconContinueStraight} from "../images/directions/ic-continue-straight.svg";
@@ -18,6 +18,11 @@ import {ReactComponent as IconTurnSlightlyRight} from "../images/directions/ic-t
 import {ReactComponent as IconTurnSharplyLeft} from "../images/directions/ic-turn-sharply-left.svg"
 import {ReactComponent as IconTurnSlightlyLeft} from "../images/directions/ic-turn-slightly-left.svg"
 import TransportUtil from "./TransportUtil";
+import { black, white } from '../jss/TKUITheme';
+
+function roadTagTextColor(tag: RoadTags) {
+    return tag === "MAIN-ROAD" || tag === "SIDE-ROAD" ? black() : white();
+}
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     street: Street;

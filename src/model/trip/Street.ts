@@ -2,7 +2,6 @@ import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2t
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
 import MapUtil from "../../util/MapUtil";
-import { black, white } from "../../jss/TKUITheme";
 
 
 export enum StreetInstructions {
@@ -30,7 +29,7 @@ export class StreetInstructionsConverter implements JsonCustomConvert<StreetInst
     }
 }
 
-type RoadTags = 
+export type RoadTags = 
     "CYCLE-LANE" | 
     "CYCLE-TRACK" |
     "CYCLE-NETWORK" |
@@ -62,10 +61,6 @@ export function roadTagColor(tag: RoadTags) {
         default:
             return 'gray';
     }
-}
-
-export function roadTagTextColor(tag: RoadTags) {
-    return tag === "MAIN-ROAD" || tag === "SIDE-ROAD" ? black() : white();
 }
 
 @JsonConverter

@@ -1,6 +1,6 @@
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import TKI18nProvider, { TranslationFunction } from "../i18n/TKI18nProvider";
+import { TranslationFunction } from "../i18n/TKI18nProvider";
 
 class LocationUtil {
     public static getMainText(loc: Location, t?: TranslationFunction): string {

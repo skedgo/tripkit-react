@@ -3,6 +3,7 @@ import { I18n, translate } from 'react-polyglot';
 import Environment from "../env/Environment";
 import messages_en from "./i18n_en.json";
 import untranslated from "./untranslated.json";
+import { i18n } from "./TKI18nConstants";
 
 export type TKI18nMessages = { [key: string]: string; };
 
@@ -30,7 +31,7 @@ export const TKI18nContext = React.createContext<TKI18nContextProps>({
 
 const WithTranslate = translate()(
     (props: { t: TranslationFunction, children: any }) => {
-        TKI18nProvider.tStatic = props.t;
+        i18n.t = props.t;
         return props.children({ t: props.t });
     }
 );
@@ -47,10 +48,7 @@ interface IState {
 
 class TKI18nProvider extends React.Component<IProps, IState> {
 
-    // To facilitate access from static methods (helpers / utils).
-    static tStatic: TranslationFunction;
-    static localeStatic: string;
-    static distanceUnit: () => "metric" | "imperial" = () => TKI18nProvider.localeStatic === "en-US" ? "imperial" : "metric";
+    static distanceUnit: () => "metric" | "imperial" = () => i18n.locale === "en-US" ? "imperial" : "metric";
 
     constructor(props: IProps) {
         super(props);
@@ -65,9 +63,10 @@ class TKI18nProvider extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        TKI18nProvider.localeStatic = this.state.locale;
+        i18n.locale = this.state.locale;
         return (
-            <I18n locale={this.state.locale}
+            <I18n
+                locale={this.state.locale}
                 messages={this.state.messages}
                 allowMissing={Environment.isDev()}
                 onMissingKey={Environment.isDev() ?

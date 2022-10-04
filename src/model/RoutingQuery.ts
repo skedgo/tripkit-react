@@ -4,7 +4,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
 import RegionInfo from "./region/RegionInfo";
 import Environment from "../env/Environment";
-import TKI18nProvider from "../i18n/TKI18nProvider";
+import { i18n } from "../i18n/TKI18nConstants";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -107,8 +107,8 @@ class RoutingQuery {
             modeParams + avoidModeParams +
             weightingPreferencesParam +
             minTransferTimeParam +
-            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +            
-            `&unit=${TKI18nProvider.distanceUnit()}&v=11&ir=1&includeStops=true` +
+            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
+            `&unit=${i18n.distanceUnit()}&v=11&ir=1&includeStops=true` +
             (Environment.isBeta() ? "&bsb=true" : "") +
             wheelchairParam +
             profileParams);

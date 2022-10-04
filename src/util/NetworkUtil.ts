@@ -1,7 +1,7 @@
 import Util from "./Util";
 import { Env } from "../env/Environment";
 import { TKError } from "../error/TKError";
-import TKI18nProvider from "../i18n/TKI18nProvider";
+import { i18n } from "../i18n/TKI18nConstants";
 
 enum MethodType {
     GET = "GET",
@@ -31,7 +31,7 @@ class NetworkUtil {
                     }
                 });
             } else {
-                return Promise.reject(new TKError(TKI18nProvider.tStatic("Something.went.wrong."), response.status, false));
+                return Promise.reject(new TKError(i18n.t("Something.went.wrong."), response.status, false));
             }
         }
     }
@@ -69,7 +69,7 @@ class NetworkUtil {
         }
         return response.text().then(text => {
             try {
-                return JSON.parse(text);                
+                return JSON.parse(text);
             } catch (err) {
                 return text;
             }

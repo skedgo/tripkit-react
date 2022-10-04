@@ -1,14 +1,14 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
-import SegmentTemplate, {SegmentType, Visibility} from "./SegmentTemplate";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any } from "json2typescript";
+import SegmentTemplate, { SegmentType, Visibility } from "./SegmentTemplate";
 import Trip from "./Trip";
 import Color from "./Color";
 import TransportUtil from "../../trip/TransportUtil";
 import DateTimeUtil from "../../util/DateTimeUtil";
 import ModeIdentifier from "../region/ModeIdentifier";
 import RealTimeVehicle from "../service/RealTimeVehicle";
-import RealTimeAlert, {AlertSeverity} from "../service/RealTimeAlert";
-import {Booking} from "./BookingInfo";
-import TKI18nProvider from "../../i18n/TKI18nProvider";
+import RealTimeAlert, { AlertSeverity } from "../service/RealTimeAlert";
+import { Booking } from "./BookingInfo";
+import { i18n } from "../../i18n/TKI18nConstants";
 import VehicleInfo from "../location/VehicleInfo";
 
 export enum TripAvailability {
@@ -66,7 +66,7 @@ class Segment extends SegmentTemplate {
     @JsonProperty("wheelchairAccessible", Boolean, true)
     public wheelchairAccessible: boolean | undefined = undefined;
     @JsonProperty("bicycleAccessible", Boolean, true)
-    private _bicycleAccessible: boolean | null = null;    
+    private _bicycleAccessible: boolean | null = null;
     @JsonProperty("stops", Number, true)
     public stops?: number = undefined;
     @JsonProperty("startPlatform", String, true)
@@ -223,7 +223,7 @@ class Segment extends SegmentTemplate {
     }
 
     public getDurationInMinutes(): number {
-        return Math.floor(this.endTime/60) - Math.floor(this.startTime/60);
+        return Math.floor(this.endTime / 60) - Math.floor(this.startTime / 60);
     }
 
     public getColor(): string {
@@ -255,7 +255,7 @@ class Segment extends SegmentTemplate {
             result = result.replace("<NUMBER>", service)
         }
         if (result.includes("<DURATION>")) {
-            const durationInMinutes = Math.floor(this.endTime/60) - Math.floor(this.startTime/60);
+            const durationInMinutes = Math.floor(this.endTime / 60) - Math.floor(this.startTime / 60);
             const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);
             result = result.replace("<DURATION>", " about " + duration)
         }
@@ -285,7 +285,7 @@ class Segment extends SegmentTemplate {
             result = result.replace("<LINE_NAME>", this.serviceName)
         }
         if (result.includes("<STOPS>")) { // Don't want to instantiate stops for ACT, so replace whole note with duration.
-            result = result.replace("<STOPS>", this.stops !== undefined ? TKI18nProvider.tStatic("X.stops", {0: this.stops.toString()}) : "");
+            result = result.replace("<STOPS>", this.stops !== undefined ? i18n.t("X.stops", { 0: this.stops.toString() }) : "");
         }
         if (result.includes("<DURATION>")) {
             result = result.replace("<DURATION>", DateTimeUtil.durationToBriefString(this.getDurationInMinutes()))
@@ -329,4 +329,4 @@ export const SegmentForDoc = (props: Segment) => null;
 SegmentForDoc.displayName = "Segment";
 
 export default Segment;
-export {alertSeverity};
+export { alertSeverity };
