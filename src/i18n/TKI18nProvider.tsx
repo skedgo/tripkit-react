@@ -1,6 +1,8 @@
 import React from "react";
 import { I18n, translate } from 'react-polyglot';
 import Environment from "../env/Environment";
+import messages_en from "./i18n_en.json";
+import untranslated from "./untranslated.json";
 
 export type TKI18nMessages = { [key: string]: string; };
 
@@ -32,9 +34,6 @@ const WithTranslate = translate()(
         return props.children({ t: props.t });
     }
 );
-
-const messages_en = require("./i18n_en.json");
-const untranslated = require("./untranslated.json");
 
 interface IProps {
     dataPromise?: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
 import { TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUICard, { CardPresentation, TKUICardProps } from '../card/TKUICard';
 import TKLoading from '../card/TKLoading';
-import { useEffect } from 'react';
 import TripGoApi from '../api/TripGoApi';
 import { PurchasedTicket } from '../model/trip/TicketOption';
 import { TKError } from '../error/TKError';

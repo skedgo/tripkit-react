@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path');
-const glob = require('glob');
-const fse = require('fs-extra');
+import path from 'path';
+import glob from 'glob';
+import fse from 'fs-extra';
 
 function copyFiles(ms) {
     /* eslint-enable @typescript-eslint/no-var-requires */
@@ -18,5 +17,3 @@ function copyFiles(ms) {
 }
 
 copyFiles('js');
-copyFiles('esm');
-copyFiles('umd');

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useRef } from "react";
 import TripGroup from "../model/trip/TripGroup";
 import TripRowTrack from "./TripRowTrack";
 import TKUITripTime from "./TKUITripTime";
@@ -21,7 +21,6 @@ import DeviceUtil from "../util/DeviceUtil";
 import Segment from "../model/trip/Segment";
 import { moveToNext } from "../mxm/TKUIMxMView";
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
-import { useRef } from "react";
 
 export enum TKTripCostType {
     price, calories, carbon, score

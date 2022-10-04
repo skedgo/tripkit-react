@@ -1,7 +1,7 @@
 import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
-import LeafletUtil from "../../util/LeafletUtil";
+import MapUtil from "../../util/MapUtil";
 import { black, white } from "../../jss/TKUITheme";
 
 
@@ -126,7 +126,7 @@ class Street {
     get waypoints(): LatLng[] | null {
         if (this._waypoints === null) {
             if (this._encodedWaypoints) {
-                this._waypoints = LeafletUtil.decodePolyline(this._encodedWaypoints);
+                this._waypoints = MapUtil.decodePolyline(this._encodedWaypoints);
             } else if (this._decodedWaypoints) {
                 this._waypoints = [];
                 for (let i = 0; i < this._decodedWaypoints.length; i++) {

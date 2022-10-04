@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, RefObject } from "react";
 import Trip from "../model/trip/Trip";
 import { tKUIResultsDefaultStyle } from "./TKUIRoutingResultsView.css";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
@@ -43,8 +43,6 @@ import { ReactComponent as IconTriangleDown } from '../images/ic-triangle-down.s
 import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
-import { useContext } from "react";
-import { RefObject } from "react";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {

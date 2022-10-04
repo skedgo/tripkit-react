@@ -1,11 +1,10 @@
 import * as React from "react";
 import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
-import L, { FitBoundsOptions } from "leaflet";
+import L, { FitBoundsOptions, LatLngBounds } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
 import BBox from "../model/BBox";
-import LeafletUtil from "../util/LeafletUtil";
 import Trip from "../model/trip/Trip";
 import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
@@ -357,7 +356,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.setViewport(fitSet[0], newZoom);
             return;
         }
-        this.fitBounds(LeafletUtil.createBBoxArray(fitSet));
+        this.fitBounds(MapUtil.createBBoxArray(fitSet));
     }
 
     private onViewportChange(viewport: { center?: LatLng, zoom?: number }) {
@@ -642,7 +641,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         </Marker>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
-                            bounds={LeafletUtil.toBBox(this.leafletElement.getBounds())}
+                            bounds={this.toBBox(this.leafletElement.getBounds())}
                             zoom={this.leafletElement.getZoom()}
                             onClick={(loc: Location) => {
                                 this.onClick(loc);
@@ -790,7 +789,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
         // if (!prevProps.from && !prevProps.to &&
         if (this.props.from !== prevProps.from && this.props.to !== prevProps.to &&
             this.props.from && this.props.from.isResolved() && this.props.to && this.props.to.isResolved()) {
-            this.fitBounds(LeafletUtil.createBBoxArray([this.props.from, this.props.to]));
+            this.fitBounds(MapUtil.createBBoxArray([this.props.from, this.props.to]));
         }
 
         // If computing trips from user location then show it on map.
@@ -905,10 +904,14 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
     }
 
+    private toBBox(bounds: LatLngBounds) {
+        return MapUtil.createBBoxArray([MapUtil.toLatLng(bounds.getNorthEast()), MapUtil.toLatLng(bounds.getSouthWest())]);
+    }
+
     public alreadyFits(bounds: BBox): boolean {
         const padding = Object.assign({ top: 0, right: 0, bottom: 0, left: 0 }, this.props.padding);
         return this.leafletElement ?
-            MapUtil.alreadyFits(LeafletUtil.toBBox(this.leafletElement.getBounds()), padding, bounds,
+            MapUtil.alreadyFits(this.toBBox(this.leafletElement.getBounds()), padding, bounds,
                 this.leafletElement.getContainer().offsetWidth, this.leafletElement.getContainer().offsetHeight)
             : false;
     }

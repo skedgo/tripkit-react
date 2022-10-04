@@ -1,6 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
 import BBox from "../BBox";
-import LeafletUtil from "../../util/LeafletUtil";
+import MapUtil from "../../util/MapUtil";
 import LatLng from "../LatLng";
 import City from "../location/City";
 
@@ -41,13 +41,13 @@ class Region {
 
     get bounds(): BBox {
         if (this._bounds === null) {
-            this._bounds = LeafletUtil.createBBoxArray(LeafletUtil.decodePolyline(this._polygon));
+            this._bounds = MapUtil.createBBoxArray(MapUtil.decodePolyline(this._polygon));
         }
         return this._bounds;
     }
 
     public contains(latLng: LatLng): boolean {
-        return LeafletUtil.pointInPolygon(latLng, LeafletUtil.decodePolyline(this._polygon));
+        return MapUtil.pointInPolygon(latLng, MapUtil.decodePolyline(this._polygon));
     }
 }
 

@@ -17,19 +17,19 @@ const _usersnapconfig: any = {
 
 // Export to gwt
 
-Util.global.setUserSnapEmail = function setUserSnapEmail(email: string) {
+(window as any).setUserSnapEmail = function setUserSnapEmail(email: string) {
     // userSnapEmail = email;
 };
 
-Util.global.openReportWindow = function openReportWindow() {
-    Util.global.UserSnap.openReportWindow();
+(window as any).openReportWindow = function openReportWindow() {
+    (window as any).UserSnap.openReportWindow();
 };
 
-Util.global.setUserSnapData = function setUserSnapData(data: string) {
+(window as any).setUserSnapData = function setUserSnapData(data: string) {
     feedback = data;
 };
 
-Util.global.initUsersnap = function initUsersnap(modeReport: boolean) {
+(window as any).initUsersnap = function initUsersnap(modeReport: boolean) {
     if (modeReport) {
         _usersnapconfig.mode = 'report';
     }

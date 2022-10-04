@@ -13,7 +13,7 @@ import Util from "../util/Util";
 import union from "@turf/union"
 import intersect from "@turf/intersect";
 import {polygon} from "@turf/helpers";
-import LeafletUtil from "../util/LeafletUtil";
+import MapUtil from "../util/MapUtil";
 import BBox from "../model/BBox";
 
 export class RegionsData {
@@ -222,7 +222,7 @@ export class RegionsData {
                 return undefined;
             }
             const polygons = regions.map(region => {
-                const decoded = LeafletUtil.decodePolylineGeoJson(region.polygon);
+                const decoded = MapUtil.decodePolylineGeoJson(region.polygon);
                 if (JSON.stringify(decoded[0]) !== JSON.stringify(decoded[decoded.length - 1])) {
                     decoded.push(decoded[0]);
                 }
@@ -268,8 +268,8 @@ export class RegionsData {
             const coveragePolygons = coverageGeoJson?.coordinates[0].slice(1);
             const pointsToCover = coveragePolygons?.reduce((polygon, pointsToCover) => pointsToCover.concat(polygon), []);
             this.coverageBounds = pointsToCover ?
-                LeafletUtil.toBBox(LeafletUtil.boundsFromLatLngArray(pointsToCover
-                    .map(coord => LatLng.createLatLng(coord[1], coord[0])))) :
+                MapUtil.boundsFromLatLngArray(pointsToCover
+                    .map(coord => LatLng.createLatLng(coord[1], coord[0]))) :
                 null;
         }
         return this.coverageBounds || undefined;

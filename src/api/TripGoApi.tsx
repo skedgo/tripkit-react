@@ -92,6 +92,10 @@ class TripGoApi {
         return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
             + "v=11" + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
+                if (!routingResultsJson) {
+                    // Our api answers 200 with no content when there is no update. Should return 204.
+                    return undefined;
+                }
                 const routingResults: RoutingResults = Util.deserialize(routingResultsJson, RoutingResults);
                 routingResults.setQuery(query);
                 routingResults.setSatappQuery(trip.satappQuery);
@@ -101,10 +105,6 @@ class TripGoApi {
                 }
                 return tripGroups[0].trips[0];
             }).catch((reason: Error) => {
-                // Our api answers 200 with a null json when there is no update, so return undefined;
-                if (reason.message.includes("Unexpected end of JSON input")) {
-                    return undefined;
-                }
                 Util.log(reason, Env.PRODUCTION);
                 // Don't re-throw exception since we are not showing any message to user for now.
                 return undefined;
@@ -127,3 +127,4 @@ class TripGoApi {
 }
 
 export default TripGoApi;
+export { TripGoApi };
