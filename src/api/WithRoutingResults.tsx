@@ -592,8 +592,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         }
                         const stateUpdate = {
                             trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
-                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,                            
-                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment                            
+                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
+                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
                         }
                         return stateUpdate;
                     });
@@ -690,12 +690,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.refreshRegion();
         }
 
-        public onTripJsonUrl(tripUrl: string): Promise<Trip[]> {
-            const routingResultsPromise = Util.isJsonString(tripUrl) ?
-                this.resultsFromJsonString(tripUrl) :
-                (tripUrl.startsWith("http") ?
-                    TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults) :
-                    TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults));
+        public onTripJsonUrl(tripUrl: string | RoutingResults): Promise<Trip[]> {
+            const routingResultsPromise = tripUrl instanceof RoutingResults ?
+                Promise.resolve(tripUrl) : Util.isJsonString(tripUrl) ?
+                    this.resultsFromJsonString(tripUrl) :
+                    (tripUrl.startsWith("http") ?
+                        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults) :
+                        TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
                 let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
@@ -712,7 +713,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
                     firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
                 routingResults.setQuery(query);
-                routingResults.setSatappQuery(tripUrl);
+                if (typeof tripUrl === 'string') {
+                    routingResults.setSatappQuery(tripUrl);
+                }
                 const trips = routingResults.groups;
                 const sortedTrips = this.sortTrips(trips, this.state.sort);
                 const selected = sortedTrips.length > 0 ? sortedTrips[0] : undefined;
