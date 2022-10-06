@@ -14,6 +14,7 @@ import {TKError} from "../error/TKError";
 import {TKUIMapViewClass} from "../map/TKUIMapView";
 import {TripSort} from "../model/trip/TripSort";
 import ModeLocation from "../model/location/ModeLocation";
+import RoutingResults from "../model/trip/RoutingResults";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -22,7 +23,7 @@ export interface IRoutingResultsContext {
     /** @ctype */
     onQueryChange: (query: RoutingQuery) => void;
     onQueryUpdate: (update: Partial<RoutingQuery>) => void;
-    onTripJsonUrl: (tripJsonUrl: string) => Promise<Trip[] | undefined>;
+    onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise<Trip[] | undefined>;
     preFrom?: Location;
     preTo?: Location;
     onPreChange?: (from: boolean, location?: Location) => void;
@@ -73,7 +74,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     query: RoutingQuery.create(),
     onQueryChange: (query: RoutingQuery) => {},
     onQueryUpdate: (update: Partial<RoutingQuery>) => {},
-    onTripJsonUrl: (tripJsonUrl: string) => Promise.resolve(undefined),
+    onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise.resolve(undefined),
     viewport: {center: MapUtil.worldCoords, zoom: 2},
     onViewportChange: (viewport: {center?: LatLng, zoom?: number}) => {},
     directionsView: false,
