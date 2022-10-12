@@ -23,8 +23,8 @@ class DateTimeUtil {
 
     public static defaultTZ = "Etc/UTC";
 
-    public static getNow() {
-        return moment.tz(this.defaultTZ);
+    public static getNow(timezone = this.defaultTZ) {
+        return moment.tz(timezone);
     }
 
     public static moment(timeS: string, format?: string): Moment {

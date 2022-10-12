@@ -183,7 +183,7 @@ class Segment extends SegmentTemplate {
         return this.modeIdentifier !== null && this.modeIdentifier.startsWith(ModeIdentifier.SCHOOLBUS_ID);
     }
 
-    public isStationay(): boolean {
+    public isStationary(): boolean {
         return this.type === SegmentType.stationary;
     }
 

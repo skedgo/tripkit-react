@@ -51,7 +51,7 @@
         "node-polyglot": "^2.4.0",
         "point-in-polygon": "^1.0.1",
         "qrcode.react": "^1.0.0",
-        "query-string": "^5.1.1",
+        "query-string": "^7.1.1",
         "rc-tooltip": "^3.7.2",
         "react-app-polyfill": "^1.0.6",
         "react-app-rewired": "^2.1.5",

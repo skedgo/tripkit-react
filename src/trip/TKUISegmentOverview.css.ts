@@ -65,7 +65,7 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
     preLine: {  // Line with the color of the previous segment.
         borderLeft: (props: TKUISegmentOverviewProps) => {
             let prevSegment = props.value.prevSegment();
-            if (prevSegment && prevSegment.isStationay()) {
+            if (prevSegment && prevSegment.isStationary()) {
                 // Skip stationary segment, though it should never be the case since header of a segment with a
                 // stationary prev segment is not displayed.
                 prevSegment = prevSegment.prevSegment();
@@ -101,7 +101,7 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
             let prevSegment = segment.prevSegment();
             // Skip stationary segment, though it should never be the case since header of a segment with a
             // stationary prev segment is not displayed.
-            if (prevSegment && prevSegment.isStationay()) {
+            if (prevSegment && prevSegment.isStationary()) {
                 prevSegment = prevSegment.prevSegment();
             }
             return prevSegment ? '4px solid ' + prevSegment.getColor() : 'none';
@@ -202,7 +202,7 @@ export const tKUISegmentOverviewDefaultStyle = (theme: TKUITheme) => ({
 export function isIconOnDark(segment: Segment): boolean {
     const modeInfo = segment.modeInfo!;
     return !modeInfo.remoteIcon
-        && !segment.isWalking() && !segment.isWheelchair() && !segment.isStationay();
+        && !segment.isWalking() && !segment.isWheelchair() && !segment.isStationary();
 }
 
 export function isUnconnected(segment: Segment): boolean {
@@ -211,5 +211,5 @@ export function isUnconnected(segment: Segment): boolean {
 
 export function prevWaitingSegment(segment: Segment): Segment | undefined {
     const prevSegment = segment.prevSegment();
-    return prevSegment && prevSegment.isStationay() ? prevSegment : undefined;
+    return prevSegment && prevSegment.isStationary() ? prevSegment : undefined;
 }
