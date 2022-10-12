@@ -2,7 +2,6 @@ import Location from "./Location";
 import { Moment } from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
-import RegionInfo from "./region/RegionInfo";
 import Environment from "../env/Environment";
 import { i18n } from "../i18n/TKI18nConstants";
 
@@ -12,12 +11,16 @@ export enum TimePreference {
     ARRIVE = "ARRIVE"
 }
 
+// type URLQueryParam = "wp" | "tt";
+type RoutingQueryAdditional = { [key: string]: string | string[] | boolean | number };
+
 class RoutingQuery {
 
     private _from: Location | null;
     private _to: Location | null;
     private _timePref: TimePreference;
     private _time: Moment;
+    public additional?: RoutingQueryAdditional;
 
     public static create(from: Location | null = null, to: Location | null = null, timePref: TimePreference = TimePreference.NOW, time: Moment = DateTimeUtil.getNow()) {
         const instance = new RoutingQuery();
@@ -26,6 +29,31 @@ class RoutingQuery {
         instance._timePref = timePref;
         instance._time = time;
         return instance;
+    }
+
+    public static buildAdditional(modes: string[], options: TKUserProfile): RoutingQueryAdditional {
+        return ({
+            modes,
+            avoid: options.transportOptions.avoidTransports,    // Notice I include all avoid modes, even modes that are not present in the region.
+            wp: options.weightingPrefs.toUrlParam(),
+            tt: options.minimumTransferTime,
+            ws: options.walkingSpeed,
+            cs: options.cyclingSpeed,
+            ...options.transitConcessionPricing && {
+                conc: true
+            },
+            ...options.wheelchair && {
+                wheelchair: true
+            },
+            unit: i18n.distanceUnit(),
+            v: 11,
+            ir: 1,
+            includeStops: true,            
+            ...Environment.isBeta() && {
+                bsb: true
+            },
+            ...options.routingQueryParams   // Profile params, have priority over the others
+        });        
     }
 
     /**
@@ -74,44 +102,25 @@ class RoutingQuery {
     public isComplete(checkResolved = false): boolean {
         return this.from !== null && (!checkResolved || this.from.isResolved()) &&
             this.to !== null && (!checkResolved || this.to.isResolved());
-    }
+    }    
 
-    public getQueryUrl(modeSet: string[], options: TKUserProfile, regionInfo?: RegionInfo): string {
+    public getQueryUrl(modeSet: string[], options: TKUserProfile): string {
         if (this.from === null || this.to === null) {
             return "";
-        }
-        let modeParams = "";
-        for (const mode of modeSet) {
-            modeParams += "&modes=" + mode;
-        }
-        // Notice I include all avoid modes, even modes that are not present in the region.
-        let avoidModeParams = "";
-        const avoidModes = options.transportOptions.avoidTransports;
-        for (const avoidMode of avoidModes) {
-            avoidModeParams += "&avoid=" + avoidMode;
-        }
-        const weightingPreferencesParam = "&wp=" + options.weightingPrefs.toUrlParam();
-        const minTransferTimeParam = "&tt=" + options.minimumTransferTime;
-        const walkingSpeedParam = "&ws=" + options.walkingSpeed;
-        const cyclingSpeedParam = "&cs=" + options.cyclingSpeed;
-        const concessionPricingParam = options.transitConcessionPricing ? "&conc=true" : ""; // API default: false
-        const wheelchairParam = options.wheelchair ? "&wheelchair=true" : ""; // API default: false
-        const profileParams = options.routingQueryParams ?
-            Object.keys(options.routingQueryParams).reduce((params, key) =>
-                params + '&' + key + '=' + options.routingQueryParams[key], "") : "";
-
+        }        
+        const additional = RoutingQuery.buildAdditional(modeSet, options);        
+        const additionalParams = Object.keys(additional).reduce((params, key) => {
+            if (Array.isArray(additional[key])) {
+                return params + (additional[key] as string[]).reduce((arrayParam, value) => arrayParam + '&' + key + '=' + value, "");
+            } else {
+                return params + '&' + key + '=' + additional[key];
+            }
+        }, "");
         return encodeURI("routing.json" +
             `?from=(${this.from.lat},${this.from.lng})"${this.from.address}"` +
             `&to=(${this.to.lat},${this.to.lng})"${this.to.address}"` +
             `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}` +
-            modeParams + avoidModeParams +
-            weightingPreferencesParam +
-            minTransferTimeParam +
-            walkingSpeedParam + cyclingSpeedParam + concessionPricingParam +
-            `&unit=${i18n.distanceUnit()}&v=11&ir=1&includeStops=true` +
-            (Environment.isBeta() ? "&bsb=true" : "") +
-            wheelchairParam +
-            profileParams);
+            additionalParams);            
     }
 
     public isEmpty(): boolean {

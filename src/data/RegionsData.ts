@@ -12,7 +12,7 @@ import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import union from "@turf/union"
 import intersect from "@turf/intersect";
-import {polygon} from "@turf/helpers";
+import { polygon } from "@turf/helpers";
 import MapUtil from "../util/MapUtil";
 import BBox from "../model/BBox";
 
@@ -53,7 +53,7 @@ export class RegionsData {
                 this.regions.set(region.name, region);
             }
             this._regionList = Array.from(this.regions.values());
-            const modes: {[index: string]:any} = regionResults.modes;
+            const modes: { [index: string]: any } = regionResults.modes;
             for (const modeKey of Object.keys(modes)) {
                 const modeIdentifier = Util.deserialize(modes[modeKey], ModeIdentifier) as ModeIdentifier;
                 modeIdentifier.identifier = modeKey;

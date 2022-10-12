@@ -61,6 +61,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     userLocationPromise?: Promise<LatLng>;
     renderTopRight?: () => React.ReactNode;
     transportSettingsUI?: "BRIEF" | "FULL" | "BRIEF_TO_FULL";
+    hideSearch?: boolean;
 }
 
 interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext { }
@@ -215,7 +216,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const props = this.props;
         const { isUserTabbing, classes, t } = this.props;
         const searchBar =
-            !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
+            !this.props.hideSearch && !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
             <div>
                 <TKUILocationSearch
                     onDirectionsClicked={() => {
