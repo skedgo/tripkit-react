@@ -19,11 +19,13 @@ import Util from "../util/Util";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import TKUserProfile, { WalkingSpeed } from "../model/options/TKUserProfile";
 import TKUISlider from "./TKUISlider";
-import RegionInfo from "../model/region/RegionInfo";
+import RegionInfo, { SpecificMode } from "../model/region/RegionInfo";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
+import TKUISettingLink from "./TKUISettingLink";
 
+type IStyle = ReturnType<typeof tKUITransportOptionsRowStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     mode: ModeIdentifier;
     value: TKUserProfile;
@@ -35,22 +37,6 @@ interface IConsumedProps {
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
-
-interface IStyle {
-    main: CSSProps<IProps>;
-    iconExpand: CSSProps<IProps>;
-    transIcon: CSSProps<IProps>;
-    expansionPanel: CSSProps<IProps>;
-    expansionPanelDetails: CSSProps<IProps>;
-    section: CSSProps<IProps>;
-    sectionTitle: CSSProps<IProps>;
-    sectionBody: CSSProps<IProps>;
-    checkboxRow: CSSProps<IProps>;
-    sliderRow: CSSProps<IProps>;
-    sliderHeader: CSSProps<IProps>;
-    prefModeTitle: CSSProps<IProps>;
-    walkSpeedSelect: CSSProps<IProps>;
-}
 
 export type TKUITransportOptionsRowProps = IProps;
 export type TKUITransportOptionsRowStyle = IStyle;
@@ -163,6 +149,41 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     )}
                 </div>
             </div>;
+
+        const micromobilityOptions = mode.identifier.startsWith("cy_bic-s") && regionInfo?.modes?.["cy_bic-s"] &&
+            <div className={classes.section} tabIndex={0} aria-label="Preferred transport">
+                <div className={classes.sectionTitle}>
+                    {t("Operators")}
+                </div>
+                <div className={classes.sectionBody}>
+                    {regionInfo.modes["cy_bic-s"].specificModes.map((transMode: SpecificMode, i: number) =>
+                        <TKUISettingLink
+                            text={
+                                <div className={classes.checkboxRow} key={i}>
+                                    <img src={TransportUtil.getTransIcon(transMode.modeInfo, { onDark: this.props.theme.isDark })}
+                                        className={classes.transIcon}
+                                        aria-hidden={true}
+                                    />
+                                    <div className={classes.prefModeTitle}>
+                                        {transMode.title}
+                                    </div>
+                                    <div className={classes.modeImages}>
+                                        {transMode.modeImageNames.map((imgName, j) =>
+                                            <img
+                                                src={TransportUtil.getTransportIconLocal(imgName, false, this.props.theme.isDark)}
+                                                className={classes.transIcon}
+                                                aria-hidden={true}
+                                                key={j}
+                                            />
+                                        )}
+                                    </div>
+                                </div>
+                            }
+                            onClick={() => window.open(transMode.url, '_blank')}
+                        />)}
+                </div>
+            </div>;
+
         const minTransferTimeOption = mode.isPT() &&
             <div className={classes.sliderRow}>
                 <div className={classes.sliderHeader}>
@@ -319,6 +340,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     >
                         {minimizedOption}
                         {preferredTransportOption}
+                        {micromobilityOptions}
                         <div className={classes.sectionBody}>
                             {minTransferTimeOption}
                             {concessionPricingOption}
@@ -341,7 +363,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
             this.setState({ expanded: false });
         }
-        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && this.props.mode.isPT()) {
+        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && (this.props.mode.isPT() || this.props.mode.identifier.startsWith("cy_bic-s"))) {
             this.regionInfoP = this.props.getRegionInfoP();
             this.regionInfoP?.then(regionInfo => this.setState({ regionInfo }));
         }
