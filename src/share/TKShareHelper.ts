@@ -188,6 +188,9 @@ class TKShareHelper {
             routingQuery = RoutingQuery.create(from, to,
                 queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
                 queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000))
+            if (queryMap.modes) {
+                routingQuery.additional = { modes: queryMap.modes };
+            }
         }
         return routingQuery;
     }
@@ -203,7 +206,7 @@ class TKShareHelper {
     }
 
     public static parseRoutingQueryUrl(url: string): RoutingQuery | undefined {
-        url = url.replaceAll(/[]|%5B%5D/g, "");       
+        url = url.replaceAll(/[]|%5B%5D/g, "");
         const params = queryString.parse(url, { sort: false, parseNumbers: true }); // Sort option is ignored.        
         // Can do something like this, to force an arbitrary order on stringify (this doesn't seem to work on parse):
         // const order = ['wp', 'tt', 'ws', 'v'];
@@ -211,10 +214,10 @@ class TKShareHelper {
         return TKShareHelper.parseRoutingQueryJSON(params);
     }
 
-    public static parseRoutingQueryJSON(queryJSON: any): RoutingQuery | undefined {    
+    public static parseRoutingQueryJSON(queryJSON: any): RoutingQuery | undefined {
         console.log(queryJSON);
         const { from, to, departAfter, arriveBefore, ...additional } = queryJSON;
-        const instance = new RoutingQuery();    
+        const instance = new RoutingQuery();
         if (from) {
             instance.from = TKShareHelper.parseLocation(from);
         }
