@@ -213,7 +213,9 @@ interface MapboxGLLayerProps {
     attribution: string;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
+    children?: React.ReactNode;    
+}
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -307,8 +309,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
         if (this.props.directionsView) {
             if (!from || !to || clickLatLng instanceof StopLocation) {
                 if (!from && !to) {
-                // Avoid fit bounds when setting first location on
-                // directions view.
+                    // Avoid fit bounds when setting first location on
+                    // directions view.
                     avoidFitLatLng = clickLatLng
                 }
                 // Do nothing if the location is already the from or to.
@@ -692,6 +694,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
                         </Marker>}
                     {menuPopup}
+                    {this.props.children}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                     onResize={() => this.onResize()}
@@ -1009,6 +1012,7 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
 
 export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
 export { TKUIMapView as TKUIMapViewClass };
+export { Marker, Popup, L };
 
 const WALK_PATH_COLOR = "rgb(0, 220, 0)";
 
