@@ -106,6 +106,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     shouldFitMap?: (from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) => boolean
 
     showCurrLocBtn?: boolean;
+
+    disableMapClick?: (zoom?: number) => boolean;
 }
 
 export interface IStyle {
@@ -304,6 +306,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
     };
 
     private onClick(clickLatLng: LatLng) {
+        if (this.props.disableMapClick?.(this.getZoom())) {
+            return;
+        }
         const from = this.props.from;
         const to = this.props.to;
         if (this.props.directionsView) {
