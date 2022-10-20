@@ -57,7 +57,8 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                     }}
                                     keyboard={false}
                                 >
-                                    <Popup offset={[0, -46]}
+                                    <Popup
+                                        offset={[0, -46]}
                                         closeButton={false}
                                         // TODO: disabled auto pan to fit popup on open since it messes with viewport
                                         // (generates infinite (or a lot) setState calls) since it seems the viewport

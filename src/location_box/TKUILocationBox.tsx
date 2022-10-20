@@ -51,6 +51,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     menuContainer?: HTMLElement;
     menuMaxHeightPx?: number;
     debounce?: number;
+    selectOnBlur?: boolean; // default true
 }
 
 interface IStyle {
@@ -108,7 +109,8 @@ class TKUILocationBox extends Component<IProps, IState> {
     private autocompleteRef: React.RefObject<Autocomplete> = React.createRef<Autocomplete>();
 
     public static defaultProps: Partial<IProps> = {
-        resolveCurr: true
+        resolveCurr: true,
+        selectOnBlur: true
     };
 
     constructor(props: IProps) {
@@ -605,7 +607,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                 }}
                 autoHighlight={false}
                 ref={this.autocompleteRef}
-                selectOnBlur={true}
+                selectOnBlur={this.props.selectOnBlur}
             />
         );
     }
@@ -646,3 +648,4 @@ const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProp
 
 export default connect((config: TKUIConfig) => config.TKUILocationBox, config, Mapper);
 export type TKUILocationBoxRef = TKUILocationBox;
+export { TKUILocationBox as TKUILocationBoxRaw };

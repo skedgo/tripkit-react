@@ -33,13 +33,15 @@ export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMar
             iconAnchor: [10, 10],
             className: ""
         });
-        return <Marker
-            position={loc}
-            icon={icon}
-            onclick={onClick}
-            key={key}
-            keyboard={false}
-        />;
+        return (
+            <Marker
+                position={loc}
+                icon={icon}
+                onclick={onClick}
+                key={key}
+                keyboard={false}
+            />
+        );
     }
 interface IProps {
     zoom: number,
@@ -95,7 +97,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
             }
         }
         return locations.filter(loc => !omit.find(omitLoc => LocationUtil.equal(omitLoc, loc)))
-            .map((loc, i) => <TKUIModeLocationMarker loc={loc} onClick={() => this.props.onClick?.(loc)} isDarkMode={this.props.isDarkMode} key={i}/>);
+            .map((loc, i) => <TKUIModeLocationMarker loc={loc} onClick={() => this.props.onClick?.(loc)} isDarkMode={this.props.isDarkMode} key={i} />);
     }
 
     public shouldComponentUpdate(nextProps: IProps): boolean {

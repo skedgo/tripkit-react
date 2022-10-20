@@ -5,12 +5,12 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import {TKUIConfig, TKComponentDefaultConfig} from "./TKUIConfig";
-import {TKComponentConfig, TKUIPropsOverride} from "./TKComponentConfig";
-import {TKUIConfigContext, default as TKUIConfigProvider} from "./TKUIConfigProvider";
-import {Subtract} from "utility-types";
+import { TKUIConfig, TKComponentDefaultConfig } from "./TKUIConfig";
+import { TKComponentConfig, TKUIPropsOverride } from "./TKComponentConfig";
+import { TKUIConfigContext, default as TKUIConfigProvider } from "./TKUIConfigProvider";
+import { Subtract } from "utility-types";
 import Util from "../util/Util";
-import {TKI18nContextProps, TKI18nContext} from "../i18n/TKI18nProvider";
+import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 
 function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>, STYLE>(
     confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
@@ -29,9 +29,9 @@ function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS
                 const componentConfig = confToCompMapper(config);
                 const configProps = componentConfig &&
                     (Util.isFunction(componentConfig.props) ?
-                        (componentConfig.props as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({...defaultConfigProps, ...props}) :
+                        (componentConfig.props as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({ ...defaultConfigProps, ...props }) :
                         componentConfig.props);
-                return render({...defaultConfigProps, ...props, ...configProps});
+                return render({ ...defaultConfigProps, ...props, ...configProps });
             }}
         </TKUIConfigContext.Consumer>;
 }
@@ -53,13 +53,14 @@ function i18nInjector<IMPL_PROPS extends TKI18nContextProps>(
 }
 
 export type PropsMapper<INPUT_PROPS, OUTPUT_PROPS> =
-    React.SFC<{inputProps: INPUT_PROPS, children: (outputProps: OUTPUT_PROPS) => React.ReactNode}>
+    React.FunctionComponent<{ inputProps: INPUT_PROPS, children: (outputProps: OUTPUT_PROPS) => React.ReactNode }>
 
 
 export function mapperFromFunction<INPUT_PROPS, OUTPUT_PROPS>(mapperFc: (inputProps: INPUT_PROPS) => OUTPUT_PROPS): PropsMapper<INPUT_PROPS, OUTPUT_PROPS> {
     return (props: {
         inputProps: INPUT_PROPS,
-        children: (outputProps: OUTPUT_PROPS) => React.ReactNode}) =>
+        children: (outputProps: OUTPUT_PROPS) => React.ReactNode
+    }) =>
         <>
             {props.children!(mapperFc(props.inputProps))}
         </>
@@ -79,9 +80,9 @@ export function connect<
     IMPL_PROPS extends CLIENT_PROPS & TKUIWithClasses<STYLE, IMPL_PROPS> & TKI18nContextProps,
     CLIENT_PROPS extends TKUIWithStyle<STYLE, IMPL_PROPS>,
     STYLE
-    >(confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
-      defaultConfig: TKComponentDefaultConfig<IMPL_PROPS, STYLE>,
-      PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>>) {
+>(confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
+    defaultConfig: TKComponentDefaultConfig<IMPL_PROPS, STYLE>,
+    PropsMapper: PropsMapper<CLIENT_PROPS, Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>>) {
     // Renderer + config props injector
     const ComponentRenderer = dependencyInjector(confToCompMapper, defaultConfig);
     // Wraps ComponentRenderer on a component that injects styles, received as properties, on creation / mount (not on render), so just once.
@@ -98,12 +99,12 @@ export function connect<
                             componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
                         const verboseClassNamesToPass = componentConfig && componentConfig.verboseClassNames != undefined ? componentConfig.verboseClassNames : defaultConfig.verboseClassNames;
                         return <WithI18nInjector {...implProps}
-                                                 defaultStyles={defaultConfig.styles}
-                                                 propStyles={props.styles}
-                                                 configStyles={componentConfig && componentConfig.styles}
-                                                 randomizeClassNames={randomizeClassNamesToPass}
-                                                 classNamePrefix={(componentConfig && componentConfig.classNamePrefix) || defaultConfig.classNamePrefix}
-                                                 verboseClassNames={verboseClassNamesToPass}
+                            defaultStyles={defaultConfig.styles}
+                            propStyles={props.styles}
+                            configStyles={componentConfig && componentConfig.styles}
+                            randomizeClassNames={randomizeClassNamesToPass}
+                            classNamePrefix={(componentConfig && componentConfig.classNamePrefix) || defaultConfig.classNamePrefix}
+                            verboseClassNames={verboseClassNamesToPass}
                         />;
                     }}
                 </TKUIConfigContext.Consumer>
@@ -111,8 +112,8 @@ export function connect<
         </PropsMapper>
 }
 
-export function replaceStyle<ST,PR extends TKUIWithClasses<ST, PR>>
-(config: TKUIConfig, componentKey: string, styles: TKUICustomStyles<ST, PR>): TKUIConfig {
+export function replaceStyle<ST, PR extends TKUIWithClasses<ST, PR>>
+    (config: TKUIConfig, componentKey: string, styles: TKUICustomStyles<ST, PR>): TKUIConfig {
     const resultConfig = Object.assign({}, config);
     const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
     const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
@@ -121,33 +122,56 @@ export function replaceStyle<ST,PR extends TKUIWithClasses<ST, PR>>
     return resultConfig;
 }
 
-export const TKStyleOverride = (props: {componentKey: string, stylesOverride: any, children: any}) => (
+export const TKStyleOverride = (props: { componentKey: string, stylesOverride: any, children: any }) => (
     <TKUIConfigContext.Consumer>
         {(config: TKUIConfig) => {
             const configOverride = replaceStyle(config, props.componentKey, props.stylesOverride);
             return (
                 // <TKUIConfigProvider config={configOverride}> // Replace this since re-injects styles
-                    <TKUIConfigContext.Provider value={configOverride}>
+                <TKUIConfigContext.Provider value={configOverride}>
                     {props.children}
-                    </TKUIConfigContext.Provider>
+                </TKUIConfigContext.Provider>
                 // </TKUIConfigProvider>
             )
         }}
     </TKUIConfigContext.Consumer>
 );
 
+export function replaceRender<ST, PR extends TKUIWithClasses<ST, PR>>
+    (config: TKUIConfig, componentKey: string, render: (props: PR) => JSX.Element): TKUIConfig {
+    const resultConfig = Object.assign({}, config);
+    const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
+    const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
+    resultComponent.render = render;
+    resultConfig[componentKey] = resultComponent;
+    return resultConfig;
+}
+
+export const TKRenderOverride = (props: { componentKey: string, renderOverride: (props: any) => JSX.Element, children: any }) => (
+    <TKUIConfigContext.Consumer>
+        {(config: TKUIConfig) => {
+            const configOverride = replaceRender(config, props.componentKey, props.renderOverride);
+            return (
+                <TKUIConfigContext.Provider value={configOverride}>
+                    {props.children}
+                </TKUIConfigContext.Provider>
+            )
+        }}
+    </TKUIConfigContext.Consumer>
+);
+
 function mergeProps<ST, PR extends TKUIWithClasses<ST, PR>>
-(props1: TKUIPropsOverride<PR, ST>, props2: TKUIPropsOverride<PR, ST>): (implProps: PR) => Partial<PR> {
+    (props1: TKUIPropsOverride<PR, ST>, props2: TKUIPropsOverride<PR, ST>): (implProps: PR) => Partial<PR> {
     return (props0: PR) => {
         const props1Obj = Util.isFunction(props1) ? (props1 as (implProps: PR) => Partial<PR>)(props0) : props1;
         const props2Obj = Util.isFunction(props2) ?
-            (props2 as (implProps: PR) => Partial<PR>)({...props0, ...props1Obj as PR}) : props2;
-        return {...props0, ...props1Obj, ...props2Obj};
+            (props2 as (implProps: PR) => Partial<PR>)({ ...props0, ...props1Obj as PR }) : props2;
+        return { ...props0, ...props1Obj, ...props2Obj };
     }
 }
 
-export function replaceProps<ST,PR extends TKUIWithClasses<ST, PR>>
-(config: TKUIConfig, componentKey: string, propsOverride: TKUIPropsOverride<PR, ST>): TKUIConfig {
+export function replaceProps<ST, PR extends TKUIWithClasses<ST, PR>>
+    (config: TKUIConfig, componentKey: string, propsOverride: TKUIPropsOverride<PR, ST>): TKUIConfig {
     const resultConfig = Object.assign({}, config);
     const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
     const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
@@ -156,22 +180,22 @@ export function replaceProps<ST,PR extends TKUIWithClasses<ST, PR>>
     return resultConfig;
 }
 
-export const TKPropsOverride = (props: {componentKey: string, propsOverride: any, children: any}) => (
+export const TKPropsOverride = (props: { componentKey: string, propsOverride: any, children: any }) => (
     <TKUIConfigContext.Consumer>
         {(config: TKUIConfig) => {
             const configOverride = replaceProps(config, props.componentKey, props.propsOverride);
             return (
                 // <TKUIConfigProvider config={configOverride}> // Replace this since re-injects styles
-                    <TKUIConfigContext.Provider value={configOverride}>
+                <TKUIConfigContext.Provider value={configOverride}>
                     {props.children}
-                    </TKUIConfigContext.Provider>
+                </TKUIConfigContext.Provider>
                 // </TKUIConfigProvider>
             )
         }}
     </TKUIConfigContext.Consumer>
 );
 
-export const TKRandomizeClassNamesOverride = (props: {componentKey: string, randomizeOverride?: boolean, verboseOverride?: boolean, children: any}) => (
+export const TKRandomizeClassNamesOverride = (props: { componentKey: string, randomizeOverride?: boolean, verboseOverride?: boolean, children: any }) => (
     <TKUIConfigContext.Consumer>
         {(config: TKUIConfig) => {
             const configOverride = Object.assign({}, config);
