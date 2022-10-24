@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
+import React, { useState, useEffect, Fragment, useContext, Key } from 'react';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Segment from "../model/trip/Segment";
 import TKUICard from "../card/TKUICard";
@@ -52,6 +52,7 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIMxMBookingCardProps = IProps;
 export type TKUIMxMBookingCardStyle = IStyle;
+export type TKUIBookingCardClientProps = IClientProps & { key?: Key };
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMxMBookingCard {...props} />,
