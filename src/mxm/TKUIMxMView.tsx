@@ -22,7 +22,6 @@ import { cardSpacing } from "../jss/TKUITheme";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import MapUtil from "../util/MapUtil";
 import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
-import TKUIMxMBookingCard from "./TKUIMxMBookingCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIStreetStep from "../trip/TKUIStreetStep";
 import DeviceUtil from '../util/DeviceUtil';
@@ -33,6 +32,7 @@ import { SignInStatus, TKAccountContext } from '../account/TKAccountContext';
 import TKUILocationDetailField from '../location/TKUILocationDetailField';
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
+import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     parentElement?: any;
@@ -74,6 +74,7 @@ export interface SegmentMxMCardsProps {
     accountsSupported?: boolean;
     signInStatus?: SignInStatus;
     isSelectedCard?: () => boolean;
+    tkconfig: TKUIConfig;
 }
 
 const cardStyles = {
@@ -82,7 +83,7 @@ const cardStyles = {
 }
 
 function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: () => number): JSX.Element[] {
-    const { segment, onRequestClose, t, options, landscape, accountsSupported, signInStatus, refreshSelectedTrip, trip } = props;
+    const { segment, onRequestClose, t, options, landscape, accountsSupported, signInStatus, refreshSelectedTrip, trip, tkconfig } = props;
     let cards: JSX.Element[] = [];
     cards.push(
         <TKUIMxMTimetableCard segment={segment} onRequestClose={onRequestClose} key={generateCardIndex()} />
@@ -122,17 +123,12 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
                 />}
         </TKUICard>
     );
-    if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
+    if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
+        && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
         signInStatus === SignInStatus.signedIn) {
-        cards.push(
-            <TKUIMxMBookingCard
-                segment={segment}
-                onRequestClose={onRequestClose}
-                refreshSelectedTrip={refreshSelectedTrip}
-                trip={trip}
-                key={generateCardIndex()}
-            />
-        );
+        cards.push(tkconfig.booking.renderBookingCard({
+            segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
+        }));
     }
     return cards;
 }
@@ -168,18 +164,14 @@ function getSegmentMxMCards(
     isSelectedCardBuilder: (cardIndex: number) => () => boolean,
     moveToNext: () => void
 ): JSX.Element[] {
-    const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync } = props;
+    const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, tkconfig } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
-    } else if (segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+    } else if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
         return [
-            <TKUIMxMBookingCard
-                segment={segment}
-                onRequestClose={onRequestClose}
-                refreshSelectedTrip={refreshSelectedTrip}
-                trip={trip}
-                key={generateCardIndex()}
-            />
+            tkconfig.booking.renderBookingCard({
+                segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
+            })
         ];
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
         // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
@@ -314,6 +306,8 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const selectedSegmentInSummary = findNextInSummary(selectedSegment, segments);
     const selectedIndexInSummary = segmentsInSummary.indexOf(selectedSegmentInSummary);
 
+    const tkconfig = useContext(TKUIConfigContext);
+
     // Call this function to generate the key for each card. Also pass it to the isSelectedCardBuilder to create a
     // isSelectedCard function to pass to cards that need to know when they are selected.
     let cardCount = 0;
@@ -339,7 +333,8 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             mapAsync,
             trip,
             accountsSupported: accountContext.accountsSupported,
-            signInStatus: accountContext.status
+            signInStatus: accountContext.status,
+            tkconfig
         }, generateCardIndex, isSelectedCardBuilder, () => moveToNext()));
         return map;
     }, new Map<Segment, JSX.Element[]>());

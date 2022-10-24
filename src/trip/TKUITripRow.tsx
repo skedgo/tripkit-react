@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import TripGroup from "../model/trip/TripGroup";
 import TripRowTrack from "./TripRowTrack";
 import TKUITripTime from "./TKUITripTime";
@@ -21,6 +21,7 @@ import DeviceUtil from "../util/DeviceUtil";
 import Segment from "../model/trip/Segment";
 import { moveToNext } from "../mxm/TKUIMxMView";
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
+import { TKUIConfigContext } from "../config/TKUIConfigProvider";
 
 export enum TKTripCostType {
     price, calories, carbon, score
@@ -215,7 +216,12 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
     }
     const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
     const collapsed = !props.expanded;
-    const bookingSegment = trip.segments.find(segment => segment.booking);
+    const tkconfig = useContext(TKUIConfigContext);
+    // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
+    // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
+    // by default.
+    const bookingSegment = trip.segments.find(segment => 
+        (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking);
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
         .filter(metricS => metricS !== undefined)
@@ -224,7 +230,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
         <div className={classes.info}>
             {metricsS}
         </div>;
-    const { status } = React.useContext(TKAccountContext);
+    const { status } = useContext(TKAccountContext);    
     const more = (props.expanded || alternatives.length > visibleAlternatives.length) &&
         <TKUIButton
             text={props.expanded ? t("Less") : t("More")}

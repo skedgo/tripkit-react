@@ -72,7 +72,7 @@ import { TKUIMyBookingProps, TKUIMyBookingStyle } from "../booking/TKUIMyBooking
 import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
 import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
-import { TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
+import { TKUIBookingCardClientProps, TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
 import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
@@ -80,6 +80,7 @@ import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "..
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 import Trip from "../model/trip/Trip";
 import { TKUIPagerControlProps, TKUIPagerControlStyle } from "../card/TKUIPagerControl";
+import Segment from "../model/trip/Segment";
 
 /**
  * SDK configuration
@@ -130,6 +131,10 @@ interface ITKUIConfigOptional {
         }
     };
     tripCompareFc: (trip1: Trip, trip2: Trip) => number;
+    booking: {
+        renderBookingCard: (props: TKUIBookingCardClientProps) => JSX.Element;
+        enabled?: (segment: Segment) => boolean;    // () => true, by default
+    };
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
         stripePublicKey: string;
