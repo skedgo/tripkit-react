@@ -20,8 +20,8 @@ class Trip {
     private _weightedScore: number = 0;
     @JsonProperty("queryIsLeaveAfter", Boolean, true)
     public queryIsLeaveAfter: boolean | null = null;    // Don't set as readonly since I want to set it when results come from waypoints.json
-    @JsonProperty("queryTime", Number, true)
-    public queryTime: number | null = null;             // Don't set as readonly since I want to set it when results come from waypoints.json
+    @JsonProperty("queryTime", Any, true)
+    private _queryTime: string | number | null = null;
     @JsonProperty("currencySymbol", String, true)
     private _currencySymbol: string | null = null;
     @JsonProperty("moneyCost", Number, true)
@@ -66,6 +66,21 @@ class Trip {
 
     get arriveSeconds(): number {
         return DateTimeUtil.isoToSeconds(this.arrive);        
+    }
+
+    get queryTime(): string | null {    
+        return this._queryTime === null || typeof this._queryTime === "string" ? this._queryTime as string | null : DateTimeUtil.isoFromSeconds(this._queryTime, this.segments[0].from.timezone);
+    }
+
+    /**
+     * I want to set it when results come from waypoints.json
+     */
+    set queryTime(value: string | null) {
+        this._queryTime = value;
+    }
+
+    get queryTimeSeconds(): number | null {
+        return this.queryTime !== null ? DateTimeUtil.isoToSeconds(this.queryTime) : null;
     }
 
     get weightedScore(): number {

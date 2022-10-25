@@ -46,7 +46,7 @@ class RoutingQuery {
                 wheelchair: true
             },
             unit: i18n.distanceUnit(),
-            v: 11,
+            v: 13,
             ir: 1,
             includeStops: true,            
             ...Environment.isBeta() && {

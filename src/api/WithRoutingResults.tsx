@@ -711,7 +711,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 }
                 const query = RoutingQuery.create(from, to,
                     firstTrip && (firstTrip.queryIsLeaveAfter ? TimePreference.LEAVE : TimePreference.ARRIVE),
-                    firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromTimeTZ(firstTrip.queryTime * 1000) : undefined);
+                    firstTrip && firstTrip.queryTime ? DateTimeUtil.momentFromIsoWithTimezone(firstTrip.queryTime) : undefined);
                 routingResults.setQuery(query);
                 if (typeof tripUrl === 'string') {
                     routingResults.setSatappQuery(tripUrl);
