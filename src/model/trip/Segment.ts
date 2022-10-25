@@ -32,10 +32,10 @@ class Segment extends SegmentTemplate {
 
     @JsonProperty("id", String, true)
     public id: string = "";
-    @JsonProperty("startTime")
-    private _startTime: number = 0;
-    @JsonProperty("endTime")
-    private _endTime: number = 0;
+    @JsonProperty("startTime", Any)
+    private _startTime: string | number = 0;
+    @JsonProperty("endTime", Any)
+    private _endTime: string | number = 0;
     @JsonProperty("segmentTemplateHashCode")
     private _segmentTemplateHashCode: number = 0;
     @JsonProperty("serviceTripID", String, true)
@@ -91,16 +91,28 @@ class Segment extends SegmentTemplate {
 
     private _trip: Trip = new Trip();
 
-    get startTime(): number {
-        return this._startTime;
+    /**
+     * Returns the segment start time in ISO format in the from location timezone. I assume that when the value comes in ISO format from 
+     * the BE it comes in the from location timezone.
+     */
+    get startTime(): string {
+        return typeof this._startTime === "string" ? this._startTime : DateTimeUtil.isoFromSeconds(this._startTime, this.from.timezone);
     }
 
-    set startTime(value: number) {
+    get startTimeSeconds(): number {
+        return DateTimeUtil.isoToSeconds(this.startTime);        
+    }
+
+    set startTime(value: string) {
         this._startTime = value;
     }
 
-    get endTime(): number {
-        return this._endTime;
+    get endTime(): string {
+        return typeof this._endTime === "string" ? this._endTime : DateTimeUtil.isoFromSeconds(this._endTime, this.to.timezone);        
+    }
+
+    get endTimeSeconds(): number {
+        return DateTimeUtil.isoToSeconds(this.endTime);        
     }
 
     get segmentTemplateHashCode(): number {
@@ -219,11 +231,11 @@ class Segment extends SegmentTemplate {
     }
 
     public getDuration(): number {
-        return this.endTime - this.startTime;
+        return this.endTimeSeconds - this.startTimeSeconds;
     }
 
     public getDurationInMinutes(): number {
-        return Math.floor(this.endTime / 60) - Math.floor(this.startTime / 60);
+        return Math.floor(this.endTimeSeconds / 60) - Math.floor(this.startTimeSeconds / 60);
     }
 
     public getColor(): string {
@@ -255,7 +267,7 @@ class Segment extends SegmentTemplate {
             result = result.replace("<NUMBER>", service)
         }
         if (result.includes("<DURATION>")) {
-            const durationInMinutes = Math.floor(this.endTime / 60) - Math.floor(this.startTime / 60);
+            const durationInMinutes = Math.floor(this.endTimeSeconds / 60) - Math.floor(this.startTimeSeconds / 60);
             const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);
             result = result.replace("<DURATION>", " about " + duration)
         }

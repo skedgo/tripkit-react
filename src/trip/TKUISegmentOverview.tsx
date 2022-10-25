@@ -88,10 +88,8 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             const nextSegment = segment.nextSegment();
             const arrivePlatform = prevSegment && prevSegment.type === SegmentType.scheduled ? prevSegment.endPlatform : undefined;
             const transferAction = nextSegment && nextSegment.type === SegmentType.scheduled ? (nextSegment.startPlatform && platformText(nextSegment.startPlatform)) : segment.getAction();
-            const arriveTime = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-                .format(DateTimeUtil.timeFormat(false));
-            const departTime = hideTimes ? undefined : DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone)
-                .format(DateTimeUtil.timeFormat(false));
+            const arriveTime = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));
+            const departTime = hideTimes ? undefined : DateTimeUtil.format(segment.endTime, DateTimeUtil.timeFormat(false));
             const betweenScheduled = prevSegment && prevSegment.type === SegmentType.scheduled && nextSegment && nextSegment.type === SegmentType.scheduled;
             header =
                 <div className={classes.header}>
@@ -123,8 +121,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                 </div>;
         } else {    // Header of a non-stationary segment.
             const startTime = segment.isContinuation || hideTimes ? undefined :
-                DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone)
-                    .format(DateTimeUtil.timeFormat(false));
+                DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));
             const startPlatform = segment.type === SegmentType.scheduled && !segment.isContinuation ? segment.startPlatform :
                 prevSegment?.type === SegmentType.scheduled ? prevSegment.endPlatform : undefined;
             header =
@@ -148,9 +145,9 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                     </div>
                 </div>;
         }
-        const renderTransportIcon = () => {            
+        const renderTransportIcon = () => {
             const isOnDark = isIconOnDark(segment);
-            const transportIconUrl = TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime ?? false, onDark: isOnDark || this.props.theme.isDark });            
+            const transportIconUrl = TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime ?? false, onDark: isOnDark || this.props.theme.isDark });
             const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
             return (
                 <div className={isRemote ? classes.iconCircledWhite : isOnDark ? classes.iconCircledColor : classes.icon}>

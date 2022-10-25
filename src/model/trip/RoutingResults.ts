@@ -81,10 +81,10 @@ class RoutingResults {
                     segment.shapes?.forEach((shape: ServiceShape) =>
                         shape.stops?.forEach((stop: ServiceStopLocation) => {
                             if (stop.departure === null && stop.relativeDeparture !== null) {
-                                stop.departure = segment.startTime + stop.relativeDeparture;
+                                stop.departure = segment.startTimeSeconds + stop.relativeDeparture;
                             }
                             if (stop.arrival === null && stop.relativeArrival !== null) {
-                                stop.arrival = segment.endTime + stop.relativeArrival;
+                                stop.arrival = segment.endTimeSeconds + stop.relativeArrival;
                             }
                         }));
                     if (segment.isFirst() && !this.query.isEmpty() && this.query.from!.address) { // Check that this.query is defined to avoid crashing when injecting trips tests.

@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import Segment from "../../model/trip/Segment";
 
 @JsonObject
@@ -14,7 +14,7 @@ class ChoiceSegment {
         const modeInfo = segment.modeInfo;
         instance._mode = modeInfo ?
             (modeInfo.identifier ? modeInfo.identifier : modeInfo.alt.toLowerCase()) : "";
-        instance._duration = segment.endTime - segment.startTime;
+        instance._duration = segment.endTimeSeconds - segment.startTimeSeconds;
         return instance;
     }
 

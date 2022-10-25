@@ -95,7 +95,7 @@ class TKShareHelper {
     public static getShareSegmentArrival(segment: Segment): string {
         const destination = segment.to;
         return this.getBaseUrl() + "/meet?" + "lat=" + destination.lat + "&lng=" + destination.lng
-            + (!segment.hideExactTimes && !segment.trip.hideExactTimes ? "&at=" + segment.endTime : "");
+            + (!segment.hideExactTimes && !segment.trip.hideExactTimes ? "&at=" + segment.endTimeSeconds : "");
     }
 
     public static getShareLocation(location: Location): string {

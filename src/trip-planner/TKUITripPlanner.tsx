@@ -207,7 +207,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const targetSegment = segment.isContinuation ? segment.prevSegment()! : segment;
         this.props.onQueryUpdate({
             from: targetSegment.from,
-            time: DateTimeUtil.momentFromTimeTZ(targetSegment.startTime * 1000, segment.from.timezone)
+            time: DateTimeUtil.momentFromIsoWithTimezone(targetSegment.startTime)
         });
         this.props.onTripDetailsView(false);
     }

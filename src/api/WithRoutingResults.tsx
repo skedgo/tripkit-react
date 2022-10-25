@@ -114,10 +114,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 switch (sort) {
                     case TripSort.TIME: {
                         return this.state.query.timePref === TimePreference.ARRIVE ?
-                            t2.depart - t1.depart : t1.arrive - t2.arrive;
+                            t2.departSeconds - t1.departSeconds : t1.arriveSeconds - t2.arriveSeconds;
                     }
                     case TripSort.DURATION: {
-                        return (t1.arrive - t1.depart) - (t2.arrive - t2.depart);
+                        return (t1.arriveSeconds - t1.departSeconds) - (t2.arriveSeconds - t2.departSeconds);
                     }
                     case TripSort.PRICE: {
                         const t1Cost = t1.moneyCost === null ? Number.MAX_SAFE_INTEGER : t1.moneyCost;
@@ -348,8 +348,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public equivalentTrips(tripA: Trip, tripB: Trip): boolean {
-            return tripA.depart === tripB.depart &&
-                tripA.arrive === tripB.arrive &&
+            return tripA.departSeconds === tripB.departSeconds &&
+                tripA.arriveSeconds === tripB.arriveSeconds &&
                 tripA.weightedScore === tripB.weightedScore &&
                 tripA.caloriesCost === tripB.caloriesCost &&
                 tripA.carbonCost === tripB.carbonCost &&

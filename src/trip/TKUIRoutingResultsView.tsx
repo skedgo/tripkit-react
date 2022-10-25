@@ -572,6 +572,11 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
             this.timePrefOptions = TKUIRoutingQueryInputClass.getTimePrefOptions(this.props.t);
             this.sortOptions = this.getSortOptions(this.props.t);
         }
+
+        // To refresh time sort label according to time pref.
+        if (this.props.query.timePref !== prevProps.query.timePref) {            
+            this.sortOptions = this.getSortOptions(this.props.t);
+        }
     }
 
     public componentDidMount() {

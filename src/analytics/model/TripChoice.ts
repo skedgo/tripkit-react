@@ -16,10 +16,10 @@ class TripChoice {
     private _hassle: number = 0;
     @JsonProperty('calories', Number)
     private _calories: number = 0;
-    @JsonProperty('arrivalTime', Number, true)
-    public arrivalTime?: number = undefined; /* In secs. since epoch */
-    @JsonProperty('departureTime', Number, true)
-    public departureTime?: number = undefined;
+    @JsonProperty('arrivalTime', String, true)
+    public arrivalTime?: string = undefined; /* In secs. since epoch */
+    @JsonProperty('departureTime', String, true)
+    public departureTime?: string = undefined;
     @JsonProperty('segments', [ChoiceSegment])
     private _segments: ChoiceSegment[] = [];
     @JsonProperty('selected', Boolean)
