@@ -214,6 +214,8 @@ class TKUICard extends React.Component<IProps, IState> {
         // Z-index is assigned on card construction, contemplating slide-us and modals (since presentation can switch
         // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
         // created.
+        // Issue when open a card and the close one below, e.g. menu > profile > Development > Open routing specs.
+        // Maybe use the stack instead to dynamically calculate the index.
         this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
         if (!props.doNotStack) {
             TKUICard.cardStack.push(this);

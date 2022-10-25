@@ -89,8 +89,7 @@ class TripGoApi {
 
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
         const updateURL = trip.updateURL;
-        return TripGoApi.apiCallUrl(updateURL + (updateURL.includes("?") ? "&" : "?")
-            + "v=11" + '&includeStops=true', NetworkUtil.MethodType.GET)
+        return TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(updateURL, 13) + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
                 if (!routingResultsJson) {
                     // Our api answers 200 with no content when there is no update. Should return 204.

@@ -695,8 +695,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 Promise.resolve(tripUrl) : Util.isJsonString(tripUrl) ?
                     this.resultsFromJsonString(tripUrl) :
                     (tripUrl.startsWith("http") ?
-                        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults) :
-                        TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 11), NetworkUtil.MethodType.GET, RoutingResults));
+                        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, 13), NetworkUtil.MethodType.GET, RoutingResults) :
+                        TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 13), NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
                 let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :
