@@ -212,7 +212,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                                                 this.setState({startStop: startStop},
                                                     () => {
                                                         let initialTime = DateTimeUtil.momentFromTimeTZ(
-                                                            (segment.trip.queryTime ? segment.trip.queryTime : segment.startTimeSeconds) * 1000).add(-30, 'm');
+                                                            (segment.trip.queryTimeSeconds ? segment.trip.queryTimeSeconds : segment.startTimeSeconds) * 1000).add(-30, 'm');
                                                         if (initialTime.isBefore(DateTimeUtil.getNow())) {
                                                             initialTime = DateTimeUtil.getNow();
                                                         }
