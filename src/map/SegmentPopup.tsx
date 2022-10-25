@@ -31,7 +31,7 @@ class SegmentPopup extends React.Component<IProps, IState> {
         const title = segment.arrival ?
             t("Arrive.X.at.X", {
                 0: segment.to.getDisplayString(),
-                1: DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.from.timezone).format(DateTimeUtil.timeFormat(false))
+                1: DateTimeUtil.format(segment.endTime, DateTimeUtil.timeFormat(false))
             }) : segment.getAction();
         const subtitle = !segment.arrival ?
             (segment.isFirst() ? t("To.X", {0: segment.to.getDisplayString()}) : t("From.X", {0: segment.from.getDisplayString()})) : undefined;

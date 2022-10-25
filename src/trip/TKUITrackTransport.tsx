@@ -40,7 +40,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         if (segment.isPT()) {
             infoTitle = segment.serviceNumber !== null ? segment.serviceNumber : "";
             if (!brief && !hideTimes) {
-                infoSubtitle = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.timeFormat(false));
+                infoSubtitle = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));
             }
         } else if (segment.trip.isSingleSegment(Visibility.IN_SUMMARY) && (segment.isBicycle() || segment.isWheelchair())) {
             // TODO getDurationWithContinuation

@@ -198,7 +198,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                                     styles={selectOverrideStyle(150)}
                                     value={returnValueToOption(inputField.value)}
                                     onChange={update => changeHandler((update.value === ONE_WAY_ONLY_OPTION.value) ? ONE_WAY_ONLY_OPTION.value :
-                                        DateTimeUtil.momentFromTimeTZ(segment.endTime * 1000, segment.to.timezone).toISOString())}
+                                        DateTimeUtil.momentFromTimeTZ(segment.endTimeSeconds * 1000, segment.to.timezone).toISOString())}
                                     placeholder={"Select one-way or enter a return trip date."}
                                     components={{
                                         IndicatorsContainer: () => null
@@ -346,7 +346,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
         content = (
             <div className={classes.bookingFormMain}>
                 <div className={classes.startTime}>
-                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone),
+                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.moment(segment.startTime),
                         DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                 </div>
                 <div className={classes.fromTo}>

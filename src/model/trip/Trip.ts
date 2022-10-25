@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import {Any, JsonObject, JsonProperty} from "json2typescript";
 import Segment, {TripAvailability} from "./Segment";
 import Util from "../../util/Util";
 import {SegmentType, Visibility} from "./SegmentTemplate";
@@ -12,10 +12,10 @@ class Trip {
 
     @JsonProperty("id", String, true)
     public id?: string = undefined;
-    @JsonProperty("depart", Number, true)
-    private _depart: number = 0;
-    @JsonProperty("arrive", Number, true)
-    private _arrive: number = 0;
+    @JsonProperty("depart", Any, true)
+    private _depart: string | number = 0;
+    @JsonProperty("arrive", Any, true)
+    private _arrive: string | number = 0;
     @JsonProperty("weightedScore", Number, true)
     private _weightedScore: number = 0;
     @JsonProperty("queryIsLeaveAfter", Boolean, true)
@@ -52,13 +52,20 @@ class Trip {
     private _satappQuery: string = "";
     private _arrivalSegment: Segment | undefined;
 
-
-    get depart(): number {
-        return this._depart;
+    get depart(): string {    
+        return typeof this._depart === "string" ? this._depart : DateTimeUtil.isoFromSeconds(this._depart, this.segments[0].from.timezone);
     }
 
-    get arrive(): number {
-        return this._arrive;
+    get departSeconds(): number {
+        return DateTimeUtil.isoToSeconds(this.depart);        
+    }
+
+    get arrive(): string {
+        return typeof this._arrive === "string" ? this._arrive : DateTimeUtil.isoFromSeconds(this._arrive, this.segments[this.segments.length - 1].from.timezone);        
+    }
+
+    get arriveSeconds(): number {
+        return DateTimeUtil.isoToSeconds(this.arrive);        
     }
 
     get weightedScore(): number {
@@ -218,7 +225,7 @@ class Trip {
     }
 
     get duration(): number {
-        return this.arrive - this.depart;
+        return this.arriveSeconds - this.departSeconds;
     }
 
     public isCancelled(): boolean {

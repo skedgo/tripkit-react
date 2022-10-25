@@ -47,6 +47,35 @@ class DateTimeUtil {
         return moment.tz(datetime, timezone);
     }
 
+    /**
+     * @deprecated Since shouldn't use moment outside DateTimeUtil anymore.
+     */
+    public static momentFromIsoWithTimezone(datetime: string): Moment {
+        return moment.parseZone(datetime);
+    }
+
+    public static isoFromMillis(time: number, timezone: string = DateTimeUtil.defaultTZ): string {
+        return moment.tz(time, timezone).format();
+    }
+
+    public static isoFromSeconds(time: number, timezone: string = DateTimeUtil.defaultTZ): string {
+        return this.isoFromMillis(time * 1000, timezone);
+    }
+
+    public static isoToMillis(time: string): number {
+        return moment(time).valueOf();
+    }
+
+    public static isoToSeconds(time: string): number {
+        return this.isoToMillis(time) / 1000;
+    }
+
+    public static format(timeISO: string, formatS: string): string {
+        // Parses the timeISO string and preserves the offset, unlike moment(string) which converts to the local timezone.
+        // See doc: https://momentjscom.readthedocs.io/en/latest/moment/01-parsing/14-parse-zone
+        return moment.parseZone(timeISO).format(formatS);
+    }
+
     public static durationToBriefString(durationInMinutes: number, space: boolean = true, decimal: boolean = false): string {
         const t = i18n.t;
         durationInMinutes = Math.floor(durationInMinutes);

@@ -49,7 +49,7 @@ class TKUITransportPin extends React.Component<IProps, {}> {
         const transIcon = segment.arrival ? Constants.absUrl("/images/modeicons/ondark/ic-arrive-24px.svg") :
             TransportUtil.getTransIcon(modeInfo, { isRealtime: segment.realTime === true, onDark: wantIconForDark });
         const isTransIconForDark = segment.arrival || (isDarkMode && !isRemoteIcon(modeInfo));
-        const timeS = DateTimeUtil.momentFromTimeTZ(segment.startTime * 1000, segment.from.timezone).format(DateTimeUtil.timeFormat(false));
+        const timeS = DateTimeUtil.format(segment.startTime, DateTimeUtil.timeFormat(false));        
         return <TKUITransportPinConnected
             icon={transIcon}
             label={timeS}

@@ -1,4 +1,5 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
+import DateTimeUtil from "../util/DateTimeUtil";
 import LatLng from "./LatLng";
 
 @JsonObject
@@ -11,10 +12,10 @@ class ServiceStopLocation extends LatLng {
     private _shortName: string | null = null;
     @JsonProperty('bearing', Number, true)
     private _bearing: number | undefined = undefined;
-    @JsonProperty('arrival', Number, true)
-    public arrival: number | null = null;
-    @JsonProperty('departure', Number, true)
-    public departure: number | null = null;
+    @JsonProperty('arrival', Any, true)
+    private _arrival: string | number | null = null;
+    @JsonProperty('departure', Any, true)
+    private _departure: string | number | null = null;
     @JsonProperty('relativeArrival', Number, true)
     private _relativeArrival: number | null = null;
     @JsonProperty('relativeDeparture', Number, true)
@@ -30,8 +31,27 @@ class ServiceStopLocation extends LatLng {
         return this._shortName;
     }
 
-    get bearing(): number | undefined{
+    get bearing(): number | undefined {
         return this._bearing;
+    }
+
+    /**
+     * Convert ISO to seconds since epoch, since don't have the timezone here (for Segment.endTime we do the other way around).     
+     */
+    get arrival(): number | null {
+        return this._arrival === null || typeof this._arrival === "number" ? (this._arrival as number | null) : DateTimeUtil.isoToSeconds(this._arrival);        
+    }
+
+    set arrival(value: number | null) {
+        this._arrival = value;
+    }    
+
+    get departure(): number | null {
+        return this._departure === null || typeof this._departure === "number" ? (this._departure as number | null) : DateTimeUtil.isoToSeconds(this._departure);        
+    }
+
+    set departure(value: number | null) {
+        this._departure = value;
     }
 
     get relativeArrival(): number | null {

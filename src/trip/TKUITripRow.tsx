@@ -195,16 +195,16 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
         .slice()
         // sort by depart, ascending if leave after (the sooner the better), descending if arrive by (the later the better).
         .sort((t1: Trip, t2: Trip) => {
-            return trip.queryIsLeaveAfter === false ? t2.depart - t1.depart : t1.depart - t2.depart;
+            return trip.queryIsLeaveAfter === false ? t2.departSeconds - t1.departSeconds : t1.departSeconds - t2.departSeconds;
         });
     const pastAlternatives = alternatives.filter((alt: Trip) =>
         alt.queryTime !== null && alt.queryIsLeaveAfter !== null &&
-        (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) < Math.floor(alt.queryTime / 60) :
-            Math.floor(alt.arrive / 60) > Math.floor(alt.queryTime / 60)));
+        (alt.queryIsLeaveAfter ? Math.floor(alt.departSeconds / 60) < Math.floor(alt.queryTime / 60) :
+            Math.floor(alt.arriveSeconds / 60) > Math.floor(alt.queryTime / 60)));
     const futureAlternatives = alternatives.filter((alt: Trip) =>
         alt.queryTime === null || alt.queryIsLeaveAfter === null ||
-        (alt.queryIsLeaveAfter ? Math.floor(alt.depart / 60) >= Math.floor(alt.queryTime / 60) :
-            Math.floor(alt.arrive / 60) <= Math.floor(alt.queryTime / 60)));
+        (alt.queryIsLeaveAfter ? Math.floor(alt.departSeconds / 60) >= Math.floor(alt.queryTime / 60) :
+            Math.floor(alt.arriveSeconds / 60) <= Math.floor(alt.queryTime / 60)));
     const selectedAlt = (trip as TripGroup).getSelectedTrip();
     const visibleAlternativesCount = props.visibleAlternatives ? props.visibleAlternatives : 2;
     const visiblePastAlternatives = props.expanded ? pastAlternatives :
