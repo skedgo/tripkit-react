@@ -31,7 +31,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
      * The title for the card, to be displayed on card header.
      */
-    title?: string;
+    title?: React.ReactNode;
 
     /**
      * The subtitle for the card, to be displayed on card header.
@@ -234,7 +234,7 @@ class TKUICard extends React.Component<IProps, IState> {
         const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         let cardAriaLabel = this.props.ariaLabel;
         if (!cardAriaLabel) {
-            if (this.props.title) {
+            if (this.props.title && typeof this.props.title === "string") {
                 cardAriaLabel = this.props.title;
             }
             if (this.props.subtitle) {

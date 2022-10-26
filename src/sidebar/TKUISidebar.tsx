@@ -45,6 +45,20 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUISidebar"
 };
 
+export const buttonStylesOverride = (theme: TKUITheme) => ({
+    main: overrideClass({
+        padding: '8px 16px!important',
+        '&:hover': {
+            background: black(5, theme.isDark)
+        },
+        ...theme.textWeightRegular,
+        color: black(1, theme.isDark) + '!important',
+        border: 'none!important',
+        width: '100%!important',
+        ...genStyles.justifyStart
+    })
+});
+
 class TKUISidebar extends React.Component<IProps, {}> {
 
     public static defaultProps: Partial<IProps> = {
@@ -57,19 +71,6 @@ class TKUISidebar extends React.Component<IProps, {}> {
     }
 
     private getDefaultMenuItems() {
-        const buttonStylesOverride = (theme: TKUITheme) => ({
-            main: overrideClass({
-                padding: '8px 16px!important',
-                '&:hover': {
-                    background: black(5, theme.isDark)
-                },
-                ...theme.textWeightRegular,
-                color: black(1, theme.isDark) + '!important',
-                border: 'none!important',
-                width: '100%!important',
-                ...genStyles.justifyStart
-            })
-        });
         const props = this.props;
         const t = props.t;
         return [

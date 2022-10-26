@@ -34,6 +34,7 @@ import { serviceTextColor } from "./TKUIServiceDepartureRow.css";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import Segment from "../model/trip/Segment";
+import TripUtil from "../trip/TripUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -335,7 +336,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                         this.props.onServiceSelection(departure)
                                                     }
                                                 }}
-                                                selected={departure === this.props.selectedService}
+                                                selected={this.props.timetableForSegment ?
+                                                    TripUtil.sameService(this.props.timetableForSegment, departure) : departure === this.props.selectedService}
                                             />
                                         </div>
                                     );
