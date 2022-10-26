@@ -4,6 +4,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKUserProfile from "./options/TKUserProfile";
 import Environment from "../env/Environment";
 import { i18n } from "../i18n/TKI18nConstants";
+import TripGoApi from "../api/TripGoApi";
 
 export enum TimePreference {
     NOW = "NOW",
@@ -46,7 +47,7 @@ class RoutingQuery {
                 wheelchair: true
             },
             unit: i18n.distanceUnit(),
-            v: 13,
+            v: TripGoApi.apiVersion,
             ir: 1,
             includeStops: true,            
             ...Environment.isBeta() && {

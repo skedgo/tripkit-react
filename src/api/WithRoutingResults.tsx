@@ -468,7 +468,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waypointSegments.push(waypointSegment);
             }
             const requestBody = {
-                config: { v: 11 },
+                config: { v: TripGoApi.apiVersion },
                 segments: waypointSegments
             };
             let segmentReplacement;
@@ -579,7 +579,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     });
             }
             const requestBody = {
-                config: { v: 11 },
+                config: { v: TripGoApi.apiVersion },
                 segments: waypointSegments
             };
             return TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
@@ -695,8 +695,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 Promise.resolve(tripUrl) : Util.isJsonString(tripUrl) ?
                     this.resultsFromJsonString(tripUrl) :
                     (tripUrl.startsWith("http") ?
-                        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, 13), NetworkUtil.MethodType.GET, RoutingResults) :
-                        TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, 13), NetworkUtil.MethodType.GET, RoutingResults));
+                        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET, RoutingResults) :
+                        TripGoApi.apiCallT(TripGoApi.defaultToVersion(tripUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET, RoutingResults));
             return routingResultsPromise.then((routingResults: RoutingResults) => {
                 const firstTrip = routingResults.groups && routingResults.groups.length > 0 ? routingResults.groups[0].trips[0] : undefined;
                 let from = routingResults.resultsQuery ? routingResults.resultsQuery.from :

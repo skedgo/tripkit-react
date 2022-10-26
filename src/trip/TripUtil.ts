@@ -19,7 +19,7 @@ class TripUtil {
         return { departureTime, arrivalTime, duration, hasPT }
     }
 
-    public static sameService(altSegment: Segment, service: ServiceDeparture) {
+    public static sameService(altSegment: Segment, service: ServiceDeparture) {        
         return altSegment.serviceTripID === service.serviceTripID // consider it's the same service if has the same id,
             && Math.abs(altSegment.startTimeSeconds - service.startTime) < 600;   // and are less than 10 mins apart.
     }

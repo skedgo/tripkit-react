@@ -19,6 +19,7 @@ class TripGoApi {
     public static accountAccessToken?: string = undefined;
     public static userID?: string = undefined;
     public static locale?: Promise<string> = undefined;
+    public static apiVersion: number = 13;
 
     public static getServer(): string {
         return this.server;
@@ -89,7 +90,7 @@ class TripGoApi {
 
     public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
         const updateURL = trip.updateURL;
-        return TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(updateURL, 13) + '&includeStops=true', NetworkUtil.MethodType.GET)
+        return TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(updateURL, TripGoApi.apiVersion) + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {
                 if (!routingResultsJson) {
                     // Our api answers 200 with no content when there is no update. Should return 204.
