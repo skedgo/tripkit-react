@@ -5,16 +5,13 @@ import { tKUIUserPrioritiesDefaultStyle } from "./TKUIUserPriorities.css";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import TKWeightingPreferences, { WeightingPreference } from "../model/options/TKWeightingPreferences";
 import TKUISlider from "./TKUISlider";
-import iconMoney from "../images/badges/ic-badge-money.svg";
-import iconCarbon from "../images/badges/ic-badge-leaf.svg";
-import iconTime from "../images/ic-clock.svg";
-import iconHassle from "../images/badges/ic-badge-like.svg";
 import { CardPresentation, default as TKUICard } from "../card/TKUICard";
 import { Subtract } from "utility-types";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import Constants from "../util/Constants";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
     value: TKWeightingPreferences;
@@ -59,7 +56,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         onChange={((event: any, value: any) => {
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.money, value / 100));
                         }) as any}
-                        thumbIcon={iconMoney}
+                        thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-money.svg")}
                         label={t("rQd-ri-hHa.text")}
                         leftLabel={t("I.dont.care")}
                         rightLabel={t("yuP-f9-IR1.text")}
@@ -75,7 +72,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         value={priorities.time * 100}
                         onChange={((event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.time, value / 100))) as any}
-                        thumbIcon={iconTime}
+                        thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-time.svg")}
                         label={t("o4h-JW-YBy.text")}
                         leftLabel={t("I.dont.care")}
                         rightLabel={t("KSL-Sc-UHU.text")}
@@ -89,7 +86,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         value={priorities.carbon * 100}
                         onChange={((event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.carbon, value / 100))) as any}
-                        thumbIcon={iconCarbon}
+                        thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-environment.svg")}
                         label={t("EzB-oD-wvZ.text")}
                         leftLabel={t("I.dont.care")}
                         rightLabel={t("RKH-vV-EU9.text")}
@@ -103,7 +100,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                         value={priorities.hassle * 100}
                         onChange={((event: any, value: any) =>
                             this.props.onChange(TKWeightingPreferences.slidePrefTo(priorities, WeightingPreference.hassle, value / 100))) as any}
-                        thumbIcon={iconHassle}
+                        thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-convenience.svg")}
                         label={t("brC-tq-EEG.text")}
                         leftLabel={t("I.dont.care")}
                         rightLabel={t("g7e-OY-rPw.text")}
