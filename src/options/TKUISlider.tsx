@@ -1,12 +1,11 @@
 import * as React from "react";
 import {Slider, SliderProps, withStyles} from '@material-ui/core';
-import Constants from "../util/Constants";
 import genStyles, {TK_FOCUS_TARGET_CLASS} from "../css/GenStyle.css";
 import {TKUITheme, white} from "../jss/TKUITheme";
 
 export type TKUISliderProps = SliderProps &
     {
-        thumbIcon?: string,
+        thumbIconUrl?: string,
         label?: string,
         leftLabel?: string,
         rightLabel?: string,
@@ -41,8 +40,8 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
                         boxShadow: iOSBoxShadow,
                     },
                 },
-                ...this.props.thumbIcon && {
-                    backgroundImage: 'url("' + Constants.absUrl(this.props.thumbIcon) + '")',
+                ...this.props.thumbIconUrl && {
+                    backgroundImage: `url("${this.props.thumbIconUrl}")`,                    
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
                 }
@@ -51,7 +50,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const {thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps} = this.props;
+        const {thumbIconUrl: thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps} = this.props;
         return (
             <div style={genStyles.fontS as any}>
                 <this.WithStyle {...sliderProps} classes={{thumb: TK_FOCUS_TARGET_CLASS}}/>
