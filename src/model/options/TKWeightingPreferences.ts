@@ -30,21 +30,7 @@ class TKWeightingPreferences {
         return "(" + this.money.toFixed(2) + "," + this.carbon.toFixed(2) + "," +
             this.time.toFixed(2) + "," + this.hassle.toFixed(2) + ")";
     }
-
-    public static slidePrefTo(prefs: TKWeightingPreferences, pref: WeightingPreference, value: number): TKWeightingPreferences {
-        const result = new TKWeightingPreferences();
-        const total = 5;
-        const oldRemainder = total - prefs[pref];
-        const newRemainder = total - value;
-        for (const prefName of Object.keys(WeightingPreference)) {
-            if (prefName === pref) {
-                result[prefName] = value;
-            } else {
-                result[prefName] = Math.min((prefs[prefName] * newRemainder) / oldRemainder, 2);
-            }
-        }
-        return result;
-    }
+    
 }
 
 export default TKWeightingPreferences;
