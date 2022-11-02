@@ -22,7 +22,7 @@ export interface ResultAmmendments {
         lat: number,
         lng: number
     }[],
-    add?: { address: string, lat: number, lng: number }[]
+    add?: { address: string, lat: number, lng: number, match?: (props: { query: string, address: string }) => boolean }[]
 }
 
 export interface PeliasGeocoderOptions extends GeocoderOptions {
@@ -120,7 +120,7 @@ class PeliasGeocoder implements IGeocoder {
                         return result;
                     });
                     const add = this.options.ammendments?.add?.filter(add => {
-                        return query.length > 3 && add.address.toLowerCase().startsWith(query.toLowerCase());
+                        return add.match ? add.match({ query, address: add.address }) : (query.length > 3 && LocationUtil.standarizeForMatch(add.address).startsWith(LocationUtil.standarizeForMatch(query)));
                     });
                     if (add) {
                         locationResults = add.map(a => Location.create(LatLng.createLatLng(a.lat, a.lng), a.address, "" + a.lat + a.lng, ""))
