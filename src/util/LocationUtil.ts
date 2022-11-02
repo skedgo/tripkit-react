@@ -109,6 +109,10 @@ class LocationUtil {
         const p2 = (c1.lat - c2.lat);
         return this.earthRadius * this.radians * Math.sqrt(p1 * p1 + p2 * p2);
     }
+
+    public static standarizeForMatch(text: string): string {
+        return text.toLowerCase().replace(/,/g,' ').replace(/\s+/g,' ');
+    }
 }
 
 export default LocationUtil;
