@@ -1,5 +1,5 @@
-import {TKUICustomStyles, TKUIStyles, TKUIWithClasses} from "../jss/StyleHelper";
-import {Subtract} from "utility-types";
+import { TKUICustomStyles, TKUIStyles, TKUIWithClasses } from "../jss/StyleHelper";
+import { Subtract } from "utility-types";
 
 /**
  * Component configuration
@@ -50,14 +50,20 @@ export interface TKComponentDefaultConfig<P extends TKUIWithClasses<S, P>, S> {
 }
 
 export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
-    Partial<Subtract<TKComponentDefaultConfig<P, S>,
-        {styles: TKUIStyles<S, P>}> & {
-        /**
-         * Allows to specify a _styles override object_, or a function of [theme](TKUITheme) returning a styles
-         * override object. See a detailed explanation and example [here](#/Component-level%20Customization/Styles).
-         * @ctype object | (theme: TKUITheme) => object
-         */
-        styles: TKUICustomStyles<S, P>}>;
+    Partial<
+        Subtract<
+            TKComponentDefaultConfig<P, S>,
+            {
+                styles: TKUIStyles<S, P>;
+            }
+        > & {
+            /**
+             * Allows to specify a _styles override object_, or a function of [theme](TKUITheme) returning a styles
+             * override object. See a detailed explanation and example [here](#/Component-level%20Customization/Styles).
+             * @ctype object | (theme: TKUITheme) => object
+             */
+            styles: TKUICustomStyles<S, P>;
+        }>;
 
 export type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);
 

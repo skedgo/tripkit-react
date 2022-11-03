@@ -1,17 +1,17 @@
 import * as React from "react";
-import {Slider, SliderProps, withStyles} from '@material-ui/core';
-import genStyles, {TK_FOCUS_TARGET_CLASS} from "../css/GenStyle.css";
-import {TKUITheme, white} from "../jss/TKUITheme";
+import { Slider, SliderProps, withStyles } from '@material-ui/core';
+import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
+import { TKUITheme, white } from "../jss/TKUITheme";
 
 export type TKUISliderProps = SliderProps &
-    {
-        thumbIconUrl?: string,
-        label?: string,
-        leftLabel?: string,
-        rightLabel?: string,
-        isDarkMode?: boolean,
-        theme: TKUITheme
-    }
+{
+    thumbIconUrl?: string,
+    label?: string,
+    leftLabel?: string,
+    rightLabel?: string,
+    isDarkMode?: boolean,
+    theme: TKUITheme
+}
 
 class TKUISlider extends React.Component<TKUISliderProps, {}> {
 
@@ -41,7 +41,7 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
                     },
                 },
                 ...this.props.thumbIconUrl && {
-                    backgroundImage: `url("${this.props.thumbIconUrl}")`,                    
+                    backgroundImage: `url("${this.props.thumbIconUrl}")`,
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
                 }
@@ -50,14 +50,14 @@ class TKUISlider extends React.Component<TKUISliderProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const {thumbIconUrl: thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps} = this.props;
+        const { thumbIconUrl: thumbIcon, label, leftLabel, rightLabel, isDarkMode, theme, ...sliderProps } = this.props;
         return (
             <div style={genStyles.fontS as any}>
-                <this.WithStyle {...sliderProps} classes={{thumb: TK_FOCUS_TARGET_CLASS}}/>
-                <div style={{...genStyles.flex, ...genStyles.spaceBetween, ...theme.textColorDefault} as any}>
-                    <span style={{minWidth: '100px'}}>{this.props.leftLabel}</span>
+                <this.WithStyle {...sliderProps} classes={{ thumb: TK_FOCUS_TARGET_CLASS }} />
+                <div style={{ ...genStyles.flex, ...genStyles.spaceBetween, ...theme.textColorDefault } as any}>
+                    <span style={{ minWidth: '100px' }}>{this.props.leftLabel}</span>
                     <span>{this.props.label}</span>
-                    <span style={{minWidth: '100px', textAlign: 'right'}}>{this.props.rightLabel}</span>
+                    <span style={{ minWidth: '100px', textAlign: 'right' }}>{this.props.rightLabel}</span>
                 </div>
             </div>
         );
