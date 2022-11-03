@@ -27,6 +27,18 @@ class VehicleTypeInfo {
                 return Util.toFirstUpperCase(this.formFactor);
         }
     }
+
+    public vehicleTypeLocalIcon(): string | undefined {
+        switch (this.formFactor) {
+            case "BICYCLE":
+                return this.propulsionType === "ELECTRIC" || this.propulsionType === "ELECTRIC_ASSIST" ?
+                    "bicycle-electric" : "bicycle";
+            case "SCOOTER":
+                return "kickscooter";
+            default:
+                return undefined;
+        }
+    }
 }
 
 export default VehicleTypeInfo;

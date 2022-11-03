@@ -57,7 +57,7 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                 iconInverted: {
                     padding: '5px',
                     '& img': {
-                        // Icon is inverted w.r.t. what we wanted, which is always "for Dark", so got "for light",
+                        // Icon is inverted w.r.t. what we wanted, which is always "for dark", so got "for light",
                         // so need light background.
                         background: white(0),
                         border: '1px solid ' + white(2)

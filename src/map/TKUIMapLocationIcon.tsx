@@ -79,7 +79,7 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
                     onDark: wantIconForDark,
                     useLocal: wantLocalIcon
                 });
-            invertedWrtMode = isRemoteIcon(modeInfo);
+            invertedWrtMode = !wantLocalIcon && isRemoteIcon(modeInfo);
         }
         const classes = this.props.classes;
         const icon = transIcon &&
