@@ -177,6 +177,11 @@ function getSegmentMxMCards(
         // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
         // matches fields of VehicleInfo, and not CarPodVehicle.
         const freeFloatingVehicleLoc = Util.iAssign(new FreeFloatingVehicleLocation(), segment.location);
+        // Need to ammend the local icon since modeInfo doesn't come in segment.location for collect segments. 
+        const localIcon = segment.sharedVehicle?.vehicleTypeInfo.vehicleTypeLocalIcon() ?? segment.nextSegment()?.modeInfo?.localIcon
+        if (localIcon) {
+            freeFloatingVehicleLoc.modeInfo.localIcon = localIcon;
+        }        
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
         const collectCardIndex = generateCardIndex();
         return [
