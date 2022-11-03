@@ -30,12 +30,15 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
             },
             rail: {
                 top: '0',
-                height: '100%',                
-                background: 'none'                
+                height: '100%',
+                background: 'none',
+                padding: `0 ${SLIDER_HEIGHT / 2}px`,
+                marginLeft: `${-SLIDER_HEIGHT / 2}px`,
+                boxSizing: 'content-box'
             },
             track: ({ value }) => ({
                 height: '100%',
-                background: value === 0 ? 'none' : color,                
+                background: value === 0 ? 'none' : color,
                 ...genStyles.borderRadius(SLIDER_HEIGHT / 2),
                 paddingLeft: `${SLIDER_HEIGHT}px`,
                 boxSizing: 'content-box',
@@ -48,7 +51,7 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
                 backgroundColor: '#f5f6f6',
                 boxShadow: 'none',
                 marginTop: 0,
-                marginLeft: 0,                
+                marginLeft: 0,
                 transform: 'translate(-50%, 0)',
                 '&:focus,&:hover,&$active': {
                     boxShadow: 'none',
@@ -60,7 +63,8 @@ class TKUIPrioritySlider extends React.Component<TKUIPrioritySliderProps, {}> {
                 ...this.props.thumbIconUrl && {
                     backgroundImage: `url("${this.props.thumbIconUrl}")`,
                     backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center'
+                    backgroundPosition: 'center',
+                    backgroundSize: '22px'
                 }
             })
         })(Slider);
