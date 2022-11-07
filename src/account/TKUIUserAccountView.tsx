@@ -57,6 +57,10 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = (props) => {
                                 title={t("Email")}
                                 subtitle={userAccount.email}
                             />
+                            <TKUIRow
+                                title={t("Phone")}
+                                subtitle={userAccount.phone}
+                            />
                         </TKUISettingSection>
                     </div>
                 </TKUICard>}
