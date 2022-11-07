@@ -30,6 +30,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ctype
      */
     onDirectionsClicked?: () => void;
+
+    onMenuVisibilityChange?: (open: boolean) => void;
 }
 
 interface IConsumedProps extends TKUIViewportUtilProps {
@@ -143,6 +145,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 inputAriaLabel={ariaLabel}
                                 onRef={this.props.onLocationBoxRef}
                                 menuContainer={this.props.menuContainer}
+                                onMenuVisibilityChange={this.props.onMenuVisibilityChange}
                             />
                             {this.props.onDirectionsClicked && viewportProps.landscape &&
                                 <Fragment>

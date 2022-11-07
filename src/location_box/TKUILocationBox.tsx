@@ -78,6 +78,7 @@ interface IConsumedProps {
      * @default Bounds of the current region: {@link TKState#region}.bounds
      */
     bounds?: BBox;
+    onMenuVisibilityChange?: (open: boolean) => void;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
@@ -145,8 +146,8 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.autocompleteRef.current && this.autocompleteRef.current.focus();
     }
 
-    private isDDOpen() {
-        return this.state.focus && this.state.items !== undefined && this.state.items.length > 0;
+    private isDDOpen(state: IState = this.state) {
+        return state.focus && state.items !== undefined && state.items.length > 0;
         // return true;
     }
 
@@ -538,6 +539,9 @@ class TKUILocationBox extends Component<IProps, IState> {
             JSON.stringify(Object.keys(this.props.geocodingOptions.geocoders))) {
             this.geocodingData = new MultiGeocoder(this.props.geocodingOptions);
         }
+        if (this.isDDOpen() !== this.isDDOpen(prevState)) {
+            this.props.onMenuVisibilityChange?.(this.isDDOpen());
+        }
     }
 
     public componentDidMount() {
@@ -574,6 +578,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     } else {
                         this.setState({ focus: isOpen });
                     }
+                    // setTimeout(() => this.props.onMenuVisibilityChange?.(isOpen && this.state.items !== undefined && this.state.items.length > 0), 50);                    
                 }}
                 open={this.isDDOpen()}
                 wrapperProps={{

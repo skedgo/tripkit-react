@@ -25,6 +25,10 @@ interface ITKUIGenStyleClasses {
     noShrink: any;
     wrap: any;
     animateSpin: any;
+    transitionFadeOut: any;
+    fadeOut: any;
+    animateFadeOut: any;
+    animateFadeIn: any;
     svgFillCurrColor: any;
     svgPathFillCurrColor: any;
     scrollableY: any;
@@ -53,7 +57,7 @@ interface ITKUIGenStyleCreators {
     transformRotate: (angle: number, unit?: string) => any;
 }
 
-interface ITKUIGenStyle extends ITKUIGenStyleClasses, ITKUIGenStyleCreators {}
+interface ITKUIGenStyle extends ITKUIGenStyleClasses, ITKUIGenStyleCreators { }
 
 // TODO: confirm automatic vendor prefixing works. See: https://cssinjs.org/jss-plugin-vendor-prefixer/?v=v10.1.1.
 // See if need to import it, probably yes:
@@ -105,6 +109,40 @@ const keyframesStyle = {
             transform: 'translate3d(-100%, 0, 0)'
         }
     },
+    '@keyframes fadeOut': {
+        '0%': {
+            opacity: '1',
+            height: 'initial',
+            overflow: 'visible'
+        },
+        '99%': {
+            opacity: '0',
+            height: 'initial',
+            overflow: 'visible'
+        },
+        '100%': {
+            opacity: '0',
+            height: '0',
+            overflow: 'hidden'            
+        }
+    },
+    '@keyframes fadeIn': {
+        '0%': {
+            opacity: '0',
+            height: '0',
+            overflow: 'hidden'            
+        },
+        '1%': {
+            opacity: '0',
+            height: 'initial',
+            overflow: 'visible'
+        },
+        '100%': {
+            opacity: '1',
+            height: 'initial',
+            overflow: 'visible'
+        }
+    },
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [
     //     {
@@ -126,7 +164,7 @@ export const keyFramesStyles: any = jss.createStyleSheet(keyframesStyle as any).
 const genStyleClasses: ITKUIGenStyleClasses = {
 
     flex: {
-        ...{display: '-webkit-flex'},
+        ...{ display: '-webkit-flex' },
         display: 'flex'
     },
 
@@ -225,6 +263,30 @@ const genStyleClasses: ITKUIGenStyleClasses = {
 
     animateSpin: {
         animation: keyFramesStyles.keyframes.spin + ' 1.5s linear infinite'
+    },
+
+    transitionFadeOut: {
+        transition: 'opacity .5s 0s, height 0s .5s'        
+    },
+
+    fadeOut: {
+        height: 0,
+        opacity: 0,
+        overflow: 'hidden'
+    },
+
+    animateFadeOut: {
+        animationDuration: '.3s',
+        animationName: keyFramesStyles.keyframes.fadeOut,
+        animationTimingFunction: 'ease-in-out',
+        animationFillMode: 'forwards'
+    },
+
+    animateFadeIn: {
+        animationDuration: '.5s',        
+        animationName: keyFramesStyles.keyframes.fadeIn,
+        animationTimingFunction: 'ease-in-out',        
+        animationFillMode: 'forwards'
     },
 
     svgFillCurrColor: {
@@ -338,17 +400,17 @@ const genStyleClasses: ITKUIGenStyleClasses = {
 
     userIsTabbing: {
         ['& $root input[type=text]:focus,' +
-        '& $root input[type=email]:focus,' +
-        '& $root input[aria-autocomplete=list]:focus,' +
-        '& $root button:focus,' +
-        '& $root a:focus,' +
-        '& $root select:focus,' +
-        '& $root textarea:focus,' +
-        '& $root div:focus,' +
-        '& $root:focus'
-        // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, so doesn't match the style.
-        // '& $focusTarget:focus'
-            ]: {
+            '& $root input[type=email]:focus,' +
+            '& $root input[aria-autocomplete=list]:focus,' +
+            '& $root button:focus,' +
+            '& $root a:focus,' +
+            '& $root select:focus,' +
+            '& $root textarea:focus,' +
+            '& $root div:focus,' +
+            '& $root:focus'
+            // +    // TODO: for some reason next $focusTarget reference is translated to focus-target, so doesn't match the style.
+            // '& $focusTarget:focus'
+        ]: {
             // outline: '2px solid #024dff',
             boxShadow: '0px 0px 3px 3px #024dff!important'  // To prevail to boxShadow: none of resetStyles.
         },
@@ -380,7 +442,7 @@ const genStyleCreators: ITKUIGenStyleCreators = {
     }),
 };
 
-const genStyles = {...genStyleClasses, ...genStyleCreators};
+const genStyles = { ...genStyleClasses, ...genStyleCreators };
 // @ts-ignore: avoid TS2740
 const genClassNames: Record<keyof ITKUIGenStyleClasses, string> = jss.createStyleSheet(genStyleClasses as any).attach().classes;
 
@@ -439,4 +501,4 @@ jss.createStyleSheet(otherStyles as any).attach();
 export const TK_FOCUS_TARGET_CLASS = 'tk-focus-target'
 
 export default genStyles;
-export {genClassNames};
+export { genClassNames };
