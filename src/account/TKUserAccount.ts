@@ -12,6 +12,8 @@ class TKUserAccount {
     public surname?: string = undefined;
     @JsonProperty('name', String, true)
     public name?: string = undefined;
+    @JsonProperty('phone', String, true)
+    public phone?: string = undefined;
 }
 
 export default TKUserAccount;
