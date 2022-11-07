@@ -89,6 +89,8 @@ interface IState {
     tripUpdateStatus?: TKRequestStatus;
     // Need to put this elem into the state so when instantiated it triggers a re-render on consumer TKUILocationSearch.
     searchMenuPanelElem?: HTMLDivElement;
+    fadeOutHome: boolean;
+    fadeOutHomeBecauseDetails: boolean;
 }
 
 const modalContainerId = "mv-modal-panel";
@@ -111,7 +113,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTransportSettings: false,
             mapView: false,
             showFavourites: false,
-            showLocationDetails: false
+            showLocationDetails: false,
+            fadeOutHome: false,
+            fadeOutHomeBecauseDetails: false
         };
         TKUICardRaw.modalContainerId = modalContainerId;
         TKUICardRaw.mainContainerId = mainContainerId;
@@ -226,8 +230,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     onShowSideBarClicked={() => {
                         this.setState({ showSidebar: true });
                     }}
-                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
-                    menuContainer={this.state.searchMenuPanelElem}
+                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}                    
+                    onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
                 />
                 <div className={classes.searchMenuContainer}
                     ref={(ref) => ref && ref !== this.state.searchMenuPanelElem && this.setState({ searchMenuPanelElem: ref })} />
@@ -359,9 +363,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 showTransportsBtn={this.props.portrait}
             /> : null;
 
-        const homeCard = searchBar && !locationDetailView && !favouritesView &&
-            !this.isShowTimetable() &&
-            <TKUIHomeCard onMyBookings={() => this.setState({ showMyBookings: true })} />;
+        // this.state.fadeOutHomeBecauseDetails is set to false with a delay, to avoid home card being displayed on search location clear and immediatly being hidden again 
+        // because input gets focus and there are recent autocompletion results.
+        const homeCard = searchBar && !favouritesView && !this.isShowTimetable() &&
+            <div className={this.state.fadeOutHome || this.state.fadeOutHomeBecauseDetails ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
+                <TKUIHomeCard onMyBookings={() => this.setState({ showMyBookings: true })} />
+            </div>
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
             if (DeviceUtil.isTouch()) {
@@ -541,7 +548,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
         if (TKUITripPlanner.ableToShowLocationDetailView(this.props) !== TKUITripPlanner.ableToShowLocationDetailView(prevProps)) {
-            this.setState({ showLocationDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props) });
+            const ableToShowLocationDetailView = TKUITripPlanner.ableToShowLocationDetailView(this.props);
+            this.setState({ showLocationDetails: ableToShowLocationDetailView });
+            if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
+                this.setState({ fadeOutHomeBecauseDetails: true });
+            } else {
+                setTimeout(() => this.setState({ fadeOutHomeBecauseDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props) }), 500);
+            }
         }
 
         // If on search view and a stop is set as query from, then show timetable for the stop
