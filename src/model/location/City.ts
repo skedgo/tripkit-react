@@ -15,6 +15,8 @@ class City extends Location {
     // @ts-ignore: avoid TS2610
     public timezone: string = '';
 
+    public regionCode: string = '';
+
     get address(): string {
         return this.title;
     }

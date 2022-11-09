@@ -207,6 +207,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     transportOptions: TKTransportOptions;
 
     setMap: (ref: TKUIMapView) => void;
+
+    children?: React.ReactNode;
 }
 
 interface MapboxGLLayerProps {
@@ -215,9 +217,7 @@ interface MapboxGLLayerProps {
     attribution: string;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-    children?: React.ReactNode;    
-}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
