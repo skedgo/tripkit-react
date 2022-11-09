@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import BBox from "../BBox";
 import MapUtil from "../../util/MapUtil";
 import LatLng from "../LatLng";
@@ -36,6 +36,9 @@ class Region {
     }
 
     get cities(): City[] {
+        if (!this._cities[0]?.regionCode) {
+            this._cities.forEach(city => city.regionCode = this.name);
+        }
         return this._cities;
     }
 

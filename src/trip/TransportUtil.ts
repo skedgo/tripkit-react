@@ -111,6 +111,9 @@ class TransportUtil {
         if (modeId.startsWith("pt_pub_lightRail")) {
             return "lightRail";
         }
+        if (modeId.startsWith("pt_pub_subway")) {
+            return "subway";
+        }
         if (modeId.startsWith("pt_pub_tram")) {
             return "tram";
         }
