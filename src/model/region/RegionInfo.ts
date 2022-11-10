@@ -26,6 +26,11 @@ class Mode {
 type Modes = {
     [key: string]: Mode;
 }
+
+type SpecificModes = {
+    [key: string]: SpecificMode;
+}
+
 @JsonObject
 class RegionInfo {
 
@@ -55,14 +60,26 @@ class RegionInfo {
 
     private _modes: Modes | undefined;
 
-    get modes(): Modes | undefined {
+    private _specificModes: SpecificModes | undefined;
+
+    get modes(): Modes {
         if (!this._modes && this._modesJSON) {
             this._modes = Object.keys(this._modesJSON).reduce((result, key) => {
                 result[key] = Util.deserialize(this._modesJSON[key], Mode);
                 return result;
             }, {});
         }
-        return this._modes;
+        return this._modes ?? {};
+    }
+
+    get specificModes(): SpecificModes {
+        if (!this._specificModes) {
+            this._specificModes = {};
+            Object.values(this.modes)
+            .forEach(mode => mode.specificModes
+                .forEach(sMode => sMode.modeInfo.identifier && (this._specificModes![sMode.modeInfo.identifier] = sMode)))
+        }
+        return this._specificModes;
     }
 
 }
