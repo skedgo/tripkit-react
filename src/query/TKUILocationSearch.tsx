@@ -138,7 +138,8 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 inputStyle={this.props.injectedStyles.locationBoxInput as any}
                                 menuStyle={{
                                     ...this.props.injectedStyles.resultsMenu as any,
-                                    width: this.props.portrait ? 'calc(100% + 69px)' : 'calc(100% + 123px)'
+                                    left: `-${(this.props.onShowSideBarClicked ? 36 : 0) + 25}px`,
+                                    width: `calc(100% + ${(this.props.onShowSideBarClicked ? 36 : 0) + (this.props.onDirectionsClicked && this.props.landscape ? 53 : 0) + 32}px)`
                                 }}
                                 inputId={inputId}
                                 ariaLabel={"Search location"}

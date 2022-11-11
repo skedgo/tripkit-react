@@ -107,7 +107,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 
     showCurrLocBtn?: boolean;
 
-    disableMapClick?: (zoom?: number) => boolean;
+    disableMapClick?: boolean | ((zoom?: number) => boolean);
 }
 
 export interface IStyle {
@@ -306,7 +306,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     };
 
     private onClick(clickLatLng: LatLng) {
-        if (this.props.disableMapClick?.(this.getZoom())) {
+        if (typeof this.props.disableMapClick === 'function' ? this.props.disableMapClick?.(this.getZoom()) : this.props.disableMapClick) {
             return;
         }
         const from = this.props.from;
@@ -502,9 +502,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             const init = !this.leafletElement && ref.leafletElement;
                             this.leafletElement = ref.leafletElement;
                             if (init) {
-                                // Init map viewport, so we don't get an exception when getting map zoom or center.
-                                this.leafletElement!.setView([MapUtil.worldCoords.lat, MapUtil.worldCoords.lng], 2);
+                                // Init map viewport, so we don't get an exception when getting map zoom or center.                                
+                                this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng), 2);
                                 this.props.setMap(this);
+                                // To avoid map glitch where city icons are bad positioned initially, which fixes with any map movement.
+                                this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng + 1), 2);                                
                             }
                         }
                     }}
@@ -878,6 +880,11 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
     public getZoom(): number | undefined {
         return this.leafletElement?.getZoom();
+    }
+
+    public getCenter(): LatLng | undefined {
+        const center = this.leafletElement?.getCenter();
+        return center && LatLng.createLatLng(center[0], center[1]);
     }
 
     public setViewport(center: LatLng, zoom: number) {
