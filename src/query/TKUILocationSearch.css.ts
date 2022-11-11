@@ -48,8 +48,7 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             height: '36px'
         },
         resultsMenu: {
-            top: '43px',
-            left: '-61px',
+            top: '43px',            
             position: 'absolute',
             minWidth: '211px'
         },
