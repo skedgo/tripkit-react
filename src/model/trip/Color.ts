@@ -1,38 +1,25 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
+import Util from "../../util/Util";
 
+enum ColorKeys {
+    red = "red",
+    green = "green",
+    blue = "blue"
+}
+export interface ColorI {
+    [ColorKeys.red]: number;
+    [ColorKeys.green]: number;
+    [ColorKeys.blue]: number;
+}
 @JsonObject
-class Color {
+class Color implements ColorI {
 
-    @JsonProperty("red", Number)
-    private _red: number = 0;
-    @JsonProperty("green", Number)
-    private _green: number = 0;
-    @JsonProperty("blue", Number)
-    private _blue: number = 0;
-
-    get red(): number {
-        return this._red;
-    }
-
-    set red(value: number) {
-        this._red = value;
-    }
-
-    get green(): number {
-        return this._green;
-    }
-
-    set green(value: number) {
-        this._green = value;
-    }
-
-    get blue(): number {
-        return this._blue;
-    }
-
-    set blue(value: number) {
-        this._blue = value;
-    }
+    @JsonProperty(ColorKeys.red, Number)
+    public red: number = 0;
+    @JsonProperty(ColorKeys.green, Number)
+    public green: number = 0;
+    @JsonProperty(ColorKeys.blue, Number)
+    public blue: number = 0;    
 
     public toRGB(): string {
         return "rgb(" + this.red + "," + this.green + "," + this.blue + ")";
@@ -55,6 +42,10 @@ class Color {
             hex = "0" + hex;
         }
         return hex;
+    }
+
+    public static fromJSON(json: ColorI): Color {
+        return Util.deserialize(json, Color);
     }
 
     public static createFromString(value: string): Color {
@@ -84,15 +75,15 @@ class Color {
     }
 
     private static hexToR(h: string): number {
-        return parseInt((Color.cutHex(h)).substring(0,2), 16);
+        return parseInt((Color.cutHex(h)).substring(0, 2), 16);
     }
 
     private static hexToG(h: string): number {
-        return parseInt((Color.cutHex(h)).substring(2,4), 16);
+        return parseInt((Color.cutHex(h)).substring(2, 4), 16);
     }
 
     private static hexToB(h: string): number {
-        return parseInt((Color.cutHex(h)).substring(4,6), 16);
+        return parseInt((Color.cutHex(h)).substring(4, 6), 16);
     }
 
     private static cutHex(h: string): string {

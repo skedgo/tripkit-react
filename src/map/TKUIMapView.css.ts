@@ -1,8 +1,8 @@
-import {CSSProps, TKUIStyles} from "../jss/StyleHelper";
-import {TKUIMapViewProps, TKUIMapViewStyle} from "./TKUIMapView";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { TKUIMapViewProps, TKUIMapViewStyle } from "./TKUIMapView";
 import genStyles from "../css/GenStyle.css";
-import {black, TKUITheme, white} from "../jss/TKUITheme";
-import {resetStyles} from "../css/ResetStyle.css";
+import { black, TKUITheme, white } from "../jss/TKUITheme";
+import { resetStyles } from "../css/ResetStyle.css";
 
 export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewProps> =
     (theme: TKUITheme) => ({
@@ -91,7 +91,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
         currentLocMarker: {
             zIndex: '1000!important'
         },
-        currentLocBtn : {
+        currentLocBtn: {
             ...resetStyles.button,
             position: 'absolute',
             right: '10px',
@@ -128,7 +128,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
             }
         },
         vehicle: {
-            ...{display: '-webkit-flex!important'},
+            ...{ display: '-webkit-flex!important' },
             display: 'flex!important',
             ...genStyles.alignCenter,
             zIndex: '1000!important'

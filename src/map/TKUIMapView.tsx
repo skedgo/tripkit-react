@@ -248,7 +248,12 @@ class TKUIMapView extends React.Component<IProps, IState> {
     private leafletElement?: L.Map;
     private wasDoubleClick = false;
     private userLocTooltipRef?: any;
-    private mapboxGlMap?: any;
+    public mapboxGlMap?: any;
+    private resolveMapboxGlMap?: any;
+    public mapboxGlMapP: Promise<any> = new Promise<any>((resolve, reject) => {
+        this.resolveMapboxGlMap = resolve;
+    });
+
 
     constructor(props: Readonly<IProps>) {
         super(props);
@@ -532,6 +537,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 ref={(ref: any) => {
                                     if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
                                         this.mapboxGlMap = ref.leafletElement.getMapboxMap();
+                                        this.resolveMapboxGlMap(this.mapboxGlMap);
                                         this.mapboxGlMap.on('load', () =>
                                             RegionsData.instance.requireRegions().then(() => {
                                                 try {
@@ -938,6 +944,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             console.log(e);
         }
     }
+
 }
 
 let geocodingData: MultiGeocoder;
