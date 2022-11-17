@@ -11,6 +11,7 @@ import { lineString, point, BBox as TurfBBox } from "@turf/helpers";
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
+import { Feature, FeatureCollection } from "geojson";
 
 class MapUtil {
 
@@ -185,6 +186,24 @@ class MapUtil {
         const reducedBounds = this.expandBoundsByPercent(currentBounds, -leftReductionPCT, -rightReductionPCT, -topReductionPCT, -bottomReductionPCT);
         const alreadyFits = this.inBBox(bounds.sw, reducedBounds) && this.inBBox(bounds.ne, reducedBounds)
         return alreadyFits
+    }
+
+    public static latLngsToGeoJSONFeature(latLngs: LatLng[]): Feature {
+        return ({
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": latLngs.map(latLng => [latLng.lng, latLng.lat])
+            },
+            "properties": {}
+        })
+    }
+
+    public static featuresToCollection(features: Feature[]): FeatureCollection {
+        return ({
+            "type": "FeatureCollection",
+            "features": features
+        });
     }
 
 }

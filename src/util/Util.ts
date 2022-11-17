@@ -46,7 +46,7 @@ class Util {
      */
 
     public static iAssign<T>(target: T, source: Update<T>): T {
-        return Object.assign(Util.clone(target), source)
+        return Object.assign(Util.clone(target), source);
     }
 
     /**
