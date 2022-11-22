@@ -12,6 +12,15 @@ export class SpecificMode {
     modeImageNames: string[] = [];
     @JsonProperty("url", String, true)
     public url: string = "";
+    @JsonProperty("integrations", [String], true)
+    private _integrations: string[] | undefined = undefined;
+
+    get integrations(): string[] {
+        if (!this._integrations) {
+            this._integrations = ["routing"];
+        }
+        return this._integrations;    
+    }
 }
 @JsonObject
 class Mode {
