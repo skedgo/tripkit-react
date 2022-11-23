@@ -23,7 +23,7 @@ export class SpecificMode {
     }
 }
 @JsonObject
-class Mode {
+export class Mode {
     @JsonProperty("title", String, true)
     public title: string = "";
     @JsonProperty("modeInfo", ModeInfo, true)
@@ -63,6 +63,9 @@ class RegionInfo {
 
     @JsonProperty("transitModes", [ModeInfo])
     public transitModes: ModeInfo[] = [];
+
+    @JsonProperty("operators", [Any])
+    public operators: any[] = [];
 
     @JsonProperty("modes", Any, true)
     public _modesJSON: any | undefined = undefined;
