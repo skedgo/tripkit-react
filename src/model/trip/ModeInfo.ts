@@ -44,7 +44,7 @@ class ModeInfo implements ModeInfoI {
     /**
      * Part of icon file name that should be shipped with app. Required.
      */
-    @JsonProperty("localIcon", String) 
+    @JsonProperty("localIcon", String, true) 
     public localIcon: string = "";
 
     /**
