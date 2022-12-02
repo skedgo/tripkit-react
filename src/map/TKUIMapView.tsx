@@ -209,6 +209,8 @@ interface IConsumedProps extends TKUIViewportUtilProps {
     setMap: (ref: TKUIMapView) => void;
 
     children?: React.ReactNode;
+
+    childrenThis?: (mapthis: any) => React.ReactNode;
 }
 
 interface MapboxGLLayerProps {
@@ -708,6 +710,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         </Marker>}
                     {menuPopup}
                     {this.props.children}
+                    {this.props.childrenThis?.(this)}
                 </RLMap>
                 <ReactResizeDetector handleWidth={true} handleHeight={true}
                     onResize={() => this.onResize()}
@@ -891,6 +894,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
     public getCenter(): LatLng | undefined {
         const center = this.leafletElement?.getCenter();
         return center && LatLng.createLatLng(center[0], center[1]);
+    }
+
+    public getBounds(): BBox | undefined {
+        return this.toBBox(this.leafletElement?.getBounds());
     }
 
     public setViewport(center: LatLng, zoom: number) {

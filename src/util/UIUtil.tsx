@@ -1,4 +1,5 @@
 import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 import { TKError } from "../error/TKError";
 import { i18n } from "../i18n/TKI18nConstants";
 
