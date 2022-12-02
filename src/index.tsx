@@ -118,4 +118,3 @@ export {default as TKMapboxGeocoder} from "./geocode/TKMapboxGeocoder";
     /* eslint-disable import/first */
     // import("./example/tripgo/tripgo-sample");
 // }
-import 'react-confirm-alert/src/react-confirm-alert.css';

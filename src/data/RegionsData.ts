@@ -156,7 +156,7 @@ export class RegionsData {
     }
 
     public getRegionByName(name: string): Region | undefined {
-        return this.regions!.get(name);
+        return this.regions?.get(name);
     }
 
     public getRegionByNameP(name: string): Promise<Region | undefined> {
