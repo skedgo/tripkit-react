@@ -35,7 +35,7 @@ export const tKUIMapViewDefaultStyle: TKUIStyles<TKUIMapViewStyle, TKUIMapViewPr
                 ...theme.divider
             },
             '& .leaflet-bar a, .leaflet-bar a:hover': {
-                background: 'none',
+                background: 'none!important',
                 color: black(1, theme.isDark)
             }
         } as any,
