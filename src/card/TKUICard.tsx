@@ -141,6 +141,13 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * By default is true for presentation === CardPresentation.MODAL, or false otherwise.
      */
     focusTrap?: boolean;
+    // Currently it doesn't make sense for MODAL presentation, since react-modal already traps focus.
+    // Besides that, it causes the undesired effect that cards that render on top of current one won't be clickable
+    // (e.g. close button, or elements inside), unless they are also passed focusTrap = true (that is, FocusTrap 
+    // elem is also used). The same happened with UIUtil.confirmMsg (buttons unclickable), that's why I provided a
+    // custom UI for it surrounded by a FocusTrap, so buttons are clickable. However, cannot close confirmMsg on click 
+    // outside (click on the overlay) due to the added FocusTrap. See how to improve all of this. Probably get rid of the
+    // react-focus-trap, or get a better use of it.
 
     className?: string;
 }

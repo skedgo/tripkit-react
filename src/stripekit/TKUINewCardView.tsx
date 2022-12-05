@@ -95,7 +95,7 @@ const TKUINewCardView: React.FunctionComponent<IProps> =
                         onRequestClose={onRequestClose}
                         presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                         slideUpOptions={{ draggable: false }}
-                        focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
+                        focusTrap={true}
                         styles={{
                             modalContent: overrideClass({
                                 width: '800px'

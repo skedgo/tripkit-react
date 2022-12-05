@@ -74,7 +74,7 @@ const TKUIHTMLTicketView: React.FunctionComponent<IProps> =
                 title={((purchasedTickets?.length ?? 0) > 1) ? "Tickets" : "Ticket"}
                 onRequestClose={onRequestClose}
                 presentation={CardPresentation.MODAL}
-                focusTrap={false}   // Since this causes confirmAlert buttons to be un-clickable.
+                focusTrap={true}
             >
                 <div className={classes.main}>
                     {purchasedTickets.length > 1 &&

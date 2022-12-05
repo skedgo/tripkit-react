@@ -66,7 +66,6 @@ interface IState {
     showMyBookings: boolean;
     showTransports: boolean;
     showPriorities: boolean;
-    showDevSettings: boolean;
 }
 
 class TKUIProfileView extends React.Component<IProps, IState> {
@@ -81,8 +80,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
             showPersonalData: false,
             showMyBookings: false,
             showTransports: false,
-            showPriorities: false,
-            showDevSettings: false
+            showPriorities: false
         };
         RegionsData.instance.getModeIdentifierP(ModeIdentifier.SCHOOLBUS_ID).then((modeId?: ModeIdentifier) =>
             this.setState({ schoolModeId: modeId }));

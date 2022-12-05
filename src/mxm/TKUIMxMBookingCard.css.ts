@@ -77,7 +77,11 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     },
     returnTripInput: {
         ...genStyles.flex,
-        ...genStyles.alignCenter
+        ...genStyles.alignCenter,
+        ...genStyles.grow,
+        '&>*:first-child': {
+            ...genStyles.grow
+        }
     },
     value: {
         ...genStyles.flex,

@@ -11,6 +11,7 @@ import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import RoutingQuery from '../model/RoutingQuery';
+import { TKError } from '../error/TKError';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
@@ -64,12 +65,12 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                                     .catch(UIUtil.errorMsg)
                                     .finally(() => setWaiting?.(false));
                             }
-                        })                    
+                        });
                     } else if (action.externalURL) {
                         window.open(action.externalURL, "_self");
                     }
                 }}
-            />            
+            />
         </Fragment>
     );
 };
