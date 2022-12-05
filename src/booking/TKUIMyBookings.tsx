@@ -71,7 +71,7 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
             onRequestClose={onRequestClose}
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={slideUpOptions}
-            focusTrap={false}   // Since this causes modal on top (e.g. payment modal) to be un-clickable
+            focusTrap={true}
         >
             {!bookings ?
                 <div className={classes.loadingPanel}>
