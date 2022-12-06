@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import Util from "../../util/Util";
 import Color, { ColorI } from "./Color";
 
@@ -32,7 +32,7 @@ class ModeInfo implements ModeInfoI {
     /**
      * Textual alternative to icon. Required.
      */
-    @JsonProperty("alt", String) 
+    @JsonProperty("alt", String, true)
     public readonly alt: string = "";
 
     /**
@@ -44,30 +44,30 @@ class ModeInfo implements ModeInfoI {
     /**
      * Part of icon file name that should be shipped with app. Required.
      */
-    @JsonProperty("localIcon", String, true) 
+    @JsonProperty("localIcon", String, true)
     public localIcon: string = "";
 
     /**
      * Part of icon file name that can be fetched from server.
      */
-    @JsonProperty("remoteIcon", String, true) 
+    @JsonProperty("remoteIcon", String, true)
     public readonly remoteIcon: string | undefined = undefined;
 
     /**
      * Part of icon file name for dark background that can be fetched from server.
      */
-    @JsonProperty("remoteDarkIcon", String, true) 
+    @JsonProperty("remoteDarkIcon", String, true)
     public readonly remoteDarkIcon: string | undefined = undefined;
 
-    @JsonProperty("color", Color, true) private 
+    @JsonProperty("color", Color, true) private
     public readonly color: Color | undefined = undefined;
 
     /**
      * Whether the remote icon is a representing the brand not the mode. 
      * If this is true it's a good idea to show the brand icon plus an icon indicating the mode.
      */
-    @JsonProperty("remoteIconIsBranding", Boolean, true) 
-    public readonly remoteIconIsBranding: boolean = false;    
+    @JsonProperty("remoteIconIsBranding", Boolean, true)
+    public readonly remoteIconIsBranding: boolean = false;
 
     public isBicycle(): boolean {
         return !!(this.identifier?.startsWith("cy_bic") || this.identifier?.startsWith("me_mic_bic"));

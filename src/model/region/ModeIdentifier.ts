@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import Color from "../trip/Color";
 
 @JsonObject
@@ -12,8 +12,9 @@ class ModeIdentifier {
 
     private _identifier: string = "";
 
-    public static readonly PUBLIC_TRANSIT_ID = "pt_";
+    public static readonly PUBLIC_TRANSIT_ID = "pt";
     public static readonly PUBLIC_TRANSPORT_ID = "pt_pub";
+    public static readonly PUBLIC_TRANSIT_LIMITED_ID = "pt_ltd";
     public static readonly SCHOOLBUS_ID = "pt_ltd_SCHOOLBUS";
     public static readonly UBER_ID = "ps_tnc_UBER";
     public static readonly CAR_ID = "me_car";
