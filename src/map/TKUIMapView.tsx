@@ -10,7 +10,7 @@ import MapTripSegment from "./MapTripSegment";
 import Segment from "../model/trip/Segment";
 import Util from "../util/Util";
 import LocationUtil from "../util/LocationUtil";
-import GATracker from "../analytics/GATracker";
+import GATracker, { ACTION_PICK_FROM_LOCATION, ACTION_PICK_TO_LOCATION, CATEGORY_QUERY_INPUT } from "../analytics/GATracker";
 import { Visibility } from "../model/trip/SegmentTemplate";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
@@ -332,8 +332,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 const isFrom = !from;
                 this.onMapLocChanged(isFrom, clickLatLng);
                 GATracker.event({
-                    category: "query input",
-                    action: isFrom ? "pick from location" : "pick to location",
+                    category: CATEGORY_QUERY_INPUT,
+                    action: isFrom ? ACTION_PICK_FROM_LOCATION : ACTION_PICK_TO_LOCATION,
                     label: "drop to"
                 });
             }

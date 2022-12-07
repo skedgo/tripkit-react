@@ -8,7 +8,7 @@ import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import Util from "../util/Util";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import DateTimeUtil from "../util/DateTimeUtil";
-import GATracker from "../analytics/GATracker";
+import GATracker, { ACTION_PICK_FROM_LOCATION, ACTION_PICK_TO_LOCATION, ACTION_SELECT_TIME_PREF, CATEGORY_QUERY_INPUT } from "../analytics/GATracker";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
@@ -183,8 +183,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 
     private onPrefChange(timePref: TimePreference) {
         GATracker.event({
-            category: "query input",
-            action: "select time pref",
+            category: CATEGORY_QUERY_INPUT,
+            action: ACTION_SELECT_TIME_PREF,
             label: timePref.toLowerCase()
         });
         if (timePref === TimePreference.NOW
@@ -325,8 +325,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         }
                                         if (value !== null) {
                                             GATracker.event({
-                                                category: "query input",
-                                                action: "pick from location",
+                                                category: CATEGORY_QUERY_INPUT,
+                                                action: ACTION_PICK_FROM_LOCATION,
                                                 label: value.isCurrLoc() ? "current location" : "type address"
                                             });
                                         }
@@ -381,8 +381,8 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         }
                                         if (value !== null) {
                                             GATracker.event({
-                                                category: "query input",
-                                                action: "pick to location",
+                                                category: CATEGORY_QUERY_INPUT,
+                                                action: ACTION_PICK_TO_LOCATION,
                                                 label: value.isCurrLoc() ? "current location" : "type address"
                                             });
                                         }

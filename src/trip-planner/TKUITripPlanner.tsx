@@ -157,11 +157,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         //     )
         // });
     }
-    private onShowSettings() {
-        GATracker.event({
-            category: "query input",
-            action: "display transport switches"
-        });
+    private onShowSettings() {        
         this.props.setShowUserProfile(true);
     }
 

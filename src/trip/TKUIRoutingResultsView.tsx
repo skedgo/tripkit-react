@@ -16,7 +16,7 @@ import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import { TKUIRoutingQueryInputClass } from "../query/TKUIRoutingQueryInput";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
-import GATracker from "../analytics/GATracker";
+import GATracker, { ACTION_SELECT_TIME_PREF, CATEGORY_QUERY_INPUT } from "../analytics/GATracker";
 import { Moment } from "moment-timezone";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
@@ -314,8 +314,8 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
     private onPrefChange(timePref: TimePreference) {
         GATracker.event({
-            category: "query input",
-            action: "select time pref",
+            category: CATEGORY_QUERY_INPUT,
+            action: ACTION_SELECT_TIME_PREF,
             label: timePref.toLowerCase()
         });
         if (timePref === TimePreference.NOW) {
