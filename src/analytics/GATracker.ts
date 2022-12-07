@@ -1,5 +1,12 @@
 import ReactGA, {Tracker, InitializeOptions, EventArgs, TrackerNames} from 'react-ga';
 
+export const CATEGORY_TRIP_RESULTS = "trip results";
+export const CATEGORY_QUERY_INPUT = "query input";
+export const ACTION_COMPUTE_TRIPS = "compute trips";
+export const ACTION_PICK_FROM_LOCATION = "pick from location";
+export const ACTION_PICK_TO_LOCATION = "pick to location";
+export const ACTION_SELECT_TIME_PREF = "select time pref";
+
 class GATracker {
 
     // Registers if initialize method was called, since just in that case calls to

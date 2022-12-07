@@ -23,7 +23,7 @@ import { TKError } from "../error/TKError";
 import TripUtil from "../trip/TripUtil";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
-import GATracker from "../analytics/GATracker";
+import GATracker, { ACTION_COMPUTE_TRIPS, CATEGORY_TRIP_RESULTS } from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
 import ModeLocation from "../model/location/ModeLocation";
 
@@ -195,8 +195,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 label += " change";
             }
             GATracker.event({
-                category: "trip results",
-                action: "compute trips",
+                category: CATEGORY_TRIP_RESULTS,
+                action: ACTION_COMPUTE_TRIPS,
                 label: label
             });
         }
