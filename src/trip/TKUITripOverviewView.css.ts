@@ -8,7 +8,8 @@ export const tKUITripOverviewViewDefaultStyle = (theme: TKUITheme) => ({
     actionsPanel: {
         margin: '24px 0 16px',
         ...genStyles.flex,
-        ...genStyles.spaceAround
+        ...genStyles.spaceAround,
+        ...genStyles.alignStart
     },
     header: {
         ...genStyles.flex,
