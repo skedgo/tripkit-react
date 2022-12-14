@@ -91,15 +91,13 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
     ({ publicKey, paymentOption, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
-        const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
-        // External payment means that is performed directly by hitting Stripe, as opposed to passing through our BE.
-        const isExternalPayment = paymentOption.method === "GET";
+        const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);        
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
             const initPaymentUrl = paymentOption.url;
-            if (isExternalPayment) {
+            if (paymentOption.paymentMode === "INTERNAL") { // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
                 setWaiting(true);
-                TripGoApi.apiCallUrl(initPaymentUrl, NetworkUtil.MethodType.GET)
+                TripGoApi.apiCallUrl(initPaymentUrl, paymentOption.method)
                     .then(({ clientSecret, url: paidUrl }) => {
                         if (!clientSecret) {
                             throw new TKError("Unexpected error. Contact SkedGo support");
@@ -111,7 +109,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     .finally(() => setWaiting(false));;
             }
         }, []);
-        if (isExternalPayment && !paymentIntentSecret || !stripePromise) {
+        if (paymentOption.paymentMode === "INTERNAL" && !paymentIntentSecret || !stripePromise) {
             return null;
         }
         const options = paymentIntentSecret ?
@@ -126,7 +124,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     // Make sure to disable form submission until Stripe.js has loaded.
                     return;
                 }
-                if (isExternalPayment) {
+                if (paymentOption.paymentMode === "INTERNAL") {
                     let result;
                     setWaiting(true);
                     if (paymentMethod) {
@@ -160,7 +158,9 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     } else {
                         TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
                             .then(() => onClose(true))
-                            .catch(UIUtil.errorMsg)
+                            .catch(e => {
+                                UIUtil.errorMsg(e, { onClose });
+                            })
                             .finally(() => setWaiting(false));
                     }
                 } else {
@@ -188,7 +188,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 .then(NetworkUtil.jsonCallback);
                         }
                     }
-                    TripGoApi.apiCallUrl(paymentOption.url, NetworkUtil.MethodType.POST, { paymentMethod: paymentMethod.id })
+                    TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: paymentMethod.id })
                         .then(() => onClose(true))
                         .catch(UIUtil.errorMsg)
                         .finally(() => setWaiting(false));

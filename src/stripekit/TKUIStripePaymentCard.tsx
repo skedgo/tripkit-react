@@ -11,6 +11,8 @@ import TKUIBookingReview from './TKUIBookingReview';
 import TKUICheckoutView from './TKUICheckoutView';
 import { TKUIViewportUtil } from '../util/TKUIResponsiveUtil';
 import EphemeralResult from '../model/payment/EphemeralResult';
+import TripGoApi from '../api/TripGoApi';
+import UIUtil from '../util/UIUtil';
 
 
 type IStyle = ReturnType<typeof tKUIStripePaymentCardDefaultStyle>
@@ -43,9 +45,17 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
     const [waiting, setWaiting] = useState<boolean>(false);
     const title = showPaymentForm ? "Payment" : "Review booking";
     const onPayOption = (payOption: PaymentOption) => {
+        if (payOption.paymentMode === "FREE") {
+            setWaiting(true);
+            TripGoApi.apiCallUrl(payOption.url, payOption.method)
+                .then(() => onRequestClose(true))
+                .catch(UIUtil.errorMsg)
+                .finally(() => setWaiting(false));
+            return;
+        }
         setPaymentOption(payOption);
         setShowPaymentForm(true)
-    };    
+    };
     return (
         <TKUIViewportUtil>
             {(viewportProps) =>

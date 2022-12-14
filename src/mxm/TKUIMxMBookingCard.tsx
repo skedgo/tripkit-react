@@ -363,14 +363,17 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                             onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { tickets: update }))}
                         />
                     </Fragment>}
-                <div className={classes.separator} />
-                <BookingInputForm
-                    inputFields={requestBookingForm.input}
-                    onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { input: update }))}
-                    classes={classes}
-                    injectedStyles={injectedStyles}
-                    segment={segment}
-                />
+                {requestBookingForm.input.length > 0 &&
+                    <Fragment>
+                        <div className={classes.separator} />
+                        <BookingInputForm
+                            inputFields={requestBookingForm.input}
+                            onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { input: update }))}
+                            classes={classes}
+                            injectedStyles={injectedStyles}
+                            segment={segment}
+                        />
+                    </Fragment>}
                 <div className={classes.separator} />
                 {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
                     <div className={classes.paySummary}>
