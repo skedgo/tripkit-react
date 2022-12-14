@@ -36,20 +36,20 @@ const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         '&>*': {
             padding: '16px',
-            width: '50%'            
+            width: '50%'
         },
         '&>*:nth-child(2)': {
-            borderLeft: '1px solid ' + black(4, theme.isDark),
+            borderLeft: '1px solid ' + black(4, theme.isDark)
         }
     },
     reviewBodyPortrait: {
         ...genStyles.flex,
         ...genStyles.column,
         '&>*': {
-            padding: '16px'         
+            padding: '16px'
         },
-        '&>*:nth-child(1)': {
-            ...theme.divider            
+        '&>*:nth-child(2)': {
+            borderTop: '1px solid ' + black(4, theme.isDark)
         }
     },
     modeIcon: {
@@ -132,21 +132,22 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                             <div className={viewportProps.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
                                 {review.origin && review.destination &&
                                     <TKUIFromTo from={review.origin} to={review.destination} />}
-                                <div className={classes.tickets}>
-                                    {review.tickets.map((ticket, i) => {
-                                        return (
-                                            <div className={classes.ticket} key={i}>
-                                                <IconPassenger className={classes.iconPassenger} />
-                                                <div className={classes.ticketValueName}>
-                                                    {ticket.value + " x " + ticket.name}
+                                {review.tickets.length > 0 &&
+                                    <div className={classes.tickets}>
+                                        {review.tickets.map((ticket, i) => {
+                                            return (
+                                                <div className={classes.ticket} key={i}>
+                                                    <IconPassenger className={classes.iconPassenger} />
+                                                    <div className={classes.ticketValueName}>
+                                                        {ticket.value + " x " + ticket.name}
+                                                    </div>
+                                                    <div className={classes.ticketPrice}>
+                                                        {FormatUtil.toMoney(ticket.price * ticket.value, { currency: review.currency ? review.currency + " " : undefined, forceDecimals: true, nInCents: true })}
+                                                    </div>
                                                 </div>
-                                                <div className={classes.ticketPrice}>
-                                                    {FormatUtil.toMoney(ticket.price * ticket.value, { currency: review.currency ? review.currency + " " : undefined, forceDecimals: true, nInCents: true })}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                            );
+                                        })}
+                                    </div>}
                             </div>
                         </div>
                     );
@@ -165,7 +166,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                         type={TKUIButtonType.SECONDARY}
                         onClick={() => onClose()}
                     />
-                    <TKUIButton text={"Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />
+                    <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />
                 </div>
             </div>
         );

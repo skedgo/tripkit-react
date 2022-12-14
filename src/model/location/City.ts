@@ -9,6 +9,8 @@ class City extends Location {
         this.class = "CityLocation";
     }
 
+    @JsonProperty('identifier', String, true)
+    public identifier: string = '';
     @JsonProperty('title', String)
     public title: string = '';
     @JsonProperty('timezone', String)

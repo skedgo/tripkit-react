@@ -71,7 +71,7 @@ class UIUtil {
                 }
             }
         ];
-        this.customConfirmAlert({
+        UIUtil.customConfirmAlert({
             buttons,
             ...otherOptions
         });
@@ -85,11 +85,11 @@ class UIUtil {
 
             }
         ];
-        this.customConfirmAlert({
+        UIUtil.customConfirmAlert({
+            buttons,
             message: e.message || e.title || e.subtitle,            
             closeOnEscape: true,
-            closeOnClickOutside: true,
-            buttons
+            closeOnClickOutside: true            
         });
     }
 
