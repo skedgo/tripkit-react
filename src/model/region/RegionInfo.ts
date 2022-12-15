@@ -32,7 +32,7 @@ export class Mode {
     specificModes: SpecificMode[] = [];
 }
 
-type Modes = {
+export type Modes = {
     [key: string]: Mode;
 }
 
