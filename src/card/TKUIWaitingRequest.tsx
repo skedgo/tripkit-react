@@ -9,7 +9,6 @@ import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
 import classNames from "classnames";
 
 // TODO: refactor it as a more general component that displays messages up-front.
-// Maybe add property blocking?: boolean.
 
 export enum TKRequestStatus {
     wait, success, error

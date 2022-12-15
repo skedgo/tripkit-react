@@ -7,7 +7,6 @@ export class TSPInfoMode {
     public mode: string = "";
     @JsonProperty("numberOfServices", Number, true)
     public numberOfServices: number = 0;
-    // realTime: any[];
     @JsonProperty("integrations", [String], true)
     private _integrations: string[] | undefined = undefined;
 
@@ -61,6 +60,12 @@ class TSPInfo {
             this._numberOfservices = this.modes.reduce((acc, mode) => acc + mode.numberOfServices, 0);
         }
         return this._numberOfservices;
+    }
+    get integrations(): string[] {
+        return Array.from(Object.values(this.modesById).reduce((acc, mode) => {
+            mode.integrations.forEach(int => acc.add(int));
+            return acc;
+        }, new Set<string>()));
     }
 }
 
