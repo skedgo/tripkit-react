@@ -15,7 +15,7 @@ type StyleCreator<
     Name extends string | number | symbol = string,
     Theme = undefined,
     Props = unknown
-    > = ((theme: Theme) => Styles<Name, Props>);
+> = ((theme: Theme) => Styles<Name, Props>);
 
 type FcValues<PR> = ((props: PR) => CSS.Properties);
 type CSSProperties<PR> = FcValues<PR>;
@@ -293,3 +293,5 @@ export function renderToStaticMarkup(elem) {
     // return renderToStaticMarkupDomServer(elem);
     return Environment.isDev() ? '<div />' : renderToStaticMarkupDomServer(elem);
 }
+
+export { createUseStyles };

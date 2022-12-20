@@ -217,6 +217,8 @@ interface MapboxGLLayerProps {
     accessToken: string;
     style: string;
     attribution: string;
+    /* whether or not to register the mouse and keyboard events on the mapbox overlay. See [v0.0.9 changelog](https://github.com/mapbox/mapbox-gl-leaflet/blob/master/CHANGELOG.md#009---2019-09-02) */
+    interactive?: boolean;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
@@ -483,6 +485,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     boundsOptions={paddingOptions}
                     maxBounds={L.latLngBounds([-90, -1800], [90, 1800])} // To avoid lats > 90 or < -90
                     minZoom={2}
+                    // Since this is to max zoom on underlying mapbox gl map, while leaflet reaches greater zooms, and so zooms between
+                    // both maps lose sync. This causes issues on projection calculations to translate a target lat lng to a mapbox-gl point.
+                    maxZoom={23}
                     // If maxBounds is set, this option will control how solid the bounds are when dragging the map
                     // around, 1.0 makes the bounds fully solid, preventing the user from dragging outside the bounds.
                     maxBoundsViscosity={1.0}
@@ -513,7 +518,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                                 this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng), 2);
                                 this.props.setMap(this);
                                 // To avoid map glitch where city icons are bad positioned initially, which fixes with any map movement.
-                                this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng + 1), 2);                                
+                                this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng + 1), 2);
                             }
                         }
                     }}
@@ -950,6 +955,10 @@ class TKUIMapView extends React.Component<IProps, IState> {
         } catch (e) {
             console.log(e);
         }
+    }
+
+    public getLeafletMap() {
+        return this.leafletElement;
     }
 
 }
