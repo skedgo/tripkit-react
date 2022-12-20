@@ -49,6 +49,8 @@ class RouteInfo {
     public readonly operatorName?: string = "";
     @JsonProperty("routeName", String, true)
     public readonly routeName?: string = "";
+    @JsonProperty("routeDescription", String, true)
+    public readonly routeDescription?: string = "";
     @JsonProperty("shortName", String, true)
     public readonly shortName?: string = "";
     @JsonProperty("mode", String, true)
@@ -59,6 +61,8 @@ class RouteInfo {
     public readonly routeColor: Color = new Color();
     @JsonProperty("directions", [Direction], true)
     public readonly directions: Direction[] = [];
+    @JsonProperty("numberOfServices", Number, true)
+    public numberOfServices: number = 0;
 }
 
 export default RouteInfo;
