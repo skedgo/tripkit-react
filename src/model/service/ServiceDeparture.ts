@@ -49,6 +49,8 @@ class ServiceDeparture {
     public alertHashCodes: number[] = [];
     @JsonProperty("endStopCode", String, true) // It comes when disembarkation stop was specified.
     public endStopCode?: string = undefined;
+    @JsonProperty("startPlatform", String, true)
+    public startPlatform?: string = undefined;
 
     public startStop?: StopLocation;
     public startStopCode: string = "";
@@ -96,6 +98,12 @@ class ServiceDeparture {
             return false;
         }
         return this.wheelchairAccessible;
+    }
+
+    get lineText(): string | undefined {
+        const origin = this.startPlatform ?? this.startStop?.shortName?.trim();
+        const directionOrName = this.serviceDirection ? this.serviceDirection : this.serviceName;
+        return origin ? origin + " · " + directionOrName : directionOrName;
     }
 
 }

@@ -1,20 +1,20 @@
 import * as React from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {EventEmitter} from "fbemitter";
-import {IServiceResultsContext, ServiceResultsContext} from "./ServiceResultsProvider";
-import TKUICard, {CardPresentation} from "../card/TKUICard";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {tKUIServiceViewDefaultStyle} from "./TKUIServiceView.css";
+import { EventEmitter } from "fbemitter";
+import { IServiceResultsContext, ServiceResultsContext } from "./ServiceResultsProvider";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { tKUIServiceViewDefaultStyle } from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { Subtract } from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import {IOptionsContext, OptionsContext} from "../options/OptionsProvider";
+import { TKUISlideUpOptions } from "../card/TKUISlideUp";
+import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import TKUIServiceRealtimeInfo from "./TKUIServiceRealtimeInfo";
@@ -41,17 +41,17 @@ interface IConsumedProps {
     options: TKUserProfile
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIServiceViewProps = IProps;
 export type TKUIServiceViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIServiceView {...props}/>,
+    render: props => <TKUIServiceView {...props} />,
     styles: tKUIServiceViewDefaultStyle,
     classNamePrefix: "TKUIServiceView",
     randomizeClassNames: true,  // This needs to be true since multiple instances are rendered,
-                                // each with a different service color.
+    // each with a different service color.
 };
 
 interface IState {
@@ -86,8 +86,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const departure = this.props.departure;
-        const classes = this.props.classes;
+        const { departure, classes, t } = this.props;
         const defaultActions = this.getDefaultActions(departure);
         const actions = this.props.actions ? this.props.actions(departure, defaultActions) : defaultActions;
         const actionElems = actions ?
@@ -98,13 +97,14 @@ class TKUIServiceView extends React.Component<IProps, IState> {
         const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
-                title={this.props.title}
+                title={departure.lineText ?? t("Service")}
                 onRequestClose={this.props.onRequestClose}
                 renderSubHeader={() =>
                     <div className={this.props.classes.serviceOverview} id="serviceViewHeader">
                         <TKUIServiceDepartureRow
                             value={this.props.departure}
                             detailed={true}
+                            showLineText={false}
                         />
                         <TKUIServiceRealtimeInfo
                             wheelchairAccessible={departure.isWheelchairAccessible()}
@@ -112,7 +112,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             alerts={departure.hasAlerts ? departure.alerts : undefined}
                             modeInfo={departure.modeInfo}
                             options={this.props.options}
-                            alertsSlideUpOptions={this.props.slideUpOptions && {modalUp: this.props.slideUpOptions.modalUp}}
+                            alertsSlideUpOptions={this.props.slideUpOptions && { modalUp: this.props.slideUpOptions.modalUp }}
                         />
                         {actionElems}
                     </div>
@@ -123,11 +123,11 @@ class TKUIServiceView extends React.Component<IProps, IState> {
             >
                 <div className={classes.main}>
                     {departure.serviceDetail?.shapes &&
-                    <TKUIServiceSteps
-                        steps={departure.serviceDetail.shapes}
-                        serviceColor={TransportUtil.getServiceDepartureColor(departure)}
-                        timezone={departure.startTimezone}
-                    />}
+                        <TKUIServiceSteps
+                            steps={departure.serviceDetail.shapes}
+                            serviceColor={TransportUtil.getServiceDepartureColor(departure)}
+                            timezone={departure.startTimezone}
+                        />}
                 </div>
             </TKUICard>
         );
@@ -142,7 +142,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> = (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
     return (
         <OptionsContext.Consumer>
             {(optionsContext: IOptionsContext) =>
@@ -163,10 +163,10 @@ const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}
 };
 
 const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <Consumer>
             {(consumedProps: IConsumedProps) =>
-                children!({...consumedProps, ...inputProps})}
+                children!({ ...consumedProps, ...inputProps })}
         </Consumer>;
 
 export default connect((config: TKUIConfig) => config.TKUIServiceView, config, Mapper);
