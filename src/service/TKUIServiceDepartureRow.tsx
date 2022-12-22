@@ -23,6 +23,16 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClick?: () => void;
     selected?: boolean;
     renderRight?: () => JSX.Element;
+    /**
+     * Set this to `true` to show the operator of each service on the timetable and service cards.
+     * @default {true}
+     */
+    showLineText?: boolean;
+    /**
+     * Set this to `true` to show the operator of each service on the timetable and service cards.
+     * @default {undefined}
+     */
+    showOperatorName?: boolean;
 }
 
 interface IConsumedProps {
@@ -75,6 +85,10 @@ interface UIStrings {
 
 class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
 
+    public static defaultProps: Partial<IProps> = {
+        showLineText: true
+    };
+
     private getUIStrings(departure: ServiceDeparture): UIStrings {
         const t = this.props.t;
         let status: string | undefined;
@@ -118,14 +132,11 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const departure = this.props.value;
+        const { classes, value: departure, showLineText } = this.props;
         const timezone = departure.startTimezone;
         const departureTime = DateTimeUtil.momentFromTimeTZ(departure.actualStartTime * 1000, timezone);
         const transIcon = TransportUtil.getTransIcon(departure.modeInfo, { onDark: this.props.theme.isDark });
-        const origin = departure.startStop && departure.startStop.shortName && departure.startStop.shortName.trim() ? departure.startStop.shortName : undefined;
-        const directionOrName = departure.serviceDirection ? departure.serviceDirection : departure.serviceName;
-        const serviceDescrText = origin ? origin + " · " + directionOrName : directionOrName;
+        const lineText = showLineText ? departure.lineText : undefined;
         const cancelled = departure.realTimeStatus === "CANCELLED";
         const t = this.props.t;
         let timeToDepart = moment.duration(departureTime.diff(DateTimeUtil.getNow())).asMinutes();
@@ -164,8 +175,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         if (status || modifier) {
             ariaLabel += (status || modifier) + ". ";
         }
-        if (serviceDescrText) {
-            ariaLabel += serviceDescrText.replace(" ·", ",") + ". ";
+        if (lineText) {
+            ariaLabel += lineText.replace(" ·", ",") + ". ";
         }
         if (!detailed) {
             ariaLabel += departure.endStopCode ? "Press enter to select." : "Press enter for details.";
@@ -193,14 +204,18 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                     <div className={classes.timeAndOccupancy}>
                         {time}
                     </div>
-                    <div className={classes.serviceDescription}>{serviceDescrText}</div>
+                    {lineText &&
+                        <div className={classes.serviceDescription}>{lineText}</div>}
+                    {this.props.showOperatorName &&
+                        <div className={classes.serviceDescription} style={{ marginTop: '5px' }}>{departure.operator}</div>}
                 </div>
-                {this.props.renderRight ? this.props.renderRight() :
-                    <div
-                        className={classNames(classes.timeToDepart,
-                            cancelled && classes.timeToDepartCancelled, timeToDepart < 0 && classes.timeToDepartPast)}>
-                        {timeToDepartS}
-                    </div>
+                {
+                    this.props.renderRight ? this.props.renderRight() :
+                        <div
+                            className={classNames(classes.timeToDepart,
+                                cancelled && classes.timeToDepartCancelled, timeToDepart < 0 && classes.timeToDepartPast)}>
+                            {timeToDepartS}
+                        </div>
                 }
             </div>
         );
