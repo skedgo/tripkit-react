@@ -375,7 +375,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         />
                     </Fragment>}
                 <div className={classes.separator} />
-                {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
+                {null && requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&    // Disabled as requested in #18575: to avoid confusion, since it is not considering the round trip, and we have the confirm screen for the pricing to be computed in the BE.
                     <div className={classes.paySummary}>
                         <div>{requestBookingForm.tickets.reduce((totalTickets, ticket) => totalTickets + ticket.value, 0) + " tickets"}</div>
                         <div>{FormatUtil.toMoney(requestBookingForm.tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
