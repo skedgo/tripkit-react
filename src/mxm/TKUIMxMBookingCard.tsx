@@ -398,7 +398,6 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                                     });
                                 } else { // result is a booking form:                                    
                                     if (result.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
-                                        // TODO: check if onSuccess is still necessary
                                         onSuccess?.(result.refreshURLForSourceObject);
                                     }
                                     // Workaround for (selected) trip with empty ("") updateUrl.
@@ -425,6 +424,8 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 refreshSelectedTrip()
                     .catch(UIUtil.errorMsg)
                     .finally(() => setWaiting?.(false));
+                // TODO: I need the booking refresh url, something like https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update
+                // onSuccess?.(result.refreshURLForSourceObject);
             }
             setReviewAndPaymentForm(undefined);
         }

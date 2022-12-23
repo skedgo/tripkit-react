@@ -89,14 +89,14 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
         const [editing, setEditing] = useState<boolean>(false);
         return (
             <div className={classes.main}>
-                {options.map(paymentMethod => {
+                {options.map((paymentMethod, i) => {
                     const { card } = paymentMethod;
                     if (!card) {
                         return null;
                     }
                     const { brand, last4 } = card;
                     return (
-                        <div className={classes.cardNRemove}>
+                        <div className={classes.cardNRemove} key={i}>
                             <div className={classes.card} onClick={() => onChange(paymentMethod)}>
                                 <StyledRadio checked={value === paymentMethod} />
                                 {iconFromBrand(brand)}
