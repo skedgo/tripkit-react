@@ -21,8 +21,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     paymentOptions: PaymentOption[];
     reviews: BookingReview[];
     onRequestClose: (success: boolean) => void;
-    publicKey: string;
-    ephemeralKeyObj: EphemeralResult;
+    publicKey?: string;
+    ephemeralKeyObj?: EphemeralResult;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -80,7 +80,7 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                                 onClose={() => onRequestClose(false)}
                                 viewportProps={viewportProps}
                             />}
-                        {showPaymentForm && paymentOption &&
+                        {showPaymentForm && paymentOption && publicKey && ephemeralKeyObj &&
                             <TKUICheckoutView
                                 publicKey={publicKey}
                                 paymentOption={paymentOption}
