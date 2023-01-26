@@ -754,6 +754,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
         }
 
+        public componentWillUnmount(): void {
+            // To clear realtime update interval on unmount, 
+            // useful when embedding a tripkit based web-app on a view, and the view is closed.
+            this.onChange(undefined);
+        }
+
         public sameApiQueries(q1: RoutingQuery, opts1: TKUserProfile, q2: RoutingQuery, opts2: TKUserProfile): boolean {
             // To avoid considering 2 queries as different because timepref is NOW and RoutingQuery.time is
             // computed on call, using DateTimeUtil.getNow(), so with bad luck will fall on different seconds.
