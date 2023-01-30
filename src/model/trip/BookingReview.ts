@@ -25,7 +25,10 @@ class BookingReview {
     public origin?: Location = undefined;
     @JsonProperty("destination", Location, true)
     public destination?: Location = undefined;
-
+    @JsonProperty("depart", String, true)
+    public depart: string = "";
+    @JsonProperty("arrive", String, true)
+    public arrive: string = "";
 }
 
 export default BookingReview;

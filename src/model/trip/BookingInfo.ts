@@ -148,4 +148,4 @@ class Booking {
 }
 
 export default BookingInfo;
-export { Booking, BookingField, BookingFieldOption, BookingConfirmation }
+export { Booking, BookingField, BookingFieldOption, BookingConfirmation, BookingConfirmationStatus }
