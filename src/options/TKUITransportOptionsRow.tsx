@@ -92,6 +92,10 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         }
     }
 
+    private hasOperatorsDetails(): boolean {
+        return this.props.mode.identifier === "cy_bic-s" || this.props.mode.identifier === "me_mic-s";
+    }
+
     public render(): React.ReactNode {
         const mode = this.props.mode;
         const value = this.props.value;
@@ -149,14 +153,14 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     )}
                 </div>
             </div>;
-
-        const micromobilityOptions = mode.identifier.startsWith("cy_bic-s") && regionInfo?.modes?.["cy_bic-s"] &&
+        
+        const micromobilityOptions = this.hasOperatorsDetails() && regionInfo?.modes?.[mode.identifier] &&
             <div className={classes.section} tabIndex={0} aria-label="Preferred transport">
                 <div className={classes.sectionTitle}>
                     {t("Operators")}
                 </div>
                 <div className={classes.sectionBody}>
-                    {regionInfo.modes["cy_bic-s"].specificModes.map((transMode: SpecificMode, i: number) =>
+                    {regionInfo.modes[mode.identifier].specificModes.map((transMode: SpecificMode, i: number) =>
                         <TKUISettingLink
                             text={
                                 <div className={classes.checkboxRow} key={i}>
@@ -265,7 +269,8 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 {walkSpeedSelect}
             </div>;
         let cycleSpeedSelect: any = undefined;
-        if (mode.isBicycle()) {
+        if (mode.isBicycle() || mode.identifier === "me_mic-s") {
+            // For Shared Micromobility should just display Cycle Speed if it includes bikes, but in practice, for now, it's always the case.
             cycleSpeedSelect =
                 <TKUISelect
                     options={this.cycleSpeedOptions}
@@ -290,7 +295,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                 {cycleSpeedSelect}
             </div>;
         const hasContent = minimizedOption || preferredTransportOption || minTransferTimeOption || concessionPricingOption ||
-            wheelchairOption || walkSpeedSelect || cycleSpeedOption;
+            wheelchairOption || walkSpeedSelect || cycleSpeedOption || this.hasOperatorsDetails();
         return (
             <ExpansionPanel
                 expanded={this.state.expanded}
@@ -363,7 +368,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
             this.setState({ expanded: false });
         }
-        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && (this.props.mode.isPT() || this.props.mode.identifier.startsWith("cy_bic-s"))) {
+        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && (this.props.mode.isPT() || this.props.mode.identifier === "cy_bic-s" || this.props.mode.identifier === "me_mic-s")) {
             this.regionInfoP = this.props.getRegionInfoP();
             this.regionInfoP?.then(regionInfo => this.setState({ regionInfo }));
         }
