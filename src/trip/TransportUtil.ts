@@ -135,6 +135,9 @@ class TransportUtil {
         if (modeId.startsWith("cy_bic-s")) {
             return "bicycle-share";
         }
+        if (modeId.startsWith("me_mic-s")) {
+            return "shared-micromobility";
+        }
         if (modeId.startsWith("cy_bic")) {
             return "bicycle";
         }
