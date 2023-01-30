@@ -344,15 +344,13 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
         )
     } else if (requestBookingForm) {
         content = (
-            <div className={classes.bookingFormMain}>
-                <div className={classes.startTime}>
-                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.moment(segment.startTime),
-                        DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
-                </div>
+            <div className={classes.bookingFormMain}>                
                 <div className={classes.fromTo}>
                     <TKUIFromTo
                         from={segment.from}
                         to={segment.to}
+                        startTime={segment.startTime}
+                        endTime={segment.endTime}
                     />
                 </div>
                 {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&

@@ -61,7 +61,8 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                     title={confirmation.status!.title}
                     subtitle={confirmation.status?.subtitle}
                 />
-                <TKUIFromTo from={tripsInfo![0].origin!}
+                <TKUIFromTo
+                    from={tripsInfo![0].origin!}
                     to={tripsInfo![0].destination!}
                     onClick={tripUrl ? () => onShowTrip(tripUrl) : undefined}
                 />

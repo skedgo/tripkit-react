@@ -58,11 +58,12 @@ class RouteInfo {
     @JsonProperty("modeInfo", ModeInfo, true)
     public readonly modeInfo: ModeInfo = new ModeInfo();
     @JsonProperty("routeColor", Color, true)
-    public readonly routeColor: Color = new Color();
+    public readonly routeColor?: Color = undefined;
     @JsonProperty("directions", [Direction], true)
-    public readonly directions: Direction[] = [];
+    public directions: Direction[] = [];
     @JsonProperty("numberOfServices", Number, true)
     public numberOfServices: number = 0;
 }
 
 export default RouteInfo;
+export { Direction, RouteStop };

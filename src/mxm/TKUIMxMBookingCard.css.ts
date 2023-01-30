@@ -6,11 +6,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         padding: '16px'
-    },
-    startTime: {
-        ...genStyles.fontL,
-        marginBottom: '20px'
-    },
+    },    
     form: {
         ...genStyles.flex,
         ...genStyles.column,

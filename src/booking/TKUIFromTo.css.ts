@@ -17,7 +17,7 @@ export const tKUIFromToDefaultStyle = (theme: TKUITheme) => {
             ...genStyles.alignCenter,
             ...genStyles.alignSelfStretch,
             marginRight: '16px',
-            padding: '2px 4px 40px'
+            padding: '2px 4px 2px'
         },
         circle: {
             border: '3px solid ' + theme.colorPrimary,
@@ -33,7 +33,17 @@ export const tKUIFromToDefaultStyle = (theme: TKUITheme) => {
             ...genStyles.flex,
             ...genStyles.alignCenter
         },
-        value,
-        label
+        value: {
+            ...value,
+            '&:first-child': {
+                marginTop: '15px'
+            }
+        },
+        label: {
+            ...label,
+            '&:not(:first-child)': {
+                marginTop: '15px'
+            }
+        }
     });
 };

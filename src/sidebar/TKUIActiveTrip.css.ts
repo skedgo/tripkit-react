@@ -1,4 +1,4 @@
-import {colorWithOpacity, TKUITheme, white} from "../jss/TKUITheme";
+import { colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
@@ -30,21 +30,14 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     contentInfo: {
+        ...genStyles.flex,
+        ...genStyles.column,
         marginTop: '20px',
         cursor: 'pointer'
     },
-    timeStatus: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        ...genStyles.spaceBetween,
-        marginBottom: '16px'
-    },
-    startTime: {
-        ...theme.textWeightBold,
-        ...genStyles.noShrink
-    },
     status: {
-        background: ({activeTrip}) => {
+        ...genStyles.alignSelfStart,
+        background: ({ activeTrip }) => {
             const status = activeTrip?.confirmation?.status?.value;
             switch (status) {
                 case "ACCEPTED":
@@ -58,7 +51,8 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
         },
         ...genStyles.borderRadius(6),
         color: white(),
-        padding: '1px 12px'
+        padding: '1px 12px',
+        marginBottom: '16px'
     },
     mode: {
         ...genStyles.flex,
