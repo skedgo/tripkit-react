@@ -1,25 +1,26 @@
 import * as React from "react";
-import {TKUIConfig} from "./TKUIConfig";
-import {generateClassNameSeed, tKUIDeaultTheme, TKUITheme} from "../jss/TKUITheme";
-import {JssProvider, ThemeProvider, useTheme} from "react-jss";
+import { IThemeCreatorProps, TKUIConfig } from "./TKUIConfig";
+import { generateClassNameSeed, tKUIDeaultTheme, TKUITheme } from "../jss/TKUITheme";
+import { JssProvider, ThemeProvider, useTheme } from "react-jss";
 import GATracker from "../analytics/GATracker";
 import Util from "../util/Util";
-import {IOptionsContext, default as OptionsProvider, OptionsContext} from "../options/OptionsProvider";
+import { IOptionsContext, default as OptionsProvider, OptionsContext } from "../options/OptionsProvider";
 
 export const TKUIConfigContext = React.createContext<TKUIConfig>({} as TKUIConfig);
 
-export const TKUIThemeConsumer: React.SFC<{children: (theme: TKUITheme) => React.ReactElement<any, any> | null}> =
-    (props: {children: ((theme: TKUITheme) => React.ReactElement<any, any> | null)}) => {
-            const theme = useTheme() as TKUITheme;
-            return props.children(theme);
-        };    
+export const TKUIThemeConsumer: React.FunctionComponent<{ children: (theme: TKUITheme) => React.ReactElement<any, any> | null }> =
+    (props: { children: ((theme: TKUITheme) => React.ReactElement<any, any> | null) }) => {
+        const theme = useTheme() as TKUITheme;
+        return props.children(theme);
+    };
 
 interface IProps {
     config: TKUIConfig
 }
 
 interface IState {
-    isOSDark: boolean
+    isOSDark: boolean,
+    isOSHighContrast: boolean
 }
 
 class TKUIConfigProvider extends React.Component<IProps, IState> {
@@ -27,7 +28,8 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            isOSDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+            isOSDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+            isOSHighContrast: window.matchMedia && window.matchMedia('(prefers-contrast: more)').matches
         }
     }
 
@@ -39,11 +41,12 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
                     {(optionsContext: IOptionsContext) => {
                         // Make isDarkDefault to override the user setting (should not be called 'Default').
                         const isDark = this.props.config.isDarkDefault ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
+                        const isHighContrast = this.state.isOSHighContrast;
                         const customTheme = Util.isFunction(customThemeCreator) ?
-                            (customThemeCreator as ((isDark: boolean) => TKUITheme))(isDark) : customThemeCreator;
-                        return <TKUIConfigContext.Provider value={{...this.props.config}}>
+                            (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
+                        return <TKUIConfigContext.Provider value={{ ...this.props.config }}>
                             <JssProvider generateId={generateClassNameSeed}>
-                                <ThemeProvider theme={{...tKUIDeaultTheme(isDark), ...customTheme}}>
+                                <ThemeProvider theme={{ ...tKUIDeaultTheme({ isDark, isHighContrast }), ...customTheme }}>
                                     <>
                                         {this.props.children}
                                     </>
@@ -63,18 +66,32 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
             GATracker.initialize(Array.isArray(gaConfig.tracker) ? gaConfig.tracker : [gaConfig.tracker],
                 gaConfig.initOptions, gaConfig.isEnabled);
         }
-        const mediaQueryList = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
-        if (mediaQueryList) {
+        const mediaQueryColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+        if (mediaQueryColorScheme) {
             const onAppearanceChange = e =>
                 this.setState({
                     isOSDark: e.matches
                 });
-            if (mediaQueryList.addEventListener) {
-                mediaQueryList.addEventListener('change', onAppearanceChange)
-            } else if (mediaQueryList.addListener) {
+            if (mediaQueryColorScheme.addEventListener) {
+                mediaQueryColorScheme.addEventListener('change', onAppearanceChange)
+            } else if (mediaQueryColorScheme.addListener) {
                 // Need this for Safari and old browsers
                 // (see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener)
-                mediaQueryList.addListener(onAppearanceChange)
+                mediaQueryColorScheme.addListener(onAppearanceChange)
+            }
+        }
+        const mediaQueryContrast = window.matchMedia && window.matchMedia('(prefers-contrast: more)');
+        if (mediaQueryContrast) {
+            const onContrastChange = e =>
+                this.setState({
+                    isOSHighContrast: e.matches
+                });
+            if (mediaQueryContrast.addEventListener) {
+                mediaQueryContrast.addEventListener('change', onContrastChange)
+            } else if (mediaQueryContrast.addListener) {
+                // Need this for Safari and old browsers
+                // (see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/addListener)
+                mediaQueryContrast.addListener(onContrastChange)
             }
         }
     }

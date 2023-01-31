@@ -1,27 +1,27 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import DeviceUtil from "../util/DeviceUtil";
-import RoutingQuery, {TimePreference} from "../model/RoutingQuery";
+import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import Location from "../model/Location";
 import DateTimeUtil from "../util/DateTimeUtil";
 import Util from "../util/Util";
 import * as queryString from "query-string";
 import TripGoApi from "../api/TripGoApi";
-import {unregister} from "../registerServiceWorker";
+import { unregister } from "../registerServiceWorker";
 import LatLng from "../model/LatLng";
-import {TKUITheme} from "../jss/TKUITheme";
+import { TKUITheme } from "../jss/TKUITheme";
 import TKUITripPlanner from "../trip-planner/TKUITripPlanner";
-import {TKUIConfig} from "../config/TKUIConfig";
-import {TKUITripRowProps} from "../trip/TKUITripRow";
+import { TKUIConfig } from "../config/TKUIConfig";
+import { TKUITripRowProps } from "../trip/TKUITripRow";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
-import {default as TKUIButton, TKUIButtonType} from "../buttons/TKUIButton";
-import {ReactComponent as IconLike} from "../images/badges/ic-badge-like.svg";
-import {TKUITripOverviewViewProps, TKUITripOverviewViewStyle} from "../trip/TKUITripOverviewView";
-import {TKUIWithClasses} from "../jss/StyleHelper";
-import {Subtract} from 'utility-types';
+import { default as TKUIButton, TKUIButtonType } from "../buttons/TKUIButton";
+import { ReactComponent as IconLike } from "../images/badges/ic-badge-like.svg";
+import { TKUITripOverviewViewProps, TKUITripOverviewViewStyle } from "../trip/TKUITripOverviewView";
+import { TKUIWithClasses } from "../jss/StyleHelper";
+import { Subtract } from 'utility-types';
 import TKStateProvider from "../config/TKStateProvider";
-import {genClassNames} from "../css/GenStyle.css";
+import { genClassNames } from "../css/GenStyle.css";
 
 const searchStr = window.location.search;
 // Put query string manipulation in Util class
@@ -53,7 +53,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
                 }
             }
         },
-        theme: (isDark: boolean) => ({
+        theme: ({ isDark }) => ({
             // colorPrimary: 'rgba(2, 66, 172)',
             // colorPrimaryOpacity: (opacity: number) => 'rgba(2, 66, 172, ' + opacity + ')'
             fontFamily: 'ProximaNova, sans-serif',
@@ -104,7 +104,7 @@ export function renderTripPlanner(containerId: string = "tripgo-sample-root", tr
 
     ReactDOM.render(
         <TKStateProvider config={config}>
-            <TKUITripPlanner/>
+            <TKUITripPlanner />
         </TKStateProvider>,
         containerElement);
 

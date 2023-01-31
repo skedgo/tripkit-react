@@ -92,13 +92,18 @@ interface ITKUIConfigRequired {
     apiKey: string;
 }
 
+export interface IThemeCreatorProps {
+    isDark: boolean;
+    isHighContrast: boolean;
+}
+
 interface ITKUIConfigOptional {
     server: string;
     /**
      * Override for [default theme object]().
      * @ctype
      */
-    theme: Partial<TKUITheme> | ((isDark: boolean) => Partial<TKUITheme>);
+    theme: Partial<TKUITheme> | ((props: IThemeCreatorProps) => Partial<TKUITheme>);
     /** @ctype */
     onInitState: (state: TKState) => void;
     /** @ctype */

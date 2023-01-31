@@ -1,8 +1,9 @@
-import {createGenerateId} from 'react-jss'
+import { createGenerateId } from 'react-jss'
 import * as CSS from 'csstype';
 import DeviceUtil from "../util/DeviceUtil";
 import Color from "../model/trip/Color";
 import genStyles from "../css/GenStyle.css";
+import { IThemeCreatorProps } from '../config/TKUIConfig';
 
 export const TKUIThemeForDoc = (props: Partial<TKUITheme>) => null;
 TKUIThemeForDoc.displayName = 'TKUITheme';
@@ -14,7 +15,7 @@ export const tKUIColors = {
     black3: '#212a332e',
     black4: '#212a331f',
     black5: '#212a3314',
-    white:  '#ffffff',
+    white: '#ffffff',
     white1: '#ffffffa6',
     white2: '#ffffff4d',
     white3: '#ffffff2e',
@@ -40,7 +41,7 @@ export function white(n: 0 | 1 | 2 | 3 | 4 | 5 = 0, dual: boolean = false): stri
 }
 
 function important(style: CSS.Properties): CSS.Properties {
-    const styleImportant = {...style};
+    const styleImportant = { ...style };
     for (const key of Object.keys(style)) {
         if (styleImportant[key].includes('!important')) {
             continue;
@@ -83,15 +84,15 @@ export interface TKUITheme {
 
 }
 
-const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
-    (isDark: boolean) => {
+const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
+    ({ isDark, isHighContrast }) => {
         const isLight = !isDark;
         return {
             // Brand colors
             colorPrimary: '#008543',
-            colorSuccess: '#23b15e',
+            colorSuccess: isHighContrast ? '#24883D' : '#23b15e',
             colorInfo: '#2e3336', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
-            colorWarning: '#fcba1e',
+            colorWarning: isHighContrast ? '#AE6500' : '#fcba1e',
             colorError: '#e34040',
 
             fontFamily: 'sans-serif',
@@ -109,7 +110,7 @@ const tKUIDeaultTheme: (isDark: boolean) => TKUITheme =
                 color: isLight ? tKUIColors.black : tKUIColors.white
             },
             textColorGray: {
-                color: isLight ? tKUIColors.black1: tKUIColors.white1
+                color: isLight ? tKUIColors.black1 : tKUIColors.white1
             },
             textColorDisabled: {
                 color: isLight ? tKUIColors.black2 : tKUIColors.white2
@@ -161,16 +162,16 @@ export const generateClassNameFactory = (prefix: string) =>
 export const generateClassNameSeed: any = createGenerateId();
 
 if (DeviceUtil.isIE) { // Since IE doesn't support hex with alpha.
-    tKUIColors.black1 = colorWithOpacity('#212A33',.65);
-    tKUIColors.black2 = colorWithOpacity('#212A33',.3);
-    tKUIColors.black3 = colorWithOpacity('#212A33',.18);
-    tKUIColors.black4 = colorWithOpacity('#212A33',.12);
-    tKUIColors.black5 = colorWithOpacity('#212A33',.08);
-    tKUIColors.white1 = colorWithOpacity('#ffffff',.6);
-    tKUIColors.white2 = colorWithOpacity('#ffffff',.3);
-    tKUIColors.white3 = colorWithOpacity('#ffffff',.18);
-    tKUIColors.white4 = colorWithOpacity('#ffffff',.12);
-    tKUIColors.white5 = colorWithOpacity('#ffffff',.08);
+    tKUIColors.black1 = colorWithOpacity('#212A33', .65);
+    tKUIColors.black2 = colorWithOpacity('#212A33', .3);
+    tKUIColors.black3 = colorWithOpacity('#212A33', .18);
+    tKUIColors.black4 = colorWithOpacity('#212A33', .12);
+    tKUIColors.black5 = colorWithOpacity('#212A33', .08);
+    tKUIColors.white1 = colorWithOpacity('#ffffff', .6);
+    tKUIColors.white2 = colorWithOpacity('#ffffff', .3);
+    tKUIColors.white3 = colorWithOpacity('#ffffff', .18);
+    tKUIColors.white4 = colorWithOpacity('#ffffff', .12);
+    tKUIColors.white5 = colorWithOpacity('#ffffff', .08);
 }
 
-export {cardSpacing, important, tKUIDeaultTheme};
+export { cardSpacing, important, tKUIDeaultTheme };
