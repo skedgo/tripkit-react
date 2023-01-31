@@ -47,6 +47,8 @@ const TKUIActiveTrip: React.FunctionComponent<IProps> = (props: IProps) => {
                     <TKUIFromTo
                         from={activeTrip.tripsInfo[0].origin}
                         to={activeTrip.tripsInfo[0].destination}
+                        // This is since date string comes with timezone between square brackets, e.g. "2023-02-07T12:21:45-08:00[America/Los_Angeles]", 
+                        // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
                         startTime={activeTrip.datetime ? activeTrip.datetime.split("[")[0] : undefined}
                         status={activeTrip.confirmation?.status?.value}
                     />}
