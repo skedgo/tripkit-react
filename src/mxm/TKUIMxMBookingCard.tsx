@@ -235,8 +235,11 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
             </div>)
     };
 
+let segmentGlobal;
+
 const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, onRequestClose, onSuccess, refreshSelectedTrip, classes, injectedStyles, t }) => {
     const booking = segment.booking!;
+    segmentGlobal = segment;
     const confirmation = booking.confirmation;
     const [requestBookingForm, setRequestBookingForm] = useState<BookingInfo | undefined>(undefined);
     const [reviewAndPaymentForm, setReviewAndPaymentForm] =
@@ -344,7 +347,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
         )
     } else if (requestBookingForm) {
         content = (
-            <div className={classes.bookingFormMain}>                
+            <div className={classes.bookingFormMain}>
                 <div className={classes.fromTo}>
                     <TKUIFromTo
                         from={segment.from}
@@ -421,9 +424,11 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 setWaiting?.(true);
                 refreshSelectedTrip()
                     .catch(UIUtil.errorMsg)
-                    .finally(() => setWaiting?.(false));
-                // TODO: I need the booking refresh url, something like https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update
-                // onSuccess?.(result.refreshURLForSourceObject);
+                    .finally(() => {
+                        const bookingUrl = segmentGlobal.booking?.confirmation?.actions.find(action => action.type === "CANCEL")?.internalURL;
+                        bookingUrl && onSuccess?.(bookingUrl);
+                        setWaiting?.(false);
+                    });
             }
             setReviewAndPaymentForm(undefined);
         }
