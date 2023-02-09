@@ -94,7 +94,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                     >
                         {infoTitle ? <div className={classes.title}>{infoTitle}</div> : null}
                         <div className={classes.subtitle}>
-                            {infoSubtitle}
+                            {infoSubtitle && <div>{infoSubtitle}</div>}
                             {segment.realTime && <RealtimeIcon className={classes.realtimeIcon} />}
                         </div>
                     </div> : null}
