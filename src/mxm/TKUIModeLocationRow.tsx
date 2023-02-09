@@ -18,6 +18,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     userPosition?: TKUserPosition;
     selected?: boolean;
     onClick?: () => void;
+    showBothIcons?: boolean;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -31,10 +32,14 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMxMBookingCard"
 };
 
-const TKUIModeLocationRow: React.FunctionComponent<IProps> = ({ location, userPosition, selected, onClick, classes, injectedStyles, t }) => {
-    const icon = TransportUtil.getTransIcon(location.modeInfo);
+const TKUIModeLocationRow: React.FunctionComponent<IProps> = ({ location, userPosition, selected, onClick, showBothIcons, classes, injectedStyles, t, theme }) => {
+    const modeInfo = location.modeInfo;
+    const icon = TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark });
     return (
         <div className={classNames(classes.main, selected && classes.selected)} onClick={onClick}>
+            {showBothIcons && modeInfo.remoteIconIsBranding && modeInfo.remoteIcon &&
+                <img src={TransportUtil.getTransIcon(modeInfo, { onDark: theme.isDark, useLocal: true })}
+                    className={classes.transport} style={{ marginRight: '10px' }} />}
             <img src={icon} className={classes.transport} />
             <TKUIRow
                 title={location.name}
