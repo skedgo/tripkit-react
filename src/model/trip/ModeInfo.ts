@@ -59,7 +59,7 @@ class ModeInfo implements ModeInfoI {
     @JsonProperty("remoteDarkIcon", String, true)
     public readonly remoteDarkIcon: string | undefined = undefined;
 
-    @JsonProperty("color", Color, true) private
+    @JsonProperty("color", Color, true)
     public readonly color: Color | undefined = undefined;
 
     /**

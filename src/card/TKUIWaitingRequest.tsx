@@ -1,11 +1,11 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {tKUIWaitingDefaultStyle} from "./TKUIWaitingRequest.css";
-import {ReactComponent as IconSpin} from '../images/ic-loading2.svg';
-import {ReactComponent as IconTick} from '../images/ic-tick.svg';
-import {ReactComponent as IconCross} from '../images/ic-cross2.svg';
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { tKUIWaitingDefaultStyle } from "./TKUIWaitingRequest.css";
+import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
+import { ReactComponent as IconTick } from '../images/ic-tick.svg';
+import { ReactComponent as IconCross } from '../images/ic-cross2.svg';
 import classNames from "classnames";
 
 // TODO: refactor it as a more general component that displays messages up-front.
@@ -18,6 +18,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     status?: TKRequestStatus,
     message?: React.ReactNode;
     blocking?: boolean;
+    renderIcon?: () => React.ReactNode;
     onDismiss?: () => void;
 }
 
@@ -34,7 +35,7 @@ export interface IStyle {
     iconClear: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIWaitingRequestProps = IProps;
 export type TKUIWaitingRequestStyle = IStyle;
@@ -44,7 +45,7 @@ interface IState {
 }
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIWaitingRequest {...props}/>,
+    render: props => <TKUIWaitingRequest {...props} />,
     styles: tKUIWaitingDefaultStyle,
     classNamePrefix: "TKUIWaitingRequest"
 };
@@ -59,22 +60,23 @@ class TKUIWaitingRequest extends React.Component<IProps, IState> {
         const classes = this.props.classes;
         return (this.props.status !== undefined &&
             <div className={classNames(classes.main, this.props.blocking ? classes.blocking : classes.noBlocking)}
-                 role={this.props.status === TKRequestStatus.error ? "alert" : "status"}>
+                role={this.props.status === TKRequestStatus.error ? "alert" : "status"}>
                 <div className={classes.waitingBanner}>
                     {this.props.onDismiss &&
-                    <button onClick={this.props.onDismiss} className={classNames(classes.btnClear)}>
-                        <IconCross  aria-hidden={true}
-                                    className={classes.iconClear}
-                                    focusable="false"/>
-                    </button>}
+                        <button onClick={this.props.onDismiss} className={classNames(classes.btnClear)}>
+                            <IconCross aria-hidden={true}
+                                className={classes.iconClear}
+                                focusable="false" />
+                        </button>}
                     <div className={classes.waitingMessage}>
                         {this.props.message}
                     </div>
-                    {this.props.status === TKRequestStatus.wait ?
-                        <IconSpin className={classes.iconLoading} focusable="false"/> :
-                        this.props.status === TKRequestStatus.error ?
-                            <IconCross className={classes.iconCross} focusable="false"/> :
-                            <IconTick className={classes.iconTick} focusable="false"/> }
+                    {this.props.renderIcon ? this.props.renderIcon() :
+                        this.props.status === TKRequestStatus.wait ?
+                            <IconSpin className={classes.iconLoading} focusable="false" /> :
+                            this.props.status === TKRequestStatus.error ?
+                                <IconCross className={classes.iconCross} focusable="false" /> :
+                                <IconTick className={classes.iconTick} focusable="false" />}
                 </div>
             </div>
         )
