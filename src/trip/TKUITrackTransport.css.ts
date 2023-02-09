@@ -52,6 +52,9 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
     realtimeIcon: {
         width: '12px',
         height: '12px',
+        '&:not(:first-child)': {
+            marginLeft: '2px'
+        },
         '& path': {
             fill: black(0, theme.isDark)
         }
@@ -72,6 +75,7 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
     },
     subtitle: {
         color: black(1, theme.isDark),
-        ...genStyles.flex
+        ...genStyles.flex,
+        ...genStyles.center
     }
 });
