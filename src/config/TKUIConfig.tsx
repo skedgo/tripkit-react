@@ -97,6 +97,14 @@ export interface IThemeCreatorProps {
     isHighContrast: boolean;
 }
 
+export interface TKUIGAConfig {
+    tracker: TrackerOptions;
+    // It's checked before every GA event, allowing to enable / disable tracking
+    // dynamically, e.g. depending con cookies / tracking consent.
+    isEnabled?: () => boolean;  // () => true; by default
+    isOldUA?: boolean;
+}
+
 interface ITKUIConfigOptional {
     server: string;
     /**
@@ -127,13 +135,7 @@ interface ITKUIConfigOptional {
     i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
     isDarkDefault: boolean;
     analytics: {
-        google?: {
-            tracker: TrackerOptions | TrackerOptions[];
-            initOptions?: InitializeOptions;
-            // It's checked before every GA event, allowing to enable / disable tracking
-            // dynamically, e.g. depending con cookies / tracking consent.
-            isEnabled?: () => boolean;  // () => true; by default
-        }
+        google?: TKUIGAConfig
     };
     tripCompareFc: (trip1: Trip, trip2: Trip) => number;
     booking: {
