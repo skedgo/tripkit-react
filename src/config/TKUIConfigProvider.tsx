@@ -63,8 +63,7 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
         const config = this.props.config;
         if (config.analytics && config.analytics.google) {
             const gaConfig = config.analytics.google;
-            GATracker.initialize(Array.isArray(gaConfig.tracker) ? gaConfig.tracker : [gaConfig.tracker],
-                gaConfig.initOptions, gaConfig.isEnabled);
+            GATracker.initialize(gaConfig);
         }
         const mediaQueryColorScheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
         if (mediaQueryColorScheme) {

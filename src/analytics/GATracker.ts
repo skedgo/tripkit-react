@@ -1,4 +1,7 @@
-import ReactGA, {Tracker, InitializeOptions, EventArgs, TrackerNames} from 'react-ga';
+import ReactGA from 'react-ga4';
+import { InitOptions as Tracker, UaEventOptions as EventArgs } from 'react-ga4/types/ga4';
+import { TKUIGAConfig } from '../config/TKUIConfig';
+import ReactUA from 'react-ga';
 
 export const CATEGORY_TRIP_RESULTS = "trip results";
 export const CATEGORY_QUERY_INPUT = "query input";
@@ -18,29 +21,33 @@ class GATracker {
     // This forces that first tracker to behave as the default when a host app has already init it's own GA instance,
     // and so the default tracker will be that of the host page,
     // e.g. when you embed the tripkit based app on a page that already setup GA.
-    private static defaultTracker?: string;
+    private static defaultTrackerId: string;
 
     // It's checked before every GA event, allowing to enable / disable tracking
     // dynamically, e.g. depending con cookies / tracking consent.
     private static isEnabled: () => boolean = () => true;
 
-    public static initialize(trackers: Tracker[], options?: InitializeOptions, isEnabled: () => boolean = () => true) {
-        ReactGA.initialize(trackers, options);
-        if (trackers[0].gaOptions && trackers[0].gaOptions.name) {
-            this.defaultTracker = trackers[0].gaOptions.name;
+    private static isOldUA?: boolean;
+
+    public static initialize(props: TKUIGAConfig) {
+        const { tracker, isEnabled = () => true, isOldUA } = props;
+        GATracker.isOldUA = isOldUA;
+        if (isOldUA) {
+            ReactUA.initialize([{ ...tracker, gaOptions: { name: "skedgo" }, debug: true }], { alwaysSendToDefaultTracker: false });
+        } else {
+            ReactGA.initialize([tracker]);
         }
+        this.defaultTrackerId = isOldUA ? "skedgo" : tracker.trackingId;
         this.initialized = true;
         this.isEnabled = isEnabled;
     };
 
-    public static pageview(path: string, trackerNames?: TrackerNames, title?: string): void {
-        const trackers = trackerNames ? trackerNames : this.defaultTracker ? [this.defaultTracker] : undefined;
-        this.initialized && this.isEnabled() && ReactGA.pageview(path, trackers, title);
-    }
-
-    public static event(args: EventArgs, trackerNames?: TrackerNames) {
-        const trackers = trackerNames ? trackerNames : this.defaultTracker ? [this.defaultTracker] : undefined;
-        this.initialized && this.isEnabled() && ReactGA.event(args, trackers);
+    public static event(args: EventArgs) {
+        if (GATracker.isOldUA) {
+            this.initialized && this.isEnabled() && ReactUA.event(args, [this.defaultTrackerId]);
+        } else {
+            this.initialized && this.isEnabled() && ReactGA.event(args, { 'send_to': this.defaultTrackerId });
+        }
     }
 
 }
