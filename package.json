@@ -67,7 +67,7 @@
         "react-leaflet-control": "^2.0.0",
         "react-leaflet-google-layer": "^1.1.6",
         "react-modal": "^3.14.3",
-        "react-polyglot": "^0.6.1",
+        "react-polyglot": "^0.7.2",
         "react-resize-detector": "^3.1.3",
         "react-responsive": "^9.0.2",
         "react-responsive-carousel": "^3.1.50",
