@@ -27,10 +27,11 @@ class TKUIMyLocationMapIcon extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const classes = this.props.classes;
+        const styles = this.props.injectedStyles;
         return(
-            <div className={classes.main}>
-                <div className={classes.pin}/>
-                <div className={classes.pinEffect}/>
+            <div style={styles.main as any}>
+                <div style={styles.pin as any}/>
+                <div style={styles.pinEffect as any}/>
             </div>
         );
     }

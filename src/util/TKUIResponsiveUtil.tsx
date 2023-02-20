@@ -23,7 +23,7 @@ export interface TKUIViewportUtilProps {
     landscape: boolean;
 }
 
-export const TKUIViewportUtil: React.SFC<{children: (props: TKUIViewportUtilProps) => React.ReactNode}> =
+export const TKUIViewportUtil: React.FunctionComponent<{children: (props: TKUIViewportUtilProps) => React.ReactNode}> =
     (props: {children: (props: TKUIViewportUtilProps) => React.ReactNode}) => {
         return (
             <MediaQuery maxWidth={TKUIResponsiveUtil.getPortraitWidth()}>
