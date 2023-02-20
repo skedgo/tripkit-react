@@ -1,6 +1,6 @@
 {
     "name": "tripkit-react",
-    "version": "0.1.38",
+    "version": "0.1.39-0",
     "_prod_main": "dist/js/index.js",
     "_dev_main": "src/index.tsx",
     "main": "dist/js/index.js",
