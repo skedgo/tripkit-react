@@ -1,7 +1,7 @@
 import * as React from "react";
 import DeviceUtil, { BROWSER, OS } from "../util/DeviceUtil";
 import { Moment } from "moment";
-import DatePicker from 'react-datepicker';
+import DatePicker from 'react-datepicker/dist/es';
 import * as Popper from 'popper.js';
 import DateTimeHTML5Input from "./DateTimeHTML5Input";
 import DateTimeUtil from "../util/DateTimeUtil";
