@@ -10,11 +10,12 @@ import { TKUIMapViewClass } from "./TKUIMapView";
 import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
 import { TKUIConfig } from "../config/TKUIConfig";
 import { TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
-import { TKUITransportPin } from "./TKUITransportPin";
+import { TKUITransportPin, tKUITransportPinConfig } from "./TKUITransportPin";
 import { TKUITheme } from "../jss/TKUITheme";
 import SegmentPopup from "./SegmentPopup";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import { renderToStaticMarkup } from "../jss/StyleHelper";
+import { TKRenderOverride } from "../config/TKConfigHelper";
 
 interface IProps {
     segment: Segment;
@@ -33,41 +34,49 @@ class MapTripSegment extends React.Component<IProps, {}> {
                 {(theme: TKUITheme) =>
                     <TKUIConfigContext.Consumer>
                         {(config: TKUIConfig) => {
-                            const transIconHTML = renderToStaticMarkup(
-                                <TKUIConfigProvider config={config}>
-                                    {TKUITransportPin.createForSegment(this.props.segment, theme.isDark)}
-                                </TKUIConfigProvider>
-                            );
-                            const icon = L.divIcon({
-                                html: transIconHTML,
-                                className: this.props.segmentIconClassName,
-                                iconSize: [40, 62],
-                                iconAnchor: [20, 62]
-                            });
                             return [
                                 segment.hasVisibility(Visibility.ON_MAP) &&
-                                <Marker icon={icon} position={segment.from} key={"pin"}
-                                    draggable={this.props.ondragend !== undefined}
-                                    riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
-                                    ondragend={(event: L.DragEndEvent) => {
-                                        if (this.props.ondragend) {
-                                            const latLng = event.target.getLatLng();
-                                            this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
-                                        }
-                                    }}
-                                    keyboard={false}
+                                <TKRenderOverride
+                                    componentKey={"TKUITransportPin"}
+                                    renderOverride={renderProps => {
+                                        const render = config["TKUITransportPin"]?.render ?? tKUITransportPinConfig.render;
+                                        const transIconHTML = renderToStaticMarkup(render(renderProps));
+                                        const icon = L.divIcon({
+                                            html: transIconHTML,
+                                            className: this.props.segmentIconClassName,
+                                            iconSize: [40, 62],
+                                            iconAnchor: [20, 62]
+                                        });
+                                        return <Marker
+                                            icon={icon}
+                                            position={segment.from}
+                                            key={"pin"}
+                                            draggable={this.props.ondragend !== undefined}
+                                            riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
+                                            ondragend={(event: L.DragEndEvent) => {
+                                                if (this.props.ondragend) {
+                                                    const latLng = event.target.getLatLng();
+                                                    this.props.ondragend(LatLng.createLatLng(latLng.lat, latLng.lng));
+                                                }
+                                            }}
+                                            keyboard={false}
+                                        >
+                                            <Popup
+                                                offset={[0, -46]}
+                                                closeButton={false}
+                                                // TODO: disabled auto pan to fit popup on open since it messes with viewport
+                                                // (generates infinite (or a lot) setState calls) since it seems the viewport
+                                                // doesn't stabilizes. Fix it.
+                                                autoPan={false}
+                                            >
+                                                {<SegmentPopup segment={segment} t={this.props.t} />}
+                                            </Popup>
+                                        </Marker>;
+                                    }
+                                    }
                                 >
-                                    <Popup
-                                        offset={[0, -46]}
-                                        closeButton={false}
-                                        // TODO: disabled auto pan to fit popup on open since it messes with viewport
-                                        // (generates infinite (or a lot) setState calls) since it seems the viewport
-                                        // doesn't stabilizes. Fix it.
-                                        autoPan={false}
-                                    >
-                                        {<SegmentPopup segment={segment} t={this.props.t} />}
-                                    </Popup>
-                                </Marker>,
+                                    {TKUITransportPin.createForSegment(this.props.segment, theme.isDark)}
+                                </TKRenderOverride>,
                                 segment.shapes ?
                                     <TKUIMapShapes key={"map-polyline" + segment.trip.getKey() + segment.id}
                                         id={"map-polyline" + segment.trip.getKey() + segment.id}

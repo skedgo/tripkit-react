@@ -107,4 +107,4 @@ class TKUITransportPin extends React.Component<IProps, {}> {
 const TKUITransportPinConnected = connect((config: TKUIConfig) => config.TKUITransportPin, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
 
-export { TKUITransportPin }
+export { TKUITransportPin, config as tKUITransportPinConfig }

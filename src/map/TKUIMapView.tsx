@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
 import L, { FitBoundsOptions, LatLngBounds } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
@@ -25,11 +25,11 @@ import { CSSProps, renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle } from "
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIMapViewDefaultStyle } from "./TKUIMapView.css";
 import "./TKUIMapViewCss.css";
-import { connect, mapperFromFunction, PropsMapper } from "../config/TKConfigHelper";
+import { connect, PropsMapper, TKRenderOverride } from "../config/TKConfigHelper";
 import { Subtract } from "utility-types";
 import classNames from "classnames";
 import { TKUIViewportUtilProps, TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
-import TKUIMapLocationIcon from "./TKUIMapLocationIcon";
+import TKUIMapLocationIcon, { tKUIMapLocationIconConfig } from "./TKUIMapLocationIcon";
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import { ReactComponent as IconCurrentLocation } from "../images/location/ic-curr-loc.svg";
@@ -53,7 +53,6 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 import RegionsData from "../data/RegionsData";
 import { tKUIColors } from "../jss/TKUITheme";
-import TKUIMapLocationIconMarker from "./TKUIMapLocationIconMarker";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -617,30 +616,66 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         </Marker>}
                     {!this.props.trip && this.props.from && this.props.from.isResolved() &&
                         !(this.props.from.isCurrLoc() && this.state.userLocation) &&
-                        <TKUIMapLocationIconMarker location={this.props.from} from={true} />}
-                    {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
-                        <Marker position={this.props.to!}
-                            icon={L.divIcon({
-                                html: renderToStaticMarkup(
-                                    <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIMapLocationIcon location={this.props.to!} />
-                                    </TKUIConfigProvider>
-                                ),
-                                iconSize: [26, 39],
-                                iconAnchor: [13, 39],
-                                className: "LeafletMap-pinTo"
-                            })}
-                            draggable={!this.props.readonly}
-                            riseOnHover={true}
-                            ondragend={(event: L.DragEndEvent) => {
-                                const latLng = event.target.getLatLng();
-                                this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
+                        <TKRenderOverride
+                            componentKey={"TKUIMapLocationIcon"}
+                            renderOverride={renderProps => {
+                                const render = this.props.config["TKUIMapLocationIcon"]?.render ?? tKUIMapLocationIconConfig.render;
+                                return <Marker
+                                    position={this.props.from!}
+                                    icon={L.divIcon({
+                                        html: renderToStaticMarkup(render(renderProps)),
+                                        iconSize: [26, 39],
+                                        iconAnchor: [13, 39],
+                                        className: "LeafletMap-pinTo"
+                                    })}
+                                    draggable={!this.props.readonly}
+                                    riseOnHover={true}
+                                    ondragend={(event: L.DragEndEvent) => {
+                                        const latLng = event.target.getLatLng();
+                                        this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                    }}
+                                    keyboard={false}
+                                    onadd={event => event.target.openPopup()}
+                                >
+                                    {this.getLocationPopup(this.props.from!)}
+                                </Marker>;
                             }}
-                            keyboard={false}
-                            onadd={event => event.target.openPopup()}
                         >
-                            {this.getLocationPopup(this.props.to!)}
-                        </Marker>}
+                            <TKUIMapLocationIcon
+                                from={true}
+                                location={this.props.from}
+                            />
+                        </TKRenderOverride>}
+                    {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
+                        <TKRenderOverride
+                            componentKey={"TKUIMapLocationIcon"}
+                            renderOverride={renderProps => {
+                                const render = this.props.config["TKUIMapLocationIcon"]?.render ?? tKUIMapLocationIconConfig.render;
+                                return <Marker
+                                    position={this.props.to!}
+                                    icon={L.divIcon({
+                                        html: renderToStaticMarkup(render(renderProps)),
+                                        iconSize: [26, 39],
+                                        iconAnchor: [13, 39],
+                                        className: "LeafletMap-pinTo"
+                                    })}
+                                    draggable={!this.props.readonly}
+                                    riseOnHover={true}
+                                    ondragend={(event: L.DragEndEvent) => {
+                                        const latLng = event.target.getLatLng();
+                                        this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                    }}
+                                    keyboard={false}
+                                    onadd={event => event.target.openPopup()}
+                                >
+                                    {this.getLocationPopup(this.props.to!)}
+                                </Marker>;
+                            }}
+                        >
+                            <TKUIMapLocationIcon
+                                location={this.props.to}
+                            />
+                        </TKRenderOverride>}
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
                             bounds={this.toBBox(this.leafletElement.getBounds())}
