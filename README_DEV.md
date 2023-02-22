@@ -114,3 +114,6 @@ git push -o ci.skip
 - Commented `type: module` on package.json (ES modules) since it caused some issues on tripkit-react dependencies. So I needed to rename `copyFiles.js` to `.mjs`. I need `type: module` to enable tripkit-react to be used by routing specs when running with Nodejs (server / cli tool).
 
 - Switched from `import DatePicker from 'react-datepicker'` to `import DatePicker from 'react-datepicker/dist/es'` to solve issue with 'react-datepicker' dependency when declaring tripkit-react as `type: module`. Still other issues that made me revert that change (see item above).
+
+- `npm version` to bump up version.
+- `npm version prerelease` to bump up pre-release version.
