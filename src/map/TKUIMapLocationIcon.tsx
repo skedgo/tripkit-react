@@ -1,11 +1,11 @@
 import React from "react";
-import {ReactComponent as IconPin} from '../images/map/ic-map-pin.svg';
+import { ReactComponent as IconPin } from '../images/map/ic-map-pin.svg';
 import Location from "../model/Location";
 import TransportUtil from "../trip/TransportUtil";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {isRemoteIcon, tKUIMapLocationIconDefaultStyle} from "./TKUIMapLocationIcon.css";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { isRemoteIcon, tKUIMapLocationIconDefaultStyle } from "./TKUIMapLocationIcon.css";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import classNames from "classnames";
 import ModeLocation from "../model/location/ModeLocation";
 
@@ -13,8 +13,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
     from?: boolean;
     selected?: boolean; // TODO: if false it's a circle, if true is a drop. MapLocations changes selected for drop,
-                        // and from/to pin uses this always as drop. MapLocations pin will be behind from/to pin (at least until dissapears)
-                        // but will be identical. Selected is on MapLocations state, so update should be without delay?
+    // and from/to pin uses this always as drop. MapLocations pin will be behind from/to pin (at least until dissapears)
+    // but will be identical. Selected is on MapLocations state, so update should be without delay?
 }
 
 export interface IStyle {
@@ -25,13 +25,13 @@ export interface IStyle {
     clickAndHold: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIMapLocationIconProps = IProps;
 export type TKUIMapLocationIconStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIMapLocationIcon {...props}/>,
+    render: props => <TKUIMapLocationIcon {...props} />,
     styles: tKUIMapLocationIconDefaultStyle,
     classNamePrefix: "TKUIMapLocationIcon",
 };
@@ -71,8 +71,8 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
         if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
-            const wantLocalIcon = !!modeInfo.identifier && 
-            (modeInfo.identifier.startsWith("me_car-s") || modeInfo.identifier.startsWith("cy_bic-s"));
+            const wantLocalIcon = !!modeInfo.identifier &&
+                (modeInfo.identifier.startsWith("me_car-s") || modeInfo.identifier.startsWith("cy_bic-s"));
             transIcon = TransportUtil.getTransIcon(modeInfo,
                 {
                     isRealtime: false,
@@ -84,11 +84,11 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
         const classes = this.props.classes;
         const icon = transIcon &&
             <div className={classNames(classes.icon, invertedWrtMode && classes.iconInverted)}>
-                <img src={transIcon}/>
+                <img src={transIcon} />
             </div>;
         return <div className={classes.main}
-                    id={this.id}>
-            <IconPin className={classes.iconPin}/>
+            id={this.id}>
+            <IconPin className={classes.iconPin} />
             {icon}
         </div>;
     }
@@ -96,3 +96,5 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
 
 export default connect((config: TKUIConfig) => config.TKUIMapLocationIcon, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export { TKUIMapLocationIcon as TKUIMapLocationIconRaw }
