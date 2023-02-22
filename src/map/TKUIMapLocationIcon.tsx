@@ -97,4 +97,4 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
 export default connect((config: TKUIConfig) => config.TKUIMapLocationIcon, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
 
-export { TKUIMapLocationIcon as TKUIMapLocationIconRaw }
+export { TKUIMapLocationIcon as TKUIMapLocationIconRaw, config as tKUIMapLocationIconConfig }
