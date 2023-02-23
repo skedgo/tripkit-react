@@ -1,15 +1,15 @@
 import * as React from "react";
-import {Marker, Polyline, Popup, PolylineProps} from "react-leaflet";
+import { Marker, Polyline, Popup, PolylineProps } from "react-leaflet";
 import ServiceStopLocation from "../model/ServiceStopLocation";
 import L from "leaflet";
 import ServiceShape from "../model/trip/ServiceShape";
-import {EventEmitter} from "fbemitter";
-import {STOP_CLICKED_EVENT} from "../service/TKUIServiceView";
-import {renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { EventEmitter } from "fbemitter";
+import { STOP_CLICKED_EVENT } from "../service/TKUIServiceView";
+import { renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import ServiceStopPopup from "./ServiceStopPopup";
-import {ReactComponent as IconServiceStop} from "../images/ic-service-stop.svg";
+import { ReactComponent as IconServiceStop } from "../images/ic-service-stop.svg";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     shapes: ServiceShape[];
@@ -20,15 +20,15 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     travelledOnly?: boolean;
 }
 
-export interface IStyle {}
+export interface IStyle { }
 
 export type TKUIMapShapesProps = IProps;
 export type TKUIMapShapesStyle = IStyle;
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIMapShapes {...props}/>,
+    render: props => <TKUIMapShapes {...props} />,
     styles: {},
     classNamePrefix: "TKUIMapShapes"
 };
@@ -79,7 +79,7 @@ class TKUIMapShapes extends React.Component<IProps, {}> {
             this.toPolylineProps(this.props.shapes, this.props.color);
         const polylineOptionsArray = (polylineOptions.constructor === Array ? polylineOptions : [polylineOptions]) as PolylineProps[];
         const polylineArray = polylineOptionsArray
-            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i}/>);
+            .map((options: PolylineProps, i: number) => <Polyline {...options} key={this.props.id + "-" + i} />);
         const stopMarkers: any[] = [];
         if (this.props.shapes) {
             for (const shape of this.props.shapes) {
@@ -90,25 +90,25 @@ class TKUIMapShapes extends React.Component<IProps, {}> {
                             <IconServiceStop style={{
                                 color: shape.travelled ? this.props.color : "grey",
                                 opacity: shape.travelled ? 1 : .5
-                            }}/>;
+                            }} />;
                         const iconHTML = renderToStaticMarkup(element);
                         const stopIcon = L.divIcon({
                             html: iconHTML,
                             className: "MapPolyline-stop"
                         });
                         return <Marker icon={stopIcon} position={stop} key={"stop-" + iStop}
-                                       ref={(elem: Marker | null) => {
-                                           if (elem) {
-                                               this.stopToMarker.set(stop, elem.leafletElement);
-                                           }
-                                       }}
-                                       keyboard={false}
+                            ref={(elem: Marker | null) => {
+                                if (elem) {
+                                    this.stopToMarker.set(stop, elem.leafletElement);
+                                }
+                            }}
+                            keyboard={false}
                         >
                             <Popup className={"ServiceStopPopup-popup"}
-                                   closeButton={false}
-                                   autoPan={false}
+                                closeButton={false}
+                                autoPan={false}
                             >
-                                <ServiceStopPopup stop={stop} shape={shape}/>
+                                <ServiceStopPopup stop={stop} shape={shape} />
                             </Popup>
                         </Marker>
                     }));

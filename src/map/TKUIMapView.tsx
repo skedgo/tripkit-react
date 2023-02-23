@@ -33,7 +33,7 @@ import TKUIMapLocationIcon, { tKUIMapLocationIconConfig } from "./TKUIMapLocatio
 import TKUIMyLocationMapIcon from "./TKUIMyLocationMapIcon";
 import GeolocationData from "../geocode/GeolocationData";
 import { ReactComponent as IconCurrentLocation } from "../images/location/ic-curr-loc.svg";
-import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
+import TKUIRealtimeVehicle, { tKUIRealtimeVehicleConfig } from "./TKUIRealtimeVehicle";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import TKUIRealtimeVehiclePopup from "./TKUIRealtimeVehiclePopup";
@@ -708,26 +708,31 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         />}
                     {service && service.realtimeVehicle &&
                         (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&
-                        <Marker position={service.realtimeVehicle.location}
-                            icon={L.divIcon({
-                                html: renderToStaticMarkup(
-                                    <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIRealtimeVehicle
-                                            value={service.realtimeVehicle}
-                                            label={service.serviceNumber}
-                                            color={service.serviceColor}
-                                        />
-                                    </TKUIConfigProvider>
-                                ),
-                                iconSize: [40, 40],
-                                iconAnchor: [20, 20],
-                                className: classes.vehicle
-                            })}
-                            riseOnHover={true}
-                            keyboard={false}
+                        <TKRenderOverride
+                            componentKey={"TKUIRealtimeVehicle"}
+                            renderOverride={renderProps => {
+                                const render = this.props.config["TKUIRealtimeVehicle"]?.render ?? tKUIRealtimeVehicleConfig.render;
+                                return <Marker
+                                    position={service.realtimeVehicle!.location}
+                                    icon={L.divIcon({
+                                        html: renderToStaticMarkup(render(renderProps)),
+                                        iconSize: [40, 40],
+                                        iconAnchor: [20, 20],
+                                        className: classes.vehicle
+                                    })}
+                                    riseOnHover={true}
+                                    keyboard={false}
+                                >
+                                    {TKUIMapView.getPopup(service.realtimeVehicle!, service.modeInfo.alt + " " + service.serviceNumber)}
+                                </Marker>;
+                            }}
                         >
-                            {TKUIMapView.getPopup(service.realtimeVehicle, service.modeInfo.alt + " " + service.serviceNumber)}
-                        </Marker>}
+                            <TKUIRealtimeVehicle
+                                value={service.realtimeVehicle}
+                                label={service.serviceNumber}
+                                color={service.serviceColor}
+                            />
+                        </TKRenderOverride>}
                     {menuPopup}
                     {this.props.children}
                     {this.props.childrenThis?.(this)}

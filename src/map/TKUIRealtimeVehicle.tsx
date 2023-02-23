@@ -72,3 +72,4 @@ class TKUIRealtimeVehicle extends React.Component<IProps, {}> {
 
 export default connect((config: TKUIConfig) => config.TKUIRealtimeVehicle, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+export {config as tKUIRealtimeVehicleConfig}
