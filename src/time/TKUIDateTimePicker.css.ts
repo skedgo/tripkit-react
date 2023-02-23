@@ -1,4 +1,4 @@
-import { black, TKUITheme, white } from "../jss/TKUITheme";
+import { black, important, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 import { resetStyles } from "../css/ResetStyle.css";
 import DeviceUtil from "../util/DeviceUtil";
@@ -12,17 +12,17 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
         ...theme.textColorGray
     },
     calendarPopper: {
-        marginTop: '12px!important',
+        paddingTop: '12px!important',
         '& .react-datepicker__triangle': {
             borderBottomColor: white(0, theme.isDark) + '!important'
         },
-        '& .react-datepicker__triangle::before': {
-            top: '-1px!important'
+        '& .react-datepicker__triangle::after': {
+            borderBottomColor: white(0, theme.isDark) + '!important'
         },
         zIndex: '100!important'
     },
     calendar: {
-        background: white(0, theme.isDark),
+        backgroundColor: white(0, theme.isDark) + "!important",
         '&.react-datepicker': {
             border: 'none',
             ...genStyles.borderRadius(12),
@@ -64,25 +64,29 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
         },
         '& .react-datepicker__day.react-datepicker__day--selected, .react-datepicker__day.react-datepicker__day--selected:hover': {
             backgroundColor: theme.colorPrimary,
-            color: white(0, theme.isDark)
+            color: white(0, theme.isDark) + '!important'
         },
         '& .react-datepicker__day.react-datepicker__day--keyboard-selected, .react-datepicker__day.react-datepicker__day--keyboard-selected:hover': {
             backgroundColor: black(4),
-            color: black(0, theme.isDark)
+            color: black(0, theme.isDark) + '!important'
         },
         '& .react-datepicker__day:hover': {
             ...genStyles.borderRadius(50, '%'),
             backgroundColor: theme.isDark ? white(3) : '#f0f0f0'
         },
         '& button.react-datepicker__navigation': {
-            top: '14px',
-            border: '.40rem solid transparent'
+            top: '15px',
+            border: '.40rem solid transparent',
+            width: '12px',
+            height: '12px'
         },
         '& button.react-datepicker__navigation--next': {
-            borderLeftColor: theme.colorPrimary
+            borderLeftColor: theme.colorPrimary,
+            right: '10px'
         },
         '& button.react-datepicker__navigation--previous': {
-            borderRightColor: theme.colorPrimary
+            borderRightColor: theme.colorPrimary,
+            left: '10px'
         },
         '& li.react-datepicker__time-list-item--selected': {
             backgroundColor: theme.colorPrimary + '!important',
@@ -94,7 +98,7 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
             background: 'none!important'
         },
         '& *': {
-            ...theme.textColorDefault
+            ...important(theme.textColorDefault)
         }
     },
     inputElem: {
