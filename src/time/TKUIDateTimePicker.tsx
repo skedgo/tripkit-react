@@ -160,14 +160,14 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                         this.state.dateSelection.valueOf() !== this.props.value.valueOf() &&
                             this.onValueChange(this.state.dateSelection);
                     }}
-                    popperModifiers={{
-                        preventOverflow: {
+                    popperModifiers={[{
+                        name: 'preventOverflow',
+                        options: { // This options seems not valid in popper v2. See https://popper.js.org/docs/v2/modifiers/prevent-overflow.
                             enabled: true,
                             escapeWithReference: false,
                             boundariesElement: "viewport"
-                        },
-                        ...this.props.popperModifiers
-                    }}
+                        }
+                    }]}
                     customInput={CustomInput ? <CustomInput /> : <DatePickerInput />}
                     popperPlacement={this.props.popperPlacement}
                     timeCaption={t("o4h-JW-YBy.text")}

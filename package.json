@@ -58,7 +58,7 @@
         "react-app-rewired": "^2.1.5",
         "react-autocomplete": "^1.8.1",
         "react-confirm-alert": "^2.7.0",
-        "react-datepicker": "^3.6.0",
+        "react-datepicker": "^4.10.0",
         "react-draggable": "4.2.0",
         "react-ga": "^3.3.1",
         "react-ga4": "^2.0.0",
