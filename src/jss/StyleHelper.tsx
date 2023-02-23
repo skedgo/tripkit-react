@@ -290,8 +290,7 @@ export function overrideClass(propsOverride: any) {
  * a renderToStaticMarkup, since it assumes we are puting dynamic logic on server side rendering.
  */
 export function renderToStaticMarkup(elem) {
-    // return renderToStaticMarkupDomServer(elem);
-    return Environment.isDev() ? '<div />' : renderToStaticMarkupDomServer(elem);
+    return renderToStaticMarkupDomServer(elem);
 }
 
 export { createUseStyles };

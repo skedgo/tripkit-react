@@ -7,7 +7,7 @@ import LatLng from "../model/LatLng";
 import TKUIMapStreets from "./TKUIMapStreets";
 import TKUIMapShapes from "./TKUIMapShapes";
 import { TKUIMapViewClass } from "./TKUIMapView";
-import TKUIRealtimeVehicle from "./TKUIRealtimeVehicle";
+import TKUIRealtimeVehicle, { tKUIRealtimeVehicleConfig } from "./TKUIRealtimeVehicle";
 import { TKUIConfig } from "../config/TKUIConfig";
 import { TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
 import { TKUITransportPin, tKUITransportPinConfig } from "./TKUITransportPin";
@@ -37,6 +37,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                             return [
                                 segment.hasVisibility(Visibility.ON_MAP) &&
                                 <TKRenderOverride
+                                    key={"pin"}
                                     componentKey={"TKUITransportPin"}
                                     renderOverride={renderProps => {
                                         const render = config["TKUITransportPin"]?.render ?? tKUITransportPinConfig.render;
@@ -50,7 +51,6 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                         return <Marker
                                             icon={icon}
                                             position={segment.from}
-                                            key={"pin"}
                                             draggable={this.props.ondragend !== undefined}
                                             riseOnHover={segment.isFirst(Visibility.IN_SUMMARY)}
                                             ondragend={(event: L.DragEndEvent) => {
@@ -95,28 +95,33 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                         /> : undefined,
                                 segment.realtimeVehicle &&
                                 // (DateTimeUtil.getNow().valueOf() / 1000 - segment.realtimeVehicle.lastUpdate) < 120 &&
-                                <Marker position={segment.realtimeVehicle.location}
+                                <TKRenderOverride
                                     key={"vehicle"}
-                                    icon={L.divIcon({
-                                        html: renderToStaticMarkup(
-                                            <TKUIConfigProvider config={config}>
-                                                <TKUIRealtimeVehicle
-                                                    value={segment.realtimeVehicle}
-                                                    label={segment.serviceNumber || undefined}
-                                                    color={segment.serviceColor || undefined}
-                                                />
-                                            </TKUIConfigProvider>
-                                        ),
-                                        iconSize: [40, 40],
-                                        iconAnchor: [20, 20],
-                                        className: this.props.vehicleClassName
-                                    })}
-                                    riseOnHover={true}
-                                    keyboard={false}
+                                    componentKey={"TKUIRealtimeVehicle"}
+                                    renderOverride={renderProps => {
+                                        const render = config["TKUIRealtimeVehicle"]?.render ?? tKUIRealtimeVehicleConfig.render;
+                                        return <Marker
+                                            position={segment.realtimeVehicle!.location}
+                                            icon={L.divIcon({
+                                                html: renderToStaticMarkup(render(renderProps)),
+                                                iconSize: [40, 40],
+                                                iconAnchor: [20, 20],
+                                                className: this.props.vehicleClassName
+                                            })}
+                                            riseOnHover={true}
+                                            keyboard={false}
+                                        >
+                                            {segment.modeInfo && segment.serviceNumber &&
+                                                TKUIMapViewClass.getPopup(segment.realtimeVehicle!, segment.modeInfo.alt + " " + segment.serviceNumber)}
+                                        </Marker>;
+                                    }}
                                 >
-                                    {segment.modeInfo && segment.serviceNumber &&
-                                        TKUIMapViewClass.getPopup(segment.realtimeVehicle, segment.modeInfo.alt + " " + segment.serviceNumber)}
-                                </Marker>
+                                    <TKUIRealtimeVehicle
+                                        value={segment.realtimeVehicle}
+                                        label={segment.serviceNumber || undefined}
+                                        color={segment.serviceColor || undefined}
+                                    />
+                                </TKRenderOverride>
                             ];
                         }}
                     </TKUIConfigContext.Consumer>
