@@ -4,26 +4,26 @@
     "author": "SkedGo",
     "license": "MIT",
     "homepage": "https://react.developer.tripgo.com",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "keywords": [
         "reactjs",
         "routing",
         "trip-planning",
         "tripgo-api",
         "sdk-react"
-      ],
-      "repository": {
+    ],
+    "repository": {
         "type": "git",
         "url": "https://github.com/skedgo/tripkit-react.git"
-      },    
-    "main": "dist/js/index.js",    
+    },
+    "main": "dist/js/index.js",
     "types": "dist/js/index.d.ts",
     "private": false,
     "_dev_main": "src/index.tsx",
     "_type": "module",
     "publishConfig": {
         "access": "public"
-    },    
+    },
     "sideEffects": false,
     "dependencies": {
         "@auth0/auth0-react": "^1.6.0",
