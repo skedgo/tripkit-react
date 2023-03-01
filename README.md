@@ -15,7 +15,7 @@ npm install tripkit-react
 [TKRoot component](https://react.developer.tripgo.com/reference/#/Main%20SDK%20component%3A%20TKRoot) through the [config object](https://react.developer.tripgo.com/reference/#/Model/TKUIConfig).
 
 
-```
+```jsx
 import React from 'react';
 import ReactDOM from 'react-dom';
 import 'reflect-metadata';  // Important: Polyfill for Metadata Reflection API
