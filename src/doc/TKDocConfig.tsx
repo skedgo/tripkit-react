@@ -61,9 +61,9 @@ export function getMockRoutingResults(): Trip[] {
 }
 
 export function getMockServiceDeparture(): ServiceDeparture {
-    const serviceDepartureJson = require("./data/serviceDeparture.json");
-    const serviceDeparture = Util.deserialize(serviceDepartureJson, ServiceDeparture);
-    return serviceDeparture;
+    const serviceDeparturesResult = getMockServiceDepartures();
+    const departures = serviceDeparturesResult.getDepartures(serviceDeparturesResult.stops?.[0]!);
+    return departures[0];
 }
 
 export function getMockServiceDepartures(): ServiceDeparturesResult {
@@ -79,10 +79,8 @@ function getMockLocation(): Location {
 
 const TKUIServiceViewShowcase = () => {
     const { selectedService = null, onServiceSelection } = useContext(ServiceResultsContext);
-    useEffect(() => {
-        const serviceDeparturesResult = getMockServiceDepartures();
-        const departures = serviceDeparturesResult.getDepartures(serviceDeparturesResult.stops?.[0]!);
-        onServiceSelection(departures[0]);
+    useEffect(() => {        
+        onServiceSelection(getMockServiceDeparture());
     }, []);
     return selectedService &&
         <TKUIServiceView
@@ -199,7 +197,7 @@ const tKDocConfig = {
         style: classNamesOf(tKUITimetableDefaultStyle)
     },
     TKUIServiceView: {
-        showcase: () => <TKUIServiceViewShowcase />,        
+        showcase: () => <TKUIServiceViewShowcase />,
         style: classNamesOf(tKUIServiceViewDefaultStyle)
     },
     TKUIMapView: {
