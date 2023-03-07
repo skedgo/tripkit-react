@@ -115,5 +115,5 @@ git push -o ci.skip
 
 - Switched from `import DatePicker from 'react-datepicker'` to `import DatePicker from 'react-datepicker/dist/es'` to solve issue with 'react-datepicker' dependency when declaring tripkit-react as `type: module`. Still other issues that made me revert that change (see item above).
 
-- `npm version` to bump up version.
+- `npm version` to bump up version. It also creates a tag than can then be pushed using `git push gh vX.Y.Z`.
 - `npm version prerelease` to bump up pre-release version.

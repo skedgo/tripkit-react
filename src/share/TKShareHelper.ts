@@ -110,7 +110,7 @@ class TKShareHelper {
     public static getShareService(service: ServiceDeparture): string {
         const stop = service.startStop!;
         return this.getBaseUrl() + "/service/" +
-            encodeURIComponent(RegionsData.instance.getRegion(stop)!.name) + "/" + encodeURIComponent(stop.code)
+            encodeURIComponent(stop.region) + "/" + encodeURIComponent(stop.code)
             + "/" + encodeURIComponent(service.serviceTripID) + "/" + service.startTime;
     }
 

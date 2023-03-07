@@ -1,0 +1,37 @@
+{
+  "startTime": 1678189110,
+  "serviceTripID": "39472-11757:1414479:1415309_XxX_INTERCHANGE_XxX_1_pos_26_31",
+  "serviceName": "Kingsford Line",
+  "serviceDirection": "Circular Quay",
+  "serviceNumber": "L3",
+  "serviceShortName": "",
+  "serviceColor": {
+    "red": 120,
+    "green": 17,
+    "blue": 64
+  },
+  "serviceTextColor": {
+    "red": 255,
+    "green": 255,
+    "blue": 255
+  },
+  "operatorID": "SLR",
+  "operator": "Sydney Light Rail",
+  "mode": "tram",
+  "searchString": "Wynyard Light Rail; Bridge Street Light Rail; Circular Quay Light Rail",
+  "modeInfo": {
+    "identifier": "pt_pub_tram",
+    "alt": "el tranvía",
+    "localIcon": "tram",
+    "color": {
+      "red": 220,
+      "green": 17,
+      "blue": 49
+    }
+  },
+  "wheelchairAccessible": true,
+  "bicycleAccessible": true,
+  "realTimeStatus": "IS_REAL_TIME",
+  "realTimeDeparture": 1678189185,
+  "startPlatform": "1"
+}

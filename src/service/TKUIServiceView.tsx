@@ -18,8 +18,10 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import TKUIServiceRealtimeInfo from "./TKUIServiceRealtimeInfo";
+import HasCard, { HasCardKeys } from "../card/HasCard";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
+    Pick<HasCard, HasCardKeys.cardPresentation> {
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
     actions?: (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[];
@@ -117,7 +119,7 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                         {actionElems}
                     </div>
                 }
-                presentation={CardPresentation.SLIDE_UP}
+                presentation={this.props.cardPresentation || CardPresentation.SLIDE_UP}
                 slideUpOptions={slideUpOptions}
                 scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
             >
@@ -148,10 +150,9 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
             {(optionsContext: IOptionsContext) =>
                 <ServiceResultsContext.Consumer>
                     {(serviceContext: IServiceResultsContext) => (
-                        serviceContext.selectedService &&
                         props.children!({
                             title: serviceContext.title,
-                            departure: serviceContext.selectedService,
+                            departure: serviceContext.selectedService!,
                             eventBus: serviceContext.servicesEventBus,
                             options: optionsContext.userProfile
                         })

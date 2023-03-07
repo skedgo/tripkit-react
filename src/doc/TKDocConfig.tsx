@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { tKUIDeaultTheme } from "../jss/TKUITheme";
 import { tKUIButtonDefaultStyle } from "../buttons/TKUIButton.css";
@@ -37,6 +37,11 @@ import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
 import { genClassNames } from "../css/GenStyle.css";
 import TKStateController from "../config/TKStateController";
 import TKState from "../config/TKState";
+import TKUIServiceView from '../service/TKUIServiceView';
+import ServiceDeparture from '../model/service/ServiceDeparture';
+import { tKUIServiceViewDefaultStyle } from '../service/TKUIServiceView.css';
+import ServiceDeparturesResult from '../model/service/ServiceDeparturesResult';
+import { ServiceResultsContext } from '../service/ServiceResultsProvider';
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme({ isDark: false, isHighContrast: false })) : defaultStyle);
@@ -55,9 +60,35 @@ export function getMockRoutingResults(): Trip[] {
     return routingResults.groups;
 }
 
+export function getMockServiceDeparture(): ServiceDeparture {
+    const serviceDepartureJson = require("./data/serviceDeparture.json");
+    const serviceDeparture = Util.deserialize(serviceDepartureJson, ServiceDeparture);
+    return serviceDeparture;
+}
+
+export function getMockServiceDepartures(): ServiceDeparturesResult {
+    const serviceDeparturesJson = require("./data/serviceDepartures.json");
+    const serviceDepartures = Util.deserialize(serviceDeparturesJson, ServiceDeparturesResult);
+    return serviceDepartures;
+}
+
 function getMockLocation(): Location {
     const locationJson = require("./data/location.json");
     return Util.deserialize(locationJson, Location);
+}
+
+const TKUIServiceViewShowcase = () => {
+    const { selectedService = null, onServiceSelection } = useContext(ServiceResultsContext);
+    useEffect(() => {
+        const serviceDeparturesResult = getMockServiceDepartures();
+        const departures = serviceDeparturesResult.getDepartures(serviceDeparturesResult.stops?.[0]!);
+        onServiceSelection(departures[0]);
+    }, []);
+    return selectedService &&
+        <TKUIServiceView
+            // departure={departures[0]}
+            cardPresentation={CardPresentation.NONE}
+        />;
 }
 
 const TKUISelectShowcase = () => {
@@ -166,6 +197,10 @@ const tKDocConfig = {
                 }
             </TKStateConsumer>,
         style: classNamesOf(tKUITimetableDefaultStyle)
+    },
+    TKUIServiceView: {
+        showcase: () => <TKUIServiceViewShowcase />,        
+        style: classNamesOf(tKUIServiceViewDefaultStyle)
     },
     TKUIMapView: {
         showcase: () =>

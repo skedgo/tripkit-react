@@ -25,6 +25,8 @@ class Location extends LatLng {
     // Workaround since Locations sometimes come with 'timeZone' instead of 'timezone'. Clean this when fixed.
     @JsonProperty('timeZone', String, true)
     public timeZone: string | undefined = undefined;
+    @JsonProperty('region', String, true)
+    public region: string = "AU_NSW_Sydney";    // required according to docs, but use Sydney as fallback just in case.
 
     public static create(latlng: LatLng, address: string, id: string, name: string, source?: string) {
         const instance: Location = Util.iAssign(new Location(), latlng);

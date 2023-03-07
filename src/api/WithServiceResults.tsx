@@ -1,8 +1,8 @@
 import * as React from "react";
-import {Moment} from "moment-timezone";
+import { Moment } from "moment-timezone";
 import Segment from "../model/trip/Segment";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import {Subtract} from "utility-types";
+import { Subtract } from "utility-types";
 import DateTimeUtil from "../util/DateTimeUtil";
 import RegionsData from "../data/RegionsData";
 import TripGoApi from "./TripGoApi";
@@ -11,15 +11,15 @@ import ServiceDeparturesResult from "../model/service/ServiceDeparturesResult";
 import Features from "../env/Features";
 import RTServiceDepartureUpdate from "../model/service/RTServiceDepartureUpdate";
 import LatestResult from "../model/service/LatestResult";
-import {IServiceResultsContext as IServiceResConsumerProps} from "../service/ServiceResultsProvider";
+import { IServiceResultsContext as IServiceResConsumerProps } from "../service/ServiceResultsProvider";
 import StopLocation from "../model/StopLocation";
 import ServiceDetail from "../model/service/ServiceDetail";
-import {EventEmitter} from "fbemitter";
+import { EventEmitter } from "fbemitter";
 import Region from "../model/region/Region";
 import StopsData from "../data/StopsData";
 import TripUtil from "../trip/TripUtil";
-import {TKError} from "../error/TKError";
-import {ERROR_DEPARTURES_FROM_OLD_REQUEST, default as TKErrorHelper} from "../error/TKErrorHelper";
+import { TKError } from "../error/TKError";
+import { ERROR_DEPARTURES_FROM_OLD_REQUEST, default as TKErrorHelper } from "../error/TKErrorHelper";
 
 export interface IWithServiceResultsProps {
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => void;
@@ -92,20 +92,20 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public requestMoreDepartures() {
             this.setState((prevState: IWithServiceResultsState) => {
-                    if (this.isWaiting(prevState)) { // We are already awaiting for previously requested departures,
-                        return null;                 // so avoid increasing display limit again.
-                    }
-                    return { displayLimit: prevState.displayLimit + this.getDisplaySnap(prevState) }
-                },
+                if (this.isWaiting(prevState)) { // We are already awaiting for previously requested departures,
+                    return null;                 // so avoid increasing display limit again.
+                }
+                return { displayLimit: prevState.displayLimit + this.getDisplaySnap(prevState) }
+            },
                 () => this.coverDisplayLimit()
             )
         }
 
         public onFilterChange(filter: string) {
             this.setState({
-                    filter: filter,
-                    displayLimit: this.idealMinDisplayed
-                },
+                filter: filter,
+                displayLimit: this.idealMinDisplayed
+            },
                 () => {
                     this.applyFilter(() =>
                         this.state.startStop &&     // On initial state load filter is set before stop, so don't call
@@ -165,7 +165,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 });
             } else {    // Timetable for stop, so request departure details.
                 const endpoint = "service.json"
-                    + "?region=" + RegionsData.instance.getRegion(departure.startStop!)!.name
+                    + "?region=" + departure.startStop!.region
                     + "&serviceTripID=" + departure.serviceTripID
                     + "&startStopCode=" + departure.startStopCode
                     + "&embarkationDate=" + departure.startTime
@@ -173,17 +173,17 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
                 TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, ServiceDetail)
                     .then((result: ServiceDetail) => {
-                            // if (result.isError()) {
-                            //     throw new Error("Error loading departures.");
-                            // }
-                            const departureUpdate = departure;
-                            departureUpdate.serviceDetail = result;
-                            if (departure === this.state.selected) {
-                                this.setState({selected: departureUpdate});
-                            }
+                        // if (result.isError()) {
+                        //     throw new Error("Error loading departures.");
+                        // }
+                        const departureUpdate = departure;
+                        departureUpdate.serviceDetail = result;
+                        if (departure === this.state.selected) {
+                            this.setState({ selected: departureUpdate });
                         }
+                    }
                     ).catch((error: Error) => {
-                        this.setState({serviceError: new TKError(error.message)});
+                        this.setState({ serviceError: new TKError(error.message) });
                     });
             }
         }
@@ -191,8 +191,8 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public onStopChange(stop?: StopLocation) {
             this.setState((prevState: IWithServiceResultsState) => {
                 return stop === undefined || stop !== prevState.startStop ?
-                    {startStop: stop, selected: undefined} :    // Clear selection if stop becomes undefined or it changes
-                    {startStop: stop}
+                    { startStop: stop, selected: undefined } :    // Clear selection if stop becomes undefined or it changes
+                    { startStop: stop }
             }, () => {
                 if (stop) {
                     this.onInitTimeChange(DateTimeUtil.getNow().add(-15, 'm'));
@@ -202,23 +202,23 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public onTimetableForSegment(segment?: Segment) {
             if (segment) {
-                this.setState({segment: segment},
+                this.setState({ segment: segment },
                     () => {
                         if (segment) {
                             RegionsData.instance.getRegionP(segment.from)
                                 .then((fromRegion?: Region) =>
                                     fromRegion && StopsData.instance.getStopFromCode(fromRegion.name, segment.stopCode!)
                                         .then((startStop: StopLocation) => {
-                                                this.setState({startStop: startStop},
-                                                    () => {
-                                                        let initialTime = DateTimeUtil.momentFromTimeTZ(
-                                                            (segment.trip.queryTimeSeconds ? segment.trip.queryTimeSeconds : segment.startTimeSeconds) * 1000).add(-30, 'm');
-                                                        if (initialTime.isBefore(DateTimeUtil.getNow())) {
-                                                            initialTime = DateTimeUtil.getNow();
-                                                        }
-                                                        this.onInitTimeChange(initialTime);
-                                                    });
-                                            }
+                                            this.setState({ startStop: startStop },
+                                                () => {
+                                                    let initialTime = DateTimeUtil.momentFromTimeTZ(
+                                                        (segment.trip.queryTimeSeconds ? segment.trip.queryTimeSeconds : segment.startTimeSeconds) * 1000).add(-30, 'm');
+                                                    if (initialTime.isBefore(DateTimeUtil.getNow())) {
+                                                        initialTime = DateTimeUtil.getNow();
+                                                    }
+                                                    this.onInitTimeChange(initialTime);
+                                                });
+                                        }
                                         )
                                 )
 
@@ -250,26 +250,26 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         }
 
         public render(): React.ReactNode {
-            const {...props} = this.props as IWithServiceResultsProps;
+            const { ...props } = this.props as IWithServiceResultsProps;
             const startStop = this.state.startStop;
             return <Consumer {...props}
-                             stop={startStop}
-                             onStopChange={this.onStopChange}
-                             timetableForSegment={this.state.segment}
-                             onTimetableForSegment={this.onTimetableForSegment}
-                             onRequestMore={this.requestMoreDepartures}
-                             departures={this.getDisplayDepartures()}
-                             waiting={this.isWaiting(this.state)}
-                             serviceError={this.state.serviceError}
-                             timetableFilter={this.state.filter}
-                             onFilterChange={this.onFilterChange}
-                             title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name): ""}
-                             timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}
-                             onInitTimeChange={this.onInitTimeChange}
-                             selectedService={this.getSelectedService()}
-                             onServiceSelection={this.onServiceSelection}
-                             servicesEventBus={this.eventBus}
-                             onFindAndSelectService={this.onFindAndSelectService}
+                stop={startStop}
+                onStopChange={this.onStopChange}
+                timetableForSegment={this.state.segment}
+                onTimetableForSegment={this.onTimetableForSegment}
+                onRequestMore={this.requestMoreDepartures}
+                departures={this.getDisplayDepartures()}
+                waiting={this.isWaiting(this.state)}
+                serviceError={this.state.serviceError}
+                timetableFilter={this.state.filter}
+                onFilterChange={this.onFilterChange}
+                title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name) : ""}
+                timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}
+                onInitTimeChange={this.onInitTimeChange}
+                selectedService={this.getSelectedService()}
+                onServiceSelection={this.onServiceSelection}
+                servicesEventBus={this.eventBus}
+                onFindAndSelectService={this.onFindAndSelectService}
             />;
         }
 
@@ -278,7 +278,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public getCoverDisplayRequestHash(): string {
             const stopId = this.state.startStop && this.state.startStop.code!;
             const lastDepartureDate = this.getLastDepartureTime();
-            return JSON.stringify({stopId: stopId, lastDepartureDate: lastDepartureDate})
+            return JSON.stringify({ stopId: stopId, lastDepartureDate: lastDepartureDate })
         }
 
         /**
@@ -316,7 +316,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 return;
             }
 
-            this.setState({serviceError: undefined});
+            this.setState({ serviceError: undefined });
             this.requestDepartures().then((results: ServiceDeparture[]) => {
                 this.updateDepartures((prev: ServiceDeparture[]) => prev.concat(results),
                     () => this.coverDisplayLimit());
@@ -392,15 +392,15 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 }
                 return TripGoApi.apiCallT("departures.json", NetworkUtil.MethodType.POST, ServiceDeparturesResult, departuresRequest)
                     .then((departuresResult: ServiceDeparturesResult) => {
-                            // Initial time changed, which triggered a clear, so should discard these results
-                            if (!initialTimeAtRequest.isSame(this.state.timetableInitTime)) {
-                                throw new TKError("Results from an old request.", ERROR_DEPARTURES_FROM_OLD_REQUEST);
-                            }
-                            if (departuresResult.error) {
-                                throw new TKError(departuresResult.error, departuresResult.error, departuresResult.usererror);
-                            }
-                            return departuresResult.getDepartures(this.state.startStop!);
+                        // Initial time changed, which triggered a clear, so should discard these results
+                        if (!initialTimeAtRequest.isSame(this.state.timetableInitTime)) {
+                            throw new TKError("Results from an old request.", ERROR_DEPARTURES_FROM_OLD_REQUEST);
                         }
+                        if (departuresResult.error) {
+                            throw new TKError(departuresResult.error, departuresResult.error, departuresResult.usererror);
+                        }
+                        return departuresResult.getDepartures(this.state.startStop!);
+                    }
                     ).catch((error) => {
                         throw error.code ? error : new TKError(error.message);
                     });
@@ -411,7 +411,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
             let lastDepartureDate;
             if (this.state.departures.length === 0) {
                 lastDepartureDate = Math.floor(this.state.timetableInitTime.valueOf() / 1000);
-            }  else {
+            } else {
                 lastDepartureDate = Math.floor(this.state.noRTDepartures[this.state.noRTDepartures.length - 1].startTime) + 1;
             }
             return lastDepartureDate;
@@ -485,7 +485,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     }
                     // Since mutably updated the state.
                     this.forceUpdate();
-            });
+                });
         }
 
         public requestUntilServiceFound(serviceTripId: string, limit: number = 3): Promise<void> {
@@ -521,17 +521,17 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
         public onFindAndSelectService(stop: StopLocation, serviceCode: string, initTime: Moment): Promise<void> {
             return new Promise((resolve, reject) => {
                 RegionsData.instance.requireRegions().then(() => {
-                        this.setState({
-                            startStop: stop,
-                            timetableInitTime: initTime,
-                            departures: [],
-                            noRTDepartures: [],
-                            departuresFiltered: [],
-                            displayLimit: 0,
-                            initTimeChanged: true
-                        }, () => this.requestUntilServiceFound(serviceCode)
-                            .then(() => resolve()).catch((reason) => reject(reason)));
-                    }
+                    this.setState({
+                        startStop: stop,
+                        timetableInitTime: initTime,
+                        departures: [],
+                        noRTDepartures: [],
+                        departuresFiltered: [],
+                        displayLimit: 0,
+                        initTimeChanged: true
+                    }, () => this.requestUntilServiceFound(serviceCode)
+                        .then(() => resolve()).catch((reason) => reject(reason)));
+                }
                 ).catch((reason) => reject(reason));
             });
         }

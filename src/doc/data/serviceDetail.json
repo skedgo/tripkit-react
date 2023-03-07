@@ -1,0 +1,195 @@
+{
+    "shapes": [
+        {
+            "travelled": false,
+            "encodedWaypoints": "|wymEaq|y[??IJGPIRGPIRGNIRGRIRGNGRGRGRGPGRGRGRGRGPGRGPGRGPGRGRGRGPIRERGRGRGPGPIRGRINKPKNINKPIPINKPGRKPINIPIPIPKPGPMLMLQDOBQ?Q?QAQ?QCOGOKOKOKMIMMOIMMOIOKWM????GIOKMKOKMKOKOKMKOIOEQ?QBQBQBOHMLIPKPGPIPIPGRKNGPKRGNKRGPKPGNKRGPINIRIPKPINKPIPINKPGPKNGRKP@L????OTKPGRKNKLQFQAOEQCQGOEQCQEQGQCOEQEQGOCQEQEOCQGOEQCQEOGQAQCQAQCQAQAQEGC????[?QAQEOCQCQCOEQGQCQCOEQCQGOCSEQCOGQCQEOCQEQGOCQEQCOGQEQCOEQCQGOEQEQEQGOEQEOGQCQEOCQEQEQEOCQCQAQCQCQAQAQA[A????GEQAQAQAQAQAQEQAQAQ?Q?Q?Q?Q?S?Q@Q?Q@Q?Q?QBQ?Q?Q?Q@K@",
+            "stops": [
+                {
+                    "lat": -33.88814,
+                    "lng": 151.21185,
+                    "code": "2010109",
+                    "name": "Surry Hills Light Rail",
+                    "bearing": 313,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": true,
+                    "dropOffOnly": false,
+                    "departure": 1678188420
+                },
+                {
+                    "lat": -33.88419,
+                    "lng": 151.2076,
+                    "code": "2000448",
+                    "name": "Central Chalmers Street Light Rail",
+                    "bearing": 320,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678188550,
+                    "departure": 1678188595
+                },
+                {
+                    "lat": -33.88149,
+                    "lng": 151.2053,
+                    "code": "2000446",
+                    "name": "Haymarket Light Rail",
+                    "bearing": 5,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678188715,
+                    "departure": 1678188725
+                },
+                {
+                    "lat": -33.87861,
+                    "lng": 151.20555,
+                    "code": "2000444",
+                    "name": "Chinatown Light Rail",
+                    "bearing": 16,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678188865,
+                    "departure": 1678188875
+                },
+                {
+                    "lat": -33.87388,
+                    "lng": 151.20686,
+                    "code": "2000459",
+                    "name": "Town Hall Light Rail",
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678188990,
+                    "departure": 1678189030
+                }
+            ],
+            "operator": "Sydney Light Rail",
+            "operatorID": "SLR",
+            "serviceTripID": "39472-11757:1414479:1415309_XxX_INTERCHANGE_XxX_1_pos_26_31",
+            "serviceName": "Kingsford Line",
+            "serviceNumber": "L3",
+            "serviceShortName": "",
+            "serviceDirection": "Circular Quay",
+            "routeId": "1001_L3",
+            "serviceColor": {
+                "red": 120,
+                "green": 17,
+                "blue": 64
+            },
+            "bicycleAccessible": true,
+            "wheelchairAccessible": true
+        },
+        {
+            "travelled": true,
+            "encodedWaypoints": "ppvmEir{y[??UCQ?Q@Q?Q?Q?Q?Q?Q@Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?Q?S?Q?QAQ?QAQAQAQAQAQAQAQ?QAQCQAQAQAQAQAQAQAQ?QAQAQAY@????MEQAO?QAQAQAQAQAQCQAQAQAQ?QASAQAQAQAQAQAQCQ?QAQAQAQAQ?QAIG????UBQCQAQ?QAQAQ?QAQAQ?QAQ?QAQ?SAQAQCOGQEOGOIOIOKOGOIOIOIOGOKOIOIMMES?U@U@U@S?U@U@S@UBU@U@S@U@U?U@UJE",
+            "stops": [
+                {
+                    "lat": -33.8716,
+                    "lng": 151.20693,
+                    "code": "2000457",
+                    "name": "QVB Light Rail",
+                    "bearing": 3,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": true,
+                    "dropOffOnly": false,
+                    "departure": 1678189110
+                },
+                {
+                    "lat": -33.86668,
+                    "lng": 151.20713,
+                    "code": "2000455",
+                    "name": "Wynyard Light Rail",
+                    "bearing": 8,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678189215,
+                    "departure": 1678189225
+                },
+                {
+                    "lat": -33.86412,
+                    "lng": 151.20745,
+                    "code": "2000452",
+                    "name": "Bridge Street Light Rail",
+                    "bearing": 45,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678189285,
+                    "departure": 1678189290
+                }
+            ],
+            "operator": "Sydney Light Rail",
+            "operatorID": "SLR",
+            "serviceTripID": "39472-11757:1414479:1415309_XxX_INTERCHANGE_XxX_1_pos_26_31",
+            "serviceName": "Kingsford Line",
+            "serviceNumber": "L3",
+            "serviceShortName": "",
+            "serviceDirection": "Circular Quay",
+            "routeId": "1001_L3",
+            "serviceColor": {
+                "red": 120,
+                "green": 17,
+                "blue": 64
+            },
+            "bicycleAccessible": true,
+            "wheelchairAccessible": true
+        },
+        {
+            "travelled": true,
+            "encodedWaypoints": "pqtmEwe|y[@TATATATARCRATAT?TATATARATATATFRHNLJPFNJNHNFNJNFNJLFPHNHPFNDPDPBP@P?P@P@P?P@P?P?P?PAP?P?P@P@P@NF",
+            "stops": [
+                {
+                    "lat": -33.86152,
+                    "lng": 151.21004,
+                    "code": "2000450",
+                    "name": "Circular Quay Light Rail",
+                    "bearing": 224,
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678189500,
+                    "departure": 1678189800
+                },
+                {
+                    "lat": -33.86415,
+                    "lng": 151.20748,
+                    "code": "2000453",
+                    "name": "Bridge Street Light Rail",
+                    "wheelchairAccessible": true,
+                    "pickUpOnly": false,
+                    "dropOffOnly": false,
+                    "arrival": 1678189930,
+                    "departure": 1678189935
+                }
+            ],
+            "operator": "Sydney Light Rail",
+            "operatorID": "SLR",
+            "serviceTripID": "39472-11778:1415047:1415309_XxX_INTERCHANGE_XxX_1_pos_27_31",
+            "serviceName": "Kingsford Line",
+            "serviceNumber": "L3",
+            "serviceShortName": "",
+            "serviceDirection": "Juniors Kingsford",
+            "routeId": "1001_L3",
+            "serviceColor": {
+                "red": 120,
+                "green": 17,
+                "blue": 64
+            },
+            "bicycleAccessible": true,
+            "wheelchairAccessible": true
+        }
+    ],
+    "type": "tram",
+    "modeInfo": {
+        "identifier": "pt_pub_tram",
+        "alt": "el tranvía",
+        "localIcon": "tram",
+        "color": {
+            "red": 220,
+            "green": 17,
+            "blue": 49
+        }
+    },
+    "realTimeStatus": "IS_REAL_TIME"
+}
