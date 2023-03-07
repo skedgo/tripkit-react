@@ -6,6 +6,8 @@ import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
+import Util from '../util/Util';
+import { OptionsContext } from '../options/OptionsProvider';
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
     private static _instance: AuthStorage;
@@ -40,6 +42,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     const prevIsLoading = usePrevious(isLoading);
     const prevIsAuthenticated = usePrevious(isAuthenticated);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
+    const { userProfile, onUserProfileChange } = useContext(OptionsContext);
     const requestUserToken = (auth0AccessToken: string) => {
         TripGoApi.apiCallT("/data/user/auth/auth0/" + auth0AccessToken, "POST", TKAuth0AuthResponse)
             .then((result: TKAuth0AuthResponse) => {
@@ -110,13 +113,17 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
         setUserAccount(undefined);
     };
     if (!finishInitLoadingPromise) {
-        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) : 
-        new Promise(resolve => {         
-            finishInitLoadingResolver = resolve; 
-        })
-    }        
+        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) :
+            new Promise(resolve => {
+                finishInitLoadingResolver = resolve;
+            });
+    }
     useEffect(() => {
-        if (status !== SignInStatus.loading) {            
+        onUserProfileChange(Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
+    }, [finishInitLoadingPromise]);
+    useEffect(() => {
+        console.log(status);
+        if (status !== SignInStatus.loading) {
             finishInitLoadingResolver?.(status);
         }
     }, [status]);
@@ -140,7 +147,7 @@ interface IProps {
     children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
 }
 
-const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
+const TKAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {
     const [returnToAfterLogin, setReturnToAfterLogin] = useState<string | undefined>(undefined);
     const onRedirectCallback = (appState) => {
         const returnTo = appState?.returnTo;

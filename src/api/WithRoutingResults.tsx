@@ -26,6 +26,8 @@ import { TripSort } from "../model/trip/TripSort";
 import GATracker, { ACTION_COMPUTE_TRIPS, CATEGORY_TRIP_RESULTS } from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
 import ModeLocation from "../model/location/ModeLocation";
+import TKUserMode from "../account/TKUserMode";
+import { SignInStatus } from "../account/TKAccountContext";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -330,6 +332,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         this.checkWaiting(waitingState);
                         this.setState({ routingError: error });
                     }))
+                })
+                .catch((error: TKError) => {
+                    Util.log(error, Env.PRODUCTION);
+                    this.setState({ routingError: error, waiting: false });
                 });
         }
 
@@ -796,12 +802,22 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
-            return RegionsData.instance.requireRegions().then(() => {
-                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
-                    return query.getQueryUrl(modeSet, this.props.options);
-                });
-            });
+            return RegionsData.instance.requireRegions().then(() => {                
+                    return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
+                        .then(status => (status === SignInStatus.signedIn ?
+                            RegionsData.instance.getRegionP(query.from!)
+                                .then(region => {
+                                    return this.props.options.getUserModeRulesByRegionP(region!.name).then(() => {});
+                                }) :
+                            Promise.resolve()).then(() => {
+                                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
+                                    return query.getQueryUrl(modeSet, this.props.options);
+                                });
+                            })
+                        );
+                }
+            );
         }
 
         public computeModeSets(query: RoutingQuery, options: TKUserProfile): string[][] {
@@ -818,6 +834,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             (options.transportOptions.isModeEnabled(mode)
                 || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
+            const userModeRules = options.getUserModeRulesByRegion(region.name);
+            if (userModeRules) {
+                userModeRules.forEach((modeRule: TKUserMode) => {
+                    if (!modeRule.rules.replaceWith || !enabledModes.includes(modeRule.mode)) {
+                        return;
+                    }
+                    enabledModes.splice(enabledModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
+                });
+            }
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();
             if (multiModalSet.length > 1) {

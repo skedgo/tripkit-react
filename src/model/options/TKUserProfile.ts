@@ -4,6 +4,10 @@ import Features from "../../env/Features";
 import TKTransportOptions, {DisplayConf} from "./TKTransportOptions";
 import TKWeightingPreferences from "./TKWeightingPreferences";
 import {TripSort} from "../trip/TripSort";
+import TKUserMode from "../../account/TKUserMode";
+import TripGoApi from "../../api/TripGoApi";
+import Util from "../../util/Util";
+import { SignInStatus } from "../../account/TKAccountContext";
 
 export enum WalkingSpeed {
     SLOW,
@@ -61,6 +65,36 @@ class TKUserProfile {
     public defaultTripSort?: TripSort = undefined;
     @JsonProperty('routingQueryParams', Any, true)
     public routingQueryParams?: any = undefined;
+
+
+    // Maybe put this in a TKRemoteUserProfile object. See how to avoid depending on account model class, if possible.
+    // Don't declare JsonProperty to avoid serializing and storing it in LS. See if there's any problem that this won't
+    // serialize / deserialize on any other situation, e.g. to compare profiles. If there's a problem, then put
+    // JsonProperty and just avoid saving it in LS on OptionsData.instance.save.
+    private userModeRulesPByRegion: Map<string, Promise<TKUserMode[]>> = new Map();
+    private userModeRulesByRegion: Map<string, TKUserMode[] | null> = new Map();
+
+    // Need to ensure this is called after user token was resolved.
+    public getUserModeRulesByRegionP(region: string): Promise<TKUserMode[]> {
+        let modeRulesP = this.userModeRulesPByRegion.get(region);
+        if (!modeRulesP) {
+            this.userModeRulesByRegion.set(region, null);
+            modeRulesP = TripGoApi.apiCall("/data/user/modes.json?regionCode=" + region, "GET")
+                .then(resultJson => {
+                    const result = Util.jsonConvert().deserializeArray(resultJson, TKUserMode);
+                    this.userModeRulesByRegion.set(region, result);
+                    return result;
+                });                
+            this.userModeRulesPByRegion.set(region, modeRulesP);
+        }
+        return modeRulesP;
+    }
+
+    public getUserModeRulesByRegion(region: string): TKUserMode[] | null | undefined {
+        return this.userModeRulesByRegion.get(region);
+    }
+        
+    public finishSignInStatusP?: Promise<SignInStatus>;
 
     get wheelchair(): boolean {
         return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);
