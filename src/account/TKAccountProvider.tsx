@@ -42,7 +42,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     const prevIsLoading = usePrevious(isLoading);
     const prevIsAuthenticated = usePrevious(isAuthenticated);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
-    const { userProfile, onUserProfileChange } = useContext(OptionsContext);
+    const { onUserProfileChange } = useContext(OptionsContext);
     const requestUserToken = (auth0AccessToken: string) => {
         TripGoApi.apiCallT("/data/user/auth/auth0/" + auth0AccessToken, "POST", TKAuth0AuthResponse)
             .then((result: TKAuth0AuthResponse) => {
@@ -119,10 +119,9 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             });
     }
     useEffect(() => {
-        onUserProfileChange(Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
+        onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
     }, [finishInitLoadingPromise]);
-    useEffect(() => {
-        console.log(status);
+    useEffect(() => {        
         if (status !== SignInStatus.loading) {
             finishInitLoadingResolver?.(status);
         }
@@ -144,6 +143,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
 interface IProps {
     auth0Domain: string;
     auth0ClientId: string;
+    exclusiveModes?: boolean;
     children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
 }
 
@@ -155,6 +155,10 @@ const TKAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {
             setReturnToAfterLogin(returnTo);
         }
     };
+    const { onUserProfileChange } = useContext(OptionsContext);
+    useEffect(() => {        
+        props.exclusiveModes && onUserProfileChange(userProfile => Util.iAssign(userProfile, { exclusiveModes: true }));
+    }, []);
     return (
         <Auth0Provider
             domain={props.auth0Domain}

@@ -66,15 +66,30 @@ class TKUserProfile {
     @JsonProperty('routingQueryParams', Any, true)
     public routingQueryParams?: any = undefined;
 
-
-    // Maybe put this in a TKRemoteUserProfile object. See how to avoid depending on account model class, if possible.
-    // Don't declare JsonProperty to avoid serializing and storing it in LS. See if there's any problem that this won't
-    // serialize / deserialize on any other situation, e.g. to compare profiles. If there's a problem, then put
-    // JsonProperty and just avoid saving it in LS on OptionsData.instance.save.
+    /**
+     * Next two fields are set by TKAccountProvider, the reason is that we need them on a higher level in the components hierarchy,
+     * e.g. to be consumed by WithRoutingResults, whereas TKAccountProvider is below it.
+     */
+    public finishSignInStatusP?: Promise<SignInStatus>;    
+    public exclusiveModes: boolean = false;
+    
+    /**
+     * Next two fields may be considered part of the remote user profile, similar to TKUserAccount fetched and maintained by
+     * TKAccountProvider, but we need to access them on a higher level in the components hierarchy, 
+     * e.g. to be consumed by WithRoutingResults, whereas TKAccountProvider is below it.
+     * Improvement: put this data, along with TKUserAccount as a "remote" part in the TKUserProfile, e.g. put this in a 
+     * TKRemoteUserProfile object, property of TKUserProfile. See how to avoid depending on account model class, if possible.
+     * 
+     * Don't declare JsonProperty to avoid serializing and storing it in LS. See if there's any problem that this won't
+     * serialize / deserialize on any other situation, e.g. to compare profiles. If there's a problem, then put
+     * JsonProperty and just avoid saving it in LS on OptionsData.instance.save.
+     */
     private userModeRulesPByRegion: Map<string, Promise<TKUserMode[]>> = new Map();
     private userModeRulesByRegion: Map<string, TKUserMode[] | null> = new Map();
 
-    // Need to ensure this is called after user token was resolved.
+    /** 
+     * Need to ensure this is called after user token was resolved.
+     */ 
     public getUserModeRulesByRegionP(region: string): Promise<TKUserMode[]> {
         let modeRulesP = this.userModeRulesPByRegion.get(region);
         if (!modeRulesP) {
@@ -93,8 +108,6 @@ class TKUserProfile {
     public getUserModeRulesByRegion(region: string): TKUserMode[] | null | undefined {
         return this.userModeRulesByRegion.get(region);
     }
-        
-    public finishSignInStatusP?: Promise<SignInStatus>;
 
     get wheelchair(): boolean {
         return this.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID);

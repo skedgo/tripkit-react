@@ -758,6 +758,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     this.setSelectedSegment(undefined);
                 }
             }
+            // Pre-fetch modes on region change (see also trigger it on demand getQueryUrlsWaitRegions) to save time when
+            // triggering compute trips.
+            if (this.state.region && prevState.region !== this.state.region) {
+                this.props.options.finishSignInStatusP &&
+                    this.props.options.finishSignInStatusP.then(status => {
+                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region.name);
+                    });
+            }
         }
 
         public componentWillUnmount(): void {
@@ -802,22 +810,23 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
-            return RegionsData.instance.requireRegions().then(() => {                
-                    return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
-                        .then(status => (status === SignInStatus.signedIn ?
+            return RegionsData.instance.requireRegions().then(() => {
+                return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
+                    .then(status =>
+                        (status === SignInStatus.signedIn && this.props.options.exclusiveModes ?
                             RegionsData.instance.getRegionP(query.from!)
                                 .then(region => {
-                                    return this.props.options.getUserModeRulesByRegionP(region!.name).then(() => {});
+                                    return this.props.options.getUserModeRulesByRegionP(region!.name).then(() => { });
                                 }) :
-                            Promise.resolve()).then(() => {
+                            Promise.resolve())
+                            .then(() => {
                                 const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
                                 return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
                                     return query.getQueryUrl(modeSet, this.props.options);
                                 });
                             })
-                        );
-                }
-            );
+                    );
+            });
         }
 
         public computeModeSets(query: RoutingQuery, options: TKUserProfile): string[][] {
