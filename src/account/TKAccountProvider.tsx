@@ -37,7 +37,12 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = (isLoading || isAuthenticated || userToken) ? SignInStatus.loading :
         SignInStatus.signedOut;
-    const [status, setStatus] = useState<SignInStatus>(initStatus);
+    console.log("userToken: " + userToken);
+    const [status, setStatus2] = useState<SignInStatus>(initStatus);
+    const setStatus = status => {
+        console.log("status: " + status);
+        setStatus2(status);
+    };
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
     const prevIsLoading = usePrevious(isLoading);
     const prevIsAuthenticated = usePrevious(isAuthenticated);
@@ -55,22 +60,29 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             });
     };
     useEffect(() => {
+        console.log("isAuthenticated: " + isAuthenticated)
+        console.log("isLoading: " + isLoading)
         // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
         // on login pupup closed, so login to our BE.
-        if (isAuthenticated !== prevIsAuthenticated && isAuthenticated && !AuthStorage.instance.get().userToken) {
+        if ((isLoading !== prevIsLoading || isAuthenticated !== prevIsAuthenticated) && !isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {
+            console.log("acá entró");
             getAccessTokenSilently()
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
-        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {
-            setStatus(SignInStatus.signedOut)
+        if ((isLoading !== prevIsLoading || isAuthenticated !== prevIsAuthenticated ) && !isLoading && !isAuthenticated) {
+            setStatus(SignInStatus.signedOut);
+            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            setUserToken(undefined);
+            setUserAccount(undefined);
+            // logoutHandler();
         }
     });
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
         // Request user profile
-        if (userToken) {
+        if (userToken && !isLoading && isAuthenticated) {
             TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
                 .then((result) => {
                     setUserAccount(result);
@@ -82,7 +94,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
                     logoutHandler();
                 });
         }
-    }, [userToken]);
+    }, [userToken, isLoading]);
     const login = () => {
         setStatus(SignInStatus.loading);
         if (!props.withPopup) { // Blocking spinner, just if login with redirect.
@@ -121,7 +133,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     useEffect(() => {
         onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
     }, [finishInitLoadingPromise]);
-    useEffect(() => {        
+    useEffect(() => {
         if (status !== SignInStatus.loading) {
             finishInitLoadingResolver?.(status);
         }
@@ -156,7 +168,7 @@ const TKAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     };
     const { onUserProfileChange } = useContext(OptionsContext);
-    useEffect(() => {        
+    useEffect(() => {
         props.exclusiveModes && onUserProfileChange(userProfile => Util.iAssign(userProfile, { exclusiveModes: true }));
     }, []);
     return (
