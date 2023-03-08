@@ -763,7 +763,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (this.state.region && prevState.region !== this.state.region) {
                 this.props.options.finishSignInStatusP &&
                     this.props.options.finishSignInStatusP.then(status => {
-                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region.name);
+                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
                     });
             }
         }

@@ -93,7 +93,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
     }
 
     private hasOperatorsDetails(): boolean {
-        return this.props.mode.identifier === "cy_bic-s" || this.props.mode.identifier === "me_mic-s";
+        return this.props.mode.identifier === "cy_bic-s" || this.props.mode.identifier === "me_mic-s" || this.props.mode.identifier === "ps_drt";
     }
 
     public render(): React.ReactNode {
@@ -368,7 +368,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
         if (displayValue === DisplayConf.HIDDEN && prevDisplayValue !== DisplayConf.HIDDEN) {
             this.setState({ expanded: false });
         }
-        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && (this.props.mode.isPT() || this.props.mode.identifier === "cy_bic-s" || this.props.mode.identifier === "me_mic-s")) {
+        if (this.state.expanded && !prevState.expanded && !this.regionInfoP && (this.props.mode.isPT() || this.hasOperatorsDetails())) {
             this.regionInfoP = this.props.getRegionInfoP();
             this.regionInfoP?.then(regionInfo => this.setState({ regionInfo }));
         }
