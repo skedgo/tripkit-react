@@ -34,18 +34,10 @@ let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.sign
 
 const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean }> = (props) => {
     const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user } = useAuth0();
-    const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
-    const initStatus = (isLoading || isAuthenticated || userToken) ? SignInStatus.loading :
-        SignInStatus.signedOut;
-    console.log("userToken: " + userToken);
-    const [status, setStatus2] = useState<SignInStatus>(initStatus);
-    const setStatus = status => {
-        console.log("status: " + status);
-        setStatus2(status);
-    };
+    const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);    
+    const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
+    const [status, setStatus] = useState<SignInStatus>(initStatus);    
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
-    const prevIsLoading = usePrevious(isLoading);
-    const prevIsAuthenticated = usePrevious(isAuthenticated);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const { onUserProfileChange } = useContext(OptionsContext);
     const requestUserToken = (auth0AccessToken: string) => {
@@ -60,28 +52,26 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             });
     };
     useEffect(() => {
-        console.log("isAuthenticated: " + isAuthenticated)
-        console.log("isLoading: " + isLoading)
         // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
         // on login pupup closed, so login to our BE.
-        if ((isLoading !== prevIsLoading || isAuthenticated !== prevIsAuthenticated) && !isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {
-            console.log("acá entró");
+        if (!isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {            
             getAccessTokenSilently()
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
-        if ((isLoading !== prevIsLoading || isAuthenticated !== prevIsAuthenticated ) && !isLoading && !isAuthenticated) {
+        // Not Authenticated in Auth0, so cleanup our token + set status to SignInStatus.signedOut.
+        if (!isLoading && !isAuthenticated) {
             setStatus(SignInStatus.signedOut);
             AuthStorage.instance.save(new TKAuth0AuthResponse);
             setUserToken(undefined);
             setUserAccount(undefined);
-            // logoutHandler();
+            // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines couses an infinite redirection loop.
         }
-    });
+    }, [isLoading, isAuthenticated]);
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
-        // Request user profile
+        // Request user profile, just if Auth0 determined the user is authenticated.
         if (userToken && !isLoading && isAuthenticated) {
             TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
                 .then((result) => {
