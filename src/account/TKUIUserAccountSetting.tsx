@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { TKAccountContext } from "./TKAccountContext";
 import TKUIUserAccountView from "./TKUIUserAccountView";
 import { TKUITheme } from "../jss/TKUITheme";
@@ -24,9 +24,11 @@ const userAccountSettingJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof userAccountSettingJss>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> { }
+interface IProps extends TKUIWithClasses<IStyle, IProps> {
+    phoneNote?: ReactNode;
+}
 
-const TKUIUserAccountSetting: React.SFC<IProps> = (props) => {
+const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
     const { userAccount } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     const [showAccountView, setShowAccountView] = useState<boolean>(false);
@@ -51,7 +53,7 @@ const TKUIUserAccountSetting: React.SFC<IProps> = (props) => {
                 onClick={() => setShowAccountView(true)}
             />
             {showAccountView &&
-                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} />}
+                <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} />}
         </React.Fragment>
     )
 };
