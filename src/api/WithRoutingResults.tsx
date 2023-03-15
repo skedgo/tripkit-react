@@ -534,8 +534,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 start: `(${location.lat},${location.lng})`,
                                 end: `(${location.lat},${location.lng})`,
                                 modes: [tripSegment.modeIdentifier],
-                                startTime: segment.startTime,
-                                endTime: segment.endTime,
+                                startTime: segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                                endTime: segment.endTimeSeconds,
                                 sharedVehicleID: location.id,
                                 region: segmentRegions[0].name,
                                 ...segmentRegions[0] !== segmentRegions[1] ? {
@@ -562,8 +562,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 start: `(${location.lat},${location.lng})`,
                                 end: `(${location.lat},${location.lng})`,
                                 modes: [location.modeInfo.identifier],
-                                startTime: segment.startTime,
-                                endTime: segment.endTime,
+                                startTime: segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                                endTime: segment.endTimeSeconds,
                                 sharedVehicleID: location.id,
                                 region: segmentRegions[0].name,
                                 ...segmentRegions[0] !== segmentRegions[1] ? {

@@ -69,8 +69,8 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                 // Display alternatives on map except for the selected one, since it's already signaled with the segment pin. 
                 map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier)
                     .filter(alt => !disabledModes.includes(getModeType(alt.modeInfo))),
-                        location => routingContext.onSegmentCollectChange(segment, location)
-                            .then(tripUpdate => tripUpdate && onAlternativeCollected?.()));
+                    location => routingContext.onSegmentCollectChange(segment, location)
+                        .then(tripUpdate => tripUpdate && onAlternativeCollected?.()));
             } else {
                 map.setModeLocations(undefined);
             }
@@ -120,6 +120,12 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                 );
             })}
         </div>
+    const selectedAltI = alternatives?.findIndex(alt => alt.id === segment.sharedVehicle?.identifier);
+    let sortedAlternatives = alternatives?.slice();
+    if (selectedAltI !== undefined && selectedAltI !== -1) {
+        sortedAlternatives!.splice(selectedAltI, 1);
+        sortedAlternatives = [alternatives![selectedAltI]].concat(sortedAlternatives!);
+    }
     return (
         <TKUICard
             title={segment.getAction()}
@@ -130,7 +136,7 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
             renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
             renderSubHeader={filter ? () => filter : undefined}
         >
-            {alternatives?.filter(alt => !disabledModes.includes(getModeType(alt.modeInfo)))
+            {sortedAlternatives?.filter(alt => !disabledModes.includes(getModeType(alt.modeInfo)))
                 .map((alt, i) =>
                     <TKUIModeLocationRow
                         location={alt}
