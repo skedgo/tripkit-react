@@ -184,7 +184,7 @@ interface IConsumedProps extends TKUIViewportUtilProps {
 
     /**
      * States if the environment is in _directions mode_, which implies that it automatically compute trips for
-     * current query whenever from and to become specified (and refresh trips when from or to change.
+     * current query whenever from and to become specified (and refresh trips when from or to change).
      * @ctype
      * @default {@link TKState#directionsView}
      */
