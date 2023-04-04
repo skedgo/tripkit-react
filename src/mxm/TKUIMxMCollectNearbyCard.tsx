@@ -19,6 +19,8 @@ import FacilityLocation from '../model/location/FacilityLocation';
 import ModeInfo from '../model/trip/ModeInfo';
 import TransportUtil from '../trip/TransportUtil';
 import classNames from 'classnames';
+import LocationUtil from '../util/LocationUtil';
+import BikePodLocation from '../model/location/BikePodLocation';
 
 type IStyle = ReturnType<typeof tKUIMxMCollectNearbyCardDefaultStyle>
 
@@ -119,13 +121,9 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                     </div>
                 );
             })}
-        </div>
-    const selectedAltI = alternatives?.findIndex(alt => alt.id === segment.sharedVehicle?.identifier);
-    let sortedAlternatives = alternatives?.slice();
-    if (selectedAltI !== undefined && selectedAltI !== -1) {
-        sortedAlternatives!.splice(selectedAltI, 1);
-        sortedAlternatives = [alternatives![selectedAltI]].concat(sortedAlternatives!);
-    }
+        </div>    
+    const sortedAlternatives = alternatives?.slice();
+    sortedAlternatives?.sort((alt1, alt2) => LocationUtil.distanceInMetres(alt1, segment.location) - LocationUtil.distanceInMetres(alt2, segment.location));    
     return (
         <TKUICard
             title={segment.getAction()}
@@ -141,7 +139,7 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                     <TKUIModeLocationRow
                         location={alt}
                         userPosition={userPosition}
-                        selected={alt.id === segment.sharedVehicle?.identifier}
+                        selected={alt.id === segment.sharedVehicle?.identifier || alt instanceof BikePodLocation && LocationUtil.distanceInMetres(alt, segment.location) < 10}
                         key={i}
                         onClick={() => routingContext.onSegmentCollectChange(segment, alt)
                             .then(tripUpdate => tripUpdate && onAlternativeCollected?.())}
