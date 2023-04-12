@@ -42,6 +42,8 @@ import ServiceDeparture from '../model/service/ServiceDeparture';
 import { tKUIServiceViewDefaultStyle } from '../service/TKUIServiceView.css';
 import ServiceDeparturesResult from '../model/service/ServiceDeparturesResult';
 import { ServiceResultsContext } from '../service/ServiceResultsProvider';
+import { tKUILocationBoxDefaultStyle } from '../location_box/TKUILocationBox.css';
+import TKUILocationBox from '../location_box/TKUILocationBox';
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme({ isDark: false, isHighContrast: false })) : defaultStyle);
@@ -79,7 +81,7 @@ function getMockLocation(): Location {
 
 const TKUIServiceViewShowcase = () => {
     const { selectedService = null, onServiceSelection } = useContext(ServiceResultsContext);
-    useEffect(() => {        
+    useEffect(() => {
         onServiceSelection(getMockServiceDeparture());
     }, []);
     return selectedService &&
@@ -108,6 +110,27 @@ const TKUISelectShowcase = () => {
     )
 };
 
+const TKUILocationBoxShowcase = () => {
+    const [location, setLocation] = useState<Location | null>(null);
+    return (
+        <TKUILocationBox
+            value={location}
+            onChange={setLocation}
+            placeholder='Search address'
+            styles={{
+                wrapper: overrideClass({
+                    border: '1px solid lightgray',
+                    padding: '0 10px',
+                    borderRadius: '8px'
+                }),
+                menu: overrideClass({
+                    top: '36px'
+                })
+            }}
+        />
+    );
+}
+
 const tKDocConfig = {
     TKUICard: {
         showcase: () =>
@@ -123,6 +146,10 @@ const tKDocConfig = {
                 }} />
             </TKUICard>,
         style: classNamesOf(tKUICardDefaultStyle)
+    },
+    TKUILocationBox: {
+        showcase: () => <TKUILocationBoxShowcase />,
+        style: classNamesOf(tKUILocationBoxDefaultStyle)
     },
     TKUILocationSearch: {
         showcase: () => <TKUILocationSearch />,

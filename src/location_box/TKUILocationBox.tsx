@@ -11,7 +11,6 @@ import LatLng from "../model/LatLng";
 import Tooltip from "rc-tooltip";
 import DeviceUtil from "../util/DeviceUtil";
 import { resetStyles } from "../css/ResetStyle.css";
-import * as CSS from 'csstype';
 import RegionsData from "../data/RegionsData";
 import { TKError } from "../error/TKError";
 import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
@@ -28,43 +27,103 @@ import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    showCurrLoc?: boolean,
-    placeholder?: string,
+    /**
+     * The selected location value.
+     * @ctype     
+     */
     value: Location | null,
-    onChange?: (value: Location | null, highlighted: boolean) => void,
+    /**
+     * Called when the selected location changes.
+     * @ctype
+     */
+    onChange?: (value: Location | null) => void,
+    /**
+     * Called when an autocompletion result is highlighted, using up/down arrows.     
+     * @ctype
+     */
+    onResultHighlight?: (value: Location | null) => void,
+    /**
+     * Called when input text changes
+     * @ctype
+     */
     onInputTextChange?: (text: string) => void,
+    placeholder?: string,
+    /**
+     * It determines if user's current location should be suggested on autocompletion.
+     * @default true
+     */
+    showCurrLoc?: boolean,
+    /**
+     * It determines if, when setting as value user's current location, it should be or not automatically resolved by using browser's Geolocation API.
+     * @default true
+     */
     resolveCurr?: boolean
-    onFailedToResolve?: (highlighted: boolean, error: Error) => void;
+    /**
+     * To be called if it failed to resolve user's current location. Relevant just if [`resolveCurr`]{@link TKUILocationBox#resolveCurr} was set to `true`. 
+     */
+    onFailedToResolve?: (error: Error) => void;
+    /**
+     * Main element's aria-label
+     */
     ariaLabel?: string;
+    /**
+     * Input element's aria-label
+     */
     inputAriaLabel?: string;
+    /**
+     * @ignore
+     */
     inputId?: string;
+    /**
+     * Set true to display autocomplete suggestions popup to the side of the location input box.
+     * @default false
+     */
     sideDropdown?: boolean;
+    /**
+     * The icon to be displayed to the right of the location box content when no location is set.
+     * @ctype
+     */
     iconEmpty?: JSX.Element;
-    style?: CSS.Properties;
-    menuStyle?: CSS.Properties;
-    inputStyle?: CSS.Properties;
+    /**
+     * To be called when the input element recives focus.
+     * @ctype
+     */
     onFocus?: () => void;
     /**
      * Until implement forwarding ref on connect HOC.
+     * @ignore
      */
     onRef?: (ref: TKUILocationBoxRef) => void;
+    /**
+     * To specify an external container for the menu, to be rendered using a React portal. Currently not used.
+     * @ignore
+     */
     menuContainer?: HTMLElement;
+    /**
+     * To specify a maximum height for the autocompletion menu.
+     */
     menuMaxHeightPx?: number;
+    /**
+     * To be called when autocompletion menu appears and dissapears.
+     * @ctype
+     */
+    onMenuVisibilityChange?: (open: boolean) => void;
+    /**
+     * Time in milliseconds to debounce requests to geocoding services after user type.
+     * @default 200
+     */
     debounce?: number;
-    selectOnBlur?: boolean; // default true
-}
-
-interface IStyle {
-    main: CSSProps<IProps>;
-    input: CSSProps<IProps>;
-    iconLoading: CSSProps<IProps>;
-    btnClear: CSSProps<IProps>;
-    iconClear: CSSProps<IProps>;
-    menu: CSSProps<IProps>;
-    sideMenu: CSSProps<IProps>;
+    /**
+     * Whether or not to automatically select the highlighted item when the input element loses focus.
+     * @default true
+     */
+    selectOnBlur?: boolean;
 }
 
 interface IConsumedProps {
+    /**
+     * @ctype
+     */
     geocodingOptions: TKGeocodingOptions;
     /**
      * Coordinates to focus from / to location search.
@@ -78,11 +137,11 @@ interface IConsumedProps {
      * @default Bounds of the current region: {@link TKState#region}.bounds
      */
     bounds?: BBox;
-    onMenuVisibilityChange?: (open: boolean) => void;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {
-}
+type IStyle = ReturnType<typeof tKUILocationBoxDefaultStyle>;
+
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUILocationBoxProps = IProps;
 export type TKUILocationBoxStyle = IStyle;
@@ -225,7 +284,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     })
                     .catch((error: Error) => {
                         if (locationValue.isCurrLoc() && (locationValue === this.state.locationValue || locationValue === this.state.highlightedValue)) {
-                            this.props.onFailedToResolve && this.props.onFailedToResolve(locationValue === this.state.highlightedValue, error);
+                            this.props.onFailedToResolve && this.props.onFailedToResolve(error);
                             this.setValue(null, false, true);
                         }
                     });
@@ -250,9 +309,8 @@ class TKUILocationBox extends Component<IProps, IState> {
                                                 console.log("Resolved: " + JSON.stringify(results[0]));
                                             });
                                     } else {
-                                        this.props.onFailedToResolve && this.props.onFailedToResolve(
-                                            locationValue === this.state.highlightedValue,
-                                            new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
+                                        this.props.onFailedToResolve
+                                            && this.props.onFailedToResolve(new TKError("Cannot resolve address.", ERROR_UNABLE_TO_RESOLVE_ADDRESS));
                                     }
                                 }
                             });
@@ -386,8 +444,10 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private fireLocationChange(preselect: boolean) {
-        if (this.props.onChange) {
-            this.props.onChange(preselect ? this.state.highlightedValue : this.state.locationValue, preselect);
+        if (preselect) {
+            this.props.onResultHighlight && this.props.onResultHighlight(this.state.highlightedValue);
+        } else {
+            this.props.onChange && this.props.onChange(this.state.locationValue);
         }
     }
 
@@ -401,9 +461,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     autoCorrect="off"
                     autoCapitalize="off"
                     {...props}
-                    style={this.props.inputStyle}
-                    className={classes.input}
-                // autoFocus={true}
+                    className={classes.input}                
                 />
                 {this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false" /> :
@@ -462,26 +520,18 @@ class TKUILocationBox extends Component<IProps, IState> {
             const externalContainer = this.props.menuContainer;
             const menu =
                 <div
-                    style={
-                        {
-                            ...style,
-                            position: "absolute",
-                            top: "initial",
-                            left: "0",
-                            width: "100%",
-                            ...this.props.menuStyle,
-                            ...externalContainer && {
-                                position: "relative",
-                                left: undefined,
-                                top: undefined,
-                                width: undefined
-                            },
-                            ...this.props.menuMaxHeightPx && {
-                                maxHeight: this.props.menuMaxHeightPx + 'px',
-                                overflow: 'auto'
-                            }
+                    style={{                        
+                        ...externalContainer && {
+                            position: "relative",
+                            left: undefined,
+                            top: undefined,
+                            width: undefined
+                        },
+                        ...this.props.menuMaxHeightPx && {
+                            maxHeight: this.props.menuMaxHeightPx + 'px',
+                            overflow: 'auto'
                         }
-                    }
+                    }}
                     children={items}
                     className={classes.menu}
                     role="listbox"
@@ -578,11 +628,12 @@ class TKUILocationBox extends Component<IProps, IState> {
                     } else {
                         this.setState({ focus: isOpen });
                     }
-                    // setTimeout(() => this.props.onMenuVisibilityChange?.(isOpen && this.state.items !== undefined && this.state.items.length > 0), 50);                    
                 }}
                 open={this.isDDOpen()}
+                wrapperStyle={{}}   // Just to remove the display: inline-block that Autocomplete sets to the wrapper element.
                 wrapperProps={{
-                    "aria-label": this.props.ariaLabel
+                    "aria-label": this.props.ariaLabel,
+                    className: classes.wrapper
                 }}
                 inputProps={{
                     placeholder: this.props.placeholder,
@@ -605,10 +656,6 @@ class TKUILocationBox extends Component<IProps, IState> {
                     "aria-haspopup": this.isDDOpen(),
                     tabIndex: 0,
                     "aria-live": "polite"
-                }}
-                wrapperStyle={{
-                    position: "relative",
-                    ...this.props.style
                 }}
                 autoHighlight={false}
                 ref={this.autocompleteRef}

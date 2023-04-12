@@ -118,28 +118,29 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 showCurrLoc={false}
                                 value={this.props.value}
                                 placeholder={placeholder}
-                                onChange={(value: Location | null, highlighted: boolean) => {
-                                    if (!highlighted) {
-                                        this.props.onChange && this.props.onChange(value);
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(undefined);
-                                        }
-                                    } else {
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(value ? value : undefined);
-                                        }
+                                onChange={(value: Location | null) => {
+                                    this.props.onChange && this.props.onChange(value);
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(undefined);
+                                    }
+                                }}
+                                onResultHighlight={(value: Location | null) => {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(value ? value : undefined);
                                     }
                                 }}
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(text);
                                 }}
                                 iconEmpty={<IconGlass className={classes.glassIcon} />}
-                                style={this.props.injectedStyles.locationBox as any}
-                                inputStyle={this.props.injectedStyles.locationBoxInput as any}
-                                menuStyle={{
-                                    ...this.props.injectedStyles.resultsMenu as any,
-                                    left: `-${(this.props.onShowSideBarClicked ? 36 : 0) + 25}px`,
-                                    width: `calc(100% + ${(this.props.onShowSideBarClicked ? 36 : 0) + (this.props.onDirectionsClicked && this.props.landscape ? 53 : 0) + 32}px)`
+                                styles={{
+                                    wrapper: overrideClass(this.props.injectedStyles.locationBox),
+                                    input: overrideClass(this.props.injectedStyles.locationBoxInput),
+                                    menu: overrideClass({
+                                        ...this.props.injectedStyles.resultsMenu as any,
+                                        left: `-${(this.props.onShowSideBarClicked ? 36 : 0) + 25}px`,
+                                        width: `calc(100% + ${(this.props.onShowSideBarClicked ? 36 : 0) + (this.props.onDirectionsClicked && this.props.landscape ? 53 : 0) + 32}px)`
+                                    })
                                 }}
                                 inputId={inputId}
                                 ariaLabel={"Search location"}

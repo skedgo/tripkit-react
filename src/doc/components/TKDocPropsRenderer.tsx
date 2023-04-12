@@ -23,7 +23,7 @@ export function TKDocPropsRenderer({props}) {
     return (
         <TKDocTable
             colConfigs={[
-                { title: 'Prop name', renderer: (value: any) =>
+                { title: 'Name', renderer: (value: any) =>
                         <div id={value.name} style={{fontFamily: 'Consolas, "Liberation Mono", Menlo, monospace', color: 'rgb(102, 153, 0)',}}>
                             {value.name}
                         </div>},

@@ -317,23 +317,26 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             <TKUILocationBox
                                 value={routingQuery.from}
                                 placeholder={fromPlaceholder}
-                                onChange={(value: Location | null, highlighted: boolean) => {
-                                    if (!highlighted) {
-                                        this.updateQuery({ from: value });
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(true, undefined);
-                                        }
-                                        if (value !== null) {
-                                            GATracker.event({
-                                                category: CATEGORY_QUERY_INPUT,
-                                                action: ACTION_PICK_FROM_LOCATION,
-                                                label: value.isCurrLoc() ? "current location" : "type address"
-                                            });
-                                        }
-                                    } else {
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(true, value ? value : undefined);
-                                        }
+                                onChange={(value: Location | null) => {
+                                    this.updateQuery({ from: value });
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(true, undefined);
+                                    }
+                                    if (value !== null) {
+                                        GATracker.event({
+                                            category: CATEGORY_QUERY_INPUT,
+                                            action: ACTION_PICK_FROM_LOCATION,
+                                            label: value.isCurrLoc() ? "current location" : "type address"
+                                        });
+                                    }
+                                    // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
+                                    // if (value) {
+                                    //     this.props.map?.fitMap(value, routingQuery.to);
+                                    // }
+                                }}
+                                onResultHighlight={(value: Location | null) => {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(true, value ?? undefined);
                                     }
                                     // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
                                     // if (value) {
@@ -344,7 +347,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     this.props.onInputTextChange && this.props.onInputTextChange(true, text);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocation} // Resolve curr loc on 'from' when 'to' is already set
-                                onFailedToResolve={(highlighted: boolean, error: Error) => {
+                                onFailedToResolve={(error: Error) => {
                                     this.showTooltip(true, this.getErrorMessage(error, t));
                                     const fromInput = document.getElementById(inputFromId);
                                     // Need to use a timeout since if not location box autocomplete popup don't show.
@@ -353,9 +356,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputAriaLabel={ariaLabelFrom}
                                 inputId={inputFromId}
                                 sideDropdown={this.props.sideDropdown}
-                                menuStyle={{
-                                    borderTopLeftRadius: '0',
-                                    borderTopRightRadius: '0'
+                                styles={{
+                                    menu: overrideClass({
+                                        borderTopLeftRadius: '0',
+                                        borderTopRightRadius: '0'
+                                    })
                                 }}
                             />
                         </TKUITooltip>
@@ -373,34 +378,37 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             <TKUILocationBox
                                 value={routingQuery.to}
                                 placeholder={toPlaceholder}
-                                onChange={(value: Location | null, highlighted: boolean) => {
-                                    if (!highlighted) {
-                                        this.updateQuery({ to: value });
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(false, undefined);
-                                        }
-                                        if (value !== null) {
-                                            GATracker.event({
-                                                category: CATEGORY_QUERY_INPUT,
-                                                action: ACTION_PICK_TO_LOCATION,
-                                                label: value.isCurrLoc() ? "current location" : "type address"
-                                            });
-                                        }
-                                    } else {
-                                        if (this.props.onPreChange) {
-                                            this.props.onPreChange(false, value ? value : undefined);
-                                        }
+                                onChange={(value: Location | null) => {
+                                    this.updateQuery({ to: value });
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(false, undefined);
+                                    }
+                                    if (value !== null) {
+                                        GATracker.event({
+                                            category: CATEGORY_QUERY_INPUT,
+                                            action: ACTION_PICK_TO_LOCATION,
+                                            label: value.isCurrLoc() ? "current location" : "type address"
+                                        });
                                     }
                                     // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
                                     // if (value) {
-                                    //     this.props.map?.fitMap(routingQuery.from, value);
+                                    //     this.props.map?.fitMap(routingQuery.to, value);
+                                    // }
+                                }}
+                                onResultHighlight={(value: Location | null) => {
+                                    if (this.props.onPreChange) {
+                                        this.props.onPreChange(false, value ?? undefined);
+                                    }
+                                    // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
+                                    // if (value) {
+                                    //     this.props.map?.fitMap(routingQuery.to, value);
                                     // }
                                 }}
                                 onInputTextChange={(text: string) => {
                                     this.props.onInputTextChange && this.props.onInputTextChange(false, text);
                                 }}
                                 resolveCurr={this.props.resolveCurrLocation} // Resolve curr loc on 'from' when 'to' is already set
-                                onFailedToResolve={(highlighted: boolean, error: Error) => {
+                                onFailedToResolve={(error: Error) => {
                                     this.showTooltip(false, this.getErrorMessage(error, t));
                                     const toInput = document.getElementById(inputToId);
                                     // Need to use a timeout since if not location box autocomplete popup don't show.
@@ -409,9 +417,11 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                 inputAriaLabel={ariaLabelTo}
                                 inputId={inputToId}
                                 sideDropdown={this.props.sideDropdown}
-                                menuStyle={{
-                                    borderTopLeftRadius: '0',
-                                    borderTopRightRadius: '0'
+                                styles={{
+                                    menu: overrideClass({
+                                        borderTopLeftRadius: '0',
+                                        borderTopRightRadius: '0'
+                                    })
                                 }}
                             />
                         </TKUITooltip>
