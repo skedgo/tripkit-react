@@ -139,7 +139,7 @@ interface ITKUIConfigOptional {
     };
     tripCompareFc: (trip1: Trip, trip2: Trip) => number;
     booking: {
-        renderBookingCard: (props: TKUIBookingCardClientProps) => JSX.Element;
+        renderBookingCard?: (props: TKUIBookingCardClientProps) => JSX.Element;
         enabled?: (segment: Segment) => boolean;    // () => true, by default
     };
     payment: {

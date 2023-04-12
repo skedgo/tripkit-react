@@ -124,7 +124,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
         </TKUICard>
     );
     if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
-        && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
+        && segment.booking && accountsSupported && tkconfig.booking.renderBookingCard && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
         signInStatus === SignInStatus.signedIn) {
         cards.push(tkconfig.booking.renderBookingCard({
             segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
