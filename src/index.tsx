@@ -37,7 +37,7 @@ export { default as TKStateConsumer } from "./config/TKStateConsumer";
 export { default as TKStateController } from "./config/TKStateController";
 export type TKUIConfig = TKUIConfigForExport;
 export { default as TKShareHelper } from "./share/TKShareHelper";
-export { default as TKUIRoutingQueryInput } from "./query/TKUIRoutingQueryInput";
+export { default as TKUIRoutingQueryInput, TKUIRoutingQueryInputHelpers } from "./query/TKUIRoutingQueryInput";
 export { default as TKUILocationSearch } from "./query/TKUILocationSearch";
 export { default as TKUILocationBox } from "./location_box/TKUILocationBox";
 export { default as RegionsData } from "./data/RegionsData";

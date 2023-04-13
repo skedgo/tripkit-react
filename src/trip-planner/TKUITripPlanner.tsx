@@ -2,7 +2,6 @@ import * as React from "react";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
-import GATracker from "../analytics/GATracker";
 import TKUITimetableView from "../service/TKUITimetableView";
 import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
@@ -11,7 +10,7 @@ import TKUIServiceView from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUITripPlannerDefaultStyle } from "./TKUITripPlanner.css";
-import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
+import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
@@ -157,7 +156,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         //     )
         // });
     }
-    private onShowSettings() {        
+    private onShowSettings() {
         this.props.setShowUserProfile(true);
     }
 
@@ -226,7 +225,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     onShowSideBarClicked={() => {
                         this.setState({ showSidebar: true });
                     }}
-                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}                    
+                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
                     onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
                 />
                 <div className={classes.searchMenuContainer}
@@ -271,22 +270,27 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const queryInput = this.props.directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
             !this.props.selectedTripSegment &&    // not displaying MxM view
-            <TKUIRoutingQueryInput
-                title={t("Route")}
-                showTransportsBtn={this.props.landscape}
-                showTimeSelect={this.props.landscape}
-                sideDropdown={DeviceUtil.isTablet}
-                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
-                onShowTransportOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
-                resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
-                onClearClicked={() => {
-                    this.props.onQueryChange(RoutingQuery.create());
-                    this.props.onDirectionsView(false);
-                }}
-                // To avoid capturing focus when returning from trip details view (where query input renders again),
-                // since focus should be returned to 'Detail' btn on trip row.
-                shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}
-            />;
+            <TKUIRoutingQueryInputHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIRoutingQueryInput
+                        title={t("Route")}
+                        showTransportsBtn={this.props.landscape}
+                        showTimeSelect={this.props.landscape}
+                        sideDropdown={DeviceUtil.isTablet}
+                        onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                        onShowTransportOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
+                        resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
+                        onClearClicked={() => {
+                            this.props.onQueryChange(RoutingQuery.create());
+                            this.props.onDirectionsView(false);
+                        }}
+                        // To avoid capturing focus when returning from trip details view (where query input renders again),
+                        // since focus should be returned to 'Detail' btn on trip row.
+                        shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}                        
+                        {...stateProps}
+                    />
+                }
+            </TKUIRoutingQueryInputHelpers.TKStateProps>;
         const toLocation = this.props.query.to;
         const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
             <TKUILocationDetailView

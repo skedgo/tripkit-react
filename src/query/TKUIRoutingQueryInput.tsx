@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import TKUILocationBox from "../location_box/TKUILocationBox";
 import Location from "../model/Location";
 import { ReactComponent as IconSwap } from '../images/ic-swap.svg';
@@ -19,8 +19,7 @@ import { ReactComponent as IconArrowBack } from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
-import { connect, PropsMapper } from "../config/TKConfigHelper";
-import { Subtract } from "utility-types";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
@@ -29,9 +28,9 @@ import { ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE } from "../util/Geolocatio
 import TKErrorHelper, { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
-import { tKUIColors, TKUITheme, white } from "../jss/TKUITheme";
+import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
     // Included and documented in HasCard, but put here to force it to be at the top.
     title?: string;
@@ -86,46 +85,58 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
      */
     onClearClicked?: () => void;
     shouldFocusAfterRender?: boolean;
+
+    /**
+     * Stating if it should be optimized for portrait.
+     * @default false
+     */
+    portrait?: boolean;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {
+interface IConsumedProps {
     /**
-     * Routing query
-     * @ctype
-     * @default {@link TKState#query}
+     * Routing query.
+     * 
+     * Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#query}.
+     * @ctype     
      */
     value: RoutingQuery;
 
     /**
      * Routing query change callback.
-     * @ctype
-     * @default {@link TKState#onQueryChange}
+     * 
+     * Connect it with {@link TKState#onQueryChange} by using TKUIRoutingQueryInputUtils.TKStateProps
+     * @ctype     
      */
     onChange?: (routingQuery: RoutingQuery) => void;
 
     /**
-     * @ctype
-     * @default {@link TKState#onPreChange}
+     * Connect it with {@link TKState#onPreChange} by using TKUIRoutingQueryInputUtils.TKStateProps
+     * @ctype     
      */
     onPreChange?: (from: boolean, location?: Location) => void;
 
     /**
-     * @ctype
-     * @default {@link TKState#onInputTextChange}
+     * Connect it with {@link TKState#onInputTextChange} by using TKUIRoutingQueryInputUtils.TKStateProps
+     * @ctype     
      */
     onInputTextChange?: (from: boolean, text: string) => void;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @default Timezone of the current region: {@link TKState#region}.timezone
+     * 
+     * Use TKUIRoutingQueryInputUtils.TKStateProps to pass the timezone of the current region {@link TKState#region}.     
      */
     timezone?: string;
 
-    // Until define interface for TKUIMapViewClass, so to not bundle map with routing query input.
+    /**
+     * Until define interface for TKUIMapViewClass, so to not bundle map with routing query input.
+     * @ignore
+     */
     map?: any;
 }
 
-interface IProps extends IConsumedProps, IClientProps, TKUIWithClasses<IStyle, IProps> { }
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     btnBack: CSSProps<IProps>;
@@ -220,6 +231,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         }
         if (this.props.onChange) {
             this.props.onChange(update);
+            console.log(update);
         }
     }
 
@@ -272,11 +284,12 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
         const inputFromId = "input-from";
         const showTimeSelect = this.props.showTimeSelect !== undefined ? this.props.showTimeSelect : true;
         const showTransportsBtn = this.props.showTransportsBtn !== undefined ? this.props.showTransportsBtn : true;
+        const landscape = !this.props.portrait;
         return (
             <TKUICard
                 presentation={CardPresentation.NONE}
-                title={this.props.landscape ? this.props.title : undefined}
-                onRequestClose={this.props.landscape ? this.props.onClearClicked : undefined}
+                title={landscape ? this.props.title : undefined}
+                onRequestClose={landscape ? this.props.onClearClicked : undefined}
                 closeAriaLabel={"Close query input"}
                 scrollable={false}
                 mainFocusElemId={!routingQuery.from ? inputFromId : !routingQuery.to ? inputToId : undefined}
@@ -392,7 +405,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     }
                                     // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
                                     // if (value) {
-                                    //     this.props.map?.fitMap(routingQuery.to, value);
+                                    //     this.props.map?.fitMap(routingQuery.from, value);
                                     // }
                                 }}
                                 onResultHighlight={(value: Location | null) => {
@@ -401,7 +414,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     }
                                     // Fit Map imperatively, instead of doing it with logic in TKUIMapView.
                                     // if (value) {
-                                    //     this.props.map?.fitMap(routingQuery.to, value);
+                                    //     this.props.map?.fitMap(routingQuery.from, value);
                                     // }
                                 }}
                                 onInputTextChange={(text: string) => {
@@ -550,23 +563,32 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
     );
 };
 
-const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({ ...inputProps, ...consumedProps })}
-        </Consumer>;
-
 /**
  *  Allows the user to enter _depart_ and _arrive_ locations through address and place autocompletion, set the
  *  _time to depart_ or the _time to arrive_, and select what _transport modes_ should be considered.
  *
- *  It can be seen as building or updating a [routing query object]() in an uncontrolled way, through
- *  ```query``` and ```onChange``` properties. Both of them are _connection properties_, as explained in
- *  [this section](#/Main%20SDK%20component%3A%20TKRoot), which means that if no value is explicitly provided when using the
- *  component, then values from SDK state are passed by default, i.e., TKUIRoutingQueryInput gets connected to the SDK
- *  state.
+ *  It can be seen as building or updating a [routing query object]() in a controlled way, through
+ *  ```query``` and ```onChange``` properties. 
+ *  
+ *  You can connect the component with the SDK global state, {@link TKState}, by forwarding the props
+ *  provided by TKUIRoutingQueryInputHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUIRoutingQueryInputHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUIRoutingQueryInput 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUIRoutingQueryInputHelpers.TKStateProps>
+ *  ```
  */
-export default connect((config: TKUIConfig) => config.TKUIRoutingQueryInput, config, Mapper);
+
+export default connect((config: TKUIConfig) => config.TKUIRoutingQueryInput, config, mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export const TKUIRoutingQueryInputHelpers = {
+    TKStateProps: Consumer,
+    useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
+}
 
 export { TKUIRoutingQueryInput as TKUIRoutingQueryInputClass }

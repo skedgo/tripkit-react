@@ -37,7 +37,7 @@ For instance, the example below integrates [](TKUIRoutingQueryInput) (query inpu
 just by putting them somewhere below [](TKRoot), and so they become automatically connected to the global state.
 
 ```jsx
-import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, tKRequestCurrentLocation } from 'tripkit-react';
+import { TKRoot, TKUIRoutingQueryInput, TKUIRoutingQueryInputHelpers, TKUIMapView, tKRequestCurrentLocation } from 'tripkit-react';
 import { queryMapConfig } from 'doc-helper';
         
 const config = {
@@ -60,7 +60,9 @@ const config = {
 <TKRoot config={config}>
     <div style={{height: '500px'}}>
         <div style={{position: 'absolute', zIndex: '1', margin: '10px', width: '300px'}}>
-            <TKUIRoutingQueryInput/>
+            <TKUIRoutingQueryInputHelpers.TKStateProps>
+                {stateProps => <TKUIRoutingQueryInput {...stateProps}/>}
+            </TKUIRoutingQueryInputHelpers.TKStateProps>
         </div>
         <TKUIMapView/>
     </div>

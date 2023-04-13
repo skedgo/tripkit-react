@@ -33,7 +33,7 @@ import TKUILocationSearch from "../query/TKUILocationSearch";
 import { tKUILocationSearchDefaultStyle } from "../query/TKUILocationSearch.css";
 import TKUIMapView from "../map/TKUIMapView";
 import { tKUIMapViewDefaultStyle } from "../map/TKUIMapView.css";
-import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
+import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
 import { genClassNames } from "../css/GenStyle.css";
 import TKStateController from "../config/TKStateController";
 import TKState from "../config/TKState";
@@ -156,7 +156,10 @@ const tKDocConfig = {
         style: classNamesOf(tKUILocationSearchDefaultStyle)
     },
     TKUIRoutingQueryInput: {
-        showcase: () => <TKUIRoutingQueryInput />,
+        showcase: () =>
+            <TKUIRoutingQueryInputHelpers.TKStateProps>
+                {stateProps => <TKUIRoutingQueryInput {...stateProps} />}
+            </TKUIRoutingQueryInputHelpers.TKStateProps>,
         style: classNamesOf(tKUIRoutingQueryInputDefaultStyle)
     },
     TKUILocationDetailView: {
