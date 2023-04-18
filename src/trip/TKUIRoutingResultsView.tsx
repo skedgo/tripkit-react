@@ -50,7 +50,7 @@ interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, P
     /**
      * Stating if time select component should be displayed or not.
      * @default true
-     * @ignore maybe until I change it into the more intuitive hideTimeSelect, defaulted to false.
+     * @ignore maybe until I change it into the more intuitive hideTimeSelect, defaulted to false.     
      */
     showTimeSelect?: boolean;
 
@@ -95,6 +95,7 @@ interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, P
      * such metric is unavailable in the response of the routing request, it will not be
      * shown. In addition, the order specified here is the order in which the metrics will be displayed.
      * The default metrics to show are `price`, `calories` and `carbon`.
+     * @ctype
      */
     tripMetricsToShow?: TKTripCostType[];
 
@@ -104,12 +105,14 @@ interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, P
      * Badges order matters: a trip matching two or more badges will get the first matching badge according to the specified order.
      * This setting is independent of `tripMetricsToShow`.
      * By default all badges are shown.
+     * @ctype
      */
     tripBadgesToShow?: Badges[];
 
     /**
      * Set this to specify the trip sortings to show. The order of the elements in this array determine the order of the
      * options in the sort select.
+     * @ctype
      */
     tripSortingsToShow?: TripSort[];
 
@@ -125,34 +128,39 @@ interface IConsumedProps {
      * Array of routing results to be displayed. It's assumed that trips come already sorted according to selected sort
      * criterion (which is handled through ```sort``` and ```onSortChange``` properties in a controlled way).
      * @ctype
-     * @default {@link TKState#trips}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#trips}.
+     * @order 1
      */
     values?: Trip[];
 
     /**
      * Stating the trip in ```values``` that is currently selected.
      * @ctype
-     * @default {@link TKState#selectedTrip}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#selectedTrip}
+     * @order 2
      */
     value?: Trip;
 
     /**
      * Trip selection change callback
      * @ctype
-     * @default {@link TKState#onChange}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onChange}
+     * @order 3
      */
     onChange?: (value: Trip) => void;
 
     /**
      * Function that will run when user picks an alternative trip from a trip group.
      * @ctype
-     * @default {@link TKState#onAlternativeChange}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onAlternativeChange}
+     * @order 4
+     * @divider
      */
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
 
     /**
      * Stating if we are waiting for routing results to arrive from TripGo api request.
-     * @default {@link TKState#waiting}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#waiting}
      */
     waiting?: boolean;
 
@@ -160,27 +168,28 @@ interface IConsumedProps {
      * Criterion by which routing results passed through ```values``` prop are sorted. <br/>
      * Values: TripSort.OVERALL, TripSort.TIME, TripSort.DURATION, TripSort.PRICE, TripSort.CARBON.
      * @ctype
-     * @default {@link TKState#sort}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#sort}     
      */
     sort?: TripSort;
 
     /**
      * Sort criterion change callback.
      * @ctype
-     * @default {@link TKState#onSortChange}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onSortChange}
      */
     onSortChange?: (sort: TripSort) => void;
 
     /**
      * Specifying an error object describing a routing error, if such an error happened.
-     * @default {@link TKState#routingError}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#routingError}
+     * @ctype
      */
     routingError?: TKError;
 
     /**
      * Routing query to which ```values``` trips correspond.
      * @ctype
-     * @default {@link TKState#query}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#query}
      */
     query?: RoutingQuery;
 
@@ -188,20 +197,21 @@ interface IConsumedProps {
      * Routing query change callback, since this component allows the user to set the time to depart or the time to
      * arrive (part of the routing query).
      * @ctype
-     * @default {@link TKState#onQueryChange}
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onQueryChange}
      */
     onQueryChange?: (query: RoutingQuery) => void;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @default Timezone of the current region: {@link TKState#region}.timezone
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass the timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
 
     /**     
      * @ctype
+     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#setSelectedTripSegment}
      */
-    setSelectedTripSegment?: (segment?: Segment) => void;
+    onTripSegmentSelected?: (segment?: Segment) => void;
 
     transportBtnText?: string;
 }
@@ -516,7 +526,7 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                                 this.setState({
                                     expanded: expand ? trip : undefined
                                 })}
-                            onSegmentSelected={this.props.setSelectedTripSegment}
+                            onSegmentSelected={this.props.onTripSegmentSelected}
                             isUserTabbing={this.props.isUserTabbing}
                             tripMetricsToShow={this.props.tripMetricsToShow}
                         />
@@ -627,7 +637,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                         onSortChange: routingContext.onSortChange,
                         onQueryChange: routingContext.onQueryChange,
                         timezone: routingContext.region ? routingContext.region.timezone : undefined,
-                        setSelectedTripSegment: routingContext.setSelectedTripSegment                        
+                        onTripSegmentSelected: routingContext.setSelectedTripSegment                        
                     };
                     return props.children!(consumerProps);
                 }}
@@ -635,9 +645,6 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
         );
     };
 
-// interface IClientConsumed extends IClientProps, Partial<IConsumedProps> { }
-
-// const Mapper: PropsMapper<IClientProps, Subtract<IClientProps, TKUIViewportUtilProps & IAccessibilityContext> & Partial<TKUIViewportUtilProps> & Partial<IAccessibilityContext>> =
 const Mapper: PropsMapper<IClientProps, IClientProps> =
     ({ inputProps, children }) => {
         const { tripCompareFc } = useContext(TKUIConfigContext);
@@ -661,26 +668,33 @@ const Mapper: PropsMapper<IClientProps, IClientProps> =
  *
  * The component does not compute trips by itself, but just displays the list of trips ([](Trip) instances) passed
  * through the ```values``` property, so trips computation via TripGo api from the routing query happens outside.
- * However, as explained in [this section](#/Main%20SDK%20component%3A%20TKRoot), this component gets automatically
- * connected to the (global) _state of the SDK_, via it's properties (and using React Contexts), when we don't pass
- * values for the (so called) _connection props_, which get their defaults values from the global state.
- * For instance, ```values``` is a connection property, so if not specified it will get it's value from the global SDK
- * state: the current list of trips for the current query.
  *
  * It also receives a ```value``` prop specifying the trip in ```values``` that is currently selected (if any),
  * as well as an ```onChange``` callback function prop to notify on trip selection change (e.g. user clicking on a
- * different trip), which are both also connection props.
+ * different trip).
  *
  * Since it allows the user to set the time to depart or the time to arrive (part of a routing query) then it receives
- * ```query``` ([](RoutingQuery) instance) and ```onQueryChange``` props, both connection props, so automatically
- * connected to the SDK global state if not provided.
+ * ```query``` ([](RoutingQuery) instance) and ```onQueryChange``` props.
+ * 
+ *  You can connect the component to the SDK global state, {@link TKState}, by forwarding the props
+ *  provided by TKUIRoutingResultsViewHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUIRoutingResultsViewHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUIRoutingResultsView 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUIRoutingResultsViewHelpers.TKStateProps>
+ *  ```
+ * 
  *
- * In a typical usage, connection props will be left unspecified (i.e. connected to SDK state), and so the component will
- * display trips for the currently specified query. If query changes (e.g. user changed time in this component, or
- * interacted with [query input component](TKUIRoutingQueryInput), then the SDK environment will recompute trips, and
- * ```values``` props will be updated accordingly.
- *
- * In a similar way, the SDK environment automatically performs real-time updates of trips.
+ * In this way, the component will display trips for the current query in the SDK state. If query changes (e.g. user 
+ * changed time in this component, or interacted with a [query input component](TKUIRoutingQueryInput) also connected to the state, 
+ * then the SDK environment will recompute trips, and ```values``` props will be updated accordingly.
+ * In a similar way, the SDK environment automatically performs real-time updates of trips, and so updates will be automatically
+ * displayed by this component.
  */
 
 export default connect((config: TKUIConfig) => config.TKUIRoutingResultsView, config, Mapper);
