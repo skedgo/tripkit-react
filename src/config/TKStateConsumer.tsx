@@ -30,7 +30,7 @@ class TKStateConsumer extends React.Component<IProps, {}> {
                                                         ...serviceContext,
                                                         ...optionsContext,
                                                         ...accessibilityContext,
-                                                        config: config
+                                                        config
                                                     };
                                                     return (this.props.children as ((state: TKState) => React.ReactNode))(state);
                                                 }}

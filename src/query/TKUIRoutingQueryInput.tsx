@@ -86,11 +86,6 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pi
     onClearClicked?: () => void;
     shouldFocusAfterRender?: boolean;
 
-    /**
-     * Stating if it should be optimized for portrait.
-     * @default false
-     */
-    portrait?: boolean;
 }
 
 interface IConsumedProps {
@@ -128,6 +123,14 @@ interface IConsumedProps {
      * Use TKUIRoutingQueryInputUtils.TKStateProps to pass the timezone of the current region {@link TKState#region}.     
      */
     timezone?: string;
+
+    /**
+     * Stating if it should be optimized for portrait.
+     * 
+     * Use TKUIRoutingQueryInputUtils.TKStateProps to pass global state orientation value.
+     * @default false
+     */
+    portrait?: boolean;
 
     /**
      * Until define interface for TKUIMapViewClass, so to not bundle map with routing query input.
@@ -541,7 +544,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {
     return (
         <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) =>
+            {({ portrait }) =>
                 <RoutingResultsContext.Consumer>
                     {(routingContext: IRoutingResultsContext) => {
                         const region = routingContext.region;
@@ -553,7 +556,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                             onInputTextChange: routingContext.onInputTextChange,
                             timezone: timezone,
                             map: routingContext.map,
-                            ...viewportProps
+                            portrait
                         };
                         return props.children!(consumerProps);
                     }}

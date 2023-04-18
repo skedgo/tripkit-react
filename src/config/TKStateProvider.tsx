@@ -1,13 +1,14 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { TKUIConfig } from "./TKUIConfig";
 import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
-import ServiceResultsProvider from "../service/ServiceResultsProvider";
+import ServiceResultsProvider, { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import RoutingResultsProvider, { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import TKUIConfigProvider from "./TKUIConfigProvider";
+import TKUIConfigProvider, { TKUIConfigContext } from "./TKUIConfigProvider";
 import TKFavouritesProvider from "../favourite/TKFavouritesProvider";
 import TripGoApi from "../api/TripGoApi";
 import TKI18nProvider, { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
-import TKAccessibilityProvider from "./TKAccessibilityProvider";
+import TKAccessibilityProvider, { TKAccessibilityContext } from "./TKAccessibilityProvider";
+import TKState from "./TKState";
 
 interface IProps {
     config: TKUIConfig;
@@ -79,6 +80,15 @@ class TKStateProvider extends React.Component<IProps, {}> {
         }
     }
 
+}
+
+export function useTKState(): TKState {
+    const config = useContext(TKUIConfigContext);
+    const optionsContext = useContext(OptionsContext);
+    const accessibilityContext = useContext(TKAccessibilityContext);
+    const routingResultsContext = useContext(RoutingResultsContext);
+    const serviceResultsContext = useContext(ServiceResultsContext);
+    return { config, ...optionsContext, ...accessibilityContext, ...routingResultsContext, ...serviceResultsContext };
 }
 
 export default TKStateProvider;

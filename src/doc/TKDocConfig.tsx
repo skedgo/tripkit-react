@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { tKUIDeaultTheme } from "../jss/TKUITheme";
 import { tKUIButtonDefaultStyle } from "../buttons/TKUIButton.css";
-import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
+import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/TKUIRoutingResultsView";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import Util from "../util/Util";
 import RoutingResults from "../model/trip/RoutingResults";
@@ -23,7 +23,7 @@ import { tKUILocationDetailViewDefaultStyle } from "../location/TKUILocationDeta
 import TKUILocationDetailView from "../location/TKUILocationDetailView";
 import { tKUITimetableDefaultStyle } from "../service/TKUITimetableView.css";
 import TKUITimetableView from "../service/TKUITimetableView";
-import { loadTimetableState, loadTripState } from "../state/TKStateUrl";
+import { loadTimetableState } from "../state/TKStateUrl";
 import TKStateConsumer from "../config/TKStateConsumer";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
 import { tKUISelectDefaultStyle } from "../buttons/TKUISelect.css";
@@ -44,6 +44,7 @@ import ServiceDeparturesResult from '../model/service/ServiceDeparturesResult';
 import { ServiceResultsContext } from '../service/ServiceResultsProvider';
 import { tKUILocationBoxDefaultStyle } from '../location_box/TKUILocationBox.css';
 import TKUILocationBox from '../location_box/TKUILocationBox';
+import { useTKState } from '../config/TKStateProvider';
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme({ isDark: false, isHighContrast: false })) : defaultStyle);
@@ -131,6 +132,26 @@ const TKUILocationBoxShowcase = () => {
     );
 }
 
+const TKUIRoutingResultsViewShowcase = () => {
+    const tKState = useTKState();
+    useEffect(() => {
+        const routingResultsJson = require("./data/routingResults2.json");        
+        tKState.onTripJsonUrl(JSON.stringify(routingResultsJson));
+    }, []);
+    return (
+        <div style={{ maxHeight: 600, display: 'flex', justifyContent: 'center' }}>
+            <TKUIRoutingResultsViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIRoutingResultsView
+                        {...stateProps}
+                        cardPresentation={CardPresentation.NONE}
+                        showTimeSelect={false}
+                        showTransportsBtn={false} />}
+            </TKUIRoutingResultsViewHelpers.TKStateProps>
+        </div>
+    );
+}
+
 const tKDocConfig = {
     TKUICard: {
         showcase: () =>
@@ -188,16 +209,7 @@ const tKDocConfig = {
         style: classNamesOf(tKUISelectDefaultStyle)
     },
     TKUIRoutingResultsView: {
-        showcase: () =>
-            <React.Fragment>
-                <TKUIRoutingResultsView cardPresentation={CardPresentation.NONE} />
-                <TKStateController
-                    onInit={(tKState: TKState) => {
-                        const routingResultsJson = require("./data/routingResults.json");
-                        loadTripState(tKState, JSON.stringify(routingResultsJson));
-                    }}
-                />
-            </React.Fragment>,
+        showcase: () => <TKUIRoutingResultsViewShowcase />,
         style: classNamesOf(tKUIResultsDefaultStyle)
     },
     TKUITripRow: {

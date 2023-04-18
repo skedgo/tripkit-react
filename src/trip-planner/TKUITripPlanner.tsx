@@ -3,7 +3,7 @@ import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
 import TKUITimetableView from "../service/TKUITimetableView";
-import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
+import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/TKUIRoutingResultsView";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
 import TKUIServiceView from "../service/TKUIServiceView";
@@ -286,7 +286,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         }}
                         // To avoid capturing focus when returning from trip details view (where query input renders again),
                         // since focus should be returned to 'Detail' btn on trip row.
-                        shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}                        
+                        shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}
                         {...stateProps}
                     />
                 }
@@ -345,23 +345,27 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 }}
             />;
         const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips ?
-            <TKUIRoutingResultsView
-                onDetailsClicked={() => this.props.onTripDetailsView(true)}
-                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
-                onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
-                slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    position: this.isShowTripDetail() || this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
-                        DeviceUtil.isTouch() ? undefined :
-                            this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalMiddle: { top: 55, unit: '%' },
-                    modalDown: { top: 90, unit: '%' }
-                }}
-                showTimeSelect={this.props.portrait}
-                showTransportsBtn={this.props.portrait}
-            /> : null;
+            <TKUIRoutingResultsViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIRoutingResultsView
+                        {...stateProps}
+                        onDetailsClicked={() => this.props.onTripDetailsView(true)}
+                        onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                        onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
+                        slideUpOptions={{
+                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            position: this.isShowTripDetail() || this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
+                                DeviceUtil.isTouch() ? undefined :
+                                    this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            draggable: DeviceUtil.isTouch(),
+                            modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalMiddle: { top: 55, unit: '%' },
+                            modalDown: { top: 90, unit: '%' }
+                        }}
+                        showTimeSelect={this.props.portrait}
+                        showTransportsBtn={this.props.portrait}
+                    />}
+            </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
 
         // this.state.fadeOutHomeBecauseDetails is set to false with a delay, to avoid home card being displayed on search location clear and immediatly being hidden again 
         // because input gets focus and there are recent autocompletion results.

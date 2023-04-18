@@ -123,6 +123,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
 interface IConsumedProps {
     /**
      * @ctype
+     * @ignore Since currently it can just be specified through TKUIConfig. Evaluate enabling to specify it also through this prop.
      */
     geocodingOptions: TKGeocodingOptions;
     /**
