@@ -20,7 +20,7 @@ import classNames from "classnames";
 import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
@@ -233,8 +233,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             FavouritesData.recInstance.add(FavouriteTrip.create(update.from!, update.to!));
         }
         if (this.props.onChange) {
-            this.props.onChange(update);
-            console.log(update);
+            this.props.onChange(update);            
         }
     }
 

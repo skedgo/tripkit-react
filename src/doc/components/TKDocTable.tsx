@@ -14,30 +14,32 @@ export interface TKDocStyleProps {
 }
 
 function TKDocTable(props: TKDocStyleProps & { classes: Classes<keyof typeof tKDocTableStyle>; }) {
-    const classes = props.classes;
-    // console.log(props.values);
+    const classes = props.classes;    
     return (
         <table className={classes.table}>
             <thead className={classes.tableHead}>
                 <tr>
-                    {props.colConfigs.map((colConfig: ColConfig) =>
-                        <th className={classes.headerCell}>
+                    {props.colConfigs.map((colConfig: ColConfig, i) =>
+                        <th className={classes.headerCell} key={i}>
                             {colConfig.title}
                         </th>)}
                 </tr>
             </thead>
-            {props.values.map((value: any) => {
-                const showDivider = value.tags?.divider;
-                return (
-                    <tr className={showDivider ? classes.divider : undefined}>
-                        {props.colConfigs.map((colConfig: ColConfig) => <td className={classes.cell}>
-                            {colConfig.renderer(value)}
-                        </td>
-                        )}
-                    </tr>
-                );
-            }
-            )}
+            <tbody>
+                {props.values.map((value, i) => {
+                    const showDivider = value.tags?.divider;
+                    return (
+                        <tr className={showDivider ? classes.divider : undefined} key={i}>
+                            {props.colConfigs.map((colConfig: ColConfig, i) => (
+                                <td className={classes.cell} key={i}>
+                                    {colConfig.renderer(value)}
+                                </td>
+                            ))}
+                        </tr>
+                    );
+                }
+                )}
+            </tbody>
         </table>
     );
 }

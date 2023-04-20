@@ -128,7 +128,7 @@ interface IConsumedProps {
      * Array of routing results to be displayed. It's assumed that trips come already sorted according to selected sort
      * criterion (which is handled through ```sort``` and ```onSortChange``` properties in a controlled way).
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#trips}.
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#trips}.
      * @order 1
      */
     values?: Trip[];
@@ -136,7 +136,7 @@ interface IConsumedProps {
     /**
      * Stating the trip in ```values``` that is currently selected.
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#selectedTrip}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#selectedTrip}
      * @order 2
      */
     value?: Trip;
@@ -144,7 +144,7 @@ interface IConsumedProps {
     /**
      * Trip selection change callback
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onChange}
      * @order 3
      */
     onChange?: (value: Trip) => void;
@@ -152,7 +152,7 @@ interface IConsumedProps {
     /**
      * Function that will run when user picks an alternative trip from a trip group.
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onAlternativeChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onAlternativeChange}
      * @order 4
      * @divider
      */
@@ -160,7 +160,7 @@ interface IConsumedProps {
 
     /**
      * Stating if we are waiting for routing results to arrive from TripGo api request.
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#waiting}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#waiting}
      */
     waiting?: boolean;
 
@@ -168,20 +168,20 @@ interface IConsumedProps {
      * Criterion by which routing results passed through ```values``` prop are sorted. <br/>
      * Values: TripSort.OVERALL, TripSort.TIME, TripSort.DURATION, TripSort.PRICE, TripSort.CARBON.
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#sort}     
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#sort}     
      */
     sort?: TripSort;
 
     /**
      * Sort criterion change callback.
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onSortChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onSortChange}
      */
     onSortChange?: (sort: TripSort) => void;
 
     /**
      * Specifying an error object describing a routing error, if such an error happened.
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#routingError}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#routingError}
      * @ctype
      */
     routingError?: TKError;
@@ -189,7 +189,7 @@ interface IConsumedProps {
     /**
      * Routing query to which ```values``` trips correspond.
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#query}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#query}
      */
     query?: RoutingQuery;
 
@@ -197,19 +197,19 @@ interface IConsumedProps {
      * Routing query change callback, since this component allows the user to set the time to depart or the time to
      * arrive (part of the routing query).
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#onQueryChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onQueryChange}
      */
     onQueryChange?: (query: RoutingQuery) => void;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass the timezone of the current region: {@link TKState#region}.timezone
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass the timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
 
     /**     
      * @ctype
-     * @default Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#setSelectedTripSegment}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#setSelectedTripSegment}
      */
     onTripSegmentSelected?: (segment?: Segment) => void;
 
@@ -618,7 +618,6 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
-        const config = useContext(TKUIConfigContext);
         return (
             <RoutingResultsContext.Consumer>
                 {(routingContext: IRoutingResultsContext) => {
@@ -637,7 +636,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                         onSortChange: routingContext.onSortChange,
                         onQueryChange: routingContext.onQueryChange,
                         timezone: routingContext.region ? routingContext.region.timezone : undefined,
-                        onTripSegmentSelected: routingContext.setSelectedTripSegment                        
+                        onTripSegmentSelected: routingContext.setSelectedTripSegment
                     };
                     return props.children!(consumerProps);
                 }}

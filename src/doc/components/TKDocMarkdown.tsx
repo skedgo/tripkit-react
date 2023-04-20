@@ -19,7 +19,7 @@ import TableHead from 'react-styleguidist/lib/client/rsg-components/Markdown/Tab
 import TableBody from 'react-styleguidist/lib/client/rsg-components/Markdown/Table/TableBodyRenderer';
 import TableRow from 'react-styleguidist/lib/client/rsg-components/Markdown/Table/TableRowRenderer';
 import TableCell from 'react-styleguidist/lib/client/rsg-components/Markdown/Table/TableCellRenderer';
-import {jSDocLinksToMD, resolveRelativeLinks} from "../TKDocUtil";
+import { jSDocLinksToMD, resolveRelativeLinks } from "../TKDocUtil";
 
 const Pre = (props: any) => {
     if (isValidElement(props.children)) {

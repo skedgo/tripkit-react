@@ -5,7 +5,13 @@ import { EventSubscription } from "fbemitter";
 import Util from "../util/Util";
 
 export interface IOptionsContext {
+    /**
+     * @ctype
+     */
     userProfile: TKUserProfile;
+    /**
+     * @ctype
+     */
     onUserProfileChange: (value: SetStateAction<TKUserProfile>) => void;
     showUserProfile: boolean;
     setShowUserProfile: (show: boolean) => void;

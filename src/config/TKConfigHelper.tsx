@@ -138,16 +138,16 @@ export const TKStyleOverride = (props: { componentKey: string, stylesOverride: a
 );
 
 export function replaceRender<ST, PR extends TKUIWithClasses<ST, PR>>
-    (config: TKUIConfig, componentKey: string, render: (props: PR) => JSX.Element): TKUIConfig {
+    (config: TKUIConfig, componentKey: string, render: (props: PR, configRender: (props: PR) => JSX.Element) => JSX.Element): TKUIConfig {
     const resultConfig = Object.assign({}, config);
     const targetComponent: TKComponentConfig<PR, ST> | undefined = config[componentKey];
     const resultComponent: TKComponentConfig<PR, ST> = Object.assign({}, targetComponent);
-    resultComponent.render = render;
+    resultComponent.render = props => render(props, config[componentKey]?.render);
     resultConfig[componentKey] = resultComponent;
     return resultConfig;
 }
 
-export const TKRenderOverride = (props: { componentKey: string, renderOverride: (props: any) => JSX.Element, children: any }) => (
+export const TKRenderOverride = (props: { componentKey: string, renderOverride: (props: any, configRender?: (props: any) => JSX.Element) => JSX.Element, children: any }) => (
     <TKUIConfigContext.Consumer>
         {(config: TKUIConfig) => {
             const configOverride = replaceRender(config, props.componentKey, props.renderOverride);

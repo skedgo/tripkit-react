@@ -138,6 +138,8 @@ module.exports = {
                     'src/geocode/TKGeocodingOptions.tsx',
                     'src/geocode/IGeocoder.ts',
                     'src/card/TKUISlideUpOptions.ts',
+                    'src/model/options/TKTransportOptions.ts',
+                    'src/model/options/TKUserProfile.ts'
                 ]
             }
         ]
