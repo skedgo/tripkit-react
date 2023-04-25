@@ -79,6 +79,7 @@ function renderDescription(prop: any) {
             <JsDoc {...tags} />
             {args.length > 0 && <Arguments args={args} heading />}
             {returnDocumentation && <Argument {...{ ...returnDocumentation, name: '' }} returns />}
+            {tags.tkstateprop && <Markdown text={`Use TKStateProps to pass ${jSDocLinksToMD(tags.tkstateprop[0].description)}`} />}
         </div>
     );
 }

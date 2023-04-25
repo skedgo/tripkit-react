@@ -2,7 +2,7 @@ import * as React from "react";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
-import TKUITimetableView from "../service/TKUITimetableView";
+import TKUITimetableView, { TKUITimetableViewHelpers } from "../service/TKUITimetableView";
 import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/TKUIRoutingResultsView";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
@@ -306,20 +306,25 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 onRequestClose={() => this.setState({ showLocationDetails: false })}
             />;
         const timetableView = this.isShowTimetable() ?
-            <TKUITimetableView
-                onRequestClose={() => this.showTimetableFor(undefined)}
-                slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.UP,
-                    // Hide, but don't close, when service is selected.
-                    // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
-                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
-                    draggable: false,
-                    modalUp: this.props.landscape ?
-                        { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
-                        { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
-                }}
-            /> : null;
+            <TKUITimetableViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUITimetableView
+                        {...stateProps}
+                        onRequestClose={() => this.showTimetableFor(undefined)}
+                        slideUpOptions={{
+                            initPosition: TKUISlideUpPosition.UP,
+                            // Hide, but don't close, when service is selected.
+                            // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
+                            position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
+                            draggable: false,
+                            modalUp: this.props.landscape ?
+                                { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                                { top: cardSpacing(false), unit: 'px' },
+                            modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
+                        }}
+                    />}
+            </TKUITimetableViewHelpers.TKStateProps>
+            : null;
         const serviceDetailView = this.isShowServiceDetail() ?
             <TKUIServiceView
                 onRequestClose={() => this.props.onServiceSelection(undefined)}

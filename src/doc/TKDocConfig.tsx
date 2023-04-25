@@ -22,7 +22,7 @@ import LatLng from "../model/LatLng";
 import { tKUILocationDetailViewDefaultStyle } from "../location/TKUILocationDetailView.css";
 import TKUILocationDetailView from "../location/TKUILocationDetailView";
 import { tKUITimetableDefaultStyle } from "../service/TKUITimetableView.css";
-import TKUITimetableView from "../service/TKUITimetableView";
+import TKUITimetableView, { TKUITimetableViewHelpers } from "../service/TKUITimetableView";
 import { loadTimetableState } from "../state/TKStateUrl";
 import TKStateConsumer from "../config/TKStateConsumer";
 import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
@@ -80,6 +80,21 @@ function getMockLocation(): Location {
     return Util.deserialize(locationJson, Location);
 }
 
+const TKUITimetableViewShowcase = () =>
+    <TKStateConsumer>
+        {(tKState: TKState) =>
+            <div style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column' }}>
+                {tKState.stop &&
+                    <TKUITimetableViewHelpers.TKStateProps>
+                        {stateProps => <TKUITimetableView {...stateProps} initScrollToNow={false} cardPresentation={CardPresentation.NONE} />}
+                    </TKUITimetableViewHelpers.TKStateProps>}
+                <TKStateController
+                    onInit={(tKState: TKState) => loadTimetableState(tKState, "AU_NSW_Sydney", "200050")}
+                />
+            </div>
+        }
+    </TKStateConsumer>
+
 const TKUIServiceViewShowcase = () => {
     const { selectedService = null, onServiceSelection } = useContext(ServiceResultsContext);
     useEffect(() => {
@@ -135,7 +150,7 @@ const TKUILocationBoxShowcase = () => {
 const TKUIRoutingResultsViewShowcase = () => {
     const tKState = useTKState();
     useEffect(() => {
-        const routingResultsJson = require("./data/routingResults2.json");        
+        const routingResultsJson = require("./data/routingResults2.json");
         tKState.onTripJsonUrl(JSON.stringify(routingResultsJson));
     }, []);
     return (
@@ -225,17 +240,7 @@ const tKDocConfig = {
             />
     },
     TKUITimetableView: {
-        showcase: () =>
-            <TKStateConsumer>
-                {(tKState: TKState) =>
-                    <div style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column' }}>
-                        {tKState.stop && <TKUITimetableView cardPresentation={CardPresentation.NONE} />}
-                        <TKStateController
-                            onInit={(tKState: TKState) => loadTimetableState(tKState, "AU_NSW_Sydney", "200050")}
-                        />
-                    </div>
-                }
-            </TKStateConsumer>,
+        showcase: () => <TKUITimetableViewShowcase />,
         style: classNamesOf(tKUITimetableDefaultStyle)
     },
     TKUIServiceView: {

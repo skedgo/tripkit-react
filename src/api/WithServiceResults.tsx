@@ -160,7 +160,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                             // (or just detect it with segmentReplacement === segment).
                         })
                     } else {
-                        this.onTimetableForSegment(segmentReplacement);
+                        this.setState({ segment: segmentReplacement });
                     }
                 });
             } else {    // Timetable for stop, so request departure details.
@@ -202,7 +202,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public onTimetableForSegment(segment?: Segment) {
             if (segment) {
-                this.setState({ segment: segment },
+                this.setState({ segment },
                     () => {
                         if (segment) {
                             RegionsData.instance.getRegionP(segment.from)
@@ -259,7 +259,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 onTimetableForSegment={this.onTimetableForSegment}
                 onRequestMore={this.requestMoreDepartures}
                 departures={this.getDisplayDepartures()}
-                waiting={this.isWaiting(this.state)}
+                waiting={this.isWaiting(this.state) || !startStop}
                 serviceError={this.state.serviceError}
                 timetableFilter={this.state.filter}
                 onFilterChange={this.onFilterChange}

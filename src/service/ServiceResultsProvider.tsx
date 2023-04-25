@@ -24,6 +24,8 @@ export interface IServiceResultsContext {
     /**
      * The segment that timetable services cover.
      * @ctype
+     * @ignore since deprecated
+     * @deprecated
      */
     timetableForSegment?: Segment;
 
