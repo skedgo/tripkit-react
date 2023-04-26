@@ -31,6 +31,7 @@ import { TKError } from "../error/TKError";
 import { serviceTextColor } from "./TKUIServiceDepartureRow.css";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import HasCard, { HasCardKeys } from "../card/HasCard";
+import TKUISlideUpOptions from "../card/TKUISlideUpOptions";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -60,6 +61,18 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>,
      * @ctype TKUICard props
      */
     cardProps?: TKUICardClientProps;
+
+    /**
+     * @ignore
+     * @deprecated in favor of `cardProps`
+     */
+    [HasCardKeys.cardPresentation]?: CardPresentation;
+
+    /**
+     * @ignore
+     * @deprecated in favor of `cardProps`
+     */
+    [HasCardKeys.slideUpOptions]?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps extends
@@ -68,38 +81,38 @@ interface IConsumedProps extends
 
     /**
      * @ctype
-     * @tkstateprop {@link TKState#departures}
+     * @tkstateprop {@link TKState#stop}
      * @order 1
+     */
+    stop?: StopLocation;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#departures}
+     * @order 2
      */
     departures: ServiceDeparture[];
 
     /**
      * @ctype
      * @tkstateprop {@link TKState#onRequestMore}
-     * @order 2
+     * @order 3
      */
-    onRequestMore?: () => void;    
+    onRequestMore?: () => void;
 
     /**
      * @ctype
      * @tkstateprop {@link TKState#selectedService}
-     * @order 3
+     * @order 4
      */
     selectedService?: ServiceDeparture;
 
     /**
      * @ctype
      * @tkstateprop {@link TKState#onServiceSelection}
-     * @order 4
-     */
-    onServiceSelection?: (departure?: ServiceDeparture) => void;
-
-    /**
-     * @ctype
-     * @tkstateprop {@link TKState#stop}
      * @order 5
      */
-    stop?: StopLocation;
+    onServiceSelection?: (departure?: ServiceDeparture) => void;
 
     /**
      * @ctype
@@ -148,7 +161,7 @@ interface IConsumedProps extends
      * @ctype
      * @tkstateprop {@link TKState#serviceError}
      */
-    serviceError?: TKError;    
+    serviceError?: TKError;
 
 }
 
@@ -404,6 +417,34 @@ const Consumer: React.FunctionComponent<{ children: (props: IServiceResultsConte
         </ServiceResultsContext.Consumer>
     );
 };
+
+/**
+ * Displays service departures from a given stop or larger satation obtained from the TripGo api. 
+ * - Real-time information where available, including real-time departure and arrival times, service disruptions and crowdedness of individual services.
+ * - Optionally with wheelchair accessibility information. 
+ * - Let users select a departure, set the time of the first departure time, enter a text filter
+ * 
+ * It has the following additional customisation points:
+ * - Card options via [```cardProps```](#/Components%20API/TKUITimetableView?id=cardProps) property.
+ * - Customisable list of action buttons via [```actions```](#/Components%20API/TKUITimetableView?id=actions) property.
+ * 
+ * You can connect the component to the SDK global state, {@link TKState}, by forwarding the props
+ * provided by TKUITimetableViewHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUITimetableViewHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUITimetableView 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUITimetableViewHelpers.TKStateProps>
+ *  ```
+ * 
+ *
+ * In this way, the component will display departures from the current stop in SDK state, {@link TKState#stop}, as well as reflect
+ * real-time updates.
+ */
 
 export default connect((config: TKUIConfig) => config.TKUITimetableView, config, mapperFromFunction((clientProps: IClientProps) => clientProps));
 
