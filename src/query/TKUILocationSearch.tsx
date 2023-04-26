@@ -5,7 +5,6 @@ import { tKUILocationSearchDefaultStyle } from "./TKUILocationSearch.css";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import Location from "../model/Location";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import { Subtract } from "utility-types";
 import Util from "../util/Util";
 import TKUILocationBox, { TKUILocationBoxRef } from "../location_box/TKUILocationBox";
 import { ReactComponent as IconMenu } from '../images/ic-menu.svg';
@@ -15,15 +14,15 @@ import FavouritesData from "../data/FavouritesData";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUICard from "../card/TKUICard";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
      * Function that will run when side bar button is clicked.
      * @ctype
      */
-    onShowSideBarClicked?: () => void;
+    onShowSideMenuClicked?: () => void;
 
     /**
      * Function that will run when directions button is clicked.
@@ -31,10 +30,21 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     onDirectionsClicked?: () => void;
 
+    /**
+     * @ignore
+     */
     onMenuVisibilityChange?: (open: boolean) => void;
+
+    /**
+     * Stating if it should be optimized for portrait.
+     * 
+     * @tkstateprop global state orientation value.
+     * @default false
+     */
+    portrait?: boolean;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {
+interface IConsumedProps {
     /**
      * Destination location.
      * @default {@link TKState#query}.to
@@ -53,7 +63,12 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      * @ctype
      * @default {@link TKState#onPreChange}
      */
-    onPreChange?: (location?: Location) => void;
+
+    /**
+     * Called when an autocompletion result is highlighted, using up/down arrows.     
+     * @ctype
+     */
+    onResultHighlight?: (value: Location | null) => void
 
     /**
      * @ctype
@@ -61,8 +76,14 @@ interface IConsumedProps extends TKUIViewportUtilProps {
      */
     onInputTextChange?: (text: string) => void;
 
+    /**
+     * @ignore
+     */
     onLocationBoxRef?: (ref: TKUILocationBoxRef) => void;
 
+    /**
+     * @ignore
+     */
     menuContainer?: HTMLElement;
 }
 
@@ -93,7 +114,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 class TKUILocationSearch extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const classes = this.props.classes;
+        const { portrait, classes } = this.props;
         const placeholder = this.props.t("Search.for.destination");
         const inputId = "input-search";
         const ariaLabel = this.props.value ?
@@ -105,62 +126,50 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                 }}
                 role="search"
             >
-                <TKUIViewportUtil>
-                    {(viewportProps: TKUIViewportUtilProps) =>
-                        <div className={classes.main}>
-                            {this.props.onShowSideBarClicked &&
-                                <button className={classes.sideBarBtn} onClick={this.props.onShowSideBarClicked}
-                                    aria-label="Menu"
-                                >
-                                    <IconMenu className={classes.sideBarIcon} />
-                                </button>}
-                            <TKUILocationBox
-                                showCurrLoc={false}
-                                value={this.props.value}
-                                placeholder={placeholder}
-                                onChange={(value: Location | null) => {
-                                    this.props.onChange && this.props.onChange(value);
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(undefined);
-                                    }
-                                }}
-                                onResultHighlight={(value: Location | null) => {
-                                    if (this.props.onPreChange) {
-                                        this.props.onPreChange(value ? value : undefined);
-                                    }
-                                }}
-                                onInputTextChange={(text: string) => {
-                                    this.props.onInputTextChange && this.props.onInputTextChange(text);
-                                }}
-                                iconEmpty={<IconGlass className={classes.glassIcon} />}
-                                styles={{
-                                    wrapper: overrideClass(this.props.injectedStyles.locationBox),
-                                    input: overrideClass(this.props.injectedStyles.locationBoxInput),
-                                    menu: overrideClass({
-                                        ...this.props.injectedStyles.resultsMenu as any,
-                                        left: `-${(this.props.onShowSideBarClicked ? 36 : 0) + 25}px`,
-                                        width: `calc(100% + ${(this.props.onShowSideBarClicked ? 36 : 0) + (this.props.onDirectionsClicked && this.props.landscape ? 53 : 0) + 32}px)`
-                                    })
-                                }}
-                                inputId={inputId}
-                                ariaLabel={"Search location"}
-                                inputAriaLabel={ariaLabel}
-                                onRef={this.props.onLocationBoxRef}
-                                menuContainer={this.props.menuContainer}
-                                onMenuVisibilityChange={this.props.onMenuVisibilityChange}
-                            />
-                            {this.props.onDirectionsClicked && viewportProps.landscape &&
-                                <Fragment>
-                                    <div className={classes.divider} />
-                                    <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
-                                        aria-label="Get directions"
-                                    >
-                                        <IconDirections className={classes.directionsIcon} />
-                                    </button>
-                                </Fragment>}
-                        </div>
-                    }
-                </TKUIViewportUtil>
+                <div className={classes.main}>
+                    {this.props.onShowSideMenuClicked &&
+                        <button className={classes.sideBarBtn} onClick={this.props.onShowSideMenuClicked}
+                            aria-label="Menu"
+                        >
+                            <IconMenu className={classes.sideBarIcon} />
+                        </button>}
+                    <TKUILocationBox
+                        showCurrLoc={false}
+                        value={this.props.value}
+                        placeholder={placeholder}
+                        onChange={(value: Location | null) => {
+                            this.props.onChange?.(value);
+                            this.props.onResultHighlight?.(null);
+                        }}
+                        onResultHighlight={this.props.onResultHighlight}
+                        onInputTextChange={this.props.onInputTextChange}
+                        iconEmpty={<IconGlass className={classes.glassIcon} />}
+                        styles={{
+                            wrapper: overrideClass(this.props.injectedStyles.locationBox),
+                            input: overrideClass(this.props.injectedStyles.locationBoxInput),
+                            menu: overrideClass({
+                                ...this.props.injectedStyles.resultsMenu as any,
+                                left: `-${(this.props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
+                                width: `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClicked && !portrait ? 53 : 0) + 32}px)`
+                            })
+                        }}
+                        inputId={inputId}
+                        ariaLabel={"Search location"}
+                        inputAriaLabel={ariaLabel}
+                        onRef={this.props.onLocationBoxRef}
+                        menuContainer={this.props.menuContainer}
+                        onMenuVisibilityChange={this.props.onMenuVisibilityChange}
+                    />
+                    {this.props.onDirectionsClicked && !portrait &&
+                        <Fragment>
+                            <div className={classes.divider} />
+                            <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
+                                aria-label="Get directions"
+                            >
+                                <IconDirections className={classes.directionsIcon} />
+                            </button>
+                        </Fragment>}
+                </div>
             </TKUICard>
         );
     }
@@ -169,39 +178,39 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = props => {
     return (
-        <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingContext: IRoutingResultsContext) => {
-                        const consumerProps: IConsumedProps = {
-                            value: routingContext.query.to,
-                            onChange: (value: Location | null) => {
-                                routingContext.onQueryChange(Util.iAssign(routingContext.query, { to: value }));
-                                if (value !== null && !value.isCurrLoc()) {
-                                    FavouritesData.recInstance.add(value instanceof StopLocation ?
-                                        FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
-                                }
-                            },
-                            onPreChange: routingContext.onPreChange &&
-                                ((location?: Location) => routingContext.onPreChange!(false, location)),
-                            onInputTextChange: routingContext.onInputTextChange &&
-                                ((text: string) => routingContext.onInputTextChange!(false, text)),
-                            ...viewportProps
-                        };
-                        return props.children!(consumerProps);
-                    }}
-                </RoutingResultsContext.Consumer>
-            }
-        </TKUIViewportUtil>
+        <RoutingResultsContext.Consumer>
+            {(routingContext: IRoutingResultsContext) => {
+                const consumerProps: IConsumedProps = {
+                    value: routingContext.query.to,
+                    onChange: (value: Location | null) => {
+                        routingContext.onQueryChange(Util.iAssign(routingContext.query, { to: value }));
+                        if (value !== null && !value.isCurrLoc()) {
+                            FavouritesData.recInstance.add(value instanceof StopLocation ?
+                                FavouriteStop.create(value) : FavouriteTrip.createForLocation(value));
+                        }
+                    },
+                    onResultHighlight: routingContext.onPreChange &&
+                        ((location: Location | null) => routingContext.onPreChange!(false, location ?? undefined)),
+                    onInputTextChange: routingContext.onInputTextChange &&
+                        ((text: string) => routingContext.onInputTextChange!(false, text))
+                };
+                return props.children!(consumerProps);
+            }}
+        </RoutingResultsContext.Consumer>
     );
 };
 
-const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
+const Mapper: PropsMapper<IClientProps, IClientProps> =
     ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({ ...inputProps, ...consumedProps })}
-        </Consumer>;
+        <TKUIViewportUtil>
+            {({ portrait }) =>
+                children!({ ...inputProps, portrait })}
+        </TKUIViewportUtil>;
 
 export default connect((config: TKUIConfig) => config.TKUILocationSearch, config, Mapper);
+
+export const TKUILocationSearchHelpers = {
+    TKStateProps: Consumer
+}
+
 export { TKUILocationSearch as TKUILocationSearchRaw };

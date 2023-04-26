@@ -18,7 +18,7 @@ import TKUIProfileView from "../options/TKUIProfileView";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { Subtract } from "utility-types";
-import TKUILocationSearch from "../query/TKUILocationSearch";
+import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import TKUILocationDetailView from "../location/TKUILocationDetailView";
@@ -217,17 +217,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const searchBar =
             !this.props.hideSearch && !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
             <div>
-                <TKUILocationSearch
-                    onDirectionsClicked={() => {
-                        this.props.onQueryChange(Util.iAssign(this.props.query, { from: Location.createCurrLoc() }));
-                        this.props.onDirectionsView(true);
-                    }}
-                    onShowSideBarClicked={() => {
-                        this.setState({ showSidebar: true });
-                    }}
-                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
-                    onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
-                />
+                <TKUILocationSearchHelpers.TKStateProps>
+                    {stateProps =>
+                        <TKUILocationSearch
+                            {...stateProps}
+                            onDirectionsClicked={() => {
+                                this.props.onQueryChange(Util.iAssign(this.props.query, { from: Location.createCurrLoc() }));
+                                this.props.onDirectionsView(true);
+                            }}
+                            onShowSideMenuClicked={() => {
+                                this.setState({ showSidebar: true });
+                            }}
+                            onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
+                            onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
+                        />
+                    }
+                </TKUILocationSearchHelpers.TKStateProps>
                 <div className={classes.searchMenuContainer}
                     ref={(ref) => ref && ref !== this.state.searchMenuPanelElem && this.setState({ searchMenuPanelElem: ref })} />
             </div>;

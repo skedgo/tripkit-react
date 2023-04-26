@@ -29,7 +29,7 @@ import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
 import { tKUISelectDefaultStyle } from "../buttons/TKUISelect.css";
 import { overrideClass } from "../jss/StyleHelper";
 import { tKUICardDefaultStyle } from "../card/TKUICard.css";
-import TKUILocationSearch from "../query/TKUILocationSearch";
+import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import { tKUILocationSearchDefaultStyle } from "../query/TKUILocationSearch.css";
 import TKUIMapView from "../map/TKUIMapView";
 import { tKUIMapViewDefaultStyle } from "../map/TKUIMapView.css";
@@ -200,7 +200,15 @@ const tKDocConfig = {
         style: classNamesOf(tKUILocationBoxDefaultStyle)
     },
     TKUILocationSearch: {
-        showcase: () => <TKUILocationSearch />,
+        showcase: () =>
+            <TKUILocationSearchHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUILocationSearch
+                        {...stateProps}
+                        onShowSideMenuClicked={() => alert("Clicked menu button")}
+                        onDirectionsClicked={() => alert("Clicked directions button")}
+                    />}
+            </TKUILocationSearchHelpers.TKStateProps>,
         style: classNamesOf(tKUILocationSearchDefaultStyle)
     },
     TKUIRoutingQueryInput: {
