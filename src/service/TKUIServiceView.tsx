@@ -1,30 +1,28 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import ServiceDeparture from "../model/service/ServiceDeparture";
-import { EventEmitter } from "fbemitter";
-import { IServiceResultsContext, ServiceResultsContext } from "./ServiceResultsProvider";
-import TKUICard, { CardPresentation } from "../card/TKUICard";
+import { ServiceResultsContext } from "./ServiceResultsProvider";
+import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
 import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIServiceViewDefaultStyle } from "./TKUIServiceView.css";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import TransportUtil from "../trip/TransportUtil";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
-import { Subtract } from "utility-types";
 import TKShareHelper from "../share/TKShareHelper";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKUIActionsView from "../action/TKUIActionsView";
-import { TKUISlideUpOptions } from "../card/TKUISlideUp";
-import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { OptionsContext } from "../options/OptionsProvider";
 import TKUserProfile from "../model/options/TKUserProfile";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import TKUIServiceRealtimeInfo from "./TKUIServiceRealtimeInfo";
-import HasCard, { HasCardKeys } from "../card/HasCard";
+import ServiceDetail from "../model/service/ServiceDetail";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
-    Pick<HasCard, HasCardKeys.cardPresentation> {
-    onRequestClose?: () => void;
-    slideUpOptions?: TKUISlideUpOptions;
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {    
     actions?: (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[];
+    /**
+     * @ctype TKUICard props
+     */
+    cardProps?: TKUICardClientProps;
 }
 
 interface IStyle {
@@ -37,10 +35,12 @@ interface IStyle {
 }
 
 interface IConsumedProps {
-    title: string,
     departure: ServiceDeparture;
-    eventBus?: EventEmitter;
-    options: TKUserProfile
+    serviceDetail?: ServiceDetail;
+    /**
+     * @default {@link TKState#userProfile}
+     */
+    options?: TKUserProfile
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
@@ -88,19 +88,17 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { departure, classes, t } = this.props;
+        const { departure, serviceDetail, cardProps, classes, t } = this.props;
         const defaultActions = this.getDefaultActions(departure);
         const actions = this.props.actions ? this.props.actions(departure, defaultActions) : defaultActions;
         const actionElems = actions ?
             <TKUIActionsView
                 actions={actions}
                 className={classes.actionsPanel}
-            /> : undefined;
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+            /> : undefined;        
         return (
             <TKUICard
-                title={departure.lineText ?? t("Service")}
-                onRequestClose={this.props.onRequestClose}
+                title={departure.lineText ?? t("Service")}                
                 renderSubHeader={() =>
                     <div className={this.props.classes.serviceOverview} id="serviceViewHeader">
                         <TKUIServiceDepartureRow
@@ -114,19 +112,18 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                             alerts={departure.hasAlerts ? departure.alerts : undefined}
                             modeInfo={departure.modeInfo}
                             options={this.props.options}
-                            alertsSlideUpOptions={this.props.slideUpOptions && { modalUp: this.props.slideUpOptions.modalUp }}
+                            alertsSlideUpOptions={cardProps?.slideUpOptions && { modalUp: cardProps.slideUpOptions.modalUp }}
                         />
                         {actionElems}
                     </div>
                 }
-                presentation={this.props.cardPresentation || CardPresentation.SLIDE_UP}
-                slideUpOptions={slideUpOptions}
                 scrollRef={(scrollRef: any) => this.scrollRef = scrollRef}
+                {...cardProps}
             >
                 <div className={classes.main}>
-                    {departure.serviceDetail?.shapes &&
+                    {serviceDetail?.shapes &&
                         <TKUIServiceSteps
-                            steps={departure.serviceDetail.shapes}
+                            steps={serviceDetail.shapes}
                             serviceColor={TransportUtil.getServiceDepartureColor(departure)}
                             timezone={departure.startTimezone}
                         />}
@@ -136,38 +133,37 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        if (!this.scrolledIntoView && this.props.departure.serviceDetail && this.scrollRef) {
-            this.scrolledIntoView = true;
-            const classes = this.props.classes;
+        if (!this.scrolledIntoView && this.props.serviceDetail && this.scrollRef) {
+            this.scrolledIntoView = true;            
             this.scrollRef.getElementsByClassName("TKUIServiceSteps-firstTravelledStop")[0].scrollIntoView();
         }
     }
 }
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+    const serviceContext = useContext(ServiceResultsContext);
     return (
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <ServiceResultsContext.Consumer>
-                    {(serviceContext: IServiceResultsContext) => (
-                        props.children!({
-                            title: serviceContext.title,
-                            departure: serviceContext.selectedService!,
-                            eventBus: serviceContext.servicesEventBus,
-                            options: optionsContext.userProfile
-                        })
-                    )}
-                </ServiceResultsContext.Consumer>
-            }
-        </OptionsContext.Consumer>
+        <>
+            {props.children!({
+                departure: serviceContext.selectedService!,
+                serviceDetail: serviceContext.selectedService!.serviceDetail
+            })}
+        </>
     );
 };
 
-const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({ ...consumedProps, ...inputProps })}
-        </Consumer>;
+const Mapper: PropsMapper<IClientProps, IClientProps> =
+    ({ inputProps, children }) => {
+        const optionsContext = useContext(OptionsContext);
+        return (
+            <>
+                {children!({ ...optionsContext, ...inputProps })}
+            </>
+        );
+    };
 
 export default connect((config: TKUIConfig) => config.TKUIServiceView, config, Mapper);
+
+export const TKUIServiceViewHelpers = {
+    TKStateProps: Consumer
+}

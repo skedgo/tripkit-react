@@ -8,7 +8,7 @@ import { ReactComponent as IconClock } from "../images/ic-clock.svg";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import { Moment } from "moment";
-import TKUICard, { CardPresentation, TKUICardClientProps } from "../card/TKUICard";
+import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
 import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUITimetableDefaultStyle } from "./TKUITimetableView.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -30,11 +30,8 @@ import TKUIErrorView from "../error/TKUIErrorView";
 import { TKError } from "../error/TKError";
 import { serviceTextColor } from "./TKUIServiceDepartureRow.css";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
-import HasCard, { HasCardKeys } from "../card/HasCard";
-import TKUISlideUpOptions from "../card/TKUISlideUpOptions";
 
-interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>,
-    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
 
     /**
      * Allows to specify a list of action buttons (JSX.Elements) associated with the stop, to be rendered on card header.
@@ -61,23 +58,11 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>,
      * @ctype TKUICard props
      */
     cardProps?: TKUICardClientProps;
-
-    /**
-     * @ignore
-     * @deprecated in favor of `cardProps`
-     */
-    [HasCardKeys.cardPresentation]?: CardPresentation;
-
-    /**
-     * @ignore
-     * @deprecated in favor of `cardProps`
-     */
-    [HasCardKeys.slideUpOptions]?: TKUISlideUpOptions;
 }
 
 interface IConsumedProps extends
     Pick<IServiceResultsContext, "stop" | "onInitTimeChange" | "onRequestMore" | "departures" | "serviceError" | "selectedService">,
-    Pick<Partial<IServiceResultsContext>, "title" | "timetableInitTime" | "timetableFilter" | "onFilterChange" | "waiting" | "onServiceSelection"> {
+    Pick<Partial<IServiceResultsContext>, "timetableInitTime" | "timetableFilter" | "onFilterChange" | "waiting" | "onServiceSelection"> {
 
     /**
      * @ctype
@@ -242,6 +227,7 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
 
     public render(): React.ReactNode {
         const { stop, showServicesOnHeader } = this.props;
+        const title = stop?.shortName ?? stop?.name ?? ""
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
@@ -263,8 +249,7 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
                     elems.push(departure)
                 }
                 return elems;
-            }, []);
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+            }, []);        
         const renderCustomInput = (value: any, onClick: any, onKeyDown: any, ref: any) => (
             // Pass onKeyDown to preserve keyboard navigation when using react-datepicker.
             <button className={classes.faceButtonClass} onClick={onClick} onKeyDown={onKeyDown} ref={ref}
@@ -284,7 +269,7 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
         }
         return (
             <TKUICard
-                title={this.props.title}
+                title={title}
                 subtitle={subtitle}
                 renderSubHeader={(!showServicesOnHeader && !actionElems) ? undefined :
                     () =>
@@ -307,9 +292,6 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
                             {actionElems}
                         </div>
                 }
-                presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
-                onRequestClose={this.props.onRequestClose}
-                slideUpOptions={slideUpOptions}
                 // Timetable should not scroll at body, but at panel below filter, on body content. Next is just required
                 // for Safari so div below filter can actually get a height and scroll happens there.
                 styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({ height: '100%' }) } : undefined}

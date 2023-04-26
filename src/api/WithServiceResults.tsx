@@ -263,7 +263,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 serviceError={this.state.serviceError}
                 timetableFilter={this.state.filter}
                 onFilterChange={this.onFilterChange}
-                title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name) : ""}
+                title={startStop?.shortName ?? startStop?.name ?? ""}
                 timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}
                 onInitTimeChange={this.onInitTimeChange}
                 selectedService={this.getSelectedService()}

@@ -37,7 +37,7 @@ import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TK
 import { genClassNames } from "../css/GenStyle.css";
 import TKStateController from "../config/TKStateController";
 import TKState from "../config/TKState";
-import TKUIServiceView from '../service/TKUIServiceView';
+import TKUIServiceView, { TKUIServiceViewHelpers } from '../service/TKUIServiceView';
 import ServiceDeparture from '../model/service/ServiceDeparture';
 import { tKUIServiceViewDefaultStyle } from '../service/TKUIServiceView.css';
 import ServiceDeparturesResult from '../model/service/ServiceDeparturesResult';
@@ -86,7 +86,7 @@ const TKUITimetableViewShowcase = () =>
             <div style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column' }}>
                 {tKState.stop &&
                     <TKUITimetableViewHelpers.TKStateProps>
-                        {stateProps => <TKUITimetableView {...stateProps} initScrollToNow={false} cardPresentation={CardPresentation.NONE} />}
+                        {stateProps => <TKUITimetableView {...stateProps} initScrollToNow={false} />}
                     </TKUITimetableViewHelpers.TKStateProps>}
                 <TKStateController
                     onInit={(tKState: TKState) => loadTimetableState(tKState, "AU_NSW_Sydney", "200050")}
@@ -101,10 +101,14 @@ const TKUIServiceViewShowcase = () => {
         onServiceSelection(getMockServiceDeparture());
     }, []);
     return selectedService &&
-        <TKUIServiceView
-            // departure={departures[0]}
-            cardPresentation={CardPresentation.NONE}
-        />;
+        <div style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column' }}>
+            <TKUIServiceViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIServiceView
+                        {...stateProps}                        
+                    />}
+            </TKUIServiceViewHelpers.TKStateProps>
+        </div>;
 }
 
 const TKUISelectShowcase = () => {

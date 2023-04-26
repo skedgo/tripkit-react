@@ -25,7 +25,7 @@ const TKUIMxMTimetableCard: React.FunctionComponent<{ segment: Segment, onReques
                                             cardProps={{
                                                 title: "Get on service to " + segment.to.getDisplayString(),
                                                 subtitle: "From " + segment.from.getDisplayString(),
-                                                onRequestClose: onRequestClose,
+                                                onRequestClose,
                                                 renderHeader: props => <TKUIMxMCardHeader segment={segment} {...props} />,
                                                 styles: {
                                                     main: overrideClass({ height: '100%' })
