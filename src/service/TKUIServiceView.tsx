@@ -25,6 +25,7 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * @default _Share_ action, which is an instance of [](TKUIButton).
      */
     actions?: (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[];
+
     /**
      * @ctype TKUICard props
      */

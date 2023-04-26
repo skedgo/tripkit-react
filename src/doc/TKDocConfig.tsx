@@ -172,6 +172,13 @@ const TKUIRoutingResultsViewShowcase = () => {
     );
 }
 
+const TKUITripOverviewShowcase = () =>
+    <div style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column' }}>
+        <TKUITripOverviewView
+            value={getMockRoutingResults()[0]}
+        />
+    </div>;
+
 const tKDocConfig = {
     TKUICard: {
         showcase: () =>
@@ -238,11 +245,7 @@ const tKDocConfig = {
     },
     TKUITripOverviewView: {
         style: classNamesOf(tKUITripOverviewViewDefaultStyle),
-        showcase: () =>
-            <TKUITripOverviewView
-                value={getMockRoutingResults()[0]}
-                cardPresentation={CardPresentation.NONE}
-            />
+        showcase: () => <TKUITripOverviewShowcase />
     },
     TKUITimetableView: {
         showcase: () => <TKUITimetableViewShowcase />,

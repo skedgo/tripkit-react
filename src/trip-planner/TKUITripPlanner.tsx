@@ -394,17 +394,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 tripDetailView =
                     <TKUITripOverviewView
                         value={this.props.selectedTrip!}
-                        onRequestClose={() => this.props.onTripDetailsView(false)}
-                        slideUpOptions={{
-                            position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
-                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                            draggable: true,
-                            modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                            modalMiddle: { top: 55, unit: '%' },
-                            modalDown: { top: 90, unit: '%' }
-                        }}
                         onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
-                        setSelectedTripSegment={props.setSelectedTripSegment}
+                        onTripSegmentSelected={props.setSelectedTripSegment}
+                        cardProps={{
+                            onRequestClose: () => this.props.onTripDetailsView(false),
+                            slideUpOptions: {
+                                position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
+                                initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                draggable: true,
+                                modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                modalMiddle: { top: 55, unit: '%' },
+                                modalDown: { top: 90, unit: '%' }
+                            },
+                            presentation: CardPresentation.SLIDE_UP
+                        }}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -427,19 +430,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                     <div className={classes.carouselPage}>
                                         <TKUITripOverviewView
                                             value={trip}
-                                            onRequestClose={() => {
-                                                this.props.onTripDetailsView(false);
-                                            }}
                                             key={trip.getKey(String(i))}
                                             handleRef={(handleRef: any) => registerHandle(i, handleRef)}
-                                            cardPresentation={CardPresentation.NONE}
-                                            slideUpOptions={{
-                                                draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
-                                                showHandle: true
-                                            }}
                                             shouldFocusAfterRender={i === selected ? undefined : false}
                                             doNotStack={i !== selected}
-                                            setSelectedTripSegment={props.setSelectedTripSegment}
+                                            onTripSegmentSelected={props.setSelectedTripSegment}
+                                            cardProps={{
+                                                onRequestClose: () => this.props.onTripDetailsView(false),
+                                                slideUpOptions: {
+                                                    draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
+                                                    showHandle: true
+                                                },
+                                                presentation: CardPresentation.NONE
+                                            }}
                                         />
                                     </div>
                                 )}
