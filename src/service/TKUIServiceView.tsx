@@ -17,12 +17,23 @@ import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import TKUIServiceRealtimeInfo from "./TKUIServiceRealtimeInfo";
 import ServiceDetail from "../model/service/ServiceDetail";
 
-interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {    
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
+    /**
+     * Allows to specify a list of action buttons (JSX.Elements) associated with the service, to be rendered on card header.
+     * It receives the service and the default list of buttons.
+     * @ctype (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[]
+     * @default _Share_ action, which is an instance of [](TKUIButton).
+     */
     actions?: (service: ServiceDeparture, defaultActions: JSX.Element[]) => JSX.Element[];
     /**
      * @ctype TKUICard props
      */
     cardProps?: TKUICardClientProps;
+
+    /**
+     * @default true
+     */
+    initScrollToStop?: boolean;
 }
 
 interface IStyle {
@@ -35,9 +46,19 @@ interface IStyle {
 }
 
 interface IConsumedProps {
+    /**
+     * @ctype
+     * @order 1
+     */
     departure: ServiceDeparture;
+    /**
+     * @ctype
+     * @order 2
+     * @divider
+     */
     serviceDetail?: ServiceDetail;
     /**
+     * @ctype
      * @default {@link TKState#userProfile}
      */
     options?: TKUserProfile
@@ -95,10 +116,10 @@ class TKUIServiceView extends React.Component<IProps, IState> {
             <TKUIActionsView
                 actions={actions}
                 className={classes.actionsPanel}
-            /> : undefined;        
+            /> : undefined;
         return (
             <TKUICard
-                title={departure.lineText ?? t("Service")}                
+                title={departure.lineText ?? t("Service")}
                 renderSubHeader={() =>
                     <div className={this.props.classes.serviceOverview} id="serviceViewHeader">
                         <TKUIServiceDepartureRow
@@ -133,8 +154,8 @@ class TKUIServiceView extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        if (!this.scrolledIntoView && this.props.serviceDetail && this.scrollRef) {
-            this.scrolledIntoView = true;            
+        if (this.props.initScrollToStop !== false && !this.scrolledIntoView && this.props.serviceDetail && this.scrollRef) {
+            this.scrolledIntoView = true;
             this.scrollRef.getElementsByClassName("TKUIServiceSteps-firstTravelledStop")[0].scrollIntoView();
         }
     }

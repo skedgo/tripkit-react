@@ -105,7 +105,8 @@ const TKUIServiceViewShowcase = () => {
             <TKUIServiceViewHelpers.TKStateProps>
                 {stateProps =>
                     <TKUIServiceView
-                        {...stateProps}                        
+                        {...stateProps}
+                        initScrollToStop={false}
                     />}
             </TKUIServiceViewHelpers.TKStateProps>
         </div>;
