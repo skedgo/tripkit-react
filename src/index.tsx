@@ -77,7 +77,7 @@ export { TKUISlideUpPosition } from "./card/TKUISlideUp";
 export { TKError } from "./error/TKError";
 export type TKUIRoutingResultsViewProps = TKUIRoutingResultsViewPropsForExport;
 export { default as TKFeatures } from "./env/Features";
-export { default as TKUIMapView } from "./map/TKUIMapView";
+export { default as TKUIMapView, TKUIMapViewHelpers } from "./map/TKUIMapView";
 export type TKUIMapViewProps = TKUIMapViewPropsForExport;
 export { tKRequestCurrentLocation } from "./util/GeolocationUtil";
 export { default as TKStateUrl } from "./state/TKStateUrl";
