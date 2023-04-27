@@ -204,7 +204,7 @@ const Mapper: PropsMapper<IClientProps, IClientProps> =
     ({ inputProps, children }) =>
         <TKUIViewportUtil>
             {({ portrait }) =>
-                children!({ ...inputProps, portrait })}
+                children!({ portrait, ...inputProps })}
         </TKUIViewportUtil>;
 
 export default connect((config: TKUIConfig) => config.TKUILocationSearch, config, Mapper);

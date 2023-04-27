@@ -69,6 +69,7 @@ module.exports = {
                     'src/service/TKUIServiceView.tsx',
                     'src/trip/TKUIRoutingResultsView.tsx',
                     'src/trip/TKUITripOverviewView.tsx',
+                    'src/mxm/TKUIMxMView.tsx',
                     'src/map/TKUIMapView.tsx',
                     'src/card/TKUICard.tsx',
                     'src/query/TKUILocationSearch.tsx',

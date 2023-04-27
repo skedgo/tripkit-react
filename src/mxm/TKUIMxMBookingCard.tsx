@@ -42,7 +42,7 @@ type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
-    onRequestClose: () => void;
+    onRequestClose?: () => void;
     refreshSelectedTrip: () => Promise<boolean>;
     onSuccess?: (bookingTripUpdateURL: string) => void;
     trip?: Trip;

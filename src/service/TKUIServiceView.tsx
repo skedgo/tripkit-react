@@ -176,10 +176,10 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
 
 const Mapper: PropsMapper<IClientProps, IClientProps> =
     ({ inputProps, children }) => {
-        const optionsContext = useContext(OptionsContext);
+        const { userProfile } = useContext(OptionsContext);
         return (
             <>
-                {children!({ ...optionsContext, ...inputProps })}
+                {children!({ options: userProfile, ...inputProps })}
             </>
         );
     };

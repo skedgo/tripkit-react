@@ -48,7 +48,7 @@ import Segment from "../model/trip/Segment";
 import { cardSpacing } from "../jss/TKUITheme";
 import Environment from "../env/Environment";
 import { TKUILocationBoxRef } from "../location_box/TKUILocationBox";
-import TKUIMxMView from "../mxm/TKUIMxMView";
+import TKUIMxMView, { TKUIMxMViewHelpers } from "../mxm/TKUIMxMView";
 import TKUIHomeCard from "../sidebar/TKUIHomeCard";
 import TKUIMyBookings from "../booking/TKUIMyBookings";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
@@ -494,7 +494,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
                 onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({ tripUpdateStatus: undefined }) : undefined}
             />;
-        const mxMView = props.selectedTripSegment && <TKUIMxMView parentElement={this.ref} />;
+        const mxMView = props.selectedTripSegment &&
+            <TKUIMxMViewHelpers.TKStateProps>
+                {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
+            </TKUIMxMViewHelpers.TKStateProps>
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>

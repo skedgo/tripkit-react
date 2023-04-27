@@ -11,8 +11,6 @@ import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import RoutingQuery from '../model/RoutingQuery';
-import { TKError } from '../error/TKError';
-
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
     setWaiting?: (waiting: boolean) => void;

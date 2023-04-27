@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { tKUIDeaultTheme } from "../jss/TKUITheme";
 import { tKUIButtonDefaultStyle } from "../buttons/TKUIButton.css";
@@ -45,6 +45,9 @@ import { ServiceResultsContext } from '../service/ServiceResultsProvider';
 import { tKUILocationBoxDefaultStyle } from '../location_box/TKUILocationBox.css';
 import TKUILocationBox from '../location_box/TKUILocationBox';
 import { useTKState } from '../config/TKStateProvider';
+import { tKUIMxMViewDefaultStyle } from '../mxm/TKUIMxMView.css';
+import TKUIMxMView from '../mxm/TKUIMxMView';
+import Segment from '../model/trip/Segment';
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme({ isDark: false, isHighContrast: false })) : defaultStyle);
@@ -179,6 +182,27 @@ const TKUITripOverviewShowcase = () =>
         />
     </div>;
 
+const TKUIMxMViewShowcase = () => {
+    const trip = useMemo(() => getMockRoutingResults()[0], []);
+    const [selectedTripSegment, setSelectedTripSegment] = useState<Segment | undefined>(undefined);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [show, setShow] = useState<boolean>(false);
+    useEffect(() => {
+        setShow(true);  // To wait for containerRef.current to be instantiated.
+    }, []);
+    return (
+        <div ref={containerRef} style={{ height: '800px', width: '400px', display: 'flex', flexDirection: 'column', position: 'relative' }}>
+            {show &&
+                <TKUIMxMView
+                    trip={trip}
+                    selectedTripSegment={selectedTripSegment}
+                    onTripSegmentSelected={setSelectedTripSegment}
+                    parentElement={containerRef.current}
+                />}
+        </div>
+    );
+};
+
 const tKDocConfig = {
     TKUICard: {
         showcase: () =>
@@ -247,13 +271,17 @@ const tKDocConfig = {
         showcase: () => <TKUIRoutingResultsViewShowcase />,
         style: classNamesOf(tKUIResultsDefaultStyle)
     },
-    TKUITripRow: {
-        showcase: () => <TKUITripRow value={getMockRoutingResults()[0]} />,
-        style: classNamesOf(tKUITripRowDefaultStyle)
-    },
     TKUITripOverviewView: {
         style: classNamesOf(tKUITripOverviewViewDefaultStyle),
         showcase: () => <TKUITripOverviewShowcase />
+    },
+    TKUIMxMView: {
+        style: classNamesOf(tKUIMxMViewDefaultStyle),
+        showcase: () => <TKUIMxMViewShowcase />
+    },
+    TKUITripRow: {
+        showcase: () => <TKUITripRow value={getMockRoutingResults()[0]} />,
+        style: classNamesOf(tKUITripRowDefaultStyle)
     },
     TKUITimetableView: {
         showcase: () => <TKUITimetableViewShowcase />,
