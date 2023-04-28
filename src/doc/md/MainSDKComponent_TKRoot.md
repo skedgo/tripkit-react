@@ -6,7 +6,7 @@ to the system.
 
 It receives a [config object](TKUIConfig) as property, which allows to specify the *TripGo API key* (required) and 
 optionally other general customization options, as *theme*, *i18n resources* (translations of SDK strings), 
-*google analytics configs* (including API keys), *geocoding sources*, etc. It also allows to specify component-specific configs 
+*google analytics configs* (including API keys), *geocoding sources*, etc. It also allows to specify [component-specific configs](#/Component-level%20Customization) 
 for any component of the SDK,  which will be applied to the component when rendered anywhere below TKRoot in the tree.
 
 ### Global state
