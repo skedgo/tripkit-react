@@ -93,7 +93,8 @@ interface IConsumedProps {
      * Routing query.
      * 
      * Use TKUIRoutingQueryInputUtils.TKStateProps to pass {@link TKState#query}.
-     * @ctype     
+     * @ctype
+     * @order 1
      */
     value: RoutingQuery;
 
@@ -101,7 +102,9 @@ interface IConsumedProps {
      * Routing query change callback.
      * 
      * Connect it with {@link TKState#onQueryChange} by using TKUIRoutingQueryInputUtils.TKStateProps
-     * @ctype     
+     * @ctype
+     * @order 2
+     * @divider   
      */
     onChange?: (routingQuery: RoutingQuery) => void;
 
