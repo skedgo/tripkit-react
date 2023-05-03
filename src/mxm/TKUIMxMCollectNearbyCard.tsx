@@ -56,7 +56,10 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
         TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=1000&modes=${mode}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
             .then(groupsJSON => Util.deserialize(groupsJSON.groups[0], LocationsResult))
             .then(locationsResult => {
-                setAlternatives(locationsResult.getLocations().filter(location => !(location instanceof FacilityLocation)));
+                const locations = locationsResult.getLocations()
+                    .filter(location => !(location instanceof FacilityLocation) &&
+                        !(location instanceof BikePodLocation && location.bikePod?.inService === false));
+                setAlternatives(locations);
             });
         // Use an observable instead.    
         GeolocationData.instance.requestCurrentLocation(true)
@@ -121,9 +124,9 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
                     </div>
                 );
             })}
-        </div>    
+        </div>
     const sortedAlternatives = alternatives?.slice();
-    sortedAlternatives?.sort((alt1, alt2) => LocationUtil.distanceInMetres(alt1, segment.location) - LocationUtil.distanceInMetres(alt2, segment.location));    
+    sortedAlternatives?.sort((alt1, alt2) => LocationUtil.distanceInMetres(alt1, segment.location) - LocationUtil.distanceInMetres(alt2, segment.location));
     return (
         <TKUICard
             title={segment.getAction()}
