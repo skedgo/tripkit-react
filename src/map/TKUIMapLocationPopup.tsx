@@ -120,7 +120,8 @@ const TKUIMapLocationPopup: React.SFC<IProps> = (props: IProps) => {
     };
 
     return (
-        <TKUIMapPopup title={LocationUtil.getMainText(location, props.t)}
+        <TKUIMapPopup
+            title={LocationUtil.getMainText(location, props.t)}
             subtitle={LocationUtil.getSecondaryText(location)}
             onAction={props.onAction}
             renderActionIcon={location instanceof StopLocation ? () => <IconTimes /> : undefined}

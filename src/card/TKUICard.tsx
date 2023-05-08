@@ -218,12 +218,13 @@ class TKUICard extends React.Component<IProps, IState> {
         // First modal at the moment of creation, so will show fog. Assume a dialogs close in reverse order they were
         // opened, so the first opened (showing fog) is the last closed.
         this.firstModal = TKUICard.MODAL_COUNT === 1;
-        // Z-index is assigned on card construction, contemplating slide-us and modals (since presentation can switch
+        // Z-index is assigned on card construction, contemplating slide-ups and modals (since presentation can switch
         // between them during card lifetime). Also assumes that cards are displayed stacked in the order they where
         // created.
-        // Issue when open a card and the close one below, e.g. menu > profile > Development > Open routing specs.
+        // Issue when open a card and then close one below, e.g. menu > profile > Development > Open routing specs.
         // Maybe use the stack instead to dynamically calculate the index.
-        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
+        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;        
+        console.log(props.title + " zIndex: " + this.zIndex);        
         if (!props.doNotStack) {
             TKUICard.cardStack.push(this);
         }

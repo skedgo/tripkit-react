@@ -62,7 +62,7 @@ export const tKUILocationBoxDefaultStyle = (theme: TKUITheme) => ({
         left: "0",
         width: "100%",
         overflow: "auto"
-    },    
+    },
     sideMenu: {
         fontFamily: theme.fontFamily,
         '&.rc-tooltip': {

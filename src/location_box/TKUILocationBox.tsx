@@ -13,7 +13,7 @@ import DeviceUtil from "../util/DeviceUtil";
 import { resetStyles } from "../css/ResetStyle.css";
 import RegionsData from "../data/RegionsData";
 import { TKError } from "../error/TKError";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { tKUILocationBoxDefaultStyle } from "./TKUILocationBox.css";
@@ -453,7 +453,7 @@ class TKUILocationBox extends Component<IProps, IState> {
     }
 
     private renderInput(props: any) {
-        const classes = this.props.classes;
+        const { classes } = this.props;
         return (
             <div className={classes.main} role="none">
                 <input type="text"
@@ -462,7 +462,7 @@ class TKUILocationBox extends Component<IProps, IState> {
                     autoCorrect="off"
                     autoCapitalize="off"
                     {...props}
-                    className={classes.input}                
+                    className={classes.input}
                 />
                 {this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false" /> :
@@ -521,7 +521,7 @@ class TKUILocationBox extends Component<IProps, IState> {
             const externalContainer = this.props.menuContainer;
             const menu =
                 <div
-                    style={{                        
+                    style={{
                         ...externalContainer && {
                             position: "relative",
                             left: undefined,

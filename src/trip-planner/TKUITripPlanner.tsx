@@ -84,7 +84,7 @@ interface IState {
     showTransportSettings: boolean;
     showMyBookings?: boolean;
     showFavourites: boolean;
-    showLocationDetails: boolean;
+    showLocationDetailsFor?: Location;
     tripUpdateStatus?: TKRequestStatus;
     // Need to put this elem into the state so when instantiated it triggers a re-render on consumer TKUILocationSearch.
     searchMenuPanelElem?: HTMLDivElement;
@@ -112,7 +112,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTransportSettings: false,
             mapView: false,
             showFavourites: false,
-            showLocationDetails: false,
+            showLocationDetailsFor: undefined,
             fadeOutHome: false,
             fadeOutHomeBecauseDetails: false
         };
@@ -176,12 +176,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.props.onDirectionsView(true);
         }
         FavouritesData.recInstance.add(favourite);
-    }
-
-    private static ableToShowLocationDetailView(props: IProps): boolean {
-        const toLocation = props.query.to;
-        return !props.directionsView && !!toLocation && toLocation.isResolved() &&
-            !toLocation.isDroppedPin() && !(toLocation instanceof StopLocation);
     }
 
     private isShowTripDetail(props?: IProps) {
@@ -296,19 +290,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />
                 }
             </TKUIRoutingQueryInputHelpers.TKStateProps>;
-        const toLocation = this.props.query.to;
-        const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
+        const locationDetailView = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor.isResolved() && !this.state.showLocationDetailsFor.isDroppedPin() &&
             <TKUILocationDetailView
-                location={toLocation!}
+                location={this.state.showLocationDetailsFor}
+                actions={this.props.directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     position: DeviceUtil.isTouch() ? undefined :
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 145, unit: 'px' }
+                    modalUp: this.props.landscape ?
+                        { top: (this.isShowTripDetail() || this.props.selectedTripSegment) ? cardSpacing() : (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                        { top: cardSpacing(false), unit: 'px' },
+                    modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
+                    zIndex: this.props.selectedTripSegment ? 1006 : undefined   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
                 }}
-                onRequestClose={() => this.setState({ showLocationDetails: false })}
+                onRequestClose={() => this.setState({ showLocationDetailsFor: undefined })}
             />;
         const timetableView = this.isShowTimetable() ?
             <TKUITimetableViewHelpers.TKStateProps>
@@ -526,8 +523,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                     }
                                                 } else if (loc.isCurrLoc()) {
                                                     return undefined;
-                                                } else if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
-                                                    return () => this.setState({ showLocationDetails: true });
+                                                } else if (loc.isResolved() && !loc.isDroppedPin()) {
+                                                    return () => this.setState({ showLocationDetailsFor: loc });
                                                 }
                                                 return undefined;
                                             }}
@@ -580,13 +577,11 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
-        if (TKUITripPlanner.ableToShowLocationDetailView(this.props) !== TKUITripPlanner.ableToShowLocationDetailView(prevProps)) {
-            const ableToShowLocationDetailView = TKUITripPlanner.ableToShowLocationDetailView(this.props);
-            this.setState({ showLocationDetails: ableToShowLocationDetailView });
-            if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
+        if (!!this.state.showLocationDetailsFor !== !!prevState.showLocationDetailsFor) {
+            if (this.state.showLocationDetailsFor) {
                 this.setState({ fadeOutHomeBecauseDetails: true });
             } else {
-                setTimeout(() => this.setState({ fadeOutHomeBecauseDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props) }), 500);
+                setTimeout(() => this.setState({ fadeOutHomeBecauseDetails: false }), 500);
             }
         }
 
@@ -600,12 +595,24 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             // resolved, which happens when loading a timetable web-app url. Timetable will be triggered by TKStateUrl.
             && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
             this.showTimetableFor(this.props.query.to as StopLocation);
-        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to
-            && !this.props.directionsView && !this.state.showLocationDetails
+        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && !this.props.directionsView // Set destination on search view
             // Don't show location details if it was the case that the location was unresolved and become
             // resolved. Copied from stop location case, not sure it it's actually necessary.
-            && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
-            this.setState({ showLocationDetails: true })
+            && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)
+            && this.props.query.to !== this.state.showLocationDetailsFor) {
+            this.setState({ showLocationDetailsFor: this.props.query.to })
+        }
+
+        if (this.state.showLocationDetailsFor &&
+            (
+                (prevProps.query.from === this.state.showLocationDetailsFor && !this.props.query.from) ||   // Hide from details if removed from
+                (prevProps.query.to === this.state.showLocationDetailsFor && !this.props.query.to) ||   // Hide to details if removed to
+                (!prevProps.directionsView && this.props.directionsView) || // Switched to directions view, so close location detail
+                (prevProps.trips === undefined && this.props.trips !== undefined) ||    // Hide details if started computing trips
+                (prevProps.trips !== undefined && this.props.trips === undefined)       // Hide details if cleared trips
+            )
+        ) {
+            this.setState({ showLocationDetailsFor: undefined })
         }
 
         if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
@@ -620,13 +627,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
         if (!this.isShowTimetable(prevProps) && this.isShowTimetable() // Start displaying timetable
             || (this.isShowTimetable() && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
-            || !prevState.showLocationDetails && this.state.showLocationDetails // Start displaying location details
+            || !prevState.showLocationDetailsFor && this.state.showLocationDetailsFor // Start displaying location details
         ) {
             this.setState({ showFavourites: false });
-        }
-        // Switched to directions view, so close location detail
-        if (!prevProps.directionsView && this.props.directionsView && this.state.showLocationDetails) {
-            this.setState({ showLocationDetails: false });
         }
         // Switched to directions view, so close timetable
         if (!prevProps.directionsView && this.props.directionsView && this.isShowTimetable()) {

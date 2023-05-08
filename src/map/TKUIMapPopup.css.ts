@@ -26,7 +26,7 @@ export const tKUIMapPopupStyle: TKUIStyles<TKUIMapPopupStyle, TKUIMapPopupProps>
         },
         separator: {
             marginRight: '10px',
-            borderRight: '1px solid #23b15e',
+            borderRight: '1px solid ' + theme.colorPrimary,
             paddingRight: '10px',
             ...genStyles.alignSelfStretch
         },

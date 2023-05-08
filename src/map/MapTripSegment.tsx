@@ -23,6 +23,7 @@ interface IProps {
     segmentIconClassName?: string;
     vehicleClassName?: string;
     t: TranslationFunction;
+    onLocationAction?: () => void;
 }
 
 class MapTripSegment extends React.Component<IProps, {}> {
@@ -69,7 +70,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                                 // doesn't stabilizes. Fix it.
                                                 autoPan={false}
                                             >
-                                                {<SegmentPopup segment={segment} t={this.props.t} />}
+                                                {<SegmentPopup segment={segment} t={this.props.t} onLocationAction={this.props.onLocationAction} />}
                                             </Popup>
                                         </Marker>;
                                     }

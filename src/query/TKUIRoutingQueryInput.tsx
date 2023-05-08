@@ -142,23 +142,9 @@ interface IConsumedProps {
     map?: any;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+type IStyle = ReturnType<typeof tKUIRoutingQueryInputDefaultStyle>;
 
-interface IStyle {
-    btnBack: CSSProps<IProps>;
-    fromToPanel: CSSProps<IProps>;
-    fromToInputsPanel: CSSProps<IProps>;
-    locSelector: CSSProps<IProps>;
-    locIcon: CSSProps<IProps>;
-    locTarget: CSSProps<IProps>;
-    dotIcon: CSSProps<IProps>;
-    divider: CSSProps<IProps>;
-    swap: CSSProps<IProps>;
-    footer: CSSProps<IProps>;
-    transportsBtn: CSSProps<IProps>;
-    timePrefSelect: CSSProps<IProps>;
-    datePicker: CSSProps<IProps>;
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIRoutingQueryInputProps = IProps;
 export type TKUIRoutingQueryInputStyle = IStyle;
@@ -316,9 +302,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </button> :
                         <div className={classes.locSelector}>
                             <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)} />
-                            <div className={classes.dotIcon} />
-                            <div className={classes.dotIcon} />
-                            <div className={classes.dotIcon} />
+                            <div className={classes.locLine} />                            
                             <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)} />
                         </div>}
                     <div className={classes.fromToInputsPanel}>
