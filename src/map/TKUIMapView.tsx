@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { MutableRefObject, useContext, useMemo } from "react";
 import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
 import L, { FitBoundsOptions, LatLngBounds } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
@@ -125,6 +125,11 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * @ignore until define how to merge with readonly, or just remove it.
      */
     disableMapClick?: boolean | ((zoom?: number) => boolean);
+
+    /**
+     * @ignore
+     */
+    reference?: ((instance: TKUIMapView | null) => void) | MutableRefObject<TKUIMapView | null> | null;
 }
 interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
     /**
@@ -853,6 +858,13 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         }
         // TODO Delete: Can actually delete this? It causes an exception sometimes.
         setTimeout(() => this.onResize(), 5000);
+        if (this.props.reference) {
+            if (Util.isFunction(this.props.reference)) {
+                (this.props.reference as ((instance: TKUIMapView | null) => void))(this);
+            } else {
+                (this.props.reference as MutableRefObject<TKUIMapView | null>).current = this;
+            }
+        }
     }
 
     public componentDidUpdate(prevProps: IProps & IDefaultProps): void {
@@ -1115,7 +1127,10 @@ const Mapper: PropsMapper<IClientProps, IClientProps> = ({ inputProps, children 
  * computation by right clicking on map and selecting "Directions from here" or "Directions to here".
  */
 
-export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
+const Component = connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
+export default React.forwardRef<TKUIMapView, IClientProps>((props: IClientProps, ref) => (
+    <Component {...props} reference={ref} />
+));
 export { TKUIMapView as TKUIMapViewClass };
 export { Marker, Popup, L };
 
