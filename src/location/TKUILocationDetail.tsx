@@ -14,10 +14,10 @@ import Region from "../model/region/Region";
 import BikePodLocation from "../model/location/BikePodLocation";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
-import iconW3w from "../images/location/ic-what3words.png";
 import { ReactComponent as IconPhone } from "../images/location/ic-phone.svg";
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 import { ReactComponent as IconOpenApp } from "../images/location/ic-open-app.svg";
+import { ReactComponent as IconW3W } from "../images/location/ic-what3word.svg";
 import CarParkLocation from "../model/location/CarParkLocation";
 import CompanyInfo from "../model/location/CompanyInfo";
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
@@ -60,13 +60,14 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         // TODO: if location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
+        setLocationInfo(undefined);
         RegionsData.instance.getRegionP(location).then((region?: Region) =>
             LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ?
                 location.id : location, location.source === TKDefaultGeocoderNames.skedgo && location.id && region ?
                 region.name : undefined)
                 .then((result: TKLocationInfo) => setLocationInfo(result))
                 .catch((e) => console.log(e)));
-    }, []);
+    }, [location.getKey()]);
     let moreInfoItems: React.ReactElement[] = [];
     let operator: CompanyInfo | undefined = undefined;
     let openingHours: OpeningHours | undefined = undefined;
@@ -240,12 +241,13 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
     }
     if (locationInfo && locationInfo.details && locationInfo.details.w3w) {
         moreInfoItems.push(
-            <TKUILocationDetailField title={locationInfo.details.w3w}
+            <TKUILocationDetailField
+                title={locationInfo.details.w3w}
                 subtitle={
                     <a href={locationInfo.details.w3wInfoURL} target="_blank" tabIndex={-1}>
                         {t("what3words.address")}
                     </a>}
-                icon={iconW3w}
+                icon={<IconW3W />}
                 key={"w3w"}
             />);
     }

@@ -89,7 +89,7 @@ interface IState {
     // Need to put this elem into the state so when instantiated it triggers a re-render on consumer TKUILocationSearch.
     searchMenuPanelElem?: HTMLDivElement;
     fadeOutHome: boolean;
-    fadeOutHomeBecauseDetails: boolean;
+    fadeOutHomeBounce: boolean;
 }
 
 const modalContainerId = "mv-modal-panel";
@@ -114,7 +114,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showFavourites: false,
             showLocationDetailsFor: undefined,
             fadeOutHome: false,
-            fadeOutHomeBecauseDetails: false
+            fadeOutHomeBounce: false
         };
         TKUICardRaw.modalContainerId = modalContainerId;
         TKUICardRaw.mainContainerId = mainContainerId;
@@ -141,6 +141,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onShowTransportSettings = this.onShowTransportSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
         this.onRequestAlternativeRoutes = this.onRequestAlternativeRoutes.bind(this);
+        this.setFadeOutHome = this.setFadeOutHome.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -223,7 +224,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 this.setState({ showSidebar: true });
                             }}
                             onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
-                            onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
+                            onMenuVisibilityChange={open => this.setFadeOutHome(open)}
                         />
                     }
                 </TKUILocationSearchHelpers.TKStateProps>
@@ -383,11 +384,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         showTransportsBtn={this.props.portrait}
                     />}
             </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
-
-        // this.state.fadeOutHomeBecauseDetails is set to false with a delay, to avoid home card being displayed on search location clear and immediatly being hidden again 
-        // because input gets focus and there are recent autocompletion results.
         const homeCard = searchBar && !favouritesView && !this.isShowTimetable() &&
-            <div className={this.state.fadeOutHome || this.state.fadeOutHomeBecauseDetails ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
+            <div className={this.state.fadeOutHome ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
                 <TKUIHomeCard onMyBookings={() => this.setState({ showMyBookings: true })} />
             </div>
         let tripDetailView: any;
@@ -576,12 +574,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
 
+    private setFadeOutHome(fadeOutHome: boolean) {
+        this.setState({ fadeOutHomeBounce: fadeOutHome });
+        // Just bounce setting fadeOutHome to false, to avoid home to start appearing to immediatly dissapear. E.g.
+        // one component was hidden to display another: loc datail -> other loc detail on drag pin, showing autocompletion results -> pin drop).
+        if (fadeOutHome) {
+            this.setState({ fadeOutHome: true });
+        } else {
+            setTimeout(() => this.state.fadeOutHomeBounce !== this.state.fadeOutHome && this.setState({ fadeOutHome: fadeOutHome }), 500);
+        }
+    }
+
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
         if (!!this.state.showLocationDetailsFor !== !!prevState.showLocationDetailsFor) {
             if (this.state.showLocationDetailsFor) {
-                this.setState({ fadeOutHomeBecauseDetails: true });
+                this.setFadeOutHome(true);
             } else {
-                setTimeout(() => this.setState({ fadeOutHomeBecauseDetails: false }), 500);
+                this.setFadeOutHome(false);
             }
         }
 
