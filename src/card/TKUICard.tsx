@@ -223,8 +223,7 @@ class TKUICard extends React.Component<IProps, IState> {
         // created.
         // Issue when open a card and then close one below, e.g. menu > profile > Development > Open routing specs.
         // Maybe use the stack instead to dynamically calculate the index.
-        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;        
-        console.log(props.title + " zIndex: " + this.zIndex);        
+        this.zIndex = 1001 + TKUICard.MODAL_COUNT + TKUICard.SLIDE_UP_COUNT;
         if (!props.doNotStack) {
             TKUICard.cardStack.push(this);
         }

@@ -121,6 +121,12 @@ interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, P
      * @default  [TKState.config.tripCompareFc]{@link TKUIConfig#tripCompareFc}
      */
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
+
+    /**
+     * ignore
+     * @default true
+     */
+    automaticTripSelection?: boolean;
 }
 
 interface IConsumedProps {
@@ -247,7 +253,7 @@ interface IState {
     toLocInfo?: TKLocationInfo;
 }
 
-type IDefaultProps = Required<Pick<IProps, "values" | "waiting" | "sort" | "landscape" | "portrait" | "tripSortingsToShow">>;
+type IDefaultProps = Required<Pick<IProps, "values" | "waiting" | "sort" | "landscape" | "portrait" | "tripSortingsToShow" | "automaticTripSelection">>;
 
 class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, IState> {
 
@@ -261,7 +267,8 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
         sort: TripSort.OVERALL,
         tripSortingsToShow: Object.values(TripSort).filter((value: TripSort) => value !== TripSort.CARBON),
         portrait: false,
-        landscape: true
+        landscape: true,
+        automaticTripSelection: true
     };
 
     constructor(props: IProps & IDefaultProps) {
@@ -566,7 +573,7 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
         }
 
         // Automatic trip selection a while after first group of trips arrived
-        if (!prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
+        if (this.props.automaticTripSelection && !prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
             this.automaticSelectionTimeout = setTimeout(() => {
                 if (this.props.values && this.props.values.length > 0 && this.props.onChange && !this.props.value
                     && !this.state.showTransportSwitches) { // Avoid automatic trip selection if showTransportSwitches is showing.

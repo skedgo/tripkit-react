@@ -62,7 +62,7 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
 
 interface IConsumedProps extends
     Pick<IServiceResultsContext, "stop" | "onInitTimeChange" | "onRequestMore" | "departures" | "serviceError" | "selectedService">,
-    Pick<Partial<IServiceResultsContext>, "timetableInitTime" | "timetableFilter" | "onFilterChange" | "waiting" | "onServiceSelection"> {
+    Pick<Partial<IServiceResultsContext>, "timetableInitTime" | "timetableFilter" | "onFilterChange" | "waitingDepartures" | "onServiceSelection"> {
 
     /**
      * @ctype
@@ -137,10 +137,10 @@ interface IConsumedProps extends
 
     /**
      * @ctype
-     * @tkstateprop {@link TKState#waiting}
+     * @tkstateprop {@link TKState#waitingDepartures}
      * @default false
      */
-    waiting?: boolean;
+    waitingDepartures?: boolean;
 
     /**
      * @ctype
@@ -177,7 +177,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView"
 };
 
-type IDefaultProps = Required<Pick<IProps, "timetableInitTime" | "showServicesOnHeader" | "initScrollToNow" | "waiting">>;
+type IDefaultProps = Required<Pick<IProps, "timetableInitTime" | "showServicesOnHeader" | "initScrollToNow" | "waitingDepartures">>;
 
 class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
 
@@ -187,7 +187,7 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
         timetableInitTime: DateTimeUtil.getNow(),
         showServicesOnHeader: true,
         initScrollToNow: true,
-        waiting: false
+        waitingDepartures: false
     }
 
     constructor(props: IProps & IDefaultProps) {
@@ -258,7 +258,7 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
             </button>
         );
         let error: JSX.Element | undefined = undefined;
-        if (!this.props.waiting && this.props.serviceError) {
+        if (!this.props.waitingDepartures && this.props.serviceError) {
             const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : t("Something.went.wrong.");
             error =
                 <TKUIErrorView
@@ -358,9 +358,9 @@ class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
                                     );
                                     return elems;
                                 }, [])}
-                                {this.props.waiting ?
+                                {this.props.waitingDepartures ?
                                     <IconSpin className={classes.iconLoading} focusable="false" /> : null}
-                                {!this.props.waiting && !this.props.serviceError && this.props.departures.length === 0
+                                {!this.props.waitingDepartures && !this.props.serviceError && this.props.departures.length === 0
                                     && <div className={classes.noResults}>{"No results"}</div>}
                             </div>
                         </div>

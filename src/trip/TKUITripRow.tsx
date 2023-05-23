@@ -220,7 +220,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
     // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
     // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
     // by default.
-    const bookingSegment = trip.segments.find(segment => 
+    const bookingSegment = trip.segments.find(segment =>
         (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking);
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
@@ -230,7 +230,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
         <div className={classes.info}>
             {metricsS}
         </div>;
-    const { status } = useContext(TKAccountContext);    
+    const { status } = useContext(TKAccountContext);
     const more = (props.expanded || alternatives.length > visibleAlternatives.length) &&
         <TKUIButton
             text={props.expanded ? t("Less") : t("More")}
@@ -251,7 +251,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
             role={"button"}
             aria-pressed={props.expanded}
             aria-label={props.expanded ? "Less alternatives" : "More alternatives"} />;
-    const book = bookingSegment &&
+    const book = bookingSegment && props.onSegmentSelected &&
         <TKUIButton
             text={bookingSegment?.booking?.title ?? t("Book")}
             type={TKUIButtonType.PRIMARY_LINK}

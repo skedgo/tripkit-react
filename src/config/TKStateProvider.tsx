@@ -44,6 +44,7 @@ class TKStateProvider extends React.Component<IProps, {}> {
                                             options={optionsContext && optionsContext.userProfile}
                                             locale={i18nProps.locale}
                                             preferredTripCompareFc={config.tripCompareFc}
+                                            computeModeSetsBuilder={config.computeModeSetsBuilder}                                            
                                         >
                                             <RoutingResultsContext.Consumer>
                                                 {(routingResultsContext: IRoutingResultsContext) =>

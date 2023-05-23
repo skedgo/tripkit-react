@@ -1,5 +1,5 @@
 import React from "react";
-import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import classNames from "classnames";
 import { tKUIButtonDefaultStyle } from "./TKUIButton.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -58,16 +58,9 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     name?: string;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+type IStyle = ReturnType<typeof tKUIButtonDefaultStyle>;
 
-interface IStyle {
-    main: CSSProps<IProps>;
-    primary: CSSProps<IProps>;
-    secondary: CSSProps<IProps>;
-    vertical: CSSProps<IProps>;
-    link: CSSProps<IProps>;
-    iconContainer: CSSProps<IProps>;
-}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIButtonProps = IProps;
 export type TKUIButtonStyle = IStyle;
@@ -86,12 +79,12 @@ class TKUIButton extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const {
-            type, text, icon, classes, injectedStyles, theme, refreshStyles, styles, t, 
+            type, text, icon, classes, injectedStyles, theme, refreshStyles, styles, t,
             ...otherProps
         } = this.props;
         // Remove all other properties that are not part of HTMLButtonElement.
         const {
-            defaultStyles, propStyles, configStyles, randomizeClassNames, classNamePrefix, verboseClassNames, i18nOverridden, 
+            defaultStyles, propStyles, configStyles, randomizeClassNames, classNamePrefix, verboseClassNames, i18nOverridden,
             ...nativeButtonProps
         } = otherProps as any;
         const secondary = type === TKUIButtonType.SECONDARY || type === TKUIButtonType.SECONDARY_VERTICAL;

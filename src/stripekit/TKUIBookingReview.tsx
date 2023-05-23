@@ -109,11 +109,12 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     paymentOptions: PaymentOption[];
     onPayOption: (option: PaymentOption) => void;
     onClose: () => void;
-    viewportProps: TKUIViewportUtilProps;
+    viewportProps?: TKUIViewportUtilProps;
+    cancelText?: string;
 }
 
 const TKUIBookingReview: React.FunctionComponent<IProps> =
-    ({ reviews, paymentOptions, classes, theme, onPayOption, onClose, t, viewportProps }) => {
+    ({ reviews, paymentOptions, cancelText, classes, theme, onPayOption, onClose, t, viewportProps }) => {
         return (
             <div className={classes.main}>
                 {reviews.map((review, i) => {
@@ -129,7 +130,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                                 </div>
                                 <div>{FormatUtil.toMoney(review.price, { currency: review.currency ? review.currency + " " : undefined, forceDecimals: true, nInCents: true })}</div>
                             </div>
-                            <div className={viewportProps.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
+                            <div className={viewportProps?.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
                                 {review.origin && review.destination &&
                                     <TKUIFromTo from={review.origin} to={review.destination} startTime={review.depart} endTime={review.arrive} />}
                                 {review.tickets.length > 0 &&
@@ -162,7 +163,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                 </div>
                 <div className={classes.buttonsPanel}>
                     <TKUIButton
-                        text={t("Cancel")}
+                        text={cancelText ?? t("Cancel")}
                         type={TKUIButtonType.SECONDARY}
                         onClick={() => onClose()}
                     />

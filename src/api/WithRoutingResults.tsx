@@ -33,7 +33,7 @@ export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
     fixToInitViewportRegion?: boolean;
     options: TKUserProfile;
-    computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
+    computeModeSetsBuilder?: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
 }
@@ -109,6 +109,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onSegmentCollectChange = this.onSegmentCollectChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
+            this.computeModeSets = this.computeModeSets.bind(this);
         }
 
         public sortTrips(trips: Trip[], sort: TripSort) {
@@ -398,7 +399,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (this.realtimeInterval) {
                 clearInterval(this.realtimeInterval);
             }
-            if (!Features.instance.realtimeEnabled()) {
+            if (!Features.instance.realtimeEnabled) {
                 return;
             }
             if (!selected || !selected.updateURL) {  // No realtime data for the trip.
@@ -729,7 +730,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     query: query,
                     trips: sortedTrips,
                     selected: selected,
-                    directionsView: true
+                    directionsView: true,
+                    waiting: false
                 }, () => this.refreshRegion());
                 if (selected) {
                     this.onReqRealtimeFor(selected);
@@ -785,7 +787,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             let modeSetsQ1;
             let modeSetsQ2;
             if (RegionsData.instance.hasRegions()) {
-                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                const computeModeSetsFc = this.props.computeModeSetsBuilder ? this.props.computeModeSetsBuilder(this.computeModeSets) : this.computeModeSets;
                 modeSetsQ1 = computeModeSetsFc(q1, opts1);
                 modeSetsQ2 = computeModeSetsFc(q2, opts2);
                 // When there's no mode enabled put empty set so q1Urls and q2Urls below has at least one element,
@@ -820,7 +822,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 }) :
                             Promise.resolve())
                             .then(() => {
-                                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                                const computeModeSetsFc = this.props.computeModeSetsBuilder ? this.props.computeModeSetsBuilder(this.computeModeSets) : this.computeModeSets;
                                 return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
                                     return query.getQueryUrl(modeSet, this.props.options);
                                 });
@@ -830,11 +832,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public computeModeSets(query: RoutingQuery, options: TKUserProfile): string[][] {
-            const referenceLatLng = query.from && query.from.isResolved() ? query.from : (query.to && query.to.isResolved() ? query.to : undefined);
-            if (!referenceLatLng) {
-                return [];
-            }
-            const region = RegionsData.instance.getRegion(referenceLatLng);
+            const region = this.getQueryRegion(query);
             if (!region) {
                 return [];
             }
@@ -882,9 +880,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public getQueryRegion(query: RoutingQuery): Region | undefined {
-            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
-                (query.to && query.to.isResolved() ? query.to : undefined);
-            return referenceLatLng && RegionsData.instance.getRegion(referenceLatLng);
+            return (query.from && RegionsData.instance.getRegion(query.from)) ??
+                (query.to && RegionsData.instance.getRegion(query.to)) ??
+                undefined;
         }
 
         public getRoutingResultsJSONTest(): any {

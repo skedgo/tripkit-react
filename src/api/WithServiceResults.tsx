@@ -75,7 +75,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     return;
                 }
                 this.forceUpdate(); //to update 'time to depart' labels
-                if (Features.instance.realtimeEnabled()) {
+                if (Features.instance.realtimeEnabled) {
                     this.realtimeUpdate();
                 }
             }, 10000);
@@ -259,7 +259,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 onTimetableForSegment={this.onTimetableForSegment}
                 onRequestMore={this.requestMoreDepartures}
                 departures={this.getDisplayDepartures()}
-                waiting={this.isWaiting(this.state) || !startStop}
+                waitingDepartures={this.isWaiting(this.state) || !startStop}
                 serviceError={this.state.serviceError}
                 timetableFilter={this.state.filter}
                 onFilterChange={this.onFilterChange}
