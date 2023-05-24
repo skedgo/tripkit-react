@@ -149,8 +149,13 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                             input: overrideClass(this.props.injectedStyles.locationBoxInput),
                             menu: overrideClass({
                                 ...this.props.injectedStyles.resultsMenu as any,
-                                left: `-${(this.props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
-                                width: `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClicked && !portrait ? 53 : 0) + 32}px)`
+                                // I need to specify next two styles as functions as a workaround so they update dynamically. 
+                                // Otherwise, the style of TKUILocationBox gets fixed to the first values of these props.
+                                // Also notice this works since this.props is a reference, in a function component would need to use useRef.
+                                // Finally notice that I cannot do left: props => `-${(props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
+                                // since those props are TKUILocationBox props, not TKUILocationSearch's.
+                                left: () => `-${(this.props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
+                                width: () => `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClicked && !this.props.portrait ? 53 : 0) + 32}px)`
                             })
                         }}
                         inputId={inputId}
