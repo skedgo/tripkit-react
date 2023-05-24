@@ -49,14 +49,7 @@ interface IState {
 
 function feedbackTextFromState(state: TKState): string {
     let feedbackS = "";
-
-    feedbackS += "Client URL: " + window.location.href + "\n";
-    feedbackS += "\n";
-    
-    feedbackS += "Client User Agent: " + window.navigator.userAgent + "\n";
-    feedbackS += "\n";
-
-    feedbackS += "Share query URL: " + encodeURI(TKShareHelper.getShareQuery(state.query)) + "\n";
+    feedbackS += "Share query url: " + encodeURI(TKShareHelper.getShareQuery(state.query)) + "\n";
     feedbackS += "\n";
     // Remove sensible data from userProfile for feedback. Probably should remove customData (the sdk is not aware of
     // apiKeys field).
@@ -79,8 +72,8 @@ function feedbackTextFromState(state: TKState): string {
     }
     if (state.selectedTrip) {
         feedbackS += "\n";
-        feedbackS += "Selected trip URL: " + (state.selectedTrip ? state.selectedTrip.temporaryURL : "") + "\n";
-        feedbackS += state.selectedTrip.satappQuery ? "Satapp URL: " + state.selectedTrip.satappQuery + "\n" : "";
+        feedbackS += "Selected trip url: " + (state.selectedTrip ? state.selectedTrip.temporaryURL : "") + "\n";
+        feedbackS += "Satapp url: " + (state.selectedTrip ? state.selectedTrip.satappQuery : "") + "\n";
     }
     if (state.tripUpdateError) {
         feedbackS += "\n";
@@ -90,10 +83,10 @@ function feedbackTextFromState(state: TKState): string {
         feedbackS += "\n";
         feedbackS += "Timetable for stop: " + state.stop.code + "\n";
         feedbackS += "Timetable init time: " + state.timetableInitTime.valueOf() + "\n";
-        feedbackS += "Share timetable URL: " + TKShareHelper.getShareTimetable(state.stop) + "\n";
+        feedbackS += "Share timetable url: " + TKShareHelper.getShareTimetable(state.stop) + "\n";
         if (state.selectedService) {
             feedbackS += "Selected service: " + state.selectedService.serviceTripID + "\n";
-            feedbackS += "Share service URL: " + TKShareHelper.getShareService(state.selectedService) + "\n";
+            feedbackS += "Share service url: " + TKShareHelper.getShareService(state.selectedService) + "\n";
         }
         if (state.serviceError) {
             feedbackS += "\n";
@@ -142,21 +135,19 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
             e.preventDefault && e.preventDefault(); // Since safari on iOS fails saying preventDefault is not defined.
         };
         this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.setContextMenuHandler(onShowActionsMenu);
-        const feedbackBtn =
-            <button
-                className={classNames(this.props.className, classes.main)}
-                onClick={() => onClick(this.props.tKState)}
-                tabIndex={0}
-                aria-label="Report issue"
-                onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
-                    onShowActionsMenu}
-                onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
-                onTouchCancel={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchCancel}
-                onTouchEnd={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchEnd}
-                onTouchMove={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchMove}
-            >
-                {icon}
-            </button>;
+        const feedbackBtn = <button className={classNames(this.props.className, classes.main)}
+            onClick={() => onClick(this.props.tKState)}
+            tabIndex={0}
+            aria-label="Report issue"
+            onContextMenu={this.contextMenuHandlerIOS ? this.contextMenuHandlerIOS.onContextMenu :
+                onShowActionsMenu}
+            onTouchStart={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchStart}
+            onTouchCancel={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchCancel}
+            onTouchEnd={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchEnd}
+            onTouchMove={this.contextMenuHandlerIOS && this.contextMenuHandlerIOS.onTouchMove}
+        >
+            {icon}
+        </button>;
         return (
             [
                 <TKUITooltip
