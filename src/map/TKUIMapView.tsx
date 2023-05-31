@@ -130,6 +130,21 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     reference?: ((instance: TKUIMapView | null) => void) | MutableRefObject<TKUIMapView | null> | null;
+
+    /**
+     * @ctype "SET\_FROM\_TO" | "SET\_TO" | "SET\_FROM" | "NONE"
+     * @default "SET\_FROM\_TO".
+     * @order 8
+     */
+    mapClickBehaviour?: "SET_FROM_TO" | "SET_TO" | "SET_FROM" | "NONE"   // Could also offer "DROP_REPLACE_TO", "DROP_REPLACE_FROM", "DROP_REPLACE_FROM_TO" which replaces a pin if exists.
+
+    /**
+     * @ctype
+     * @order 9     
+     * @default Use TKUIMapView.TKStateProps to pass "Directions from here" / "Directions to here" / "What's here" menu, 
+     * with it's corresponding effects on the SDK state.
+     */
+    rightClickMenu?: MenuOptions[];
 }
 interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
     /**
@@ -187,21 +202,6 @@ interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
      * @order 7
      */
     service?: ServiceDeparture;
-
-    /**
-     * @ctype "SET\_FROM\_TO" | "SET\_TO" | "SET\_FROM" | "NONE"
-     * @default "SET\_TO". Use TKUIMapView.TKStateProps to pass "SET\_FROM\_TO" if {@link TKState#directionsView}
-     * @order 8
-     */
-    mapClickBehaviour?: "SET_FROM_TO" | "SET_TO" | "SET_FROM" | "NONE"   // Could also offer "DROP_REPLACE_TO", "DROP_REPLACE_FROM", "DROP_REPLACE_FROM_TO" which replaces a pin if exists.
-
-    /**
-     * @ctype
-     * @order 9     
-     * @default Use TKUIMapView.TKStateProps to pass "Directions from here" / "Directions to here" / "What's here" menu, 
-     * with it's corresponding effects on the SDK state.
-     */
-    rightClickMenu?: MenuOptions[];
 
     /**
      * Function to be called each time the map viewport (center + zoom) changes.
@@ -283,11 +283,15 @@ interface IState {
     onModeLocationClick?: (location: ModeLocation) => void;
 }
 
-type IDefaultProps = Required<Pick<IProps, "mapClickBehaviour" | "geocodingOptions" | "portrait" | "landscape">>;
+type IDefaultProps = Required<Pick<IProps, "mapClickBehaviour" | "rightClickMenu" | "geocodingOptions" | "portrait" | "landscape">>;
 class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     static defaultProps: IDefaultProps = {
-        mapClickBehaviour: "SET_TO",
+        mapClickBehaviour: "SET_FROM_TO",
+        rightClickMenu: [
+            { label: "Set as origin", effect: "SET_FROM" },
+            { label: "Set as destination", effect: "SET_TO" }
+        ],
         geocodingOptions: {} as any,  // Just since it cannot be left undefined, it's always overriden in the Mapper.
         portrait: false,
         landscape: true
@@ -1058,7 +1062,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                     const to = routingContext.preTo ? routingContext.preTo :
                         (routingContext.query.to ? routingContext.query.to : undefined);
                     const consumerProps: IConsumedProps = {
-                        from: routingContext.directionsView ? from : undefined,
+                        from: from,
                         onFromChange: (location: Location | null) =>
                             routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
                                 from: location
@@ -1074,12 +1078,6 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                             serviceContext.selectedService : undefined,
                         ...viewportProps,
                         transportOptions: optionsContext.userProfile.transportOptions,
-                        mapClickBehaviour: routingContext.directionsView ? "SET_FROM_TO" : "SET_TO",
-                        rightClickMenu: [
-                            { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => routingContext.onDirectionsView(true) },
-                            { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => routingContext.onDirectionsView(true) },
-                            ...!routingContext.directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
-                        ],
                         setMap: routingContext.setMap,
                         onViewportChange: routingContext.onViewportChange
                     };

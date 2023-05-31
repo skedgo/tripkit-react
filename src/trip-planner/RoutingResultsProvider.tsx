@@ -45,8 +45,8 @@ export interface IRoutingResultsContext {
      * @ctype
      * @default false
      */
-    directionsView: boolean;
-    onDirectionsView: (directionsView: boolean) => void;
+    computeTripsForQuery: boolean;
+    onComputeTripsForQuery: (computeTripsForQuery: boolean) => void;
 
     trips?: Trip[];
     waiting: boolean;
@@ -83,8 +83,8 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onTripJsonUrl: (tripJsonUrl: string | RoutingResults) => Promise.resolve(undefined),
     viewport: { center: MapUtil.worldCoords, zoom: 2 },
     onViewportChange: (viewport: { center?: LatLng, zoom?: number }) => { },
-    directionsView: false,
-    onDirectionsView: (directionsView: boolean) => { },
+    computeTripsForQuery: false,
+    onComputeTripsForQuery: (computeTripsForQuery: boolean) => { },
     waiting: true,
     waitingTripUpdate: false,
     onChange: (select?: Trip) => { },

@@ -63,7 +63,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext { }
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext {
+    directionsView: boolean,
+    onDirectionsView: (onDirectionsView: boolean) => void
+}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -209,8 +212,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const props = this.props;
         const { isUserTabbing, classes, t } = this.props;
+        const directionsView = this.props.directionsView;
         const searchBar =
-            !this.props.hideSearch && !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
+            !this.props.hideSearch && !directionsView && !(this.props.portrait && this.props.selectedService) &&
             <div>
                 <TKUILocationSearchHelpers.TKStateProps>
                     {stateProps =>
@@ -233,7 +237,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             </div>;
         const sideBar =
             <TKUISidebar
-                open={this.state.showSidebar && !this.props.directionsView}
+                open={this.state.showSidebar && !directionsView}
                 onRequestClose={() => {
                     return this.setState({ showSidebar: false });
                 }}
@@ -267,7 +271,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIMyBookings
                 onRequestClose={() => this.setState({ showMyBookings: false })}
             />;
-        const queryInput = this.props.directionsView &&
+        const queryInput = directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
             !this.props.selectedTripSegment &&    // not displaying MxM view
             <TKUIRoutingQueryInputHelpers.TKStateProps>
@@ -294,14 +298,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const locationDetailView = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor.isResolved() && !this.state.showLocationDetailsFor.isDroppedPin() &&
             <TKUILocationDetailView
                 location={this.state.showLocationDetailsFor}
-                actions={this.props.directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
+                actions={directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
                 slideUpOptions={{
                     initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
                     position: DeviceUtil.isTouch() ? undefined :
                         this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                     draggable: DeviceUtil.isTouch(),
                     modalUp: this.props.landscape ?
-                        { top: (this.isShowTripDetail() || this.props.selectedTripSegment) ? cardSpacing() : (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                        { top: (this.isShowTripDetail() || this.props.selectedTripSegment) ? cardSpacing() : (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
                         { top: cardSpacing(false), unit: 'px' },
                     modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
                     zIndex: this.props.selectedTripSegment ? 1006 : undefined   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
@@ -322,7 +326,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
                                 draggable: false,
                                 modalUp: this.props.landscape ?
-                                    { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                                    { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
                                     { top: cardSpacing(false), unit: 'px' },
                                 modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
                             },
@@ -343,14 +347,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 position: DeviceUtil.isTouch() ? undefined :
                                     this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
                                 draggable: DeviceUtil.isTouch(),
-                                modalUp: this.props.landscape ? { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                modalUp: this.props.landscape ? { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
                                 modalDown: { top: this.getContainerHeight() - 130, unit: 'px' }
                             },
                             onRequestClose: () => this.props.onServiceSelection(undefined)
                         }}
                     />}
             </TKUIServiceViewHelpers.TKStateProps> : null;
-        const favouritesView = this.state.showFavourites && !this.props.directionsView &&
+        const favouritesView = this.state.showFavourites && !directionsView &&
             <TKUIFavouritesView
                 onFavouriteClicked={this.onFavouriteClicked}
                 onRequestClose={() => { this.setState({ showFavourites: false }) }}
@@ -362,7 +366,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
                 }}
             />;
-        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips ?
+        const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips ?
             <TKUIRoutingResultsViewHelpers.TKStateProps>
                 {stateProps =>
                     <TKUIRoutingResultsView
@@ -454,7 +458,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView
                 && !locationDetailView ? 0 : 500;
         } else {
-            if (this.props.directionsView && this.props.trips) {
+            if (directionsView && this.props.trips) {
                 mapPadding.bottom = this.getContainerHeight() * .50;
             }
             if (queryInput) {
@@ -467,7 +471,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             }
         }
         // this.props.landscape ? {left: 500} :
-        //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
+        //     directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
         let stateLoadError: React.ReactNode = null;
         if (this.props.stateLoadError) {
             stateLoadError = this.props.stateLoadError.message;
@@ -526,6 +530,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 }
                                                 return undefined;
                                             }}
+                                            mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
+                                            rightClickMenu={[
+                                                { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
+                                                { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
+                                                ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
+                                            ]}
                                         />
                                     }
                                 </TKUIMapViewHelpers.TKStateProps>
@@ -721,6 +731,8 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                                                     {(serviceContext: IServiceResultsContext) => (
                                                         props.children!({
                                                             ...routingResultsContext,
+                                                            directionsView: routingResultsContext.computeTripsForQuery,
+                                                            onDirectionsView: routingResultsContext.onComputeTripsForQuery,
                                                             ...serviceContext,
                                                             ...viewportProps,
                                                             ...optionsContext,

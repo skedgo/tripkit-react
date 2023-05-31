@@ -48,7 +48,7 @@ const config = {
             .then(userPos => state.setViewport({ center: userPos.latLng, zoom: 13 }));
 
         // Enable directions view flag    
-        state.onDirectionsView(true);           
+        state.onComputeTripsForQuery(true);           
     },
     onUpdateState: (state, prevState) =>
         // Select the first trip by default  

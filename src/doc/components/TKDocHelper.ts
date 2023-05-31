@@ -17,7 +17,7 @@ export const multiTripsMockConfig = {
 export const overridePropsConfig = {
     ...commonConfig,
     onInitState: state => {
-        state.onDirectionsView(true);
+        state.onComputeTripsForQuery(true);
     }
 };
 
