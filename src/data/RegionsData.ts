@@ -111,6 +111,10 @@ export class RegionsData {
 
     public requireRegions(): Promise<void> {
         return this.regionsPromise.then(() => {
+            // This may happen after a RegionsData.reset(), so make subscribers to the old instance to become subscribers of the new one.
+            if (this !== RegionsData.instance) {                
+                return RegionsData.instance.requireRegions();
+            }
             return Promise.resolve();
         })
     }

@@ -36,15 +36,15 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const customThemeCreator = this.props.config && this.props.config.theme;
         return (
-            <OptionsProvider defaultValue={this.props.config.defaultUserProfile} reset={this.props.config.resetUserProfile}>
-                <OptionsContext.Consumer>
-                    {(optionsContext: IOptionsContext) => {
-                        // Make isDarkDefault to override the user setting (should not be called 'Default').
-                        const isDark = this.props.config.isDarkDefault ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
-                        const isHighContrast = this.state.isOSHighContrast;
-                        const customTheme = Util.isFunction(customThemeCreator) ?
-                            (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
-                        return <TKUIConfigContext.Provider value={{ ...this.props.config }}>
+            <OptionsContext.Consumer>
+                {(optionsContext: IOptionsContext) => {
+                    // Make isDarkDefault to override the user setting (should not be called 'Default').
+                    const isDark = this.props.config.isDarkDefault ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
+                    const isHighContrast = this.state.isOSHighContrast;
+                    const customTheme = Util.isFunction(customThemeCreator) ?
+                        (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
+                    return (
+                        <TKUIConfigContext.Provider value={{ ...this.props.config }}>
                             <JssProvider generateId={generateClassNameSeed}>
                                 <ThemeProvider theme={{ ...tKUIDeaultTheme({ isDark, isHighContrast }), ...customTheme }}>
                                     <>
@@ -52,10 +52,10 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
                                     </>
                                 </ThemeProvider>
                             </JssProvider>
-                        </TKUIConfigContext.Provider>;
-                    }}
-                </OptionsContext.Consumer>
-            </OptionsProvider>
+                        </TKUIConfigContext.Provider>
+                    );
+                }}
+            </OptionsContext.Consumer>
         );
     }
 

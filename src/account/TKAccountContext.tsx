@@ -13,11 +13,13 @@ export interface IAccountContext {
     logout: () => void;
     finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
     accountsSupported?: boolean;
+    resetUserToken: () => void;
 }
 
 export const TKAccountContext = React.createContext<IAccountContext>({
     status: SignInStatus.loading,
-    login: () => {},
-    logout: () => {},
-    finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut)
+    login: () => { },
+    logout: () => { },
+    finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
+    resetUserToken: () => { }
 });

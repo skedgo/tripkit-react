@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TKUIConfig } from "./TKUIConfig";
-import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import OptionsProvider, { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import ServiceResultsProvider, { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import RoutingResultsProvider, { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import TKUIConfigProvider, { TKUIConfigContext } from "./TKUIConfigProvider";
@@ -31,40 +31,42 @@ class TKStateProvider extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const config = this.props.config;
         return (
-            <TKUIConfigProvider config={config}>
-                <OptionsContext.Consumer>
-                    {(optionsContext: IOptionsContext) =>
-                        <TKAccessibilityProvider>
-                            <TKI18nProvider dataPromise={config.i18n}>
-                                <TKI18nContext.Consumer>
-                                    {(i18nProps: TKI18nContextProps) =>
-                                        <RoutingResultsProvider
-                                            initViewport={config.initViewport}
-                                            fixToInitViewportRegion={config.fixToInitViewportRegion}
-                                            options={optionsContext && optionsContext.userProfile}
-                                            locale={i18nProps.locale}
-                                            preferredTripCompareFc={config.tripCompareFc}
-                                            computeModeSetsBuilder={config.computeModeSetsBuilder}                                            
-                                        >
-                                            <RoutingResultsContext.Consumer>
-                                                {(routingResultsContext: IRoutingResultsContext) =>
-                                                    <ServiceResultsProvider
-                                                        onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
-                                                    >
-                                                        <TKFavouritesProvider>
-                                                            {this.props.children}
-                                                        </TKFavouritesProvider>
-                                                    </ServiceResultsProvider>
-                                                }
-                                            </RoutingResultsContext.Consumer>
-                                        </RoutingResultsProvider>
-                                    }
-                                </TKI18nContext.Consumer>
-                            </TKI18nProvider>
-                        </TKAccessibilityProvider>
-                    }
-                </OptionsContext.Consumer>
-            </TKUIConfigProvider>
+            <OptionsProvider defaultValue={config.defaultUserProfile} reset={config.resetUserProfile}>
+                <TKUIConfigProvider config={config}>
+                    <OptionsContext.Consumer>
+                        {(optionsContext: IOptionsContext) =>
+                            <TKAccessibilityProvider>
+                                <TKI18nProvider dataPromise={config.i18n}>
+                                    <TKI18nContext.Consumer>
+                                        {(i18nProps: TKI18nContextProps) =>
+                                            <RoutingResultsProvider
+                                                initViewport={config.initViewport}
+                                                fixToInitViewportRegion={config.fixToInitViewportRegion}
+                                                options={optionsContext && optionsContext.userProfile}
+                                                locale={i18nProps.locale}
+                                                preferredTripCompareFc={config.tripCompareFc}
+                                                computeModeSetsBuilder={config.computeModeSetsBuilder}
+                                            >
+                                                <RoutingResultsContext.Consumer>
+                                                    {(routingResultsContext: IRoutingResultsContext) =>
+                                                        <ServiceResultsProvider
+                                                            onSegmentServiceChange={routingResultsContext.onSegmentServiceChange}
+                                                        >
+                                                            <TKFavouritesProvider>
+                                                                {this.props.children}
+                                                            </TKFavouritesProvider>
+                                                        </ServiceResultsProvider>
+                                                    }
+                                                </RoutingResultsContext.Consumer>
+                                            </RoutingResultsProvider>
+                                        }
+                                    </TKI18nContext.Consumer>
+                                </TKI18nProvider>
+                            </TKAccessibilityProvider>
+                        }
+                    </OptionsContext.Consumer>
+                </TKUIConfigProvider>
+            </OptionsProvider>
         )
     }
 

@@ -9,7 +9,7 @@ import TKUIMapShapes from "./TKUIMapShapes";
 import { TKUIMapViewClass } from "./TKUIMapView";
 import TKUIRealtimeVehicle, { tKUIRealtimeVehicleConfig } from "./TKUIRealtimeVehicle";
 import { TKUIConfig } from "../config/TKUIConfig";
-import { TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
+import { TKUIConfigContext, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
 import { TKUITransportPin, tKUITransportPinConfig } from "./TKUITransportPin";
 import { TKUITheme } from "../jss/TKUITheme";
 import SegmentPopup from "./SegmentPopup";

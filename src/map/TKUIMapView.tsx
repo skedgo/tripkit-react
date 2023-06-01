@@ -1011,6 +1011,19 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         }
     }
 
+    public refreshRegionsPolygons() {
+        if (!this.mapboxGlMap || !this.mapboxGlMap.isStyleLoaded()) {
+            return;
+        }
+        RegionsData.instance.requireRegions().then(() => {
+            this.mapboxGlMap.getSource("coverage")
+                .setData({
+                    'type': 'Feature',
+                    'geometry': RegionsData.instance.getCoverageGeoJson()
+                });
+        });
+    }
+
     private toBBox(bounds: LatLngBounds) {
         return MapUtil.createBBoxArray([MapUtil.toLatLng(bounds.getNorthEast()), MapUtil.toLatLng(bounds.getSouthWest())]);
     }

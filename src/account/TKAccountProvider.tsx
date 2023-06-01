@@ -34,9 +34,9 @@ let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.sign
 
 const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean }> = (props) => {
     const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user } = useAuth0();
-    const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);    
+    const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
-    const [status, setStatus] = useState<SignInStatus>(initStatus);    
+    const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const { onUserProfileChange } = useContext(OptionsContext);
@@ -54,7 +54,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     useEffect(() => {
         // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
         // on login pupup closed, so login to our BE.
-        if (!isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {            
+        if (!isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {
             getAccessTokenSilently()
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
@@ -128,6 +128,17 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             finishInitLoadingResolver?.(status);
         }
     }, [status]);
+    const resetUserToken = () => {
+        console.log("Reset usertoken!!!");
+        TripGoApi.userToken = undefined;
+        AuthStorage.instance.save(new TKAuth0AuthResponse);
+        setUserToken(undefined);
+        setUserAccount(undefined);
+        getAccessTokenSilently()
+            .then(requestUserToken)
+            .catch((error) => console.log(error));
+    }
+    TripGoApi.resetUserToken = resetUserToken;
     return (
         <React.Fragment>
             {props.children({
@@ -136,7 +147,8 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
                 login,
                 logout: logoutHandler,
                 accountsSupported: true,
-                finishInitLoadingPromise
+                finishInitLoadingPromise,
+                resetUserToken
             })}
         </React.Fragment>
     );

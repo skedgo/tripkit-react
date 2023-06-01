@@ -5,7 +5,7 @@ import TKUISettingSection from "../options/TKUISettingSection";
 import TKUISettingLink from "../options/TKUISettingLink";
 import { TKI18nContext } from '../i18n/TKI18nProvider';
 
-const TKUISignInFromSettings: React.SFC<{}> = () => {
+const TKUISignInFromSettings: React.FunctionComponent<{}> = () => {
     const { status, login, logout } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     return (

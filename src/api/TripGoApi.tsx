@@ -20,6 +20,8 @@ class TripGoApi {
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
     public static userToken?: string = undefined;
+    public static resetUserToken: () => void = () => { };
+    public static clientID?: string = undefined;
     public static accountAccessToken?: string = undefined;
     public static userID?: string = undefined;
     public static locale?: Promise<string> = undefined;
@@ -70,6 +72,9 @@ class TripGoApi {
                 headers: {
                     'X-TripGo-Version': 'w3.2018.12.20',
                     'X-TripGo-Key': this.apiKey,
+                    ...this.clientID && {
+                        'X-TripGo-Client-Id': this.clientID
+                    },
                     'referer': 'https://tripgo.com',
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -139,7 +144,7 @@ class TripGoApi {
         paymentOptions?: PaymentOption[],
         reviews?: BookingReview[],
         publishableApiKey: string,
-        ephemeralKey: EphemeralResult,        
+        ephemeralKey: EphemeralResult,
         refreshURLForSourceObject: string
     }> {
         return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm))
@@ -160,13 +165,13 @@ class TripGoApi {
         paymentOptions?: PaymentOption[],
         reviews?: BookingReview[],
         publishableApiKey: string,
-        ephemeralKey: EphemeralResult,        
+        ephemeralKey: EphemeralResult,
         refreshURLForSourceObject: string
     } {
         return ({
             ...bookingResultJson,
             reviews: bookingResultJson.review && Util.jsonConvert().deserializeArray(bookingResultJson.review, BookingReview),
-        });                
+        });
     }
 
 }
