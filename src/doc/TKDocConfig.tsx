@@ -230,7 +230,7 @@ const tKDocConfig = {
                     <TKUILocationSearch
                         {...stateProps}
                         onShowSideMenuClicked={() => alert("Clicked menu button")}
-                        onDirectionsClicked={() => alert("Clicked directions button")}
+                        onDirectionsClick={() => alert("Clicked directions button")}
                     />}
             </TKUILocationSearchHelpers.TKStateProps>,
         style: classNamesOf(tKUILocationSearchDefaultStyle)

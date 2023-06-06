@@ -53,6 +53,11 @@ module.exports = {
                 ]
             },
             {
+                name: 'SDK Global state: TKState',
+                content: 'src/doc/md/SDK_Global_State.md',
+                exampleMode: 'expand'
+            },
+            {
                 name: 'Example Use Cases',
                 content: 'src/doc/md/Example_Use_Cases.md'
             },

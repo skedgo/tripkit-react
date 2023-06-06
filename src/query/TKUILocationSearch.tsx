@@ -28,7 +28,7 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * Function that will run when directions button is clicked.
      * @ctype
      */
-    onDirectionsClicked?: () => void;
+    onDirectionsClick?: () => void;
 
     /**
      * @ignore
@@ -155,7 +155,7 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                                 // Finally notice that I cannot do left: props => `-${(props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
                                 // since those props are TKUILocationBox props, not TKUILocationSearch's.
                                 left: () => `-${(this.props.onShowSideMenuClicked ? 36 : 0) + 25}px`,
-                                width: () => `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClicked && !this.props.portrait ? 53 : 0) + 32}px)`
+                                width: () => `calc(100% + ${(this.props.onShowSideMenuClicked ? 36 : 0) + (this.props.onDirectionsClick && !this.props.portrait ? 53 : 0) + 32}px)`
                             })
                         }}
                         inputId={inputId}
@@ -165,10 +165,10 @@ class TKUILocationSearch extends React.Component<IProps, {}> {
                         menuContainer={this.props.menuContainer}
                         onMenuVisibilityChange={this.props.onMenuVisibilityChange}
                     />
-                    {this.props.onDirectionsClicked && !portrait &&
+                    {this.props.onDirectionsClick && !portrait &&
                         <Fragment>
                             <div className={classes.divider} />
-                            <button className={classes.directionsBtn} onClick={this.props.onDirectionsClicked}
+                            <button className={classes.directionsBtn} onClick={this.props.onDirectionsClick}
                                 aria-label="Get directions"
                             >
                                 <IconDirections className={classes.directionsIcon} />

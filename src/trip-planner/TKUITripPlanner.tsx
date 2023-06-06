@@ -220,7 +220,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     {stateProps =>
                         <TKUILocationSearch
                             {...stateProps}
-                            onDirectionsClicked={() => {
+                            onDirectionsClick={() => {
                                 this.props.onQueryChange(Util.iAssign(this.props.query, { from: Location.createCurrLoc() }));
                                 this.props.onDirectionsView(true);
                             }}

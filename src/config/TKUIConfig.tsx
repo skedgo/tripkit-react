@@ -134,7 +134,7 @@ interface ITKUIConfigOptional {
      * @ctype
      */
     i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
-    isDarkDefault: boolean;
+    isDarkMode: boolean;
     analytics: {
         google?: TKUIGAConfig
     };

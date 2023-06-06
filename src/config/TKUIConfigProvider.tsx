@@ -38,8 +38,8 @@ class TKUIConfigProvider extends React.Component<IProps, IState> {
         return (
             <OptionsContext.Consumer>
                 {(optionsContext: IOptionsContext) => {
-                    // Make isDarkDefault to override the user setting (should not be called 'Default').
-                    const isDark = this.props.config.isDarkDefault ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
+                    // Make isDarkMode to override the user setting.
+                    const isDark = this.props.config.isDarkMode ?? optionsContext.userProfile.isDarkMode ?? this.state.isOSDark;
                     const isHighContrast = this.state.isOSHighContrast;
                     const customTheme = Util.isFunction(customThemeCreator) ?
                         (customThemeCreator as ((props: IThemeCreatorProps) => TKUITheme))({ isDark, isHighContrast }) : customThemeCreator;
