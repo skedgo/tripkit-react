@@ -115,5 +115,36 @@ git push -o ci.skip
 
 - Switched from `import DatePicker from 'react-datepicker'` to `import DatePicker from 'react-datepicker/dist/es'` to solve issue with 'react-datepicker' dependency when declaring tripkit-react as `type: module`. Still other issues that made me revert that change (see item above).
 
+### Steps to publish a new version
+#### Bump up version + create git commit and tag
+
 - `npm version` to bump up version. It also creates a tag than can then be pushed using `git push gh vX.Y.Z`.
 - `npm version prerelease` to bump up pre-release version.
+- `npm version prerelease --preid=alpha` to bump up minor + pre-release version.
+- `npm version premajor --preid=alpha` to bump up major + pre-release version. E.g.: if you are in 0.3.0 this will take you to 1.0.0-alpha.0
+- `npm version premajor --preid=alpha -m "Upgrade to %s for reasons"` to include version commit message.
+
+More info:
+- If run in a git repo, it will also create a version commit and tag. [npm-version](https://docs.npmjs.com/cli/v6/commands/npm-version)
+- If supplied with -m or --message config option, npm will use it as a commit message when creating a version commit. If the message config contains %s then that will be replaced with the resulting version number. For example:
+```npm version patch -m "Upgrade to %s for reasons"```
+- For automation: if preversion, version, or postversion are in the scripts property of the package.json, they will be executed as part of running npm version. E.g.
+```json
+"scripts": {
+      "preversion": "npm test",
+      "version": "npm run build && git add -A dist",
+      "postversion": "git push && git push --tags && rm -rf build/temp"
+}
+```
+
+#### Push to github
+- `git push && git push --tags`
+
+#### Publish to npm
+
+From [npm-publish](https://docs.npmjs.com/cli/v6/commands/npm-publish)
+
+npm publish [<tarball>|<folder>] [--tag <tag>] [--access <public|restricted>] [--otp otpcode] [--dry-run]
+
+Publishes '.' if no argument supplied
+Sets tag 'latest' if no --tag specified
