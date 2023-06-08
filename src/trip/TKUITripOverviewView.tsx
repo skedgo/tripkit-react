@@ -1,7 +1,7 @@
 import React from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
-import TKUICard, { CardPresentation } from "../card/TKUICard";
+import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { default as TKUISegmentOverview } from "./TKUISegmentOverview";
 import { tKUITripOverviewViewDefaultStyle } from "./TKUITripOverviewView.css";
@@ -18,26 +18,30 @@ import TKShareHelper from "../share/TKShareHelper";
 import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
-import HasCard, { HasCardKeys } from "../card/HasCard";
 import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
 import TKUITripTime from "./TKUITripTime";
 import TripRowTrack from "./TripRowTrack";
 import TKUICardHeader from "../card/TKUICardHeader";
 
 type IStyle = ReturnType<typeof tKUITripOverviewViewDefaultStyle>;
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
-    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
-
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
      * @ctype
+     * @order 1
      */
     value: Trip;
 
-    /**
-     * @ignore
+    /**     
+     * @ctype     
+     * @order 2
      */
-    handleRef?: (ref: any) => void;
+    selectedTripSegment?: Segment;
+
+    /**     
+     * @ctype     
+     * @order 3
+     */
+    onTripSegmentSelected?: (segment: Segment) => void;
 
     /**
      * Function that will run when user hits the 'Alternative routes' button on a cancelled segment.
@@ -60,10 +64,26 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * @default _Share Arrival_, if segment is the last one, which is an instance of [](TKUIButton).
      */
     segmentActions?: (segment: Segment, defaultActions: JSX.Element[]) => JSX.Element[];
+
+    /**
+     * @ctype TKUICard props
+     */
+    cardProps?: TKUICardClientProps;
+
+    /**
+     * @ignore
+     */
     shouldFocusAfterRender?: boolean;
+
+    /**
+     * @ignore
+     */
     doNotStack?: boolean;
-    selectedTripSegment?: Segment;
-    setSelectedTripSegment?: (segment: Segment) => void;
+
+    /**
+     * @ignore
+     */
+    handleRef?: (ref: any) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -81,41 +101,35 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     constructor(props: IProps) {
         super(props);
+        this.getDefaultActions = this.getDefaultActions.bind(this);
         this.getDefaultSegmentActions = this.getDefaultSegmentActions.bind(this);
     }
 
     private getDefaultActions(trip: Trip) {
+        const { value, onTripSegmentSelected, t } = this.props;
         return [
-            <TKI18nContext.Consumer key={"actionGo"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <RoutingResultsContext.Consumer key={"actionFavourite"}>
-                        {(routingResultsContext: IRoutingResultsContext) =>
-                            <TKUIButton text={i18nProps.t("Go")}
-                                icon={<IconNavigation />}
-                                type={TKUIButtonType.SECONDARY_VERTICAL}
-                                onClick={() => routingResultsContext.setSelectedTripSegment(this.props.value.getSegments(Visibility.IN_DETAILS)[0])}
-                            />}
-                    </RoutingResultsContext.Consumer>
-                }
-            </TKI18nContext.Consumer>,
+            ...(onTripSegmentSelected ?
+                [<TKUIButton text={t("Go")}
+                    icon={<IconNavigation />}
+                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                    onClick={() => onTripSegmentSelected?.(value.getSegments(Visibility.IN_DETAILS)[0])}
+                    key={"actionGo"}
+                />] : []),
             <RoutingResultsContext.Consumer key={"actionFavourite"}>
-                {(routingResultsContext: IRoutingResultsContext) =>
+                {(routingResultsContext: IRoutingResultsContext) => // Avoid this connection with the routing context, maybe get this value from the trip.
                     routingResultsContext.query.from && routingResultsContext.query.to &&
                     <TKUIFavouriteAction
                         favourite={FavouriteTrip.create(routingResultsContext.query.from, routingResultsContext.query.to)}
                         vertical={true}
                     />}
             </RoutingResultsContext.Consumer>,
-            <TKI18nContext.Consumer key={"actionShare"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <TKUIShareAction
-                        title={i18nProps.t("Share.Trip")}
-                        message={""}
-                        link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
-                        vertical={true}
-                    />
-                }
-            </TKI18nContext.Consumer>
+            <TKUIShareAction
+                title={t("Share.Trip")}
+                message={""}
+                link={() => TripGoApi.apiCallUrl(trip.saveURL, NetworkUtil.MethodType.GET).then((json: any) => json.url)}
+                vertical={true}
+                key={"actionShare"}
+            />
         ];
     }
 
@@ -137,8 +151,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
         const segments = this.props.value.getSegments(Visibility.IN_DETAILS);
-        const { value: trip } = this.props;
-        const classes = this.props.classes;
+        const { value: trip, cardProps, classes } = this.props;
         const defaultActions = this.getDefaultActions(trip);
         const actions = this.props.actions ? this.props.actions(trip, defaultActions) : defaultActions;
         const hideTimes = trip.hideExactTimes;
@@ -166,13 +179,11 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                         }
                     />}
                 renderSubHeader={subHeader}
-                onRequestClose={this.props.onRequestClose}
-                presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
                 handleRef={this.props.handleRef}
-                slideUpOptions={this.props.slideUpOptions}
                 ariaLabel={trip.mainSegment?.modeInfo ? trip.mainSegment.modeInfo.alt + " Trip Details" : undefined}
                 shouldFocusAfterRender={this.props.shouldFocusAfterRender}
                 doNotStack={this.props.doNotStack}
+                {...cardProps}
             >
                 <div className={classes.main}>
                     {segmentsAndArrival.map((segment: Segment, index: number) => {
@@ -184,7 +195,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                             key={index}
                             actions={segmentActions}
                             onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
-                            onClick={() => this.props.setSelectedTripSegment && this.props.setSelectedTripSegment(segment)}
+                            onClick={() => this.props.onTripSegmentSelected?.(segment)}
                         />;
                     }
                     )}

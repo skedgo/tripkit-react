@@ -5,14 +5,12 @@ import { TKComponentDefaultConfig } from "../config/TKUIConfig";
 import { default as TKUIButton, TKUIButtonType } from "../buttons/TKUIButton";
 import NetworkUtil from "../util/NetworkUtil";
 import TripGoApi from "../api/TripGoApi";
-import { BookingAction } from "../model/trip/BookingInfo";
+import { BookingAction, ConfirmationPrompt } from "../model/trip/BookingInfo";
 import { tKUIBookingActionsDefaultStyle } from "./TKUIBookingActions.css";
 import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import RoutingQuery from '../model/RoutingQuery';
-import { TKError } from '../error/TKError';
-
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
     setWaiting?: (waiting: boolean) => void;
@@ -35,7 +33,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
     const { action, setWaiting, requestRefresh, trip } = props;
-    const { onQueryChange, onDirectionsView } = useContext(RoutingResultsContext);
+    const { onQueryChange, onComputeTripsForQuery } = useContext(RoutingResultsContext);
     return (
         <Fragment>
             <TKUIButton
@@ -44,12 +42,14 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                 onClick={() => {
                     if (action.type === "REQUESTANOTHER") {
                         onQueryChange(RoutingQuery.create());
-                        onDirectionsView(false);
-                    } else if (action.confirmationMessage) {
+                        onComputeTripsForQuery(false);
+                    } else if (action.confirmation || action.confirmationMessage) {
+                        const confirmationPrompt = action.confirmation
+                            ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.
                         UIUtil.confirmMsg({
-                            message: action.confirmationMessage,
-                            confirmLabel: "Yes",
-                            cancelLabel: "No",
+                            message: confirmationPrompt.message,
+                            confirmLabel: confirmationPrompt.confirmActionTitle || "Yes",
+                            cancelLabel: confirmationPrompt.abortActionTitle || "No",
                             onConfirm: () => {
                                 setWaiting?.(true);
                                 TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)

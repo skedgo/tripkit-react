@@ -50,8 +50,7 @@ interface IProps {
     onClick?: (loc: Location) => void;
     omit?: Location[];
     isDarkMode?: boolean;
-    config: TKUIConfig;
-    transportOptions: TKTransportOptions;
+    transportOptions?: TKTransportOptions;
 }
 class TKUIMapLocations extends React.Component<IProps, {}> {
 
@@ -75,7 +74,7 @@ class TKUIMapLocations extends React.Component<IProps, {}> {
             return [];
         }
         const modes = region.modes;
-        return modes.filter((mode: string) => props.transportOptions.isModeEnabled(mode) && LocationsResult.isModeRelevant(mode));
+        return modes.filter((mode: string) => !props.transportOptions || (props.transportOptions.isModeEnabled(mode) && LocationsResult.isModeRelevant(mode)));
     }
 
     public render(): React.ReactNode {

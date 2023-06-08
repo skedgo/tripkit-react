@@ -8,12 +8,11 @@ import { ReactComponent as IconClock } from "../images/ic-clock.svg";
 import DateTimeUtil from "../util/DateTimeUtil";
 import DaySeparator from "./DaySeparator";
 import { Moment } from "moment";
-import TKUICard, { CardPresentation, TKUICardClientProps } from "../card/TKUICard";
+import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
 import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUITimetableDefaultStyle } from "./TKUITimetableView.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
-import { connect, PropsMapper } from "../config/TKConfigHelper";
-import { Subtract } from "utility-types";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import TKUIServiceDepartureRow from "./TKUIServiceDepartureRow";
 import StopLocation from "../model/StopLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
@@ -26,18 +25,13 @@ import { TKUIButtonType } from "../buttons/TKUIButton";
 import TransportUtil from "../trip/TransportUtil";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import RegionsData from "../data/RegionsData";
-import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import TKUIErrorView from "../error/TKUIErrorView";
 import { TKError } from "../error/TKError";
 import { serviceTextColor } from "./TKUIServiceDepartureRow.css";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
-import HasCard, { HasCardKeys } from "../card/HasCard";
-import Segment from "../model/trip/Segment";
-import TripUtil from "../trip/TripUtil";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
-    Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
 
     /**
      * Allows to specify a list of action buttons (JSX.Elements) associated with the stop, to be rendered on card header.
@@ -47,97 +41,112 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      */
     actions?: (stop: StopLocation, defaultActions: JSX.Element[]) => JSX.Element[];
 
+    /**
+     * @default true
+     */
+    showServicesOnHeader?: boolean;
+
+    /**
+     * @default true
+     */
+    initScrollToNow?: boolean;
+
     /** @ignore */
     errorActions?: (error: TKError) => JSX.Element[];
 
-    cardProps?: TKUICardClientProps;
     /**
-     * @default {true}
+     * @ctype TKUICard props
      */
-    showSearch?: boolean;
+    cardProps?: TKUICardClientProps;
 }
 
-interface IConsumedProps extends Pick<IServiceResultsContext, "stop" | "timetableForSegment" | "timetableInitTime" |
-    "onInitTimeChange" | "timetableFilter" | "onFilterChange" | "onRequestMore" | "departures" | "waiting" |
-    "serviceError" | "title" | "selectedService" | "onServiceSelection"> {
+interface IConsumedProps extends
+    Pick<IServiceResultsContext, "stop" | "onInitTimeChange" | "onRequestMore" | "departures" | "serviceError" | "selectedService">,
+    Pick<Partial<IServiceResultsContext>, "timetableInitTime" | "timetableFilter" | "onFilterChange" | "waitingDepartures" | "onServiceSelection"> {
 
     /**
      * @ctype
-     * @default {@link TKState#stop}
+     * @tkstateprop {@link TKState#stop}
+     * @order 1
      */
     stop?: StopLocation;
 
     /**
      * @ctype
-     * @default {@link TKState#timetableForSegment}
-     */
-    timetableForSegment?: Segment;
-
-    /**
-     * @ctype
-     * @default {@link TKState#timetableInitTime}
-     */
-    timetableInitTime: Moment;
-
-    /**
-     * @ctype
-     * @default {@link TKState#onInitTimeChange}
-     */
-    onInitTimeChange?: (initTime: Moment) => void;
-
-    /**
-     * @ctype
-     * @default {@link TKState#timetableFilter}
-     */
-    timetableFilter: string;
-
-    /**
-     * @ctype
-     * @default {@link TKState#onFilterChange}
-     */
-    onFilterChange: (filter: string) => void;
-
-    /**
-     * @ctype
-     * @default {@link TKState#onRequestMore}
-     */
-    onRequestMore?: () => void;
-
-    /**
-     * @ctype
-     * @default {@link TKState#departures}
+     * @tkstateprop {@link TKState#departures}
+     * @order 2
      */
     departures: ServiceDeparture[];
 
     /**
      * @ctype
-     * @default {@link TKState#waiting}
+     * @tkstateprop {@link TKState#onRequestMore}
+     * @order 3
      */
-    waiting: boolean;
+    onRequestMore?: () => void;
 
     /**
      * @ctype
-     * @default {@link TKState#serviceError}
-     */
-    serviceError?: TKError;
-
-    /**
-     * @ctype
-     * @default {@link TKState#title}
-     */
-    title: string;
-
-    /**
-     * @ctype
-     * @default {@link TKState#selectedService}
+     * @tkstateprop {@link TKState#selectedService}
+     * @order 4
      */
     selectedService?: ServiceDeparture;
 
     /**
      * @ctype
-     * @default {@link TKState#onServiceSelection}
+     * @tkstateprop {@link TKState#onServiceSelection}
+     * @order 5
      */
-    onServiceSelection: (departure?: ServiceDeparture) => void;
+    onServiceSelection?: (departure?: ServiceDeparture) => void;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#timetableInitTime}. 
+     * @default now
+     * @order 6
+     */
+    timetableInitTime?: Moment;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#onInitTimeChange}
+     * @order 7
+     */
+    onInitTimeChange?: (initTime: Moment) => void;
+
+    /**
+     * @ctype     
+     * @tkstateprop {@link TKState#timetableFilter}
+     * @order 8
+     */
+    timetableFilter?: string;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#onFilterChange}
+     * @order 9
+     * @divider
+     */
+    onFilterChange?: (filter: string) => void;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#title}
+     */
+    title?: string;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#waitingDepartures}
+     * @default false
+     */
+    waitingDepartures?: boolean;
+
+    /**
+     * @ctype
+     * @tkstateprop {@link TKState#serviceError}
+     */
+    serviceError?: TKError;
 
 }
 
@@ -168,11 +177,20 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITimetableView"
 };
 
-class TKUITimetableView extends React.Component<IProps, {}> {
+type IDefaultProps = Required<Pick<IProps, "timetableInitTime" | "showServicesOnHeader" | "initScrollToNow" | "waitingDepartures">>;
+
+class TKUITimetableView extends React.Component<IProps & IDefaultProps, {}> {
 
     private scrollRef: any;
 
-    constructor(props: IProps) {
+    static defaultProps: IDefaultProps = {
+        timetableInitTime: DateTimeUtil.getNow(),
+        showServicesOnHeader: true,
+        initScrollToNow: true,
+        waitingDepartures: false
+    }
+
+    constructor(props: IProps & IDefaultProps) {
         super(props);
         this.getDefaultActions = this.getDefaultActions.bind(this);
         this.onScroll = this.onScroll.bind(this);
@@ -183,17 +201,14 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         return [
             <TKUIRouteToLocationAction location={stop} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={"actionToLoc"} />,
             <TKUIFavouriteAction favourite={FavouriteStop.create(stop)} vertical={true} key={"actionFav"} />,
-            <TKI18nContext.Consumer key={"actionShare"}>
-                {(i18nProps: TKI18nContextProps) =>
-                    <TKUIShareAction
-                        title={this.props.t("Share")}
-                        message={""}
-                        link={() => RegionsData.instance.requireRegions()
-                            .then(() => TKShareHelper.getShareTimetable(stop))}
-                        vertical={true}
-                    />
-                }
-            </TKI18nContext.Consumer>
+            <TKUIShareAction
+                title={this.props.t("Share")}
+                message={""}
+                link={() => RegionsData.instance.requireRegions()
+                    .then(() => TKShareHelper.getShareTimetable(stop))}
+                vertical={true}
+                key={"actionShare"}
+            />
         ];
     }
 
@@ -211,7 +226,8 @@ class TKUITimetableView extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const stop = this.props.stop;
+        const { stop, showServicesOnHeader } = this.props;
+        const title = stop?.shortName ?? stop?.name ?? ""
         const parentStopMode = stop && stop.class === "ParentStopLocation" && stop.modeInfo && stop.modeInfo.alt;
         const subtitle = parentStopMode ? parentStopMode.charAt(0).toUpperCase() + parentStopMode.slice(1) + " station"
             : undefined;
@@ -221,7 +237,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         if (stop) {
             const defaultActions = stop && this.getDefaultActions(stop);
             const actions = this.props.actions ? this.props.actions(stop, defaultActions) : defaultActions;
-            actionElems = actions ?
+            actionElems = (actions && actions.length > 0) ?
                 <TKUIActionsView
                     actions={actions}
                     className={classes.actionsPanel}
@@ -233,8 +249,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                     elems.push(departure)
                 }
                 return elems;
-            }, []);
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
+            }, []);        
         const renderCustomInput = (value: any, onClick: any, onKeyDown: any, ref: any) => (
             // Pass onKeyDown to preserve keyboard navigation when using react-datepicker.
             <button className={classes.faceButtonClass} onClick={onClick} onKeyDown={onKeyDown} ref={ref}
@@ -243,7 +258,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             </button>
         );
         let error: JSX.Element | undefined = undefined;
-        if (!this.props.waiting && this.props.serviceError) {
+        if (!this.props.waitingDepartures && this.props.serviceError) {
             const errorMessage = this.props.serviceError.usererror ? this.props.serviceError.message : t("Something.went.wrong.");
             error =
                 <TKUIErrorView
@@ -254,30 +269,29 @@ class TKUITimetableView extends React.Component<IProps, {}> {
         }
         return (
             <TKUICard
-                title={this.props.title}
+                title={title}
                 subtitle={subtitle}
-                renderSubHeader={this.props.timetableForSegment ? undefined :
-                    () => <div className={classes.subHeader}>
-                        <div className={classes.serviceList}>
-                            {serviceListSamples.map((service: ServiceDeparture, i: number) => {
-                                return service.serviceNumber &&
-                                    <div className={classes.serviceNumber}
-                                        style={{
-                                            backgroundColor: TransportUtil.getServiceDepartureColor(service),
-                                            color: serviceTextColor(service)
-                                        }}
-                                        key={i}
-                                    >
-                                        {service.serviceNumber}
-                                    </div>
-                            })}
+                renderSubHeader={(!showServicesOnHeader && !actionElems) ? undefined :
+                    () =>
+                        <div className={classes.subHeader}>
+                            {showServicesOnHeader &&
+                                <div className={classes.serviceList}>
+                                    {serviceListSamples.map((service: ServiceDeparture, i: number) => {
+                                        return service.serviceNumber &&
+                                            <div className={classes.serviceNumber}
+                                                style={{
+                                                    backgroundColor: TransportUtil.getServiceDepartureColor(service),
+                                                    color: serviceTextColor(service)
+                                                }}
+                                                key={i}
+                                            >
+                                                {service.serviceNumber}
+                                            </div>
+                                    })}
+                                </div>}
+                            {actionElems}
                         </div>
-                        {actionElems}
-                    </div>
                 }
-                presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
-                onRequestClose={this.props.onRequestClose}
-                slideUpOptions={slideUpOptions}
                 // Timetable should not scroll at body, but at panel below filter, on body content. Next is just required
                 // for Safari so div below filter can actually get a height and scroll happens there.
                 styles={DeviceUtil.browser === BROWSER.SAFARI ? { body: overrideClass({ height: '100%' }) } : undefined}
@@ -285,30 +299,32 @@ class TKUITimetableView extends React.Component<IProps, {}> {
             >
                 {error ? error :
                     <div className={classes.main}>
-                        {this.props.showSearch !== false &&
+                        {(this.props.onFilterChange || this.props.onInitTimeChange) &&
                             <div className={classes.secondaryBar}>
-                                <input type="text"
-                                    spellCheck={false}
-                                    autoComplete="off"
-                                    autoCorrect="off"
-                                    autoCapitalize="off"
-                                    className={classes.filterInput}
-                                    placeholder={t("Search")}
-                                    value={this.props.timetableFilter}
-                                    onChange={this.onFilterChange} />
-                                <TKUIDateTimePicker
-                                    value={this.props.timetableInitTime}
-                                    timeZone={stop && stop.timezone}
-                                    onChange={this.props.onInitTimeChange}
-                                    renderCustomInput={renderCustomInput}
-                                    popperPlacement="bottom-end"
-                                    popperModifiers={{
-                                        offset: {
-                                            enabled: true,
-                                            offset: "15px, 0px"
-                                        }
-                                    }}
-                                />
+                                {this.props.onFilterChange &&
+                                    <input type="text"
+                                        spellCheck={false}
+                                        autoComplete="off"
+                                        autoCorrect="off"
+                                        autoCapitalize="off"
+                                        className={classes.filterInput}
+                                        placeholder={t("Search")}
+                                        value={this.props.timetableFilter}
+                                        onChange={this.onFilterChange} />}
+                                {this.props.onInitTimeChange &&
+                                    <TKUIDateTimePicker
+                                        value={this.props.timetableInitTime}
+                                        timeZone={stop && stop.timezone}
+                                        onChange={this.props.onInitTimeChange}
+                                        renderCustomInput={renderCustomInput}
+                                        popperPlacement="bottom-end"
+                                        popperModifiers={{
+                                            offset: {
+                                                enabled: true,
+                                                offset: "15px, 0px"
+                                            }
+                                        }}
+                                    />}
                             </div>}
                         <div className={classes.listPanel}>
                             <div
@@ -336,30 +352,21 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                                                         this.props.onServiceSelection(departure)
                                                     }
                                                 }}
-                                                selected={this.props.timetableForSegment ?
-                                                    TripUtil.sameService(this.props.timetableForSegment, departure) : departure === this.props.selectedService}
+                                                selected={departure === this.props.selectedService}
                                             />
                                         </div>
                                     );
                                     return elems;
                                 }, [])}
-                                {this.props.waiting || !stop ?
+                                {this.props.waitingDepartures ?
                                     <IconSpin className={classes.iconLoading} focusable="false" /> : null}
-                                {!this.props.waiting && stop && !this.props.serviceError && this.props.departures.length === 0
+                                {!this.props.waitingDepartures && !this.props.serviceError && this.props.departures.length === 0
                                     && <div className={classes.noResults}>{"No results"}</div>}
                             </div>
                         </div>
                     </div>}
             </TKUICard>
         );
-    }
-
-    public componentDidMount() {
-        // If shared link then this is triggered from WithServicesResults.tsx constructor
-        if (!TKShareHelper.isSharedStopLink() && !TKShareHelper.isSharedServiceLink()
-            && !this.props.timetableForSegment && this.props.stop && this.props.onRequestMore) {
-            this.props.onRequestMore();
-        }
     }
 
     public componentDidUpdate(prevProps: Readonly<IProps>): void {
@@ -372,7 +379,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
                 timeToDepart = timeToDepart < 0 ? Math.ceil(timeToDepart) : Math.floor(timeToDepart);
                 return timeToDepart >= 0;   // To be consistent with timeToDepart calculation in TKUIServiceDepartureRow
             });
-            if (!this.props.timetableForSegment && nextDepartureIndex !== -1 && this.scrollRef) {
+            if (this.props.initScrollToNow && nextDepartureIndex !== -1 && this.scrollRef) {
                 Array.prototype.slice.call(this.scrollRef.children).filter((child: any) =>
                     child.className.includes // This is to filter svg IconSpin, which has className.includes undefined
                     && !child.className.includes("DaySeparator")
@@ -383,7 +390,7 @@ class TKUITimetableView extends React.Component<IProps, {}> {
 
 }
 
-const Consumer: React.SFC<{ children: (props: IServiceResultsContext) => React.ReactNode }> = (props: { children: (props: IServiceResultsContext) => React.ReactNode }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IServiceResultsContext) => React.ReactNode }> = (props: { children: (props: IServiceResultsContext) => React.ReactNode }) => {
     return (
         <ServiceResultsContext.Consumer>
             {(serviceContext: IServiceResultsContext) => (
@@ -393,11 +400,36 @@ const Consumer: React.SFC<{ children: (props: IServiceResultsContext) => React.R
     );
 };
 
-const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IServiceResultsContext) =>
-                children!({ ...consumedProps, ...inputProps })}
-        </Consumer>;
+/**
+ * Displays service departures from a given stop or larger satation obtained from the TripGo api. 
+ * - Real-time information where available, including real-time departure and arrival times, service disruptions and crowdedness of individual services.
+ * - Optionally with wheelchair accessibility information. 
+ * - Let users select a departure, set the time of the first departure time, enter a text filter
+ * 
+ * It has the following additional customisation points:
+ * - Card options via [```cardProps```](#/Components%20API/TKUITimetableView?id=cardProps) property.
+ * - Customisable list of action buttons via [```actions```](#/Components%20API/TKUITimetableView?id=actions) property.
+ * 
+ * You can connect the component to the SDK global state, {@link TKState}, by forwarding the props
+ * provided by TKUITimetableViewHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUITimetableViewHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUITimetableView 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUITimetableViewHelpers.TKStateProps>
+ *  ```
+ * 
+ *
+ * In this way, the component will display departures from the current stop in SDK state, {@link TKState#stop}, as well as reflect
+ * real-time updates.
+ */
 
-export default connect((config: TKUIConfig) => config.TKUITimetableView, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUITimetableView, config, mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export const TKUITimetableViewHelpers = {
+    TKStateProps: Consumer
+}

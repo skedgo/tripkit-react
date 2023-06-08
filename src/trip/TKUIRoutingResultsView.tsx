@@ -9,7 +9,6 @@ import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
 import { default as TKUITripRow, TKTripCostType } from "./TKUITripRow";
 import TKMetricClassifier, { Badges } from "./TKMetricClassifier";
-import { Subtract } from "utility-types";
 import { TKUIConfig, TKComponentDefaultConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper, replaceStyle } from "../config/TKConfigHelper";
 import DateTimeUtil from "../util/DateTimeUtil";
@@ -43,13 +42,15 @@ import { ReactComponent as IconTriangleDown } from '../images/ic-triangle-down.s
 import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
+import Util from "../util/Util";
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
+interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, Partial<IAccessibilityContext>, TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
 
     /**
      * Stating if time select component should be displayed or not.
      * @default true
+     * @ignore maybe until I change it into the more intuitive hideTimeSelect, defaulted to false.     
      */
     showTimeSelect?: boolean;
 
@@ -69,12 +70,14 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     /**
      * Function that will be run when the user clicks on button to show transport options.
      * @ctype
+     * @ignore
      */
     onTransportButtonClick?: () => void;
 
     /**
      * Function that will be run when the user clicks on button to show full transport options.
      * @ctype
+     * @ignore Actually not used, since don't support the 'More options' button inside the transport switches component.
      */
     onShowOptions?: () => void;
 
@@ -92,6 +95,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * such metric is unavailable in the response of the routing request, it will not be
      * shown. In addition, the order specified here is the order in which the metrics will be displayed.
      * The default metrics to show are `price`, `calories` and `carbon`.
+     * @ctype
      */
     tripMetricsToShow?: TKTripCostType[];
 
@@ -101,105 +105,121 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
      * Badges order matters: a trip matching two or more badges will get the first matching badge according to the specified order.
      * This setting is independent of `tripMetricsToShow`.
      * By default all badges are shown.
+     * @ctype
      */
     tripBadgesToShow?: Badges[];
 
     /**
-     * Set this to the specify the trip sortings to show. The order of the elements in this array determine the order of the
+     * Set this to specify the trip sortings to show. The order of the elements in this array determine the order of the
      * options in the sort select.
+     * @ctype
      */
     tripSortingsToShow?: TripSort[];
+
+    /**     
+     * @ctype
+     * @default  [TKState.config.tripCompareFc]{@link TKUIConfig#tripCompareFc}
+     */
+    preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
+
+    /**
+     * ignore
+     * @default true
+     */
+    automaticTripSelection?: boolean;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps, IAccessibilityContext {
+interface IConsumedProps {
     /**
      * Array of routing results to be displayed. It's assumed that trips come already sorted according to selected sort
      * criterion (which is handled through ```sort``` and ```onSortChange``` properties in a controlled way).
      * @ctype
-     * @default {@link TKState#trips}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#trips}.
+     * @order 1
      */
-    values: Trip[];
+    values?: Trip[];
 
     /**
      * Stating the trip in ```values``` that is currently selected.
      * @ctype
-     * @default {@link TKState#selectedTrip}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#selectedTrip}
+     * @order 2
      */
     value?: Trip;
 
     /**
      * Trip selection change callback
      * @ctype
-     * @default {@link TKState#onChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onChange}
+     * @order 3
      */
     onChange?: (value: Trip) => void;
 
     /**
      * Function that will run when user picks an alternative trip from a trip group.
      * @ctype
-     * @default {@link TKState#onAlternativeChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onAlternativeChange}
+     * @order 4
+     * @divider
      */
     onAlternativeChange?: (group: TripGroup, alt: Trip) => void;
 
     /**
      * Stating if we are waiting for routing results to arrive from TripGo api request.
-     * @default {@link TKState#waiting}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#waiting}
      */
-    waiting: boolean;
+    waiting?: boolean;
 
     /**
      * Criterion by which routing results passed through ```values``` prop are sorted. <br/>
      * Values: TripSort.OVERALL, TripSort.TIME, TripSort.DURATION, TripSort.PRICE, TripSort.CARBON.
      * @ctype
-     * @default {@link TKState#sort}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#sort}     
      */
-    sort: TripSort;
+    sort?: TripSort;
 
     /**
      * Sort criterion change callback.
      * @ctype
-     * @default {@link TKState#onSortChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onSortChange}
      */
-    onSortChange: (sort: TripSort) => void;
+    onSortChange?: (sort: TripSort) => void;
 
     /**
      * Specifying an error object describing a routing error, if such an error happened.
-     * @default {@link TKState#routingError}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#routingError}
+     * @ctype
      */
     routingError?: TKError;
 
     /**
      * Routing query to which ```values``` trips correspond.
      * @ctype
-     * @default {@link TKState#query}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#query}
      */
-    query: RoutingQuery;
+    query?: RoutingQuery;
 
     /**
      * Routing query change callback, since this component allows the user to set the time to depart or the time to
      * arrive (part of the routing query).
      * @ctype
-     * @default {@link TKState#onQueryChange}
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#onQueryChange}
      */
-    onQueryChange: (query: RoutingQuery) => void;
-
-    /**
-     * @default {@link TKState#onQueryUpdate}
-     * @ignore
-     */
-    onQueryUpdate: (update: Partial<RoutingQuery>) => void;
+    onQueryChange?: (query: RoutingQuery) => void;
 
     /**
      * Id of timezone to consider for time display / input.
-     * @default Timezone of the current region: {@link TKState#region}.timezone
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass the timezone of the current region: {@link TKState#region}.timezone
      */
     timezone?: string;
 
-    setSelectedTripSegment: (segment?: Segment) => void;
+    /**     
+     * @ctype
+     * @default Use TKUIRoutingResultsViewUtils.TKStateProps to pass {@link TKState#setSelectedTripSegment}
+     */
+    onTripSegmentSelected?: (segment?: Segment) => void;
 
     transportBtnText?: string;
-
-    config: TKUIConfig;
 }
 
 export interface IStyle {
@@ -233,17 +253,25 @@ interface IState {
     toLocInfo?: TKLocationInfo;
 }
 
-class TKUIRoutingResultsView extends React.Component<IProps, IState> {
+type IDefaultProps = Required<Pick<IProps, "values" | "waiting" | "sort" | "landscape" | "portrait" | "tripSortingsToShow" | "automaticTripSelection">>;
+
+class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, IState> {
 
     private rowRefs: RefObject<HTMLElement>[] = [];
     private timePrefOptions: SelectOption[];
     private sortOptions: SelectOption[];
 
-    static defaultProps: Partial<IProps> = {
-        tripSortingsToShow: Object.values(TripSort).filter((value: TripSort) => value !== TripSort.CARBON)
+    static defaultProps: IDefaultProps = {
+        values: [],
+        waiting: false,
+        sort: TripSort.OVERALL,
+        tripSortingsToShow: Object.values(TripSort).filter((value: TripSort) => value !== TripSort.CARBON),
+        portrait: false,
+        landscape: true,
+        automaticTripSelection: true
     };
 
-    constructor(props: IProps) {
+    constructor(props: IProps & IDefaultProps) {
         super(props);
         this.state = {
             tripToBadge: new Map<Trip, Badges>(),
@@ -257,16 +285,20 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         // This is necessary since default trip sort is selected in WithRoutingResults, based on 
         // TKUserProfile.defaultTripSort, with fallback to TripSort.OVERALL, and so the default trip
         // sort may not be among the tripSortingsToShow. Improve the sync of this.
-        if (props.tripSortingsToShow!.length > 0 && !props.tripSortingsToShow!.includes(props.sort)) {
-            props.onSortChange(props.tripSortingsToShow![0]);
+        if (props.tripSortingsToShow.length > 0 && !props.tripSortingsToShow!.includes(props.sort)) {
+            props.onSortChange?.(props.tripSortingsToShow![0]);
         }
+    }
+
+    private onQueryUpdate(update: Partial<RoutingQuery>) {
+        this.props.query && this.props.onQueryChange?.(Util.iAssign(this.props.query, update));
     }
 
     private getDefaultErrorActions(error: TKError) {
         return [
             <TKUIButton text={this.props.t("Plan.a.new.trip")}
                 type={TKUIButtonType.SECONDARY}
-                onClick={() => this.props.onQueryUpdate({ from: null, to: null })}
+                onClick={() => this.onQueryUpdate({ from: null, to: null })}
                 key={"Plan.a.new.trip"}
             />
         ]
@@ -280,7 +312,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                     label = t("sorted_by_preferred");
                     break;
                 case TripSort.TIME:
-                    label = this.props.query.timePref === TimePreference.ARRIVE ?
+                    label = this.props.query?.timePref === TimePreference.ARRIVE ?
                         t("sorted_by_departure") : t("sorted_by_arrival");
                     break;
                 case TripSort.PRICE:
@@ -319,36 +351,30 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
             label: timePref.toLowerCase()
         });
         if (timePref === TimePreference.NOW) {
-            this.updateQuery({
+            this.onQueryUpdate({
                 timePref: timePref,
                 time: DateTimeUtil.getNow()
             });
         } else {
-            this.updateQuery({
+            this.onQueryUpdate({
                 timePref: timePref
             })
         }
     }
 
-    private updateQuery(update: Partial<RoutingQuery>) {
-        this.props.onQueryUpdate(update);
-    }
-
     public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const t = this.props.t;
-        const injectedStyles = this.props.injectedStyles;
-        const routingQuery = this.props.query;
-        const datePickerDisabled = routingQuery.timePref === TimePreference.NOW;
-        const showTimeSelect = this.props.showTimeSelect !== undefined ? this.props.showTimeSelect : true;
-        const showTransportsBtn = this.props.showTransportsBtn !== undefined ? this.props.showTransportsBtn : true;
-
+        const { query: routingQuery, onQueryChange, showTransportsBtn = true, classes, t, injectedStyles } = this.props;
+        const showTimeSelect = onQueryChange && this.props.showTimeSelect !== false;
         let error: JSX.Element | undefined = undefined;
         const routingError = this.props.routingError;
         if (!this.props.waiting && routingError) {
             const errorMessage = TKErrorHelper.hasErrorCode(routingError, ERROR_ROUTING_NOT_SUPPORTED) ?
-                t("Routing.from.X.to.X.is.not.yet.supported",
-                    { 0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t) }) + "." :
+                (this.props.query ?
+                    t("Routing.from.X.to.X.is.not.yet.supported",
+                        { 0: LocationUtil.getMainText(this.props.query.from!, t), 1: LocationUtil.getMainText(this.props.query.to!, t) }) + "." :
+                    t("Routing.between.these.locations.is.not.yet.supported.")
+                )
+                :
                 routingError.usererror || Environment.isDev() || Environment.isBeta() ? routingError.message : t("Something.went.wrong.");
             const defaultErrorActions = this.getDefaultErrorActions(routingError);
             const errorActions = this.props.errorActions ? this.props.errorActions(routingError, defaultErrorActions) :
@@ -371,7 +397,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                             justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
                         } : undefined}
                     >
-                        {showTimeSelect &&
+                        {showTimeSelect && routingQuery &&
                             <TKUISelect
                                 options={this.timePrefOptions}
                                 value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
@@ -381,14 +407,13 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                     menu: overrideClass({ marginTop: '3px' })
                                 })}
                             />}
-                        {showTimeSelect && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
+                        {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                                 value={routingQuery.time}
                                 timeZone={this.props.timezone}
-                                onChange={(date: Moment) => this.updateQuery({ time: date })}
+                                onChange={(date: Moment) => this.onQueryUpdate({ time: date })}
                                 timeFormat={DateTimeUtil.timeFormat()}
                                 dateFormat={DateTimeUtil.dateTimeFormat()}
-                                disabled={datePickerDisabled}
                             />
                         }
                         {showTransportsBtn &&
@@ -463,12 +488,12 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                             }}
                         </TKUIConfigContext.Consumer>
                     }
-                    {this.props.tripSortingsToShow!.length > 1 && (!error || this.props.values.length > 0) &&
+                    {this.props.onSortChange && this.props.tripSortingsToShow.length > 1 && (!error || this.props.values.length > 0) &&
                         <div className={classes.sortBar}>
                             <TKUISelect
                                 options={this.sortOptions}
                                 value={this.sortOptions.find((option: any) => option.value === this.props.sort)}
-                                onChange={(option) => this.props.onSortChange(option.value as TripSort)}
+                                onChange={(option) => this.props.onSortChange?.(option.value as TripSort)}
                                 styles={{
                                     main: overrideClass(injectedStyles.sortSelect),
                                     control: overrideClass(injectedStyles.sortSelectControl),
@@ -508,7 +533,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
                                 this.setState({
                                     expanded: expand ? trip : undefined
                                 })}
-                            onSegmentSelected={this.props.setSelectedTripSegment}
+                            onSegmentSelected={this.props.onTripSegmentSelected}
                             isUserTabbing={this.props.isUserTabbing}
                             tripMetricsToShow={this.props.tripMetricsToShow}
                         />
@@ -528,7 +553,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
             tripToBadge: TKMetricClassifier.getTripClassifications(this.props.values,
                 {
                     badges: this.props.tripBadgesToShow,
-                    preferredTripCompareFc: this.props.config.tripCompareFc
+                    preferredTripCompareFc: this.props.preferredTripCompareFc
                 })
         });
     }
@@ -548,7 +573,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         }
 
         // Automatic trip selection a while after first group of trips arrived
-        if (!prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
+        if (this.props.automaticTripSelection && !prevProps.value && this.props.values && this.props.values.length > 0 && !this.automaticSelectionTimeout) {
             this.automaticSelectionTimeout = setTimeout(() => {
                 if (this.props.values && this.props.values.length > 0 && this.props.onChange && !this.props.value
                     && !this.state.showTransportSwitches) { // Avoid automatic trip selection if showTransportSwitches is showing.
@@ -561,7 +586,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
             this.refreshBadges();
         }
 
-        if (this.props.query.to !== prevProps.query.to) {
+        if (this.props.query?.to !== prevProps.query?.to) {
             this.setState({ toLocInfo: undefined });
             this.refreshAlert();
         }
@@ -574,7 +599,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
         }
 
         // To refresh time sort label according to time pref.
-        if (this.props.query.timePref !== prevProps.query.timePref) {            
+        if (this.props.query?.timePref !== prevProps.query?.timePref) {
             this.sortOptions = this.getSortOptions(this.props.t);
         }
     }
@@ -585,7 +610,7 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
     }
 
     private refreshAlert() {
-        this.props.query.to && LocationsData.instance.getLocationInfo(this.props.query.to)
+        this.props.query?.to && LocationsData.instance.getLocationInfo(this.props.query.to)
             .then((locInfo: TKLocationInfo) => this.setState({ toLocInfo: locInfo }))
             .catch((e) => console.log(e));
     }
@@ -600,53 +625,44 @@ class TKUIRoutingResultsView extends React.Component<IProps, IState> {
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
-        const config = useContext(TKUIConfigContext);
         return (
-            <TKAccessibilityContext.Consumer>
-                {accessibilityContext =>
-                    <TKUIViewportUtil>
-                        {(viewportProps: TKUIViewportUtilProps) =>
-                            <RoutingResultsContext.Consumer>
-                                {(routingContext: IRoutingResultsContext) => {
-                                    const consumerProps: IConsumedProps = {
-                                        values: routingContext.trips || [],
-                                        waiting: routingContext.waiting,
-                                        routingError: routingContext.routingError,
-                                        value: routingContext.selectedTrip,
-                                        onChange: (trip: Trip) => {
-                                            routingContext.onChange(trip);
-                                            routingContext.onReqRealtimeFor(trip);
-                                        },
-                                        onAlternativeChange: routingContext.onAlternativeChange,
-                                        query: routingContext.query,
-                                        sort: routingContext.sort,
-                                        onSortChange: routingContext.onSortChange,
-                                        onQueryChange: routingContext.onQueryChange,
-                                        onQueryUpdate: routingContext.onQueryUpdate,
-                                        timezone: routingContext.region ? routingContext.region.timezone : undefined,
-                                        setSelectedTripSegment: routingContext.setSelectedTripSegment,
-                                        ...viewportProps,
-                                        ...accessibilityContext,
-                                        config
-                                    };
-                                    return props.children!(consumerProps);
-                                }}
-                            </RoutingResultsContext.Consumer>
-                        }
-                    </TKUIViewportUtil>
-                }
-            </TKAccessibilityContext.Consumer>
+            <RoutingResultsContext.Consumer>
+                {(routingContext: IRoutingResultsContext) => {
+                    const consumerProps: IConsumedProps = {
+                        values: routingContext.trips || [],
+                        waiting: routingContext.waiting,
+                        routingError: routingContext.routingError,
+                        value: routingContext.selectedTrip,
+                        onChange: (trip: Trip) => {
+                            routingContext.onSelectedTripChange(trip);
+                            routingContext.onReqRealtimeFor(trip);
+                        },
+                        onAlternativeChange: routingContext.onAlternativeChange,
+                        query: routingContext.query,
+                        sort: routingContext.sort,
+                        onSortChange: routingContext.onSortChange,
+                        onQueryChange: routingContext.onQueryChange,
+                        timezone: routingContext.region ? routingContext.region.timezone : undefined,
+                        onTripSegmentSelected: routingContext.setSelectedTripSegment
+                    };
+                    return props.children!(consumerProps);
+                }}
+            </RoutingResultsContext.Consumer>
         );
     };
 
-interface IClientConsumed extends IClientProps, Partial<IConsumedProps> { }
+const Mapper: PropsMapper<IClientProps, IClientProps> =
+    ({ inputProps, children }) => {
+        const { tripCompareFc } = useContext(TKUIConfigContext);
+        const accessibilityContext = useContext(TKAccessibilityContext);
+        return (
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) =>
+                    children!({ preferredTripCompareFc: tripCompareFc, ...viewportProps, ...accessibilityContext, ...inputProps })}
+            </TKUIViewportUtil>
+        );
+    }
 
-const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({ ...consumedProps, ...inputProps })}
-        </Consumer>;
 
 /**
  * Displays routing results obtained from TripGo api for a routing query (_start_ and _end_ locations, and _time to depar_
@@ -658,26 +674,38 @@ const Mapper: PropsMapper<IClientConsumed, Subtract<IProps, TKUIWithClasses<ISty
  *
  * The component does not compute trips by itself, but just displays the list of trips ([](Trip) instances) passed
  * through the ```values``` property, so trips computation via TripGo api from the routing query happens outside.
- * However, as explained in [this section](#/Main%20SDK%20component%3A%20TKRoot), this component gets automatically
- * connected to the (global) _state of the SDK_, via it's properties (and using React Contexts), when we don't pass
- * values for the (so called) _connection props_, which get their defaults values from the global state.
- * For instance, ```values``` is a connection property, so if not specified it will get it's value from the global SDK
- * state: the current list of trips for the current query.
  *
  * It also receives a ```value``` prop specifying the trip in ```values``` that is currently selected (if any),
  * as well as an ```onChange``` callback function prop to notify on trip selection change (e.g. user clicking on a
- * different trip), which are both also connection props.
+ * different trip).
  *
  * Since it allows the user to set the time to depart or the time to arrive (part of a routing query) then it receives
- * ```query``` ([](RoutingQuery) instance) and ```onQueryChange``` props, both connection props, so automatically
- * connected to the SDK global state if not provided.
+ * ```query``` ([](RoutingQuery) instance) and ```onQueryChange``` props.
+ * 
+ *  You can connect the component to the SDK global state, {@link TKState}, by forwarding the props
+ *  provided by TKUIRoutingResultsViewHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUIRoutingResultsViewHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUIRoutingResultsView 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUIRoutingResultsViewHelpers.TKStateProps>
+ *  ```
+ * 
  *
- * In a typical usage, connection props will be left unspecified (i.e. connected to SDK state), and so the component will
- * display trips for the currently specified query. If query changes (e.g. user changed time in this component, or
- * interacted with [query input component](TKUIRoutingQueryInput), then the SDK environment will recompute trips, and
- * ```values``` props will be updated accordingly.
- *
- * In a similar way, the SDK environment automatically performs real-time updates of trips.
+ * In this way, the component will display trips for the current query in the SDK state. If query changes (e.g. user 
+ * changed time in this component, or interacted with a [query input component](TKUIRoutingQueryInput) also connected to the state, 
+ * then the SDK environment will recompute trips, and ```values``` props will be updated accordingly.
+ * In a similar way, the SDK environment automatically performs real-time updates of trips, and so updates will be automatically
+ * displayed by this component.
  */
 
 export default connect((config: TKUIConfig) => config.TKUIRoutingResultsView, config, Mapper);
+
+export const TKUIRoutingResultsViewHelpers = {
+    TKStateProps: Consumer,
+    useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
+}

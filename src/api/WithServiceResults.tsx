@@ -75,7 +75,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                     return;
                 }
                 this.forceUpdate(); //to update 'time to depart' labels
-                if (Features.instance.realtimeEnabled()) {
+                if (Features.instance.realtimeEnabled) {
                     this.realtimeUpdate();
                 }
             }, 10000);
@@ -160,7 +160,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                             // (or just detect it with segmentReplacement === segment).
                         })
                     } else {
-                        this.onTimetableForSegment(segmentReplacement);
+                        this.setState({ segment: segmentReplacement });
                     }
                 });
             } else {    // Timetable for stop, so request departure details.
@@ -202,7 +202,7 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
 
         public onTimetableForSegment(segment?: Segment) {
             if (segment) {
-                this.setState({ segment: segment },
+                this.setState({ segment },
                     () => {
                         if (segment) {
                             RegionsData.instance.getRegionP(segment.from)
@@ -259,11 +259,11 @@ function withServiceResults<P extends IServiceResConsumerProps>(Consumer: React.
                 onTimetableForSegment={this.onTimetableForSegment}
                 onRequestMore={this.requestMoreDepartures}
                 departures={this.getDisplayDepartures()}
-                waiting={this.isWaiting(this.state)}
+                waitingDepartures={this.isWaiting(this.state) || !startStop}
                 serviceError={this.state.serviceError}
                 timetableFilter={this.state.filter}
                 onFilterChange={this.onFilterChange}
-                title={startStop ? (startStop.shortName ? startStop.shortName : startStop.name) : ""}
+                title={startStop?.shortName ?? startStop?.name ?? ""}
                 timetableInitTime={this.state.initTimeChanged ? this.state.timetableInitTime : DateTimeUtil.getNow()}
                 onInitTimeChange={this.onInitTimeChange}
                 selectedService={this.getSelectedService()}

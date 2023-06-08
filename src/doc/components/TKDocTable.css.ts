@@ -4,7 +4,8 @@ import {TKDocStyleProps} from "./TKDocStyle";
 export const tKDocTableStyle: Styles<string, TKDocStyleProps> = {
     table: {
         width: '100%',
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        borderCollapse: 'collapse'
     },
     tableHead: {
         borderBottom: '1px solid rgb(232, 232, 232)'
@@ -17,5 +18,8 @@ export const tKDocTableStyle: Styles<string, TKDocStyleProps> = {
     cell: {
         fontSize: '13px',
         padding: '8px 16px 8px 0'
+    },
+    divider: {
+        borderBottom: '1px solid rgb(232, 232, 232)'
     }
 };

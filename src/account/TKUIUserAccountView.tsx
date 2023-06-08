@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { TKAccountContext } from "./TKAccountContext";
 import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
@@ -15,6 +15,14 @@ const userAccountViewJss = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         padding: '30px 0'
+    },
+    phoneNote: {
+        padding: '0 30px',
+        ...theme.textColorGray,
+        ...theme.textSizeCaption,
+        '& a': {
+            color: theme.colorPrimary
+        }
     }
 });
 
@@ -22,9 +30,10 @@ type IStyle = ReturnType<typeof userAccountViewJss>
 
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     onRequestClose?: () => void;
+    phoneNote?: ReactNode;
 }
 
-const TKUIUserAccountView: React.FunctionComponent<IProps> = (props) => {
+const TKUIUserAccountView: React.FunctionComponent<IProps> = props => {
     const { userAccount } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     if (!userAccount) {
@@ -57,11 +66,16 @@ const TKUIUserAccountView: React.FunctionComponent<IProps> = (props) => {
                                 title={t("Email")}
                                 subtitle={userAccount.email}
                             />
-                            <TKUIRow
-                                title={t("Phone")}
-                                subtitle={userAccount.phone}
-                            />
+                            {userAccount.phone &&
+                                <TKUIRow
+                                    title={t("Phone")}
+                                    subtitle={userAccount.phone}
+                                />}
                         </TKUISettingSection>
+                        {userAccount.phone && props.phoneNote &&
+                            <div className={classes.phoneNote}>
+                                {props.phoneNote}
+                            </div>}
                     </div>
                 </TKUICard>}
         </TKUIViewportUtil>

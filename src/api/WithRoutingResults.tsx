@@ -26,12 +26,14 @@ import { TripSort } from "../model/trip/TripSort";
 import GATracker, { ACTION_COMPUTE_TRIPS, CATEGORY_TRIP_RESULTS } from "../analytics/GATracker";
 import TKMapViewport from "../map/TKMapViewport";
 import ModeLocation from "../model/location/ModeLocation";
+import TKUserMode from "../account/TKUserMode";
+import { SignInStatus } from "../account/TKAccountContext";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
     fixToInitViewportRegion?: boolean;
     options: TKUserProfile;
-    computeModeSets?: (query: RoutingQuery, options: TKUserProfile) => string[][];
+    computeModeSetsBuilder?: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
 }
@@ -44,7 +46,7 @@ interface IWithRoutingResultsState {
     inputTextTo: string
     viewport?: TKMapViewport;
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
-    directionsView: boolean;    // It means: compute trips for query whenever it is complete.
+    computeTripsForQuery: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
     selectedSegment?: Segment;
@@ -85,7 +87,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waiting: false,
                 waitingTripUpdate: false,
                 viewport: { center: MapUtil.worldCoords, zoom: 2 },
-                directionsView: false,
+                computeTripsForQuery: false,
                 tripDetailsView: false,
                 waitingStateLoad: false
             };
@@ -97,7 +99,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.setSelectedSegment = this.setSelectedSegment.bind(this);
             this.onSortChange = this.onSortChange.bind(this);
             this.onViewportChange = this.onViewportChange.bind(this);
-            this.onDirectionsView = this.onDirectionsView.bind(this);
+            this.onComputeTripsForQuery = this.onComputeTripsForQuery.bind(this);
             this.onTripDetailsView = this.onTripDetailsView.bind(this);
             this.refreshTrip = this.refreshTrip.bind(this);
             this.refreshSelectedTrip = this.refreshSelectedTrip.bind(this);
@@ -107,6 +109,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onSegmentCollectChange = this.onSegmentCollectChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
+            this.computeModeSets = this.computeModeSets.bind(this);
         }
 
         public sortTrips(trips: Trip[], sort: TripSort) {
@@ -143,7 +146,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onQueryChange(query: RoutingQuery) {
             const prevQuery = this.state.query;
-            const alreadyOnDirectionsView = this.state.directionsView;
+            const alreadyOnComputeTripsForQuery = this.state.computeTripsForQuery;
             this.setState({ query: query }, () => {
                 this.refreshRegion();
                 // TODO: Next logic currently does not depend on this.state.region, although it should (in computeModeSets).
@@ -151,8 +154,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 if (query.isComplete(true)) {
                     // Just refresh trips if already on directions view when called
                     // onQueryChange. If not, trips will be computed when
-                    // this.onDirectionsView(true) is called.
-                    if (alreadyOnDirectionsView &&
+                    // this.onComputeTripsForQuery(true) is called.
+                    if (alreadyOnComputeTripsForQuery &&
                         !query.from?.isDroppedPin() && !query.to?.isDroppedPin() &&
                         !this.sameApiQueries(prevQuery, this.props.options, query, this.props.options)) {
                         // Avoid requesting routing if:
@@ -235,10 +238,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.setState({ viewport: viewport }, () => this.refreshRegion());
         }
 
-        public onDirectionsView(directionsView: boolean) {
-            if (this.state.directionsView !== directionsView) {
-                this.setState({ directionsView: directionsView }, () => {
-                    if (this.state.query.isComplete(true) && this.state.directionsView &&
+        public onComputeTripsForQuery(computeTripsForQuery: boolean) {
+            if (this.state.computeTripsForQuery !== computeTripsForQuery) {
+                this.setState({ computeTripsForQuery: computeTripsForQuery }, () => {
+                    if (this.state.query.isComplete(true) && this.state.computeTripsForQuery &&
                         !this.state.query.from?.isDroppedPin() && !this.state.query.to?.isDroppedPin()) {
                         this.refreshTrips();
                         this.trackComputeTrips(this.state.query, this.props.options, undefined, this.props.options);
@@ -330,6 +333,10 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         this.checkWaiting(waitingState);
                         this.setState({ routingError: error });
                     }))
+                })
+                .catch((error: TKError) => {
+                    Util.log(error, Env.PRODUCTION);
+                    this.setState({ routingError: error, waiting: false });
                 });
         }
 
@@ -392,7 +399,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             if (this.realtimeInterval) {
                 clearInterval(this.realtimeInterval);
             }
-            if (!Features.instance.realtimeEnabled()) {
+            if (!Features.instance.realtimeEnabled) {
                 return;
             }
             if (!selected || !selected.updateURL) {  // No realtime data for the trip.
@@ -528,8 +535,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 start: `(${location.lat},${location.lng})`,
                                 end: `(${location.lat},${location.lng})`,
                                 modes: [tripSegment.modeIdentifier],
-                                startTime: segment.startTime,
-                                endTime: segment.endTime,
+                                startTime: segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                                endTime: segment.endTimeSeconds,
                                 sharedVehicleID: location.id,
                                 region: segmentRegions[0].name,
                                 ...segmentRegions[0] !== segmentRegions[1] ? {
@@ -556,8 +563,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                                 start: `(${location.lat},${location.lng})`,
                                 end: `(${location.lat},${location.lng})`,
                                 modes: [location.modeInfo.identifier],
-                                startTime: segment.startTime,
-                                endTime: segment.endTime,
+                                startTime: segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                                endTime: segment.endTimeSeconds,
                                 sharedVehicleID: location.id,
                                 region: segmentRegions[0].name,
                                 ...segmentRegions[0] !== segmentRegions[1] ? {
@@ -646,15 +653,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
                 viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}
-                directionsView={this.state.directionsView}
-                onDirectionsView={this.onDirectionsView}
+                computeTripsForQuery={this.state.computeTripsForQuery}
+                onComputeTripsForQuery={this.onComputeTripsForQuery}
                 trips={this.state.trips}
                 waiting={this.state.waiting}
                 routingError={this.state.routingError}
                 waitingTripUpdate={this.state.waitingTripUpdate}
                 tripUpdateError={this.state.tripUpdateError}
                 selectedTrip={this.state.selected}
-                onChange={this.onChange}
+                onSelectedTripChange={this.onChange}
                 selectedTripSegment={this.state.selectedSegment}
                 setSelectedTripSegment={this.setSelectedSegment}
                 tripDetailsView={this.state.tripDetailsView}
@@ -723,7 +730,8 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     query: query,
                     trips: sortedTrips,
                     selected: selected,
-                    directionsView: true
+                    computeTripsForQuery: true,
+                    waiting: false
                 }, () => this.refreshRegion());
                 if (selected) {
                     this.onReqRealtimeFor(selected);
@@ -740,7 +748,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         public componentDidUpdate(prevProps: Readonly<Subtract<P, RResultsConsumerProps> & IWithRoutingResultsProps>,
             prevState: Readonly<IWithRoutingResultsState>): void {
             if (this.props.options !== prevProps.options &&
-                this.state.query.isComplete(true) && this.state.directionsView &&
+                this.state.query.isComplete(true) && this.state.computeTripsForQuery &&
                 !this.sameApiQueries(this.state.query, prevProps.options, this.state.query, this.props.options)) {
                 this.refreshTrips();
                 this.trackComputeTrips(this.state.query, this.props.options, this.state.query, prevProps.options);
@@ -751,6 +759,14 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     this.onChange(undefined);
                     this.setSelectedSegment(undefined);
                 }
+            }
+            // Pre-fetch modes on region change (see also trigger it on demand getQueryUrlsWaitRegions) to save time when
+            // triggering compute trips.
+            if (this.state.region && prevState.region !== this.state.region) {
+                this.props.options.finishSignInStatusP &&
+                    this.props.options.finishSignInStatusP.then(status => {
+                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
+                    });
             }
         }
 
@@ -771,7 +787,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             let modeSetsQ1;
             let modeSetsQ2;
             if (RegionsData.instance.hasRegions()) {
-                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
+                const computeModeSetsFc = this.props.computeModeSetsBuilder ? this.props.computeModeSetsBuilder(this.computeModeSets) : this.computeModeSets;
                 modeSetsQ1 = computeModeSetsFc(q1, opts1);
                 modeSetsQ2 = computeModeSetsFc(q2, opts2);
                 // When there's no mode enabled put empty set so q1Urls and q2Urls below has at least one element,
@@ -797,19 +813,26 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
-                const computeModeSetsFc = this.props.computeModeSets ? this.props.computeModeSets! : this.computeModeSets;
-                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
-                    return query.getQueryUrl(modeSet, this.props.options);
-                });
+                return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
+                    .then(status =>
+                        (status === SignInStatus.signedIn && this.props.options.exclusiveModes ?
+                            RegionsData.instance.getRegionP(query.from!)
+                                .then(region => {
+                                    return this.props.options.getUserModeRulesByRegionP(region!.name).then(() => { });
+                                }) :
+                            Promise.resolve())
+                            .then(() => {
+                                const computeModeSetsFc = this.props.computeModeSetsBuilder ? this.props.computeModeSetsBuilder(this.computeModeSets) : this.computeModeSets;
+                                return computeModeSetsFc(query, this.props.options).map((modeSet: string[]) => {
+                                    return query.getQueryUrl(modeSet, this.props.options);
+                                });
+                            })
+                    );
             });
         }
 
         public computeModeSets(query: RoutingQuery, options: TKUserProfile): string[][] {
-            const referenceLatLng = query.from && query.from.isResolved() ? query.from : (query.to && query.to.isResolved() ? query.to : undefined);
-            if (!referenceLatLng) {
-                return [];
-            }
-            const region = RegionsData.instance.getRegion(referenceLatLng);
+            const region = this.getQueryRegion(query);
             if (!region) {
                 return [];
             }
@@ -818,6 +841,15 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             (options.transportOptions.isModeEnabled(mode)
                 || (mode === "wa_wal" && options.wheelchair))  // send wa_wal as mode when wheelchair is true.
             );
+            const userModeRules = options.getUserModeRulesByRegion(region.name);
+            if (userModeRules) {
+                userModeRules.forEach((modeRule: TKUserMode) => {
+                    if (!modeRule.rules.replaceWith || !enabledModes.includes(modeRule.mode)) {
+                        return;
+                    }
+                    enabledModes.splice(enabledModes.indexOf(modeRule.mode), 1, ...modeRule.rules.replaceWith!);
+                });
+            }
             const modeSets = enabledModes.map((mode: string) => [mode]);
             const multiModalSet: string[] = enabledModes.slice();
             if (multiModalSet.length > 1) {
@@ -848,9 +880,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public getQueryRegion(query: RoutingQuery): Region | undefined {
-            const referenceLatLng = query.from && query.from.isResolved() ? query.from :
-                (query.to && query.to.isResolved() ? query.to : undefined);
-            return referenceLatLng && RegionsData.instance.getRegion(referenceLatLng);
+            return (query.from && RegionsData.instance.getRegion(query.from)) ??
+                (query.to && RegionsData.instance.getRegion(query.to)) ??
+                undefined;
         }
 
         public getRoutingResultsJSONTest(): any {

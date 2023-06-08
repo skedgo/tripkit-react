@@ -167,7 +167,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
 
         tKState.onQueryChange(query);
         if (query.from || fieldsMap.has(URLFields.TIME_PREF) || fieldsMap.has(URLFields.TIME)) {
-            tKState.onDirectionsView(true);
+            tKState.onComputeTripsForQuery(true);
         }
 
         if (query.isComplete(true)) {
@@ -299,7 +299,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
                             RoutingQuery.create(null, location);
                         tKState.onQueryChange(routingQuery);
                         if (queryMap.at) {
-                            this.setState({ directionsView: true })
+                            tKState.onComputeTripsForQuery(true);                            
                         }
                         TKShareHelper.resetToHome();
                     }
@@ -333,7 +333,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
             if (query) {
                 tKState.onQueryChange(query);
                 if (query.from) {
-                    tKState.onDirectionsView(true);
+                    tKState.onComputeTripsForQuery(true);
                 }
             }
         } else {

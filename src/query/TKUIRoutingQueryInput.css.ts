@@ -1,11 +1,9 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle} from "./TKUIRoutingQueryInput";
+import {TKUIRoutingQueryInputProps} from "./TKUIRoutingQueryInput";
 import genStyles from "../css/GenStyle.css";
-import {black, colorWithOpacity, important, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
+import {black, important, tKUIColors, TKUITheme} from "../jss/TKUITheme";
 import {resetStyles} from "../css/ResetStyle.css";
 
-export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInputStyle, TKUIRoutingQueryInputProps> =
-    (theme: TKUITheme) => ({
+export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         btnBack: {
             ...resetStyles.button,
             padding: '0',
@@ -18,8 +16,8 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             }
         },
         fromToPanel: {
-            marginBottom: (props: TKUIRoutingQueryInputProps) => props.landscape ? '20px' : '0',
-            marginTop: (props: TKUIRoutingQueryInputProps) => props.landscape && !props.title && !props.onClearClicked ? '10px' : '0',
+            marginBottom: (props: TKUIRoutingQueryInputProps) => !props.portrait ? '20px' : '0',
+            marginTop: (props: TKUIRoutingQueryInputProps) => !props.portrait && !props.title && !props.onClearClicked ? '10px' : '0',
             ...genStyles.flex,
             ...genStyles.alignCenter
         },
@@ -45,19 +43,20 @@ export const tKUIRoutingQueryInputDefaultStyle: TKUIStyles<TKUIRoutingQueryInput
             ...genStyles.alignSelfStretch
         },
         locIcon: {
-            width: '12px',
-            height: '12px',
+            width: '11px',
+            height: '11px',
             boxSizing: 'border-box',
-            border: '2px solid ' + black(1, theme.isDark),
-            ...genStyles.borderRadius(50, "%")
+            border: '1px solid ' + black(1, theme.isDark),
+            ...genStyles.borderRadius(50, "%"),
+            margin: '2px 0'
         },
         locTarget: {
             borderColor: theme.colorPrimary,
-            backgroundColor: colorWithOpacity(theme.colorPrimary, .7)
+            backgroundColor: theme.colorPrimary
         },
-        dotIcon: {
-            width: '2px',
-            height: '2px',
+        locLine: {
+            width: '1px',
+            height: '14px',
             background: black(1, theme.isDark)
         },
         divider: {

@@ -3,7 +3,10 @@ import { TKUITheme } from "../jss/TKUITheme";
 
 export const tKUITripOverviewViewDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        padding: '15px 0'
+        padding: '15px 0',
+        '& *': {
+            boxSizing: 'border-box'
+        }
     },
     actionsPanel: {
         margin: '24px 0 16px',

@@ -11,6 +11,7 @@ import {TranslationFunction} from "../i18n/TKI18nProvider";
 
 export interface IProps {
     segment: Segment;
+    onLocationAction?: () => void;
     t: TranslationFunction;
 }
 
@@ -47,6 +48,7 @@ class SegmentPopup extends React.Component<IProps, IState> {
                                onClick={() => window.open(this.state.interchangeUrl,'_blank')}
                     >View stop map</div> : undefined
                 }
+                onAction={this.props.onLocationAction}
             />
         );
     }

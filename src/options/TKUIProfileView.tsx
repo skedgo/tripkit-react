@@ -201,7 +201,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             onClick={() => this.setState({ showPriorities: true })}
                         />
                     </TKUISettingSection>
-                    {this.props.config.isDarkDefault === undefined &&
+                    {this.props.config.isDarkMode === undefined &&
                         <TKUISettingSection>
                             <div className={classes.checkboxRow}>
                                 <div>
@@ -246,7 +246,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
 
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
     const accountContext = useContext(TKAccountContext);
     const config = useContext(TKUIConfigContext);
     return (

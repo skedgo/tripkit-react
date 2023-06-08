@@ -6,6 +6,8 @@ import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
+import Util from '../util/Util';
+import { OptionsContext } from '../options/OptionsProvider';
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
     private static _instance: AuthStorage;
@@ -33,13 +35,11 @@ let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.sign
 const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountContext) => React.ReactNode, withPopup?: boolean }> = (props) => {
     const { loginWithRedirect, loginWithPopup, logout, getAccessTokenSilently, isLoading, isAuthenticated, user } = useAuth0();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
-    const initStatus = (isLoading || isAuthenticated || userToken) ? SignInStatus.loading :
-        SignInStatus.signedOut;
+    const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
-    const prevIsLoading = usePrevious(isLoading);
-    const prevIsAuthenticated = usePrevious(isAuthenticated);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
+    const { onUserProfileChange } = useContext(OptionsContext);
     const requestUserToken = (auth0AccessToken: string) => {
         TripGoApi.apiCallT("/data/user/auth/auth0/" + auth0AccessToken, "POST", TKAuth0AuthResponse)
             .then((result: TKAuth0AuthResponse) => {
@@ -54,20 +54,25 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
     useEffect(() => {
         // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
         // on login pupup closed, so login to our BE.
-        if (isAuthenticated !== prevIsAuthenticated && isAuthenticated && !AuthStorage.instance.get().userToken) {
+        if (!isLoading && isAuthenticated && !AuthStorage.instance.get().userToken) {
             getAccessTokenSilently()
                 .then(requestUserToken)
                 .catch((error) => console.log(error));
         }
-        if (!isLoading && !isAuthenticated && (isLoading !== prevIsLoading || prevIsAuthenticated !== isAuthenticated)) {
-            setStatus(SignInStatus.signedOut)
+        // Not Authenticated in Auth0, so cleanup our token + set status to SignInStatus.signedOut.
+        if (!isLoading && !isAuthenticated) {
+            setStatus(SignInStatus.signedOut);
+            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            setUserToken(undefined);
+            setUserAccount(undefined);
+            // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines couses an infinite redirection loop.
         }
-    });
+    }, [isLoading, isAuthenticated]);
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
-        // Request user profile
-        if (userToken) {
+        // Request user profile, just if Auth0 determined the user is authenticated.
+        if (userToken && !isLoading && isAuthenticated) {
             TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
                 .then((result) => {
                     setUserAccount(result);
@@ -79,7 +84,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
                     logoutHandler();
                 });
         }
-    }, [userToken]);
+    }, [userToken, isLoading]);
     const login = () => {
         setStatus(SignInStatus.loading);
         if (!props.withPopup) { // Blocking spinner, just if login with redirect.
@@ -110,16 +115,31 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
         setUserAccount(undefined);
     };
     if (!finishInitLoadingPromise) {
-        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) : 
-        new Promise(resolve => {         
-            finishInitLoadingResolver = resolve; 
-        })
-    }        
+        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) :
+            new Promise(resolve => {
+                finishInitLoadingResolver = resolve;
+            });
+    }
     useEffect(() => {
-        if (status !== SignInStatus.loading) {            
+        onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
+    }, [finishInitLoadingPromise]);
+    useEffect(() => {
+        if (status !== SignInStatus.loading) {
             finishInitLoadingResolver?.(status);
         }
     }, [status]);
+    const resetUserToken = () => {
+        if (TripGoApi.userToken) {
+            TripGoApi.userToken = undefined;
+            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            setUserToken(undefined);
+            setUserAccount(undefined);
+            getAccessTokenSilently()
+                .then(requestUserToken)
+                .catch((error) => console.log(error));
+        }
+    }
+    TripGoApi.resetUserToken = resetUserToken;
     return (
         <React.Fragment>
             {props.children({
@@ -128,7 +148,8 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
                 login,
                 logout: logoutHandler,
                 accountsSupported: true,
-                finishInitLoadingPromise
+                finishInitLoadingPromise,
+                resetUserToken
             })}
         </React.Fragment>
     );
@@ -137,10 +158,11 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
 interface IProps {
     auth0Domain: string;
     auth0ClientId: string;
+    exclusiveModes?: boolean;
     children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
 }
 
-const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
+const TKAccountProvider: React.FunctionComponent<IProps> = (props: IProps) => {
     const [returnToAfterLogin, setReturnToAfterLogin] = useState<string | undefined>(undefined);
     const onRedirectCallback = (appState) => {
         const returnTo = appState?.returnTo;
@@ -148,6 +170,10 @@ const TKAccountProvider: React.SFC<IProps> = (props: IProps) => {
             setReturnToAfterLogin(returnTo);
         }
     };
+    const { onUserProfileChange } = useContext(OptionsContext);
+    useEffect(() => {
+        props.exclusiveModes && onUserProfileChange(userProfile => Util.iAssign(userProfile, { exclusiveModes: true }));
+    }, []);
     return (
         <Auth0Provider
             domain={props.auth0Domain}

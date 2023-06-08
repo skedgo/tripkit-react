@@ -37,7 +37,8 @@ export { default as TKStateConsumer } from "./config/TKStateConsumer";
 export { default as TKStateController } from "./config/TKStateController";
 export type TKUIConfig = TKUIConfigForExport;
 export { default as TKShareHelper } from "./share/TKShareHelper";
-export { default as TKUIRoutingQueryInput } from "./query/TKUIRoutingQueryInput";
+export { default as TKUIRoutingQueryInput, TKUIRoutingQueryInputHelpers } from "./query/TKUIRoutingQueryInput";
+export { default as TKUIRoutingResultsView, TKUIRoutingResultsViewHelpers } from "./trip/TKUIRoutingResultsView";
 export { default as TKUILocationSearch } from "./query/TKUILocationSearch";
 export { default as TKUILocationBox } from "./location_box/TKUILocationBox";
 export { default as RegionsData } from "./data/RegionsData";
@@ -77,7 +78,7 @@ export { TKUISlideUpPosition } from "./card/TKUISlideUp";
 export { TKError } from "./error/TKError";
 export type TKUIRoutingResultsViewProps = TKUIRoutingResultsViewPropsForExport;
 export { default as TKFeatures } from "./env/Features";
-export { default as TKUIMapView } from "./map/TKUIMapView";
+export { default as TKUIMapView, TKUIMapViewHelpers } from "./map/TKUIMapView";
 export type TKUIMapViewProps = TKUIMapViewPropsForExport;
 export { tKRequestCurrentLocation } from "./util/GeolocationUtil";
 export { default as TKStateUrl } from "./state/TKStateUrl";
@@ -111,6 +112,7 @@ export type TKSelectOption = SelectOption;
 export { default as TKGeolocationData } from "./geocode/GeolocationData";
 export type PeliasGeocoderOptions = PeliasGeocoderOptionsForExport;
 export { default as TKMapboxGeocoder } from "./geocode/TKMapboxGeocoder";
+export { useTKState } from './config/TKStateProvider';
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.

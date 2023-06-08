@@ -1,91 +1,111 @@
 [](TKRoot) is a component to be used as root of (the sub-tree of the app using) the SDK components, and provides the
 environment necessary for the SDK components to work: it handles the global state of the SDK ([](TKState)), the TripGo API traffic, and the injection of general and component-specific configs 
-to the system.
+into the system.
 
 ### Config property
 
-It receives a [config object](TKUIConfig) as property, which allows to specify the *TripGo API key* (required) and 
-optionally other general customization options, as *theme*, *i18n resources* (translations of SDK strings), 
-*google analytics configs* (including API keys), *geocoding sources*, etc. It also allows to specify component-specific configs 
-for any component of the SDK,  which will be applied to the component when rendered anywhere below TKRoot in the tree.
+TKRoot receives a [config object](TKUIConfig) as property, which allows to specify the *TripGo API key* (required) and 
+optionally other general customization options, as [theme](#/Customization/Theme), [i18n resources](#/Customization/I18n) (translations of SDK strings), [geocoding sources](#/Customization/Geocoding), 
+*google analytics configs* (including API keys), etc. It also allows to specify [component-specific configs](#/Component-level%20Customization) 
+for any component of the SDK,  which will be applied to the component when rendered anywhere below `TKRoot` in the tree.
 
-### Global state
+### Examples
 
-The TKRoot component maintains a global state accessible by the SDK components, composed by values and callback 
-functions to update them. For instance, the current *routing query* (from + to + time + time preference, 
-possibly partially specified), and the corresponding *routing results* 
-(computed vía the TripGo API, if the query is fully specified), are part of the global state.
-
-Some of the SDK components (specially high-level ones) become, by default, **automatically connected to the part** of the 
-global state **relevant to the component** when placing it anywhere below TKRoot in the components hierarchy.
-This connection happens through the component props: by 
-**injecting state values (and update callbacks) as deault values** for some (optional) props that we call 
-_connection props_. 
-
-For instance, the query input component ([](TKUIRoutingQueryInput)) has the following optional (connection) props:
-
-```js static
-value: RoutingQuery;
-onChange: (routingQuery: RoutingQuery) => void;
-```
-
-that if not provided when calling the component they default to the query and query update callback of the global 
-state.
-
-This feature makes really easy to integrate different SDK components to get the most typical interactions between them.
-For instance, the example below integrates [](TKUIRoutingQueryInput) (query input component) and [](TKUIMapView) (map component) 
-just by putting them somewhere below [](TKRoot), and so they become automatically connected to the global state.
+A [tripgo.com](https://tripgo.com) like (full) trip planner, where a TripGo api key is passed to TKRoot through config:
 
 ```jsx
-import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, tKRequestCurrentLocation } from 'tripkit-react';
-import { queryMapConfig } from 'doc-helper';
+import { TKRoot, TKUITripPlanner } from 'tripkit-react';
         
 const config = {
-    apiKey: 'TRIPGO_API_KEY',
-    onInitState: state => {
-        // Set map viewport to focus user position
-        tKRequestCurrentLocation(true, true)
-            .then(userPos => state.setViewport({ center: userPos.latLng, zoom: 13 }));
-
-        // Enable directions view flag    
-        state.onDirectionsView(true);           
-    },
-    onUpdateState: (state, prevState) =>
-        // Select the first trip by default  
-        (!prevState.trips || prevState.trips.length === 0) && state.trips && state.trips.length > 0
-            && state.onChange(state.trips[0]),
-    ...queryMapConfig
+    apiKey: '424353266689764a5f15b5dc7e619aa1'  // Use your TripGo api key here.
 };
 
 <TKRoot config={config}>
-    <div style={{height: '500px'}}>
-        <div style={{position: 'absolute', zIndex: '1', margin: '10px', width: '300px'}}>
-            <TKUIRoutingQueryInput/>
-        </div>
-        <TKUIMapView/>
+    <div style={{height: '500px', position: 'relative'}}>
+        <TKUITripPlanner/>
     </div>
 </TKRoot>
 ```
 
-Then by picking *from* or *to* locations from the query input component it will also be reflected on the map, and conversely, by
+A location search component, pick a location to see it's details below.
+
+```jsx
+import { useState } from "react";
+import { TKRoot, TKUILocationSearch } from 'tripkit-react';
+        
+const config = {
+    apiKey: '424353266689764a5f15b5dc7e619aa1'  // Use your TripGo api key here.
+};
+
+const [location, setLocation] = useState();
+
+<TKRoot config={config}>
+    <div>
+        <TKUILocationSearch 
+            value={location} 
+            onChange={setLocation} 
+            onDirectionsClick={() => { alert("Directions button clicked") }}
+        />
+        {location && 
+            <div style={{ margin: '16px' }}>
+                <div>Location details:</div>
+                <ul>
+                    <li>{`Address: ${location.address}`}</li>
+                    <li>{`Coords: (${location.lat}, ${location.lng})`}</li>
+                </ul>
+            </div>
+        }
+    </div>
+</TKRoot>
+```
+
+The next example shows how to use query and map components to define and display a routing query.
+
+The routing query input component ([](TKUIRoutingQueryInput)) can be used to build or update a [routing query object]() in a controlled way, through `query` and `onChange` properties. Also, the [](TKUIMapView) [](TKUIMapView) can be used to display *from* and *to* locations of a routing query, as well as updating them by dropping / drag & dropping pins.
+
+Notice that by picking *from* or *to* locations from the query input component it will also be reflected on the map, and conversely, by
 dropping a pin on the map it will set the corresponding location as *from* or *to* on the query input.
 
-Also notice that after setting both *from* and *to* locations, computation of routing results via TripGo API is 
-automatically triggered, and when the first result arrives we set it as the selected trip (global state value) and so
-it becomes displayed on the map. If we also include the [](TKUIRoutingResultsView) component to show the list of all routing 
-results, then it will automatically display the trip selection, too (see [TripGo trip planner](https://tripgo.com)).
+```jsx
+import { useState, useEffect, useRef } from "react";
+import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, tKRequestCurrentLocation, RoutingQuery, TKUtil } from 'tripkit-react';
+import "./styles.css";
 
-**Code highlights**
-- onInitState and onUpdateState are functions that can be provided through SDK config to do actions on global state 
-initialization and update, respectively. Both functions receive the state, which include values and update 
-callbacks, allowing to read and write the global state.
-- In our example, on state init we calculate the user position and set the map viewport (state value) accordingly, and also
-set behaviour mode to 'directions' (further explained [here]()). On state update we detect that routing 
-results (for the current query) have arrived, and set the first as the selected one.
+function TripPlanner() {
+    const [query, setQuery] = useState(new RoutingQuery());
+    const mapRef = useRef();
 
-**Disconnection from the state**
+    useEffect(() => {
+        // Fit map to user's current location, if available.
+        tKRequestCurrentLocation(true, true)            
+            .then(userPos => mapRef.current.setViewport(userPos.latLng, 13));
+    }, []);
 
-By explicitly passing a value for a connection property it will avoid that property to connect to the state.
-If you want to avoid the connection but don't want to provide any specific value to the property,
-then you can explicitly pass _undefined_ as property value.
+    return (
+        <div className="trip-planner-main">
+            <div className="trip-planner-floating-left">
+                <TKUIRoutingQueryInput 
+                    value={query}
+                    onChange={setQuery}
+                />           
+            </div>        
+            <TKUIMapView 
+                from={query.from}
+                onFromChange={update => setQuery(TKUtil.iAssign(query, {from: update}))}                        
+                to={query.to}
+                onToChange={update => setQuery(TKUtil.iAssign(query, {to: update}))}            
+                ref={mapRef}
+            />        
+        </div>
+    );
+}
+
+const config = {
+    apiKey: '424353266689764a5f15b5dc7e619aa1' // Use your TripGo api key here.
+};
+
+<TKRoot config={config}>
+    <TripPlanner />    
+</TKRoot>
+```
 

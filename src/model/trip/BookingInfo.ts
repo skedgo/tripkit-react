@@ -1,4 +1,5 @@
 import { JsonObject, JsonProperty, Any } from "json2typescript";
+import { deprecate } from "util";
 import Color from "./Color";
 import TicketOption from "./TicketOption";
 
@@ -47,6 +48,16 @@ class BookingInfo {
 }
 
 @JsonObject
+export class ConfirmationPrompt {
+    @JsonProperty("message", String, true)
+    public message: string = "";
+    @JsonProperty("abortActionTitle", String, true)
+    public abortActionTitle: string = "";
+    @JsonProperty("confirmActionTitle", String, true)
+    public confirmActionTitle: string = "";
+}
+
+@JsonObject
 export class BookingAction {
     @JsonProperty("type", String, true)
     public type: string = "";   // values: CANCEL, CONFIRM
@@ -58,8 +69,13 @@ export class BookingAction {
     public externalURL: string = "";
     @JsonProperty("isDestructive", Boolean, true)
     public isDestructive: boolean = false;
+    /**
+     * @deprecated
+     */
     @JsonProperty("confirmationMessage", String, true)
     public confirmationMessage?: string = undefined;
+    @JsonProperty("confirmation", ConfirmationPrompt, true)
+    public confirmation?: ConfirmationPrompt = undefined;
 }
 
 @JsonObject
@@ -73,8 +89,8 @@ class BookingConfirmationStatus {
     @JsonProperty("value", String, true)
     public value: string = ""; // e.g. "PROCESSING"
 }
-export interface BookingProvider {    
-    title: string;    
+export interface BookingProvider {
+    title: string;
     subtitle: string;
     imageURL: string;
 }

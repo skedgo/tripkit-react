@@ -19,7 +19,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     wheelchairAccessible?: boolean;
     vehicle?: RealTimeVehicle;
     alerts?: RealTimeAlert[];
-    options: TKUserProfile;
+    options?: TKUserProfile;
     modeInfo?: ModeInfo;
     alertsSlideUpOptions?: TKUISlideUpOptions;
 }
@@ -40,7 +40,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIServiceRealtimeInfo: React.SFC<IProps> = (props: IProps) => {
     const [open, setOpen] = useState<boolean>(false);
     const {wheelchairAccessible, vehicle, alerts, options, modeInfo, alertsSlideUpOptions, t, classes} = props;
-    const showWheelchair = options.wheelchair || wheelchairAccessible === false;
+    const showWheelchair = options?.wheelchair || wheelchairAccessible === false;
     const occupancy = vehicle && vehicle.getOccupancyStatus();
     const alertElems = !alerts ? null :
         open ?

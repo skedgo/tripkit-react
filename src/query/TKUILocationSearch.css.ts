@@ -1,8 +1,8 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUILocationSearchProps, TKUILocationSearchStyle} from "./TKUILocationSearch";
-import {black, colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { TKUILocationSearchProps, TKUILocationSearchStyle } from "./TKUILocationSearch";
+import { black, colorWithOpacity, TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {resetStyles} from "../css/ResetStyle.css";
+import { resetStyles } from "../css/ResetStyle.css";
 
 export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle, TKUILocationSearchProps> =
     (theme: TKUITheme) => ({
@@ -48,7 +48,7 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
             height: '36px'
         },
         resultsMenu: {
-            top: '43px',            
+            top: '43px',
             position: 'absolute',
             minWidth: '211px'
         },

@@ -53,56 +53,56 @@ module.exports = {
                 ]
             },
             {
-                name: 'Example Use Cases',
-                content: 'src/doc/md/Example_Use_Cases.md'
+                name: 'SDK Global state: TKState',
+                content: 'src/doc/md/SDK_Global_State.md',
+                exampleMode: 'expand'
             },
+            // {
+            //     name: 'Example Use Cases',
+            //     content: 'src/doc/md/Example_Use_Cases.md'
+            // },
             {
                 name: 'Components API',
                 content: 'src/doc/md/ComponentsAPI.md',
                 sectionDepth: 2,
                 usageMode: 'expand',
                 components: [
-                    // 'src/model/LatLng.ts',
-                    // 'src/model/Location.ts',
-                    // 'src/model/BBox.ts',
-                    // 'src/model/trip/ModeInfo.ts',
-                    // 'src/config/TKUIConfig.tsx',
-                    // 'src/options/TKUISlider.tsx',
+                    'src/config/TKRoot.tsx',
+                    'src/location_box/TKUILocationBox.tsx',
+                    'src/query/TKUIRoutingQueryInput.tsx',
+                    'src/service/TKUITimetableView.tsx',
+                    'src/service/TKUIServiceView.tsx',
+                    'src/trip/TKUIRoutingResultsView.tsx',
+                    'src/trip/TKUITripOverviewView.tsx',
+                    'src/mxm/TKUIMxMView.tsx',
+                    'src/map/TKUIMapView.tsx',
+                    'src/card/TKUICard.tsx',
+                    'src/query/TKUILocationSearch.tsx',
                     'src/location/TKUILocationDetailView.tsx',
                     'src/location/TKUILocationDetailField.tsx',
+                    'src/trip/TKUITripRow.tsx',
                     // 'src/**/*.tsx',  // doesn't work
-
                     // 'src/action/**/*.tsx',
                     // 'src/alerts/**/*.tsx',
                     // 'src/buttons/**/*.tsx',
                     'src/buttons/TKUIButton.tsx',
                     'src/buttons/TKUISelect.tsx',
-                    'src/card/TKUICard.tsx',
-                    'src/config/TKRoot.tsx',
                     // 'src/favourite/**/*.tsx',
                     // 'src/feedback/**/*.tsx',
                     // 'src/geocode/**/*.tsx',
                     // 'src/location/**/*.tsx',
-                    // 'src/location_box/**/*.tsx',
-                    'src/map/TKUIMapView.tsx',
-                    // 'src/options/**/*.tsx',
-                    'src/query/TKUIRoutingQueryInput.tsx',
-                    'src/query/TKUILocationSearch.tsx',
+                    // 'src/location_box/**/*.tsx',                                        
+                    // 'src/options/**/*.tsx',                    
                     // 'src/share/**/*.tsx',
                     // 'src/sidebar/**/*.tsx',
                     // 'src/time/**/*.tsx',
-                    // 'src/trip/**/*.tsx',
-                    'src/trip/TKUIRoutingResultsView.tsx',
-                    'src/trip/TKUITripRow.tsx',
-                    'src/trip/TKUITripOverviewView.tsx',
+                    // 'src/trip/**/*.tsx',                    
                     // 'src/trip-planner/**/*.tsx'
                     'src/trip-planner/TKUITripPlanner.tsx',
-                    'src/service/TKUITimetableView.tsx',
                     'src/alert/TKUIAlertsView.tsx',
                     'src/favourite/TKUIFavouritesView.tsx',
                     'src/options/TKUIPrivacyOptionsView.tsx',
                     'src/options/TKUIProfileView.tsx',
-                    'src/service/TKUIServiceView.tsx',
                     'src/options/TKUITransportOptionsView.tsx',
                     'src/options/TKUITransportSwitchesView.tsx',
                     'src/options/TKUIUserPriorities.tsx'
@@ -137,6 +137,8 @@ module.exports = {
                     'src/geocode/TKGeocodingOptions.tsx',
                     'src/geocode/IGeocoder.ts',
                     'src/card/TKUISlideUpOptions.ts',
+                    'src/model/options/TKTransportOptions.ts',
+                    'src/model/options/TKUserProfile.ts'
                 ]
             }
         ]

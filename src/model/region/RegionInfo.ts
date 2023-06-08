@@ -61,7 +61,7 @@ class RegionInfo {
     @JsonProperty("transitWheelchairAccessibility", Boolean)
     public transitWheelchairAccessibility: boolean = false;
 
-    @JsonProperty("transitModes", [ModeInfo])
+    @JsonProperty("transitModes", [ModeInfo], true)
     public transitModes: ModeInfo[] = [];
 
     @JsonProperty("operators", [Any])

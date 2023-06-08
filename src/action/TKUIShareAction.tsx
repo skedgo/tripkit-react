@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import * as CSS from 'csstype';
-import { CardPresentation, default as TKUICard, TKUICardClientProps } from "../card/TKUICard";
+import { CardPresentation, default as TKUICard } from "../card/TKUICard";
 import { ReactComponent as IconShare } from "../images/ic-share.svg";
 import TKUIShareView from "../share/TKUIShareView";
 import Util from "../util/Util";

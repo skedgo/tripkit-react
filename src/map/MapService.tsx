@@ -6,7 +6,7 @@ import ServiceDeparture from "../model/service/ServiceDeparture";
 import L from "leaflet";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { TKUIConfig } from "../config/TKUIConfig";
-import { TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
+import { TKUIConfigContext, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
 import { TKUITransportPin, tKUITransportPinConfig } from "./TKUITransportPin";
 import { TKUITheme } from "../jss/TKUITheme";
 import TransportUtil from "../trip/TransportUtil";

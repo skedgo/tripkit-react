@@ -5,5 +5,8 @@
     "More.options": "More options",
     "min": "min",
     "hr": "hr",
-    "sorted_by_healthiest": "Sorted by Healthiest"
+    "sorted_by_healthiest": "Sorted by Healthiest",
+    "Directions.from.here": "Directions from here",
+    "Directions.to.here": "Directions to here",
+    "What's.here?": "What's here?"
 }

@@ -24,6 +24,8 @@ export interface IServiceResultsContext {
     /**
      * The segment that timetable services cover.
      * @ctype
+     * @ignore since deprecated
+     * @deprecated
      */
     timetableForSegment?: Segment;
 
@@ -80,7 +82,7 @@ export interface IServiceResultsContext {
     /**
      * Stating if we are waiting for service departures to arrive from TripGo api request.
      */
-    waiting: boolean;
+    waitingDepartures: boolean;
 
     /**
      * Describing an error getting service departures.
@@ -116,7 +118,7 @@ export const ServiceResultsContext = React.createContext<IServiceResultsContext>
     onTimetableForSegment: (segment?: Segment) => {},
     timetableInitTime: DateTimeUtil.getNow(),
     departures: [],
-    waiting: true,
+    waitingDepartures: true,
     title: "",
     onServiceSelection: (departure?: ServiceDeparture) => {},
     servicesEventBus: new EventEmitter(),

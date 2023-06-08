@@ -81,6 +81,7 @@ import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIM
 import Trip from "../model/trip/Trip";
 import { TKUIPagerControlProps, TKUIPagerControlStyle } from "../card/TKUIPagerControl";
 import Segment from "../model/trip/Segment";
+import RoutingQuery from "../model/RoutingQuery";
 
 /**
  * SDK configuration
@@ -133,13 +134,14 @@ interface ITKUIConfigOptional {
      * @ctype
      */
     i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
-    isDarkDefault: boolean;
+    isDarkMode: boolean;
     analytics: {
         google?: TKUIGAConfig
     };
     tripCompareFc: (trip1: Trip, trip2: Trip) => number;
+    computeModeSetsBuilder: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][]; 
     booking: {
-        renderBookingCard: (props: TKUIBookingCardClientProps) => JSX.Element;
+        renderBookingCard?: (props: TKUIBookingCardClientProps) => JSX.Element;
         enabled?: (segment: Segment) => boolean;    // () => true, by default
     };
     payment: {

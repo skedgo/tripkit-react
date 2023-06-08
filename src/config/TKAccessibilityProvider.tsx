@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 
 export interface IAccessibilityContext {
+    /**     
+     * @ignore     
+     */
     enableTabbingDetection: () => void;
+    /**
+     * @ignore    
+     */
     isUserTabbing: boolean;
 }
 
