@@ -58,7 +58,7 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                     <div>
                         {t("Use.the.sliders.to.choose.your.highest.and.lowest.priorities.when.travelling..Only.one.priority.can.be.maximised.")}
                         &nbsp;
-                        {t("aMf-bu-Gcg.text")}
+                        {t("TripGo.will.display.results.according.to.these.preferences")}
                         .
                     </div>
                     <div className={classes.priorities}>
@@ -72,10 +72,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                     thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-money.svg")}
                                     color={'#8e59f7'}
                                     isDarkMode={this.props.theme.isDark}
-                                    aria-label={t("rQd-ri-hHa.text")}
+                                    aria-label={t("Money")}
                                     theme={this.props.theme}
                                 />
-                                <label>{t("rQd-ri-hHa.text")}</label>
+                                <label>{t("Money")}</label>
                             </div>
                             <div className={classes.priority}>
                                 <TKUIPrioritySlider
@@ -86,10 +86,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                     thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-time.svg")}
                                     color={'#e87aa4'}
                                     isDarkMode={this.props.theme.isDark}
-                                    aria-label={t("o4h-JW-YBy.text")}
+                                    aria-label={t("Time")}
                                     theme={this.props.theme}
                                 />
-                                <label>{t("o4h-JW-YBy.text")}</label>
+                                <label>{t("Time")}</label>
                             </div>
                         </div>
                         <div>
@@ -102,10 +102,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                     thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-environment.svg")}
                                     color={'#b8e295'}
                                     isDarkMode={this.props.theme.isDark}
-                                    aria-label={t("EzB-oD-wvZ.text")}
+                                    aria-label={t("Environment")}
                                     theme={this.props.theme}
                                 />
-                                <label>{t("EzB-oD-wvZ.text")}</label>
+                                <label>{t("Environment")}</label>
                             </div>
                             <div className={classes.priority}>
                                 <TKUIPrioritySlider
@@ -116,10 +116,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                     thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-convenience.svg")}
                                     color={'#f4a78a'}
                                     isDarkMode={this.props.theme.isDark}
-                                    aria-label={t("brC-tq-EEG.text")}
+                                    aria-label={t("Convenience")}
                                     theme={this.props.theme}
                                 />
-                                <label>{t("brC-tq-EEG.text")}</label>
+                                <label>{t("Convenience")}</label>
                             </div>
                         </div>
                         <div className={classes.priority}>
@@ -131,10 +131,10 @@ class TKUIUserPriorities extends React.Component<IProps, {}> {
                                 thumbIconUrl={Constants.absUrl("/images/priorities/ic-priority-exercise.svg")}
                                 color={'#78d6f9'}
                                 isDarkMode={this.props.theme.isDark}
-                                aria-label={t("juE-EN-u70.text")}
+                                aria-label={t("Exercise")}
                                 theme={this.props.theme}
                             />
-                            <label>{t("juE-EN-u70.text")}</label>
+                            <label>{t("Exercise")}</label>
                         </div>
                     </div>
                 </div>

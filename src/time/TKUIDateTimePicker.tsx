@@ -170,8 +170,8 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     }]}
                     customInput={CustomInput ? <CustomInput /> : <DatePickerInput />}
                     popperPlacement={this.props.popperPlacement}
-                    timeCaption={t("o4h-JW-YBy.text")}
-                    timeInputLabel={t("o4h-JW-YBy.text")}
+                    timeCaption={t("Time")}
+                    timeInputLabel={t("Time")}
                 /></div> :
             (CustomInput ?
                 <div className={classes.face}>

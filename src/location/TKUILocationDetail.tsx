@@ -248,6 +248,13 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
                         {t("what3words.address")}
                     </a>}
                 icon={<IconW3W />}
+                styles={{
+                    icon: defaultStyle => {
+                        const newDefaultStyle = {...defaultStyle};
+                        delete newDefaultStyle['& path'];
+                        return newDefaultStyle;
+                    }
+                }}
                 key={"w3w"}
             />);
     }

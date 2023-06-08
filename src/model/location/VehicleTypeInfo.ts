@@ -1,5 +1,6 @@
 import { JsonObject, JsonProperty } from "json2typescript";
 import Util from "../../util/Util";
+import { TranslationFunction } from "../../i18n/TKI18nProvider";
 
 @JsonObject
 class VehicleTypeInfo {
@@ -15,7 +16,7 @@ class VehicleTypeInfo {
     @JsonProperty("propulsionType", String, true) // "HUMAN" "ELECTRIC_ASSIST" "ELECTRIC" "COMBUSTION"
     public propulsionType?: string;
 
-    public vehicleTypeS(t: (phrase: string) => string) {
+    public vehicleTypeS(t: TranslationFunction) {
         switch (this.formFactor) {
             case "BICYCLE":
                 return this.propulsionType === "ELECTRIC" || this.propulsionType === "ELECTRIC_ASSIST" ?
