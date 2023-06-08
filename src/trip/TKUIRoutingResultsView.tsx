@@ -634,7 +634,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                         routingError: routingContext.routingError,
                         value: routingContext.selectedTrip,
                         onChange: (trip: Trip) => {
-                            routingContext.onChange(trip);
+                            routingContext.onSelectedTripChange(trip);
                             routingContext.onReqRealtimeFor(trip);
                         },
                         onAlternativeChange: routingContext.onAlternativeChange,

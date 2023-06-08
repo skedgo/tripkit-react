@@ -661,7 +661,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 waitingTripUpdate={this.state.waitingTripUpdate}
                 tripUpdateError={this.state.tripUpdateError}
                 selectedTrip={this.state.selected}
-                onChange={this.onChange}
+                onSelectedTripChange={this.onChange}
                 selectedTripSegment={this.state.selectedSegment}
                 setSelectedTripSegment={this.setSelectedSegment}
                 tripDetailsView={this.state.tripDetailsView}

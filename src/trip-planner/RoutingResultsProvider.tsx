@@ -54,7 +54,7 @@ export interface IRoutingResultsContext {
     waitingTripUpdate: boolean;
     tripUpdateError?: TKError;
     selectedTrip?: Trip;
-    onChange: (select?: Trip) => void;
+    onSelectedTripChange: (select?: Trip) => void;
     selectedTripSegment?: Segment;
     setSelectedTripSegment: (segment?: Segment) => void;
     tripDetailsView: boolean;
@@ -87,7 +87,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onComputeTripsForQuery: (computeTripsForQuery: boolean) => { },
     waiting: true,
     waitingTripUpdate: false,
-    onChange: (select?: Trip) => { },
+    onSelectedTripChange: (select?: Trip) => { },
     setSelectedTripSegment: (segment?: Segment) => { },
     tripDetailsView: false,
     onTripDetailsView: (tripDetailsView: boolean) => { },

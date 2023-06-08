@@ -57,10 +57,10 @@ module.exports = {
                 content: 'src/doc/md/SDK_Global_State.md',
                 exampleMode: 'expand'
             },
-            {
-                name: 'Example Use Cases',
-                content: 'src/doc/md/Example_Use_Cases.md'
-            },
+            // {
+            //     name: 'Example Use Cases',
+            //     content: 'src/doc/md/Example_Use_Cases.md'
+            // },
             {
                 name: 'Components API',
                 content: 'src/doc/md/ComponentsAPI.md',

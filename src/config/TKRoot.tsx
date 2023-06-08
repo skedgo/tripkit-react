@@ -1,12 +1,12 @@
 import * as React from "react";
-import {TKUIConfig} from "./TKUIConfig";
+import { TKUIConfig } from "./TKUIConfig";
 import Util from "../util/Util";
 import TKStateConsumer from "./TKStateConsumer";
 import TKStateController from "./TKStateController";
-import {TKState} from "./TKState";
+import { TKState } from "./TKState";
 import TKStateProvider from "./TKStateProvider";
 import classNames from "classnames";
-import {genClassNames} from "../css/GenStyle.css";
+import { genClassNames } from "../css/GenStyle.css";
 
 interface IProps {
     /**
@@ -23,10 +23,10 @@ interface IProps {
  * injection of general and component-specific configs to the system.
  */
 
-class TKRoot extends React.Component<IProps,{}> {
+class TKRoot extends React.Component<IProps, {}> {
 
     private addRootStyleToChild(child: any) {
-        return React.cloneElement(child, {className: classNames(child.props.className, genClassNames.root)});
+        return React.cloneElement(child, { className: classNames(child.props.className, genClassNames.root) });
     }
 
     private addRootStyleToChildren(children: React.ReactNode) {

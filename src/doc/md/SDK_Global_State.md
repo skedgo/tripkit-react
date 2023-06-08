@@ -1,141 +1,194 @@
 The [](TKRoot) component provides a global state maintaining data that is typically useful for a trip planning application.
+
 Such a global state is composed by properties and updater functions to update them or trigger interactions with the TripGo api.
 
 For instance, the global state maintains a *routing query* (from + to + time + time preference), 
-which may be partially specified. When the query becomes completly specified, computation of *routing results* 
-via TripGo api is triggered automatically (this can be disabled to be triggered manually, instead).
+which may be partially or completly specified at any moment. Also, when automatic trip computation is enabled 
+(will illustrate this in an example below), then *routing results* will be calculated automatically, via TripGo api, 
+whenever the query becomes completly specified.
 When results arrive, they are also stored as part of the global state, and are maintained up to date with respect to changes
 to the routing query, as well as real-time updates.
 
-To facilitate building a UI that interacts with this global state, some of the SDK components (specially high-level ones) provide
-connection helpers, which are just wrapper components that provides properties to the target component (values and callbacks) so 
-it becomes connected with the global state. 
 
-Let's show with an example how components connected to the global state will interact with each other vía the state, and achieve
-interesting beheaviour with little effort.
+### Accessing the state with `useTKState`
 
-The routing query input component ([](TKUIRoutingQueryInput)) can be used to building or update a [routing query object]() in a controlled way, through `query` and `onChange` properties. Also, the TKUIMapView can be used to display from and to locations of a routing query, as well as updating them by dropping / drag & dropping pins.
+The global state can be accessed at any component below `TKRoot` by using the `useTKState` hook.
 
-The next example shows how to use both components to define and display a routing query, withough using the global state.
+The next example is a version of the last one at [Main SDK component: TKRoot](#/Main%20SDK%20component%3A%20TKRoot) but using
+`query` from state.
 
 ```jsx
 import { useState, useEffect, useRef } from "react";
-import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, tKRequestCurrentLocation, RoutingQuery, TKUtil } from 'tripkit-react';
-        
+import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, tKRequestCurrentLocation, RoutingQuery, TKUtil, useTKState } from 'tripkit-react';
+import "./styles.css";
+
+function TripPlanner() {
+    
+    const { query, onQueryChange } = useTKState();
+    const mapRef = useRef();
+
+    useEffect(() => {
+        // Fit map to user's current location, if available.
+        tKRequestCurrentLocation(true, true)            
+            .then(userPos => mapRef.current.setViewport(userPos.latLng, 13));
+    }, []);
+
+    return (
+        <div className="trip-planner-main">
+            <div className="trip-planner-floating-left">
+                <TKUIRoutingQueryInput 
+                    value={query}
+                    onChange={onQueryChange}
+                />           
+            </div>        
+            <TKUIMapView 
+                from={query.from}
+                onFromChange={update => onQueryChange(TKUtil.iAssign(query, {from: update}))}                        
+                to={query.to}
+                onToChange={update => onQueryChange(TKUtil.iAssign(query, {to: update}))}            
+                ref={mapRef}
+            />        
+        </div>
+    );
+}
+
 const config = {
     apiKey: '424353266689764a5f15b5dc7e619aa1' // Use your TripGo api key here.
 };
 
-const [query, setQuery] = useState(new RoutingQuery());
-const mapRef = useRef();
-
-useEffect(() => {
-    tKRequestCurrentLocation(true, true)            
-        .then(userPos => mapRef.current.setViewport(userPos.latLng, 13));
-}, []);
-
 <TKRoot config={config}>
-    <div style={{height: '500px'}}>
-        <div style={{position: 'absolute', zIndex: '1', margin: '10px', width: '300px'}}>
-            <TKUIRoutingQueryInput 
-                value={query}
-                onChange={setQuery}
-            />           
-        </div>        
-        <TKUIMapView 
-            from={query.from}
-            onFromChange={update => setQuery(TKUtil.iAssign(query, {from: update}))}                        
-            to={query.to}
-            onToChange={update => setQuery(TKUtil.iAssign(query, {to: update}))}            
-            ref={mapRef}
-        />        
-    </div>
+    <TripPlanner />    
 </TKRoot>
 ```
 
-Instead, we can do as follows, and make the components to interact with each other through the state.
+We can get more features by connecting to the global state, as getting trips calculated (via TripGo api) and displayed for the current query, including re-calculating trips on query udpates.
+
+The next example adds the [](TKUIRoutingResultsView) component to display calculated trips for current query, as well as allowing selecting
+a trip. The selected trip will also be displayed on map. Also changing the query will cause trips to be re-calculated.
 
 ```jsx
-import { TKRoot, TKUIRoutingQueryInput, TKUIRoutingQueryInputHelpers, TKUIMapView, TKUIMapViewHelpers, tKRequestCurrentLocation } from 'tripkit-react';
-import { queryMapConfig } from 'doc-helper';
-        
-const config = {
-    apiKey: 'TRIPGO_API_KEY',
-    onInitState: state => {
-        // Set map viewport to focus user position
-        tKRequestCurrentLocation(true, true)
-            .then(userPos => state.setViewport({ center: userPos.latLng, zoom: 13 }));
+import { useState, useEffect, useRef } from "react";
+import { TKRoot, TKUIRoutingQueryInput, TKUIMapView, TKUIRoutingResultsView, tKRequestCurrentLocation, RoutingQuery, TKUtil, useTKState, CardPresentation } from 'tripkit-react';
+import "./styles.css";
 
-        // Enable directions view flag    
-        state.onComputeTripsForQuery(true);           
-    },
-    onUpdateState: (state, prevState) =>
-        // Select the first trip by default  
-        (!prevState.trips || prevState.trips.length === 0) && state.trips && state.trips.length > 0
-            && state.onChange(state.trips[0]),
-    ...queryMapConfig
+function TripPlanner() {
+    
+    const { query, onQueryChange, onComputeTripsForQuery, waiting, trips, selectedTrip, onSelectedTripChange } = useTKState();
+    const mapRef = useRef();
+
+    useEffect(() => {
+        // Fit map to user's current location, if available.
+        tKRequestCurrentLocation(true, true)            
+            .then(userPos => mapRef.current.setViewport(userPos.latLng, 13));
+        // Enable automatic computation of trips when query is complete.
+        onComputeTripsForQuery(true);
+    }, []);
+
+    return (
+        <div className="trip-planner-main">
+            <div className="trip-planner-floating-left">
+                <TKUIRoutingQueryInput 
+                    value={query}
+                    onChange={onQueryChange}
+                />            
+                {trips &&                    
+                    <TKUIRoutingResultsView
+                        values={trips}
+                        onChange={onSelectedTripChange}
+                        waiting={waiting}
+                        cardPresentation={CardPresentation.NONE}
+                        showTimeSelect={false}
+                        showTransportsBtn={false}
+                    />}            
+            </div>        
+            <TKUIMapView 
+                from={query.from}
+                onFromChange={update => onQueryChange(TKUtil.iAssign(query, {from: update}))}                        
+                to={query.to}
+                onToChange={update => onQueryChange(TKUtil.iAssign(query, {to: update}))}
+                padding={{left: 300}}
+                trip={selectedTrip}
+                ref={mapRef}                
+            />        
+        </div>
+    );
+}
+
+const config = {
+    apiKey: '424353266689764a5f15b5dc7e619aa1' // Use your TripGo api key here.
 };
 
 <TKRoot config={config}>
-    <div style={{height: '500px'}}>
-        <div style={{position: 'absolute', zIndex: '1', margin: '10px', width: '300px'}}>
-            <TKUIRoutingQueryInputHelpers.TKStateProps>
-                {stateProps => <TKUIRoutingQueryInput {...stateProps}/>}
-            </TKUIRoutingQueryInputHelpers.TKStateProps>
-        </div>
-        <TKUIMapViewHelpers.TKStateProps>
-            {stateProps => <TKUIMapView {...stateProps}/>}
-        </TKUIMapViewHelpers.TKStateProps>        
-    </div>
+    <TripPlanner />
 </TKRoot>
 ```
 
-Notice that there is more logic there w.r.t. the example above: on location higlight it focuses on map.
+In this case we access to the `onComputeTripsForQuery` function, which allows to enable the automatic computation of trips when query is complete, and also some other properties to be fed to the [](TKUIRoutingResultsView): [trips](#/Model/TKState?id=trips), [selectedTrip](#/Model/TKState?id=selectedTrip), [onTripSelected](#/Model/TKState?id=onSelectedTrip), and [waiting](#/Model/TKState?id=waiting) (click on any of the previous properties to see it's documentation).
 
-TO BE CONTINUED
+### Connection helpers
 
+To facilitate building a UI that interacts with this global state, some of the SDK components (specially high-level ones) provide
+connection helpers, which are just wrappers that provide properties to the component (values and callbacks) so 
+it becomes connected with the global state, that is, the connection helper for a component translate the relevant portion of the global
+state into properties to be passed to that component.
 
-They does not need to be rendered by the same component / at the same level. 
+Let's switch the previous example to use connection helpers for [](TKUIRoutingQueryInput), [](TKUIMapView), and [](TKUIRoutingResultsView).
+See documentation for each component (click on previous links) to see which properties of the component are provided by its connection helper.
 
-<!-- This feature makes really easy to integrate different SDK components to get the most typical interactions between them.
-For instance, the example below integrates [](TKUIRoutingQueryInput) (query input component) and [](TKUIMapView) (map component) 
-just by putting them somewhere below [](TKRoot), and so they become automatically connected to the global state. -->
+```jsx
+import { useState, useEffect, useRef } from "react";
+import { TKRoot, TKUIRoutingQueryInput, TKUIRoutingQueryInputHelpers, TKUIMapView, TKUIMapViewHelpers, TKUIRoutingResultsView, TKUIRoutingResultsViewHelpers, tKRequestCurrentLocation, RoutingQuery, TKUtil, useTKState, CardPresentation } from 'tripkit-react';
+import "./styles.css";
 
-Finally, trip computation.
+function TripPlanner() {
+    
+    const { onComputeTripsForQuery, trips } = useTKState();
+    const mapRef = useRef();
 
+    useEffect(() => {
+        // Fit map to user's current location, if available.
+        tKRequestCurrentLocation(true, true)            
+            .then(userPos => mapRef.current.setViewport(userPos.latLng, 13));
+        // Enable automatic computation of trips when query is complete.
+        onComputeTripsForQuery(true);
+    }, []);
 
- *  You can connect the component with the SDK global state, {@link TKState}, by forwarding the props
- *  provided by TKUIRoutingQueryInputHelpers.TKStateProps, in the following way:
- * 
- *  ```
- *   <TKUIRoutingQueryInputHelpers.TKStateProps>
- *      {stateProps => 
- *          <TKUIRoutingQueryInput 
- *              {...stateProps}
- *              // Other props
- *          />}
- *   </TKUIRoutingQueryInputHelpers.TKStateProps>
- *  ```
+    return (
+        <div className="trip-planner-main">
+            <div className="trip-planner-floating-left">
+                <TKUIRoutingQueryInputHelpers.TKStateProps>
+                    {stateProps => <TKUIRoutingQueryInput {...stateProps}/>}
+                </TKUIRoutingQueryInputHelpers.TKStateProps>            
+                {trips &&
+                    <TKUIRoutingResultsViewHelpers.TKStateProps>
+                        {stateProps =>
+                            <TKUIRoutingResultsView {...stateProps} 
+                                cardPresentation={CardPresentation.NONE}
+                                showTimeSelect={false}
+                                showTransportsBtn={false}
+                            />}
+                    </TKUIRoutingResultsViewHelpers.TKStateProps>}            
+            </div>
+            <TKUIMapViewHelpers.TKStateProps>
+                {stateProps => 
+                    <TKUIMapView 
+                        {...stateProps}
+                        padding={{left: 300}}
+                        ref={mapRef}                         
+                    />}
+            </TKUIMapViewHelpers.TKStateProps>            
+        </div>
+    );
+}
 
+const config = {
+    apiKey: '424353266689764a5f15b5dc7e619aa1' // Use your TripGo api key here.
+};
 
-Then by picking *from* or *to* locations from the query input component it will also be reflected on the map, and conversely, by
-dropping a pin on the map it will set the corresponding location as *from* or *to* on the query input.
+<TKRoot config={config}>    
+    <TripPlanner />
+</TKRoot>
+```
 
-Also notice that after setting both *from* and *to* locations, computation of routing results via TripGo API is 
-automatically triggered, and when the first result arrives we set it as the selected trip (global state value) and so
-it becomes displayed on the map. If we also include the [](TKUIRoutingResultsView) component to show the list of all routing 
-results, then it will automatically display the trip selection, too (see [TripGo trip planner](https://tripgo.com)).
-
-**Code highlights**
-- onInitState and onUpdateState are functions that can be provided through SDK config to do actions on global state 
-initialization and update, respectively. Both functions receive the state, which include values and update 
-callbacks, allowing to read and write the global state.
-- In our example, on state init we calculate the user position and set the map viewport (state value) accordingly, and also
-set behaviour mode to 'directions' (further explained [here]()). On state update we detect that routing 
-results (for the current query) have arrived, and set the first as the selected one.
-
-**Disconnection from the state**
-
-By explicitly passing a value for a connection property it will avoid that property to connect to the state.
-If you want to avoid the connection but don't want to provide any specific value to the property,
-then you can explicitly pass _undefined_ as property value.
+Also notice that we get a richer connection between TKUIRoutingQueryInput and TKUIMapView: if you browse autocompletion results with the arrow keys, when highlighting a result the map will also display and fit bounds to that result. That's since the connection helpers of 
+both components connect some additional properties of them through the global state, in this case, `preFrom` and `preTo` locations (highlighted *from* and *to* autocompletion suggestions).
