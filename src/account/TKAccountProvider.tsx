@@ -129,14 +129,15 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
         }
     }, [status]);
     const resetUserToken = () => {
-        console.log("Reset usertoken!!!");
-        TripGoApi.userToken = undefined;
-        AuthStorage.instance.save(new TKAuth0AuthResponse);
-        setUserToken(undefined);
-        setUserAccount(undefined);
-        getAccessTokenSilently()
-            .then(requestUserToken)
-            .catch((error) => console.log(error));
+        if (TripGoApi.userToken) {
+            TripGoApi.userToken = undefined;
+            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            setUserToken(undefined);
+            setUserAccount(undefined);
+            getAccessTokenSilently()
+                .then(requestUserToken)
+                .catch((error) => console.log(error));
+        }
     }
     TripGoApi.resetUserToken = resetUserToken;
     return (
