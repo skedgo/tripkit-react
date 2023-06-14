@@ -20,6 +20,8 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import TKUILocationDetail from "./TKUILocationDetail";
+import Util from "../util/Util";
+import CarPodLocation from "../model/location/CarPodLocation";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
@@ -96,7 +98,10 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const location = this.props.location;
+        let location = this.props.location;
+        if (process.env.NODE_ENV === 'development') {
+            location = Util.deserialize(require("../mock/data/location-carPods.json"), CarPodLocation);
+        }
         const title = LocationUtil.getMainText(location, this.props.t);
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;

@@ -26,6 +26,8 @@ import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLo
 import { renderBatteryIcon } from "../map/TKUIMapLocationPopup";
 import { tKUILocationDetailDefaultStyle } from "./TKUILocationDetail.css";
 import DeviceUtil from "../util/DeviceUtil";
+import CarPodLocation from "../model/location/CarPodLocation";
+import TKUIVehicleAvailability from "./TKUIVehicleAvailability";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -50,13 +52,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 enum Sections {
     Details = "Details",
     OpeningHours = "Opening.Hours",
-    Pricing = "Pricing"
+    Pricing = "Pricing",
+    Vehicles = "Vehicles"
 }
 
 const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
-    const [section, setSection] = useState<Sections>(Sections.Details);
-    const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
     const { location, t, classes, theme } = props;
+    const hasVehicleAvailability = location instanceof CarPodLocation && location.supportsVehicleAvailability;
+
+    const [section, setSection] = useState<Sections>(hasVehicleAvailability ? Sections.Vehicles : Sections.Details);
+    const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
+
     useEffect(() => {
         // TODO: if location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
         // then use that value.
@@ -250,7 +256,7 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
                 icon={<IconW3W />}
                 styles={{
                     icon: defaultStyle => {
-                        const newDefaultStyle = {...defaultStyle};
+                        const newDefaultStyle = { ...defaultStyle };
                         delete newDefaultStyle['& path'];
                         return newDefaultStyle;
                     }
@@ -261,34 +267,52 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
 
     const onSectionChange = (event, newSection) => setSection(newSection);
 
-    const tabs =
+    const tabs = (hasVehicleAvailability || openingHours || pricingTable) &&
         <ToggleButtonGroup value={section} exclusive onChange={onSectionChange} aria-label="text formatting">
-            <ToggleButton value={Sections.Details}>
+            {hasVehicleAvailability &&
+                <ToggleButton value={Sections.Vehicles} disableFocusRipple disableTouchRipple>
+                    {t(Sections.Vehicles)}
+                </ToggleButton>}
+            <ToggleButton value={Sections.Details} disableFocusRipple disableTouchRipple>
                 {t(Sections.Details)}
             </ToggleButton>
-            <ToggleButton value={Sections.OpeningHours}>
-                {t(Sections.OpeningHours)}
-            </ToggleButton>
-            <ToggleButton value={Sections.Pricing}>
-                {t(Sections.Pricing)}
-            </ToggleButton>
+            {openingHours &&
+                <ToggleButton value={Sections.OpeningHours} disableFocusRipple disableTouchRipple>
+                    {t(Sections.OpeningHours)}
+                </ToggleButton>}
+            {pricingTable &&
+                <ToggleButton value={Sections.Pricing} disableFocusRipple disableTouchRipple>
+                    {t(Sections.Pricing)}
+                </ToggleButton>}
         </ToggleButtonGroup>;
 
+    let content;
+    switch (section) {
+        case Sections.Details:
+            content =
+                <div className={classes.details}>
+                    {locationInfo && locationInfo.alerts && locationInfo.alerts.length > 0 &&
+                        <div className={classes.alertsContainer}>
+                            {locationInfo.alerts.map((alert: RealTimeAlert, i: number) =>
+                                <TKUIAlertRow alert={alert} key={i} asCard={true} />
+                            )}
+                        </div>}
+                    {/*{typeSpecificInfo}*/}
+                    <div className={classes.fields}>
+                        {moreInfoItems}
+                    </div>
+                </div>;
+            break;
+        case Sections.Vehicles:
+            content =
+                <TKUIVehicleAvailability location={location as CarPodLocation}/>
+    }
+
     return (
-        // {tabs}                
-        section === Sections.Details ?
-            <div className={classes.main}>
-                {locationInfo && locationInfo.alerts && locationInfo.alerts.length > 0 &&
-                    <div className={classes.alertsContainer}>
-                        {locationInfo.alerts.map((alert: RealTimeAlert, i: number) =>
-                            <TKUIAlertRow alert={alert} key={i} asCard={true} />
-                        )}
-                    </div>}
-                {/*{typeSpecificInfo}*/}
-                <div className={classes.fields}>
-                    {moreInfoItems}
-                </div>
-            </div> : null
+        <div className={classes.main}>
+            {tabs}
+            {content}
+        </div>
     );
 }
 

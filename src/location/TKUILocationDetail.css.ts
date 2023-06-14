@@ -3,6 +3,31 @@ import {black, TKUITheme} from "../jss/TKUITheme";
 
 export const tKUILocationDetailDefaultStyle = (theme: TKUITheme) => ({
     main: {
+        ...genStyles.flex,
+        ...genStyles.column,        
+        '& .MuiToggleButtonGroup-root': {
+            margin: '5px'
+        },
+        '& .MuiToggleButton-root': {
+            ...genStyles.grow,
+            padding: '5px',
+            textTransform: 'initial',
+            ...genStyles.borderRadius(8),
+            color: black(1, theme.isDark),
+            borderColor: black(3, theme.isDark),
+            '&.Mui-selected': {
+                background: 'none!important',
+                borderColor: theme.colorPrimary,
+                color: theme.colorPrimary
+            },
+            '&:not(.Mui-selected):hover': {
+                background: 'none',
+                borderColor: black(2, theme.isDark),
+                color: black(0, theme.isDark)
+            }
+        }
+    },
+    details: {
         padding: '40px 0',
         '&>*': {
             marginBottom: '15px',

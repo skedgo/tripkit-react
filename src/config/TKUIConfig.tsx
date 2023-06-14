@@ -82,6 +82,7 @@ import Trip from "../model/trip/Trip";
 import { TKUIPagerControlProps, TKUIPagerControlStyle } from "../card/TKUIPagerControl";
 import Segment from "../model/trip/Segment";
 import RoutingQuery from "../model/RoutingQuery";
+import { TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle } from "../location/TKUIVehicleAvailability";
 
 /**
  * SDK configuration
@@ -177,6 +178,7 @@ interface ITKUIConfigOptional {
     TKUILocationDetail: TKComponentConfig<TKUILocationDetailProps, TKUILocationDetailStyle>;
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUILocationDetailField: TKComponentConfig<TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle>;
+    TKUIVehicleAvailability: TKComponentConfig<TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;

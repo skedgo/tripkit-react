@@ -42,6 +42,7 @@
         "@types/polyline": "^0.1.28",
         "@types/react-leaflet": "^1.1.6",
         "@types/react-resize-detector": "^3.1.0",
+        "@wojtekmaj/react-timerange-picker": "^3.5.0",
         "babel-plugin-transform-typescript-metadata": "^0.3.0",
         "classnames": "^2.2.6",
         "copy-to-clipboard": "^3.3.1",

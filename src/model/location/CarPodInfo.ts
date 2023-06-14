@@ -26,6 +26,8 @@ class CarPodVehicle {
     public pricingTable?: PricingTable = undefined;
 }
 
+type AvailabilityMode = "NONE" | "CURRENT" | "FUTURE";
+
 @JsonObject
 class CarPodInfo {
     @JsonProperty("identifier", String)
@@ -36,6 +38,10 @@ class CarPodInfo {
 
     @JsonProperty("vehicles", [CarPodVehicle], true)
     public vehicles?: CarPodVehicle[] = undefined;
+
+    // real-time availability information
+    @JsonProperty("availabilityMode", String, true)
+    public availabilityMode?: AvailabilityMode
 }
 
 export default CarPodInfo;
