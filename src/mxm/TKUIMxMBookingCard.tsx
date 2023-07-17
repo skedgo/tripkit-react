@@ -354,6 +354,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         to={segment.to}
                         startTime={segment.startTime}
                         endTime={segment.endTime}
+                        timezone={segment.from.timezone}
                     />
                 </div>
                 {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
@@ -391,9 +392,21 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
                             .then(result => {
                                 if (result.paymentOptions && result.review) {
+                                    const reviews = Util.jsonConvert().deserializeArray(result.review, BookingReview);
+                                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                                    reviews.forEach((review: BookingReview) => {
+                                        console.log(review.origin);
+                                        if (review.origin) {
+                                            review.origin.timezone = segment.from.timezone;
+                                            console.log(segment.from.timezone);
+                                        }
+                                        if (review.destination) {
+                                            review.destination.timezone = segment.to.timezone;
+                                        }
+                                    });
                                     setReviewAndPaymentForm({
                                         paymentOptions: result.paymentOptions,
-                                        reviews: Util.jsonConvert().deserializeArray(result.review, BookingReview),
+                                        reviews: reviews,
                                         publicKey: result.publishableApiKey,
                                         ephemeralKeyObj: result.ephemeralKey
                                     });

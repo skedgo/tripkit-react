@@ -51,6 +51,7 @@ const TKUIActiveTrip: React.FunctionComponent<IProps> = (props: IProps) => {
                         // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
                         startTime={activeTrip.datetime ? activeTrip.datetime.split("[")[0] : undefined}
                         status={activeTrip.confirmation?.status?.value}
+                        timezone={activeTrip.timeZone}
                     />}
             </div>;
     } else {

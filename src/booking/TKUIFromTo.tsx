@@ -11,6 +11,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     to: Location;
     startTime?: string;
     endTime?: string;
+    timezone?: string;
     status?: string;
     onClick?: () => void;
 }
@@ -28,9 +29,9 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIFromTo"
 };
 
-const TKUIFromTo: React.SFC<IProps> = (props: IProps) => {
-    const { from, to, startTime, endTime, status, onClick, classes, t } = props;
-    let startTimeText = startTime !== undefined && DateTimeUtil.formatRelativeDay(DateTimeUtil.moment(startTime),
+const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { from, to, startTime, endTime, timezone, status, onClick, classes, t } = props;
+    let startTimeText = startTime !== undefined && DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime),
         DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat());
     if (startTimeText && status === "PROCESSING") {
         startTimeText = t("Requested.time.X", { 0: startTimeText });
@@ -63,7 +64,7 @@ const TKUIFromTo: React.SFC<IProps> = (props: IProps) => {
                 </div>
                 {endTime !== undefined &&
                     <div className={classes.value}>
-                        {DateTimeUtil.formatRelativeDay(DateTimeUtil.moment(endTime),
+                        {DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(endTime, timezone) : DateTimeUtil.moment(endTime),
                             DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
                     </div>}
             </div>

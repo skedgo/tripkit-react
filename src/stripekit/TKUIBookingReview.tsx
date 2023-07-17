@@ -132,7 +132,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                             </div>
                             <div className={viewportProps?.portrait ? classes.reviewBodyPortrait : classes.reviewBody}>
                                 {review.origin && review.destination &&
-                                    <TKUIFromTo from={review.origin} to={review.destination} startTime={review.depart} endTime={review.arrive} />}
+                                    <TKUIFromTo from={review.origin} to={review.destination} startTime={review.depart} endTime={review.arrive} timezone={review.origin.timezone} />}
                                 {review.tickets.length > 0 &&
                                     <div className={classes.tickets}>
                                         {review.tickets.map((ticket, i) => {
