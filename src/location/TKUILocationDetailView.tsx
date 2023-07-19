@@ -100,7 +100,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         let location = this.props.location;
         if (process.env.NODE_ENV === 'development') {
-            location = Util.deserialize(require("../mock/data/location-carPods.json"), CarPodLocation);
+            location = Util.deserialize(require("../mock/data/location-carPods-sgfleet.json"), CarPodLocation);
         }
         const title = LocationUtil.getMainText(location, this.props.t);
         const subtitle = LocationUtil.getSecondaryText(location);

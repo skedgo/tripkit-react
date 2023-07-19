@@ -126,7 +126,7 @@ export { useTKState } from './config/TKStateProvider';
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.
-// if (document.getElementById("tripgo-sample-root")) {
+if (process.env.NODE_ENV === 'development' && document.getElementById("tripgo-sample-root")) {
 /* eslint-disable import/first */
-    // import("./example/tripgo/tripgo-sample");
-// }
+    import("./tripgo/index");
+}

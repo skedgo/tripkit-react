@@ -153,6 +153,14 @@ class DateTimeUtil {
         return moment.calendar(DateTimeUtil.getNow(), calendarFormat);
     };
 
+    public static isoAddMinutes(dateS: string, minutes: number): string {
+        return this.momentFromIsoWithTimezone(dateS).add(minutes, 'minutes').format();
+    }
+
+    public static isoFormat(dateS: string, format: string) {
+        return this.momentFromIsoWithTimezone(dateS).format(format);
+    }
+
 }
 
 export default DateTimeUtil;

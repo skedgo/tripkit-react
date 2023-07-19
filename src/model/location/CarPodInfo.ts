@@ -1,6 +1,16 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import CompanyInfo from "./CompanyInfo";
-import {PricingTable} from "./CarParkInfo";
+import { PricingTable } from "./CarParkInfo";
+
+interface BookingAvailability {
+    timestamp: string;
+    intervals: BookingAvailabilityInterval[];
+}
+interface BookingAvailabilityInterval {
+    status: "AVAILABLE" | "NOT_AVAILABLE" | "UNKNOWN";
+    start: string;
+    end: string;
+}
 
 @JsonObject
 class CarPodVehicle {
@@ -24,6 +34,9 @@ class CarPodVehicle {
 
     @JsonProperty("pricingTable", PricingTable, true)
     public pricingTable?: PricingTable = undefined;
+
+    @JsonProperty("availability", Any, true)
+    public availability?: BookingAvailability = undefined;
 }
 
 type AvailabilityMode = "NONE" | "CURRENT" | "FUTURE";
