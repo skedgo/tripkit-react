@@ -1,4 +1,5 @@
 import genStyles from "../css/GenStyle.css";
+import { resetStyles } from "../css/ResetStyle.css";
 import { black, TKUITheme, white } from "../jss/TKUITheme";
 import { tKUIDateTimePickerDefaultStyle } from "../time/TKUIDateTimePicker.css";
 
@@ -19,10 +20,11 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     header: {
         ...genStyles.flex
-    },        
+    },
     timeIndexes: {
         ...genStyles.flex,
-        height: '20px'
+        ...genStyles.alignCenter,
+        height: '40px'
     },
     timeIndex: {
         ...genStyles.noShrink
@@ -37,30 +39,85 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         padding: '15px 0',
         borderTop: '1px solid ' + black(4)
     },
+    fadeVehicle: {
+        opacity: '.5'
+    },
     vehicleLabel: {
         ...genStyles.flex,
         ...genStyles.noShrink,
         whiteSpace: 'nowrap',
         // Scroll scheme
         position: 'absolute',
-        height: '24px',
+        // height: '24px',
         left: 0,
         '&>*:first-child': {
             background: 'white'
         }
     },
-    gradient: {
+    whiteToTransparent: {
         background: 'linear-gradient(to right, white, #ffffff00)'
     },
+    transparentToWhite: {
+        background: 'linear-gradient(to left, white, #ffffff00)'
+    },
     slot: {
-        background: '#00000014',
         height: '24px',
+        ...genStyles.noShrink,
+        ...genStyles.flex,
+        '&>*': {
+            ...genStyles.grow
+        }
+    },
+    selectedSlot: {
+        background: black(),
+        height: '24px',
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter
+    },
+    firstSelectedSlot: {
+        borderTopLeftRadius: '8px',
+        borderBottomLeftRadius: '8px'
+    },
+    lastSelectedSlot: {
+        borderTopRightRadius: '8px',
+        borderBottomRightRadius: '8px'
+    },
+    availableSlot: {
+        background: '#4DEF9E',
         borderLeft: '1px solid white',
         borderRight: '1px solid white',
-        ...genStyles.noShrink
+        '&:hover': {
+            background: '#44c786', // TODO: pick exact color from Figma
+        }
     },
-    slotAvailable: {
-        background: '#4DEF9E'
+    unavailableSlot: {
+        background: '#00000014',
+        borderLeft: '1px solid white',
+        borderRight: '1px solid white',
+    },
+    arrowBtn: {
+        ...resetStyles.button,
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.center,        
+        height: '40px',
+        ...genStyles.noShrink,
+        // position: 'absolute',
+        // background: 'white',
+        '& svg': {
+            width: '100%',
+            height: '100%'
+        },
+        '& path': {
+            fill: black(0, theme.isDark)
+        },
+        '&:hover path': {
+            fill: black(1, theme.isDark)
+        },
+        '&:disabled path': {
+            fill: black(2, theme.isDark)
+        }
     },
     calendar: {
         ...tKUIDateTimePickerDefaultStyle(theme).calendar,

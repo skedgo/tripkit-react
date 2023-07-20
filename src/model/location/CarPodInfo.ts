@@ -2,7 +2,7 @@ import { Any, JsonObject, JsonProperty } from "json2typescript";
 import CompanyInfo from "./CompanyInfo";
 import { PricingTable } from "./CarParkInfo";
 
-interface BookingAvailability {
+export interface BookingAvailability {
     timestamp: string;
     intervals: BookingAvailabilityInterval[];
 }
@@ -13,7 +13,7 @@ interface BookingAvailabilityInterval {
 }
 
 @JsonObject
-class CarPodVehicle {
+export class CarPodVehicle {
     @JsonProperty("name", String, true)
     public name?: string = undefined;
 
