@@ -21,6 +21,15 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     header: {
         ...genStyles.flex
     },
+    datePicker: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter,
+        ...genStyles.grow
+    },
+    datePickerInput: {
+        ...resetStyles.button
+    },
     timeIndexes: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
@@ -75,6 +84,14 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.center,
         ...genStyles.alignCenter
     },
+    firstSlot: {
+        borderTopLeftRadius: '8px',
+        borderBottomLeftRadius: '8px'
+    },
+    lastSlot: {
+        borderTopRightRadius: '8px',
+        borderBottomRightRadius: '8px'
+    },
     firstSelectedSlot: {
         borderTopLeftRadius: '8px',
         borderBottomLeftRadius: '8px'
@@ -100,7 +117,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...resetStyles.button,
         ...genStyles.flex,
         ...genStyles.alignCenter,
-        ...genStyles.center,        
+        ...genStyles.center,
         height: '40px',
         ...genStyles.noShrink,
         // position: 'absolute',

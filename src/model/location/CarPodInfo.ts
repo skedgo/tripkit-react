@@ -14,6 +14,9 @@ interface BookingAvailabilityInterval {
 
 @JsonObject
 export class CarPodVehicle {
+    @JsonProperty("identifier", String)
+    public identifier: string = "";
+    
     @JsonProperty("name", String, true)
     public name?: string = undefined;
 

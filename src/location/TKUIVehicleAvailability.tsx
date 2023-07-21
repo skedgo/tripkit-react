@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
-import Location from "../model/Location";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import TKLocationInfo from "../model/location/TKLocationInfo";
-import LocationsData from "../data/LocationsData";
-import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
-import RegionsData from "../data/RegionsData";
-import Region from "../model/region/Region";
 import { tKUIVehicleAvailabilityDefaultStyle } from "./TKUIVehicleAvailability.css";
-import DatePicker from 'react-datepicker/dist/es';
 import CarPodLocation from "../model/location/CarPodLocation";
-import TimeRangePicker from '@wojtekmaj/react-timerange-picker/dist/entry'
 import DateTimeUtil from "../util/DateTimeUtil";
 import classNames from "classnames";
 import { BookingAvailability, CarPodVehicle } from "../model/location/CarPodInfo";
 import { ReactComponent as IconStartSlot } from "../images/ic-arrow-start-slot.svg";
 import { ReactComponent as IconEndSlot } from "../images/ic-arrow-end-slot.svg";
 import { ReactComponent as IconRightArrow } from "../images/ic-angle-right.svg";
+import { ReactComponent as IconLoading } from "../images/ic-spin-bar.svg";
+import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import Util from "../util/Util";
+import NetworkUtil from "../util/NetworkUtil";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -39,10 +37,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIVehicleAvailability"
 };
 
-function getSlots(start: string): string[] {
+function getSlots(start: string, end): string[] {
     const slots: string[] = [];
-    for (let i = 0; i < 48; i++) {
-        slots.push(DateTimeUtil.isoAddMinutes(start, i * 30));
+    let i = 0;
+    for (let slot = start; DateTimeUtil.isoCompare(slot, end) < 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+        slots.push(slot);
     }
     return slots;
 }
@@ -61,17 +60,26 @@ const SLOT_WIDTH = 32;
 const VEHICLE_LABEL_WIDTH = SLOT_WIDTH * 5;
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { region } = useContext(RoutingResultsContext);
+    const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
     const { location, t, classes, theme } = props;
     const [timeRange, setTimeRange] = useState<[string, string]>([DateTimeUtil.getNow().format("HH:mm"), DateTimeUtil.getNow().add(2, 'hours').format("HH:mm")]);
     // Start datetime (in 30 mins steps) of the display interval.
-    // For now assum I display 12h (24 slots) from displayTime, though it should depend on component width.
-    const [displayTime, setDisplayTime] = useState<string>("2023-07-19T00:00:00.000Z");
+    // For now assum I display 12h (24 slots) from displayTime, though it should depend on component width.        
+    // const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.toJustDate(DateTimeUtil.getNow(timezone)).format());
+    // console.log(DateTimeUtil.toJustDate(DateTimeUtil.getNow(timezone)).format());
+    // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00.000Z");
+    const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
+    // const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60));
+    const [displayEndTime, setDisplayEndTime] = useState<string>(displayStartTime);
+    const [displayTime, setDisplayTime] = useState<string>(displayStartTime);
+    const displayDate = DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(displayTime)).format();
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
     const [bookStartTime, setBookStartTime] = useState<string | undefined>();
     const [bookEndTime, setBookEndTime] = useState<string | undefined>();
-    const slots = getSlots(displayTime);
-    const vehicles = location.carPod.vehicles;
+    const slots = getSlots(displayStartTime, displayEndTime);
+
     function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
         if (selectedVehicle && selectedVehicle !== slotVehicle) {
             return;
@@ -89,6 +97,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             setBookEndTime(slot);
         }
     }
+
     function selectedSlot(slot, vehicle: CarPodVehicle): boolean {
         if (vehicle !== selectedVehicle) {
             return false;
@@ -96,26 +105,124 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         return bookStartTime === slot || bookEndTime === slot ||
             (!!bookStartTime && !!bookEndTime && betweenTimes(slot, bookStartTime, bookEndTime));
     }
-    function onPrevNext(prev: boolean) {
 
+    function onPrevNext(prev: boolean) {
+        if (!scrollRef.current) {
+            return;
+        }
+        scrollRef.current.scrollLeft += prev ? -SLOT_WIDTH : SLOT_WIDTH;
     }
+
+    function setScrollLeftToTime(time: string) {
+        if (!scrollRef.current) {
+            return;
+        }
+        console.log(DateTimeUtil.isoAddMinutes(time, 0));
+        const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)
+        console.log(slots);
+        console.log(slotIndex);
+        if (slotIndex === -1) {
+            return;
+        }
+        scrollRef.current.scrollLeft = slotIndex * SLOT_WIDTH;
+    }
+
+    function getTimeFromScrollLeft(scrollLeft: number): string {
+        return DateTimeUtil.isoAddMinutes(displayStartTime, Math.floor(scrollLeft / SLOT_WIDTH) * 30);
+    }
+
     useEffect(() => {
-        // TODO: if location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
-        // then use that value.
-        setLocationInfo(undefined);
-        RegionsData.instance.getRegionP(location).then((region?: Region) =>
-            LocationsData.instance.getLocationInfo(location.source === TKDefaultGeocoderNames.skedgo && location.id ?
-                location.id : location, location.source === TKDefaultGeocoderNames.skedgo && location.id && region ?
-                region.name : undefined)
-                .then((result: TKLocationInfo) => setLocationInfo(result))
-                .catch((e) => console.log(e)));
+        onRequestMore();
+    }, []);
+
+    (window as any).scrollLeftToTime = setScrollLeftToTime;
+    useEffect(() => {
+        setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 480));
     }, [location.getKey()]);
+
+    // const vehicles = location.carPod.vehicles;
+
+    const [waiting, setWaiting] = useState<boolean>(false);
+
+    const [vehicles, setVehicles] = useState<CarPodVehicle[] | undefined>();
+
+    function onRequestMore() {
+        if (waiting) {
+            return;
+        }
+        setWaiting(true);
+        try {
+            NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/location-carPods-sgfleet-${displayEndTime.substring(0, 10)}.json`), CarPodLocation))
+                .then(location => {
+                    console.log(location);
+                    const moreVehicles = location.carPod.vehicles!;
+                    let updatedVehicles: CarPodVehicle[];
+                    if (!vehicles) {
+                        updatedVehicles = moreVehicles;
+                    } else {
+                        vehicles.forEach(vehicle => {
+                            const moreVehicle = moreVehicles.find(v => v.identifier === vehicle.identifier);
+                            vehicle.availability!.intervals = vehicle.availability!.intervals.concat(moreVehicle?.availability?.intervals ?? []);
+                        })
+                        updatedVehicles = vehicles; // Mutation
+                    }
+                    setVehicles(updatedVehicles);
+                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(displayEndTime, 24 * 60));
+                    setWaiting(false);
+                });
+        } catch (e) {
+
+        }
+    }
+
+    const scrollRef = useRef<HTMLDivElement>(null);
     return (
         <div className={classes.main}>
-            <div className={classes.scrollPanel} style={{ paddingLeft: VEHICLE_LABEL_WIDTH }}>
-                <div className={classes.header} style={{ width: SLOT_WIDTH * 48 }}>
+            <div className={classes.scrollPanel}
+                style={{ paddingLeft: VEHICLE_LABEL_WIDTH, paddingRight: SLOT_WIDTH }}
+                ref={scrollRef}
+                onScroll={e => {
+                    const scrollElem = scrollRef.current!;
+                    // console.log("scrollLeft: " + scrollRef.current?.scrollLeft);
+                    // console.log(e.target);
+                    const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
+                    // console.log(displayTime);
+                    // console.log(leftSlot);
+                    if (!DateTimeUtil.isoSameTime(displayTime, leftSlot)) {
+                        setDisplayTime(leftSlot);
+                    }
+                    if (scrollElem.scrollLeft + scrollElem.clientWidth > scrollElem.scrollWidth - 30) {
+                        console.log("more!!!");
+                        onRequestMore();
+                    }
+                }}
+            >
+                <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length }}>
                     <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
-                        <div style={{ flexGrow: 1 }} />
+                        {/* <div style={{ flexGrow: 1 }} /> */}
+                        <div className={classes.datePicker}>
+                            <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
+                                timeZone={region?.timezone}
+                                onChange={date => {
+                                    console.log(date.format());
+                                    setDisplayStartTime(date.format());
+                                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60));
+                                    setDisplayTime(date.format());
+                                }}
+                                // dateFormat={DateTimeUtil.dateFormat()}
+                                dateFormat={"YYYY-MM-DD"}
+                                // styles={(theme: TKUITheme) => ({
+                                //     datePicker: overrideClass(this.props.injectedStyles.datePicker)
+                                // })}
+                                shouldCloseOnSelect={true}
+                                renderCustomInput={(value: any, onClick: any, onKeyDown: any, ref: any) =>
+                                    <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
+                                        {/* {DateTimeUtil.format(value, DateTimeUtil.dateFormat())} */}
+                                        {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(value), DateTimeUtil.dateFormat())}
+                                    </button>}
+                            />
+                        </div>
                         <button className={classes.arrowBtn} style={{ width: 40, left: VEHICLE_LABEL_WIDTH - 40 }} disabled={false} onClick={() => onPrevNext(true)}>
                             <div style={{ background: 'white', flexGrow: 1, padding: '14px 0 14px 14px', height: '100%' }}>
                                 <IconRightArrow style={{ transform: 'rotate(180deg)' }} />
@@ -129,6 +236,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 {DateTimeUtil.isoFormat(slot, "ha")}
                             </div>
                         )}
+                        {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />}
                     </div>
                     {/* <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH }} /> */}
                     {/* <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
@@ -137,11 +245,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
                         <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
                         <div style={{ background: 'white', flexGrow: 1, padding: '14px 14px 14px 0', height: '100%' }}>
+                            {/* {waiting ? <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px' }} /> : <IconRightArrow />} */}
                             <IconRightArrow />
                         </div>
                     </button>
                 </div>
-                <div className={classes.vehicles} style={{ width: SLOT_WIDTH * 48 }}>
+                <div className={classes.vehicles} style={{ width: SLOT_WIDTH * slots.length }}>
                     {vehicles?.map((vehicle, i) => {
                         return (
                             <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)} key={i}>
@@ -152,13 +261,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                     <div className={classes.whiteToTransparent} style={{ width: SLOT_WIDTH }} />
                                 </div>
                                 {slots.map((slot, i) =>
-                                    <div className={classNames(classes.slot)} style={{ width: SLOT_WIDTH }} onClick={() => onSlotClick(slot, vehicle)}>
+                                    <div className={classNames(classes.slot)} style={{ width: SLOT_WIDTH }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
                                         {selectedSlot(slot, vehicle) ?
                                             <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
                                                 {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
                                             </div>
                                             :
-                                            <div className={available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot} />}
+                                            <div className={classNames(available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)} />}
                                     </div>)}
                                 <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH / 2, height: '54px', right: SLOT_WIDTH / 2, position: 'absolute' }} />
                                 <div style={{ width: SLOT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />

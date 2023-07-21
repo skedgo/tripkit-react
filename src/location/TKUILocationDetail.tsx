@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Location from "../model/Location";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -28,6 +28,7 @@ import { tKUILocationDetailDefaultStyle } from "./TKUILocationDetail.css";
 import DeviceUtil from "../util/DeviceUtil";
 import CarPodLocation from "../model/location/CarPodLocation";
 import TKUIVehicleAvailability from "./TKUIVehicleAvailability";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -62,6 +63,9 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
 
     const [section, setSection] = useState<Sections>(hasVehicleAvailability ? Sections.Vehicles : Sections.Details);
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
+
+    // TODO Analyze if doing this. Need to wait for region.timezone to be available to display vehicle availability
+    const { region } = useContext(RoutingResultsContext);
 
     useEffect(() => {
         // TODO: if location already has w3w data (e.g. is a SkedgoGeocoder result that has details)
@@ -304,7 +308,7 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
                 </div>;
             break;
         case Sections.Vehicles:
-            content =
+            content = region &&
                 <TKUIVehicleAvailability location={location as CarPodLocation}/>
     }
 

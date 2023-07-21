@@ -161,6 +161,19 @@ class DateTimeUtil {
         return this.momentFromIsoWithTimezone(dateS).format(format);
     }
 
+    public static isoSameTime(date1: string, date2: string): boolean {
+        return this.isoToMillis(date1) === this.isoToMillis(date2);
+    }
+
+    public static isoCompare(date1: string, date2: string): number {
+        return this.isoToMillis(date1) - this.isoToMillis(date2);
+    }
+
+    public static toJustDate(moment: Moment): Moment {
+        // Immutable
+        return moment.clone().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+    }
+
 }
 
 export default DateTimeUtil;

@@ -23,6 +23,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderCustomInput?: (value: any, onClick: any, onKeyDown: any, ref: any) => JSX.Element;
     popperPlacement?: Popper.Placement;
     popperModifiers?: any;
+    shouldCloseOnSelect?: boolean;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -73,7 +74,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { classes, t } = this.props;
+        const { shouldCloseOnSelect, classes, t } = this.props;
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
@@ -83,7 +84,8 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
         // Display date picker as a button instead of a input text field, given that entering date as text is very
         // limited and confusing in react-datepicker, and also is confusing the way it's red by screenreaders.
         const DatePickerInput = React.forwardRef(((props: { value?: any, onClick?: any, onKeyDown?: any }, ref: any) =>
-            <button ref={ref}
+            <button
+                ref={ref}
                 onClick={props.onClick}
                 onKeyDown={props.onKeyDown}
                 aria-label={datePickerInputAriaLabel}
@@ -127,7 +129,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                             dateSelection: momentTZValue
                         });
                     }}
-                    shouldCloseOnSelect={false}
+                    shouldCloseOnSelect={!!shouldCloseOnSelect}
                     // showTimeSelect={true}
                     showTimeInput={true}
                     customTimeInput={customTimeInput}
