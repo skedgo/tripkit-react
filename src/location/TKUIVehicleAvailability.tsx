@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
@@ -65,20 +65,45 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
     const { location, t, classes, theme } = props;
     const [timeRange, setTimeRange] = useState<[string, string]>([DateTimeUtil.getNow().format("HH:mm"), DateTimeUtil.getNow().add(2, 'hours').format("HH:mm")]);
-    // Start datetime (in 30 mins steps) of the display interval.
-    // For now assum I display 12h (24 slots) from displayTime, though it should depend on component width.        
-    // const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.toJustDate(DateTimeUtil.getNow(timezone)).format());
-    // console.log(DateTimeUtil.toJustDate(DateTimeUtil.getNow(timezone)).format());
-    // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00.000Z");
     const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
-    // const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60));
-    const [displayEndTime, setDisplayEndTime] = useState<string>(displayStartTime);
+    const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayTime, setDisplayTime] = useState<string>(displayStartTime);
     const displayDate = DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(displayTime)).format();
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
     const [bookStartTime, setBookStartTime] = useState<string | undefined>();
     const [bookEndTime, setBookEndTime] = useState<string | undefined>();
     const slots = getSlots(displayStartTime, displayEndTime);
+    // const vehicles = location.carPod.vehicles;
+
+    const [waiting, setWaiting] = useState<boolean>(false);
+
+    /**
+     * undefined: not requested
+     * null: waiting for response
+     * Availability is requested with day granularity
+     */
+    const [vehiclesByDate, setVehiclesByDate] = useState<Map<string, CarPodVehicle[] | null>>(new Map());
+    const vehicles = useMemo(() => getMergedVehicles(), [vehiclesByDate]);
+
+    function getMergedVehicles(): CarPodVehicle[] {
+        // This shouldn't happen, we should always have data for displayStartTime(?)
+        if (!vehiclesByDate.get(displayStartTime)) {
+            return [];
+        }
+        const result: CarPodVehicle[] = [];
+        for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
+            const dateVehicles = vehiclesByDate.get(date);
+            if (result.length === 0) {
+                result.push(...dateVehicles!);
+            } else if (dateVehicles) {
+                result.forEach(vehicle => {
+                    const dateVehicle = dateVehicles.find(v => v.identifier === vehicle.identifier);
+                    vehicle.availability!.intervals = vehicle.availability!.intervals.concat(dateVehicle?.availability?.intervals ?? []);
+                })
+            }
+        }
+        return result;
+    }
 
     function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
         if (selectedVehicle && selectedVehicle !== slotVehicle) {
@@ -115,11 +140,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
 
     function setScrollLeftToTime(time: string) {
         if (!scrollRef.current) {
+            console.log("return!");
             return;
         }
-        console.log(DateTimeUtil.isoAddMinutes(time, 0));
-        const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)
-        console.log(slots);
+        const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)        
         console.log(slotIndex);
         if (slotIndex === -1) {
             return;
@@ -127,52 +151,57 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         scrollRef.current.scrollLeft = slotIndex * SLOT_WIDTH;
     }
 
+    const setScrollLeftToTimeRef = useRef<(time: string) => void>(setScrollLeftToTime);
+
+    setScrollLeftToTimeRef.current = setScrollLeftToTime;
+
     function getTimeFromScrollLeft(scrollLeft: number): string {
         return DateTimeUtil.isoAddMinutes(displayStartTime, Math.floor(scrollLeft / SLOT_WIDTH) * 30);
     }
 
     useEffect(() => {
-        onRequestMore();
-    }, []);
+        // Move scroll to 8am by default on display start date change.
+        if (vehiclesByDate.get(displayStartTime)) {
+            setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+        }
+    }, [vehiclesByDate.get(displayStartTime)]);
 
-    (window as any).scrollLeftToTime = setScrollLeftToTime;
     useEffect(() => {
-        setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 480));
-    }, [location.getKey()]);
-
-    // const vehicles = location.carPod.vehicles;
-
-    const [waiting, setWaiting] = useState<boolean>(false);
-
-    const [vehicles, setVehicles] = useState<CarPodVehicle[] | undefined>();
+        coverDisplayRange();
+    }, [displayStartTime, displayEndTime]);
 
     function onRequestMore() {
-        if (waiting) {
-            return;
-        }
-        setWaiting(true);
-        try {
-            NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/location-carPods-sgfleet-${displayEndTime.substring(0, 10)}.json`), CarPodLocation))
-                .then(location => {
-                    console.log(location);
-                    const moreVehicles = location.carPod.vehicles!;
-                    let updatedVehicles: CarPodVehicle[];
-                    if (!vehicles) {
-                        updatedVehicles = moreVehicles;
-                    } else {
-                        vehicles.forEach(vehicle => {
-                            const moreVehicle = moreVehicles.find(v => v.identifier === vehicle.identifier);
-                            vehicle.availability!.intervals = vehicle.availability!.intervals.concat(moreVehicle?.availability?.intervals ?? []);
-                        })
-                        updatedVehicles = vehicles; // Mutation
-                    }
-                    setVehicles(updatedVehicles);
-                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(displayEndTime, 24 * 60));
-                    setWaiting(false);
-                });
-        } catch (e) {
+        setDisplayEndTime(DateTimeUtil.isoAddMinutes(displayEndTime, 24 * 60));
+    }
 
+    function coverDisplayRange() {
+        let requestDates: string[] = [];
+        for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
+            if (vehiclesByDate.get(date) === undefined) {
+                vehiclesByDate.set(date, null);
+                requestDates.push(date);
+            }
         }
+        console.log(requestDates);
+        // TODO: merge consecutive days into (multi-days) intervals to optimize request.
+        requestDates.forEach(async date => {
+            try {
+                const location = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/location-carPods-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));
+                console.log(location);
+                if (vehiclesByDate.get(date) !== null) {
+                    return;
+                }
+                const vehiclesByDateUpdate = new Map(vehiclesByDate);
+                vehiclesByDateUpdate.set(date, location.carPod.vehicles!);
+                setVehiclesByDate(vehiclesByDateUpdate);
+            } catch (e) {
+
+            }
+        })
+    }
+
+    function isFetching(slot): boolean {
+        return vehiclesByDate.get(DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(slot)).format()) === null;
     }
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -183,32 +212,34 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 ref={scrollRef}
                 onScroll={e => {
                     const scrollElem = scrollRef.current!;
-                    // console.log("scrollLeft: " + scrollRef.current?.scrollLeft);
-                    // console.log(e.target);
                     const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
-                    // console.log(displayTime);
-                    // console.log(leftSlot);
                     if (!DateTimeUtil.isoSameTime(displayTime, leftSlot)) {
                         setDisplayTime(leftSlot);
                     }
                     if (scrollElem.scrollLeft + scrollElem.clientWidth > scrollElem.scrollWidth - 30) {
-                        console.log("more!!!");
                         onRequestMore();
                     }
                 }}
             >
                 <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length }}>
                     <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
-                        {/* <div style={{ flexGrow: 1 }} /> */}
                         <div className={classes.datePicker}>
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                                 value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
                                 timeZone={region?.timezone}
                                 onChange={date => {
                                     console.log(date.format());
-                                    setDisplayStartTime(date.format());
-                                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60));
-                                    setDisplayTime(date.format());
+                                    if (!selectedVehicle) {
+                                        setDisplayStartTime(date.format());
+                                        setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
+                                        setDisplayTime(date.format());
+                                        setVehiclesByDate(new Map());
+                                    } else {
+                                        setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
+                                        setTimeout(() => {
+                                            setScrollLeftToTimeRef.current(DateTimeUtil.isoAddMinutes(date.format(), 8 * 60));
+                                        }, 100);
+                                    }
                                 }}
                                 // dateFormat={DateTimeUtil.dateFormat()}
                                 dateFormat={"YYYY-MM-DD"}
@@ -238,10 +269,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         )}
                         {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />}
                     </div>
-                    {/* <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH }} /> */}
-                    {/* <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
-                        <IconRightArrow style={{ transform: 'rotate(180deg)' }} />
-                    </button> */}
                     <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
                         <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
                         <div style={{ background: 'white', flexGrow: 1, padding: '14px 14px 14px 0', height: '100%' }}>
@@ -267,7 +294,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
                                             </div>
                                             :
-                                            <div className={classNames(available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)} />}
+                                            <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)} />}
                                     </div>)}
                                 <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH / 2, height: '54px', right: SLOT_WIDTH / 2, position: 'absolute' }} />
                                 <div style={{ width: SLOT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
@@ -276,15 +303,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     })}
                 </div>
             </div>
-            {/* <DatePicker
-                selected={new Date()}
-                onChange={date => console.log(date)}
-                inline
-                calendarClassName={classes.calendar}
-                // showTimeInput={true}
-                // customTimeInput={<TimeRangePicker/>}
-            />
-            <TimeRangePicker value={timeRange} onChange={setTimeRange}/> */}
         </div>
     );
 }

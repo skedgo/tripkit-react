@@ -1,4 +1,4 @@
-import genStyles from "../css/GenStyle.css";
+import genStyles, { keyFramesStyles } from "../css/GenStyle.css";
 import { resetStyles } from "../css/ResetStyle.css";
 import { black, TKUITheme, white } from "../jss/TKUITheme";
 import { tKUIDateTimePickerDefaultStyle } from "../time/TKUIDateTimePicker.css";
@@ -112,6 +112,9 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         background: '#00000014',
         borderLeft: '1px solid white',
         borderRight: '1px solid white',
+    },
+    loadingSlot: {
+        animation: keyFramesStyles.keyframes.beatBackground + ' 4s cubic-bezier(1,1,1,1) infinite'
     },
     arrowBtn: {
         ...resetStyles.button,

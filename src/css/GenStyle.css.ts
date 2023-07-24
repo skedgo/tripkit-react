@@ -143,6 +143,11 @@ const keyframesStyle = {
             overflow: 'visible'
         }
     },
+    '@keyframes beatBackground': {
+        '0%': { backgroundColor: 'white' },
+        '50%': { backgroundColor: '#00000014' },
+        '100%': { backgroundColor: 'white' }
+    }
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [
     //     {
