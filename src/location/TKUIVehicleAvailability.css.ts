@@ -19,7 +19,8 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         overflowX: 'scroll',
     },
     header: {
-        ...genStyles.flex
+        ...genStyles.flex,
+        borderTop: '1px solid ' + black(4)
     },
     datePicker: {
         ...genStyles.flex,
@@ -33,10 +34,18 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     timeIndexes: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
-        height: '40px'
+        height: '60px'
     },
     timeIndex: {
-        ...genStyles.noShrink
+        ...genStyles.noShrink,
+        position: 'relative',
+        fontSize: '14px'
+    },
+    dayIndex: {
+        position: 'absolute',
+        top: '19px',
+        ...theme.textColorGray,
+        fontSize: '13px'
     },
     vehicles: {
         ...genStyles.flex,
@@ -61,13 +70,26 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         left: 0,
         '&>*:first-child': {
             background: 'white'
-        }
+        },
+        zIndex: 1
+    },
+    selectionPanel: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        position: 'absolute',
+        left: 0,
+        width: '100%',
+        ...genStyles.spaceBetween
     },
     whiteToTransparent: {
         background: 'linear-gradient(to right, white, #ffffff00)'
     },
     transparentToWhite: {
         background: 'linear-gradient(to left, white, #ffffff00)'
+    },
+    slots: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter
     },
     slot: {
         height: '24px',
@@ -121,13 +143,13 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.center,
-        height: '40px',
+        height: '60px',
         ...genStyles.noShrink,
         // position: 'absolute',
         // background: 'white',
         '& svg': {
-            width: '100%',
-            height: '100%'
+            width: '12px',
+            height: '12px'
         },
         '& path': {
             fill: black(0, theme.isDark)

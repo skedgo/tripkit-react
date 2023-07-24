@@ -141,12 +141,13 @@ class DateTimeUtil {
         return Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
     }
 
-    public static formatRelativeDay(moment: Moment, formatWithDay: string, partialReplace?: string): string {
+    public static formatRelativeDay(moment: Moment, formatWithDay: string, options: { partialReplace?: string, justToday?: boolean } = {}): string {
+        const { partialReplace, justToday } = options;
         const calendarFormat = {
             sameDay: partialReplace ? formatWithDay.replace(partialReplace, "[Today]") : "[Today]",
-            nextDay: partialReplace ? formatWithDay.replace(partialReplace, "[Tomorrow]") : "[Tomorrow]",
+            nextDay: justToday ? formatWithDay : partialReplace ? formatWithDay.replace(partialReplace, "[Tomorrow]") : "[Tomorrow]",
             nextWeek: formatWithDay,
-            lastDay: partialReplace ? formatWithDay.replace(partialReplace, "[Yesterday]") : "[Yesterday]",
+            lastDay: justToday ? formatWithDay : partialReplace ? formatWithDay.replace(partialReplace, "[Yesterday]") : "[Yesterday]",
             lastWeek: formatWithDay,
             sameElse: formatWithDay,
         };
@@ -172,6 +173,10 @@ class DateTimeUtil {
     public static toJustDate(moment: Moment): Moment {
         // Immutable
         return moment.clone().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+    }
+
+    public static toIsoJustDate(date: string): string {
+        return this.momentFromIsoWithTimezone(date).set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).format();
     }
 
 }

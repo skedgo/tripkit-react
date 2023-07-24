@@ -32,7 +32,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
     const { from, to, startTime, endTime, timezone, status, onClick, classes, t } = props;
     let startTimeText = startTime !== undefined && DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime),
-        DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat());
+        DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() });
     if (startTimeText && status === "PROCESSING") {
         startTimeText = t("Requested.time.X", { 0: startTimeText });
     }
@@ -65,7 +65,7 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
                 {endTime !== undefined &&
                     <div className={classes.value}>
                         {DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(endTime, timezone) : DateTimeUtil.moment(endTime),
-                            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat())}
+                            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() })}
                     </div>}
             </div>
         </div>

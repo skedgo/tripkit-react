@@ -189,7 +189,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                                 value === ONE_WAY_ONLY_OPTION.value ? ONE_WAY_ONLY_OPTION : DATE_OPTION;
                         valueElem = readonly ?
                             returnValueToOption(inputField.value) === DATE_OPTION ?
-                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat()) :
+                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() }) :
                                 returnValueToOption(inputField.value)?.label ?? "-"
                             :
                             <div className={classes.returnTripInput}>

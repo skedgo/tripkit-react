@@ -108,6 +108,41 @@
                     "name": "Car",
                     "propulsionType": "COMBUSTION"
                 },
+                "identifier": "10701",
+                "licensePlate": "CL82MI",
+                "operator": {
+                    "color": {
+                        "blue": 106,
+                        "green": 63,
+                        "red": 0
+                    },
+                    "name": "GoGet",
+                    "website": "https://www.goget.com.au"
+                },
+                "name": "Chevrolet Camaro",
+                "availability": {
+                    "timestamp": "2023-07-19T14:48:00.000Z",
+                    "intervals": [
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-20T10:00:00.000Z",
+                            "end": "2023-07-20T12:30:00.000Z"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-20T14:00:00.000Z",
+                            "end": "2023-07-20T16:00:00.000Z"
+                        }
+                    ]
+                }
+            },
+            {
+                "disabled": false,
+                "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                },
                 "identifier": "1070",
                 "licensePlate": "CL82MI",
                 "operator": {

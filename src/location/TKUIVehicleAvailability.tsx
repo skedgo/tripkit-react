@@ -16,6 +16,7 @@ import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import Util from "../util/Util";
 import NetworkUtil from "../util/NetworkUtil";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -208,7 +209,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     return (
         <div className={classes.main}>
             <div className={classes.scrollPanel}
-                style={{ paddingLeft: VEHICLE_LABEL_WIDTH, paddingRight: SLOT_WIDTH }}
+                style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH }}
                 ref={scrollRef}
                 onScroll={e => {
                     const scrollElem = scrollRef.current!;
@@ -221,7 +222,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     }
                 }}
             >
-                <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length }}>
+                <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length, paddingLeft: VEHICLE_LABEL_WIDTH }}>
                     <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
                         <div className={classes.datePicker}>
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
@@ -249,29 +250,34 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 shouldCloseOnSelect={true}
                                 renderCustomInput={(value: any, onClick: any, onKeyDown: any, ref: any) =>
                                     <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
-                                        {/* {DateTimeUtil.format(value, DateTimeUtil.dateFormat())} */}
-                                        {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(value), DateTimeUtil.dateFormat())}
+                                        {/* value comes without timezone, so use displayDate */}
+                                        {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
                                     </button>}
                             />
                         </div>
                         <button className={classes.arrowBtn} style={{ width: 40, left: VEHICLE_LABEL_WIDTH - 40 }} disabled={false} onClick={() => onPrevNext(true)}>
-                            <div style={{ background: 'white', flexGrow: 1, padding: '14px 0 14px 14px', height: '100%' }}>
+                            <div style={{ background: 'white', flexGrow: 1, padding: '24px 0 24px 14px', height: '100%' }}>
                                 <IconRightArrow style={{ transform: 'rotate(180deg)' }} />
                             </div>
                             <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
                         </button>
                     </div>
                     <div className={classes.timeIndexes}>
-                        {slots.filter((_slot, i) => i % 2 === 0).map((slot, i) =>
-                            <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
-                                {DateTimeUtil.isoFormat(slot, "ha")}
-                            </div>
+                        {slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
+                            const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                            return (
+                                <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
+                                    {isDayStart && <div className={classes.dayIndex}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
+                                    {DateTimeUtil.isoFormat(slot, "ha")}
+                                </div>
+                            );
+                        }
                         )}
                         {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />}
                     </div>
                     <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
                         <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
-                        <div style={{ background: 'white', flexGrow: 1, padding: '14px 14px 14px 0', height: '100%' }}>
+                        <div style={{ background: 'white', flexGrow: 1, padding: '24px 14px 24px 0', height: '100%' }}>
                             {/* {waiting ? <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px' }} /> : <IconRightArrow />} */}
                             <IconRightArrow />
                         </div>
@@ -280,22 +286,34 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 <div className={classes.vehicles} style={{ width: SLOT_WIDTH * slots.length }}>
                     {vehicles?.map((vehicle, i) => {
                         return (
-                            <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)} key={i}>
+                            <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
+                                style={{ paddingLeft: VEHICLE_LABEL_WIDTH, ...vehicle === selectedVehicle && { paddingBottom: 80 } }}
+                                key={i}
+                            >
                                 <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
-                                    <div style={{ padding: '20px 0 20px 20px', flexGrow: 1 }}>
+                                    <div style={{ padding: '15px 0 15px 20px', flexGrow: 1 }}>
                                         {vehicle.name}
                                     </div>
                                     <div className={classes.whiteToTransparent} style={{ width: SLOT_WIDTH }} />
                                 </div>
-                                {slots.map((slot, i) =>
-                                    <div className={classNames(classes.slot)} style={{ width: SLOT_WIDTH }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
-                                        {selectedSlot(slot, vehicle) ?
-                                            <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
-                                                {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
-                                            </div>
-                                            :
-                                            <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)} />}
-                                    </div>)}
+                                <div className={classes.slots}>
+                                    {slots.map((slot, i) =>
+                                        <div className={classNames(classes.slot)} style={{ width: SLOT_WIDTH }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
+                                            {selectedSlot(slot, vehicle) ?
+                                                <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
+                                                    {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
+                                                </div>
+                                                :
+                                                <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)} />}
+                                        </div>)}
+                                </div>
+                                {vehicle === selectedVehicle &&
+                                    <div className={classes.selectionPanel} style={{ padding: `0 30px 0 ${VEHICLE_LABEL_WIDTH}px`, transform: 'translateY(45px)' }}>
+                                        <div>From</div>
+                                        <div>To</div>
+                                        <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} />
+                                        <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
+                                    </div>}
                                 <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH / 2, height: '54px', right: SLOT_WIDTH / 2, position: 'absolute' }} />
                                 <div style={{ width: SLOT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
                             </div>
