@@ -1,30 +1,22 @@
 import genStyles from "../css/GenStyle.css";
-import {black, TKUITheme} from "../jss/TKUITheme";
+import { black, TKUITheme } from "../jss/TKUITheme";
 
 export const tKUILocationDetailDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
         ...genStyles.column,        
-        '& .MuiToggleButtonGroup-root': {
-            margin: '5px'
+        '& .MuiTabs-flexContainer': {
+            justifyContent: 'space-around',
+            borderBottom: '1px solid ' + black(4)
         },
-        '& .MuiToggleButton-root': {
-            ...genStyles.grow,
-            padding: '5px',
-            textTransform: 'initial',
-            ...genStyles.borderRadius(8),
-            color: black(1, theme.isDark),
-            borderColor: black(3, theme.isDark),
-            '&.Mui-selected': {
-                background: 'none!important',
-                borderColor: theme.colorPrimary,
-                color: theme.colorPrimary
-            },
-            '&:not(.Mui-selected):hover': {
-                background: 'none',
-                borderColor: black(2, theme.isDark),
-                color: black(0, theme.isDark)
-            }
+        '& .MuiTab-root': {
+            textTransform: 'initial'
+        },
+        '& .Mui-selected': {
+            color: theme.colorPrimary
+        },
+        '& .MuiTabs-indicator': {
+            backgroundColor: theme.colorPrimary + '!important'
         }
     },
     details: {

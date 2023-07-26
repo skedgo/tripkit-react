@@ -20,6 +20,7 @@ import Util from "../util/Util";
 import NetworkUtil from "../util/NetworkUtil";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
@@ -88,6 +89,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
      */
     const [vehiclesByDate, setVehiclesByDate] = useState<Map<string, CarPodVehicle[] | null>>(new Map());
     const vehicles = useMemo(() => getMergedVehicles(), [vehiclesByDate]);
+    const loadingVehicles = vehicles.length === 0 && Array.from(vehiclesByDate.values()).some(value => value === null);
+    const noVehicles = vehicles.length === 0 && !Array.from(vehiclesByDate.values()).some(value => value === null);
+    console.log(Array.from(vehiclesByDate.values()));
 
     function getMergedVehicles(): CarPodVehicle[] {
         // This shouldn't happen, we should always have data for displayStartTime(?)
@@ -180,7 +184,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         let requestDates: string[] = [];
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
             if (vehiclesByDate.get(date) === undefined) {
-                vehiclesByDate.set(date, null);
+                setVehiclesByDate(vehiclesByDate => {
+                    const vehiclesByDateUpdate = new Map(vehiclesByDate);
+                    vehiclesByDateUpdate.set(date, null);
+                    return vehiclesByDateUpdate;
+                });
+                console.log(Array.from(vehiclesByDate.values()));
                 requestDates.push(date);
             }
         }
@@ -190,16 +199,20 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             try {
                 const location = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/location-carPods-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));
                 console.log(location);
-                if (vehiclesByDate.get(date) !== null) {
-                    return;
-                }
                 setVehiclesByDate(vehiclesByDate => {
+                    if (vehiclesByDate.get(date) !== null) {
+                        return vehiclesByDate;
+                    }
                     const vehiclesByDateUpdate = new Map(vehiclesByDate);
                     vehiclesByDateUpdate.set(date, location.carPod.vehicles!);
                     return vehiclesByDateUpdate;
                 });
             } catch (e) {
-
+                setVehiclesByDate(vehiclesByDate => {
+                    const vehiclesByDateUpdate = new Map(vehiclesByDate);
+                    vehiclesByDateUpdate.set(date, []);
+                    return vehiclesByDateUpdate;
+                });
             }
         })
     }
@@ -232,7 +245,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 }}
             >
                 <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}>
-                    <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 1, height: '60px' }}>
+                    <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
                         <div className={classes.datePicker}>
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                                 value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
@@ -298,10 +311,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     {vehicles?.map((vehicle, i) => {
                         return (
                             <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
-                                style={{ ...portrait ? { paddingTop: 50 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 40 } }}
+                                style={{ ...portrait ? { paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 } }}
                                 key={i}
                             >
-                                <div className={classes.vehicleLabel} style={{ ...portrait ? { transform: 'translateY(-45px)' } : { width: VEHICLE_LABEL_WIDTH } }}>
+                                <div className={classes.vehicleLabel} style={{ ...portrait ? { transform: 'translateY(-55px)' } : { width: VEHICLE_LABEL_WIDTH } }}>
                                     <div className={classes.vehicleIcon}>
                                         <IconCarOption />
                                     </div>
@@ -346,6 +359,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     })}
                 </div>
             </div>
+            {loadingVehicles && <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />}
+            {noVehicles && <div>No vehicles</div>}
         </div>
     );
 }

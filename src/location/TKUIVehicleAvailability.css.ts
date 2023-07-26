@@ -1,26 +1,20 @@
 import genStyles, { keyFramesStyles } from "../css/GenStyle.css";
 import { resetStyles } from "../css/ResetStyle.css";
-import { black, TKUITheme, white } from "../jss/TKUITheme";
-import { tKUIDateTimePickerDefaultStyle } from "../time/TKUIDateTimePicker.css";
+import { black, TKUITheme } from "../jss/TKUITheme";
 
 export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        paddingTop: '10px',
-        '&>*': {
-            marginBottom: '15px',
-            paddingLeft: '20px',
-            paddingRight: '20px'
-        },
         // Scroll scheme
-        position: 'relative'
+        position: 'relative',
+        ...genStyles.flex,
+        ...genStyles.column
     },
     scrollPanel: {
         // Scroll scheme
         overflowX: 'scroll',
     },
     header: {
-        ...genStyles.flex,
-        borderTop: '1px solid ' + black(4)
+        ...genStyles.flex
     },
     datePicker: {
         ...genStyles.flex,
@@ -60,7 +54,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     vehicle: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
-        padding: '15px 0',
+        padding: '20px 0',
         borderTop: '1px solid ' + black(4)
     },
     fadeVehicle: {
@@ -202,4 +196,13 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
             // height: '40px'
         }
     },
+    iconLoading: {
+        margin: '5px',
+        width: '20px',
+        height: '20px',
+        color: black(1, theme.isDark),
+        ...genStyles.alignSelfCenter,
+        ...genStyles.animateSpin,
+        ...genStyles.svgFillCurrColor
+    }
 });

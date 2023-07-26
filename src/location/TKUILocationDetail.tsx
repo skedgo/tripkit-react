@@ -29,6 +29,8 @@ import DeviceUtil from "../util/DeviceUtil";
 import CarPodLocation from "../model/location/CarPodLocation";
 import TKUIVehicleAvailability from "./TKUIVehicleAvailability";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import Tabs from "@material-ui/core/Tabs/Tabs";
+import Tab from "@material-ui/core/Tab/Tab";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -272,23 +274,15 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
     const onSectionChange = (event, newSection) => setSection(newSection);
 
     const tabs = (hasVehicleAvailability || openingHours || pricingTable) &&
-        <ToggleButtonGroup value={section} exclusive onChange={onSectionChange} aria-label="text formatting">
+        <Tabs value={section} onChange={onSectionChange} aria-label="text formatting">
             {hasVehicleAvailability &&
-                <ToggleButton value={Sections.Vehicles} disableFocusRipple disableTouchRipple>
-                    {t(Sections.Vehicles)}
-                </ToggleButton>}
-            <ToggleButton value={Sections.Details} disableFocusRipple disableTouchRipple>
-                {t(Sections.Details)}
-            </ToggleButton>
+                <Tab value={Sections.Vehicles} label={t(Sections.Vehicles)} disableFocusRipple disableTouchRipple />}
+            <Tab value={Sections.Details} label={t(Sections.Details)} disableFocusRipple disableTouchRipple />
             {openingHours &&
-                <ToggleButton value={Sections.OpeningHours} disableFocusRipple disableTouchRipple>
-                    {t(Sections.OpeningHours)}
-                </ToggleButton>}
+                <Tab value={Sections.OpeningHours} label={t(Sections.OpeningHours)} disableFocusRipple disableTouchRipple />}
             {pricingTable &&
-                <ToggleButton value={Sections.Pricing} disableFocusRipple disableTouchRipple>
-                    {t(Sections.Pricing)}
-                </ToggleButton>}
-        </ToggleButtonGroup>;
+                <Tab value={Sections.Pricing} label={t(Sections.Pricing)} disableFocusRipple disableTouchRipple />}
+        </Tabs>;
 
     let content;
     switch (section) {
@@ -309,7 +303,7 @@ const TKUILocationDetail: React.FunctionComponent<IProps> = (props: IProps) => {
             break;
         case Sections.Vehicles:
             content = region &&
-                <TKUIVehicleAvailability location={location as CarPodLocation}/>
+                <TKUIVehicleAvailability location={location as CarPodLocation} />
     }
 
     return (
