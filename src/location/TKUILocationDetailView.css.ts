@@ -1,7 +1,7 @@
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import DeviceUtil from "../util/DeviceUtil";
 import genStyles from "../css/GenStyle.css";
-import {TKUITheme} from "../jss/TKUITheme";
+import { TKUITheme } from "../jss/TKUITheme";
 
 export const tKUILocationDetailViewDefaultStyle = (theme: TKUITheme) => ({
     actionsPanel: {

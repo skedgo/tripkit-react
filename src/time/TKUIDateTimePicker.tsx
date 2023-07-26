@@ -26,6 +26,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     shouldCloseOnSelect?: boolean;
     minDate?: Moment;
     maxDate?: Moment;
+    showTimeInput?: boolean;    // default true
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -76,7 +77,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { shouldCloseOnSelect, minDate, maxDate, classes, t } = this.props;
+        const { shouldCloseOnSelect, minDate, maxDate, showTimeInput = true, classes, t } = this.props;
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
@@ -136,8 +137,7 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     shouldCloseOnSelect={!!shouldCloseOnSelect}
                     minDate={displayMinDate}
                     maxDate={displayMaxDate}
-                    // showTimeSelect={true}
-                    showTimeInput={true}
+                    showTimeInput={showTimeInput}
                     customTimeInput={customTimeInput}
                     timeFormat={this.props.timeFormat?.replace("A", "a")}
                     dateFormat={this.props.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")}

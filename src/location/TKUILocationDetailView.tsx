@@ -20,9 +20,6 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import TKUILocationDetail from "./TKUILocationDetail";
-import Util from "../util/Util";
-import CarPodLocation from "../model/location/CarPodLocation";
-
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.onRequestClose | HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -99,9 +96,6 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
 
     public render(): React.ReactNode {
         let location = this.props.location;
-        if (process.env.NODE_ENV === 'development') {
-            location = Util.deserialize(require("../mock/data/location-carPods-sgfleet-2023-07-19.json"), CarPodLocation);
-        }
         const title = LocationUtil.getMainText(location, this.props.t);
         const subtitle = LocationUtil.getSecondaryText(location);
         const classes = this.props.classes;
@@ -109,7 +103,6 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
         const actions = this.props.actions ? this.props.actions(location, defaultActions) : defaultActions;
         const subHeader = actions ?
             () => <TKUIActionsView actions={actions} className={classes.actionsPanel} /> : undefined;
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
         return (
             <TKUICard
                 title={title}
@@ -117,10 +110,10 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 ariaLabel={title + " " + subtitle + " location detail"}
                 renderSubHeader={subHeader}
                 presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
-                slideUpOptions={slideUpOptions}
+                slideUpOptions={this.props.slideUpOptions}
                 onRequestClose={this.props.onRequestClose}
             >
-                <TKUILocationDetail location={location}/>
+                <TKUILocationDetail location={location} />
             </TKUICard>
         );
     }

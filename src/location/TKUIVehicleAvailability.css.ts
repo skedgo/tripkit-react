@@ -24,12 +24,18 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     datePicker: {
         ...genStyles.flex,
-        ...genStyles.center,
+        ...genStyles.justifyStart,
         ...genStyles.alignCenter,
-        ...genStyles.grow
+        ...genStyles.grow,
+        marginLeft: '25px'
     },
     datePickerInput: {
-        ...resetStyles.button
+        ...resetStyles.button,
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        '& svg': {
+            marginRight: '10px'
+        }
     },
     timeIndexes: {
         ...genStyles.flex,
@@ -63,17 +69,26 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     vehicleLabel: {
         ...genStyles.flex,
         ...genStyles.noShrink,
+        ...genStyles.alignCenter,
         whiteSpace: 'nowrap',
-        // Scroll scheme
         position: 'absolute',
-        // height: '24px',
         left: 0,
-        '&>*:first-child': {
-            background: 'white'
-        }
+        background: 'white'
+    },
+    vehicleIcon: {
+        width: '40px',
+        height: '40px',
+        background: '#00000014',
+        ...genStyles.borderRadius(50, "%"),
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter,
+        ...genStyles.noShrink,
+        marginLeft: '15px'
     },
     vehicleName: {
-        ...genStyles.overflowEllipsis
+        ...genStyles.overflowEllipsis,
+        padding: '15px 0 15px 12px', flexGrow: 1
     },
     selectionPanel: {
         ...genStyles.flex,
@@ -94,16 +109,17 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter
     },
     slot: {
-        height: '24px',
         ...genStyles.noShrink,
         ...genStyles.flex,
         '&>*': {
-            ...genStyles.grow
+            ...genStyles.grow,
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...genStyles.center
         }
     },
     selectedSlot: {
         background: black(),
-        height: '24px',
         ...genStyles.flex,
         ...genStyles.center,
         ...genStyles.alignCenter
@@ -180,5 +196,10 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         '&>*:first-child': {
             marginRight: '25px'
         }
-    }
+    },
+    portrait: {
+        '& $slot': {
+            // height: '40px'
+        }
+    },
 });
