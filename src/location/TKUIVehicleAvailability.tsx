@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
-import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { PropsMapper, connect } from "../config/TKConfigHelper";
 import TKLocationInfo from "../model/location/TKLocationInfo";
 import { tKUIVehicleAvailabilityDefaultStyle } from "./TKUIVehicleAvailability.css";
 import CarPodLocation from "../model/location/CarPodLocation";
@@ -11,14 +11,14 @@ import { BookingAvailability, CarPodVehicle } from "../model/location/CarPodInfo
 import { ReactComponent as IconStartSlot } from "../images/ic-arrow-start-slot.svg";
 import { ReactComponent as IconEndSlot } from "../images/ic-arrow-end-slot.svg";
 import { ReactComponent as IconRightArrow } from "../images/ic-angle-right.svg";
-import { ReactComponent as IconLoading } from "../images/ic-spin-bar.svg";
 import TKUIDateTimePicker from "../time/TKUIDateTimePicker";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import Util from "../util/Util";
 import NetworkUtil from "../util/NetworkUtil";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
+import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
      * @ctype
      */
@@ -58,13 +58,13 @@ function available(slot: string, vehicleAvailability: BookingAvailability): bool
 }
 
 const SLOT_WIDTH = 32;
-const VEHICLE_LABEL_WIDTH = SLOT_WIDTH * 5;
+const VEHICLE_LABEL_WIDTH = SLOT_WIDTH * 6;
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
     const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
-    const { location, t, classes, theme } = props;
+    const { location, portrait, t, classes, theme } = props;
     const [timeRange, setTimeRange] = useState<[string, string]>([DateTimeUtil.getNow().format("HH:mm"), DateTimeUtil.getNow().add(2, 'hours').format("HH:mm")]);
     const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
@@ -107,15 +107,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
-        if (selectedVehicle && selectedVehicle !== slotVehicle) {
+        if (selectedVehicle && selectedVehicle !== slotVehicle ||   // Selected vehicle and clicked a slot of another vehicle, or
+            !available(slot, slotVehicle.availability!) ||  // slot not available, or
+            !!bookStartTime && !!bookEndTime) { // book range already set
             return;
         }
         if (!selectedVehicle) {
             setSelectedVehicle(slotVehicle);
-        }
-        if (!available(slot, slotVehicle.availability!) ||  // Slot not available, or
-            !!bookStartTime && !!bookEndTime) { // Book range already set
-            return;
         }
         if (!bookStartTime) {
             setBookStartTime(slot);
@@ -192,9 +190,11 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 if (vehiclesByDate.get(date) !== null) {
                     return;
                 }
-                const vehiclesByDateUpdate = new Map(vehiclesByDate);
-                vehiclesByDateUpdate.set(date, location.carPod.vehicles!);
-                setVehiclesByDate(vehiclesByDateUpdate);
+                setVehiclesByDate(vehiclesByDate => {
+                    const vehiclesByDateUpdate = new Map(vehiclesByDate);
+                    vehiclesByDateUpdate.set(date, location.carPod.vehicles!);
+                    return vehiclesByDateUpdate;
+                });
             } catch (e) {
 
             }
@@ -203,6 +203,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
 
     function isFetching(slot): boolean {
         return vehiclesByDate.get(DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(slot)).format()) === null;
+    }
+
+    function onClearClick() {
+        setSelectedVehicle(undefined);
+        setBookStartTime(undefined);
+        setBookEndTime(undefined);
     }
 
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -223,7 +229,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 }}
             >
                 <div className={classes.header} style={{ width: SLOT_WIDTH * slots.length, paddingLeft: VEHICLE_LABEL_WIDTH }}>
-                    <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
+                    <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 1 }}>
                         <div className={classes.datePicker}>
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                                 value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
@@ -253,6 +259,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                         {/* value comes without timezone, so use displayDate */}
                                         {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
                                     </button>}
+                                minDate={bookStartTime ? DateTimeUtil.momentFromIsoWithTimezone(bookStartTime) : undefined}
                             />
                         </div>
                         <button className={classes.arrowBtn} style={{ width: 40, left: VEHICLE_LABEL_WIDTH - 40 }} disabled={false} onClick={() => onPrevNext(true)}>
@@ -263,7 +270,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         </button>
                     </div>
                     <div className={classes.timeIndexes}>
-                        {slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
+                        {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
                             const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
                             return (
                                 <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
@@ -273,7 +280,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                             );
                         }
                         )}
-                        {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />}
+                        {/* {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />} */}
                     </div>
                     <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
                         <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
@@ -291,7 +298,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 key={i}
                             >
                                 <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH }}>
-                                    <div style={{ padding: '15px 0 15px 20px', flexGrow: 1 }}>
+                                    <div className={classes.vehicleName} style={{ padding: '15px 0 15px 20px', flexGrow: 1 }}>
                                         {vehicle.name}
                                     </div>
                                     <div className={classes.whiteToTransparent} style={{ width: SLOT_WIDTH }} />
@@ -308,11 +315,19 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                         </div>)}
                                 </div>
                                 {vehicle === selectedVehicle &&
-                                    <div className={classes.selectionPanel} style={{ padding: `0 30px 0 ${VEHICLE_LABEL_WIDTH}px`, transform: 'translateY(45px)' }}>
-                                        <div>From</div>
-                                        <div>To</div>
-                                        <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} />
-                                        <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
+                                    <div className={classes.selectionPanel} style={{ padding: `0 30px 0 ${VEHICLE_LABEL_WIDTH}px`, transform: 'translateY(50px)' }}>
+                                        <div className={classes.fromTo}>
+                                            <div>From</div>
+                                            <div>{bookStartTime && DateTimeUtil.isoFormatRelativeDay(bookStartTime, "h:mma ddd D", { justToday: true, partialReplace: "ddd D" })}</div>
+                                        </div>
+                                        <div className={classes.fromTo}>
+                                            <div>To</div>
+                                            <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd", { justToday: true, partialReplace: "ddd" }) : "Select end time"}</div>
+                                        </div>
+                                        <div className={classes.buttons}>
+                                            <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />
+                                            <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
+                                        </div>
                                     </div>}
                                 <div className={classes.transparentToWhite} style={{ width: SLOT_WIDTH / 2, height: '54px', right: SLOT_WIDTH / 2, position: 'absolute' }} />
                                 <div style={{ width: SLOT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
@@ -325,5 +340,11 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     );
 }
 
-export default connect((config: TKUIConfig) => config.TKUIVehicleAvailability, config,
-    mapperFromFunction((clientProps: IClientProps) => clientProps));
+const Mapper: PropsMapper<IClientProps, IClientProps> =
+    ({ inputProps, children }) =>
+        <TKUIViewportUtil>
+            {({ portrait }) =>
+                children!({ portrait, ...inputProps })}
+        </TKUIViewportUtil>;
+
+export default connect((config: TKUIConfig) => config.TKUIVehicleAvailability, config, Mapper);

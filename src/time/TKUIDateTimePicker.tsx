@@ -24,6 +24,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     popperPlacement?: Popper.Placement;
     popperModifiers?: any;
     shouldCloseOnSelect?: boolean;
+    minDate?: Moment;
+    maxDate?: Moment;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -74,10 +76,12 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { shouldCloseOnSelect, classes, t } = this.props;
+        const { shouldCloseOnSelect, minDate, maxDate, classes, t } = this.props;
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+        const displayMinDate = minDate && utcToZonedTime(minDate.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+        const displayMaxDate = maxDate && utcToZonedTime(maxDate.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: { value?: any, onClick?: any, onKeyDown?: any }, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
         const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.dateTimeFormat().replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")) + ". Open date time picker";
@@ -130,6 +134,8 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                         });
                     }}
                     shouldCloseOnSelect={!!shouldCloseOnSelect}
+                    minDate={displayMinDate}
+                    maxDate={displayMaxDate}
                     // showTimeSelect={true}
                     showTimeInput={true}
                     customTimeInput={customTimeInput}

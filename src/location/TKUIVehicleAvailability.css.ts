@@ -70,8 +70,10 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         left: 0,
         '&>*:first-child': {
             background: 'white'
-        },
-        zIndex: 1
+        }
+    },
+    vehicleName: {
+        ...genStyles.overflowEllipsis
     },
     selectionPanel: {
         ...genStyles.flex,
@@ -161,21 +163,22 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
             fill: black(2, theme.isDark)
         }
     },
-    calendar: {
-        ...tKUIDateTimePickerDefaultStyle(theme).calendar,
-        '&.react-datepicker': {
-            border: 'none',
-            width: '100%'
-        },
-        '& .react-datepicker__month-container': {
-            float: 'none'
-        },
-        '& .react-datepicker__day-names, .react-datepicker__week': {
-            ...genStyles.flex,
-            ...genStyles.spaceBetween
-        },
-        '& .react-datepicker__day--outside-month': {
-            color: black(2, theme.isDark) + '!important'
+    fromTo: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        '&>div:first-child': {
+            ...theme.textWeightSemibold,
+            marginBottom: '5px'
+        }
+    },
+    placeholder: {
+        ...theme.textColorGray
+    },
+    buttons: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        '&>*:first-child': {
+            marginRight: '25px'
         }
     }
 });

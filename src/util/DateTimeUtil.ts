@@ -179,6 +179,10 @@ class DateTimeUtil {
         return this.momentFromIsoWithTimezone(date).set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).format();
     }
 
+    public static isoFormatRelativeDay(date: string, formatWithDay: string, options: { partialReplace?: string, justToday?: boolean } = {}): string {
+        return this.formatRelativeDay(this.momentFromIsoWithTimezone(date), formatWithDay, options);
+    }
+
 }
 
 export default DateTimeUtil;
