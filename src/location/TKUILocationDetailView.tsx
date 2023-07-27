@@ -112,6 +112,7 @@ class TKUILocationDetailView extends React.Component<IProps, IState> {
                 presentation={this.props.cardPresentation !== undefined ? this.props.cardPresentation : CardPresentation.SLIDE_UP}
                 slideUpOptions={this.props.slideUpOptions}
                 onRequestClose={this.props.onRequestClose}
+                scrollable={false}
             >
                 <TKUILocationDetail location={location} />
             </TKUICard>

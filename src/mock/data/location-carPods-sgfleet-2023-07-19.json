@@ -170,6 +170,76 @@
                         }
                     ]
                 }
+            },
+            {
+                "disabled": false,
+                "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                },
+                "identifier": "10700",
+                "licensePlate": "CL82MI",
+                "operator": {
+                    "color": {
+                        "blue": 106,
+                        "green": 63,
+                        "red": 0
+                    },
+                    "name": "GoGet",
+                    "website": "https://www.goget.com.au"
+                },
+                "name": "Mercedes-Benz C-Class",
+                "availability": {
+                    "timestamp": "2023-07-19T14:48:00.000Z",
+                    "intervals": [
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T12:00:00+10:00",
+                            "end": "2023-07-19T16:30:00+10:00"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T20:00:00+10:00",
+                            "end": "2023-07-19T23:00:00+10:00"
+                        }
+                    ]
+                }
+            },
+            {
+                "disabled": false,
+                "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                },
+                "identifier": "1070",
+                "licensePlate": "CL82MI",
+                "operator": {
+                    "color": {
+                        "blue": 106,
+                        "green": 63,
+                        "red": 0
+                    },
+                    "name": "GoGet",
+                    "website": "https://www.goget.com.au"
+                },
+                "name": "Honda Civic",
+                "availability": {
+                    "timestamp": "2023-07-19T14:48:00.000Z",
+                    "intervals": [
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T11:00:00+10:00",
+                            "end": "2023-07-19T15:30:00+10:00"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T17:00:00+10:00",
+                            "end": "2023-07-19T21:00:00+10:00"
+                        }
+                    ]
+                }
             }
         ]
     },

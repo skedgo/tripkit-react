@@ -7,7 +7,8 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         // Scroll scheme
         position: 'relative',
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        height: '100%'
     },
     scrollPanel: {
         // Scroll scheme
@@ -204,5 +205,11 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignSelfCenter,
         ...genStyles.animateSpin,
         ...genStyles.svgFillCurrColor
+    },
+    noVehicles: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.center,
+        ...theme.textColorGray
     }
 });

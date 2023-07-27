@@ -24,6 +24,12 @@ class LocationsData {
         return this._instance;
     }
 
+    constructor() {
+        if (process.env.NODE_ENV === 'development') {
+            this.locationInfoCache.set("sgfleet", NetworkUtil.delayPromise<TKLocationInfo>(1000)(Util.deserialize(require("../mock/data/locationInfo-sgfleet.json"), TKLocationInfo)))
+        }
+    }
+
     private eventEmitter: EventEmitter = new EventEmitter();
 
     public addChangeListener(callback: (locData: LocationsResult) => void): EventSubscription {

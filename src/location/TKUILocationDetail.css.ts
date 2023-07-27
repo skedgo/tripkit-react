@@ -4,10 +4,13 @@ import { black, TKUITheme } from "../jss/TKUITheme";
 export const tKUILocationDetailDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
-        ...genStyles.column,        
-        '& .MuiTabs-flexContainer': {
-            justifyContent: 'space-around',
+        ...genStyles.column,
+        height: '100%',
+        '& .MuiTabs-root': {
             borderBottom: '1px solid ' + black(4)
+        },
+        '& .MuiTabs-flexContainer': {
+            justifyContent: 'space-around'            
         },
         '& .MuiTab-root': {
             textTransform: 'initial'
