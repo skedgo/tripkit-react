@@ -56,7 +56,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.alignCenter,
         padding: '20px 0',
-        borderTop: '1px solid ' + black(4)
+        borderBottom: '1px solid ' + black(4)
     },
     fadeVehicle: {
         opacity: '.5'
