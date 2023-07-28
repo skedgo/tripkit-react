@@ -62,7 +62,7 @@ function available(slot: string, vehicleAvailability: BookingAvailability): bool
         interval.status === "AVAILABLE" && betweenTimes(slot, interval.start, interval.end));
 }
 
-const SCROLL_PANEL_ID = "vehiclesScrollPanel";
+const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
@@ -80,9 +80,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const [bookStartTime, setBookStartTime] = useState<string | undefined>();
     const [bookEndTime, setBookEndTime] = useState<string | undefined>();
     const slots = getSlots(displayStartTime, displayEndTime);
-    // const vehicles = location.carPod.vehicles;
-
-    const [waiting, setWaiting] = useState<boolean>(false);
 
     /**
      * undefined: not requested
@@ -139,14 +136,14 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     function onPrevNext(prev: boolean) {
-        if (!scrollRef.current) {
+        if (!scrollXRef.current) {
             return;
         }
-        scrollRef.current.scrollLeft += prev ? -SLOT_WIDTH : SLOT_WIDTH;
+        scrollXRef.current.scrollLeft += prev ? -SLOT_WIDTH : SLOT_WIDTH;
     }
 
     function setScrollLeftToTime(time: string) {
-        if (!scrollRef.current) {
+        if (!scrollXRef.current) {
             return;
         }
         const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)        
@@ -154,7 +151,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         if (slotIndex === -1) {
             return;
         }
-        scrollRef.current.scrollLeft = slotIndex * SLOT_WIDTH;
+        scrollXRef.current.scrollLeft = slotIndex * SLOT_WIDTH;
     }
 
     const setScrollLeftToTimeRef = useRef<(time: string) => void>(setScrollLeftToTime);
@@ -190,7 +187,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     vehiclesByDateUpdate.set(date, null);
                     return vehiclesByDateUpdate;
                 });
-                console.log(Array.from(vehiclesByDate.values()));
                 requestDates.push(date);
             }
         }
@@ -228,22 +224,20 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         setBookEndTime(undefined);
     }
 
-    // const scrollRef = useRef<HTMLDivElement>(null);
-    // Need to do this since ScrollSyncPane seems to override the reference I pass to the scroll panel.
-    const scrollRef = useRef<HTMLDivElement>();
+    // Need to do this, instead of passing scrollRef to div's ref prop, since ScrollSyncPane seems to override it.
+    const scrollXRef = useRef<HTMLDivElement>();
     useEffect(() => {
-        scrollRef.current = document.getElementById(SCROLL_PANEL_ID) as any ?? null;
+        scrollXRef.current = document.getElementById(SCROLL_X_PANEL_ID) as any ?? null;
     })
-    const verticalScrollRef = useRef<HTMLDivElement>(null);
+    const scrollYRef = useRef<HTMLDivElement>(null);
+    const [scrollSync, setScrollSync] = useState<boolean>(false);
 
     console.log("render");
-
-    const [scrollSync, setScrollSync] = useState<boolean>(false);
 
     const header =
         <div
             className={classes.header}
-            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH, borderBottom: '1px solid #212a331f' }}
+            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}
         >
             <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
                 <div className={classes.datePicker}>
@@ -263,13 +257,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 }, 100);
                             }
                         }}
-                        // dateFormat={DateTimeUtil.dateFormat()}
-                        dateFormat={"YYYY-MM-DD"}
-                        // styles={(theme: TKUITheme) => ({
-                        //     datePicker: overrideClass(this.props.injectedStyles.datePicker)
-                        // })}
                         shouldCloseOnSelect={true}
-                        renderCustomInput={(value: any, onClick: any, onKeyDown: any, ref: any) =>
+                        renderCustomInput={(_value, onClick, onKeyDown, ref) =>
                             <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
                                 <IconCalendar />
                                 {/* value comes without timezone, so use displayDate */}
@@ -280,8 +269,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     />
                 </div>
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, position: 'absolute', zIndex: 1, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
-                <div style={{ background: 'white', flexGrow: 1, padding: '24px 0 24px 14px', height: '100%' }}>
+            <button className={classes.arrowBtn} style={{ width: 40, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
+                <div className={classes.arrowLeftIconContainer}>
                     <IconLeftArrow />
                 </div>
                 <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
@@ -297,125 +286,119 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     );
                 }
                 )}
-                {/* {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />} */}
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
+            <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
                 <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
-                <div style={{ background: 'white', flexGrow: 1, padding: '24px 14px 24px 0', height: '100%' }}>
-                    {/* {waiting ? <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px' }} /> : <IconRightArrow />} */}
+                <div className={classes.arrowRightIconContainer}>
                     <IconRightArrow />
                 </div>
             </button>
         </div>;
 
     return (
-        <div className={classNames(classes.main, portrait && classes.portrait)}>
-            <ScrollSync>
+        <ScrollSync>
+            <div className={classes.main}>
+                {portrait ? header :
+                    scrollSync &&
+                    <ScrollSyncPane>
+                        <div className={classes.scrollXPanel} style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH, flexShrink: 0 }}>
+                            {header}
+                        </div>
+                    </ScrollSyncPane>}
                 <div
-                    style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
-                // className={classes.scrollPanel}
-                // style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH }}                
+                    ref={scrollYRef}
+                    className={classes.scrollYPanel}
+                    onScroll={e => {
+                        // Return if event was triggered by an inner scrollable panel (horizontal scroll panel)
+                        if (scrollYRef.current !== e.target) {
+                            return;
+                        }
+                        // Need scroll sync if there's vertical scroll.
+                        const needScrollSync = ((e.target as any)?.scrollTop ?? 0) > 0;
+                        if (scrollSync !== needScrollSync) {
+                            setScrollSync(needScrollSync);
+                        }
+                    }}
                 >
-                    {portrait ? header :
-                        scrollSync &&
-                        <ScrollSyncPane>
-                            <div className={classes.scrollPanel} style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH, flexShrink: 0 }}>
-                                {header}
-                            </div>
-                        </ScrollSyncPane>}
-                    <div
-                        ref={verticalScrollRef}
-                        style={{ paddingLeft: 0, position: 'relative', overflowY: 'auto', overflowX: 'hidden', flexGrow: 1, height: '1px' }}
-                        onScroll={e => {
-                            if (verticalScrollRef.current !== e.target) {
-                                return;
-                            }
-                            const needScrollSync = ((e.target as any)?.scrollTop ?? 0) > 0;
-                            if (scrollSync !== needScrollSync) {
-                                setScrollSync(needScrollSync);
-                            }
-                        }}
-                    >
-                        <ScrollSyncPane>
-                            <div className={classNames(classes.vehicles, classes.scrollPanel)}
-                                // ref={scrollRef}
-                                id={SCROLL_PANEL_ID}
-                                onScroll={e => {
-                                    const scrollElem = e.target as any;
-                                    const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
-                                    if (!DateTimeUtil.isoSameTime(displayDate, DateTimeUtil.toIsoJustDate(leftSlot))) {
-                                        setDisplayDate(DateTimeUtil.toIsoJustDate(leftSlot));
-                                    }
-                                    if (scrollElem.scrollLeft + scrollElem.clientWidth > scrollElem.scrollWidth - 30) {
-                                        onRequestMore();
-                                    }
-                                }}
-                                style={{
-                                    width: '100%',
-                                    paddingRight: SLOT_WIDTH
-                                }}>
-                                {!portrait && !scrollSync && header}
-                                {vehicles?.map((vehicle, i) => {
-                                    return (
-                                        <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
-                                            style={{
-                                                ...portrait ? { paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
-                                                width: SLOT_WIDTH * slots.length + (!portrait ? VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH : 0)
-                                            }}
-                                            key={i}
-                                        >
-                                            <div className={classes.vehicleLabel} style={{ ...portrait ? { transform: 'translateY(-55px)' } : { width: VEHICLE_LABEL_WIDTH } }}>
-                                                <div className={classes.vehicleIcon}>
-                                                    <IconCarOption />
-                                                </div>
-                                                <div className={classes.vehicleName}>
-                                                    {vehicle.name}
-                                                </div>
+                    <ScrollSyncPane>
+                        <div
+                            className={classNames(classes.vehicles, classes.scrollXPanel)}
+                            style={{ paddingRight: SLOT_WIDTH }}
+                            id={SCROLL_X_PANEL_ID}
+                            onScroll={e => {
+                                const scrollElem = e.target as any;
+                                const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
+                                if (!DateTimeUtil.isoSameTime(displayDate, DateTimeUtil.toIsoJustDate(leftSlot))) {
+                                    setDisplayDate(DateTimeUtil.toIsoJustDate(leftSlot));
+                                }
+                                if (scrollElem.scrollLeft + scrollElem.clientWidth > scrollElem.scrollWidth - 30) {
+                                    onRequestMore();
+                                }
+                            }}
+                        >
+                            {!portrait && !scrollSync && header}
+                            {vehicles?.map((vehicle, i) => {
+                                return (
+                                    <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
+                                        style={{
+                                            ...portrait ? { paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
+                                            ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
+                                            width: SLOT_WIDTH * slots.length + (!portrait ? VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH : 0)
+                                        }}
+                                        key={i}
+                                    >
+                                        <div className={classes.vehicleLabel} style={{ ...portrait ? { transform: 'translateY(-55px)' } : { width: VEHICLE_LABEL_WIDTH } }}>
+                                            <div className={classes.vehicleIcon}>
+                                                <IconCarOption />
                                             </div>
-                                            <div style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', position: 'absolute', background: 'white', left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
-                                            <div className={classes.whiteToTransparent} style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2, position: 'absolute' }} />
-                                            <div className={classes.slots}>
-                                                {slots.map((slot, i) =>
-                                                    <div className={classNames(classes.slot)} style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
-                                                        {selectedSlot(slot, vehicle) ?
-                                                            <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
-                                                                {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
-                                                            </div>
-                                                            :
-                                                            <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)}>
-                                                                {portrait && DateTimeUtil.isoFormat(slot, "h:mma")}
-                                                            </div>}
-                                                    </div>)}
+                                            <div className={classes.vehicleName}>
+                                                {vehicle.name}
                                             </div>
-                                            {vehicle === selectedVehicle &&
-                                                <div className={classes.selectionPanel} style={{ padding: `0 ${portrait ? 20 : 30}px 0 ${portrait ? 20 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH}px`, transform: `translateY(${SLOT_HEIGHT + 25}px)` }}>
-                                                    <div className={classes.fromTo}>
-                                                        <div>From</div>
-                                                        <div>{bookStartTime && DateTimeUtil.isoFormatRelativeDay(bookStartTime, "h:mma ddd D", { justToday: true, partialReplace: "ddd D" })}</div>
-                                                    </div>
-                                                    <div className={classes.fromTo}>
-                                                        <div>To</div>
-                                                        <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd", { justToday: true, partialReplace: "ddd" }) : "Select end time"}</div>
-                                                    </div>
-                                                    <div className={classes.buttons}>
-                                                        <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />
-                                                        <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
-                                                    </div>
-                                                </div>}
-                                            <div className={classes.transparentToWhite} style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: SCROLL_HORIZONT_WIDTH / 2, position: 'absolute' }} />
-                                            <div style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
                                         </div>
-                                    );
-                                })}
-                                {/* </div> */}
-                            </div>
-                        </ScrollSyncPane>
+                                        <div style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', background: 'white', left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
+                                        <div className={classes.whiteToTransparent} style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2 }} />
+                                        <div className={classes.slots}>
+                                            {slots.map((slot, i) =>
+                                                <div className={classes.slot} style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
+                                                    {selectedSlot(slot, vehicle) ?
+                                                        <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
+                                                            {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
+                                                        </div>
+                                                        :
+                                                        <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)}>
+                                                            {portrait && DateTimeUtil.isoFormat(slot, "h:mma")}
+                                                        </div>}
+                                                </div>)}
+                                        </div>
+                                        {vehicle === selectedVehicle &&
+                                            <div className={classes.selectionPanel} style={{ padding: `0 ${portrait ? 20 : 30}px 0 ${portrait ? 20 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH}px`, transform: `translateY(${SLOT_HEIGHT + 25}px)` }}>
+                                                <div className={classes.fromTo}>
+                                                    <div>From</div>
+                                                    <div>{bookStartTime && DateTimeUtil.isoFormatRelativeDay(bookStartTime, "h:mma ddd D", { justToday: true, partialReplace: "ddd D" })}</div>
+                                                </div>
+                                                <div className={classes.fromTo}>
+                                                    <div>To</div>
+                                                    <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd", { justToday: true, partialReplace: "ddd" }) : "Select end time"}</div>
+                                                </div>
+                                                <div className={classes.buttons}>
+                                                    <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />
+                                                    <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
+                                                </div>
+                                            </div>}
+                                        <div className={classes.transparentToWhite} style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: SCROLL_HORIZONT_WIDTH / 2, position: 'absolute' }} />
+                                        <div style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </ScrollSyncPane>
+                    <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
+                        {loadingVehicles && <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />}
+                        {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
                     </div>
                 </div>
-            </ScrollSync>
-            {loadingVehicles && <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />}
-            {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
-        </div>
+            </div>
+        </ScrollSync>
     );
 }
 

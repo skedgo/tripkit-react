@@ -4,18 +4,24 @@ import { black, TKUITheme } from "../jss/TKUITheme";
 
 export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        // Scroll scheme
-        position: 'relative',
         ...genStyles.flex,
         ...genStyles.column,
         height: '100%'
     },
-    scrollPanel: {
-        // Scroll scheme
+    scrollXPanel: {
         overflowX: 'scroll',
     },
+    scrollYPanel: {
+        paddingLeft: 0,
+        position: 'relative',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        flexGrow: 1,
+        height: '1px'
+    },
     header: {
-        ...genStyles.flex
+        ...genStyles.flex,
+        borderBottom: '1px solid #212a331f'
     },
     datePicker: {
         ...genStyles.flex,
@@ -50,7 +56,8 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     vehicles: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        width: '100%'
     },
     vehicle: {
         ...genStyles.flex,
@@ -158,8 +165,8 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.center,
         height: '60px',
         ...genStyles.noShrink,
-        // position: 'absolute',
-        // background: 'white',
+        position: 'absolute',
+        zIndex: 1,
         '& svg': {
             width: '12px',
             height: '12px'
@@ -173,6 +180,18 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         '&:disabled path': {
             fill: black(2, theme.isDark)
         }
+    },
+    arrowLeftIconContainer: {
+        ...genStyles.grow,
+        background: 'white',
+        padding: '24px 0 24px 14px',
+        height: '100%'
+    },
+    arrowRightIconContainer: {
+        ...genStyles.grow,
+        background: 'white',
+        padding: '24px 14px 24px 0',
+        height: '100%'
     },
     fromTo: {
         ...genStyles.flex,
@@ -190,11 +209,6 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         '&>*:first-child': {
             marginRight: '25px'
-        }
-    },
-    portrait: {
-        '& $slot': {
-            // height: '40px'
         }
     },
     iconLoading: {
