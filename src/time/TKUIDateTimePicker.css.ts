@@ -122,7 +122,8 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
             position: 'absolute',
             zIndex: '-1',
             height: '0',
-            width: '0'
+            width: '0',
+            padding: 0  // For Safari on iOS
         }
     },
     timePicker: {

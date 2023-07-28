@@ -9,6 +9,9 @@ interface IProps {
     onChange?: (value: Moment) => void;
     disabled?: boolean;
     className?: string;
+    showTimeInput?: boolean;    // default true
+    min?: Moment;
+    max?: Moment;
 }
 
 class DateTimeHTML5Input extends React.Component<IProps, {}> {
@@ -29,11 +32,12 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
     }
 
     public render(): React.ReactNode {
-        const timeZone = this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ;
+        const { timeZone = DateTimeUtil.defaultTZ, showTimeInput = true, min, max } = this.props;
         const displayValue = this.props.value.tz(timeZone);
         return (
-            <input type={"datetime-local"}
-                value={displayValue.format(DateTimeUtil.HTML5_DATE_TIME_FORMAT)}
+            <input
+                type={showTimeInput ? "datetime-local" : "date"}
+                value={displayValue.format(showTimeInput ? DateTimeUtil.HTML5_DATE_TIME_FORMAT : "YYYY-MM-DD")}
                 onChange={() => {
                     if (this.inputRef && this.props.onChange) {
                         // Handle 'Clear' button click on Android Chrome
@@ -44,6 +48,8 @@ class DateTimeHTML5Input extends React.Component<IProps, {}> {
                 ref={(el: any) => this.inputRef = el}
                 id="query-datetime-picker"
                 className={this.props.className}
+                min={min?.format(showTimeInput ? DateTimeUtil.HTML5_DATE_TIME_FORMAT : "YYYY-MM-DD")}
+                max={max?.format(showTimeInput ? DateTimeUtil.HTML5_DATE_TIME_FORMAT : "YYYY-MM-DD")}
             />
         )
     }

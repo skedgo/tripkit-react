@@ -237,7 +237,11 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const header =
         <div
             className={classes.header}
-            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}
+            style={{
+                ...portrait && { position: 'relative' },
+                ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
+                paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH
+            }}
         >
             <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
                 <div className={classes.datePicker}>
@@ -327,7 +331,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                             id={SCROLL_X_PANEL_ID}
                             onScroll={e => {
                                 const scrollElem = e.target as any;
-                                const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
+                                // Don't allow negative values, which happen on mobile since the scroll limit is a bit elastic, causing
+                                // a change to the previous day and then return.
+                                const leftSlot = getTimeFromScrollLeft(Math.max(scrollElem.scrollLeft, 0));
                                 if (!DateTimeUtil.isoSameTime(displayDate, DateTimeUtil.toIsoJustDate(leftSlot))) {
                                     setDisplayDate(DateTimeUtil.toIsoJustDate(leftSlot));
                                 }
@@ -341,7 +347,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 return (
                                     <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
                                         style={{
-                                            ...portrait ? { paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
+                                            ...portrait ? { paddingLeft: 15, paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
                                             ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
                                             width: SLOT_WIDTH * slots.length + (!portrait ? VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH : 0)
                                         }}
@@ -378,7 +384,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 </div>
                                                 <div className={classes.fromTo}>
                                                     <div>To</div>
-                                                    <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd", { justToday: true, partialReplace: "ddd" }) : "Select end time"}</div>
+                                                    <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd D", { justToday: true, partialReplace: "ddd D" }) : "Select end time"}</div>
                                                 </div>
                                                 <div className={classes.buttons}>
                                                     <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />

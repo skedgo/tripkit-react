@@ -194,6 +194,9 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                             disabled={this.props.disabled}
                             ref={(el: any) => this.dateTimeHTML5Ref = el}
                             className={classes.inputElem}
+                            showTimeInput={showTimeInput}
+                            min={this.props.minDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
+                            max={this.props.maxDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
                         />
                     </div>
                 </div> :
@@ -204,6 +207,9 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     disabled={this.props.disabled}
                     ref={(el: any) => this.dateTimeHTML5Ref = el}
                     className={classes.inputElem}
+                    showTimeInput={showTimeInput}
+                    min={this.props.minDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
+                    max={this.props.maxDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
                 />)
     }
 

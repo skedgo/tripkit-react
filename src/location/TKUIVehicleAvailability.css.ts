@@ -196,9 +196,13 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     fromTo: {
         ...genStyles.flex,
         ...genStyles.column,
+        marginRight: '10px',
         '&>div:first-child': {
             ...theme.textWeightSemibold,
             marginBottom: '5px'
+        },
+        '&>div:last-child': {
+            whiteSpace: 'wrap'
         }
     },
     placeholder: {
