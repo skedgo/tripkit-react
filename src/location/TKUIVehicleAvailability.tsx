@@ -62,6 +62,8 @@ function available(slot: string, vehicleAvailability: BookingAvailability): bool
         interval.status === "AVAILABLE" && betweenTimes(slot, interval.start, interval.end));
 }
 
+const SCROLL_PANEL_ID = "vehiclesScrollPanel";
+
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
     const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
@@ -73,8 +75,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const SCROLL_HORIZONT_WIDTH = portrait ? 20 : 32;
     const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
-    const [displayTime, setDisplayTime] = useState<string>(displayStartTime);
-    const displayDate = DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(displayTime)).format();
+    const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
     const [bookStartTime, setBookStartTime] = useState<string | undefined>();
     const [bookEndTime, setBookEndTime] = useState<string | undefined>();
@@ -91,7 +92,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const [vehiclesByDate, setVehiclesByDate] = useState<Map<string, CarPodVehicle[] | null>>(new Map());
     const vehicles = useMemo(() => getMergedVehicles(), [vehiclesByDate]);
     const loadingVehicles = vehicles.length === 0 && Array.from(vehiclesByDate.values()).some(value => value === null);
-    const noVehicles = vehicles.length === 0 && !Array.from(vehiclesByDate.values()).some(value => value === null);    
+    const noVehicles = vehicles.length === 0 && !Array.from(vehiclesByDate.values()).some(value => value === null);
 
     function getMergedVehicles(): CarPodVehicle[] {
         // This shouldn't happen, we should always have data for displayStartTime(?)
@@ -146,7 +147,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
 
     function setScrollLeftToTime(time: string) {
         if (!scrollRef.current) {
-            console.log("return!");
             return;
         }
         const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)        
@@ -228,95 +228,106 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         setBookEndTime(undefined);
     }
 
-    const scrollRef = useRef<HTMLDivElement>(null);
+    // const scrollRef = useRef<HTMLDivElement>(null);
+    // Need to do this since ScrollSyncPane seems to override the reference I pass to the scroll panel.
+    const scrollRef = useRef<HTMLDivElement>();
+    useEffect(() => {
+        scrollRef.current = document.getElementById(SCROLL_PANEL_ID) as any ?? null;
+    })
+
+    console.log("render");
+
+    const header =
+        <div
+            className={classes.header}
+            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}
+        >
+            <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
+                <div className={classes.datePicker}>
+                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                        value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
+                        timeZone={region?.timezone}
+                        onChange={date => {
+                            if (!selectedVehicle) {
+                                setDisplayStartTime(date.format());
+                                setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
+                                setDisplayDate(DateTimeUtil.toIsoJustDate(date.format()));
+                                setVehiclesByDate(new Map());
+                            } else {
+                                setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
+                                setTimeout(() => {
+                                    setScrollLeftToTimeRef.current(DateTimeUtil.isoAddMinutes(date.format(), 8 * 60));
+                                }, 100);
+                            }
+                        }}
+                        // dateFormat={DateTimeUtil.dateFormat()}
+                        dateFormat={"YYYY-MM-DD"}
+                        // styles={(theme: TKUITheme) => ({
+                        //     datePicker: overrideClass(this.props.injectedStyles.datePicker)
+                        // })}
+                        shouldCloseOnSelect={true}
+                        renderCustomInput={(value: any, onClick: any, onKeyDown: any, ref: any) =>
+                            <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
+                                <IconCalendar />
+                                {/* value comes without timezone, so use displayDate */}
+                                {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
+                            </button>}
+                        minDate={bookStartTime ? DateTimeUtil.momentFromIsoWithTimezone(bookStartTime) : undefined}
+                        showTimeInput={false}
+                    />
+                </div>
+            </div>
+            <button className={classes.arrowBtn} style={{ width: 40, position: 'absolute', zIndex: 1, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
+                <div style={{ background: 'white', flexGrow: 1, padding: '24px 0 24px 14px', height: '100%' }}>
+                    <IconLeftArrow />
+                </div>
+                <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
+            </button>
+            <div className={classes.timeIndexes}>
+                {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
+                    const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                    return (
+                        <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
+                            {isDayStart && <div className={classes.dayIndex}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
+                            {DateTimeUtil.isoFormat(slot, "ha")}
+                        </div>
+                    );
+                }
+                )}
+                {/* {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />} */}
+            </div>
+            <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
+                <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
+                <div style={{ background: 'white', flexGrow: 1, padding: '24px 14px 24px 0', height: '100%' }}>
+                    {/* {waiting ? <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px' }} /> : <IconRightArrow />} */}
+                    <IconRightArrow />
+                </div>
+            </button>
+        </div>;
+
     return (
         <div className={classNames(classes.main, portrait && classes.portrait)}>
-            {/* <ScrollSync> */}
+            <ScrollSync>
                 <div
                     style={{ display: 'flex', flexDirection: 'column', height: '100%' }}
                 // className={classes.scrollPanel}
                 // style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH }}                
                 >
-                    {/* <ScrollSyncPane> */}
+                    {/* <ScrollSyncPane>
                         <div className={classes.scrollPanel} style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH, flexShrink: 0 }}>
-                            <div
-                                className={classes.header}
-                                style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}
-                            >
-                                <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
-                                    <div className={classes.datePicker}>
-                                        <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                                            value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
-                                            timeZone={region?.timezone}
-                                            onChange={date => {
-                                                if (!selectedVehicle) {
-                                                    setDisplayStartTime(date.format());
-                                                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
-                                                    setDisplayTime(date.format());
-                                                    setVehiclesByDate(new Map());
-                                                } else {
-                                                    setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
-                                                    setTimeout(() => {
-                                                        setScrollLeftToTimeRef.current(DateTimeUtil.isoAddMinutes(date.format(), 8 * 60));
-                                                    }, 100);
-                                                }
-                                            }}
-                                            // dateFormat={DateTimeUtil.dateFormat()}
-                                            dateFormat={"YYYY-MM-DD"}
-                                            // styles={(theme: TKUITheme) => ({
-                                            //     datePicker: overrideClass(this.props.injectedStyles.datePicker)
-                                            // })}
-                                            shouldCloseOnSelect={true}
-                                            renderCustomInput={(value: any, onClick: any, onKeyDown: any, ref: any) =>
-                                                <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
-                                                    <IconCalendar />
-                                                    {/* value comes without timezone, so use displayDate */}
-                                                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
-                                                </button>}
-                                            minDate={bookStartTime ? DateTimeUtil.momentFromIsoWithTimezone(bookStartTime) : undefined}
-                                            showTimeInput={false}
-                                        />
-                                    </div>
-                                </div>
-                                <button className={classes.arrowBtn} style={{ width: 40, position: 'absolute', zIndex: 1, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
-                                    <div style={{ background: 'white', flexGrow: 1, padding: '24px 0 24px 14px', height: '100%' }}>
-                                        <IconLeftArrow />
-                                    </div>
-                                    <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
-                                </button>
-                                <div className={classes.timeIndexes}>
-                                    {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
-                                        const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
-                                        return (
-                                            <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
-                                                {isDayStart && <div className={classes.dayIndex}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
-                                                {DateTimeUtil.isoFormat(slot, "ha")}
-                                            </div>
-                                        );
-                                    }
-                                    )}
-                                    {/* {waiting && slots.length > 0 && <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px', marginLeft: '-25px' }} />} */}
-                                </div>
-                                <button className={classes.arrowBtn} style={{ width: 40, right: 0, position: 'absolute' }} disabled={false} onClick={() => onPrevNext(false)}>
-                                    <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
-                                    <div style={{ background: 'white', flexGrow: 1, padding: '24px 14px 24px 0', height: '100%' }}>
-                                        {/* {waiting ? <IconLoading style={{ width: '30px', height: '14px', marginTop: '-2px' }} /> : <IconRightArrow />} */}
-                                        <IconRightArrow />
-                                    </div>
-                                </button>
-                            </div>
+                            {header}
                         </div>
-                    {/* </ScrollSyncPane> */}
+                    </ScrollSyncPane> */}
                     <div style={{ paddingLeft: 0, position: 'relative', overflowY: 'auto', overflowX: 'hidden', flexGrow: 1, height: '1px' }}>
-                        {/* <ScrollSyncPane> */}
+                        <ScrollSyncPane>
                             <div className={classNames(classes.vehicles, classes.scrollPanel)}
-                                ref={scrollRef}
+                                // ref={scrollRef}
+                                id={SCROLL_PANEL_ID}
                                 onScroll={e => {
                                     const scrollElem = e.target as any;
-                                    // console.log((e.target as any).scrollLeft);
                                     const leftSlot = getTimeFromScrollLeft(scrollElem.scrollLeft);
-                                    if (!DateTimeUtil.isoSameTime(displayTime, leftSlot)) {
-                                        setDisplayTime(leftSlot);
+                                    if (!DateTimeUtil.isoSameTime(displayDate, DateTimeUtil.toIsoJustDate(leftSlot))) {
+                                        setDisplayDate(DateTimeUtil.toIsoJustDate(leftSlot));
                                     }
                                     if (scrollElem.scrollLeft + scrollElem.clientWidth > scrollElem.scrollWidth - 30) {
                                         onRequestMore();
@@ -327,6 +338,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                     paddingRight: SLOT_WIDTH
                                 }}>
                                 {/* <div className={classes.vehicles} style={{width: '100%'}}> */}
+                                {header}
                                 {vehicles?.map((vehicle, i) => {
                                     return (
                                         <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
@@ -381,10 +393,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 })}
                                 {/* </div> */}
                             </div>
-                        {/* </ScrollSyncPane> */}
+                        </ScrollSyncPane>
                     </div>
                 </div>
-            {/* </ScrollSync> */}
+            </ScrollSync>
             {loadingVehicles && <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />}
             {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
         </div>
