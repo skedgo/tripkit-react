@@ -234,13 +234,16 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     useEffect(() => {
         scrollRef.current = document.getElementById(SCROLL_PANEL_ID) as any ?? null;
     })
+    const verticalScrollRef = useRef<HTMLDivElement>(null);
 
     console.log("render");
+
+    const [scrollSync, setScrollSync] = useState<boolean>(false);
 
     const header =
         <div
             className={classes.header}
-            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }}
+            style={{ ...!portrait && { width: SLOT_WIDTH * slots.length + VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH }, paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH, borderBottom: '1px solid #212a331f' }}
         >
             <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
                 <div className={classes.datePicker}>
@@ -313,12 +316,26 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 // className={classes.scrollPanel}
                 // style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH }}                
                 >
-                    {/* <ScrollSyncPane>
-                        <div className={classes.scrollPanel} style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH, flexShrink: 0 }}>
-                            {header}
-                        </div>
-                    </ScrollSyncPane> */}
-                    <div style={{ paddingLeft: 0, position: 'relative', overflowY: 'auto', overflowX: 'hidden', flexGrow: 1, height: '1px' }}>
+                    {portrait ? header :
+                        scrollSync &&
+                        <ScrollSyncPane>
+                            <div className={classes.scrollPanel} style={{ paddingLeft: 0, paddingRight: SLOT_WIDTH, flexShrink: 0 }}>
+                                {header}
+                            </div>
+                        </ScrollSyncPane>}
+                    <div
+                        ref={verticalScrollRef}
+                        style={{ paddingLeft: 0, position: 'relative', overflowY: 'auto', overflowX: 'hidden', flexGrow: 1, height: '1px' }}
+                        onScroll={e => {
+                            if (verticalScrollRef.current !== e.target) {
+                                return;
+                            }
+                            const needScrollSync = ((e.target as any)?.scrollTop ?? 0) > 0;
+                            if (scrollSync !== needScrollSync) {
+                                setScrollSync(needScrollSync);
+                            }
+                        }}
+                    >
                         <ScrollSyncPane>
                             <div className={classNames(classes.vehicles, classes.scrollPanel)}
                                 // ref={scrollRef}
@@ -337,8 +354,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                     width: '100%',
                                     paddingRight: SLOT_WIDTH
                                 }}>
-                                {/* <div className={classes.vehicles} style={{width: '100%'}}> */}
-                                {header}
+                                {!portrait && !scrollSync && header}
                                 {vehicles?.map((vehicle, i) => {
                                     return (
                                         <div className={classNames(classes.vehicle, selectedVehicle && vehicle !== selectedVehicle && classes.fadeVehicle)}
