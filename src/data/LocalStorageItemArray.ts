@@ -1,9 +1,9 @@
 import LocalStorageItem from "./LocalStorageItem";
-import {JsonConvert} from "json2typescript";
+import { JsonConvert } from "json2typescript";
 
 class LocalStorageItemArray<E extends { equals: (other: any) => boolean }> extends LocalStorageItem<E[]> {
 
-    private elemClassRef: { new (): E;};
+    private elemClassRef: { new(): E; };
 
     constructor(elemClassRef: { new(): E }, localStorageKey: string) {
         super(Array, localStorageKey);

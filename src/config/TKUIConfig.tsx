@@ -16,7 +16,6 @@ import { TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle } from "../trip-plan
 import { TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle } from "../service/occupancy/TKUITrainOccupancyInfo";
 import { TKUIShareViewProps, TKUIShareViewStyle } from "../share/TKUIShareView";
 import { TKUILocationSearchProps, TKUILocationSearchStyle } from "../query/TKUILocationSearch";
-import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
 import { TKUIFavouritesViewProps, TKUIFavouritesViewStyle } from "../favourite/TKUIFavouritesView";
 import { TKUIFavouriteRowProps, TKUIFavouriteRowStyle } from "../favourite/TKUIFavouriteRow";
 import { TKUIMapViewProps, TKUIMapViewStyle } from "../map/TKUIMapView";
@@ -74,7 +73,6 @@ import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveT
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
 import { TKUIBookingCardClientProps, TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
 import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
@@ -83,6 +81,7 @@ import { TKUIPagerControlProps, TKUIPagerControlStyle } from "../card/TKUIPagerC
 import Segment from "../model/trip/Segment";
 import RoutingQuery from "../model/RoutingQuery";
 import { TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle } from "../location/TKUIVehicleAvailability";
+import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
 
 /**
  * SDK configuration
@@ -175,8 +174,7 @@ interface ITKUIConfigOptional {
     TKUIServiceView: TKComponentConfig<TKUIServiceViewProps, TKUIServiceViewStyle>;
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
-    TKUILocationDetail: TKComponentConfig<TKUILocationDetailProps, TKUILocationDetailStyle>;
-    TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
+    TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;    
     TKUILocationDetailField: TKComponentConfig<TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle>;
     TKUIVehicleAvailability: TKComponentConfig<TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;

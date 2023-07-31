@@ -11,7 +11,7 @@ import Trip from "../model/trip/Trip";
 import { Visibility } from "../model/trip/SegmentTemplate";
 import Segment from "../model/trip/Segment";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import TKUICard from "../card/TKUICard";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
@@ -24,7 +24,7 @@ import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIStreetStep from "../trip/TKUIStreetStep";
 import DeviceUtil from '../util/DeviceUtil';
-import TKUILocationDetail from '../location/TKUILocationDetail';
+import TKUILocationDetail from '../location/TKUILocationDetailView';
 import FreeFloatingVehicleLocation from '../model/location/FreeFloatingVehicleLocation';
 import Util from '../util/Util';
 import { SignInStatus, TKAccountContext } from '../account/TKAccountContext';
@@ -73,7 +73,7 @@ interface IConsumedProps {
      * @tkstateprop {@link TKState#setSelectedTripSegment}
      * @divider
      */
-    onTripSegmentSelected: (segment: Segment) => void;    
+    onTripSegmentSelected: (segment: Segment) => void;
 
     /**
      * Function to request the real-time refresh of the trip.
@@ -258,7 +258,7 @@ function getSegmentMxMCards(
                     showHandle: true
                 }}
             >
-                <TKUILocationDetail location={freeFloatingVehicleLoc} />
+                <TKUILocationDetail location={freeFloatingVehicleLoc} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
             </TKUICard>
         ];
     } else if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
@@ -466,7 +466,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                 {props.children!({
                     trip: selectedTrip,
                     selectedTripSegment,
-                    onTripSegmentSelected: setSelectedTripSegment,                    
+                    onTripSegmentSelected: setSelectedTripSegment,
                     refreshSelectedTrip,
                     mapAsync
                 })}
