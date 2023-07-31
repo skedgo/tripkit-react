@@ -22,6 +22,8 @@ import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
+import DeviceUtil from "../util/DeviceUtil";
+import { white } from "../jss/TKUITheme";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
@@ -60,6 +62,18 @@ function betweenTimes(time: string, startTime: string, endTime: string): boolean
 function available(slot: string, vehicleAvailability: BookingAvailability): boolean {
     return vehicleAvailability.intervals.some(interval =>
         interval.status === "AVAILABLE" && betweenTimes(slot, interval.start, interval.end));
+}
+
+function availableRange(startTime: string, endTime: string, vehicleAvailability: BookingAvailability): boolean {
+    if (DateTimeUtil.isoCompare(startTime, endTime) > 0) {
+        return false;
+    }
+    for (let slot = startTime; DateTimeUtil.isoCompare(slot, endTime) <= 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+        if (!available(slot, vehicleAvailability)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 const SCROLL_X_PANEL_ID = "scroll-x-panel";
@@ -114,6 +128,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
         if (selectedVehicle && selectedVehicle !== slotVehicle ||   // Selected vehicle and clicked a slot of another vehicle, or
             !available(slot, slotVehicle.availability!) ||  // slot not available, or
+            bookStartTime && (DateTimeUtil.isoCompare(slot, bookStartTime) < 0 || !availableRange(bookStartTime, slot, slotVehicle.availability!)) ||
             !!bookStartTime && !!bookEndTime) { // book range already set
             return;
         }
@@ -122,6 +137,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         }
         if (!bookStartTime) {
             setBookStartTime(slot);
+            setTimeout(() => {
+                buttonsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }, 100);
         } else {
             setBookEndTime(slot);
         }
@@ -231,8 +249,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     })
     const scrollYRef = useRef<HTMLDivElement>(null);
     const [scrollSync, setScrollSync] = useState<boolean>(false);
-
-    console.log("render");
+    const buttonsRef = useRef<HTMLDivElement>(null);
 
     const header =
         <div
@@ -249,6 +266,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
                         timeZone={region?.timezone}
                         onChange={date => {
+                            // Next if just makes sense for iOS, where minDate property does not take effect (consider putting this logic inside TKUIDateTimePicker).
+                            if (bookStartTime && DateTimeUtil.isoCompare(date.format(), bookStartTime) < 0) {
+                                return;
+                            }
                             if (!selectedVehicle) {
                                 setDisplayStartTime(date.format());
                                 setDisplayEndTime(DateTimeUtil.isoAddMinutes(date.format(), 24 * 60 - 1));
@@ -262,12 +283,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                             }
                         }}
                         shouldCloseOnSelect={true}
-                        renderCustomInput={(_value, onClick, onKeyDown, ref) =>
-                            <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
-                                <IconCalendar />
-                                {/* value comes without timezone, so use displayDate */}
-                                {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
-                            </button>}
+                        renderCustomInput={DeviceUtil.isAndroid ? undefined :
+                            (_value, onClick, onKeyDown, ref) =>
+                                <button {...{ onClick, onKeyDown, ref }} className={classes.datePickerInput}>
+                                    <IconCalendar />
+                                    {/* value comes without timezone, so use displayDate */}
+                                    {DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(displayDate), "ddd D", { justToday: true })}
+                                </button>}
                         minDate={bookStartTime ? DateTimeUtil.momentFromIsoWithTimezone(bookStartTime) : undefined}
                         showTimeInput={false}
                     />
@@ -361,20 +383,34 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 {vehicle.name}
                                             </div>
                                         </div>
-                                        <div style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', background: 'white', left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
+                                        <div style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', background: white(0, theme.isDark), left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
                                         <div className={classes.whiteToTransparent} style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2 }} />
                                         <div className={classes.slots}>
-                                            {slots.map((slot, i) =>
-                                                <div className={classes.slot} style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT }} onClick={() => onSlotClick(slot, vehicle)} key={i}>
-                                                    {selectedSlot(slot, vehicle) ?
-                                                        <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
-                                                            {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
-                                                        </div>
-                                                        :
-                                                        <div className={classNames(isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot, slot === displayStartTime && classes.firstSlot, DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot)}>
-                                                            {portrait && DateTimeUtil.isoFormat(slot, "h:mma")}
-                                                        </div>}
-                                                </div>)}
+                                            {slots.map((slot, i) => {
+                                                const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                                                return (
+                                                    <div className={classes.slot}
+                                                        style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT, ...portrait && { position: 'relative' } }}
+                                                        onClick={() => onSlotClick(slot, vehicle)}
+                                                        key={i}
+                                                    >
+                                                        {selectedSlot(slot, vehicle) ?
+                                                            <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
+                                                                {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
+                                                            </div>
+                                                            :
+                                                            <div className={classNames(
+                                                                isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot,
+                                                                slot === displayStartTime && classes.firstSlot,
+                                                                DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot,
+                                                                vehicle === selectedVehicle && bookStartTime && (DateTimeUtil.isoCompare(slot, bookStartTime) < 0 || !availableRange(bookStartTime, slot, selectedVehicle.availability!)) && classes.fadeSlot
+                                                            )}>
+                                                                {portrait && DateTimeUtil.isoFormat(slot, "h:mma")}
+                                                            </div>}
+                                                        {portrait && isDayStart && <div className={classes.dayIndexPortrait}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                         {vehicle === selectedVehicle &&
                                             <div className={classes.selectionPanel} style={{ padding: `0 ${portrait ? 20 : 30}px 0 ${portrait ? 20 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH}px`, transform: `translateY(${SLOT_HEIGHT + 25}px)` }}>
@@ -386,13 +422,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                     <div>To</div>
                                                     <div className={!bookEndTime ? classes.placeholder : undefined}>{bookEndTime ? DateTimeUtil.isoFormatRelativeDay(bookEndTime, "h:mma ddd D", { justToday: true, partialReplace: "ddd D" }) : "Select end time"}</div>
                                                 </div>
-                                                <div className={classes.buttons}>
+                                                <div className={classes.buttons} ref={buttonsRef}>
                                                     <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />
                                                     <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
                                                 </div>
                                             </div>}
                                         <div className={classes.transparentToWhite} style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: SCROLL_HORIZONT_WIDTH / 2, position: 'absolute' }} />
-                                        <div style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: 'white' }} />
+                                        <div style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: 0, position: 'absolute', background: white(0, theme.isDark) }} />
                                     </div>
                                 );
                             })}

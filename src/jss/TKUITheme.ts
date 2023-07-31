@@ -89,7 +89,7 @@ const tKUIDeaultTheme: (props: IThemeCreatorProps) => TKUITheme =
         const isLight = !isDark;
         return {
             // Brand colors
-            colorPrimary: '#008543',
+            colorPrimary: isLight ? '#008543' : '#26d06d',
             colorSuccess: isHighContrast ? '#24883D' : '#23b15e',
             colorInfo: '#2e3336', // TODO: check with DuyCT, in design it's colorInfo: '#2b7eed'
             colorWarning: isHighContrast ? '#AE6500' : '#fcba1e',

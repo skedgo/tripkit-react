@@ -1,6 +1,6 @@
 import genStyles, { keyFramesStyles } from "../css/GenStyle.css";
 import { resetStyles } from "../css/ResetStyle.css";
-import { black, TKUITheme } from "../jss/TKUITheme";
+import { black, TKUITheme, white } from "../jss/TKUITheme";
 
 export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -54,6 +54,14 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...theme.textColorGray,
         fontSize: '13px'
     },
+    dayIndexPortrait: {
+        position: 'absolute',
+        top: '43px',
+        color: black(0),
+        fontSize: '13px',
+        paddingLeft: '8px',
+        borderLeft: '1px solid ' + black(2)
+    },
     vehicles: {
         ...genStyles.flex,
         ...genStyles.column,
@@ -75,18 +83,21 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         whiteSpace: 'nowrap',
         position: 'absolute',
         left: 0,
-        background: 'white'
+        background: white(0, theme.isDark)
     },
     vehicleIcon: {
         width: '40px',
         height: '40px',
-        background: '#00000014',
+        background: black(4, theme.isDark),
         ...genStyles.borderRadius(50, "%"),
         ...genStyles.flex,
         ...genStyles.center,
         ...genStyles.alignCenter,
         ...genStyles.noShrink,
-        marginLeft: '15px'
+        marginLeft: '15px',
+        '& path': {
+            fill: black(0, theme.isDark)
+        }
     },
     vehicleName: {
         ...genStyles.overflowEllipsis,
@@ -101,10 +112,10 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.spaceBetween
     },
     whiteToTransparent: {
-        background: 'linear-gradient(to right, white, #ffffff00)'
+        background: `linear-gradient(to right, ${white(0, theme.isDark)}, #ffffff00)`
     },
     transparentToWhite: {
-        background: 'linear-gradient(to left, white, #ffffff00)'
+        background: `linear-gradient(to left, ${white(0, theme.isDark)}, #ffffff00)`
     },
     slots: {
         ...genStyles.flex,
@@ -121,10 +132,13 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     selectedSlot: {
-        background: black(),
+        background: black(0, theme.isDark),
         ...genStyles.flex,
         ...genStyles.center,
-        ...genStyles.alignCenter
+        ...genStyles.alignCenter,
+        '& path': {
+            fill: white(0, theme.isDark)
+        }
     },
     firstSlot: {
         borderTopLeftRadius: '8px',
@@ -133,6 +147,9 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     lastSlot: {
         borderTopRightRadius: '8px',
         borderBottomRightRadius: '8px'
+    },
+    fadeSlot: {
+        // opacity: '.5' // Cannot do this since it causes issues on overlapping (zIndex). Applied transparency to available / unavailable colours instead.
     },
     firstSelectedSlot: {
         borderTopLeftRadius: '8px',
@@ -143,17 +160,23 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         borderBottomRightRadius: '8px'
     },
     availableSlot: {
-        background: '#4DEF9E',
+        background: 'rgb(77 239 158)',
         borderLeft: '1px solid white',
         borderRight: '1px solid white',
-        '&:hover': {
+        '&:not($fadeSlot):hover': {
             background: '#44c786', // TODO: pick exact color from Figma
+        },
+        '&$fadeSlot': {
+            background: 'rgb(77 239 158 / 50%)'
         }
     },
     unavailableSlot: {
-        background: '#00000014',
+        background: black(4, theme.isDark),
         borderLeft: '1px solid white',
         borderRight: '1px solid white',
+        '&$fadeSlot': {
+            background: black(5, theme.isDark)
+        }
     },
     loadingSlot: {
         animation: keyFramesStyles.keyframes.beatBackground + ' 4s cubic-bezier(1,1,1,1) infinite'
@@ -183,13 +206,13 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     arrowLeftIconContainer: {
         ...genStyles.grow,
-        background: 'white',
+        background: white(0, theme.isDark),
         padding: '24px 0 24px 14px',
         height: '100%'
     },
     arrowRightIconContainer: {
         ...genStyles.grow,
-        background: 'white',
+        background: white(0, theme.isDark),
         padding: '24px 14px 24px 0',
         height: '100%'
     },
