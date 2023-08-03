@@ -165,7 +165,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             return;
         }
         const slotIndex = slots.indexOf(DateTimeUtil.isoAddMinutes(time, 0)); // Improve this. Call isoAddMinutes to ensure the same format (it has no millis)        
-        console.log(slotIndex);
         if (slotIndex === -1) {
             return;
         }
@@ -196,7 +195,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     function coverDisplayRange() {
-        console.log("coverDisplayRange");
         let requestDates: string[] = [];
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
             if (vehiclesByDate.get(date) === undefined) {
@@ -208,7 +206,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 requestDates.push(date);
             }
         }
-        console.log(requestDates);
         // TODO: merge consecutive days into (multi-days) intervals to optimize request.
         requestDates.forEach(async date => {
             try {

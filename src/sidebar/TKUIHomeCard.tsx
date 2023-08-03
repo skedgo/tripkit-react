@@ -17,6 +17,7 @@ import Util from "../util/Util";
 import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import { TKError } from "../error/TKError";
 import Segment from "../model/trip/Segment";
+import TKUISubscription from './TKUISubscription';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMyBookings: () => void;
@@ -106,6 +107,7 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     }}
                     onMyBookings={onMyBookings}
                 />
+                <TKUISubscription />
             </div>
         </TKUICard>
     );

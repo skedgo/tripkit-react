@@ -82,6 +82,8 @@ import Segment from "../model/trip/Segment";
 import RoutingQuery from "../model/RoutingQuery";
 import { TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle } from "../location/TKUIVehicleAvailability";
 import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
+import { TKUISubscriptionProps, TKUISubscriptionStyle } from "../sidebar/TKUISubscription";
+import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar/TKUISubscriptionView";
 
 /**
  * SDK configuration
@@ -217,6 +219,8 @@ interface ITKUIConfigOptional {
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
+    TKUISubscription: TKComponentConfig<TKUISubscriptionProps, TKUISubscriptionStyle>;
+    TKUISubscriptionView: TKComponentConfig<TKUISubscriptionViewProps, TKUISubscriptionViewStyle>;
     TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
 }

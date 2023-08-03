@@ -17,6 +17,10 @@ class FormatUtil {
         return (options.currency ?? "$") + moneyS;
     }
 
+    public static truncateToDecimals(num: number, decimals: number): number {
+        return Math.round(num * (Math.pow(10, decimals))) / Math.pow(10, decimals);
+    }
+
 }
 
 export default FormatUtil;

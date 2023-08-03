@@ -51,6 +51,13 @@ class DateTimeUtil {
      * @deprecated Since shouldn't use moment outside DateTimeUtil anymore.
      */
     public static momentFromIsoWithTimezone(datetime: string): Moment {
+        /**
+         * Remove timezone id, which [is not part of the standard](https://stackoverflow.com/a/42196445), but that JAVA (BE) uses.
+         */
+        const timezoneIdIndex = datetime.indexOf("[");
+        if (timezoneIdIndex !== -1) {
+            datetime = datetime.substring(0, timezoneIdIndex);
+        }
         return moment.parseZone(datetime);
     }
 
