@@ -1,9 +1,22 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import CompanyInfo from "./CompanyInfo";
-import {PricingTable} from "./CarParkInfo";
+import { PricingTable } from "./CarParkInfo";
+
+export interface BookingAvailability {
+    timestamp: string;
+    intervals: BookingAvailabilityInterval[];
+}
+interface BookingAvailabilityInterval {
+    status: "AVAILABLE" | "NOT_AVAILABLE" | "UNKNOWN";
+    start: string;
+    end: string;
+}
 
 @JsonObject
-class CarPodVehicle {
+export class CarPodVehicle {
+    @JsonProperty("identifier", String)
+    public identifier: string = "";
+    
     @JsonProperty("name", String, true)
     public name?: string = undefined;
 
@@ -24,7 +37,12 @@ class CarPodVehicle {
 
     @JsonProperty("pricingTable", PricingTable, true)
     public pricingTable?: PricingTable = undefined;
+
+    @JsonProperty("availability", Any, true)
+    public availability?: BookingAvailability = undefined;
 }
+
+type AvailabilityMode = "NONE" | "CURRENT" | "FUTURE";
 
 @JsonObject
 class CarPodInfo {
@@ -36,6 +54,10 @@ class CarPodInfo {
 
     @JsonProperty("vehicles", [CarPodVehicle], true)
     public vehicles?: CarPodVehicle[] = undefined;
+
+    // real-time availability information
+    @JsonProperty("availabilityMode", String, true)
+    public availabilityMode?: AvailabilityMode
 }
 
 export default CarPodInfo;

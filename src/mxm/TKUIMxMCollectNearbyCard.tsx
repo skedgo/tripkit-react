@@ -69,7 +69,7 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
     useEffect(() => {
         // TODO: See if can avoid the imperative access to the map, and access through props, instead. Maybe keep this as is for now, and then make a unified
         // scheme that also contemplate map locations. Probably should provide a context and access it from here and TKUIMapView.
-        mapAsync.then(map => {
+        mapAsync?.then(map => {
             if (isSelectedCard!() && alternatives) {
                 // Display alternatives on map except for the selected one, since it's already signaled with the segment pin. 
                 map.setModeLocations(alternatives.filter(alt => alt.id !== segment.sharedVehicle?.identifier)
@@ -84,7 +84,7 @@ const TKUIMxMCollectNearbyCard: React.FunctionComponent<IProps> = ({ segment, ma
     useEffect(() => {
         // Clear map also on unmount (close card or trip update after picking an alternative)
         return () => {
-            mapAsync.then(map => {
+            mapAsync?.then(map => {
                 map.setModeLocations(undefined);
             });
         }

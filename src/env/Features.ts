@@ -19,9 +19,7 @@ class Features {
         return true;
     }
 
-    public realtimeEnabled() {
-        return true;
-    }
+    public realtimeEnabled: boolean = true;
 
     get modeSpecificMapTilesEnabled(): boolean {
         return this._modeSpecificMapTilesEnabled;

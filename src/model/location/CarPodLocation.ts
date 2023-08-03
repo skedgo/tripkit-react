@@ -6,6 +6,10 @@ import CarPodInfo from "./CarPodInfo";
 class CarPodLocation extends ModeLocation {
     @JsonProperty("carPod", CarPodInfo)
     public carPod: CarPodInfo = new CarPodInfo();
+
+    get supportsVehicleAvailability(): boolean {
+        return !!this.carPod.availabilityMode && this.carPod.availabilityMode !== "NONE"
+    }
 }
 
 export default CarPodLocation;

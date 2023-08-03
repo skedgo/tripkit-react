@@ -1,0 +1,3 @@
+- [Theme](#/Customization/Theme)
+- [I18n](#/Customization/I18n)
+- [Geocoding](#/Customization/Geocoding)

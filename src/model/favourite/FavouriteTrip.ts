@@ -1,6 +1,6 @@
 import Location from "../Location";
-import {JsonObject, JsonProperty} from "json2typescript";
-import {LocationConverter} from "../location/LocationConverter";
+import { JsonObject, JsonProperty } from "json2typescript";
+import { LocationConverter } from "../location/LocationConverter";
 import Favourite from "./Favourite";
 import TKUserProfile from "../options/TKUserProfile";
 
@@ -52,7 +52,8 @@ class FavouriteTrip extends Favourite {
     }
 
     public getKey(): string {
-        return (this.from.isCurrLoc() ? "CurrLoc" : this.from.getKey()) + (this.to.isCurrLoc() ? "CurrLoc" : this.to.getKey());
+        // Give priority to the id, since, for instance, getKey for a CarParkLocation returns an id, while for the same object deserialized as a location it returns the lat,lng.
+        return (this.from.isCurrLoc() ? "CurrLoc" : this.from.id ?? this.from.getKey()) + (this.to.isCurrLoc() ? "CurrLoc" : this.to.id ?? this.to.getKey());
     }
 
     public equals(other: any): boolean {

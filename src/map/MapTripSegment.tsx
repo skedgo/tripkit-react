@@ -9,7 +9,7 @@ import TKUIMapShapes from "./TKUIMapShapes";
 import { TKUIMapViewClass } from "./TKUIMapView";
 import TKUIRealtimeVehicle, { tKUIRealtimeVehicleConfig } from "./TKUIRealtimeVehicle";
 import { TKUIConfig } from "../config/TKUIConfig";
-import { TKUIConfigContext, default as TKUIConfigProvider, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
+import { TKUIConfigContext, TKUIThemeConsumer } from "../config/TKUIConfigProvider";
 import { TKUITransportPin, tKUITransportPinConfig } from "./TKUITransportPin";
 import { TKUITheme } from "../jss/TKUITheme";
 import SegmentPopup from "./SegmentPopup";
@@ -23,6 +23,7 @@ interface IProps {
     segmentIconClassName?: string;
     vehicleClassName?: string;
     t: TranslationFunction;
+    onLocationAction?: () => void;
 }
 
 class MapTripSegment extends React.Component<IProps, {}> {
@@ -69,7 +70,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                                 // doesn't stabilizes. Fix it.
                                                 autoPan={false}
                                             >
-                                                {<SegmentPopup segment={segment} t={this.props.t} />}
+                                                {<SegmentPopup segment={segment} t={this.props.t} onLocationAction={this.props.onLocationAction} />}
                                             </Popup>
                                         </Marker>;
                                     }

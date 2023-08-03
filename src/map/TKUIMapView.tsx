@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MutableRefObject, useContext, useMemo } from "react";
 import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
 import L, { FitBoundsOptions, LatLngBounds } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
@@ -14,19 +14,17 @@ import GATracker, { ACTION_PICK_FROM_LOCATION, ACTION_PICK_TO_LOCATION, CATEGORY
 import { Visibility } from "../model/trip/SegmentTemplate";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import MapService from "./MapService";
-import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import MultiGeocoder from "../geocode/MultiGeocoder";
 import ReactResizeDetector from "react-resize-detector";
-import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
+import { ServiceResultsContext } from "../service/ServiceResultsProvider";
 import MapUtil from "../util/MapUtil";
-import StopLocation from "../model/StopLocation";
 import TKUIMapLocations, { TKUIModeLocationMarker } from "./TKUIMapLocations";
-import { CSSProps, renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { renderToStaticMarkup, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIMapViewDefaultStyle } from "./TKUIMapView.css";
 import "./TKUIMapViewCss.css";
 import { connect, PropsMapper, TKRenderOverride } from "../config/TKConfigHelper";
-import { Subtract } from "utility-types";
 import classNames from "classnames";
 import { TKUIViewportUtilProps, TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUIMapLocationIcon, { tKUIMapLocationIconConfig } from "./TKUIMapLocationIcon";
@@ -49,23 +47,26 @@ import Features from "../env/Features";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import ModeLocation from "../model/location/ModeLocation";
 import TKTransportOptions from "../model/options/TKTransportOptions";
-import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
 import RegionsData from "../data/RegionsData";
 import { tKUIColors } from "../jss/TKUITheme";
+import { i18n } from "../i18n/TKI18nConstants";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
      * States if should hide map locations layer.
      * @default false
+     * @order 12
      */
     hideLocations?: boolean;
 
     /**
      * Map padding to be considered when fit map to a given set of locations or bounding box.
      * @default {top: 20, right: 20, bottom: 20, left: 20}
+     * @order 11
      */
     padding?: TKUIMapPadding
 
@@ -76,7 +77,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     attributionControl?: boolean;
 
     /**
-     * Function that will run when a map location is clicked.
+     * Function to specify an action handler for a given location, which will be called when clicking the action button on
+     * locaton's callout. Returning undefined for a given location causes no action button to be displayed in that location's callout.
      * @ctype
      */
     locationActionHandler?: (loc: Location) => (() => void) | undefined;
@@ -95,124 +97,156 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     mapboxGlLayerProps?: MapboxGLLayerProps;
 
+    /**
+     * Layer to be rendered as child of react-leaflet map component.
+     * @ctype
+     */
     renderLayer?: () => JSX.Element;
 
-    fromHereText?: string;
-
-    toHereText?: string;
-
+    /**
+     * If true disable all map click interactions (map dragging and zoom change are kept enabled).
+     * @order 10
+     */
     readonly?: boolean;
 
+    /**
+     * Function to be called on each render to determine if map shold be updated to fit from / to.
+     * @ignore Alternatively add parameter to disable auto fit, e.g. autoFitMap, default to true, and rely on
+     * imperative map fit.
+     */
     shouldFitMap?: (from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) => boolean
 
+    /**
+     * @default true
+     */
     showCurrLocBtn?: boolean;
 
+    /**
+     * @ignore until define how to merge with readonly, or just remove it.
+     */
     disableMapClick?: boolean | ((zoom?: number) => boolean);
-}
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    leaflet: CSSProps<IProps>;
-    menuPopup: CSSProps<IProps>;
-    menuPopupContent: CSSProps<IProps>;
-    menuPopupItem: CSSProps<IProps>;
-    menuPopupBelow: CSSProps<IProps>;
-    menuPopupAbove: CSSProps<IProps>;
-    menuPopupLeft: CSSProps<IProps>;
-    menuPopupRight: CSSProps<IProps>;
-    currentLocMarker: CSSProps<IProps>;
-    currentLocBtn: CSSProps<IProps>;
-    currentLocBtnLandscape: CSSProps<IProps>;
-    currentLocBtnPortrait: CSSProps<IProps>;
-    resolvingCurrLoc: CSSProps<IProps>;
-    vehicle: CSSProps<IProps>;
-    segmentIconClassName: CSSProps<IProps>;
-    vehicleClassName: CSSProps<IProps>;
-}
+    /**
+     * @ignore
+     */
+    reference?: ((instance: TKUIMapView | null) => void) | MutableRefObject<TKUIMapView | null> | null;
 
-interface IConsumedProps extends TKUIViewportUtilProps {
+    /**
+     * @ctype "SET\_FROM\_TO" | "SET\_TO" | "SET\_FROM" | "NONE"
+     * @default "SET\_FROM\_TO".
+     * @order 8
+     */
+    mapClickBehaviour?: "SET_FROM_TO" | "SET_TO" | "SET_FROM" | "NONE"   // Could also offer "DROP_REPLACE_TO", "DROP_REPLACE_FROM", "DROP_REPLACE_FROM_TO" which replaces a pin if exists.
+
+    /**
+     * @ctype
+     * @order 9     
+     * @default Use TKUIMapView.TKStateProps to pass "Directions from here" / "Directions to here" / "What's here" menu, 
+     * with it's corresponding effects on the SDK state.
+     */
+    rightClickMenu?: MenuOptions[];
+}
+interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
     /**
      * Depart location.
      * @ctype
-     * @default {@link TKState#query}.from
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#query}.from
+     * @order 1
      */
     from?: Location;
 
     /**
      * Depart location change callback.
      * @ctype
-     * @default Callback updating {@link TKState#query}.from
+     * @default Use TKUIMapView.TKStateProps to pass a callback updating {@link TKState#query}.from
+     * @order 2
      */
     onFromChange?: (location: Location | null) => void;
 
     /**
      * Arrive location.
      * @ctype
-     * @default {@link TKState#query}.to
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#query}.to
+     * @order 3
      */
     to?: Location;
 
     /**
      * Arrive location change callback.
      * @ctype
-     * @default Callback updating {@link TKState#query}.to
+     * @default Use TKUIMapView.TKStateProps to pass a callback updating {@link TKState#query}.to
+     * @order 4
      */
     onToChange?: (location: Location | null) => void;
 
     /**
      * Trip to be displayed on map.
      * @ctype
-     * @default {@link TKState#selectedTrip}
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#selectedTrip}
+     * @order 5
      */
     trip?: Trip;
 
+    /**
+     * Segment of the displayed trip to be highlighed.
+     * @ctype
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#selectedTripSegment}
+     * @order 6
+     */
     tripSegment?: Segment;
 
     /**
      * Public transport service to be displayed on map.
      * @ctype
-     * @default {@link TKState#selectedService}
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#selectedService}
+     * @order 7
      */
     service?: ServiceDeparture;
 
     /**
-     * Map viewport change callback.
+     * Function to be called each time the map viewport (center + zoom) changes.
      * @ctype
-     * @default {@link TKState#onViewportChange}
+     * @default Use TKUIMapView.TKStateProps to pass a callback updating {@link TKState#viewport}
      */
     onViewportChange?: (viewport: { center?: LatLng, zoom?: number }) => void;
 
-    /**
-     * States if the environment is in _directions mode_, which implies that it automatically compute trips for
-     * current query whenever from and to become specified (and refresh trips when from or to change).
+    /**     
+     * To specify which transports are enabled, so the map will display just relevant locations.
      * @ctype
-     * @default {@link TKState#directionsView}
+     * @default Use TKUIMapView.TKStateProps to pass {@link TKState#userProfile}.transportOptions
+     * @order 13
+     * @divider
      */
-    directionsView?: boolean;
+    transportOptions?: TKTransportOptions;
 
-    /**
-     * Directions view change callback.
+    /**     
      * @ctype
-     * @default {@link TKState#onDirectionsView}
+     * @default @globaldefault
      */
-    onDirectionsView: (directionsView: boolean) => void;
+    setMap?: (ref: TKUIMapView) => void;
 
-    /**
-     * SDK config
+    /**     
      * @ctype
-     * @default {@link TKState#config}
      */
-    config: TKUIConfig;
-
-    transportOptions: TKTransportOptions;
-
-    setMap: (ref: TKUIMapView) => void;
-
     children?: React.ReactNode;
 
+    /**
+     * @ignore
+     */
     childrenThis?: (mapthis: any) => React.ReactNode;
+
+    /**
+     * @ctype
+     * @globaldefault
+     */
+    geocodingOptions?: TKGeocodingOptions;
 }
 
+interface MenuOptions {
+    label: string;
+    effect?: "SET_FROM" | "SET_TO"
+    effectFc?: (coord: LatLng) => void;
+}
 interface MapboxGLLayerProps {
     accessToken: string;
     style: string;
@@ -222,6 +256,8 @@ interface MapboxGLLayerProps {
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
+
+type IStyle = ReturnType<typeof tKUIMapViewDefaultStyle>
 
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
@@ -247,7 +283,19 @@ interface IState {
     onModeLocationClick?: (location: ModeLocation) => void;
 }
 
-class TKUIMapView extends React.Component<IProps, IState> {
+type IDefaultProps = Required<Pick<IProps, "mapClickBehaviour" | "rightClickMenu" | "geocodingOptions" | "portrait" | "landscape">>;
+class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
+
+    static defaultProps: IDefaultProps = {
+        mapClickBehaviour: "SET_FROM_TO",
+        rightClickMenu: [
+            { label: "Set as origin", effect: "SET_FROM" },
+            { label: "Set as destination", effect: "SET_TO" }
+        ],
+        geocodingOptions: {} as any,  // Just since it cannot be left undefined, it's always overriden in the Mapper.
+        portrait: false,
+        landscape: true
+    };
 
     private leafletElement?: L.Map;
     private wasDoubleClick = false;
@@ -259,7 +307,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     });
 
 
-    constructor(props: Readonly<IProps>) {
+    constructor(props: Readonly<IProps & IDefaultProps>) {
         super(props);
         this.state = {};
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
@@ -293,7 +341,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
             this.props.onToChange && this.props.onToChange(mapLocation);
         }
         if (mapLocation.isDroppedPin()) {
-            getGeocodingData(this.props.config.geocoding)
+            getGeocodingData(this.props.geocodingOptions)
                 .reverseGeocode(latLng, result => {
                     // If reverse geocode fails then add a trailing space to dropped pin address ("Location") to
                     // force WithRoutingResults.onQueryChange to refresh trips (loc.isDroppedPin() will be false, and
@@ -315,34 +363,46 @@ class TKUIMapView extends React.Component<IProps, IState> {
     };
 
     private onClick(clickLatLng: LatLng) {
-        if (typeof this.props.disableMapClick === 'function' ? this.props.disableMapClick?.(this.getZoom()) : this.props.disableMapClick) {
+        const { from, to, mapClickBehaviour, disableMapClick } = this.props;
+        if (typeof disableMapClick === 'function' ? disableMapClick?.(this.getZoom()) : disableMapClick) {
             return;
         }
-        const from = this.props.from;
-        const to = this.props.to;
-        if (this.props.directionsView) {
-            if (!from || !to || clickLatLng instanceof StopLocation) {
-                if (!from && !to) {
-                    // Avoid fit bounds when setting first location on
-                    // directions view.
-                    avoidFitLatLng = clickLatLng
+        // Do nothing if the location is already the from or to.
+        if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
+            return;
+        }
+        let setFrom;
+        switch (mapClickBehaviour) { // When clicking mode location, we always set as from/to, even if already set (replace).
+            case "SET_FROM_TO":
+                if (!from || !to || clickLatLng instanceof ModeLocation) {
+                    if (!from && !to) {
+                        // Avoid fit bounds when setting first of from or to
+                        avoidFitLatLng = clickLatLng
+                    }
+                    setFrom = !from;
                 }
-                // Do nothing if the location is already the from or to.
-                if (from && from.equals(clickLatLng) || to && to.equals(clickLatLng)) {
-                    return;
+                break;
+            case "SET_FROM":
+                if (!from || clickLatLng instanceof ModeLocation) {
+                    setFrom = true;
                 }
-                const isFrom = !from;
-                this.onMapLocChanged(isFrom, clickLatLng);
-                GATracker.event({
-                    category: CATEGORY_QUERY_INPUT,
-                    action: isFrom ? ACTION_PICK_FROM_LOCATION : ACTION_PICK_TO_LOCATION,
-                    label: "drop to"
-                });
-            }
-        } else {
-            if (!to || clickLatLng instanceof ModeLocation) {
-                this.onMapLocChanged(false, clickLatLng);
-            }
+                break;
+            case "SET_TO":
+                if (!to || clickLatLng instanceof ModeLocation) {
+                    setFrom = false;
+                }
+                break;
+            default: // "NONE"
+                break;
+        }
+
+        if (setFrom !== undefined) {
+            this.onMapLocChanged(setFrom, clickLatLng);
+            GATracker.event({
+                category: CATEGORY_QUERY_INPUT,
+                action: setFrom ? ACTION_PICK_FROM_LOCATION : ACTION_PICK_TO_LOCATION,
+                label: "drop to"
+            });
         }
     }
 
@@ -373,10 +433,6 @@ class TKUIMapView extends React.Component<IProps, IState> {
             return;
         }
         this.fitBounds(MapUtil.createBBoxArray(fitSet));
-    }
-
-    private onViewportChange(viewport: { center?: LatLng, zoom?: number }) {
-        this.props.onViewportChange?.(viewport);
     }
 
     private userLocationSubscription?: any;
@@ -444,33 +500,21 @@ class TKUIMapView extends React.Component<IProps, IState> {
                 onClose={() => this.setState({ menuPopupPosition: undefined })}
             >
                 <div className={classes.menuPopupContent}>
-                    <div className={classes.menuPopupItem}
-                        onClick={() => {
-                            this.onMapLocChanged(true, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
-                            this.props.onDirectionsView(true);
-                            this.setState({ menuPopupPosition: undefined });
-                        }}
-                    >
-                        {this.props.fromHereText || "Directions from here"}
-                    </div>
-                    <div className={classes.menuPopupItem}
-                        onClick={() => {
-                            this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
-                            this.props.onDirectionsView(true);
-                            this.setState({ menuPopupPosition: undefined });
-                        }}
-                    >
-                        {this.props.toHereText || "Directions to here"}
-                    </div>
-                    {!this.props.directionsView &&
-                        <div className={classes.menuPopupItem}
+                    {this.props.rightClickMenu?.map(({ label, effect, effectFc }, i) =>
+                        <div
+                            className={classes.menuPopupItem}
                             onClick={() => {
-                                this.onMapLocChanged(false, LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng));
+                                const clickedLatLng = LatLng.createLatLng(popupLatLng!.lat, popupLatLng!.lng);
+                                if (effect) {
+                                    this.onMapLocChanged(effect === "SET_FROM", clickedLatLng);
+                                }
                                 this.setState({ menuPopupPosition: undefined });
+                                effectFc?.(clickedLatLng);
                             }}
+                            key={i}
                         >
-                            What's here?
-                        </div>}
+                            {label}
+                        </div>)}
                 </div>
             </Popup>;
         const padding = Object.assign({ top: 20, right: 20, bottom: 20, left: 20 }, this.props.padding);
@@ -495,7 +539,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     // jumps to the original one so that all overlays like markers and vector layers are still visible.
                     worldCopyJump={true}
                     onViewportChanged={(viewport: Viewport) => {
-                        this.onViewportChange({
+                        this.props.onViewportChange?.({
                             center: viewport.center ? LatLng.createLatLng(viewport.center[0], viewport.center[1]) : undefined,
                             zoom: viewport.zoom ? viewport.zoom : undefined
                         });
@@ -516,7 +560,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             if (init) {
                                 // Init map viewport, so we don't get an exception when getting map zoom or center.                                
                                 this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng), 2);
-                                this.props.setMap(this);
+                                this.props.setMap?.(this);
                                 // To avoid map glitch where city icons are bad positioned initially, which fixes with any map movement.
                                 this.setViewport(LatLng.createLatLng(MapUtil.worldCoords.lat, MapUtil.worldCoords.lng + 1), 2);
                             }
@@ -525,7 +569,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     zoomControl={false}
                     attributionControl={this.props.attributionControl !== false}
                     oncontextmenu={(e: L.LeafletMouseEvent) => {
-                        if (!this.props.readonly) {
+                        if (!this.props.readonly && this.props.rightClickMenu) {
                             this.setState({ menuPopupPosition: e });
                         }
                     }}
@@ -598,28 +642,30 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             <TileLayer {...this.props.tileLayerProps!} />}
                     {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
-                        <Marker position={this.state.userLocation.latLng}
-                            icon={L.divIcon({
-                                html: renderToStaticMarkup(
-                                    <TKUIConfigProvider config={this.props.config}>
-                                        <TKUIMyLocationMapIcon />
-                                    </TKUIConfigProvider>
-                                ),
-                                iconSize: [20, 20],
-                                iconAnchor: [10, 10],
-                                className: classes.currentLocMarker
-                            })}
-                            riseOnHover={true}
-                            keyboard={false}
-                        >
-                            {this.getLocationPopup(this.currentLocation)}
-                        </Marker>}
+                        <TKUIConfigContext.Consumer>{config =>
+                            <Marker position={this.state.userLocation!.latLng}
+                                icon={L.divIcon({
+                                    html: renderToStaticMarkup(
+                                        <TKUIConfigProvider config={config}>
+                                            <TKUIMyLocationMapIcon />
+                                        </TKUIConfigProvider>
+                                    ),
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10],
+                                    className: classes.currentLocMarker
+                                })}
+                                riseOnHover={true}
+                                keyboard={false}
+                            >
+                                {this.getLocationPopup(this.currentLocation)}
+                            </Marker>
+                        }</TKUIConfigContext.Consumer>}
                     {!this.props.trip && this.props.from && this.props.from.isResolved() &&
                         !(this.props.from.isCurrLoc() && this.state.userLocation) &&
                         <TKRenderOverride
                             componentKey={"TKUIMapLocationIcon"}
-                            renderOverride={renderProps => {
-                                const render = this.props.config["TKUIMapLocationIcon"]?.render ?? tKUIMapLocationIconConfig.render;
+                            renderOverride={(renderProps, configRender) => {
+                                const render = configRender ?? tKUIMapLocationIconConfig.render;
                                 return <Marker
                                     position={this.props.from!}
                                     icon={L.divIcon({
@@ -649,8 +695,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
                         <TKRenderOverride
                             componentKey={"TKUIMapLocationIcon"}
-                            renderOverride={renderProps => {
-                                const render = this.props.config["TKUIMapLocationIcon"]?.render ?? tKUIMapLocationIconConfig.render;
+                            renderOverride={(renderProps, configRender) => {
+                                const render = configRender ?? tKUIMapLocationIconConfig.render;
                                 return <Marker
                                     position={this.props.to!}
                                     icon={L.divIcon({
@@ -685,22 +731,23 @@ class TKUIMapView extends React.Component<IProps, IState> {
                             }}
                             omit={(this.props.from ? [this.props.from] : []).concat(this.props.to ? [this.props.to] : [])}
                             isDarkMode={this.props.theme.isDark}
-                            config={this.props.config}
                             transportOptions={this.props.transportOptions}
                         />
                     }
                     {this.state.modeLocations?.map((location, i) =>
                         <TKUIModeLocationMarker loc={location} onClick={() => this.state.onModeLocationClick?.(location)} key={i} />)}
-                    {tripSegments && tripSegments.map((segment: Segment, i: number) => {
-                        return <MapTripSegment segment={segment}
+                    {tripSegments && tripSegments.map((segment: Segment, i: number) => (
+                        <MapTripSegment
+                            segment={segment}
                             ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
                                 (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                             segmentIconClassName={classes.segmentIconClassName}
                             vehicleClassName={classes.vehicleClassName}
+                            onLocationAction={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
+                                this.props.locationActionHandler && this.props.locationActionHandler(segment.from) : undefined}
                             key={i}
-                            t={this.props.t}
-                        />;
-                    })}
+                            t={this.props.t} />
+                    ))}
                     {service &&
                         <MapService
                             serviceDeparture={service}
@@ -710,8 +757,8 @@ class TKUIMapView extends React.Component<IProps, IState> {
                         (DateTimeUtil.getNow().valueOf() / 1000 - service.realtimeVehicle.lastUpdate) < 120 &&
                         <TKRenderOverride
                             componentKey={"TKUIRealtimeVehicle"}
-                            renderOverride={renderProps => {
-                                const render = this.props.config["TKUIRealtimeVehicle"]?.render ?? tKUIRealtimeVehicleConfig.render;
+                            renderOverride={(renderProps, configRender) => {
+                                const render = configRender ?? tKUIRealtimeVehicleConfig.render;
                                 return <Marker
                                     position={service.realtimeVehicle!.location}
                                     icon={L.divIcon({
@@ -815,9 +862,16 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
         // TODO Delete: Can actually delete this? It causes an exception sometimes.
         setTimeout(() => this.onResize(), 5000);
+        if (this.props.reference) {
+            if (Util.isFunction(this.props.reference)) {
+                (this.props.reference as ((instance: TKUIMapView | null) => void))(this);
+            } else {
+                (this.props.reference as MutableRefObject<TKUIMapView | null>).current = this;
+            }
+        }
     }
 
-    public componentDidUpdate(prevProps: IProps): void {
+    public componentDidUpdate(prevProps: IProps & IDefaultProps): void {
         const paddingChanged = JSON.stringify(this.props.padding) !== JSON.stringify(prevProps.padding);
         const shouldFitMap = this.props.shouldFitMap ||
             ((from: Location | undefined, to: Location | undefined, preFrom: Location | undefined, preTo: Location | undefined) =>
@@ -922,7 +976,7 @@ class TKUIMapView extends React.Component<IProps, IState> {
     }
 
     public getBounds(): BBox | undefined {
-        return this.toBBox(this.leafletElement?.getBounds());
+        return this.leafletElement && this.toBBox(this.leafletElement?.getBounds());
     }
 
     public setViewport(center: LatLng, zoom: number) {
@@ -957,6 +1011,19 @@ class TKUIMapView extends React.Component<IProps, IState> {
         }
     }
 
+    public refreshRegionsPolygons() {
+        if (!this.mapboxGlMap || !this.mapboxGlMap.isStyleLoaded()) {
+            return;
+        }
+        RegionsData.instance.requireRegions().then(() => {
+            this.mapboxGlMap.getSource("coverage")
+                .setData({
+                    'type': 'Feature',
+                    'geometry': RegionsData.instance.getCoverageGeoJson()
+                });
+        });
+    }
+
     private toBBox(bounds: LatLngBounds) {
         return MapUtil.createBBoxArray([MapUtil.toLatLng(bounds.getNorthEast()), MapUtil.toLatLng(bounds.getSouthWest())]);
     }
@@ -985,9 +1052,9 @@ class TKUIMapView extends React.Component<IProps, IState> {
 
 let geocodingData: MultiGeocoder;
 
-function getGeocodingData(geocodingConfig?: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>)) {
+function getGeocodingData(geocodingOptions: TKGeocodingOptions) {
     if (!geocodingData) {
-        geocodingData = new MultiGeocoder(getGeocodingOptions(geocodingConfig));
+        geocodingData = new MultiGeocoder(geocodingOptions);
     }
     return geocodingData;
 }
@@ -996,78 +1063,92 @@ let avoidFitLatLng: LatLng | undefined;
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
     (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+        const t = i18n.t;
+        const optionsContext = useContext(OptionsContext);
+        const routingContext = useContext(RoutingResultsContext);
+        const serviceContext = useContext(ServiceResultsContext);
         return (
-            <TKUIConfigContext.Consumer>
-                {(config: TKUIConfig) =>
-                    <OptionsContext.Consumer>
-                        {(optionsContext: IOptionsContext) =>
-                            <TKUIViewportUtil>
-                                {(viewportProps: TKUIViewportUtilProps) =>
-                                    <RoutingResultsContext.Consumer>
-                                        {(routingContext: IRoutingResultsContext) =>
-                                            <ServiceResultsContext.Consumer>
-                                                {(serviceContext: IServiceResultsContext) => {
-                                                    const from = routingContext.preFrom ? routingContext.preFrom :
-                                                        (routingContext.query.from ? routingContext.query.from : undefined);
-                                                    const to = routingContext.preTo ? routingContext.preTo :
-                                                        (routingContext.query.to ? routingContext.query.to : undefined);
-
-                                                    const consumerProps: IConsumedProps = {
-                                                        from: routingContext.directionsView ? from : undefined,
-                                                        onFromChange: (location: Location | null) =>
-                                                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                                from: location
-                                                            })),
-                                                        to: to,
-                                                        onToChange: (location: Location | null) =>
-                                                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
-                                                                to: location
-                                                            })),
-                                                        trip: routingContext.selectedTrip,
-                                                        tripSegment: routingContext.selectedTripSegment,
-                                                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
-                                                            serviceContext.selectedService : undefined,
-                                                        onViewportChange: routingContext.onViewportChange,
-                                                        directionsView: routingContext.directionsView,
-                                                        onDirectionsView: routingContext.onDirectionsView,
-                                                        ...viewportProps,
-                                                        config: config,
-                                                        transportOptions: optionsContext.userProfile.transportOptions,
-                                                        setMap: routingContext.setMap
-                                                    };
-                                                    return (
-                                                        props.children!(consumerProps)
-                                                    );
-                                                }}
-                                            </ServiceResultsContext.Consumer>
-                                        }
-                                    </RoutingResultsContext.Consumer>
-                                }
-                            </TKUIViewportUtil>
-                        }
-                    </OptionsContext.Consumer>
-                }
-            </TKUIConfigContext.Consumer>
+            <TKUIViewportUtil>
+                {(viewportProps: TKUIViewportUtilProps) => {
+                    const from = routingContext.preFrom ? routingContext.preFrom :
+                        (routingContext.query.from ? routingContext.query.from : undefined);
+                    const to = routingContext.preTo ? routingContext.preTo :
+                        (routingContext.query.to ? routingContext.query.to : undefined);
+                    const consumerProps: IConsumedProps = {
+                        from: from,
+                        onFromChange: (location: Location | null) =>
+                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                from: location
+                            })),
+                        to: to,
+                        onToChange: (location: Location | null) =>
+                            routingContext.onQueryUpdate(Util.iAssign(routingContext.query, {
+                                to: location
+                            })),
+                        trip: routingContext.selectedTrip,
+                        tripSegment: routingContext.selectedTripSegment,
+                        service: serviceContext.selectedService && serviceContext.selectedService.serviceDetail ?
+                            serviceContext.selectedService : undefined,
+                        ...viewportProps,
+                        transportOptions: optionsContext.userProfile.transportOptions,
+                        setMap: routingContext.setMap,
+                        onViewportChange: routingContext.onViewportChange
+                    };
+                    return (
+                        props.children!(consumerProps)
+                    );
+                }}
+            </TKUIViewportUtil>
         );
     };
 
-const Mapper: PropsMapper<IClientProps & Partial<IConsumedProps>, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({ ...consumedProps, ...inputProps })}
-        </Consumer>;
+const Mapper: PropsMapper<IClientProps, IClientProps> = ({ inputProps, children }) => {
+    const { geocoding } = useContext(TKUIConfigContext);
+    const geocodingOptions = useMemo(() => getGeocodingOptions(geocoding), [geocoding]);
+    return (
+        <>
+            {children!({ geocodingOptions, ...inputProps })}
+        </>
+    );
+};
 
 /**
  * Leaflet-based map to display TripGo api related elements: e.g. depart and arrive locations, trips,
  * public transport services, transport-related locations, user's current location, etc.
  * It supports both raster tiles, and vector tiles through the
  * [react-mapbox-gl-leaflet library](https://github.com/mongodb-js/react-mapbox-gl-leaflet).
+ * 
+ *  You can connect the component to the SDK global state, {@link TKState}, by forwarding the props
+ *  provided by TKUIMapViewHelpers.TKStateProps, in the following way:
+ * 
+ *  ```
+ *   <TKUIMapViewHelpers.TKStateProps>
+ *      {stateProps => 
+ *          <TKUIMapView 
+ *              {...stateProps}
+ *              // Other props
+ *          />}
+ *   </TKUIMapViewHelpers.TKStateProps>
+ *  ```
+ * 
+ *
+ * In this way, the map will display 'from' and 'to' locations for the current query in the SDK state, 
+ * as well as selected trip result, selected trip segment, etc. Also will update current state query 
+ * with from / to picked by clicking (dropping pin) on map, and also will support triggering trip 
+ * computation by right clicking on map and selecting "Directions from here" or "Directions to here".
  */
 
-export default connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
+const Component = connect((config: TKUIConfig) => config.TKUIMapView, config, Mapper);
+export default React.forwardRef<TKUIMapView, IClientProps>((props: IClientProps, ref) => (
+    <Component {...props} reference={ref} />
+));
 export { TKUIMapView as TKUIMapViewClass };
 export { Marker, Popup, L };
+
+export const TKUIMapViewHelpers = {
+    TKStateProps: Consumer,
+    useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
+}
 
 const WALK_PATH_COLOR = "rgb(0, 220, 0)";
 

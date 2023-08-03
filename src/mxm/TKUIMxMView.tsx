@@ -5,19 +5,18 @@ import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { TKUISlideUpPosition } from "../card/TKUISlideUp";
 import TKUICardCarousel from "../card/TKUICardCarousel";
-import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
-import { Subtract } from 'utility-types';
+import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUIMxMIndex from "./TKUIMxMIndex";
 import Trip from "../model/trip/Trip";
 import { Visibility } from "../model/trip/SegmentTemplate";
 import Segment from "../model/trip/Segment";
-import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
-import TKUICard from "../card/TKUICard";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import TKUICard, { CardPresentation } from "../card/TKUICard";
 import TKUIServiceSteps from "../trip/TKUIServiceSteps";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
+import { OptionsContext } from "../options/OptionsProvider";
 import { cardSpacing } from "../jss/TKUITheme";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import MapUtil from "../util/MapUtil";
@@ -25,7 +24,7 @@ import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
 import TKUIMxMCardHeader from "./TKUIMxMCardHeader";
 import TKUIStreetStep from "../trip/TKUIStreetStep";
 import DeviceUtil from '../util/DeviceUtil';
-import TKUILocationDetail from '../location/TKUILocationDetail';
+import TKUILocationDetail from '../location/TKUILocationDetailView';
 import FreeFloatingVehicleLocation from '../model/location/FreeFloatingVehicleLocation';
 import Util from '../util/Util';
 import { SignInStatus, TKAccountContext } from '../account/TKAccountContext';
@@ -34,17 +33,72 @@ import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg
 import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
-interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
+    /**
+     * @ctype
+     * @default {@link TKState#userProfile}
+     */
+    options?: TKUserProfile;
+
+    /**
+     * @ignore
+     */
     parentElement?: any;
+
+    /**
+     * Function that will be run when the view is requested to be closed (either by clicking close button or pressing ESC).
+     * @ctype     
+     */
+    onRequestClose?: () => void;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {
-    selectedTrip?: Trip;
+interface IConsumedProps {
+    /**
+     * @ctype
+     * @order 1
+     * @tkstateprop {@link TKState#selectedTrip}
+     */
+    trip: Trip;
+
+    /**
+     * @ctype
+     * @order 2
+     * @tkstateprop {@link TKState#selectedTripSegment}
+     */
     selectedTripSegment?: Segment;
-    setSelectedTripSegment: (segment?: Segment) => void;
-    refreshSelectedTrip: () => Promise<boolean>;
-    options: TKUserProfile;
-    mapAsync: Promise<TKUIMapViewClass>;
+
+    /**
+     * @ctype
+     * @order 3
+     * @tkstateprop {@link TKState#setSelectedTripSegment}
+     * @divider
+     */
+    onTripSegmentSelected: (segment: Segment) => void;
+
+    /**
+     * Function to request the real-time refresh of the trip.
+     * Just used by booking card, maybe can avoid passing this prop to this component.
+     * @ctype
+     * @ignore
+     */
+    refreshSelectedTrip?: () => Promise<boolean>;
+
+    /**
+     * Promise resolving to a map reference, used internally to fit segments of the trip (imperatively), 
+     * and display segment relevant information (e.g. TKUIMxMCollectNearbyCard).
+     * Consider removing map logic from this component, possibly moving it up to TKUITripPlanner, based on selected segment,
+     * though this logic depends on info inside TKUIMxMCollectNearbyCard, which should be lifted up to SDK or TKUITripPlannerApp state.
+     * @ignore
+     */
+    mapAsync?: Promise<TKUIMapViewClass>;
+
+    /**
+     * Stating if it should be optimized for portrait.
+     * 
+     * @tkstateprop global state orientation value.
+     * @default false
+     */
+    portrait?: boolean;
 }
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
@@ -64,12 +118,12 @@ const MODAL_UP_TOP = 100;
 
 export interface SegmentMxMCardsProps {
     segment: Segment;
-    onRequestClose: () => void;
+    onRequestClose?: () => void;
     t: TranslationFunction;
-    options: TKUserProfile;
+    options?: TKUserProfile;
     landscape: boolean;
     refreshSelectedTrip: () => Promise<boolean>;
-    mapAsync: Promise<TKUIMapViewClass>;
+    mapAsync?: Promise<TKUIMapViewClass>;
     trip?: Trip;
     accountsSupported?: boolean;
     signInStatus?: SignInStatus;
@@ -149,7 +203,7 @@ function getStreetMxMCard(props: SegmentMxMCardsProps, generateCardIndex: () => 
         >
             {segment.streets && segment.streets.map((street, i) => {
                 const onStepClick = () => {
-                    mapAsync.then((map) =>
+                    mapAsync?.then(map =>
                         map.fitBounds(MapUtil.getStreetBounds([street])));
                 };
                 return <TKUIStreetStep street={street} onClick={onStepClick} key={i} />;
@@ -167,7 +221,7 @@ function getSegmentMxMCards(
     const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, tkconfig } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
-    } else if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+    } else if (tkconfig.booking && tkconfig.booking.renderBookingCard && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
         return [
             tkconfig.booking.renderBookingCard({
                 segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
@@ -181,7 +235,7 @@ function getSegmentMxMCards(
         const localIcon = segment.sharedVehicle?.vehicleTypeInfo.vehicleTypeLocalIcon() ?? segment.nextSegment()?.modeInfo?.localIcon
         if (localIcon) {
             freeFloatingVehicleLoc.modeInfo.localIcon = localIcon;
-        }        
+        }
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
         const collectCardIndex = generateCardIndex();
         return [
@@ -204,7 +258,7 @@ function getSegmentMxMCards(
                     showHandle: true
                 }}
             >
-                <TKUILocationDetail location={freeFloatingVehicleLoc} />
+                <TKUILocationDetail location={freeFloatingVehicleLoc} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
             </TKUICard>
         ];
     } else if (segment.modeInfo?.identifier === "stationary_parking-onstreet") {
@@ -288,25 +342,14 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
     segments.slice(segments.indexOf(selectedSegment))
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
-/**
- * Need to define moveToNext global to the render method, and pass down to the componets an arrow function calling it,
- * to ensure when that arrow function is called the latest version of moveToNext function is called, with the latest
- * context (in particular, the latest version of props.selectedTripSegment). If not doing this, then the moveToNext 
- * is called with an old context (viz., old selected segment - the context gets fixed at the moment the function is 
- * declared and passed) while already displaying the new / updated trip, which causes problems (on next index calculation).
- */
-export let moveToNext: () => void;
-
 const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { refreshSelectedTrip, mapAsync, t } = props;
+    const { trip, selectedTripSegment, refreshSelectedTrip = () => Promise.resolve(true), portrait, mapAsync, t, classes } = props;
     const accountContext = useContext(TKAccountContext);
-    const trip = props.selectedTrip!;
     const segments = trip.getSegments()
         .filter(segment => !segment.isContinuation);  // Don't display MxM card for continuation segments.
     const segmentsInSummary = trip.getSegments(Visibility.IN_SUMMARY)
-        .filter(segment => !segment.isContinuation); // Maybe not necessary as it seems continuation segments are not visible in summary.
-    const classes = props.classes;
-    const selectedSegment = props.selectedTripSegment!;
+        .filter(segment => !segment.isContinuation); // Maybe not necessary as it seems continuation segments are not visible in summary.    
+    const selectedSegment = selectedTripSegment ?? segments[0];
     // A not-in-summary segment (e.g. a wait segment) is mapped to the next segment in the trip that is in summary.
     const selectedSegmentInSummary = findNextInSummary(selectedSegment, segments);
     const selectedIndexInSummary = segmentsInSummary.indexOf(selectedSegmentInSummary);
@@ -330,10 +373,10 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     const segmentToCards = segments.reduce((map: Map<Segment, JSX.Element[]>, segment: Segment) => {
         map.set(segment, getSegmentMxMCards({
             segment,
-            onRequestClose: () => props.setSelectedTripSegment(undefined),
+            onRequestClose: props.onRequestClose,
             t,
             options: props.options,
-            landscape: props.landscape,
+            landscape: !portrait,
             refreshSelectedTrip,
             mapAsync,
             trip,
@@ -354,12 +397,12 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
         // Segment may come undefined if the passed selected index overflows the cards for the trip,
         // which may happen when trying to select a card after a trip update (the new trip may have less segments)
         if (segment) {
-            props.setSelectedTripSegment(segment);
+            props.onTripSegmentSelected(segment);
             setSelectedCardOffset(selectedCardIndex - cardIndexForSegment(segment, segments, segmentToCards));
         }
     };
     useEffect(() => {
-        props.mapAsync.then(map => {
+        props.mapAsync?.then(map => {
             if (selectedSegment.isPT() && selectedCardOffset === 1 && selectedSegment.shapes) {
                 map.fitBounds(MapUtil.getShapesBounds(selectedSegment.shapes, true));
             } else {
@@ -372,7 +415,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         return () => {
             // Return map to fit the trip on unmount
-            props.mapAsync.then(map => map.fitBounds(MapUtil.getTripBounds(trip)))
+            props.mapAsync?.then(map => map.fitBounds(MapUtil.getTripBounds(trip)))
         };
     }, []);
     return (
@@ -382,7 +425,7 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
                     segments={segmentsInSummary}
                     value={selectedIndexInSummary}
                     onChange={(value: number) => {
-                        props.setSelectedTripSegment(segmentsInSummary[value]);
+                        props.onTripSegmentSelected(segmentsInSummary[value]);
                         // reset card offset since changed to another in-summary segment.
                         setSelectedCardOffset(0);
                     }}
@@ -412,29 +455,47 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
     );
 };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({ inputProps, children }) =>
-        <OptionsContext.Consumer>
-            {(optionsContext: IOptionsContext) =>
-                <RoutingResultsContext.Consumer>
-                    {(routingResultsContext: IRoutingResultsContext) =>
-                        <TKUIViewportUtil>
-                            {(viewportProps: TKUIViewportUtilProps) => {
-                                const { selectedTrip, selectedTripSegment, setSelectedTripSegment, mapAsync, refreshSelectedTrip } = routingResultsContext;
-                                return children!({
-                                    ...inputProps, ...viewportProps,
-                                    options: optionsContext.userProfile,
-                                    selectedTrip,
-                                    selectedTripSegment,
-                                    setSelectedTripSegment,
-                                    refreshSelectedTrip,
-                                    mapAsync
-                                });
-                            }}
-                        </TKUIViewportUtil>
-                    }
-                </RoutingResultsContext.Consumer>
-            }
-        </OptionsContext.Consumer>;
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+        const { selectedTrip, selectedTripSegment, setSelectedTripSegment, mapAsync, refreshSelectedTrip } = useContext(RoutingResultsContext);
+        if (!selectedTrip) {
+            return null;
+        }
+        return (
+            <>
+                {props.children!({
+                    trip: selectedTrip,
+                    selectedTripSegment,
+                    onTripSegmentSelected: setSelectedTripSegment,
+                    refreshSelectedTrip,
+                    mapAsync
+                })}
+            </>
+        );
+    };
+
+const Mapper: PropsMapper<IClientProps, IClientProps> =
+    ({ inputProps, children }) => {
+        const { userProfile } = useContext(OptionsContext);
+        return (
+            <TKUIViewportUtil>
+                {({ portrait }) =>
+                    children!({ options: userProfile, portrait, ...inputProps })}
+            </TKUIViewportUtil>
+        );
+    };
 
 export default connect((config: TKUIConfig) => config.TKUIMxMView, config, Mapper);
+
+export const TKUIMxMViewHelpers = {
+    TKStateProps: Consumer
+}
+
+/**
+ * Need to define moveToNext global to the render method, and pass down to the componets an arrow function calling it,
+ * to ensure when that arrow function is called the latest version of moveToNext function is called, with the latest
+ * context (in particular, the latest version of props.selectedTripSegment). If not doing this, then the moveToNext 
+ * is called with an old context (viz., old selected segment - the context gets fixed at the moment the function is 
+ * declared and passed) while already displaying the new / updated trip, which causes problems (on next index calculation).
+ */
+export let moveToNext: () => void;

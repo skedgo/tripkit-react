@@ -9,6 +9,7 @@ import TKLocationInfo from "../model/location/TKLocationInfo";
 import LatLng from "../model/LatLng";
 import { default as LocationsCache } from "./RegionLocationsCache";
 import DateTimeUtil from "../util/DateTimeUtil";
+import Environment from "../env/Environment";
 
 class LocationsData {
 
@@ -22,6 +23,12 @@ class LocationsData {
             this._instance = new LocationsData();
         }
         return this._instance;
+    }
+
+    constructor() {
+        if (process.env.NODE_ENV === 'development' || Environment.isBeta()) {
+            this.locationInfoCache.set("sgfleet", NetworkUtil.delayPromise<TKLocationInfo>(1000)(Util.deserialize(require("../mock/data/locationInfo-sgfleet.json"), TKLocationInfo)))
+        }
     }
 
     private eventEmitter: EventEmitter = new EventEmitter();

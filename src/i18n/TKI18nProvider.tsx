@@ -5,11 +5,13 @@ import messages_en from "./i18n_en.json";
 import untranslated from "./untranslated.json";
 import { i18n } from "./TKI18nConstants";
 
-export type TKI18nMessages = { [key: string]: string; };
+export type I18nKeys = keyof typeof messages_en | keyof typeof untranslated;
+
+export type TKI18nMessages = Record<I18nKeys, string>;
 
 export type TranslationFunction = (
     /** The key of the phrase to translate. */
-    phrase: string,
+    phrase: I18nKeys,
     /** The options accepted by `polyglot.t`. */
     options?: any
 ) => string

@@ -42,7 +42,7 @@ type IStyle = ReturnType<typeof tKUIMxMBookingCardDefaultStyle>
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     segment: Segment;
-    onRequestClose: () => void;
+    onRequestClose?: () => void;
     refreshSelectedTrip: () => Promise<boolean>;
     onSuccess?: (bookingTripUpdateURL: string) => void;
     trip?: Trip;
@@ -189,7 +189,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                                 value === ONE_WAY_ONLY_OPTION.value ? ONE_WAY_ONLY_OPTION : DATE_OPTION;
                         valueElem = readonly ?
                             returnValueToOption(inputField.value) === DATE_OPTION ?
-                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat()) :
+                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() }) :
                                 returnValueToOption(inputField.value)?.label ?? "-"
                             :
                             <div className={classes.returnTripInput}>
@@ -354,6 +354,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         to={segment.to}
                         startTime={segment.startTime}
                         endTime={segment.endTime}
+                        timezone={segment.from.timezone}
                     />
                 </div>
                 {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
@@ -391,9 +392,21 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                             // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
                             .then(result => {
                                 if (result.paymentOptions && result.review) {
+                                    const reviews = Util.jsonConvert().deserializeArray(result.review, BookingReview);
+                                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                                    reviews.forEach((review: BookingReview) => {
+                                        console.log(review.origin);
+                                        if (review.origin) {
+                                            review.origin.timezone = segment.from.timezone;
+                                            console.log(segment.from.timezone);
+                                        }
+                                        if (review.destination) {
+                                            review.destination.timezone = segment.to.timezone;
+                                        }
+                                    });
                                     setReviewAndPaymentForm({
                                         paymentOptions: result.paymentOptions,
-                                        reviews: Util.jsonConvert().deserializeArray(result.review, BookingReview),
+                                        reviews: reviews,
                                         publicKey: result.publishableApiKey,
                                         ephemeralKeyObj: result.ephemeralKey
                                     });

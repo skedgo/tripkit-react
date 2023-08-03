@@ -2,16 +2,15 @@ import * as React from "react";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
-import GATracker from "../analytics/GATracker";
-import TKUITimetableView from "../service/TKUITimetableView";
-import TKUIRoutingResultsView from "../trip/TKUIRoutingResultsView";
+import TKUITimetableView, { TKUITimetableViewHelpers } from "../service/TKUITimetableView";
+import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/TKUIRoutingResultsView";
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
-import TKUIServiceView from "../service/TKUIServiceView";
+import TKUIServiceView, { TKUIServiceViewHelpers } from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUITripPlannerDefaultStyle } from "./TKUITripPlanner.css";
-import TKUIRoutingQueryInput from "../query/TKUIRoutingQueryInput";
+import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
 import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
@@ -19,17 +18,16 @@ import TKUIProfileView from "../options/TKUIProfileView";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { Subtract } from "utility-types";
-import TKUILocationSearch from "../query/TKUILocationSearch";
+import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
-import TKUILocationDetailView from "../location/TKUILocationDetailView";
 import TKUIFavouritesView from "../favourite/TKUIFavouritesView";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import TKUIMapView, { TKUIMapPadding } from "../map/TKUIMapView";
+import TKUIMapView, { TKUIMapPadding, TKUIMapViewHelpers } from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
@@ -49,10 +47,12 @@ import Segment from "../model/trip/Segment";
 import { cardSpacing } from "../jss/TKUITheme";
 import Environment from "../env/Environment";
 import { TKUILocationBoxRef } from "../location_box/TKUILocationBox";
-import TKUIMxMView from "../mxm/TKUIMxMView";
+import TKUIMxMView, { TKUIMxMViewHelpers } from "../mxm/TKUIMxMView";
 import TKUIHomeCard from "../sidebar/TKUIHomeCard";
 import TKUIMyBookings from "../booking/TKUIMyBookings";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
+import CarPodLocation from "../model/location/CarPodLocation";
+import TKUILocationDetail from "../location/TKUILocationDetailView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -64,7 +64,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext { }
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext {
+    directionsView: boolean,
+    onDirectionsView: (onDirectionsView: boolean) => void
+}
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -85,12 +88,12 @@ interface IState {
     showTransportSettings: boolean;
     showMyBookings?: boolean;
     showFavourites: boolean;
-    showLocationDetails: boolean;
+    showLocationDetailsFor?: Location;
     tripUpdateStatus?: TKRequestStatus;
     // Need to put this elem into the state so when instantiated it triggers a re-render on consumer TKUILocationSearch.
     searchMenuPanelElem?: HTMLDivElement;
     fadeOutHome: boolean;
-    fadeOutHomeBecauseDetails: boolean;
+    fadeOutHomeBounce: boolean;
 }
 
 const modalContainerId = "mv-modal-panel";
@@ -113,9 +116,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showTransportSettings: false,
             mapView: false,
             showFavourites: false,
-            showLocationDetails: false,
+            showLocationDetailsFor: undefined,
             fadeOutHome: false,
-            fadeOutHomeBecauseDetails: false
+            fadeOutHomeBounce: false
         };
         TKUICardRaw.modalContainerId = modalContainerId;
         TKUICardRaw.mainContainerId = mainContainerId;
@@ -142,6 +145,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onShowTransportSettings = this.onShowTransportSettings.bind(this);
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
         this.onRequestAlternativeRoutes = this.onRequestAlternativeRoutes.bind(this);
+        this.setFadeOutHome = this.setFadeOutHome.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -157,7 +161,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         //     )
         // });
     }
-    private onShowSettings() {        
+    private onShowSettings() {
         this.props.setShowUserProfile(true);
     }
 
@@ -177,12 +181,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.props.onDirectionsView(true);
         }
         FavouritesData.recInstance.add(favourite);
-    }
-
-    private static ableToShowLocationDetailView(props: IProps): boolean {
-        const toLocation = props.query.to;
-        return !props.directionsView && !!toLocation && toLocation.isResolved() &&
-            !toLocation.isDroppedPin() && !(toLocation instanceof StopLocation);
     }
 
     private isShowTripDetail(props?: IProps) {
@@ -215,26 +213,32 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     public render(): React.ReactNode {
         const props = this.props;
         const { isUserTabbing, classes, t } = this.props;
+        const directionsView = this.props.directionsView;
         const searchBar =
-            !this.props.hideSearch && !this.props.directionsView && !(this.props.portrait && this.props.selectedService) &&
+            !this.props.hideSearch && !directionsView && !(this.props.portrait && this.props.selectedService) &&
             <div>
-                <TKUILocationSearch
-                    onDirectionsClicked={() => {
-                        this.props.onQueryChange(Util.iAssign(this.props.query, { from: Location.createCurrLoc() }));
-                        this.props.onDirectionsView(true);
-                    }}
-                    onShowSideBarClicked={() => {
-                        this.setState({ showSidebar: true });
-                    }}
-                    onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}                    
-                    onMenuVisibilityChange={open => this.setState({ fadeOutHome: open })}
-                />
+                <TKUILocationSearchHelpers.TKStateProps>
+                    {stateProps =>
+                        <TKUILocationSearch
+                            {...stateProps}
+                            onDirectionsClick={() => {
+                                this.props.onQueryChange(Util.iAssign(this.props.query, { from: Location.createCurrLoc() }));
+                                this.props.onDirectionsView(true);
+                            }}
+                            onShowSideMenuClicked={() => {
+                                this.setState({ showSidebar: true });
+                            }}
+                            onLocationBoxRef={(ref: TKUILocationBoxRef) => this.locSearchBoxRef = ref}
+                            onMenuVisibilityChange={open => this.setFadeOutHome(open)}
+                        />
+                    }
+                </TKUILocationSearchHelpers.TKStateProps>
                 <div className={classes.searchMenuContainer}
                     ref={(ref) => ref && ref !== this.state.searchMenuPanelElem && this.setState({ searchMenuPanelElem: ref })} />
             </div>;
         const sideBar =
             <TKUISidebar
-                open={this.state.showSidebar && !this.props.directionsView}
+                open={this.state.showSidebar && !directionsView}
                 onRequestClose={() => {
                     return this.setState({ showSidebar: false });
                 }}
@@ -268,67 +272,98 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIMyBookings
                 onRequestClose={() => this.setState({ showMyBookings: false })}
             />;
-        const queryInput = this.props.directionsView &&
+        const queryInput = directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
             !this.props.selectedTripSegment &&    // not displaying MxM view
-            <TKUIRoutingQueryInput
-                title={t("Route")}
-                showTransportsBtn={this.props.landscape}
-                showTimeSelect={this.props.landscape}
-                sideDropdown={DeviceUtil.isTablet}
-                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
-                onShowTransportOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
-                resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
-                onClearClicked={() => {
-                    this.props.onQueryChange(RoutingQuery.create());
-                    this.props.onDirectionsView(false);
+            <TKUIRoutingQueryInputHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIRoutingQueryInput
+                        title={t("Route")}
+                        showTransportsBtn={this.props.landscape}
+                        showTimeSelect={this.props.landscape}
+                        sideDropdown={DeviceUtil.isTablet}
+                        onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                        onShowTransportOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
+                        resolveCurrLocation={this.props.query.from !== null && this.props.query.to !== null}
+                        onClearClicked={() => {
+                            this.props.onQueryChange(RoutingQuery.create());
+                            this.props.onDirectionsView(false);
+                        }}
+                        // To avoid capturing focus when returning from trip details view (where query input renders again),
+                        // since focus should be returned to 'Detail' btn on trip row.
+                        shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}
+                        {...stateProps}
+                    />
+                }
+            </TKUIRoutingQueryInputHelpers.TKStateProps>;
+        const locationHasVehicleAvailability = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor instanceof CarPodLocation && this.state.showLocationDetailsFor.supportsVehicleAvailability;
+        const locationDetailView = this.state.showLocationDetailsFor &&
+            this.state.showLocationDetailsFor.isResolved() &&
+            !this.state.showLocationDetailsFor.isDroppedPin() &&
+            this.state.showLocationDetailsFor.hasDetail !== false &&
+            <TKUILocationDetail
+                location={this.state.showLocationDetailsFor}
+                actions={directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
+                cardProps={{
+                    presentation: CardPresentation.SLIDE_UP,
+                    slideUpOptions: {
+                        initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                        position: DeviceUtil.isTouch() ? undefined :
+                            this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                        draggable: DeviceUtil.isTouch(),
+                        modalUp: this.props.landscape ?
+                            { top: (this.isShowTripDetail() || this.props.selectedTripSegment || locationHasVehicleAvailability) ? cardSpacing() : (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                            { top: cardSpacing(false), unit: 'px' },
+                        modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
+                        zIndex: this.props.selectedTripSegment || locationHasVehicleAvailability ? 1006 : undefined,   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
+                        ...locationHasVehicleAvailability && { containerClass: classes.wideCard }
+                    },
+                    onRequestClose: () => this.setState({ showLocationDetailsFor: undefined })
                 }}
-                // To avoid capturing focus when returning from trip details view (where query input renders again),
-                // since focus should be returned to 'Detail' btn on trip row.
-                shouldFocusAfterRender={!this.props.trips && this.props.isUserTabbing}
-            />;
-        const toLocation = this.props.query.to;
-        const locationDetailView = this.state.showLocationDetails && TKUITripPlanner.ableToShowLocationDetailView(this.props) &&
-            <TKUILocationDetailView
-                location={toLocation!}
-                slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
-                    position: DeviceUtil.isTouch() ? undefined :
-                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 145, unit: 'px' }
-                }}
-                onRequestClose={() => this.setState({ showLocationDetails: false })}
             />;
         const timetableView = this.isShowTimetable() ?
-            <TKUITimetableView
-                onRequestClose={() => this.showTimetableFor(undefined)}
-                slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.UP,
-                    // Hide, but don't close, when service is selected.
-                    // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
-                    position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
-                    draggable: false,
-                    modalUp: this.props.landscape ?
-                        { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
-                        { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
-                }}
-            /> : null;
+            <TKUITimetableViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUITimetableView
+                        {...stateProps}
+                        cardProps={{
+                            onRequestClose: () => this.showTimetableFor(undefined),
+                            slideUpOptions: {
+                                initPosition: TKUISlideUpPosition.UP,
+                                // Hide, but don't close, when service is selected.
+                                // position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : undefined,
+                                position: this.props.selectedService ? TKUISlideUpPosition.HIDDEN : TKUISlideUpPosition.UP,
+                                draggable: false,
+                                modalUp: this.props.landscape ?
+                                    { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                                    { top: cardSpacing(false), unit: 'px' },
+                                modalDown: { top: this.getContainerHeight() - 40, unit: 'px' }
+                            },
+                            presentation: CardPresentation.SLIDE_UP
+                        }}
+                    />}
+            </TKUITimetableViewHelpers.TKStateProps>
+            : null;
         const serviceDetailView = this.isShowServiceDetail() ?
-            <TKUIServiceView
-                onRequestClose={() => this.props.onServiceSelection(undefined)}
-                slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    position: DeviceUtil.isTouch() ? undefined :
-                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: (this.props.directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 130, unit: 'px' }
-                }}
-            /> : null;
-        const favouritesView = this.state.showFavourites && !this.props.directionsView &&
+            <TKUIServiceViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIServiceView
+                        {...stateProps}
+                        cardProps={{
+                            presentation: CardPresentation.SLIDE_UP,
+                            slideUpOptions: {
+                                initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                position: DeviceUtil.isTouch() ? undefined :
+                                    this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                draggable: DeviceUtil.isTouch(),
+                                modalUp: this.props.landscape ? { top: (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                modalDown: { top: this.getContainerHeight() - 130, unit: 'px' }
+                            },
+                            onRequestClose: () => this.props.onServiceSelection(undefined)
+                        }}
+                    />}
+            </TKUIServiceViewHelpers.TKStateProps> : null;
+        const favouritesView = this.state.showFavourites && !directionsView &&
             <TKUIFavouritesView
                 onFavouriteClicked={this.onFavouriteClicked}
                 onRequestClose={() => { this.setState({ showFavourites: false }) }}
@@ -340,29 +375,30 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
                 }}
             />;
-        const routingResultsView = this.props.directionsView && this.props.query.isComplete(true) && this.props.trips ?
-            <TKUIRoutingResultsView
-                onDetailsClicked={() => this.props.onTripDetailsView(true)}
-                onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
-                onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
-                slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    position: this.isShowTripDetail() || this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
-                        DeviceUtil.isTouch() ? undefined :
-                            this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalMiddle: { top: 55, unit: '%' },
-                    modalDown: { top: 90, unit: '%' }
-                }}
-                showTimeSelect={this.props.portrait}
-                showTransportsBtn={this.props.portrait}
-            /> : null;
-
-        // this.state.fadeOutHomeBecauseDetails is set to false with a delay, to avoid home card being displayed on search location clear and immediatly being hidden again 
-        // because input gets focus and there are recent autocompletion results.
+        const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips ?
+            <TKUIRoutingResultsViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIRoutingResultsView
+                        {...stateProps}
+                        onDetailsClicked={() => this.props.onTripDetailsView(true)}
+                        onTransportButtonClick={this.props.transportSettingsUI == "FULL" ? this.onShowTransportSettings : undefined}
+                        onShowOptions={this.props.transportSettingsUI == "BRIEF_TO_FULL" ? this.onShowTransportSettings : undefined}
+                        slideUpOptions={{
+                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            position: this.isShowTripDetail() || this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
+                                DeviceUtil.isTouch() ? undefined :
+                                    this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            draggable: DeviceUtil.isTouch(),
+                            modalUp: this.props.landscape ? { top: 176 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalMiddle: { top: 55, unit: '%' },
+                            modalDown: { top: 90, unit: '%' }
+                        }}
+                        showTimeSelect={this.props.portrait}
+                        showTransportsBtn={this.props.portrait}
+                    />}
+            </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
         const homeCard = searchBar && !favouritesView && !this.isShowTimetable() &&
-            <div className={this.state.fadeOutHome || this.state.fadeOutHomeBecauseDetails ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
+            <div className={this.state.fadeOutHome ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
                 <TKUIHomeCard onMyBookings={() => this.setState({ showMyBookings: true })} />
             </div>
         let tripDetailView: any;
@@ -371,17 +407,20 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 tripDetailView =
                     <TKUITripOverviewView
                         value={this.props.selectedTrip!}
-                        onRequestClose={() => this.props.onTripDetailsView(false)}
-                        slideUpOptions={{
-                            position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
-                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                            draggable: true,
-                            modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                            modalMiddle: { top: 55, unit: '%' },
-                            modalDown: { top: 90, unit: '%' }
-                        }}
                         onRequestAlternativeRoutes={this.onRequestAlternativeRoutes}
-                        setSelectedTripSegment={props.setSelectedTripSegment}
+                        onTripSegmentSelected={props.setSelectedTripSegment}
+                        cardProps={{
+                            onRequestClose: () => this.props.onTripDetailsView(false),
+                            slideUpOptions: {
+                                position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
+                                initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                draggable: true,
+                                modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                modalMiddle: { top: 55, unit: '%' },
+                                modalDown: { top: 90, unit: '%' }
+                            },
+                            presentation: CardPresentation.SLIDE_UP
+                        }}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -389,7 +428,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 tripDetailView =
                     <TKUICardCarousel
                         selected={selected}
-                        onChange={(selected: number) => this.props.onChange((this.props.trips || [])[selected])}
+                        onChange={(selected: number) => this.props.onSelectedTripChange((this.props.trips || [])[selected])}
                         slideUpOptions={{
                             position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN :
                                 this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
@@ -404,19 +443,19 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                     <div className={classes.carouselPage}>
                                         <TKUITripOverviewView
                                             value={trip}
-                                            onRequestClose={() => {
-                                                this.props.onTripDetailsView(false);
-                                            }}
                                             key={trip.getKey(String(i))}
                                             handleRef={(handleRef: any) => registerHandle(i, handleRef)}
-                                            cardPresentation={CardPresentation.NONE}
-                                            slideUpOptions={{
-                                                draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
-                                                showHandle: true
-                                            }}
                                             shouldFocusAfterRender={i === selected ? undefined : false}
                                             doNotStack={i !== selected}
-                                            setSelectedTripSegment={props.setSelectedTripSegment}
+                                            onTripSegmentSelected={props.setSelectedTripSegment}
+                                            cardProps={{
+                                                onRequestClose: () => this.props.onTripDetailsView(false),
+                                                slideUpOptions: {
+                                                    draggable: false,    // Needs to specify so it's needed by TKUIScrollForCard
+                                                    showHandle: true
+                                                },
+                                                presentation: CardPresentation.NONE
+                                            }}
                                         />
                                     </div>
                                 )}
@@ -428,7 +467,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView
                 && !locationDetailView ? 0 : 500;
         } else {
-            if (this.props.directionsView && this.props.trips) {
+            if (directionsView && this.props.trips) {
                 mapPadding.bottom = this.getContainerHeight() * .50;
             }
             if (queryInput) {
@@ -441,7 +480,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             }
         }
         // this.props.landscape ? {left: 500} :
-        //     this.props.directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
+        //     directionsView && this.props.trips ? {bottom: this.ref ? this.ref.offsetHeight * .45 : 20, top: 100} : undefined;
         let stateLoadError: React.ReactNode = null;
         if (this.props.stateLoadError) {
             stateLoadError = this.props.stateLoadError.message;
@@ -463,7 +502,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     this.props.tripUpdateError ? "Error updating trip" : stateLoadError}
                 onDismiss={Environment.isBeta() && this.props.stateLoadError ? () => this.setState({ tripUpdateStatus: undefined }) : undefined}
             />;
-        const mxMView = props.selectedTripSegment && <TKUIMxMView parentElement={this.ref} />;
+        const mxMView = props.selectedTripSegment &&
+            <TKUIMxMViewHelpers.TKStateProps>
+                {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
+            </TKUIMxMViewHelpers.TKStateProps>
         return (
             <TKUIConfigContext.Consumer>
                 {(config: TKUIConfig) =>
@@ -478,23 +520,34 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 {queryInput}
                             </div>
                             <div id="map-main" className={classes.mapMain}>
-                                <TKUIMapView
-                                    hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                    padding={mapPadding}
-                                    locationActionHandler={(loc: Location) => {
-                                        if (loc instanceof StopLocation) {
-                                            return () => {
-                                                this.showTimetableFor(loc as StopLocation);
-                                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                            }
-                                        } else if (loc.isCurrLoc()) {
-                                            return undefined;
-                                        } else if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
-                                            return () => this.setState({ showLocationDetails: true });
-                                        }
-                                        return undefined;
-                                    }}
-                                />
+                                <TKUIMapViewHelpers.TKStateProps>
+                                    {stateProps =>
+                                        <TKUIMapView
+                                            {...stateProps}
+                                            hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                            padding={mapPadding}
+                                            locationActionHandler={(loc: Location) => {
+                                                if (loc instanceof StopLocation) {
+                                                    return () => {
+                                                        this.showTimetableFor(loc as StopLocation);
+                                                        FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                                    }
+                                                } else if (loc.isCurrLoc()) {
+                                                    return undefined;
+                                                } else if (loc.isResolved() && !loc.isDroppedPin()) {
+                                                    return () => this.setState({ showLocationDetailsFor: loc });
+                                                }
+                                                return undefined;
+                                            }}
+                                            mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
+                                            rightClickMenu={[
+                                                { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
+                                                { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
+                                                ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
+                                            ]}
+                                        />
+                                    }
+                                </TKUIMapViewHelpers.TKStateProps>
                             </div>
                             <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
                             {sideBar}
@@ -540,14 +593,23 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.locSearchBoxRef && this.locSearchBoxRef.focus(), 2000);
     }
 
+    private setFadeOutHome(fadeOutHome: boolean) {
+        this.setState({ fadeOutHomeBounce: fadeOutHome });
+        // Just bounce setting fadeOutHome to false, to avoid home to start appearing to immediatly dissapear. E.g.
+        // one component was hidden to display another: loc datail -> other loc detail on drag pin, showing autocompletion results -> pin drop).
+        if (fadeOutHome) {
+            this.setState({ fadeOutHome: true });
+        } else {
+            setTimeout(() => this.state.fadeOutHomeBounce !== this.state.fadeOutHome && this.setState({ fadeOutHome: fadeOutHome }), 500);
+        }
+    }
+
     public componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<IState>): void {
-        if (TKUITripPlanner.ableToShowLocationDetailView(this.props) !== TKUITripPlanner.ableToShowLocationDetailView(prevProps)) {
-            const ableToShowLocationDetailView = TKUITripPlanner.ableToShowLocationDetailView(this.props);
-            this.setState({ showLocationDetails: ableToShowLocationDetailView });
-            if (TKUITripPlanner.ableToShowLocationDetailView(this.props)) {
-                this.setState({ fadeOutHomeBecauseDetails: true });
+        if (!!this.state.showLocationDetailsFor !== !!prevState.showLocationDetailsFor) {
+            if (this.state.showLocationDetailsFor) {
+                this.setFadeOutHome(true);
             } else {
-                setTimeout(() => this.setState({ fadeOutHomeBecauseDetails: TKUITripPlanner.ableToShowLocationDetailView(this.props) }), 500);
+                this.setFadeOutHome(false);
             }
         }
 
@@ -561,12 +623,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             // resolved, which happens when loading a timetable web-app url. Timetable will be triggered by TKStateUrl.
             && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
             this.showTimetableFor(this.props.query.to as StopLocation);
-        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to
-            && !this.props.directionsView && !this.state.showLocationDetails
-            // Don't show location details if it was the case that the location was unresolved and become
-            // resolved. Copied from stop location case, not sure it it's actually necessary.
-            && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
-            this.setState({ showLocationDetails: true })
+        } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && !this.props.directionsView // Set destination on search view
+            && this.props.query.to.isResolved() && !this.props.query.to.isDroppedPin()
+            && this.props.query.to !== this.state.showLocationDetailsFor) {
+            this.setState({ showLocationDetailsFor: this.props.query.to })
+        }
+
+        if (this.state.showLocationDetailsFor &&
+            (
+                (prevProps.query.from === this.state.showLocationDetailsFor && !this.props.query.from) ||   // Hide from details if removed from
+                (prevProps.query.to === this.state.showLocationDetailsFor && !this.props.query.to) ||   // Hide to details if removed to
+                (!prevProps.directionsView && this.props.directionsView) || // Switched to directions view, so close location detail
+                (prevProps.trips === undefined && this.props.trips !== undefined) ||    // Hide details if started computing trips
+                (prevProps.trips !== undefined && this.props.trips === undefined)       // Hide details if cleared trips
+            )
+        ) {
+            this.setState({ showLocationDetailsFor: undefined })
         }
 
         if (this.isShowTimetable() // Hide timetable if neither query from nor to are stops, and not displaying it for a trip segment.
@@ -581,13 +653,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         }
         if (!this.isShowTimetable(prevProps) && this.isShowTimetable() // Start displaying timetable
             || (this.isShowTimetable() && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
-            || !prevState.showLocationDetails && this.state.showLocationDetails // Start displaying location details
+            || !prevState.showLocationDetailsFor && this.state.showLocationDetailsFor // Start displaying location details
         ) {
             this.setState({ showFavourites: false });
-        }
-        // Switched to directions view, so close location detail
-        if (!prevProps.directionsView && this.props.directionsView && this.state.showLocationDetails) {
-            this.setState({ showLocationDetails: false });
         }
         // Switched to directions view, so close timetable
         if (!prevProps.directionsView && this.props.directionsView && this.isShowTimetable()) {
@@ -654,7 +722,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
     return (
         <TKUIConfigContext.Consumer>
             {(config: TKUIConfig) =>
@@ -670,6 +738,8 @@ const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode
                                                     {(serviceContext: IServiceResultsContext) => (
                                                         props.children!({
                                                             ...routingResultsContext,
+                                                            directionsView: routingResultsContext.computeTripsForQuery,
+                                                            onDirectionsView: routingResultsContext.onComputeTripsForQuery,
                                                             ...serviceContext,
                                                             ...viewportProps,
                                                             ...optionsContext,

@@ -123,14 +123,14 @@ const keyframesStyle = {
         '100%': {
             opacity: '0',
             height: '0',
-            overflow: 'hidden'            
+            overflow: 'hidden'
         }
     },
     '@keyframes fadeIn': {
         '0%': {
             opacity: '0',
             height: '0',
-            overflow: 'hidden'            
+            overflow: 'hidden'
         },
         '1%': {
             opacity: '0',
@@ -143,6 +143,11 @@ const keyframesStyle = {
             overflow: 'visible'
         }
     },
+    '@keyframes beatBackground': {
+        '0%': { backgroundColor: 'white' },
+        '50%': { backgroundColor: '#00000014' },
+        '100%': { backgroundColor: 'white' }
+    }
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [
     //     {
@@ -266,7 +271,7 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     },
 
     transitionFadeOut: {
-        transition: 'opacity .5s 0s, height 0s .5s'        
+        transition: 'opacity .5s 0s, height 0s .5s'
     },
 
     fadeOut: {
@@ -283,9 +288,9 @@ const genStyleClasses: ITKUIGenStyleClasses = {
     },
 
     animateFadeIn: {
-        animationDuration: '.5s',        
+        animationDuration: '.5s',
         animationName: keyFramesStyles.keyframes.fadeIn,
-        animationTimingFunction: 'ease-in-out',        
+        animationTimingFunction: 'ease-in-out',
         animationFillMode: 'forwards'
     },
 
@@ -388,7 +393,7 @@ const genStyleClasses: ITKUIGenStyleClasses = {
             outline: 'none!important',  // To avoid glow effect on focus
             WebkitBoxSizing: 'border-box',
             MozBoxSizing: 'border-box',
-            boxSizing: 'border-box',
+            boxSizing: 'border-box'
         }
         // --------------------------------------------------------------------------------------------------------
     },

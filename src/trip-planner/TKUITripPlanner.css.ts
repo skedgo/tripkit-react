@@ -68,8 +68,8 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column
     },
     reportBtn: {
-        position: 'absolute',                        
-        right: '10px'            
+        position: 'absolute',
+        right: '10px'
         // TODO: replaced next props by two separate classes below until making
         // a props update refresh injected css. See comment in StyleHelper.onRefreshStyles
         // Increase z-index just on landscape to avoid button getting behind modal background.
@@ -122,6 +122,11 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
             '& .' + TK_FOCUS_TARGET_CLASS + ':focus'
         ]: {
             boxShadow: '0px 0px 3px 3px #024dff!important'  // To prevail to boxShadow: none of resetStyles.
+        }
+    },
+    wideCard: {
+        ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
+            width: TKUIResponsiveUtil.getPortraitWidth() - 2 * cardSpacing() + 'px!important'
         }
     }
 });

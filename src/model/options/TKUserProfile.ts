@@ -1,9 +1,9 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any } from "json2typescript";
 import ModeIdentifier from "../region/ModeIdentifier";
 import Features from "../../env/Features";
-import TKTransportOptions, {DisplayConf} from "./TKTransportOptions";
+import TKTransportOptions, { DisplayConf } from "./TKTransportOptions";
 import TKWeightingPreferences from "./TKWeightingPreferences";
-import {TripSort} from "../trip/TripSort";
+import { TripSort } from "../trip/TripSort";
 import TKUserMode from "../../account/TKUserMode";
 import TripGoApi from "../../api/TripGoApi";
 import Util from "../../util/Util";
@@ -70,9 +70,9 @@ class TKUserProfile {
      * Next two fields are set by TKAccountProvider, the reason is that we need them on a higher level in the components hierarchy,
      * e.g. to be consumed by WithRoutingResults, whereas TKAccountProvider is below it.
      */
-    public finishSignInStatusP?: Promise<SignInStatus>;    
+    public finishSignInStatusP?: Promise<SignInStatus>;
     public exclusiveModes: boolean = false;
-    
+
     /**
      * Next two fields may be considered part of the remote user profile, similar to TKUserAccount fetched and maintained by
      * TKAccountProvider, but we need to access them on a higher level in the components hierarchy, 
@@ -89,7 +89,7 @@ class TKUserProfile {
 
     /** 
      * Need to ensure this is called after user token was resolved.
-     */ 
+     */
     public getUserModeRulesByRegionP(region: string): Promise<TKUserMode[]> {
         let modeRulesP = this.userModeRulesPByRegion.get(region);
         if (!modeRulesP) {
@@ -99,7 +99,7 @@ class TKUserProfile {
                     const result = Util.jsonConvert().deserializeArray(resultJson, TKUserMode);
                     this.userModeRulesByRegion.set(region, result);
                     return result;
-                });                
+                });
             this.userModeRulesPByRegion.set(region, modeRulesP);
         }
         return modeRulesP;
@@ -107,6 +107,11 @@ class TKUserProfile {
 
     public getUserModeRulesByRegion(region: string): TKUserMode[] | null | undefined {
         return this.userModeRulesByRegion.get(region);
+    }
+
+    public resetUserModeRules() {
+        this.userModeRulesPByRegion = new Map();
+        this.userModeRulesByRegion = new Map();
     }
 
     get wheelchair(): boolean {

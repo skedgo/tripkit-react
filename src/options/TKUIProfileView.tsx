@@ -201,7 +201,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             onClick={() => this.setState({ showPriorities: true })}
                         />
                     </TKUISettingSection>
-                    {this.props.config.isDarkDefault === undefined &&
+                    {this.props.config.isDarkMode === undefined &&
                         <TKUISettingSection>
                             <div className={classes.checkboxRow}>
                                 <div>

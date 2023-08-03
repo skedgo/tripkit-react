@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useElements, Elements, PaymentElement, CardElement } from '@stripe/react-stripe-js';
+import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
 import { black, TKUITheme } from '../jss/TKUITheme';
@@ -83,20 +83,20 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     publicKey: string;
     paymentOption: PaymentOption;
     ephemeralKeyObj: EphemeralResult;
-    onClose: (success?: boolean) => void;
-    setWaiting: (waiting: boolean) => void;
+    onClose: (success?: boolean, data?: { updateURL?: string }) => void;
+    setWaiting?: (waiting: boolean) => void;
 }
 
 const TKUICheckoutView: React.FunctionComponent<IProps> =
     ({ publicKey, paymentOption, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
-        const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);        
+        const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
             const initPaymentUrl = paymentOption.url;
             if (paymentOption.paymentMode === "INTERNAL") { // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
-                setWaiting(true);
+                setWaiting?.(true);
                 TripGoApi.apiCallUrl(initPaymentUrl, paymentOption.method)
                     .then(({ clientSecret, url: paidUrl }) => {
                         if (!clientSecret) {
@@ -106,7 +106,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         setPaidUrl(paidUrl);
                     })
                     .catch(UIUtil.errorMsg)
-                    .finally(() => setWaiting(false));;
+                    .finally(() => setWaiting?.(false));;
             }
         }, []);
         if (paymentOption.paymentMode === "INTERNAL" && !paymentIntentSecret || !stripePromise) {
@@ -126,7 +126,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                 }
                 if (paymentOption.paymentMode === "INTERNAL") {
                     let result;
-                    setWaiting(true);
+                    setWaiting?.(true);
                     if (paymentMethod) {
                         result = await stripe.confirmCardPayment(paymentIntentSecret!, {
                             payment_method: paymentMethod!.id
@@ -154,17 +154,17 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     if (result.error) {
                         // Show error to your customer (for example, payment details incomplete)
                         console.log(result.error.message);
-                        setWaiting(false);
+                        setWaiting?.(false);
                     } else {
                         TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
-                            .then(() => onClose(true))
+                            .then(data => onClose(true, data))
                             .catch(e => {
                                 UIUtil.errorMsg(e, { onClose });
                             })
-                            .finally(() => setWaiting(false));
+                            .finally(() => setWaiting?.(false));
                     }
                 } else {
-                    setWaiting(true);
+                    setWaiting?.(true);
                     if (!paymentMethod) {
                         const payload = await stripe.createPaymentMethod({
                             type: "card",
@@ -189,9 +189,9 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         }
                     }
                     TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: paymentMethod.id })
-                        .then(() => onClose(true))
+                        .then(data => onClose(true, data))
                         .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting(false));
+                        .finally(() => setWaiting?.(false));
                 }
             }
         return (
@@ -210,7 +210,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
 interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
     onConfirmPayment: (props: { paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
-    setWaiting: (waiting: boolean) => void;
+    setWaiting?: (waiting: boolean) => void;
     onClose: (success?: boolean) => void;
 }
 
@@ -226,7 +226,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         // const [ephemeralKey, setEphemeralKey] = useState<string | undefined>(undefined); // Now it will come from quick/1, so remove it.
 
         const refreshData = () => {
-            setWaiting(true);
+            setWaiting?.(true);
             return fetch(`https://api.stripe.com/v1/customers/${customerId}/payment_methods?type=card`, {
                 method: 'get',
                 headers: new Headers({
@@ -237,7 +237,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 })
             })
                 .then(NetworkUtil.jsonCallback)
-                .finally(() => setWaiting(false));
+                .finally(() => setWaiting?.(false));
         };
 
         useEffect(() => {
@@ -274,7 +274,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         };
 
         const onRemovePM = async (value: PaymentMethod) => {
-            setWaiting(true);
+            setWaiting?.(true);
             const response = await fetch(`https://api.stripe.com/v1/payment_methods/${value.id}/detach`, {
                 method: 'post',
                 headers: new Headers({
@@ -284,7 +284,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                     'Stripe-Version': '2020-08-27'
                 })
             });
-            setWaiting(false);
+            setWaiting?.(false);
             if (!response.ok) {
                 UIUtil.errorMsg(new TKError("Could not delete the card.", response.status.toString(), false));
             } else {

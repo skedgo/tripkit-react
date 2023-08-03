@@ -5,6 +5,10 @@ import Trip from "../model/trip/Trip";
 import StopLocation from "../model/StopLocation";
 import { Env } from "../env/Environment";
 import Util from "../util/Util";
+import BookingInfo from "../model/trip/BookingInfo";
+import PaymentOption from "../model/trip/PaymentOption";
+import BookingReview from "../model/trip/BookingReview";
+import EphemeralResult from "../model/payment/EphemeralResult";
 
 class TripGoApi {
 
@@ -16,6 +20,8 @@ class TripGoApi {
     public static apiKey = "";
     public static server = TripGoApi.SATAPP;
     public static userToken?: string = undefined;
+    public static resetUserToken: () => void = () => { };
+    public static clientID?: string = undefined;
     public static accountAccessToken?: string = undefined;
     public static userID?: string = undefined;
     public static locale?: Promise<string> = undefined;
@@ -66,6 +72,9 @@ class TripGoApi {
                 headers: {
                     'X-TripGo-Version': 'w3.2018.12.20',
                     'X-TripGo-Key': this.apiKey,
+                    ...this.clientID && {
+                        'X-TripGo-Client-Id': this.clientID
+                    },
                     'referer': 'https://tripgo.com',
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -122,6 +131,47 @@ class TripGoApi {
     public static defaultToVersion(url: string, v: number) {
         return !url.includes('v=') ?
             url + (url.includes("?") ? "&" : "?") + "v=" + v : url;
+    }
+
+    public static requestBookingOptions(bookingInfosUrl: string): Promise<BookingInfo[]> {
+        return TripGoApi.apiCallUrl(bookingInfosUrl, "GET")
+            .then((bookingsInfoJsonArray) => {
+                return bookingsInfoJsonArray.map(infoJson => Util.deserialize(infoJson, BookingInfo));
+            })
+    }
+
+    public static submitBookingOption(bookingForm: BookingInfo): Promise<{
+        paymentOptions?: PaymentOption[],
+        reviews?: BookingReview[],
+        publishableApiKey: string,
+        ephemeralKey: EphemeralResult,
+        refreshURLForSourceObject: string
+    }> {
+        return TripGoApi.apiCallUrl(bookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(bookingForm))
+            // For testing without performing booking.
+            // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
+            .then(this.deserializeBookingResult);
+    }
+
+    public static deserializeRoutingResults(resultsJson): RoutingResults {
+        return Util.deserialize(resultsJson, RoutingResults);
+    }
+
+    public static deserializeBookingInfo(bookingInfoJson): BookingInfo {
+        return Util.deserialize(bookingInfoJson, BookingInfo);
+    }
+
+    public static deserializeBookingResult(bookingResultJson): {
+        paymentOptions?: PaymentOption[],
+        reviews?: BookingReview[],
+        publishableApiKey: string,
+        ephemeralKey: EphemeralResult,
+        refreshURLForSourceObject: string
+    } {
+        return ({
+            ...bookingResultJson,
+            reviews: bookingResultJson.review && Util.jsonConvert().deserializeArray(bookingResultJson.review, BookingReview),
+        });
     }
 
 }

@@ -63,11 +63,11 @@ export interface TKUIWithStyle<ST, CP> {
      *
      * @ctype StylesOverride | (theme: TKUITheme) => StylesOverride
      */
-    styles?: TKUICustomStyles<ST, CP>,
+    styles?: TKUICustomStyles<ST, CP>;
     /**
      * @ignore
      */
-    randomizeClassNames?: boolean
+    randomizeClassNames?: boolean;
 }
 
 // TODO: maybe rename TKUIWithClasses to TKInjectedProps? It's not intuitive to extend this with TKI18nContextProps.

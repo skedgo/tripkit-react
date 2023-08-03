@@ -1,4 +1,6 @@
 import {JsonObject, JsonProperty} from "json2typescript";
+import CurrentBundle from "../model/user/CurrentBundle";
+import FutureBundle from "../model/user/FutureBundle";
 
 @JsonObject
 class TKUserAccount {
@@ -14,6 +16,10 @@ class TKUserAccount {
     public name?: string = undefined;
     @JsonProperty('phone', String, true)
     public phone?: string = undefined;
+    @JsonProperty('currentBundle', CurrentBundle, true)
+    public currentBundle?: CurrentBundle = undefined;
+    @JsonProperty('futureBundle', FutureBundle, true)
+    public futureBundle?: FutureBundle = undefined;
 }
 
 export default TKUserAccount;

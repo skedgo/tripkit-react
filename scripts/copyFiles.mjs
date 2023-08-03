@@ -2,10 +2,10 @@ import path from 'path';
 import glob from 'glob';
 import fse from 'fs-extra';
 
-function copyFiles(ms) {
+function copyFiles() {
     /* eslint-enable @typescript-eslint/no-var-requires */
     const srcDir = path.join('./src');
-    const distDir = path.join('./dist/' + ms);
+    const distDir = path.join('./dist');
     const files = glob.sync('**/*.+(d.ts|css|png|json)', {
         cwd: srcDir
     });
@@ -16,4 +16,4 @@ function copyFiles(ms) {
     });
 }
 
-copyFiles('js');
+copyFiles();
