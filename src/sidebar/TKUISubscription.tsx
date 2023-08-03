@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -29,12 +29,29 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUISubscription"
 };
 
+let veryFirstTime = true;
+
 const TKUISubscription: React.FunctionComponent<IProps> = (props: IProps) => {
     const { t, classes } = props;
-    const { userAccount } = useContext(TKAccountContext);
+    const { userAccount: currentUserAccount, refreshUserProfile } = useContext(TKAccountContext);
+    // Undefine userAccount while refreshing user.
+    const [refreshing, setRefreshing] = useState<boolean>(false);
+    const userAccount = !refreshing ? currentUserAccount : undefined;
     const currentBundle = userAccount?.currentBundle;
     const futureBundle = userAccount?.futureBundle;
     const [showDetailOf, setShowDetailOf] = useState<CurrentBundle | FutureBundle | undefined>();
+    useEffect(() => {
+        // Refresh user on component mount, except the very first time.
+        if (veryFirstTime) {
+            veryFirstTime = false;
+            return;
+        }
+        setRefreshing(true);
+        refreshUserProfile()
+            .finally(() => {
+                setRefreshing(false);
+            });
+    }, [])
     function renderBundle(bundle: CurrentBundle | FutureBundle) {
         return (
             <button className={classes.subscription} onClick={() => setShowDetailOf(bundle)}>
@@ -44,7 +61,7 @@ const TKUISubscription: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.rightPanel}>
                     <div className={classes.balance}>
                         {bundle instanceof CurrentBundle ?
-                            FormatUtil.toMoney(bundle.balance.userBalance, { currency: currentBundle?.currency, nInCents: true }) :
+                            FormatUtil.toMoney(bundle.balance.userBalance, { currency: currentBundle?.currency, nInCents: true, zeroAsFree: false }) :
                             t("Effective.from.X", { 0: DateTimeUtil.isoFormat(bundle.futureBillingCycle.toBeAppliedTimestamp, "DD MMM YYYY") })}
                     </div>
                     <div className={classes.subscriptionName}>

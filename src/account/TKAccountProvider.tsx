@@ -68,12 +68,26 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines couses an infinite redirection loop.
         }
     }, [isLoading, isAuthenticated]);
+    function requestUserProfile(): Promise<TKUserAccount> {
+        return TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount);
+    }
+    function refreshUserProfile(): Promise<TKUserAccount> {
+        if (userToken && !isLoading && isAuthenticated) {
+            return requestUserProfile()
+                .then((result) => {
+                    setUserAccount(result);
+                    return result;
+                });
+        } else {
+            return Promise.reject("Still signing in");
+        }
+    }
     useEffect(() => {
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
         // Request user profile, just if Auth0 determined the user is authenticated.
         if (userToken && !isLoading && isAuthenticated) {
-            TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount)
+            requestUserProfile()
                 .then((result) => {
                     setUserAccount(result);
                     setStatus(SignInStatus.signedIn);
@@ -149,7 +163,8 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
                 logout: logoutHandler,
                 accountsSupported: true,
                 finishInitLoadingPromise,
-                resetUserToken
+                resetUserToken,
+                refreshUserProfile
             })}
         </React.Fragment>
     );

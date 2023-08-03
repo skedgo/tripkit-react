@@ -2,8 +2,9 @@ import { i18n } from "../i18n/TKI18nConstants";
 
 class FormatUtil {
 
-    public static toMoney(n: number, options: { currency?: string, nInCents?: boolean, round?: boolean, forceDecimals?: boolean } = {}): string {
-        if (n === 0) {
+    public static toMoney(n: number, options: { currency?: string, nInCents?: boolean, round?: boolean, forceDecimals?: boolean, zeroAsFree?: boolean } = {}): string {
+        const { zeroAsFree = true } = options;
+        if (zeroAsFree && n === 0) {
             const t = i18n.t;
             return t("Free");
         }

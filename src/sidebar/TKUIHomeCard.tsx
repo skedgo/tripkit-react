@@ -71,7 +71,7 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         if (status === SignInStatus.signedIn) {
             refreshActiveTrip();
-            refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 10000);
+            refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 60000);
         }
         return () => {
             if (refreshActiveTripInterval) {
