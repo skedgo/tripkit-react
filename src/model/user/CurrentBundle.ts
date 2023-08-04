@@ -53,6 +53,8 @@ class BundleMode {
     public readonly symbolicRewardPerCost: boolean = false;
     @JsonProperty("modeInfo", ModeInfo, true)
     public readonly modeInfo: ModeInfo = new ModeInfo();
+    @JsonProperty("offerDescription", String, true)
+    public readonly offerDescription?: string = undefined;
 }
 
 @JsonObject

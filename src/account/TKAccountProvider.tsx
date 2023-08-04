@@ -148,6 +148,11 @@ const Auth0ToTKAccount: React.FunctionComponent<{ children: (context: IAccountCo
             AuthStorage.instance.save(new TKAuth0AuthResponse);
             setUserToken(undefined);
             setUserAccount(undefined);
+            setStatus(SignInStatus.loading);
+            finishInitLoadingPromise = new Promise(resolve => {
+                finishInitLoadingResolver = resolve;
+            });
+            onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
             getAccessTokenSilently()
                 .then(requestUserToken)
                 .catch((error) => console.log(error));

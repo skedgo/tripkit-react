@@ -40,20 +40,21 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 
 const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose, paymentOptions, reviews, ephemeralKeyObj, classes, t, publicKey }) => {
-    const [paymentOption, setPaymentOption] = useState<PaymentOption | undefined>(undefined);
     const [showPaymentForm, setShowPaymentForm] = useState<boolean>(false);
+    // For mock
+    // const [showPaymentForm, setShowPaymentForm] = useState<boolean>(process.env.NODE_ENV === 'development');
     const [waiting, setWaiting] = useState<boolean>(false);
     const title = showPaymentForm ? "Payment" : "Review booking";
-    const onPayOption = (payOption: PaymentOption) => {
-        if (payOption.paymentMode === "FREE") {
+    const onContinue = () => {
+        if (paymentOptions[0]?.paymentMode === "FREE") {
+            const freePayOption = paymentOptions[0];
             setWaiting(true);
-            TripGoApi.apiCallUrl(payOption.url, payOption.method)
+            TripGoApi.apiCallUrl(freePayOption.url, freePayOption.method)
                 .then(() => onRequestClose(true))
                 .catch(UIUtil.errorMsg)
                 .finally(() => setWaiting(false));
             return;
         }
-        setPaymentOption(payOption);
         setShowPaymentForm(true)
     };
     return (
@@ -76,14 +77,14 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                             <TKUIBookingReview
                                 reviews={reviews}
                                 paymentOptions={paymentOptions}
-                                onPayOption={onPayOption}
+                                onContinue={onContinue}
                                 onClose={() => onRequestClose(false)}
                                 viewportProps={viewportProps}
                             />}
-                        {showPaymentForm && paymentOption && publicKey && ephemeralKeyObj &&
+                        {showPaymentForm && publicKey && ephemeralKeyObj &&
                             <TKUICheckoutView
                                 publicKey={publicKey}
-                                paymentOption={paymentOption}
+                                paymentOptions={paymentOptions}
                                 setWaiting={setWaiting}
                                 ephemeralKeyObj={ephemeralKeyObj}
                                 onClose={success => {

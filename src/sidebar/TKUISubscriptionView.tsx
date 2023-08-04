@@ -82,8 +82,10 @@ const TKUISubscriptionView: React.FunctionComponent<IProps> = (props: IProps) =>
                                 </div>
                                 <TKUIRow
                                     title={bundleMode.modeInfo.alt}
-                                    subtitle={bundleMode.pointsPerCost === 0 ? t("Unlimited") :
-                                        t("Take.X.off.every.trip", { 0: FormatUtil.truncateToDecimals((1 - bundleMode.pointsPerCost) * 100, 0) + "%" })}
+                                    subtitle={bundleMode.offerDescription ??
+                                        (bundleMode.pointsPerCost === 0 ? t("Unlimited") :
+                                            bundleMode.pointsPerCost === 1 ? t("Full.fare") :
+                                                t("Take.X.off.every.trip", { 0: FormatUtil.truncateToDecimals((1 - bundleMode.pointsPerCost) * 100, 0) + "%" }))}
                                 />
                             </div>
                         );

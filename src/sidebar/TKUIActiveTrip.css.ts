@@ -16,7 +16,8 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
     },
     info: {
         ...genStyles.flex,
-        ...genStyles.alignCenter
+        ...genStyles.alignCenter,
+        paddingTop: '16px'
     },
     icon: {
         ...genStyles.flex,

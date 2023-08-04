@@ -107,14 +107,14 @@ type IStyle = ReturnType<typeof tKUIBookingReviewStyle>
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     reviews: BookingReview[];
     paymentOptions: PaymentOption[];
-    onPayOption: (option: PaymentOption) => void;
+    onContinue: () => void;
     onClose: () => void;
     viewportProps?: TKUIViewportUtilProps;
     cancelText?: string;
 }
 
 const TKUIBookingReview: React.FunctionComponent<IProps> =
-    ({ reviews, paymentOptions, cancelText, classes, theme, onPayOption, onClose, t, viewportProps }) => {
+    ({ reviews, paymentOptions, cancelText, classes, theme, onContinue, onClose, t, viewportProps }) => {
         return (
             <div className={classes.main}>
                 {reviews.map((review, i) => {
@@ -167,7 +167,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                         type={TKUIButtonType.SECONDARY}
                         onClick={() => onClose()}
                     />
-                    <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onPayOption(paymentOptions[0])} />
+                    <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onContinue()} />
                 </div>
             </div>
         );

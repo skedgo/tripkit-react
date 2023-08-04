@@ -61,7 +61,7 @@ const TKUISubscription: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.rightPanel}>
                     <div className={classes.balance}>
                         {bundle instanceof CurrentBundle ?
-                            FormatUtil.toMoney(bundle.balance.userBalance, { currency: currentBundle?.currency, nInCents: true, zeroAsFree: false }) :
+                            (bundle.balance.id === "" ? null : FormatUtil.toMoney(bundle.balance.userBalance, { currency: currentBundle?.currency, nInCents: true, zeroAsFree: false })) :
                             t("Effective.from.X", { 0: DateTimeUtil.isoFormat(bundle.futureBillingCycle.toBeAppliedTimestamp, "DD MMM YYYY") })}
                     </div>
                     <div className={classes.subscriptionName}>
