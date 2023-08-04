@@ -2,7 +2,7 @@ import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
 import React, { useState } from 'react';
 import genStyles from '../css/GenStyle.css';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
-import { TKUITheme, black } from '../jss/TKUITheme';
+import { TKUITheme, black, colorWithOpacity } from '../jss/TKUITheme';
 import Util from '../util/Util';
 import { ReactComponent as IconVisa } from "../images/payment/ic-visa.svg";
 import { ReactComponent as IconMaster } from "../images/payment/ic-mastercard.svg";
@@ -15,7 +15,8 @@ import { withStyles as muiWithStyles } from '@material-ui/core/styles';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { resetStyles } from '../css/ResetStyle.css';
 import FormatUtil from '../util/FormatUtil';
-s
+import classNames from 'classnames';
+
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
@@ -39,7 +40,6 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
             width: '36px'
         },
         '&:hover': {
-            // background: '#e2733833'
             background: '#80808033'
         }
     },
@@ -54,9 +54,17 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         width: '40px',
         padding: '6px',
         cursor: 'pointer',
-        marginLeft: '10px'
+        marginLeft: '10px',
+        '& path': {
+            fill: black(0, theme.isDark)
+        }
     },
     icon: {
+        '& path': {
+            fill: black(0, theme.isDark)
+        }
+    },
+    iconBalance: {
         height: '26px',
         marginRight: '15px',
         '& svg': {
@@ -91,6 +99,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             root: {
                 marginLeft: '0',
                 width: '50px',
+                color: colorWithOpacity(theme.colorPrimary, .5),
                 '&$checked': {
                     color: theme.colorPrimary
                 }
@@ -98,6 +107,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             checked: {},
         })(Radio));
         const [editing, setEditing] = useState<boolean>(false);
+
         function renderCardOption(paymentMethod: PaymentMethod, i: number) {
             const { card } = paymentMethod;
             if (!card) {
@@ -108,7 +118,9 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                 <div className={classes.cardNRemove} key={i}>
                     <div className={classes.card} onClick={() => onChange(paymentMethod)}>
                         <StyledRadio checked={value === paymentMethod} />
-                        {iconFromBrand(brand)}
+                        <div className={classes.icon}>
+                            {iconFromBrand(brand)}
+                        </div>
                         <span>{Util.toFirstUpperCase(brand)}</span>
                         <span>ending in</span>
                         <span>{last4}</span>
@@ -126,11 +138,12 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                 </div>
             );
         }
+
         function renderSGOption(paymentMethod: SGPaymentMethod, i: number) {
             return (
                 <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
                     <StyledRadio checked={value === paymentMethod} />
-                    <div className={classes.icon}>
+                    <div className={classNames(classes.icon, classes.iconBalance)}>
                         <IconBalance />
                     </div>
                     <div>{paymentMethod.description}</div>

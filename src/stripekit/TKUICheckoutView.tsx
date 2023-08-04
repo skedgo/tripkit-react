@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKUIWithClasses, overrideClass, withStyles } from '../jss/StyleHelper';
-import { black, TKUITheme } from '../jss/TKUITheme';
+import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
 import TripGoApi from '../api/TripGoApi';
@@ -64,19 +64,19 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         margin: '15px 0 15px 18px',
         '& :not($tabSelected) button': {
-            color: black(1)
+            color: black(1, theme.isDark)
         },
         '& :not($tabSelected) button:hover': {
-            borderBottom: '1px solid ' + black(1)
+            borderBottom: '1px solid ' + black(1, theme.isDark)
         }
     },
     tabSelected: {
         '& button': {
-            borderBottom: '1px solid rgb(226, 115, 56)'
+            borderBottom: '1px solid ' + theme.colorPrimary
         }
     },
     tabSeparator: {
-        borderLeft: '1px solid ' + black(2),
+        borderLeft: '1px solid ' + black(2, theme.isDark),
         margin: '0 20px'
     },
     cardElement: {
@@ -338,8 +338,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
 
         const [StyledCheckbox] = useState<React.ComponentType<any>>(muiWithStyles({
             root: {
-                // marginLeft: '0',
-                // width: '50px',
+                color: colorWithOpacity(theme.colorPrimary, .5),
                 '&$checked': {
                     color: theme.colorPrimary
                 }
@@ -392,16 +391,6 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //         />
         //     );
         // }
-        const [StyledRadio] = useState<React.ComponentType<any>>(muiWithStyles({
-            root: {
-                marginLeft: '0',
-                width: '50px',
-                '&$checked': {
-                    color: theme.colorPrimary
-                }
-            },
-            checked: {},
-        })(Radio));
 
         const sectionStyles = { sectionBody: overrideClass(injectedStyles.section) };
 
@@ -491,7 +480,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             onClick={() => onClose()}
                         />
                         <TKUIButton
-                            text={t("Confirm")}
+                            text={"Purchase"}
                             type={TKUIButtonType.PRIMARY}
                             disabled={!newPaymentMethodAndPay && !selectedMethod}
                             onClick={handleSubmit}

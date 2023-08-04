@@ -14,7 +14,7 @@ export const tKUISubscriptionViewDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         padding: '20px',
         marginBottom: '20px',
-        background: black(0, theme.isDark),
+        background: black(theme.isDark ? 1 : 0, theme.isDark),
         color: white(0, theme.isDark),
         ...theme.textWeightBold
     },

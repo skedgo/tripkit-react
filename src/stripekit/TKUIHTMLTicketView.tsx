@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
-import { TKUITheme } from '../jss/TKUITheme';
+import { TKUITheme, white } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUICard, { CardPresentation, TKUICardProps } from '../card/TKUICard';
 import TKLoading from '../card/TKLoading';
@@ -28,7 +28,7 @@ const tKUIHTMLTicketViewPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.center,
         position: 'absolute',
         top: '0',
-        backgroundColor: '#ffffffbf',
+        background: white(1, theme.isDark),
         height: '100%',
         width: '100%'
     }

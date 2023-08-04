@@ -12,6 +12,7 @@ import DateTimeUtil from '../util/DateTimeUtil';
 import TKUIRow from '../options/TKUIRow';
 import TransportUtil from '../trip/TransportUtil';
 import FormatUtil from '../util/FormatUtil';
+import { white } from '../jss/TKUITheme';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     subscription: CurrentBundle | FutureBundle;
@@ -32,11 +33,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUISubscriptionView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { subscription, onRequestClose, classes, t } = props;
+    const { subscription, onRequestClose, classes, t, theme } = props;
     const { landscape } = useResponsiveUtil();
     const currentSubscription = subscription instanceof CurrentBundle ? subscription : undefined;
     const futureSubscription = subscription instanceof FutureBundle ? subscription : undefined;
-    const sectionStyles = { sectionBody: overrideClass({ background: 'white' }) };
+    const sectionStyles = { sectionBody: overrideClass({ background: white(0, theme.isDark) }) };
     return (
         <TKUICard
             title={subscription.name}
@@ -78,7 +79,7 @@ const TKUISubscriptionView: React.FunctionComponent<IProps> = (props: IProps) =>
                         return (
                             <div className={classes.bundleMode}>
                                 <div>
-                                    {<img src={TransportUtil.getTransIcon(bundleMode.modeInfo)} />}
+                                    {<img src={TransportUtil.getTransIcon(bundleMode.modeInfo, { onDark: theme.isDark })} />}
                                 </div>
                                 <TKUIRow
                                     title={bundleMode.modeInfo.alt}
