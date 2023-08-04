@@ -46,7 +46,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 let refreshActiveTripInterval: any;
 
 const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, t, landscape, status, classes } = props;
+    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, userAccount, t, landscape, status, classes } = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     const [waitingForActiveTrip, setWaitingForActiveTrip] = useState<boolean>(false);
 
@@ -82,6 +82,8 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     if (status !== SignInStatus.signedIn) {
         return null;
     }
+    // Hide subscription component if waiting for user or no bundle
+    const showSubscription = userAccount?.currentBundle || userAccount?.futureBundle;
     return (
         <TKUICard>
             <div className={classes.main}>
@@ -107,7 +109,8 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     }}
                     onMyBookings={onMyBookings}
                 />
-                <TKUISubscription />
+                {showSubscription &&
+                    <TKUISubscription />}
             </div>
         </TKUICard>
     );

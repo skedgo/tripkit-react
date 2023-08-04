@@ -36,9 +36,9 @@ const TKUISubscription: React.FunctionComponent<IProps> = (props: IProps) => {
     const { userAccount: currentUserAccount, refreshUserProfile } = useContext(TKAccountContext);
     // Undefine userAccount while refreshing user.
     const [refreshing, setRefreshing] = useState<boolean>(false);
-    const userAccount = !refreshing ? currentUserAccount : undefined;
-    const currentBundle = userAccount?.currentBundle;
-    const futureBundle = userAccount?.futureBundle;
+    const userAccount = !refreshing ? currentUserAccount : undefined;    
+    const currentBundle = !userAccount ? undefined : userAccount.currentBundle ?? null; // Use undefined for waiting, and null for user without bundle.
+    const futureBundle = !userAccount ? undefined : userAccount.futureBundle ?? null;
     const [showDetailOf, setShowDetailOf] = useState<CurrentBundle | FutureBundle | undefined>();
     useEffect(() => {
         // Refresh user on component mount, except the very first time.
