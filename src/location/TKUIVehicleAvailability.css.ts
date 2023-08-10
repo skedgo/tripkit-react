@@ -73,8 +73,23 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         padding: '20px 0',
         borderBottom: '1px solid ' + black(4)
     },
+    availableVehicle: {
+        cursor: 'pointer',
+        '& $selectedSlot': {
+            background: 'rgb(132 190 161)'
+        }
+    },
     fadeVehicle: {
         opacity: '.5'
+    },
+    unselectedVehicle: {
+        '& $availableSlot, $unavailableSlot': {
+            borderLeft: 'none',
+            borderRight: 'none'
+        },
+        '& $availableSlot:hover': {
+            background: 'rgb(77 239 158)!important'
+        }
     },
     vehicleLabel: {
         ...genStyles.flex,
