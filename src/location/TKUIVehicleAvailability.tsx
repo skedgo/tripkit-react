@@ -135,26 +135,37 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         return result;
     }
 
-    function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
-        if (!available(slot, slotVehicle.availability!) // slot not available
-            || selectedVehicle && selectedVehicle !== slotVehicle) {
-            return;
+    function slotClickHelper(slot: string, slotVehicle: CarPodVehicle): { clickable: boolean, startUpdate?: string | null, endUpdate?: string | null } {
+        if (selectedVehicle && selectedVehicle !== slotVehicle ||
+            !available(slot, slotVehicle.availability!)) { // slot not available
+            return { clickable: false };
         }
         if (slot === bookStartTime) {
-            setBookStartTime(undefined);
-            return;
+            return { clickable: true, startUpdate: null };
         }
         if (slot === bookEndTime) {
-            setBookEndTime(undefined);
-            return;
+            return { clickable: true, endUpdate: null };
         }
         const isStart = !bookStartTime && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) < 0)
             || bookStartTime && DateTimeUtil.isoCompare(slot, bookStartTime) < 0;
         const isEnd = !isStart && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) > 0);
-
         const resultingRangeStart = isStart ? slot : bookStartTime;
         const resultingRangeEnd = isEnd ? slot : bookEndTime;
         if (resultingRangeStart && resultingRangeEnd && !availableRange(resultingRangeStart, resultingRangeEnd, slotVehicle.availability!)) {
+            return { clickable: false };
+        }
+        if (isStart) {
+            return { clickable: true, startUpdate: slot };
+        }
+        if (isEnd) {
+            return { clickable: true, endUpdate: slot };
+        }
+        return { clickable: false }
+    }
+
+    function onSlotClick(slot: string, slotVehicle: CarPodVehicle) {
+        const { clickable, startUpdate, endUpdate } = slotClickHelper(slot, slotVehicle)
+        if (!clickable) {
             return;
         }
 
@@ -162,13 +173,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             setSelectedVehicle(slotVehicle);
         }
 
-        if (isStart) {
-            setBookStartTime(slot);
+        if (startUpdate !== undefined) {
+            setBookStartTime(startUpdate ?? undefined);
             return;
         }
 
-        if (isEnd) {
-            setBookEndTime(slot);
+        if (endUpdate !== undefined) {
+            setBookEndTime(endUpdate ?? undefined);
             return;
         }
     }
@@ -327,7 +338,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
             </button>
             <div className={classes.timeIndexes}>
-                {!portrait ? slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
+                {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
                     const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
                     return (
                         <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
@@ -336,7 +347,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         </div>
                     );
                 }
-                ) : DateTimeUtil.isoFormat(displayDate, "h:mma")}
+                )}
             </div>
             <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
                 <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
@@ -419,6 +430,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                         <div className={classes.slots}>
                                             {slots.map((slot, i) => {
                                                 const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                                                const isSelectedVehicle = vehicle === selectedVehicle;
+                                                // const { clickable, startUpdate: startPreview, endUpdate: endPreview } = isSelectedVehicle ? slotClickHelper(slot, vehicle) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
+                                                const { clickable } = isSelectedVehicle ? slotClickHelper(slot, vehicle) : { clickable: false };
+
                                                 return (
                                                     <div className={classes.slot}
                                                         style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT, ...portrait && { position: 'relative' } }}
@@ -434,7 +449,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                                 isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot,
                                                                 slot === displayStartTime && classes.firstSlot,
                                                                 DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot,
-                                                                vehicle === selectedVehicle && bookStartTime && (DateTimeUtil.isoCompare(slot, bookStartTime) < 0 || !availableRange(bookStartTime, slot, selectedVehicle.availability!)) && classes.fadeSlot
+                                                                vehicle === selectedVehicle && !clickable && classes.fadeSlot
                                                             )}>
                                                                 {portrait && (!selectedVehicle || vehicle === selectedVehicle) && DateTimeUtil.isoFormat(slot, "h:mma")}
                                                             </div>}

@@ -77,6 +77,9 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         cursor: 'pointer',
         '& $selectedSlot': {
             background: 'rgb(132 190 161)'
+        },
+        '& $firstSelectedSlot:hover, $lastSelectedSlot:hover': {
+            opacity: 1
         }
     },
     fadeVehicle: {
@@ -157,7 +160,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     firstSlot: {
         borderTopLeftRadius: '8px',
-        borderBottomLeftRadius: '8px'
+        borderBottomLeftRadius: '8px'        
     },
     lastSlot: {
         borderTopRightRadius: '8px',
@@ -168,18 +171,24 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     firstSelectedSlot: {
         borderTopLeftRadius: '8px',
-        borderBottomLeftRadius: '8px'
+        borderBottomLeftRadius: '8px',
+        '&:hover': {
+            opacity: .5
+        }
     },
     lastSelectedSlot: {
         borderTopRightRadius: '8px',
-        borderBottomRightRadius: '8px'
+        borderBottomRightRadius: '8px',
+        '&:hover': {
+            opacity: .5
+        }
     },
     availableSlot: {
         background: 'rgb(77 239 158)',
         borderLeft: '1px solid white',
         borderRight: '1px solid white',
         '&:not($fadeSlot):hover': {
-            background: '#44c786', // TODO: pick exact color from Figma
+            background: '#44c786'
         },
         '&$fadeSlot': {
             background: 'rgb(77 239 158 / 50%)'
