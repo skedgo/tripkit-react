@@ -160,7 +160,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     },
     firstSlot: {
         borderTopLeftRadius: '8px',
-        borderBottomLeftRadius: '8px'        
+        borderBottomLeftRadius: '8px'
     },
     lastSlot: {
         borderTopRightRadius: '8px',
@@ -192,6 +192,9 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         },
         '&$fadeSlot': {
             background: 'rgb(77 239 158 / 50%)'
+        },
+        '& svg': {
+            display: 'none'
         }
     },
     unavailableSlot: {
@@ -276,5 +279,29 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         ...genStyles.center,
         ...theme.textColorGray
+    },
+    startPreview: {
+        '&:hover': {
+            background: black(1, theme.isDark) + "!important",
+            borderRadius: '8px'
+        },                        
+        '&:hover svg': {
+            display: 'block'
+        },
+        '&:hover path': {
+            fill: white(0, theme.isDark)
+        }
+    },
+    endPreview: {
+        '&:hover': {
+            background: black(1, theme.isDark) + "!important",
+            borderRadius: '8px'
+        },                        
+        '&:hover svg': {
+            display: 'block'
+        },
+        '&:hover path': {
+            fill: white(0, theme.isDark)
+        }
     }
 });

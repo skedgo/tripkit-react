@@ -431,9 +431,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                             {slots.map((slot, i) => {
                                                 const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
                                                 const isSelectedVehicle = vehicle === selectedVehicle;
-                                                // const { clickable, startUpdate: startPreview, endUpdate: endPreview } = isSelectedVehicle ? slotClickHelper(slot, vehicle) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
-                                                const { clickable } = isSelectedVehicle ? slotClickHelper(slot, vehicle) : { clickable: false };
-
+                                                const { clickable, startUpdate, endUpdate } = isSelectedVehicle ? slotClickHelper(slot, vehicle) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
+                                                const isStartPreview = !!startUpdate;
+                                                const isEndPreview = !!endUpdate;
                                                 return (
                                                     <div className={classes.slot}
                                                         style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT, ...portrait && { position: 'relative' } }}
@@ -449,9 +449,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                                 isFetching(slot) ? classes.loadingSlot : available(slot, vehicle.availability!) ? classes.availableSlot : classes.unavailableSlot,
                                                                 slot === displayStartTime && classes.firstSlot,
                                                                 DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot,
-                                                                vehicle === selectedVehicle && !clickable && classes.fadeSlot
+                                                                vehicle === selectedVehicle && !clickable && classes.fadeSlot,
+                                                                isStartPreview && classes.startPreview,
+                                                                isEndPreview && classes.endPreview
                                                             )}>
                                                                 {portrait && (!selectedVehicle || vehicle === selectedVehicle) && DateTimeUtil.isoFormat(slot, "h:mma")}
+                                                                {isStartPreview ? <IconStartSlot /> : isEndPreview ? <IconEndSlot /> : undefined}
                                                             </div>}
                                                         {portrait && isDayStart && <div className={classes.dayIndexPortrait}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
                                                     </div>
