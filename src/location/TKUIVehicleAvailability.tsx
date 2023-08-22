@@ -425,8 +425,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 {vehicle.name}
                                             </div>
                                         </div>
-                                        <div style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', background: white(0, theme.isDark), left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
-                                        <div className={classes.whiteToTransparent} style={{ position: 'absolute', width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2 }} />
+                                        <div style={{ position: 'absolute', zIndex: 1, width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', background: white(0, theme.isDark), left: portrait ? 0 : VEHICLE_LABEL_WIDTH }} />
+                                        <div className={classes.whiteToTransparent} style={{ position: 'absolute', zIndex: 1, width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2 }} />
                                         <div className={classes.slots}>
                                             {slots.map((slot, i) => {
                                                 const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
@@ -453,7 +453,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                                 isStartPreview && classes.startPreview,
                                                                 isEndPreview && classes.endPreview
                                                             )}>
-                                                                {portrait && (!selectedVehicle || vehicle === selectedVehicle) && DateTimeUtil.isoFormat(slot, "h:mma")}
+                                                                {portrait && (!selectedVehicle || vehicle === selectedVehicle) && <div className={classes.slotTime}>{DateTimeUtil.isoFormat(slot, "h:mma")}</div>}
                                                                 {isStartPreview ? <IconStartSlot /> : isEndPreview ? <IconEndSlot /> : undefined}
                                                             </div>}
                                                         {portrait && isDayStart && <div className={classes.dayIndexPortrait}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}

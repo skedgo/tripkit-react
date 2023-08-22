@@ -280,10 +280,16 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.center,
         ...theme.textColorGray
     },
+    slotTime: {
+
+    },
     startPreview: {
         '&:hover': {
             background: black(1, theme.isDark) + "!important",
             borderRadius: '8px'
+        },
+        '&:hover $slotTime': {
+            display: 'none'
         },                        
         '&:hover svg': {
             display: 'block'
@@ -296,6 +302,9 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         '&:hover': {
             background: black(1, theme.isDark) + "!important",
             borderRadius: '8px'
+        },
+        '&:hover $slotTime': {
+            display: 'none'
         },                        
         '&:hover svg': {
             display: 'block'
