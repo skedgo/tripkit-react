@@ -1,10 +1,22 @@
-import * as React from "react";
+import React from "react";
 import Segment from "../model/trip/Segment";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIWCSegmentInfoDefaultStyle } from "./TKUIWCSegmentInfo.css";
 import TransportUtil from "./TransportUtil";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+} from 'chart.js';
+import { black, white } from "../jss/TKUITheme";
+import { Bar } from "react-chartjs-2";
+import { roadTagColor } from "../model/trip/Street";
 
 type IStyle = ReturnType<typeof tKUIWCSegmentInfoDefaultStyle>;
 
@@ -23,9 +35,21 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIWCSegmentInfo",
 };
 
+// ChartJS.register(
+//     CategoryScale,
+//     LinearScale,
+//     BarElement,
+//     Title,
+//     Tooltip,
+//     Legend
+// );
+// 
+// console.log("TKUIWCSegmentInfo imported!!");
+
 class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
+        const theme = this.props.theme;
         const segment = this.props.value;
         const metres = segment.metres;
         const metresSafe = segment.metresSafe;
@@ -41,8 +65,58 @@ class TKUIWCSegmentInfo extends React.Component<IProps, {}> {
         const unknownPct = ((metresUnknown / metres) * 100);
         const classes = this.props.classes;
         const barWidthPct = .8;
+
+        const options = {
+            indexAxis: 'y' as const,
+            responsive: true,
+            // maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false,
+                    labels: {
+                        color: black(1, theme.isDark)
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: black(1, theme.isDark),
+                        callback: function (value, index, ticks) {
+                            return value + " miles";
+                        },
+                        // stepSize: 1,
+                        count: 3,
+                        precision: 1
+                    },
+                    grid: {
+                        color: black(3, theme.isDark)
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: black(1, theme.isDark)
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
+            }
+        };
+
+        const chartData = {
+            labels: ["Cycle Network", "Cycle Track", "Cycle Lane", "Side Road", "Main Road"],
+            datasets: [{
+                label: "miles",
+                data: [2, 1.2, .6, .5, .4],
+                backgroundColor: [roadTagColor("CYCLE-NETWORK"), roadTagColor("CYCLE-TRACK"), roadTagColor("CYCLE-LANE"), roadTagColor("SIDE-ROAD"), roadTagColor("MAIN-ROAD")],
+                borderRadius: 4
+            }]
+        };
+
         return (
             <div className={classes.main}>
+                {/* <Bar options={options} data={chartData} /> */}
                 <div className={classes.references}>
                     {safePct > 0 &&
                         <div>

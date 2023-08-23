@@ -237,7 +237,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         let requestDates: string[] = [];
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
             if (vehiclesByDate.get(date) === undefined) {
-                setVehiclesByDate(vehiclesByDate => {
+                setVehiclesByDate(vehiclesByDate => {   // TODO: replace by just 1 setVehiclesByDate by moving the `for` inside it.
                     const vehiclesByDateUpdate = new Map(vehiclesByDate);
                     vehiclesByDateUpdate.set(date, null);
                     return vehiclesByDateUpdate;

@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import Segment, { TripAvailability } from "../model/trip/Segment";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TransportUtil from "./TransportUtil";
@@ -24,6 +24,7 @@ import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveU
 import { SegmentType } from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
 import DeviceUtil from "../util/DeviceUtil";
+import TKLazy from "../lazy/TKLazy";
 
 type IStyle = ReturnType<typeof tKUISegmentOverviewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -53,8 +54,10 @@ function platformText(platformS: string): string {
     return platformS.toLowerCase().startsWith("stop") ? platformS : "Platform " + platformS;
 }
 
-class TKUISegmentOverview extends React.Component<IProps, {}> {
+// const TKUIWCSegmentInfo = lazy(() => import("./TKUIWCSegmentInfo"));
+// const TKUIWCSegmentInfo2 = TKLazy.tKUIWCSegmentInfoBuilder("Loading");
 
+class TKUISegmentOverview extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
         const { value: segment, t, classes } = this.props;
         const hideTimes = segment.hideExactTimes || segment.trip.hideExactTimes;
@@ -75,7 +78,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                 <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!} />
             </div> : undefined;
         const wcSegmentInfo = segment.isBicycle() || segment.isWheelchair() ?
-            <TKUIWCSegmentInfo value={segment} /> : undefined;
+            <TKUIWCSegmentInfo value={segment} />
+            // <TKLazy.TKUIWCSegmentInfo value={segment} />            
+            // <Suspense fallback={null}>
+            //     <TKUIWCSegmentInfo value={segment} />
+            // </Suspense> 
+            : undefined;
         const showPin = (segment.isFirst() || segment.arrival) && isUnconnected(segment);
         const prevSegment = segment.prevSegment();
 
