@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert } from "json2typescript";
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
 import MapUtil from "../../util/MapUtil";
@@ -10,9 +10,9 @@ export enum StreetInstructions {
     TURN_LEFT = "TURN_LEFT",
     TURN_SLIGHTLY_LEFT = "TURN_SLIGHTLY_LEFT",
     TURN_SHARPLY_LEFT = "TURN_SHARPLY_LEFT",
-    TURN_RIGHT= "TURN_RIGHT",
-    TURN_SLIGHTLY_RIGHT= "TURN_SLIGHTLY_RIGHT",
-    TURN_SHARPLY_RIGHT= "TURN_SHARPLY_RIGHT"
+    TURN_RIGHT = "TURN_RIGHT",
+    TURN_SLIGHTLY_RIGHT = "TURN_SLIGHTLY_RIGHT",
+    TURN_SHARPLY_RIGHT = "TURN_SHARPLY_RIGHT"
 }
 
 /**
@@ -29,8 +29,23 @@ export class StreetInstructionsConverter implements JsonCustomConvert<StreetInst
     }
 }
 
-export type RoadTags = 
-    "CYCLE-LANE" | 
+export type CycleFriendliness = "FRIENDLY" | "UNFRIENDLY" | "DISMOUNT" | "UNKNOWN";
+
+export function friendlinessColor(tag: CycleFriendliness) {
+    switch (tag) {
+        case "FRIENDLY":
+            return '#1ec862';
+        case "UNFRIENDLY":
+            return '#f8e658';
+        case "DISMOUNT":
+            return 'red';
+        default:
+            return '#d8d8d8';
+    }
+}
+
+export type RoadTags =
+    "CYCLE-LANE" |
     "CYCLE-TRACK" |
     "CYCLE-NETWORK" |
     "BICYCLE-DESIGNATED" |
@@ -40,7 +55,9 @@ export type RoadTags =
     "SIDE-ROAD" |
     "SHARED-ROAD" |
     "UNPAVED/UNSEALED" |
-    "SERVICE-ROAD";
+    "SERVICE-ROAD" |
+    "CCTV-CAMERA" |
+    "STREET-LIGHT";
 
 export function roadTagDisplayS(tag: RoadTags) {
     return Util.kebabCaseToSpaced(tag.toLowerCase());
@@ -51,13 +68,17 @@ export function roadTagColor(tag: RoadTags) {
         case "MAIN-ROAD":
             return '#fcbb1d';
         case "CYCLE-LANE":
-        case "CYCLE-NETWORK":    
+        case "CYCLE-NETWORK":
             return '#0600ff';
         case "CYCLE-TRACK":
-        case "BICYCLE-DESIGNATED":    
+        case "BICYCLE-DESIGNATED":
             return '#23b05e';
         case "SIDE-ROAD":
-            return '#78d6f9';   
+            return '#78d6f9';
+        case "CCTV-CAMERA":
+            return '#9c27b0';
+        case "STREET-LIGHT":
+            return '#78d6f9';
         default:
             return 'gray';
     }
