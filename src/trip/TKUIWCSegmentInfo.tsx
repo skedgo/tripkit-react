@@ -55,7 +55,7 @@ const TKUIWCSegmentInfo: FunctionComponent<IProps> = (props: IProps) => {
         return tagsToMetres;
     }, {} as Record<RoadTags, number>);
 
-    const tags = Object.keys(tagsToMetres).filter(tag => tag !== "OTHER").sort().concat("OTHER") as RoadTags[];
+    const tags = Object.keys(tagsToMetres).filter(tag => tag !== "OTHER").sort().concat(tagsToMetres["OTHER"] ? ["OTHER"] : []) as RoadTags[];
 
     const options = {
         indexAxis: 'y' as const,

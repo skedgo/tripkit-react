@@ -76,7 +76,7 @@ export function roadTagColor(tag: RoadTags) {
         case "SIDE-ROAD":
             return '#78d6f9';
         case "CCTV-CAMERA":
-            return '#9c27b0';
+            return '#0603ff';
         case "STREET-LIGHT":
             return '#78d6f9';
         default:
