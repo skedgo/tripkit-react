@@ -9,7 +9,7 @@ import {
     tKUISegmentOverviewDefaultStyle
 } from "./TKUISegmentOverview.css";
 import { ReactComponent as IconPinStart } from "../images/ic-pin-start.svg";
-import { TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle } from "./TKUIWCSegmentInfo";
+import { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "./TKUIStreetsChart";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -54,8 +54,8 @@ function platformText(platformS: string): string {
     return platformS.toLowerCase().startsWith("stop") ? platformS : "Platform " + platformS;
 }
 
-const TKUIWCSegmentInfo = lazyComponent<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>(() => import("./TKUIWCSegmentInfo"));
-setTimeout(() => import("./TKUIWCSegmentInfo"), 2000);
+const TKUIStreetsChart = lazyComponent<TKUIStreetsChartProps, TKUIStreetsChartStyle>(() => import("./TKUIStreetsChart"));
+setTimeout(() => import("./TKUIStreetsChart"), 2000);
 
 class TKUISegmentOverview extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
@@ -78,7 +78,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                 <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!} />
             </div> : undefined;
         const wcSegmentInfo = segment.streets?.some(street => street.roadTags.length > 0) ?
-            <TKUIWCSegmentInfo value={segment} /> : undefined;
+            <TKUIStreetsChart value={segment} /> : undefined;
         const showPin = (segment.isFirst() || segment.arrival) && isUnconnected(segment);
         const prevSegment = segment.prevSegment();
 

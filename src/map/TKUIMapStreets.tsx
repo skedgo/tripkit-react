@@ -5,7 +5,7 @@ import ModeInfo from "../model/trip/ModeInfo";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import { tKUIFriendlinessColors } from "../trip/TKUIWCSegmentInfo.css";
+import { tKUIFriendlinessColors } from "../trip/TKUIStreetsChart.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     streets: Street[];

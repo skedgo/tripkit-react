@@ -7,7 +7,7 @@ import {
     TKUITripOverviewViewStyle
 } from "../trip/TKUITripOverviewView";
 import { TKUISegmentOverviewProps, TKUISegmentOverviewStyle } from "../trip/TKUISegmentOverview";
-import { TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle } from "../trip/TKUIWCSegmentInfo";
+import { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "../trip/TKUIStreetsChart";
 import { TKUITimetableViewProps, TKUITimetableViewStyle } from "../service/TKUITimetableView";
 import { TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle } from "../service/TKUIServiceDepartureRow";
 import { TKUIServiceViewProps, TKUIServiceViewStyle } from "../service/TKUIServiceView";
@@ -170,7 +170,7 @@ interface ITKUIConfigOptional {
     TKUIRoutingResultsView: TKComponentConfig<TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle>;
     TKUITripOverviewView: TKComponentConfig<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
     TKUISegmentOverview: TKComponentConfig<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
-    TKUIWCSegmentInfo: TKComponentConfig<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;
+    TKUIStreetsChart: TKComponentConfig<TKUIStreetsChartProps, TKUIStreetsChartStyle>;
     TKUITimetableView: TKComponentConfig<TKUITimetableViewProps, TKUITimetableViewStyle>;
     TKUIServiceDepartureRow: TKComponentConfig<TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle>;
     TKUIServiceView: TKComponentConfig<TKUIServiceViewProps, TKUIServiceViewStyle>;
