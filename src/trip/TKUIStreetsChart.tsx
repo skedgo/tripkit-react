@@ -18,7 +18,7 @@ import {
 } from 'chart.js';
 import { black } from "../jss/TKUITheme";
 import { Bar } from "react-chartjs-2";
-import { CycleFriendliness, RoadTags, friendlinessColor, roadTagColor, roadTagDisplayS } from "../model/trip/Street";
+import Street, { CycleFriendliness, RoadTags, friendlinessColor, roadTagColor, roadTagDisplayS, roadTagToSafety } from "../model/trip/Street";
 import Util from "../util/Util";
 
 type IStyle = ReturnType<typeof tKUIStreetsChartDefaultStyle>;
@@ -47,13 +47,22 @@ ChartJS.register(
     Legend
 );
 
+function tagsSort(t1: RoadTags, t2: RoadTags): number {
+    const t1Safety = roadTagToSafety(t1);
+    const t2Safety = roadTagToSafety(t2);
+    if (t1Safety === t2Safety) {
+        return t1.localeCompare(t2);
+    }
+    return t1Safety - t2Safety;
+}
+
 const TKUIStreetsChart: FunctionComponent<IProps> = (props: IProps) => {
     const { value: segment, theme, classes } = props;
     const tagsToMetres: Record<RoadTags, number> = segment.streets!.reduce((tagsToMetres, street) => {
-        const tag = street.roadTags[0] ?? "OTHER"; // The most relevant tag.
-        if (tag) {
+        const tags = street.roadTags.length === 0 ? ["OTHER"] : street.roadTags;
+        tags.forEach(tag => {
             tagsToMetres[tag] = (tagsToMetres[tag] ?? 0) + (street.metres ?? 0);
-        }
+        })
         return tagsToMetres;
     }, {} as Record<RoadTags, number>);
 
@@ -63,11 +72,17 @@ const TKUIStreetsChart: FunctionComponent<IProps> = (props: IProps) => {
     // tagsToMetres["D"] = 1500
     // tagsToMetres["E"] = 2000
 
-    const tags = Object.keys(tagsToMetres).filter(tag => tag !== "OTHER").sort().concat(tagsToMetres["OTHER"] ? ["OTHER"] : []) as RoadTags[];
+    const tags = Object.keys(tagsToMetres)
+        .filter(tag => tag !== "OTHER")
+        .sort(tagsSort as (a: string, b: string) => number)
+        .concat(tagsToMetres["OTHER"] ? ["OTHER"] : []) as RoadTags[];
+
+    const totalDistance = segment.streets!.reduce((acc: number, street: Street) => acc + (street.metres ?? 0), 0);
+    console.log(totalDistance);
 
     const options: ChartOptions<"bar"> = {
         indexAxis: 'y' as const,
-        responsive: true,        
+        responsive: true,
         plugins: {
             legend: {
                 display: false,
@@ -90,20 +105,21 @@ const TKUIStreetsChart: FunctionComponent<IProps> = (props: IProps) => {
         scales: {
             x: {
                 ticks: {
-                    color: '#3C3C4399',                    
+                    color: '#3C3C4399',
                     callback: function (value, index, ticks) {
                         return value === 0 ? undefined : TransportUtil.distanceToBriefString(value as number);
-                    },                    
+                    },
                     count: 3,
                     precision: 1,
-                    backdropColor: 'red'
+                    backdropColor: 'red',
                 },
                 grid: {
                     color: black(3, theme.isDark),
-                    borderDash: [3,3],
+                    borderDash: [3, 3],
                     drawBorder: false,
                     drawTicks: false
-                }
+                },
+                max: totalDistance
             },
             y: {
                 ticks: {
@@ -167,7 +183,7 @@ const TKUIStreetsChart: FunctionComponent<IProps> = (props: IProps) => {
     const chartHeight = tags.length * 20 + 40;  // 20 px per bar, 40 for padding and x axis ticks
 
     return (
-        <div className={classes.main} style={{height: chartHeight}}>            
+        <div className={classes.main} style={{ height: chartHeight }}>
             <Bar options={options} data={chartData} />
             {/* {tagsF.length > 0 && <Bar options={options} data={chartDataF} />} */}
         </div>

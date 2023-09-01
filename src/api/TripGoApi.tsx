@@ -9,6 +9,7 @@ import BookingInfo from "../model/trip/BookingInfo";
 import PaymentOption from "../model/trip/PaymentOption";
 import BookingReview from "../model/trip/BookingReview";
 import EphemeralResult from "../model/payment/EphemeralResult";
+import { i18n } from "../i18n/TKI18nConstants";
 
 class TripGoApi {
 
@@ -128,9 +129,14 @@ class TripGoApi {
             });
     }
 
+    private static addQueryParam(url: string, paramName: string, paramValue: string): string {
+        return url + (url.includes("?") ? "&" : "?") + paramName + "=" + paramValue;
+    }
+
     public static defaultToVersion(url: string, v: number) {
-        return !url.includes('v=') ?
-            url + (url.includes("?") ? "&" : "?") + "v=" + v : url;
+        let result = this.addQueryParam(url, "unit", i18n.distanceUnit());
+        return !result.includes('v=') ?
+            this.addQueryParam(result, "v", v.toString()) : result;
     }
 
     public static requestBookingOptions(bookingInfosUrl: string): Promise<BookingInfo[]> {

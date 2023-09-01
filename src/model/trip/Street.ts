@@ -44,6 +44,10 @@ export function friendlinessColor(tag: CycleFriendliness) {
     }
 }
 
+enum RoadSafety {
+    "SAFE", "DESIGNATED", "NEUTRAL", "HOSTILE", "UNKNOWN"
+}
+
 export type RoadTags =
     "CYCLE-LANE" |
     "CYCLE-TRACK" |
@@ -54,13 +58,40 @@ export type RoadTags =
     "MAIN-ROAD" |
     "SIDE-ROAD" |
     "SHARED-ROAD" |
-    "UNPAVED/UNSEALED" |
-    "SERVICE-ROAD" |
+    "UNPAVED/UNSEALED" | // ignored in tripkit-ios
+    "SERVICE-ROAD" |    // not listed in tripkit-ios
     "CCTV-CAMERA" |
-    "STREET-LIGHT";
+    "STREET-LIGHT" |
+    "OTHER";
+
+export function roadTagToSafety(tag: RoadTags): RoadSafety {
+    switch (tag) {
+        case "CYCLE-TRACK":
+            return RoadSafety.SAFE;
+        case "CYCLE-LANE":
+        case "CYCLE-NETWORK":
+        case "BICYCLE-DESIGNATED":
+        case "BICYCLE-BOULEVARD":
+        case "CCTV-CAMERA":
+            return RoadSafety.DESIGNATED;
+        case "SIDE-WALK":
+        case "SIDE-ROAD":
+        case "SHARED-ROAD":
+        case "STREET-LIGHT":
+            return RoadSafety.NEUTRAL;
+        case "MAIN-ROAD":
+            return RoadSafety.HOSTILE;
+        default:
+            return RoadSafety.UNKNOWN;
+
+    }
+}
 
 export function roadTagDisplayS(tag: RoadTags) {
-    return Util.kebabCaseToSpaced(tag.toLowerCase());
+    switch (tag) {
+        case "BICYCLE-DESIGNATED": return "Designated for Cyclists";
+        default: return Util.kebabCaseToSpaced(tag.toLowerCase());
+    }
 }
 
 export function roadTagColor(tag: RoadTags) {

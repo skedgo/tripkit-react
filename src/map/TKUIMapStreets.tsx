@@ -53,7 +53,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
                 positions: street.waypoints,
                 weight: 7,
                 color: color ? color :
-                    street.roadTags.length > 0 ? roadTagColor(street.roadTags[0]) :
+                    streets?.some(street => street.roadTags.length > 0) ? roadTagColor(street.roadTags[0]) :
                         street.safe ? tKUIFriendlinessColors.safe :
                             street.safe === false ? tKUIFriendlinessColors.unsafe :
                                 street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
