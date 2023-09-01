@@ -58,11 +58,14 @@ export type RoadTags =
     "MAIN-ROAD" |
     "SIDE-ROAD" |
     "SHARED-ROAD" |
-    "UNPAVED/UNSEALED" | // ignored in tripkit-ios
-    "SERVICE-ROAD" |    // not listed in tripkit-ios
+    "UNPAVED/UNSEALED" |    // ignored in tripkit-ios
+    "SERVICE-ROAD" |        // not listed in tripkit-ios
+    "SEGREGATED" |          // not listed in tripkit-ios
     "CCTV-CAMERA" |
     "STREET-LIGHT" |
     "OTHER";
+
+const IGNORED_TAGS: RoadTags[] = ["UNPAVED/UNSEALED", "SERVICE-ROAD", "SEGREGATED"];
 
 export function roadTagToSafety(tag: RoadTags): RoadSafety {
     switch (tag) {
@@ -94,25 +97,18 @@ export function roadTagDisplayS(tag: RoadTags) {
     }
 }
 
-export function roadTagColor(tag: RoadTags) {
-    switch (tag) {
-        case "MAIN-ROAD":
-            return '#fcbb1d';
-        case "CYCLE-LANE":
-        case "CYCLE-NETWORK":
-            return '#0600ff';
-        case "CYCLE-TRACK":
-        case "BICYCLE-DESIGNATED":
-            return '#23b05e';
-        case "SIDE-ROAD":
-            return '#78d6f9';
-        case "CCTV-CAMERA":
-            return '#0603ff';
-        case "STREET-LIGHT":
-            return '#78d6f9';
-        default:
-            return 'gray';
+function roadSafetyColor(safety: RoadSafety) {
+    switch (safety) {
+        case RoadSafety.SAFE: return "#23b05e";
+        case RoadSafety.DESIGNATED: return "#0600ff";
+        case RoadSafety.NEUTRAL: return "#78d6f9";
+        case RoadSafety.HOSTILE: return "#fcbb1d";
+        default: return "gray";
     }
+}
+
+export function roadTagColor(tag: RoadTags) {
+    return roadSafetyColor(roadTagToSafety(tag));
 }
 
 @JsonConverter
@@ -149,7 +145,7 @@ class Street {
     @JsonProperty("instruction", String, true)
     public instruction: StreetInstructions = StreetInstructions.CONTINUE_STRAIGHT;
     @JsonProperty("roadTags", RoadTagsConverter, true)
-    public roadTags: RoadTags[] = [];
+    private _roadTags: RoadTags[] = [];
 
     private _waypoints: LatLng[] | null = null;
 
@@ -183,6 +179,10 @@ class Street {
             }
         }
         return this._waypoints;
+    }
+
+    get roadTags(): RoadTags[] {
+        return this._roadTags.filter(t => !IGNORED_TAGS.includes(t));
     }
 }
 

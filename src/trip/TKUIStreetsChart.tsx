@@ -51,7 +51,7 @@ function tagsSort(t1: RoadTags, t2: RoadTags): number {
     const t1Safety = roadTagToSafety(t1);
     const t2Safety = roadTagToSafety(t2);
     if (t1Safety === t2Safety) {
-        return t1.localeCompare(t2);
+        return roadTagDisplayS(t1).localeCompare(roadTagDisplayS(t2));
     }
     return t1Safety - t2Safety;
 }
