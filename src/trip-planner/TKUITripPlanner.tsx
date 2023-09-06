@@ -73,8 +73,8 @@ export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IS
 
 type IStyle = ReturnType<typeof tKUITripPlannerDefaultStyle>
 
-export type TKUITKUITripPlannerProps = IProps;
-export type TKUITKUITripPlannerStyle = IStyle;
+export type TKUITripPlannerProps = IProps;
+export type TKUITripPlannerStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripPlanner {...props} />,

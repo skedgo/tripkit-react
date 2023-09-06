@@ -73,22 +73,22 @@ class TripGoApi {
         // TODO: Fetch with cache, just for development, to avoid doing so much api calls and accelerating answers.
         return Promise.resolve(this.locale).then(locale => {
             const defaultHeaders: TripGoApiHeadersMap = {
-                'X-TripGo-Version': 'w3.2018.12.20',
-                'X-TripGo-Key': this.apiKey,
+                'x-tripgo-version': 'w3.2018.12.20',
+                'x-tripgo-key': this.apiKey,
                 ...this.clientID && {
-                    'X-TripGo-Client-Id': this.clientID
+                    'x-tripgo-client-id': this.clientID
                 },
                 'referer': 'https://tripgo.com',
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'accept': 'application/json',
+                'content-type': 'application/json',
                 ...this.userToken && {
-                    'userToken': this.userToken
+                    'usertoken': this.userToken
                 },
                 ...this.accountAccessToken && {
-                    'X-Account-Access-Token': this.accountAccessToken
+                    'x-account-access-token': this.accountAccessToken
                 },
                 ...this.userID && {
-                    'userID': this.userID
+                    'userid': this.userID
                 },
                 ...locale && locale !== 'en' && {
                     'accept-language': [locale, 'en'].join(',')
@@ -105,6 +105,12 @@ class TripGoApi {
             } else {
                 apiHeadersOverride = this.apiHeadersOverride as TripGoApiHeadersMap | undefined;
             }
+            // Lower-case apiHeadersOverride keys
+            apiHeadersOverride = apiHeadersOverride &&
+                Object.keys(apiHeadersOverride).reduce((headersMap, key) => {
+                    headersMap[key.toLowerCase()] = headersMap[key];
+                    return headersMap;
+                }, {});
             const headers = {
                 ...defaultHeaders,
                 ...apiHeadersOverride

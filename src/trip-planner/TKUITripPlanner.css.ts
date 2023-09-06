@@ -1,4 +1,4 @@
-import { TKUITKUITripPlannerProps } from "./TKUITripPlanner";
+import { TKUITripPlannerProps } from "./TKUITripPlanner";
 import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import { cardSpacing, queryWidth, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
@@ -85,8 +85,8 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     },
     reportBtnPortrait: {
         bottom: undefined,
-        top: (props: TKUITKUITripPlannerProps) => props.directionsView ? '128px' : '113px',
-        zIndex: (props: TKUITKUITripPlannerProps) => '1000'
+        top: (props: TKUITripPlannerProps) => props.directionsView ? '128px' : '113px',
+        zIndex: (props: TKUITripPlannerProps) => '1000'
     },
     carouselPage: {
         height: '100%',
