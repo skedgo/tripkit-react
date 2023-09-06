@@ -342,12 +342,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     />
                 </div>
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
-                <div className={classes.arrowLeftIconContainer}>
-                    <IconLeftArrow />
-                </div>
-                <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
-            </button>
+            {!portrait &&   // Hide arrows on portrait since they are confusing: can be interpreated as navigating through days, instead of time slots. Warn: portrait + no touch require the user to explicitly scroll with the mouse.
+                <button className={classes.arrowBtn} style={{ width: 40, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
+                    <div className={classes.arrowLeftIconContainer}>
+                        <IconLeftArrow />
+                    </div>
+                    <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
+                </button>}
             <div className={classes.timeIndexes}>
                 {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
                     const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
@@ -360,12 +361,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 }
                 )}
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
-                <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
-                <div className={classes.arrowRightIconContainer}>
-                    <IconRightArrow />
-                </div>
-            </button>
+            {!portrait &&
+                <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
+                    <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
+                    <div className={classes.arrowRightIconContainer}>
+                        <IconRightArrow />
+                    </div>
+                </button>}
         </div>;
 
     return (
