@@ -84,6 +84,7 @@ import { TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle } from "../l
 import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
 import { TKUISubscriptionProps, TKUISubscriptionStyle } from "../sidebar/TKUISubscription";
 import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar/TKUISubscriptionView";
+import { TripGoApiHeadersMap } from "../api/TripGoApi";
 
 /**
  * SDK configuration
@@ -110,6 +111,12 @@ export interface TKUIGAConfig {
 
 interface ITKUIConfigOptional {
     server: string;
+    /**
+     * Override for headers sent along TripGo api resquests. The headers map specified with this property will be used to
+     * override the default headers. It also allows to specify a function, in case the headers override map depends on the 
+     * request url, or the default headers. To just remove a given (default) header you can map its key to `undefined`.
+     */
+    apiHeaders: TripGoApiHeadersMap | ((params: { defaultHeaders: TripGoApiHeadersMap, requestUrl: URL }) => TripGoApiHeadersMap | undefined);
     /**
      * Override for [default theme object]().
      * @ctype

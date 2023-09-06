@@ -11,6 +11,9 @@ import BookingReview from "../model/trip/BookingReview";
 import EphemeralResult from "../model/payment/EphemeralResult";
 import { i18n } from "../i18n/TKI18nConstants";
 
+type TripGoApiHeader = "X-TripGo-Version" | "X-TripGo-Key" | "X-TripGo-Client-Id" | "X-Tsp-Client-UserId" | "X-Tsp-Client-tenantId" | "X-Account-Access-Token" | "userID" | "userToken";
+export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
+
 class TripGoApi {
 
     public static SATAPP = "https://api.tripgo.com/v1";
@@ -27,6 +30,7 @@ class TripGoApi {
     public static userID?: string = undefined;
     public static locale?: Promise<string> = undefined;
     public static apiVersion: number = 13;
+    public static apiHeadersOverride?: TripGoApiHeadersMap | ((params: { defaultHeaders: TripGoApiHeadersMap, requestUrl: URL }) => TripGoApiHeadersMap | undefined);
 
     public static getServer(): string {
         return this.server;
@@ -67,34 +71,57 @@ class TripGoApi {
         }): Promise<any> {
         const { tkcache = false, ...fetchOptions } = options
         // TODO: Fetch with cache, just for development, to avoid doing so much api calls and accelerating answers.
-        return Promise.resolve(this.locale).then(locale =>
-            NetworkUtil.fetch(url, {
-                ...fetchOptions,
-                headers: {
-                    'X-TripGo-Version': 'w3.2018.12.20',
-                    'X-TripGo-Key': this.apiKey,
-                    ...this.clientID && {
-                        'X-TripGo-Client-Id': this.clientID
-                    },
-                    'referer': 'https://tripgo.com',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    ...this.userToken && {
-                        'userToken': this.userToken
-                    },
-                    ...this.accountAccessToken && {
-                        'X-Account-Access-Token': this.accountAccessToken
-                    },
-                    ...this.userID && {
-                        'userID': this.userID
-                    },
-                    ...locale && locale !== 'en' && {
-                        'accept-language': [locale, 'en'].join(',')
-                    },
-                    ...options.headers
+        return Promise.resolve(this.locale).then(locale => {
+            const defaultHeaders: TripGoApiHeadersMap = {
+                'X-TripGo-Version': 'w3.2018.12.20',
+                'X-TripGo-Key': this.apiKey,
+                ...this.clientID && {
+                    'X-TripGo-Client-Id': this.clientID
                 },
+                'referer': 'https://tripgo.com',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                ...this.userToken && {
+                    'userToken': this.userToken
+                },
+                ...this.accountAccessToken && {
+                    'X-Account-Access-Token': this.accountAccessToken
+                },
+                ...this.userID && {
+                    'userID': this.userID
+                },
+                ...locale && locale !== 'en' && {
+                    'accept-language': [locale, 'en'].join(',')
+                },
+                ...options.headers as any
+            };
+            let apiHeadersOverride: TripGoApiHeadersMap | undefined;
+            if (Util.isFunction(this.apiHeadersOverride)) {
+                try {
+                    apiHeadersOverride = (this.apiHeadersOverride as ((params: { defaultHeaders: TripGoApiHeadersMap, requestUrl: URL }) => TripGoApiHeadersMap))({ defaultHeaders, requestUrl: new URL(url) });
+                } catch (e) {
+                    console.log(e);
+                }
+            } else {
+                apiHeadersOverride = this.apiHeadersOverride as TripGoApiHeadersMap | undefined;
+            }
+            const headers = {
+                ...defaultHeaders,
+                ...apiHeadersOverride
+            };
+            // Remove headers with value `undefined`, which may come in `TKUIConfig.apiHeadersOverride`
+            // to remove a given (default) header.
+            Object.keys(headers).forEach(headerKey => {
+                if (headers[headerKey] === undefined) {
+                    delete headers[headerKey];
+                }
+            })
+            return NetworkUtil.fetch(url, {
+                ...fetchOptions,
+                headers,
                 body: options.body ? JSON.stringify(options.body) : undefined
-            }, tkcache)
+            }, tkcache);
+        }
         );
     }
 
