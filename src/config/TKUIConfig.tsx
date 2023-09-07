@@ -119,7 +119,7 @@ interface ITKUIConfigOptional {
      */
     apiServer: string;
     /**
-     * It allows to ammend (add, change, remove) the default headers sent along TripGo api resquests by specifying a map from headers to values,
+     * It allows to amend (add, change, remove) the default headers sent along TripGo api requests by specifying a map from headers to values,
      * that will be used to override the defaults in the following way:
      * 
      * ```
