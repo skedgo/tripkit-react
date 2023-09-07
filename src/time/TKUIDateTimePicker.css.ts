@@ -70,7 +70,7 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
             backgroundColor: black(4),
             color: black(0, theme.isDark) + '!important'
         },
-        '& .react-datepicker__day:hover': {
+        '& .react-datepicker__day:hover:not(.react-datepicker__day--disabled):not(.react-datepicker__day--selected)': {
             ...genStyles.borderRadius(50, '%'),
             backgroundColor: theme.isDark ? white(3) : '#f0f0f0'
         },
@@ -99,6 +99,9 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
         },
         '& *': {
             ...important(theme.textColorDefault)
+        },
+        '& .react-datepicker__day--disabled': {
+            color: black(1, theme.isDark) + '!important'
         }
     },
     inputElem: {
@@ -119,7 +122,8 @@ export const tKUIDateTimePickerDefaultStyle = (theme: TKUITheme) => ({
             position: 'absolute',
             zIndex: '-1',
             height: '0',
-            width: '0'
+            width: '0',
+            padding: 0  // For Safari on iOS
         }
     },
     timePicker: {

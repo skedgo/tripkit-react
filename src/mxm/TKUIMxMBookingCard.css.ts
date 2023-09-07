@@ -273,7 +273,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     },
     separator: {
         height: '8px',
-        background: '#F2F2F7',
+        background: black(5, theme.isDark),
         margin: '0 -16px 20px'
     },
     paySummary: {

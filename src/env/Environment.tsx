@@ -28,7 +28,7 @@ class Environment {
     }
 
     public static isStaging(): boolean {
-        return this.isProd() && Constants.DEPLOY_URL.includes("-staging");
+        return this.isProd() && (Constants.DEPLOY_URL.includes("-staging") || Constants.DEPLOY_URL.includes("staging."));
     }
 
     public static isBeta(): boolean {

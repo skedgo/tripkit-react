@@ -1,9 +1,14 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUITheme} from "../jss/TKUITheme";
+import { TKUITheme, black } from "../jss/TKUITheme";
 
 export const tKUIHomeCardDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        padding: '16px'
+        '&>*': {
+            padding: '16px'
+        },
+        '&>*:not(:last-child)': {
+            borderBottom: '8px solid ' + black(5, theme.isDark)
+        }
     },
     activeTrip: {
         ...genStyles.flex,

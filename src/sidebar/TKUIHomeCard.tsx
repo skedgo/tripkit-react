@@ -17,6 +17,7 @@ import Util from "../util/Util";
 import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import { TKError } from "../error/TKError";
 import Segment from "../model/trip/Segment";
+import TKUISubscription from './TKUISubscription';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMyBookings: () => void;
@@ -45,7 +46,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 let refreshActiveTripInterval: any;
 
 const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, t, landscape, status, classes } = props;
+    const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, userAccount, t, landscape, status, classes } = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     const [waitingForActiveTrip, setWaitingForActiveTrip] = useState<boolean>(false);
 
@@ -70,7 +71,7 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     useEffect(() => {
         if (status === SignInStatus.signedIn) {
             refreshActiveTrip();
-            refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 10000);
+            refreshActiveTripInterval = setInterval(() => refreshActiveTrip(), 60000);
         }
         return () => {
             if (refreshActiveTripInterval) {
@@ -81,6 +82,8 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     if (status !== SignInStatus.signedIn) {
         return null;
     }
+    // Hide subscription component if waiting for user or no bundle
+    const showSubscription = userAccount?.currentBundle || userAccount?.futureBundle;
     return (
         <TKUICard>
             <div className={classes.main}>
@@ -106,6 +109,8 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     }}
                     onMyBookings={onMyBookings}
                 />
+                {showSubscription &&
+                    <TKUISubscription />}
             </div>
         </TKUICard>
     );

@@ -9,13 +9,23 @@ import 'react-app-polyfill/stable';
 import 'date-time-format-timezone/build/browserified/date-time-format-timezone-all-zones-no-locale-min';
 // This polyfill means extra ~320kb in the bundle size (see https://github.com/formatjs/date-time-format-timezone#browserified-file-size).
 // import 'date-time-format-timezone';
-// This import is to avoid the following runtime error:
-// Uncaught TypeError: Reflect.metadata is not a function
-// However this error still happens when including module declaration on package.json, so remove it for now.
-// Also tried importing it from TKStateProvider, in case the reason is that when client uses tripkit-react in esm
-// format it optimizes compilation and doesn't include an import on index.tsx, but it doesn't work.
-// Maybe try including it on polyfills.ts (see https://stackoverflow.com/a/53791071)
-// TODO: Fix this to distribute library as esm.
+/**
+ * The following polyfill is required to support typescript decorators. It just declares a global variable 
+ * Reflect.metadata, that should be in place before any import of a module using annotations, 
+ * or else the following runtime error will be triggered:
+ * `Uncaught TypeError: Reflect.metadata is not a function`
+ * However, the following [side-effect import](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#import_a_module_for_its_side_effects_only) 
+ * is not enough to polyfill clients of the library, since despite they will include named imports
+ * from "tripkit-react" (e.g. `import { TKRoot } from "tripkit-react"`), named imports don't cause the next side effect 
+ * import to take place. For that we need to do `import "tripkit-react"` in the client code.
+ * Potential solutions / improvements:
+ *   - provide a polyfill module, say at "tripkit-react/polyfills", that includes this side-effect `import "reflect-metadata"` 
+ *     (as well as other polyfills required by the sdk), and clients need to import this before any SDK import.
+ *   - investigate if it can be included using polyfills.ts (see https://stackoverflow.com/a/53791071)
+ *   - investigate othe solutions: check other npm libraries using "reflect-metadata" (https://www.npmjs.com/package/reflect-metadata?activeTab=dependents)
+ *     to see what they do.
+ */
+
 import "reflect-metadata";
 
 // IMPORTANT: Uncomment to compile as lib.
@@ -116,7 +126,7 @@ export { useTKState } from './config/TKStateProvider';
 
 // This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").
 // IMPORTANT: Uncomment to compile TripGo web-app.
-// if (document.getElementById("tripgo-sample-root")) {
+if (process.env.NODE_ENV === 'development' && document.getElementById("tripgo-sample-root")) {
 /* eslint-disable import/first */
-    // import("./example/tripgo/tripgo-sample");
-// }
+    import("./tripgo/index");
+}

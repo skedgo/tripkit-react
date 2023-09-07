@@ -1,5 +1,5 @@
 import React from 'react';
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
@@ -51,6 +51,7 @@ const TKUIActiveTrip: React.FunctionComponent<IProps> = (props: IProps) => {
                         // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
                         startTime={activeTrip.datetime ? activeTrip.datetime.split("[")[0] : undefined}
                         status={activeTrip.confirmation?.status?.value}
+                        timezone={activeTrip.timeZone}
                     />}
             </div>;
     } else {
@@ -65,6 +66,11 @@ const TKUIActiveTrip: React.FunctionComponent<IProps> = (props: IProps) => {
                 <TKUIRow
                     title={title}
                     subtitle={subtitle}
+                    styles={{
+                        main: overrideClass({
+                            padding: '0 0 0 16px'
+                        })
+                    }}
                 />
             </div>;
     }

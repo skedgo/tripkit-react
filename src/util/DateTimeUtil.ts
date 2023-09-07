@@ -51,6 +51,13 @@ class DateTimeUtil {
      * @deprecated Since shouldn't use moment outside DateTimeUtil anymore.
      */
     public static momentFromIsoWithTimezone(datetime: string): Moment {
+        /**
+         * Remove timezone id, which [is not part of the standard](https://stackoverflow.com/a/42196445), but that JAVA (BE) uses.
+         */
+        const timezoneIdIndex = datetime.indexOf("[");
+        if (timezoneIdIndex !== -1) {
+            datetime = datetime.substring(0, timezoneIdIndex);
+        }
         return moment.parseZone(datetime);
     }
 
@@ -141,17 +148,47 @@ class DateTimeUtil {
         return Math.floor(departure.actualStartTime / 60 - departure.startTime / 60);
     }
 
-    public static formatRelativeDay(moment: Moment, formatWithDay: string, partialReplace?: string): string {
+    public static formatRelativeDay(moment: Moment, formatWithDay: string, options: { partialReplace?: string, justToday?: boolean } = {}): string {
+        const { partialReplace, justToday } = options;
         const calendarFormat = {
             sameDay: partialReplace ? formatWithDay.replace(partialReplace, "[Today]") : "[Today]",
-            nextDay: partialReplace ? formatWithDay.replace(partialReplace, "[Tomorrow]") : "[Tomorrow]",
+            nextDay: justToday ? formatWithDay : partialReplace ? formatWithDay.replace(partialReplace, "[Tomorrow]") : "[Tomorrow]",
             nextWeek: formatWithDay,
-            lastDay: partialReplace ? formatWithDay.replace(partialReplace, "[Yesterday]") : "[Yesterday]",
+            lastDay: justToday ? formatWithDay : partialReplace ? formatWithDay.replace(partialReplace, "[Yesterday]") : "[Yesterday]",
             lastWeek: formatWithDay,
             sameElse: formatWithDay,
         };
         return moment.calendar(DateTimeUtil.getNow(), calendarFormat);
     };
+
+    public static isoAddMinutes(dateS: string, minutes: number): string {
+        return this.momentFromIsoWithTimezone(dateS).add(minutes, 'minutes').format();
+    }
+
+    public static isoFormat(dateS: string, format: string) {
+        return this.momentFromIsoWithTimezone(dateS).format(format);
+    }
+
+    public static isoSameTime(date1: string, date2: string): boolean {
+        return this.isoToMillis(date1) === this.isoToMillis(date2);
+    }
+
+    public static isoCompare(date1: string, date2: string): number {
+        return this.isoToMillis(date1) - this.isoToMillis(date2);
+    }
+
+    public static toJustDate(moment: Moment): Moment {
+        // Immutable
+        return moment.clone().set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0);
+    }
+
+    public static toIsoJustDate(date: string): string {
+        return this.momentFromIsoWithTimezone(date).set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).format();
+    }
+
+    public static isoFormatRelativeDay(date: string, formatWithDay: string, options: { partialReplace?: string, justToday?: boolean } = {}): string {
+        return this.formatRelativeDay(this.momentFromIsoWithTimezone(date), formatWithDay, options);
+    }
 
 }
 

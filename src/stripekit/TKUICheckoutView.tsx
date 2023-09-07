@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
-import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
-import { black, TKUITheme } from '../jss/TKUITheme';
+import { TKUIWithClasses, overrideClass, withStyles } from '../jss/StyleHelper';
+import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
-import TKUIPaymentMethodSelect from './TKUIPaymentMethodSelect';
+import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
 import TripGoApi from '../api/TripGoApi';
 import NetworkUtil from '../util/NetworkUtil';
 import EphemeralResult from '../model/payment/EphemeralResult';
@@ -17,6 +17,10 @@ import UIUtil from '../util/UIUtil';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import PaymentOption from '../model/trip/PaymentOption';
 import { StripeElements } from '@stripe/stripe-js/types/stripe-js/elements-group';
+import Radio from '@material-ui/core/Radio';
+import TKUISettingSection from '../options/TKUISettingSection';
+import FormatUtil from '../util/FormatUtil';
+import classNames from 'classnames';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -26,7 +30,8 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     },
     body: {
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        ...genStyles.scrollableY
     },
     newPayment: {
         ...genStyles.flex,
@@ -43,9 +48,11 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.justifyEnd,
         '&>*:not(:first-child)': {
             marginLeft: '20px'
-        }
+        },
+        paddingBottom: '15px'
     },
     card: {
+        ...genStyles.noShrink,
         height: '150px',
         margin: '15px 0 30px',
         '& path': {
@@ -55,25 +62,61 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     },
     tabs: {
         ...genStyles.flex,
-        margin: '15px 0 25px 18px',
+        margin: '15px 0 15px 18px',
         '& :not($tabSelected) button': {
-            color: black(1)
+            color: black(1, theme.isDark)
         },
         '& :not($tabSelected) button:hover': {
-            borderBottom: '1px solid ' + black(1)
+            borderBottom: '1px solid ' + black(1, theme.isDark)
         }
     },
     tabSelected: {
         '& button': {
-            borderBottom: '1px solid rgb(226, 115, 56)'
+            borderBottom: '1px solid ' + theme.colorPrimary
         }
     },
     tabSeparator: {
-        borderLeft: '1px solid ' + black(2),
+        borderLeft: '1px solid ' + black(2, theme.isDark),
         margin: '0 20px'
     },
     cardElement: {
         margin: '18px'
+    },
+    group: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.spaceBetween
+    },
+    label: {
+        ...theme.textWeightSemibold
+    },
+    value: {
+
+    },
+    discountedPrice: {
+        ...theme.textWeightBold,
+    },
+    fullPrice: {
+        textDecoration: 'line-through',
+        ...theme.textSizeCaption,
+        ...theme.textColorGray
+    },
+    priceValue: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        ...genStyles.alignEnd
+    },
+    section: {
+        border: '1px solid ' + black(4, theme.isDark),
+        ...genStyles.borderRadius(8)
+    },
+    review: {
+        marginTop: '30px'
+    },
+    selectPaymentMethod: {
+        ...theme.textWeightBold,
+        ...genStyles.flex,
+        marginLeft: '19px'
     }
 });
 
@@ -81,23 +124,27 @@ type IStyle = ReturnType<typeof tKUICheckoutFormPropsDefaultStyle>
 
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     publicKey: string;
-    paymentOption: PaymentOption;
+    paymentOptions: PaymentOption[];
     ephemeralKeyObj: EphemeralResult;
     onClose: (success?: boolean, data?: { updateURL?: string }) => void;
     setWaiting?: (waiting: boolean) => void;
 }
 
 const TKUICheckoutView: React.FunctionComponent<IProps> =
-    ({ publicKey, paymentOption, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
+    ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
         const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
+
+        // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
+        const internalPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
+        console.log("render CheckoutView");
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
-            const initPaymentUrl = paymentOption.url;
-            if (paymentOption.paymentMode === "INTERNAL") { // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
+            if (internalPaymentOption) {
+                const initPaymentUrl = internalPaymentOption.url;
                 setWaiting?.(true);
-                TripGoApi.apiCallUrl(initPaymentUrl, paymentOption.method)
+                TripGoApi.apiCallUrl(initPaymentUrl, internalPaymentOption.method)
                     .then(({ clientSecret, url: paidUrl }) => {
                         if (!clientSecret) {
                             throw new TKError("Unexpected error. Contact SkedGo support");
@@ -109,22 +156,28 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                     .finally(() => setWaiting?.(false));;
             }
         }, []);
-        if (paymentOption.paymentMode === "INTERNAL" && !paymentIntentSecret || !stripePromise) {
+        if (internalPaymentOption && !paymentIntentSecret || !stripePromise) {
             return null;
         }
         const options = paymentIntentSecret ?
             {
                 clientSecret: paymentIntentSecret
             } : undefined;
-        const onConfirmPayment: (props: { paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void =
-            async ({ paymentMethod, elements, saveForFuture }) => {
-                const stripe = await stripePromise;
-                if (!stripe || !paymentMethod && !elements) {
-                    // Stripe.js has not yet loaded.
-                    // Make sure to disable form submission until Stripe.js has loaded.
-                    return;
-                }
-                if (paymentOption.paymentMode === "INTERNAL") {
+        const onConfirmPayment: (props: { paymentOption: PaymentOption, paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void =
+            async ({ paymentOption, paymentMethod, elements, saveForFuture }) => {
+                if (paymentOption.paymentMode === "WALLET") {
+                    setWaiting?.(true);
+                    TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method)
+                        .then(data => onClose(true, data))
+                        .catch(UIUtil.errorMsg)
+                        .finally(() => setWaiting?.(false));
+                } else if (paymentOption.paymentMode === "INTERNAL") {
+                    const stripe = await stripePromise;
+                    if (!stripe || !paymentMethod && !elements) {
+                        // Stripe.js has not yet loaded.
+                        // Make sure to disable form submission until Stripe.js has loaded.
+                        return;
+                    }
                     let result;
                     setWaiting?.(true);
                     if (paymentMethod) {
@@ -163,7 +216,13 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                             })
                             .finally(() => setWaiting?.(false));
                     }
-                } else {
+                } else {    // paymentOption.paymentMode === "EXTERNAL"
+                    const stripe = await stripePromise;
+                    if (!stripe || !paymentMethod && !elements) {
+                        // Stripe.js has not yet loaded.
+                        // Make sure to disable form submission until Stripe.js has loaded.
+                        return;
+                    }
                     setWaiting?.(true);
                     if (!paymentMethod) {
                         const payload = await stripe.createPaymentMethod({
@@ -198,6 +257,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
             <Elements stripe={stripePromise} options={options}>
                 <TKUICheckoutForm
                     ephemeralKeyObj={ephemeralKeyObj}
+                    paymentOptions={paymentOptions}
                     onConfirmPayment={onConfirmPayment}
                     onClose={onClose}
                     setWaiting={setWaiting}
@@ -209,21 +269,43 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
 
 interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     ephemeralKeyObj: EphemeralResult;
-    onConfirmPayment: (props: { paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
+    paymentOptions: PaymentOption[];
+    onConfirmPayment: (props: { paymentOption: PaymentOption, paymentMethod?: PaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
     setWaiting?: (waiting: boolean) => void;
     onClose: (success?: boolean) => void;
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
-    ({ ephemeralKeyObj, onConfirmPayment, onClose, setWaiting, t, classes, theme }) => {
+    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, t, classes, theme, injectedStyles }) => {
         const ephemeralKey = ephemeralKeyObj.secret;
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
         const [newPaymentMethodAndPay, setNewPaymentMethodAndPay] = useState<boolean>(false);
         const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[] | undefined>(undefined);
-        const [selectedPM, setSelectedPM] = useState<PaymentMethod | undefined>(undefined);
         const [saveForFuture, setSaveForFuture] = useState<boolean>(true);
         // const [ephemeralKey, setEphemeralKey] = useState<string | undefined>(undefined); // Now it will come from quick/1, so remove it.
+
+        const cardPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
+        const walletPaymentOption = paymentOptions.find(option => option.paymentMode === "WALLET");
+        const walletPaymentMethod: SGPaymentMethod | undefined = useMemo(() =>
+            walletPaymentOption && { type: walletPaymentOption.paymentMode, description: walletPaymentOption.description, balance: walletPaymentOption.currentBalance!, currency: walletPaymentOption.currency },
+            [walletPaymentOption]);
+        const paymentSelectOptions: (PaymentMethod | SGPaymentMethod)[] | undefined = paymentMethods && [...walletPaymentMethod ? [walletPaymentMethod] : [], ...paymentMethods ?? []];
+        const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | SGPaymentMethod | undefined>(undefined);
+        const paymentOption = (newPaymentMethodAndPay || (selectedMethod && selectedMethod.type !== "WALLET") ? cardPaymentOption : walletPaymentOption) ?? paymentOptions[0]!;
+
+        useEffect(() => {
+            // Initially select first payment option by default.
+            if (paymentSelectOptions && paymentOptions.length > 0 && !selectedMethod) {
+                setSelectedMethod(paymentSelectOptions[0])
+            }
+            // This will happen if removed the selected payment method.
+            if (paymentSelectOptions && selectedMethod && !paymentSelectOptions.includes(selectedMethod)) {
+                setSelectedMethod(paymentSelectOptions.length > 0 ? paymentSelectOptions[0] : undefined)
+            }
+        }, [paymentSelectOptions])
+
+        console.log("render CheckoutForm");
 
         const refreshData = () => {
             setWaiting?.(true);
@@ -244,20 +326,19 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             refreshData()
                 .then(result => {
                     setPaymentMethods(result.data);
-                    result.data?.length > 0 && setSelectedPM(result.data[0]);
+                    // result.data?.length > 0 && setSelectedPM(result.data[0]);
                 });
         }, []);
 
         useEffect(() => {
-            if (paymentMethods && paymentMethods.length === 0) {
+            if (paymentSelectOptions && paymentSelectOptions.length === 0) {
                 setNewPaymentMethodAndPay(true);
             }
         }, [paymentMethods]);
 
         const [StyledCheckbox] = useState<React.ComponentType<any>>(muiWithStyles({
             root: {
-                // marginLeft: '0',
-                // width: '50px',
+                color: colorWithOpacity(theme.colorPrimary, .5),
                 '&$checked': {
                     color: theme.colorPrimary
                 }
@@ -267,9 +348,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
 
         const handleSubmit = async () => {
             if (newPaymentMethodAndPay) {
-                onConfirmPayment({ elements: elements ?? undefined, saveForFuture });
+                onConfirmPayment({ paymentOption, elements: elements ?? undefined, saveForFuture });
             } else {
-                onConfirmPayment({ paymentMethod: selectedPM });
+                onConfirmPayment({ paymentOption, paymentMethod: selectedMethod!.type !== "WALLET" ? selectedMethod as PaymentMethod : undefined });
             }
         };
 
@@ -290,9 +371,6 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             } else {
                 const updatedPMs = paymentMethods!.filter(pm => pm !== value);
                 setPaymentMethods(updatedPMs);
-                if (selectedPM === value) {
-                    setSelectedPM(updatedPMs.length > 0 ? updatedPMs[0] : undefined);
-                }
             }
         }
         // if (newCard) {
@@ -313,32 +391,43 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //         />
         //     );
         // }
+
+        const sectionStyles = { sectionBody: overrideClass(injectedStyles.section) };
+
         return (
             <Fragment>
                 <div className={classes.main}>
                     <div className={classes.body}>
                         <IconCard className={classes.card} />
-                        {paymentMethods && paymentMethods.length > 0 &&
-                            <div className={classes.tabs}>
-                                <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                    <TKUIButton
-                                        type={TKUIButtonType.PRIMARY_LINK}
-                                        text={"Existing card"}
-                                        onClick={() => setNewPaymentMethodAndPay(false)}
-                                    />
+                        {paymentSelectOptions && paymentSelectOptions.length > 0 &&
+                            <>
+                                <div className={classes.selectPaymentMethod}>
+                                    Select payment method
                                 </div>
-                                <div className={classes.tabSeparator} />
-                                <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                    <TKUIButton
-                                        type={TKUIButtonType.PRIMARY_LINK}
-                                        text={"New card"}
-                                        onClick={() => setNewPaymentMethodAndPay(true)}
-                                    />
+                                <div className={classes.tabs}>
+                                    <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                        <TKUIButton
+                                            type={TKUIButtonType.PRIMARY_LINK}
+                                            text={"Existing"}
+                                            onClick={() => {
+                                                setNewPaymentMethodAndPay(false);
+                                            }}
+                                        />
+                                    </div>
+                                    <div className={classes.tabSeparator} />
+                                    <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                        <TKUIButton
+                                            type={TKUIButtonType.PRIMARY_LINK}
+                                            text={"New card"}
+                                            onClick={() => {
+                                                setNewPaymentMethodAndPay(true);
+                                            }}
+                                        />
+                                    </div>
                                 </div>
-                            </div>}
+                            </>}
                         {newPaymentMethodAndPay ?
                             <div className={classes.newPayment}>
-                                {/* <PaymentElement /> */}
                                 <CardElement className={classes.cardElement} />
                                 <div className={classes.futurePayment}>
                                     <StyledCheckbox
@@ -350,13 +439,38 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             </div>
                             :
                             <div>
-                                {paymentMethods && selectedPM &&
+                                {paymentSelectOptions && selectedMethod &&
                                     <TKUIPaymentMethodSelect
-                                        value={selectedPM}
-                                        options={paymentMethods}
-                                        onChange={value => setSelectedPM(value)}
+                                        value={selectedMethod}
+                                        options={paymentSelectOptions}
+                                        onChange={setSelectedMethod}
                                         onRemove={onRemovePM}
                                     />}
+                            </div>}
+                        {(selectedMethod || newPaymentMethodAndPay) && paymentOption.discountedPrice &&
+                            <div className={classes.review}>
+                                <TKUISettingSection styles={sectionStyles}>
+                                    <div className={classes.group}>
+                                        <div className={classes.label}>{"Discount"}</div>
+                                        <div className={classes.value}>{FormatUtil.toMoney(paymentOption.fullPrice - paymentOption.discountedPrice, { currency: paymentOption.currency, nInCents: true }) + " off"}</div>
+                                    </div>
+                                    <div className={classes.group}>
+                                        <div className={classes.label}>{t("Price")}</div>
+                                        <div className={classNames(classes.value, classes.priceValue)}>
+                                            <div className={classes.discountedPrice}>
+                                                {FormatUtil.toMoney(paymentOption.discountedPrice, { currency: paymentOption.currency, nInCents: true })}
+                                            </div>
+                                            <div className={classes.fullPrice}>
+                                                {FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency, nInCents: true })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {paymentOption.paymentMode === "WALLET" &&
+                                        <div className={classes.group}>
+                                            <div className={classes.label}>{"New Balance"}</div>
+                                            <div className={classes.value}>{FormatUtil.toMoney(paymentOption.newBalance!, { currency: paymentOption.currency, nInCents: true })}</div>
+                                        </div>}
+                                </TKUISettingSection>
                             </div>}
                     </div>
                     <div className={classes.buttonsPanel}>
@@ -366,9 +480,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             onClick={() => onClose()}
                         />
                         <TKUIButton
-                            text={t("Confirm")}
+                            text={"Purchase"}
                             type={TKUIButtonType.PRIMARY}
-                            disabled={!newPaymentMethodAndPay && !selectedPM}
+                            disabled={!newPaymentMethodAndPay && !selectedMethod}
                             onClick={handleSubmit}
                         />
                     </div>

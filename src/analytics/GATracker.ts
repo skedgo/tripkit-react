@@ -35,7 +35,7 @@ class GATracker {
         if (isOldUA) {
             ReactUA.initialize([{ ...tracker, gaOptions: { name: "skedgo" }, debug: true }], { alwaysSendToDefaultTracker: false });
         } else {
-            ReactGA.initialize([tracker]);
+            ReactGA.initialize([{ ...tracker, ...!isEnabled() ? { gtagOptions: { 'send_page_view': false, ...tracker.gtagOptions } } : {} }]);
         }
         this.defaultTrackerId = isOldUA ? "skedgo" : tracker.trackingId;
         this.initialized = true;

@@ -7,16 +7,15 @@ import {
     TKUITripOverviewViewStyle
 } from "../trip/TKUITripOverviewView";
 import { TKUISegmentOverviewProps, TKUISegmentOverviewStyle } from "../trip/TKUISegmentOverview";
-import { TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle } from "../trip/TKUIWCSegmentInfo";
+import { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "../trip/TKUIStreetsChart";
 import { TKUITimetableViewProps, TKUITimetableViewStyle } from "../service/TKUITimetableView";
 import { TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle } from "../service/TKUIServiceDepartureRow";
 import { TKUIServiceViewProps, TKUIServiceViewStyle } from "../service/TKUIServiceView";
 import { TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle } from "../query/TKUIRoutingQueryInput";
-import { TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle } from "../trip-planner/TKUITripPlanner";
+import { TKUITripPlannerProps, TKUITripPlannerStyle } from "../trip-planner/TKUITripPlanner";
 import { TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle } from "../service/occupancy/TKUITrainOccupancyInfo";
 import { TKUIShareViewProps, TKUIShareViewStyle } from "../share/TKUIShareView";
 import { TKUILocationSearchProps, TKUILocationSearchStyle } from "../query/TKUILocationSearch";
-import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
 import { TKUIFavouritesViewProps, TKUIFavouritesViewStyle } from "../favourite/TKUIFavouritesView";
 import { TKUIFavouriteRowProps, TKUIFavouriteRowStyle } from "../favourite/TKUIFavouriteRow";
 import { TKUIMapViewProps, TKUIMapViewStyle } from "../map/TKUIMapView";
@@ -74,7 +73,6 @@ import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveT
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
 import { TKUIBookingCardClientProps, TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { TKUILocationDetailProps, TKUILocationDetailStyle } from "../location/TKUILocationDetail";
 import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
@@ -82,6 +80,11 @@ import Trip from "../model/trip/Trip";
 import { TKUIPagerControlProps, TKUIPagerControlStyle } from "../card/TKUIPagerControl";
 import Segment from "../model/trip/Segment";
 import RoutingQuery from "../model/RoutingQuery";
+import { TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle } from "../location/TKUIVehicleAvailability";
+import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../location/TKUILocationDetailView";
+import { TKUISubscriptionProps, TKUISubscriptionStyle } from "../sidebar/TKUISubscription";
+import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar/TKUISubscriptionView";
+import { TripGoApiHeadersMap } from "../api/TripGoApi";
 
 /**
  * SDK configuration
@@ -90,6 +93,11 @@ export const TKUIConfigForDoc = (props: TKUIConfig) => null;
 TKUIConfigForDoc.displayName = 'TKUIConfig';
 
 interface ITKUIConfigRequired {
+    /**
+     * Allows to specify the api key to be used to access the TripGo API services.
+     * @order 1
+     * @divider
+     */
     apiKey: string;
 }
 
@@ -97,7 +105,6 @@ export interface IThemeCreatorProps {
     isDark: boolean;
     isHighContrast: boolean;
 }
-
 export interface TKUIGAConfig {
     tracker: TrackerOptions;
     // It's checked before every GA event, allowing to enable / disable tracking
@@ -107,27 +114,68 @@ export interface TKUIGAConfig {
 }
 
 interface ITKUIConfigOptional {
-    server: string;
+    /**
+     * Allows to specify the base url of the TripGo api services.
+     */
+    apiServer: string;
+    /**
+     * It allows to amend (add, change, remove) the default headers sent along TripGo api requests by specifying a map from headers to values,
+     * that will be used to override the defaults in the following way:
+     * 
+     * ```
+     * {
+     *   ...defaultHeaders,
+     *   ...apiHeaders
+     * }
+     * ```
+     * 
+     * Also, to remove an existing (default) header you can map its key to `undefined`. Next is a possible value:
+     * 
+     * ```
+     * {
+     *   "X-Tsp-Client-UserId": "1234",
+     *   "Accept-Language": undefined
+     * }
+     * ```
+     * Which adds "X-Tsp-Client-UserId" and removes "Accept-Language".
+     * It also allows to specify the headers map through a function of the request url, useful to selectively ammend headers
+     * depending on the url.
+     *      
+     * @ctype TripGoApiHeadersMap | <br> 
+     * (props: { requestUrl: URL }) => TripGoApiHeadersMap | undefined
+     */
+    apiHeaders: TripGoApiHeadersMap | ((params: { defaultHeaders: TripGoApiHeadersMap, requestUrl: URL }) => TripGoApiHeadersMap | undefined);
     /**
      * Override for [default theme object]().
      * @ctype
      */
     theme: Partial<TKUITheme> | ((props: IThemeCreatorProps) => Partial<TKUITheme>);
-    /** @ctype */
+    /** 
+     * @ignore
+     * @ctype 
+     */
     onInitState: (state: TKState) => void;
-    /** @ctype */
+    /** 
+     * @ignore
+     */
     onUpdateState: (state: TKState, prevState: TKState) => void;
-    /** @ctype */
+    /**
+     * @ctype
+     */
     initViewport: { center?: LatLng, zoom?: number };
     /** @ctype */
     defaultUserProfile: TKUserProfile;
-    /** @ctype */
+    /**
+     * @ignore
+     * @ctype
+     */
     resetUserProfile: boolean;
     /**
-     * @ctype
      * If true then region in global state will be fixed to that one of the initial
      * viewport. Useful when the api key covers multiple regions, but we want one
      * of them to be the central region (e.g. consider just transports of that region).
+     * @ctype
+     * @ignore
      */
     fixToInitViewportRegion: boolean;
     /**
@@ -135,15 +183,31 @@ interface ITKUIConfigOptional {
      */
     i18n: { locale: string, translations: TKI18nMessages } | Promise<{ locale: string, translations: TKI18nMessages }>;
     isDarkMode: boolean;
+    /**
+     * Allows to specify google analytics (GA) config to track user events to GA.
+     * @ctype
+     */
     analytics: {
         google?: TKUIGAConfig
     };
+    /**
+     * @ignore
+     */
     tripCompareFc: (trip1: Trip, trip2: Trip) => number;
-    computeModeSetsBuilder: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][]; 
+    /**
+     * @ignore     
+     */
+    computeModeSetsBuilder: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
+    /**
+     * @ignore     
+     */
     booking: {
         renderBookingCard?: (props: TKUIBookingCardClientProps) => JSX.Element;
         enabled?: (segment: Segment) => boolean;    // () => true, by default
     };
+    /**
+     * @ignore     
+     */
     payment: {
         renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
         stripePublicKey?: string;
@@ -152,7 +216,15 @@ interface ITKUIConfigOptional {
      * @ctype
      */
     geocoding: Partial<TKGeocodingOptions> | ((defaultOptions: TKGeocodingOptions) => Partial<TKGeocodingOptions>);
-    TKUITripPlanner: TKComponentConfig<TKUITKUITripPlannerProps, TKUITKUITripPlannerStyle>;
+    /**
+     * Config for [](TKUITripPlanner)
+     * @ctype TKComponentConfig<TKUITripPlannerProps, TKUITripPlannerStyle>
+     */
+    TKUITripPlanner: TKComponentConfig<TKUITripPlannerProps, TKUITripPlannerStyle>;
+    /**
+     * Config for [](TKUILocationBox)
+     * @ctype TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>
+     */
     TKUILocationBox: TKComponentConfig<TKUILocationBoxProps, TKUILocationBoxStyle>;
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
@@ -168,15 +240,23 @@ interface ITKUIConfigOptional {
     TKUIRoutingResultsView: TKComponentConfig<TKUIRoutingResultsViewProps, TKUIRoutingResultsViewStyle>;
     TKUITripOverviewView: TKComponentConfig<TKUITripOverviewViewProps, TKUITripOverviewViewStyle>;
     TKUISegmentOverview: TKComponentConfig<TKUISegmentOverviewProps, TKUISegmentOverviewStyle>;
-    TKUIWCSegmentInfo: TKComponentConfig<TKUIWCSegmentInfoProps, TKUIWCSegmentInfoStyle>;
+    TKUIStreetsChart: TKComponentConfig<TKUIStreetsChartProps, TKUIStreetsChartStyle>;
     TKUITimetableView: TKComponentConfig<TKUITimetableViewProps, TKUITimetableViewStyle>;
     TKUIServiceDepartureRow: TKComponentConfig<TKUIServiceDepartureRowProps, TKUIServiceDepartureRowStyle>;
     TKUIServiceView: TKComponentConfig<TKUIServiceViewProps, TKUIServiceViewStyle>;
     TKUITrainOccupancyInfo: TKComponentConfig<TKUITrainOccupancyInfoProps, TKUITrainOccupancyInfoStyle>;
     TKUIShareView: TKComponentConfig<TKUIShareViewProps, TKUIShareViewStyle>;
-    TKUILocationDetail: TKComponentConfig<TKUILocationDetailProps, TKUILocationDetailStyle>;
+    /**
+     * Config for [](TKUILocationDetailView)
+     * @ctype TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>
+     */
     TKUILocationDetailView: TKComponentConfig<TKUILocationDetailViewProps, TKUILocationDetailViewStyle>;
     TKUILocationDetailField: TKComponentConfig<TKUILocationDetailFieldProps, TKUILocationDetailFieldStyle>;
+    /**
+     * Config for [](TKUIVehicleAvailability)
+     * @ctype TKComponentConfig<TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle>
+     */
+    TKUIVehicleAvailability: TKComponentConfig<TKUIVehicleAvailabilityProps, TKUIVehicleAvailabilityStyle>;
     TKUICookiesBanner: TKComponentConfig<TKUICookiesBannerProps, TKUICookiesBannerStyle>;
     TKUIMapView: TKComponentConfig<TKUIMapViewProps, TKUIMapViewStyle>;
     TKUIMapLocationIcon: TKComponentConfig<TKUIMapLocationIconProps, TKUIMapLocationIconStyle>;
@@ -217,6 +297,8 @@ interface ITKUIConfigOptional {
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
     TKUIActiveTrip: TKComponentConfig<TKUIActiveTripProps, TKUIActiveTripStyle>;
+    TKUISubscription: TKComponentConfig<TKUISubscriptionProps, TKUISubscriptionStyle>;
+    TKUISubscriptionView: TKComponentConfig<TKUISubscriptionViewProps, TKUISubscriptionViewStyle>;
     TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
 }

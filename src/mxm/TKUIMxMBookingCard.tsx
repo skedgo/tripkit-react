@@ -189,7 +189,7 @@ export const BookingInputForm: React.FunctionComponent<BookingInputProps> =
                                 value === ONE_WAY_ONLY_OPTION.value ? ONE_WAY_ONLY_OPTION : DATE_OPTION;
                         valueElem = readonly ?
                             returnValueToOption(inputField.value) === DATE_OPTION ?
-                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), DateTimeUtil.dateFormat()) :
+                                DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromStringTZ(inputField.value!, segment.to.timezone), DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() }) :
                                 returnValueToOption(inputField.value)?.label ?? "-"
                             :
                             <div className={classes.returnTripInput}>
@@ -251,10 +251,9 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
     useEffect(() => {
         if (!confirmation && status === SignInStatus.signedIn) {
             const bookingInfosUrl = booking.quickBookingsUrl!;
-            TripGoApi.apiCallUrl(bookingInfosUrl, "GET")
-                .then((bookingsInfoJsonArray) => {
-                    const bookingsInfo = bookingsInfoJsonArray.map(infoJson => Util.deserialize(infoJson, BookingInfo));
-                    setRequestBookingForm(bookingsInfo[0]);
+            TripGoApi.requestBookingOptions(bookingInfosUrl)
+                .then(bookingInfos => {
+                    setRequestBookingForm(bookingInfos[0]);
                     // Environment.isLocal() && setRequestBookingForm(Util.deserialize(require("../tmp/tickets.json")[0], BookingInfo));
                     setWaiting(false);
                 })
@@ -262,6 +261,56 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 .finally(() => setWaiting(false));
         }
     }, [status]);
+    /************************************************************
+     * For mock uncomment onBook()
+     ************************************************************/
+    useEffect(() => {
+        if (process.env.NODE_ENV !== 'development') {
+            return;
+        }
+        // if (requestBookingForm) {
+        //     onBook();
+        // }
+    }, [requestBookingForm]);
+    const onBook = () => {
+        setWaiting(true);
+        TripGoApi.apiCallUrl(requestBookingForm!.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
+            // For testing without performing booking.
+            // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
+            .then(result => {
+                if (result.paymentOptions && result.review) {
+                    const reviews = Util.jsonConvert().deserializeArray(result.review, BookingReview);
+                    // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
+                    reviews.forEach((review: BookingReview) => {
+                        console.log(review.origin);
+                        if (review.origin) {
+                            review.origin.timezone = segment.from.timezone;
+                            console.log(segment.from.timezone);
+                        }
+                        if (review.destination) {
+                            review.destination.timezone = segment.to.timezone;
+                        }
+                    });
+                    setReviewAndPaymentForm({
+                        paymentOptions: result.paymentOptions,
+                        reviews: reviews,
+                        publicKey: result.publishableApiKey,
+                        ephemeralKeyObj: result.ephemeralKey
+                    });
+                } else { // result is a booking form:                                    
+                    if (result.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
+                        onSuccess?.(result.refreshURLForSourceObject);
+                    }
+                    // Workaround for (selected) trip with empty ("") updateUrl.
+                    if (trip && !trip.updateURL) {
+                        trip.updateURL = result.refreshURLForSourceObject;
+                    }
+                    return refreshSelectedTrip();
+                }
+            })
+            .catch(UIUtil.errorMsg)
+            .finally(() => setWaiting(false));
+    };
     let content;
     if (confirmation) {
         const status = confirmation.status!;
@@ -354,6 +403,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                         to={segment.to}
                         startTime={segment.startTime}
                         endTime={segment.endTime}
+                        timezone={segment.from.timezone}
                     />
                 </div>
                 {requestBookingForm.tickets && requestBookingForm.tickets?.length > 0 &&
@@ -384,33 +434,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     </div>}
                 <TKUIButton
                     text={t("Book")}
-                    onClick={() => {
-                        setWaiting(true);
-                        TripGoApi.apiCallUrl(requestBookingForm.bookingURL, NetworkUtil.MethodType.POST, Util.serialize(requestBookingForm))
-                            // For testing without performing booking.
-                            // Promise.resolve({ "type": "bookingForm", "action": { "title": "Done", "done": true }, "refreshURLForSourceObject": "https://lepton.buzzhives.com/satapp/booking/v1/2c555c5c-b40d-481a-89cc-e753e4223ce6/update" })
-                            .then(result => {
-                                if (result.paymentOptions && result.review) {
-                                    setReviewAndPaymentForm({
-                                        paymentOptions: result.paymentOptions,
-                                        reviews: Util.jsonConvert().deserializeArray(result.review, BookingReview),
-                                        publicKey: result.publishableApiKey,
-                                        ephemeralKeyObj: result.ephemeralKey
-                                    });
-                                } else { // result is a booking form:                                    
-                                    if (result.form?.[0]?.fields?.[0]?.value?.toUpperCase() !== "PENDING_CHANGES") {
-                                        onSuccess?.(result.refreshURLForSourceObject);
-                                    }
-                                    // Workaround for (selected) trip with empty ("") updateUrl.
-                                    if (trip && !trip.updateURL) {
-                                        trip.updateURL = result.refreshURLForSourceObject;
-                                    }
-                                    return refreshSelectedTrip();
-                                }
-                            })
-                            .catch(UIUtil.errorMsg)
-                            .finally(() => setWaiting(false))
-                    }}
+                    onClick={onBook}
                     disabled={!canBook(requestBookingForm)}
                 />
             </div>

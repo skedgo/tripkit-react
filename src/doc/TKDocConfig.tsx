@@ -19,8 +19,6 @@ import { tKUIResultsDefaultStyle } from "../trip/TKUIRoutingResultsView.css";
 import { tKUITripRowDefaultStyle } from "../trip/TKUITripRow.css";
 import Location from "../model/Location";
 import LatLng from "../model/LatLng";
-import { tKUILocationDetailViewDefaultStyle } from "../location/TKUILocationDetailView.css";
-import TKUILocationDetailView from "../location/TKUILocationDetailView";
 import { tKUITimetableDefaultStyle } from "../service/TKUITimetableView.css";
 import TKUITimetableView, { TKUITimetableViewHelpers } from "../service/TKUITimetableView";
 import { loadTimetableState } from "../state/TKStateUrl";
@@ -48,6 +46,8 @@ import { useTKState } from '../config/TKStateProvider';
 import { tKUIMxMViewDefaultStyle } from '../mxm/TKUIMxMView.css';
 import TKUIMxMView from '../mxm/TKUIMxMView';
 import Segment from '../model/trip/Segment';
+import TKUILocationDetail from '../location/TKUILocationDetailView';
+import { tKUILocationDetailViewDefaultStyle } from '../location/TKUILocationDetailView.css';
 
 function classNamesOf(defaultStyle: any) {
     return Object.keys(Util.isFunction(defaultStyle) ? defaultStyle(tKUIDeaultTheme({ isDark: false, isHighContrast: false })) : defaultStyle);
@@ -243,7 +243,7 @@ const tKDocConfig = {
         style: classNamesOf(tKUIRoutingQueryInputDefaultStyle)
     },
     TKUILocationDetailView: {
-        showcase: () => <TKUILocationDetailView location={getMockLocation()} cardPresentation={CardPresentation.NONE} />,
+        showcase: () => <TKUILocationDetail location={getMockLocation()} cardProps={{ presentation: CardPresentation.NONE }} />,
         style: classNamesOf(tKUILocationDetailViewDefaultStyle)
     },
     TKUIButton: {
@@ -251,16 +251,16 @@ const tKDocConfig = {
             <div className={classNames(genClassNames.flex, genClassNames.spaceAround)}>
                 <div className={classNames(genClassNames.flex, genClassNames.column, classes.buttonsColumn)}>
                     <TKUIButton text={"Button"} randomizeClassNames={true} />
-                    <TKUIButton text={"Button"} icon={<IconDirections />} />
-                    <TKUIButton text={"Button"} type={TKUIButtonType.PRIMARY_VERTICAL} icon={<IconDirections />} />
-                    <TKUIButton text={"Button"} type={TKUIButtonType.PRIMARY_LINK} />
-                </div>
+                    < TKUIButton text={"Button"} icon={< IconDirections />} />
+                    < TKUIButton text={"Button"} type={TKUIButtonType.PRIMARY_VERTICAL} icon={< IconDirections />} />
+                    < TKUIButton text={"Button"} type={TKUIButtonType.PRIMARY_LINK} />
+                </div >
                 <div className={classNames(genClassNames.flex, genClassNames.column, classes.buttonsColumn)}>
                     <TKUIButton text={"Button"} type={TKUIButtonType.SECONDARY} />
                     <TKUIButton text={"Button"} type={TKUIButtonType.SECONDARY} icon={<IconDirections />} />
                     <TKUIButton text={"Button"} type={TKUIButtonType.SECONDARY_VERTICAL} icon={<IconDirections />} />
                 </div>
-            </div>,
+            </div >,
         style: classNamesOf(tKUIButtonDefaultStyle)
     },
     TKUISelect: {

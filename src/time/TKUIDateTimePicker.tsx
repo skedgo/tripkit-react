@@ -23,6 +23,10 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     renderCustomInput?: (value: any, onClick: any, onKeyDown: any, ref: any) => JSX.Element;
     popperPlacement?: Popper.Placement;
     popperModifiers?: any;
+    shouldCloseOnSelect?: boolean;
+    minDate?: Moment;
+    maxDate?: Moment;
+    showTimeInput?: boolean;    // default true
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {
@@ -73,17 +77,20 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { classes, t } = this.props;
+        const { shouldCloseOnSelect, minDate, maxDate, showTimeInput = true, classes, t } = this.props;
         const value = this.state.dateSelection;
         const displayValue = value.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const displayDate = utcToZonedTime(displayValue.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+        const displayMinDate = minDate && utcToZonedTime(minDate.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
+        const displayMaxDate = maxDate && utcToZonedTime(maxDate.toDate(), this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ);
         const CustomInput = this.props.renderCustomInput ?
             React.forwardRef(((props: { value?: any, onClick?: any, onKeyDown?: any }, ref: any) => this.props.renderCustomInput!(props.value, props.onClick, props.onKeyDown, ref))) : undefined;
         const datePickerInputAriaLabel = format(displayDate, DateTimeUtil.dateTimeFormat().replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")) + ". Open date time picker";
         // Display date picker as a button instead of a input text field, given that entering date as text is very
         // limited and confusing in react-datepicker, and also is confusing the way it's red by screenreaders.
         const DatePickerInput = React.forwardRef(((props: { value?: any, onClick?: any, onKeyDown?: any }, ref: any) =>
-            <button ref={ref}
+            <button
+                ref={ref}
                 onClick={props.onClick}
                 onKeyDown={props.onKeyDown}
                 aria-label={datePickerInputAriaLabel}
@@ -127,9 +134,10 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                             dateSelection: momentTZValue
                         });
                     }}
-                    shouldCloseOnSelect={false}
-                    // showTimeSelect={true}
-                    showTimeInput={true}
+                    shouldCloseOnSelect={!!shouldCloseOnSelect}
+                    minDate={displayMinDate}
+                    maxDate={displayMaxDate}
+                    showTimeInput={showTimeInput}
                     customTimeInput={customTimeInput}
                     timeFormat={this.props.timeFormat?.replace("A", "a")}
                     dateFormat={this.props.dateFormat?.replace("DD", "dd").replace("YYYY", "yyyy").replace("A", "a")}
@@ -186,6 +194,9 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                             disabled={this.props.disabled}
                             ref={(el: any) => this.dateTimeHTML5Ref = el}
                             className={classes.inputElem}
+                            showTimeInput={showTimeInput}
+                            min={this.props.minDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
+                            max={this.props.maxDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
                         />
                     </div>
                 </div> :
@@ -196,6 +207,9 @@ class TKUIDateTimePicker extends React.Component<IProps, IState> {
                     disabled={this.props.disabled}
                     ref={(el: any) => this.dateTimeHTML5Ref = el}
                     className={classes.inputElem}
+                    showTimeInput={showTimeInput}
+                    min={this.props.minDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
+                    max={this.props.maxDate?.tz(this.props.timeZone ? this.props.timeZone : DateTimeUtil.defaultTZ)}
                 />)
     }
 

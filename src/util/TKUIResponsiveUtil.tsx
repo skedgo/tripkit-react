@@ -1,5 +1,5 @@
 import React from 'react';
-import MediaQuery from 'react-responsive';
+import MediaQuery, { useMediaQuery } from 'react-responsive';
 
 class TKUIResponsiveUtil {
 
@@ -23,15 +23,20 @@ export interface TKUIViewportUtilProps {
     landscape: boolean;
 }
 
-export const TKUIViewportUtil: React.FunctionComponent<{children: (props: TKUIViewportUtilProps) => React.ReactNode}> =
-    (props: {children: (props: TKUIViewportUtilProps) => React.ReactNode}) => {
+export const TKUIViewportUtil: React.FunctionComponent<{ children: (props: TKUIViewportUtilProps) => React.ReactNode }> =
+    (props: { children: (props: TKUIViewportUtilProps) => React.ReactNode }) => {
         return (
             <MediaQuery maxWidth={TKUIResponsiveUtil.getPortraitWidth()}>
                 {(matches: boolean) =>
-                    props.children({portrait: matches, landscape: !matches})
+                    props.children({ portrait: matches, landscape: !matches })
                 }
             </MediaQuery>
         );
     };
+
+export function useResponsiveUtil(): { portrait: boolean, landscape: boolean } {
+    const isPortrait = useMediaQuery({ query: `(max-width: ${TKUIResponsiveUtil.getPortraitWidth()}px)` });
+    return { portrait: isPortrait, landscape: !isPortrait };
+}
 
 export default TKUIResponsiveUtil;

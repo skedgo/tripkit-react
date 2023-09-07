@@ -14,6 +14,7 @@ export interface IAccountContext {
     finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
     accountsSupported?: boolean;
     resetUserToken: () => void;
+    refreshUserProfile: () => Promise<TKUserAccount>;
 }
 
 export const TKAccountContext = React.createContext<IAccountContext>({
@@ -21,5 +22,6 @@ export const TKAccountContext = React.createContext<IAccountContext>({
     login: () => { },
     logout: () => { },
     finishInitLoadingPromise: Promise.resolve(SignInStatus.signedOut),
-    resetUserToken: () => { }
+    resetUserToken: () => { },
+    refreshUserProfile: () => Promise.resolve(new TKUserAccount())
 });

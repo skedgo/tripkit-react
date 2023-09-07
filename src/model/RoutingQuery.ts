@@ -50,7 +50,7 @@ class RoutingQuery {
             v: TripGoApi.apiVersion,
             ir: 1,
             includeStops: true,            
-            ...Environment.isBeta() && {
+            ...(Environment.isBeta() || Environment.isStaging()) && {
                 bsb: true
             },
             ...options.routingQueryParams   // Profile params, have priority over the others

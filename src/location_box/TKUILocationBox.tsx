@@ -670,7 +670,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
     (props: { children: (props: IConsumedProps) => React.ReactNode, showCurrLoc?: boolean }) => {
         const routingContext = useContext(RoutingResultsContext);
         const config = useContext(TKUIConfigContext);
-        const geocodingOptions = getGeocodingOptions(config.geocoding);
+        const geocodingOptions = useMemo(() => getGeocodingOptions(config.geocoding), [config.geocoding]);
         const calculateFocus = geocodingOptions.getFocus ??
             (({ selectedRegion }) =>
                 selectedRegion ? (selectedRegion.cities.length !== 0 ? selectedRegion.cities[0] : selectedRegion.bounds.getCenter()) : undefined);

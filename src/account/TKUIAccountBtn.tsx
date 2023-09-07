@@ -1,12 +1,12 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import TKUISignInBtn from "./TKUISignInBtn";
-import {SignInStatus, TKAccountContext} from "./TKAccountContext";
-import {ReactComponent as IconProfile} from "../images/ic-profile.svg";
-import {resetStyles} from "../css/ResetStyle.css";
-import {colorWithOpacity, TKUITheme, white} from "../jss/TKUITheme";
+import { SignInStatus, TKAccountContext } from "./TKAccountContext";
+import { ReactComponent as IconProfile } from "../images/ic-profile.svg";
+import { resetStyles } from "../css/ResetStyle.css";
+import { colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
-import {TKUIWithClasses, withStyles} from "../jss/StyleHelper";
-import {OptionsContext} from "../options/OptionsProvider";
+import { TKUIWithClasses, withStyles } from "../jss/StyleHelper";
+import { OptionsContext } from "../options/OptionsProvider";
 
 const accountBtnJss = (theme: TKUITheme) => ({
     main: {
@@ -25,18 +25,18 @@ const accountBtnJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof accountBtnJss>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends TKUIWithClasses<IStyle, IProps> { }
 
 const TKUIAccountBtn: React.SFC<IProps> = (props: IProps) => {
-    const {status} = useContext(TKAccountContext);
-    const {setShowUserProfile} = useContext(OptionsContext);
+    const { status } = useContext(TKAccountContext);
+    const { setShowUserProfile } = useContext(OptionsContext);
     const classes = props.classes;
     return (
         status === SignInStatus.signedIn ?
             <button className={classes.main} onClick={() => setShowUserProfile(true)}>
-                <IconProfile/>
+                <IconProfile />
             </button>
-            : <TKUISignInBtn/>
+            : <TKUISignInBtn />
     )
 };
 

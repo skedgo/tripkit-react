@@ -21,7 +21,6 @@ import { Subtract } from "utility-types";
 import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
-import TKUILocationDetailView from "../location/TKUILocationDetailView";
 import TKUIFavouritesView from "../favourite/TKUIFavouritesView";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
@@ -52,6 +51,8 @@ import TKUIMxMView, { TKUIMxMViewHelpers } from "../mxm/TKUIMxMView";
 import TKUIHomeCard from "../sidebar/TKUIHomeCard";
 import TKUIMyBookings from "../booking/TKUIMyBookings";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
+import CarPodLocation from "../model/location/CarPodLocation";
+import TKUILocationDetail from "../location/TKUILocationDetailView";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -72,8 +73,8 @@ export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IS
 
 type IStyle = ReturnType<typeof tKUITripPlannerDefaultStyle>
 
-export type TKUITKUITripPlannerProps = IProps;
-export type TKUITKUITripPlannerStyle = IStyle;
+export type TKUITripPlannerProps = IProps;
+export type TKUITripPlannerStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUITripPlanner {...props} />,
@@ -295,22 +296,30 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />
                 }
             </TKUIRoutingQueryInputHelpers.TKStateProps>;
-        const locationDetailView = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor.isResolved() && !this.state.showLocationDetailsFor.isDroppedPin() &&
-            <TKUILocationDetailView
+        const locationHasVehicleAvailability = this.state.showLocationDetailsFor && this.state.showLocationDetailsFor instanceof CarPodLocation && this.state.showLocationDetailsFor.supportsVehicleAvailability;
+        const locationDetailView = this.state.showLocationDetailsFor &&
+            this.state.showLocationDetailsFor.isResolved() &&
+            !this.state.showLocationDetailsFor.isDroppedPin() &&
+            this.state.showLocationDetailsFor.hasDetail !== false &&
+            <TKUILocationDetail
                 location={this.state.showLocationDetailsFor}
                 actions={directionsView ? (_, defaultActions) => defaultActions.slice(1) : undefined}
-                slideUpOptions={{
-                    initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
-                    position: DeviceUtil.isTouch() ? undefined :
-                        this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ?
-                        { top: (this.isShowTripDetail() || this.props.selectedTripSegment) ? cardSpacing() : (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
-                        { top: cardSpacing(false), unit: 'px' },
-                    modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
-                    zIndex: this.props.selectedTripSegment ? 1006 : undefined   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
+                cardProps={{
+                    presentation: CardPresentation.SLIDE_UP,
+                    slideUpOptions: {
+                        initPosition: this.props.portrait ? TKUISlideUpPosition.DOWN : TKUISlideUpPosition.UP,
+                        position: DeviceUtil.isTouch() ? undefined :
+                            this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                        draggable: DeviceUtil.isTouch(),
+                        modalUp: this.props.landscape ?
+                            { top: (this.isShowTripDetail() || this.props.selectedTripSegment || locationHasVehicleAvailability) ? cardSpacing() : (directionsView ? 176 : 48) + 2 * cardSpacing(), unit: 'px' } :
+                            { top: cardSpacing(false), unit: 'px' },
+                        modalDown: { top: this.getContainerHeight() - 145, unit: 'px' },
+                        zIndex: this.props.selectedTripSegment || locationHasVehicleAvailability ? 1006 : undefined,   // Workaround to make details card to be above TKUIMxMIndex card in MxM view.
+                        ...locationHasVehicleAvailability && { containerClass: classes.wideCard }
+                    },
+                    onRequestClose: () => this.setState({ showLocationDetailsFor: undefined })
                 }}
-                onRequestClose={() => this.setState({ showLocationDetailsFor: undefined })}
             />;
         const timetableView = this.isShowTimetable() ?
             <TKUITimetableViewHelpers.TKStateProps>
@@ -615,9 +624,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)) {
             this.showTimetableFor(this.props.query.to as StopLocation);
         } else if (prevProps.query.to !== this.props.query.to && this.props.query.to && !this.props.directionsView // Set destination on search view
-            // Don't show location details if it was the case that the location was unresolved and become
-            // resolved. Copied from stop location case, not sure it it's actually necessary.
-            && !(prevProps.query.to && prevProps.query.to.id && prevProps.query.to.id === this.props.query.to.id)
+            && this.props.query.to.isResolved() && !this.props.query.to.isDroppedPin()
             && this.props.query.to !== this.state.showLocationDetailsFor) {
             this.setState({ showLocationDetailsFor: this.props.query.to })
         }
@@ -715,7 +722,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.SFC<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
     return (
         <TKUIConfigContext.Consumer>
             {(config: TKUIConfig) =>
