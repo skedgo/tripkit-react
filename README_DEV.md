@@ -119,7 +119,7 @@ git push -o ci.skip
 #### Bump up version + create git commit and tag
 
 - `npm version` to bump up version. It also creates a tag than can then be pushed using `git push gh vX.Y.Z`.
-- `npm version prerelease` to bump up pre-release version.
+- `npm version prerelease` to bump up pre-release version. E.g. from `1.0.0-rc.0` to `1.0.0-rc.1`.
 - `npm version prerelease --preid=alpha` to bump up minor + pre-release version.
 - `npm version premajor --preid=alpha` to bump up major + pre-release version. E.g.: if you are in 0.3.0 this will take you to 1.0.0-alpha.0
 - `npm version premajor --preid=alpha -m "Upgrade to %s for reasons"` to include version commit message.
