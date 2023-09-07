@@ -80,6 +80,7 @@ module.exports = {
                     'src/query/TKUILocationSearch.tsx',
                     'src/location/TKUILocationDetailView.tsx',
                     'src/location/TKUILocationDetailField.tsx',
+                    'src/location/TKUIVehicleAvailability.tsx',
                     'src/trip/TKUITripRow.tsx',
                     // 'src/**/*.tsx',  // doesn't work
                     // 'src/action/**/*.tsx',

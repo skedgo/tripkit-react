@@ -9,7 +9,7 @@ import {
     tKUISegmentOverviewDefaultStyle
 } from "./TKUISegmentOverview.css";
 import { ReactComponent as IconPinStart } from "../images/ic-pin-start.svg";
-import TKUIWCSegmentInfo from "./TKUIWCSegmentInfo";
+import { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "./TKUIStreetsChart";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -24,7 +24,7 @@ import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveU
 import { SegmentType } from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
 import DeviceUtil from "../util/DeviceUtil";
-import TKLazy from "../lazy/TKLazy";
+import { lazyComponent } from "../lazy/TKLazy";
 
 type IStyle = ReturnType<typeof tKUISegmentOverviewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -54,8 +54,8 @@ function platformText(platformS: string): string {
     return platformS.toLowerCase().startsWith("stop") ? platformS : "Platform " + platformS;
 }
 
-// const TKUIWCSegmentInfo = lazy(() => import("./TKUIWCSegmentInfo"));
-// const TKUIWCSegmentInfo2 = TKLazy.tKUIWCSegmentInfoBuilder("Loading");
+const TKUIStreetsChart = lazyComponent<TKUIStreetsChartProps, TKUIStreetsChartStyle>(() => import("./TKUIStreetsChart"));
+setTimeout(() => import("./TKUIStreetsChart"), 2000);
 
 class TKUISegmentOverview extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
@@ -77,13 +77,8 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             <div className={classes.occupancy}>
                 <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!} />
             </div> : undefined;
-        const wcSegmentInfo = segment.isBicycle() || segment.isWheelchair() ?
-            <TKUIWCSegmentInfo value={segment} />
-            // <TKLazy.TKUIWCSegmentInfo value={segment} />            
-            // <Suspense fallback={null}>
-            //     <TKUIWCSegmentInfo value={segment} />
-            // </Suspense> 
-            : undefined;
+        const wcSegmentInfo = segment.streets?.some(street => street.roadTags.length > 0) ?
+            <TKUIStreetsChart value={segment} /> : undefined;
         const showPin = (segment.isFirst() || segment.arrival) && isUnconnected(segment);
         const prevSegment = segment.prevSegment();
 

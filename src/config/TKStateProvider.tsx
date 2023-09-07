@@ -19,8 +19,11 @@ class TKStateProvider extends React.Component<IProps, {}> {
     constructor(props: IProps) {
         super(props);
         TripGoApi.apiKey = props.config.apiKey;
-        if (props.config.server) {
-            TripGoApi.server = props.config.server;
+        if (props.config.apiServer) {
+            TripGoApi.server = props.config.apiServer;
+        }
+        if (props.config.apiHeaders) {
+            TripGoApi.apiHeadersOverride = props.config.apiHeaders;
         }
         if (props.config.i18n) {
             TripGoApi.locale = Promise.resolve(props.config.i18n)
@@ -74,11 +77,11 @@ class TKStateProvider extends React.Component<IProps, {}> {
         if (TripGoApi.apiKey !== this.props.config.apiKey) {
             TripGoApi.apiKey = this.props.config.apiKey
         }
-        if (TripGoApi.server !== this.props.config.server) {
-            if (this.props.config.server) {
-                TripGoApi.server = this.props.config.server
+        if (TripGoApi.server !== this.props.config.apiServer) {
+            if (this.props.config.apiServer) {
+                TripGoApi.server = this.props.config.apiServer
             } else {
-                this.props.config.server = TripGoApi.SATAPP;
+                this.props.config.apiServer = TripGoApi.SATAPP;
             }
         }
     }

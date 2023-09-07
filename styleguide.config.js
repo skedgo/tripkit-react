@@ -3,6 +3,9 @@ const sectionsJson = require('./src/doc/data/sections.json');
 
 module.exports = {
     styleguideDir: 'docs/site/reference',
+    template: {
+        favicon: '/img/favicon/favicon-32x32.png'
+    },
     title: 'TripKit React SDK Reference',
     defaultExample: 'src/doc/md/ComponentDoc.md',
     sortProps: props => props,
@@ -18,10 +21,9 @@ module.exports = {
 
     propsParser: require('react-docgen-typescript').withCustomConfig(
         './tsconfig.json', {
-            shouldRemoveUndefinedFromOptional: true,
-            shouldExtractLiteralValuesFromEnum: true
-        }
-    ).parse,
+        shouldRemoveUndefinedFromOptional: true,
+        shouldExtractLiteralValuesFromEnum: true
+    }).parse,
 
     moduleAliases: {
         'tripkit-react': path.resolve(__dirname, 'src'),

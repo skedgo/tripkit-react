@@ -24,6 +24,8 @@ import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import DeviceUtil from "../util/DeviceUtil";
 import { white } from "../jss/TKUITheme";
+import TripGoApi from "../api/TripGoApi";
+import RegionsData from "../data/RegionsData";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
@@ -233,7 +235,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         setDisplayEndTime(DateTimeUtil.isoAddMinutes(displayEndTime, 24 * 60));
     }
 
-    function coverDisplayRange() {
+    async function coverDisplayRange() {
         let requestDates: string[] = [];
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
             if (vehiclesByDate.get(date) === undefined) {
@@ -245,17 +247,26 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 requestDates.push(date);
             }
         }
-        // TODO: merge consecutive days into (multi-days) intervals to optimize request.
+        // TODO: merge consecutive days into (multi-days) intervals to optimize request.        
+        await RegionsData.instance.requireRegions();
+        const region = RegionsData.instance.getRegion(location)?.name;
         requestDates.forEach(async date => {
             try {
-                const location = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/location-carPods-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));
-                console.log(location);
+                // const locationInfo = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/locationInfo-carPod-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));                
+                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${date}&region=${region}&end=${DateTimeUtil.isoAddMinutes(date, 24 * 60 - 1)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
                 setVehiclesByDate(vehiclesByDate => {
                     if (vehiclesByDate.get(date) !== null) {
                         return vehiclesByDate;
                     }
                     const vehiclesByDateUpdate = new Map(vehiclesByDate);
-                    vehiclesByDateUpdate.set(date, location.carPod.vehicles!);
+                    const podVehicles = locationInfo.carPod!.vehicles!;
+                    const nearPodsVehicles = locationInfo.carPod!.nearbyPods
+                        ?.reduce((acc, nearbyPod) => {
+                            acc.push(...nearbyPod.carPod.vehicles ?? []);
+                            return acc;
+                        }, [] as CarPodVehicle[]) ?? [];
+                    const allVehicles = podVehicles.concat(nearPodsVehicles);
+                    vehiclesByDateUpdate.set(date, allVehicles);
                     return vehiclesByDateUpdate;
                 });
             } catch (e) {
@@ -331,12 +342,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                     />
                 </div>
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
-                <div className={classes.arrowLeftIconContainer}>
-                    <IconLeftArrow />
-                </div>
-                <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
-            </button>
+            {!portrait &&   // Hide arrows on portrait since they are confusing: can be interpreated as navigating through days, instead of time slots. Warn: portrait + no touch require the user to explicitly scroll with the mouse.
+                <button className={classes.arrowBtn} style={{ width: 40, ...portrait ? { right: 40 } : { left: VEHICLE_LABEL_WIDTH } }} disabled={false} onClick={() => onPrevNext(true)}>
+                    <div className={classes.arrowLeftIconContainer}>
+                        <IconLeftArrow />
+                    </div>
+                    <div className={classes.whiteToTransparent} style={{ width: 14, height: '100%' }} />
+                </button>}
             <div className={classes.timeIndexes}>
                 {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
                     const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
@@ -349,12 +361,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 }
                 )}
             </div>
-            <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
-                <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
-                <div className={classes.arrowRightIconContainer}>
-                    <IconRightArrow />
-                </div>
-            </button>
+            {!portrait &&
+                <button className={classes.arrowBtn} style={{ width: 40, right: 0 }} disabled={false} onClick={() => onPrevNext(false)}>
+                    <div className={classes.transparentToWhite} style={{ width: 14, height: '100%' }} />
+                    <div className={classes.arrowRightIconContainer}>
+                        <IconRightArrow />
+                    </div>
+                </button>}
         </div>;
 
     return (

@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert } from "json2typescript";
 import LatLng from "../LatLng";
 import Util from "../../util/Util";
 import MapUtil from "../../util/MapUtil";
@@ -10,9 +10,9 @@ export enum StreetInstructions {
     TURN_LEFT = "TURN_LEFT",
     TURN_SLIGHTLY_LEFT = "TURN_SLIGHTLY_LEFT",
     TURN_SHARPLY_LEFT = "TURN_SHARPLY_LEFT",
-    TURN_RIGHT= "TURN_RIGHT",
-    TURN_SLIGHTLY_RIGHT= "TURN_SLIGHTLY_RIGHT",
-    TURN_SHARPLY_RIGHT= "TURN_SHARPLY_RIGHT"
+    TURN_RIGHT = "TURN_RIGHT",
+    TURN_SLIGHTLY_RIGHT = "TURN_SLIGHTLY_RIGHT",
+    TURN_SHARPLY_RIGHT = "TURN_SHARPLY_RIGHT"
 }
 
 /**
@@ -29,8 +29,27 @@ export class StreetInstructionsConverter implements JsonCustomConvert<StreetInst
     }
 }
 
-export type RoadTags = 
-    "CYCLE-LANE" | 
+export type CycleFriendliness = "FRIENDLY" | "UNFRIENDLY" | "DISMOUNT" | "UNKNOWN";
+
+export function friendlinessColor(tag: CycleFriendliness) {
+    switch (tag) {
+        case "FRIENDLY":
+            return '#1ec862';
+        case "UNFRIENDLY":
+            return '#f8e658';
+        case "DISMOUNT":
+            return 'red';
+        default:
+            return '#d8d8d8';
+    }
+}
+
+enum RoadSafety {
+    "SAFE", "DESIGNATED", "NEUTRAL", "HOSTILE", "UNKNOWN"
+}
+
+export type RoadTags =
+    "CYCLE-LANE" |
     "CYCLE-TRACK" |
     "CYCLE-NETWORK" |
     "BICYCLE-DESIGNATED" |
@@ -39,28 +58,57 @@ export type RoadTags =
     "MAIN-ROAD" |
     "SIDE-ROAD" |
     "SHARED-ROAD" |
-    "UNPAVED/UNSEALED" |
-    "SERVICE-ROAD";
+    "UNPAVED/UNSEALED" |    // ignored in tripkit-ios
+    "SERVICE-ROAD" |        // not listed in tripkit-ios
+    "SEGREGATED" |          // not listed in tripkit-ios
+    "CCTV-CAMERA" |
+    "STREET-LIGHT" |
+    "OTHER";
+
+const IGNORED_TAGS: RoadTags[] = ["UNPAVED/UNSEALED", "SERVICE-ROAD", "SEGREGATED"];
+
+export function roadTagToSafety(tag: RoadTags): RoadSafety {
+    switch (tag) {
+        case "CYCLE-TRACK":
+            return RoadSafety.SAFE;
+        case "CYCLE-LANE":
+        case "CYCLE-NETWORK":
+        case "BICYCLE-DESIGNATED":
+        case "BICYCLE-BOULEVARD":
+        case "CCTV-CAMERA":
+            return RoadSafety.DESIGNATED;
+        case "SIDE-WALK":
+        case "SIDE-ROAD":
+        case "SHARED-ROAD":
+        case "STREET-LIGHT":
+            return RoadSafety.NEUTRAL;
+        case "MAIN-ROAD":
+            return RoadSafety.HOSTILE;
+        default:
+            return RoadSafety.UNKNOWN;
+
+    }
+}
 
 export function roadTagDisplayS(tag: RoadTags) {
-    return Util.kebabCaseToSpaced(tag.toLowerCase());
+    switch (tag) {
+        case "BICYCLE-DESIGNATED": return "Designated for Cyclists";
+        default: return Util.kebabCaseToSpaced(tag.toLowerCase());
+    }
+}
+
+function roadSafetyColor(safety: RoadSafety) {
+    switch (safety) {
+        case RoadSafety.SAFE: return "#23b05e";
+        case RoadSafety.DESIGNATED: return "#0600ff";
+        case RoadSafety.NEUTRAL: return "#78d6f9";
+        case RoadSafety.HOSTILE: return "#fcbb1d";
+        default: return "gray";
+    }
 }
 
 export function roadTagColor(tag: RoadTags) {
-    switch (tag) {
-        case "MAIN-ROAD":
-            return '#fcbb1d';
-        case "CYCLE-LANE":
-        case "CYCLE-NETWORK":    
-            return '#0600ff';
-        case "CYCLE-TRACK":
-        case "BICYCLE-DESIGNATED":    
-            return '#23b05e';
-        case "SIDE-ROAD":
-            return '#78d6f9';   
-        default:
-            return 'gray';
-    }
+    return roadSafetyColor(roadTagToSafety(tag));
 }
 
 @JsonConverter
@@ -97,7 +145,7 @@ class Street {
     @JsonProperty("instruction", String, true)
     public instruction: StreetInstructions = StreetInstructions.CONTINUE_STRAIGHT;
     @JsonProperty("roadTags", RoadTagsConverter, true)
-    public roadTags: RoadTags[] = [];
+    private _roadTags: RoadTags[] = [];
 
     private _waypoints: LatLng[] | null = null;
 
@@ -131,6 +179,10 @@ class Street {
             }
         }
         return this._waypoints;
+    }
+
+    get roadTags(): RoadTags[] {
+        return this._roadTags.filter(t => !IGNORED_TAGS.includes(t));
     }
 }
 

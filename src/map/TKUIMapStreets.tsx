@@ -5,7 +5,7 @@ import ModeInfo from "../model/trip/ModeInfo";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import { tKUIFriendlinessColors } from "../trip/TKUIWCSegmentInfo.css";
+import { tKUIFriendlinessColors } from "../trip/TKUIStreetsChart.css";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     streets: Street[];
@@ -53,7 +53,7 @@ class TKUIMapStreets extends React.Component<IProps, {}> {
                 positions: street.waypoints,
                 weight: 7,
                 color: color ? color :
-                    street.roadTags.length > 0 ? roadTagColor(street.roadTags[0]) : // This happens just when modeInfo?.isBicycle()
+                    streets?.some(street => street.roadTags.length > 0) ? roadTagColor(street.roadTags[0]) :
                         street.safe ? tKUIFriendlinessColors.safe :
                             street.safe === false ? tKUIFriendlinessColors.unsafe :
                                 street.dismount ? tKUIFriendlinessColors.dismount : tKUIFriendlinessColors.unknown,
