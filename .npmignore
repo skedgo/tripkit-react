@@ -1,4 +1,5 @@
 /.vscode
+/build
 /config-overrides
 /docs
 /node_modules
