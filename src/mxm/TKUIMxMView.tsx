@@ -284,7 +284,7 @@ function getSegmentMxMCards(
                     showHandle: true
                 }}
             >
-                <TKUILocationDetail location={location} />
+                <TKUILocationDetail location={location} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
             </TKUICard>
         ];
     } else if (segment.isWalking() || segment.isBicycle()) {
