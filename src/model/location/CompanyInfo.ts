@@ -2,7 +2,7 @@ import {JsonObject, JsonProperty, Any} from "json2typescript";
 import Color from "../trip/Color";
 
 @JsonObject
-class AppInfo {
+export class AppInfo {
     @JsonProperty("name", String, true)
     public name?: string = undefined;
 
