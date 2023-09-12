@@ -7,7 +7,7 @@ import { tKUIVehicleAvailabilityDefaultStyle } from "./TKUIVehicleAvailability.c
 import CarPodLocation from "../model/location/CarPodLocation";
 import DateTimeUtil from "../util/DateTimeUtil";
 import classNames from "classnames";
-import { BookingAvailability, CarAvailability } from "../model/location/CarPodInfo";
+import { BookingAvailability, CarAvailability, CarPodVehicle } from "../model/location/CarPodInfo";
 import { ReactComponent as IconStartSlot } from "../images/ic-arrow-start-slot.svg";
 import { ReactComponent as IconEndSlot } from "../images/ic-arrow-end-slot.svg";
 import { ReactComponent as IconLeftArrow } from "../images/ic-chevron-left.svg";
@@ -90,7 +90,7 @@ function availableRange(startTime: string | undefined, endTime: string | undefin
 
 const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
-const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
+const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {    
     const { region } = useContext(RoutingResultsContext);
     const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
@@ -102,7 +102,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
-    const [selectedVehicle, setSelectedVehicle] = useState<CarAvailability | undefined>();
+    const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
     const [bookStartTime, setBookStartTime] = useState<string | undefined>();
     const [bookEndTime, setBookEndTime] = useState<string | undefined>();
     const slots = getSlots(displayStartTime, displayEndTime);
@@ -122,11 +122,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         if (!vehicleAvailabilitiesByDate.get(displayStartTime)) {
             return [];
         }
-        const result: CarAvailability[] = [];
+        let result: CarAvailability[] | undefined;
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
-            const dateAvailabilities = vehicleAvailabilitiesByDate.get(date)?.map(a => Util.clone(a));  // Clone (shallow copy) of availabilities, to avoid changing intervals arrays in the originals
-            if (result.length === 0) {
-                result.push(...dateAvailabilities!);
+            const dateAvailabilities = vehicleAvailabilitiesByDate.get(date)
+                ?.map(a => Util.clone(a));  // Clone (shallow copy) of availabilities, to avoid changing intervals arrays in the originals
+            if (!result) {  // The first availability, which determines the vehicles to be displayed.
+                result = [...dateAvailabilities!];
             } else if (dateAvailabilities) {
                 result.forEach(availability => {
                     const dateAvailability = dateAvailabilities.find(a => a.car.identifier === availability.car.identifier);
@@ -134,11 +135,11 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 })
             }
         }
-        return result;
+        return result ?? [];
     }
 
     function slotClickHelper(slot: string, slotVehicle: CarAvailability): { clickable: boolean, startUpdate?: string | null, endUpdate?: string | null } {
-        if (selectedVehicle && selectedVehicle !== slotVehicle ||
+        if (selectedVehicle && selectedVehicle !== slotVehicle.car ||
             !available(slot, slotVehicle.availability!)) { // slot not available
             return { clickable: false };
         }
@@ -172,7 +173,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         }
 
         if (!selectedVehicle) {
-            setSelectedVehicle(slotVehicle);
+            setSelectedVehicle(slotVehicle.car);
         }
 
         if (startUpdate !== undefined) {
@@ -187,7 +188,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     function selectedSlot(slot, vehicle: CarAvailability, preview: boolean = false): boolean {
-        if (vehicle !== selectedVehicle && !preview) {
+        if (vehicle.car !== selectedVehicle && !preview) {
             return false;
         }
         return bookStartTime === slot || bookEndTime === slot ||
@@ -415,17 +416,18 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         >
                             {!portrait && !scrollSync && header}
                             {vehicleAvailabilities?.map((availability, i) => {
+                                const vehicle = availability.car;
                                 return (
                                     <div className={classNames(classes.vehicle,
-                                        !availableRange(bookStartTime, bookEndTime, availability.availability!) ? classes.fadeVehicle : availability !== selectedVehicle && classes.availableVehicle,
-                                        selectedVehicle && availability !== selectedVehicle && classes.unselectedVehicle,
+                                        !availableRange(bookStartTime, bookEndTime, availability.availability!) ? classes.fadeVehicle : vehicle !== selectedVehicle && classes.availableVehicle,
+                                        selectedVehicle && vehicle !== selectedVehicle && classes.unselectedVehicle,
                                     )}
                                         onClick={() => {
-                                            availability !== selectedVehicle && availableRange(bookStartTime, bookEndTime, availability.availability!) && setSelectedVehicle(availability)
+                                            vehicle !== selectedVehicle && availableRange(bookStartTime, bookEndTime, availability.availability!) && setSelectedVehicle(availability.car)
                                         }}
                                         style={{
                                             ...portrait ? { paddingLeft: 15, paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
-                                            ...availability === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
+                                            ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
                                             width: SLOT_WIDTH * slots.length + (!portrait ? VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH : 0)
                                         }}
                                         key={i}
@@ -443,7 +445,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                         <div className={classes.slots}>
                                             {slots.map((slot, i) => {
                                                 const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
-                                                const isSelectedVehicle = availability === selectedVehicle;
+                                                const isSelectedVehicle = vehicle === selectedVehicle;
                                                 const { clickable, startUpdate, endUpdate } = isSelectedVehicle ? slotClickHelper(slot, availability) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
                                                 const isStartPreview = !!startUpdate;
                                                 const isEndPreview = !!endUpdate;
@@ -462,11 +464,11 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                                 isFetching(slot) ? classes.loadingSlot : available(slot, availability.availability!) ? classes.availableSlot : classes.unavailableSlot,
                                                                 slot === displayStartTime && classes.firstSlot,
                                                                 DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot,
-                                                                availability === selectedVehicle && !clickable && classes.fadeSlot,
+                                                                vehicle === selectedVehicle && !clickable && classes.fadeSlot,
                                                                 isStartPreview && classes.startPreview,
                                                                 isEndPreview && classes.endPreview
                                                             )}>
-                                                                {portrait && (!selectedVehicle || availability === selectedVehicle) && <div className={classes.slotTime}>{DateTimeUtil.isoFormat(slot, "h:mma")}</div>}
+                                                                {portrait && (!selectedVehicle || vehicle === selectedVehicle) && <div className={classes.slotTime}>{DateTimeUtil.isoFormat(slot, "h:mma")}</div>}
                                                                 {isStartPreview ? <IconStartSlot /> : isEndPreview ? <IconEndSlot /> : undefined}
                                                             </div>}
                                                         {portrait && isDayStart && <div className={classes.dayIndexPortrait}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
@@ -474,7 +476,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 );
                                             })}
                                         </div>
-                                        {availability === selectedVehicle &&
+                                        {vehicle === selectedVehicle &&
                                             <div className={classes.selectionPanel} style={{ padding: `0 ${portrait ? 20 : 30}px 0 ${portrait ? 20 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH}px`, transform: `translateY(${SLOT_HEIGHT + 25}px)` }}>
                                                 <div className={classes.fromTo}>
                                                     <div>From</div>
