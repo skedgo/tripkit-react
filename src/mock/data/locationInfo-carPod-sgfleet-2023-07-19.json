@@ -56,7 +56,7 @@
                         }
                     ]
                 },
-                "bookingURL": "https://www.sgfleet.com/book?vehicleID=1219"
+                "bookingURL": "https://www.sgfleet.com/bookings/createnew?resourceid=1219"
             },
             {
                 "car": {

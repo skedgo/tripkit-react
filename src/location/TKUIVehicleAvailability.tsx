@@ -32,6 +32,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pic
      * @ctype
      */
     location: CarPodLocation;
+    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string }) => void
 }
 
 type IStyle = ReturnType<typeof tKUIVehicleAvailabilityDefaultStyle>;
@@ -90,11 +91,14 @@ function availableRange(startTime: string | undefined, endTime: string | undefin
 
 const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
-const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {    
+const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
     const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
     const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
-    const { location, portrait, t, classes, theme } = props;
+    const onBookClickDefault = ({ bookingURL, bookingStart, bookingEnd }) => {
+        open(bookingURL + "&start=" + bookingStart + "&end=" + bookingEnd, '_blank');
+    }
+    const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
@@ -240,40 +244,60 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         let requestDates: string[] = [];
         for (let date = displayStartTime; DateTimeUtil.isoCompare(date, displayEndTime) <= 0; date = DateTimeUtil.isoAddMinutes(date, 24 * 60)) {
             if (vehicleAvailabilitiesByDate.get(date) === undefined) {
-                setVehicleAvailabilitiesByDate(vehicleAByDate => {   // TODO: replace by just 1 setVehiclesByDate by moving the `for` inside it.
-                    const vehiclesByDateUpdate = new Map(vehicleAByDate);
-                    vehiclesByDateUpdate.set(date, null);
-                    return vehiclesByDateUpdate;
-                });
                 requestDates.push(date);
             }
         }
-        // TODO: merge consecutive days into (multi-days) intervals to optimize request.        
+        if (requestDates.length === 0) {
+            return;
+        }
+        setVehicleAvailabilitiesByDate(vehicleAByDate => {   // TODO: replace by just 1 setVehiclesByDate by moving the `for` inside it.
+            const vehiclesByDateUpdate = new Map(vehicleAByDate);
+            requestDates.forEach(date => vehiclesByDateUpdate.set(date, null));
+            return vehiclesByDateUpdate;
+        });
         await RegionsData.instance.requireRegions();
         const region = RegionsData.instance.getRegion(location)?.name;
-        requestDates.forEach(async date => {
+        // Merge consecutive days into (multi-days) intervals to optimize requests.
+        const requestDateGroups = requestDates.reduce((groups, date) => {
+            const lastGroup = groups[groups.length - 1];
+            const lastGroupDate = lastGroup?.[lastGroup.length - 1];
+            if (lastGroupDate && DateTimeUtil.isoSameTime(DateTimeUtil.isoAddMinutes(lastGroupDate, 24 * 60), date)) {
+                lastGroup.push(date);
+            } else {
+                groups.push([date]);
+            }
+            return groups;
+        }, [] as string[][]);
+        console.log(JSON.stringify(requestDateGroups));
+        requestDateGroups.forEach(async dateGroup => {
+            const dateGStart = dateGroup[0];
+            const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);
             try {
                 // const locationInfo = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/locationInfo-carPod-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));                
-                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${date}&region=${region}&end=${DateTimeUtil.isoAddMinutes(date, 24 * 60 - 1)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
+                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${dateGStart}&region=${region}&end=${dateGEnd}`, NetworkUtil.MethodType.GET, TKLocationInfo)
                 setVehicleAvailabilitiesByDate(availabilitiesAByDate => {
-                    if (availabilitiesAByDate.get(date) !== null) {
-                        return availabilitiesAByDate;
-                    }
                     const availabilitiesByDateUpdate = new Map(availabilitiesAByDate);
-                    const podAvailabilities = (locationInfo.carPod!.availabilities ?? []);
-                    const nearPodsAvailabilities = locationInfo.carPod!.nearbyPods
-                        ?.reduce((acc, nearbyPod) => {
-                            acc.push(...nearbyPod.carPod.availabilities ?? []);
-                            return acc;
-                        }, [] as CarAvailability[]) ?? [];
-                    const allVehicles = podAvailabilities.concat(nearPodsAvailabilities);
-                    availabilitiesByDateUpdate.set(date, allVehicles);
+                    dateGroup.forEach(date => {
+                        if (availabilitiesAByDate.get(date) !== null) {
+                            return;
+                        }
+                        const podAvailabilities = (locationInfo.carPod!.availabilities ?? []);
+                        const nearPodsAvailabilities = locationInfo.carPod!.nearbyPods
+                            ?.reduce((acc, nearbyPod) => {
+                                acc.push(...nearbyPod.carPod.availabilities ?? []);
+                                return acc;
+                            }, [] as CarAvailability[]) ?? [];
+                        const allVehicles = podAvailabilities.concat(nearPodsAvailabilities);
+                        availabilitiesByDateUpdate.set(date, allVehicles);
+                    })
                     return availabilitiesByDateUpdate;
                 });
             } catch (e) {
                 setVehicleAvailabilitiesByDate(availabilitiesByDate => {
                     const availabilitiesByDateUpdate = new Map(availabilitiesByDate);
-                    availabilitiesByDateUpdate.set(date, []);
+                    dateGroup.forEach(date => {
+                        availabilitiesByDateUpdate.set(date, []);
+                    });
                     return availabilitiesByDateUpdate;
                 });
             }
@@ -492,7 +516,14 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                 </div>
                                                 <div className={classes.buttons} ref={buttonsRef}>
                                                     <TKUIButton text={"Clear"} type={TKUIButtonType.PRIMARY_LINK} onClick={onClearClick} />
-                                                    <TKUIButton text={"Book"} type={TKUIButtonType.PRIMARY} />
+                                                    <TKUIButton
+                                                        text={"Book"}
+                                                        type={TKUIButtonType.PRIMARY}
+                                                        onClick={() => {
+                                                            const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
+                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: bookEndTime!, vehicleId: selectedVehicle!.identifier })
+                                                        }}
+                                                    />
                                                 </div>
                                             </div>}
                                         <div className={classes.transparentToWhite} style={{ width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', right: SCROLL_HORIZONT_WIDTH / 2, position: 'absolute' }} />
