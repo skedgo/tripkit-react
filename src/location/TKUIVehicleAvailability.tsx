@@ -93,8 +93,6 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
-    const timezone = region?.timezone ?? DateTimeUtil.defaultTZ;
-    const [locationInfo, setLocationInfo] = useState<TKLocationInfo | undefined>();
     const onBookClickDefault = ({ bookingURL, bookingStart, bookingEnd }) => {
         open(bookingURL + "&start=" + bookingStart + "&end=" + bookingEnd, '_blank');
     }
@@ -334,7 +332,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         >
             <div className={classes.vehicleLabel} style={{ width: VEHICLE_LABEL_WIDTH, zIndex: 2, height: '60px' }}>
                 <div className={classes.datePicker}>
-                    <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                    <TKUIDateTimePicker
                         value={DateTimeUtil.momentFromIsoWithTimezone(displayDate)}
                         timeZone={region?.timezone}
                         onChange={date => {
