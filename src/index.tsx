@@ -78,6 +78,7 @@ export { default as genStylesJSS } from "./css/GenStyle.css";
 export { genClassNames } from "./css/GenStyle.css";
 export { default as LatLng } from "./model/LatLng";
 export { default as TKLocation } from "./model/Location";
+export { default as TKCarPodLocation } from "./model/location/CarPodLocation";
 export { default as Region } from "./model/region/Region";
 export { default as RoutingQuery } from "./model/RoutingQuery";
 export { default as TKUserProfile } from "./model/options/TKUserProfile";
@@ -136,6 +137,7 @@ export { default as TKGeolocationData } from "./geocode/GeolocationData";
 export type PeliasGeocoderOptions = PeliasGeocoderOptionsForExport;
 export { default as TKMapboxGeocoder } from "./geocode/TKMapboxGeocoder";
 export { useTKState } from './config/TKStateProvider';
+export { default as TKUIVehicleAvailability } from "./location/TKUIVehicleAvailability";
 
 /**
  * This import won't happen on lib clients (except they put a div element called "tripgo-sample-root").

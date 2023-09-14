@@ -108,7 +108,7 @@ class TripGoApi {
             // Lower-case apiHeadersOverride keys
             apiHeadersOverride = apiHeadersOverride &&
                 Object.keys(apiHeadersOverride).reduce((headersMap, key) => {
-                    headersMap[key.toLowerCase()] = headersMap[key];
+                    headersMap[key.toLowerCase()] = apiHeadersOverride![key];
                     return headersMap;
                 }, {});
             const headers = {

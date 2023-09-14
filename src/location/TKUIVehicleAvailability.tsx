@@ -32,6 +32,10 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pic
      * @ctype
      */
     location: CarPodLocation;
+    /**
+     * Handler for `Book` button click.
+     * @ctype
+     */
     onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string }) => void
 }
 
@@ -101,7 +105,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
     const SCROLL_HORIZONT_WIDTH = portrait ? 20 : 32;
-    const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
+    const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.getNow(region?.timezone).format());
+    // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
