@@ -129,9 +129,9 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
             return 1;
         }
 
-        if (l1.source === TKDefaultGeocoderNames.skedgo && l1 instanceof StopLocation && query === (l1 as StopLocation).code) {
+        if (l1.source === TKDefaultGeocoderNames.skedgo) {
             return -1;
-        } else if (l2.source === TKDefaultGeocoderNames.skedgo && l2 instanceof StopLocation && query === (l2 as StopLocation).code) {
+        } else if (l2.source === TKDefaultGeocoderNames.skedgo) {
             return 1
         }
 
