@@ -18,7 +18,8 @@ class CarPodLocation extends ModeLocation {
     public carPod: CarPodInfo = new CarPodInfo();
 
     get supportsVehicleAvailability(): boolean {
-        return !!this.carPod.availabilityMode && this.carPod.availabilityMode !== "NONE"
+        return !!this.carPod.availabilityMode
+        // && this.carPod.availabilityMode !== "NONE"   // Comment for now, since it comes as "NONE"
     }
 }
 

@@ -97,15 +97,15 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
-    const onBookClickDefault = ({ bookingURL, bookingStart, bookingEnd }) => {
-        open(bookingURL + "&start=" + bookingStart + "&end=" + bookingEnd, '_blank');
+    const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd }) => {
+        open(bookingURL + `${bookingURL.includes("?") ? "&" : "?"}identifier=${vehicleId}&start=${bookingStart}&end=${bookingEnd}`, '_blank');
     }
     const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
     const SCROLL_HORIZONT_WIDTH = portrait ? 20 : 32;
-    const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.getNow(region?.timezone).format());
+    const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.toJustDate(DateTimeUtil.getNow(region?.timezone)).format());
     // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
@@ -291,6 +291,21 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                 return acc;
                             }, [] as CarAvailability[]) ?? [];
                         const allVehicles = podAvailabilities.concat(nearPodsAvailabilities);
+                        allVehicles.forEach(availabilty => {
+                            if (!availabilty.availability) {
+                                availabilty.availability = {  // Workaround for when availability doesn't come I assume available in all the range (e.g. GoGet)
+                                    timestamp: DateTimeUtil.getNow().format(),
+                                    intervals: [{
+                                        "status": "AVAILABLE",
+                                        "start": dateGStart,
+                                        "end": dateGEnd
+                                    }]
+                                };
+                            }
+                            if (!availabilty.bookingURL) {  // Workaround for when booking URL comes empty.
+                                availabilty.bookingURL = availabilty.car.operator?.website
+                            }
+                        })
                         availabilitiesByDateUpdate.set(date, allVehicles);
                     })
                     return availabilitiesByDateUpdate;
@@ -524,7 +539,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                         type={TKUIButtonType.PRIMARY}
                                                         onClick={() => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
-                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: bookEndTime!, vehicleId: selectedVehicle!.identifier })
+                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
                                                         }}
                                                     />
                                                 </div>

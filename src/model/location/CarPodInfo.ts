@@ -29,6 +29,9 @@ export class CarPodVehicle {
     @JsonProperty("pricingTable", PricingTable, true)
     public pricingTable?: PricingTable = undefined;
 
+    @JsonProperty("operator", CompanyInfo, true)
+    public operator?: CompanyInfo = undefined;
+
 }
 
 type AvailabilityMode = "NONE" | "CURRENT" | "FUTURE";
@@ -44,15 +47,15 @@ interface BookingAvailabilityInterval {
 }
 
 @JsonObject
-export class CarAvailability {    
+export class CarAvailability {
     @JsonProperty("car", CarPodVehicle, true)   // Required
     public car: CarPodVehicle = new CarPodVehicle();
     @JsonProperty("availability", Any, true)
-    public availability?: BookingAvailability = undefined;
+    public availability?: BookingAvailability = undefined;    
     @JsonProperty("bookingURL", String, true)
     public bookingURL?: string = undefined;
     @JsonProperty("appInfo", AppInfo, true)
-    public appInfo?: AppInfo = undefined;    
+    public appInfo?: AppInfo = undefined;
 }
 
 @JsonConverter
