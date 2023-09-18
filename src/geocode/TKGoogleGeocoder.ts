@@ -64,16 +64,19 @@ class TKGoogleGeocoder implements IGeocoder {
             callback([]);
             return;
         }
-        const latLngBounds = bounds ? new /*global google*/google.maps.LatLngBounds({ lat: bounds.ne.lat, lng: bounds.ne.lng }, { lat: bounds.sw.lat, lng: bounds.sw.lng }) : undefined;
+        const latLngBounds = bounds ? new /*global google*/google.maps.LatLngBounds({ lat: bounds.sw.lat, lng: bounds.sw.lng }, { lat: bounds.ne.lat, lng: bounds.ne.lng }) : undefined;
         // Reference: https://developers.google.com/maps/documentation/javascript/reference/3/places-widget#AutocompletionRequest
+        // Other: https://developers.google.com/maps/documentation/javascript/place-autocomplete#address_forms
         // noinspection JSUnusedLocalSymbols
         this.getGoogleAutocomplete().getPlacePredictions({
             input: query,
             bounds: latLngBounds,
+            strictBounds: this.options.restrictToBounds,     // It seems to be supported now, but it's not in the SDK version I'm using
+            location: focus ? new google.maps.LatLng(focus.lat, focus.lng) : undefined, // It seems to be just considered if no bounds are specified
+            // radius: 5000,    // It just makes sense together with location, and is alternative to bounds. TODO: parameterize
             componentRestrictions: this.options.lang && this.options.lang === 'ja' ? {
                 country: 'jp'
             } : undefined,
-            location: focus ? new google.maps.LatLng(focus.lat, focus.lng) : undefined,
             sessionToken: this.getAutocompleteSessionToken()
 
         }, (results, status: google.maps.places.PlacesServiceStatus) => {
@@ -138,8 +141,9 @@ class TKGoogleGeocoder implements IGeocoder {
         // To make it match the location creted from the corresponding autocomplete result
         const splitComponent = result.address_components?.[1]?.long_name;
         const address = splitComponent ?
-            result.formatted_address.replace(splitComponent, "," + splitComponent).split(",").reverse().join(", ") :
-            result.formatted_address;
+            result.formatted_address.replace(splitComponent, "," + splitComponent)
+            //.split(",").reverse().join(", ") // This was to reverse the address for jp client.
+            : result.formatted_address;
         const name = '';
         return Location.create(LatLng.createLatLng(result.geometry.location.lat(), result.geometry.location.lng()), address, result.place_id, name);
     }

@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import * as React from "react";
 import { TKUIConfig } from "./TKUIConfig";
 import Util from "../util/Util";

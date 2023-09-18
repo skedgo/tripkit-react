@@ -19,61 +19,71 @@
             "remoteIcon": "goget",
             "website": "http://www.goget.com.au/"
         },
-        "vehicles": [
+        "availabilities": [
             {
-                "disabled": false,
-                "vehicleTypeInfo": {
-                    "formFactor": "CAR",
-                    "name": "Car",
-                    "propulsionType": "COMBUSTION"
-                },
-                "identifier": "1219",
-                "licensePlate": "CO33DH",
-                "operator": {
-                    "color": {
-                        "blue": 106,
-                        "green": 63,
-                        "red": 0
+                "car": {
+                    "disabled": false,
+                    "vehicleTypeInfo": {
+                        "formFactor": "CAR",
+                        "name": "Car",
+                        "propulsionType": "COMBUSTION"
                     },
-                    "name": "GoGet",
-                    "website": "https://www.goget.com.au"
+                    "identifier": "1219",
+                    "licensePlate": "CO33DH",
+                    "operator": {
+                        "color": {
+                            "blue": 106,
+                            "green": 63,
+                            "red": 0
+                        },
+                        "name": "GoGet",
+                        "website": "https://www.goget.com.au"
+                    },
+                    "name": "Kermit the Yaris"
                 },
-                "name": "Kermit the Yaris",
                 "availability": {
                     "timestamp": "2023-07-19T14:48:00.000Z",
                     "intervals": [
                         {
                             "status": "AVAILABLE",
-                            "start": "2023-07-19T10:00:00+10:00",
-                            "end": "2023-07-19T12:30:00+10:00"
+                            "start": "2023-07-20T00:00:00+10:00",
+                            "end": "2023-07-20T23:59:00+10:00"
                         },
                         {
                             "status": "AVAILABLE",
-                            "start": "2023-07-20T00:00:00+10:00",
-                            "end": "2023-07-22T16:00:00+10:00"
+                            "start": "2023-07-21T10:00:00+10:00",
+                            "end": "2023-07-21T12:30:00+10:00"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-21T00:00:00+10:00",
+                            "end": "2023-07-21T16:00:00+10:00"
                         }
                     ]
-                }
+                },
+                "bookingURL": "https://www.sgfleet.com/book?vehicleID=1219"
             },
             {
-                "disabled": false,
-                "vehicleTypeInfo": {
-                    "formFactor": "CAR",
-                    "name": "Car",
-                    "propulsionType": "COMBUSTION"
-                },
-                "identifier": "10701",
-                "licensePlate": "CL82MI",
-                "operator": {
-                    "color": {
-                        "blue": 106,
-                        "green": 63,
-                        "red": 0
+                "car": {
+                    "disabled": false,
+                    "vehicleTypeInfo": {
+                        "formFactor": "CAR",
+                        "name": "Car",
+                        "propulsionType": "COMBUSTION"
                     },
-                    "name": "GoGet",
-                    "website": "https://www.goget.com.au"
+                    "identifier": "10701",
+                    "licensePlate": "CL82MI",
+                    "operator": {
+                        "color": {
+                            "blue": 106,
+                            "green": 63,
+                            "red": 0
+                        },
+                        "name": "GoGet",
+                        "website": "https://www.goget.com.au"
+                    },
+                    "name": "Chevrolet Camaro"
                 },
-                "name": "Chevrolet Camaro",
                 "availability": {
                     "timestamp": "2023-07-19T14:48:00.000Z",
                     "intervals": [
@@ -86,9 +96,15 @@
                             "status": "AVAILABLE",
                             "start": "2023-07-20T14:00:00.000Z",
                             "end": "2023-07-20T16:00:00.000Z"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-21T00:00:00.000Z",
+                            "end": "2023-07-21T11:30:00.000Z"
                         }
                     ]
-                }
+                },
+                "bookingURL": "https://www.sgfleet.com/book?vehicleID=10701"
             }
         ],
         "nearbyPods": [
@@ -112,26 +128,28 @@
                         "remoteIcon": "goget",
                         "website": "http://www.goget.com.au/"
                     },
-                    "vehicles": [
+                    "availabilities": [
                         {
-                            "disabled": false,
-                            "vehicleTypeInfo": {
-                                "formFactor": "CAR",
-                                "name": "Car",
-                                "propulsionType": "COMBUSTION"
-                            },
-                            "identifier": "1070",
-                            "licensePlate": "CL82MI",
-                            "operator": {
-                                "color": {
-                                    "blue": 106,
-                                    "green": 63,
-                                    "red": 0
+                            "car": {
+                                "disabled": false,
+                                "vehicleTypeInfo": {
+                                    "formFactor": "CAR",
+                                    "name": "Car",
+                                    "propulsionType": "COMBUSTION"
                                 },
-                                "name": "GoGet",
-                                "website": "https://www.goget.com.au"
+                                "identifier": "1070",
+                                "licensePlate": "CL82MI",
+                                "operator": {
+                                    "color": {
+                                        "blue": 106,
+                                        "green": 63,
+                                        "red": 0
+                                    },
+                                    "name": "GoGet",
+                                    "website": "https://www.goget.com.au"
+                                },
+                                "name": "Yogie the Yaris"
                             },
-                            "name": "Yogie the Yaris",
                             "availability": {
                                 "timestamp": "2023-07-19T14:48:00.000Z",
                                 "intervals": [
@@ -144,9 +162,15 @@
                                         "status": "AVAILABLE",
                                         "start": "2023-07-20T14:00:00.000Z",
                                         "end": "2023-07-20T16:00:00.000Z"
+                                    },
+                                    {
+                                        "status": "AVAILABLE",
+                                        "start": "2023-07-21T00:00:00.000Z",
+                                        "end": "2023-07-21T11:30:00.000Z"
                                     }
                                 ]
-                            }
+                            },
+                            "bookingURL": "https://www.sgfleet.com/book?vehicleID=1070"
                         }
                     ]
                 },

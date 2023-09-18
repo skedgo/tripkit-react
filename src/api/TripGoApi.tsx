@@ -11,7 +11,7 @@ import BookingReview from "../model/trip/BookingReview";
 import EphemeralResult from "../model/payment/EphemeralResult";
 import { i18n } from "../i18n/TKI18nConstants";
 
-type TripGoApiHeader = "X-TripGo-Version" | "X-TripGo-Key" | "X-TripGo-Client-Id" | "X-Tsp-Client-UserId" | "X-Tsp-Client-tenantId" | "X-Account-Access-Token" | "userID" | "userToken";
+type TripGoApiHeader = "x-tripgo-version" | "x-tripgo-key" | "x-tripgo-client-id" | "x-tsp-client-userid" | "x-tsp-client-tenantid" | "x-account-access-token" | "userid" | "usertoken";
 export type TripGoApiHeadersMap = { [key in TripGoApiHeader]?: string } | { [key: string]: string };
 
 class TripGoApi {
@@ -108,7 +108,7 @@ class TripGoApi {
             // Lower-case apiHeadersOverride keys
             apiHeadersOverride = apiHeadersOverride &&
                 Object.keys(apiHeadersOverride).reduce((headersMap, key) => {
-                    headersMap[key.toLowerCase()] = headersMap[key];
+                    headersMap[key.toLowerCase()] = apiHeadersOverride![key];
                     return headersMap;
                 }, {});
             const headers = {

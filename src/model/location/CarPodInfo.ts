@@ -1,17 +1,7 @@
 import { Any, JsonCustomConvert, JsonObject, JsonProperty, JsonConverter } from "json2typescript";
-import CompanyInfo from "./CompanyInfo";
+import CompanyInfo, { AppInfo } from "./CompanyInfo";
 import { PricingTable } from "./CarParkInfo";
 import Util from "../../util/Util";
-
-export interface BookingAvailability {
-    timestamp: string;
-    intervals: BookingAvailabilityInterval[];
-}
-interface BookingAvailabilityInterval {
-    status: "AVAILABLE" | "NOT_AVAILABLE" | "UNKNOWN";
-    start: string;
-    end: string;
-}
 
 @JsonObject
 export class CarPodVehicle {
@@ -39,11 +29,34 @@ export class CarPodVehicle {
     @JsonProperty("pricingTable", PricingTable, true)
     public pricingTable?: PricingTable = undefined;
 
-    @JsonProperty("availability", Any, true)
-    public availability?: BookingAvailability = undefined;
+    @JsonProperty("operator", CompanyInfo, true)
+    public operator?: CompanyInfo = undefined;
+
 }
 
 type AvailabilityMode = "NONE" | "CURRENT" | "FUTURE";
+
+export interface BookingAvailability {
+    timestamp: string;
+    intervals: BookingAvailabilityInterval[];
+}
+interface BookingAvailabilityInterval {
+    status: "AVAILABLE" | "NOT_AVAILABLE" | "UNKNOWN";
+    start: string;
+    end: string;
+}
+
+@JsonObject
+export class CarAvailability {
+    @JsonProperty("car", CarPodVehicle, true)   // Required
+    public car: CarPodVehicle = new CarPodVehicle();
+    @JsonProperty("availability", Any, true)
+    public availability?: BookingAvailability = undefined;    
+    @JsonProperty("bookingURL", String, true)
+    public bookingURL?: string = undefined;
+    @JsonProperty("appInfo", AppInfo, true)
+    public appInfo?: AppInfo = undefined;
+}
 
 @JsonConverter
 class TSPInfoModesConverter implements JsonCustomConvert<CarPodInfo> {
@@ -68,11 +81,13 @@ class CarPodInfo {
     @JsonProperty("identifier", String)
     public identifier: string = "";
 
+    // Operator of the car pod
     @JsonProperty("operator", CompanyInfo)
     public operator: CompanyInfo = new CompanyInfo();
 
-    @JsonProperty("vehicles", [CarPodVehicle], true)
-    public vehicles?: CarPodVehicle[] = undefined;
+    // Vehicles at this location, including their availability (if known)
+    @JsonProperty("availabilities", [CarAvailability], true)
+    public availabilities?: CarAvailability[] = undefined;
 
     // real-time availability information
     @JsonProperty("availabilityMode", String, true)

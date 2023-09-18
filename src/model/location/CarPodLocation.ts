@@ -1,4 +1,4 @@
-import {Any, JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import ModeLocation from "./ModeLocation";
 import CarPodInfo from "./CarPodInfo";
 
@@ -9,7 +9,7 @@ export class NearbyPod {
     // public readonly carPod: CarPodInfo = new CarPodInfo();
     public readonly carPod: any = {};
     @JsonProperty("walkingDistance", Number, true)
-    public readonly walkingDistance: number = 0;    
+    public readonly walkingDistance: number = 0;
 }
 
 @JsonObject
@@ -18,7 +18,8 @@ class CarPodLocation extends ModeLocation {
     public carPod: CarPodInfo = new CarPodInfo();
 
     get supportsVehicleAvailability(): boolean {
-        return !!this.carPod.availabilityMode && this.carPod.availabilityMode !== "NONE"
+        return !!this.carPod.availabilityMode
+        // && this.carPod.availabilityMode !== "NONE"   // Comment for now, since it comes as "NONE"
     }
 }
 
