@@ -28,6 +28,14 @@ module.exports = {
     moduleAliases: {
         'tripkit-react': path.resolve(__dirname, 'src'),
         'doc-helper': path.resolve(__dirname, 'src/doc/components/TKDocHelper')
+    },
+
+    styles: {
+        StyleGuide: {
+            content: {
+                maxWidth: 1300
+            }
+        }
     }
 
 };

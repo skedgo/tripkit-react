@@ -1,3 +1,4 @@
+/* eslint-disable import/first */
 /**
  * These two imports mean ~50kb in the bundle size.
  */
