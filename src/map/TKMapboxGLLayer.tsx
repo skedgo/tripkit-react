@@ -12,6 +12,16 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
     const { coverageGeoJson, mapAsync, selectedTrip, selectedTripSegment } = useContext(RoutingResultsContext);
     const { locale } = useContext(TKI18nContext);
     const theme = useTheme<TKUITheme>();
+    const { style } = props;
+
+    useEffect(() => {
+        mapAsync.then(map => {
+            map.registerLayer({ type: "mapboxGL", ref: undefined });    // Cannot send reference to function component. TODO: find alternative.
+        });
+        return () => {
+            mapAsync.then(map => map.unregisterLayer({ type: "mapboxGL", ref: undefined }))
+        };
+    }, []);
 
     useEffect(() => {
         console.log("coverageChanged");
@@ -126,6 +136,7 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
     return (
         <MapboxGlLayer
             {...props}
+            key={style}   // Do this to re-create the component on style change to force refresh.
             ref={(ref: any) => {
                 if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
                     mapboxGlMap.current = ref.leafletElement.getMapboxMap();

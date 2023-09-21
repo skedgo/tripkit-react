@@ -11,7 +11,8 @@ import { lineString, point, BBox as TurfBBox } from "@turf/helpers";
 import bbox from "@turf/bbox";
 import bboxPolygon from "@turf/bbox-polygon";
 import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
-import { Feature, FeatureCollection } from "geojson";
+import { Feature, FeatureCollection, MultiPolygon, Position } from "geojson";
+import { LatLngExpression } from "leaflet";
 
 class MapUtil {
 
@@ -204,6 +205,12 @@ class MapUtil {
             "type": "FeatureCollection",
             "features": features
         });
+    }
+
+    public static toLeafletMultiPolygon(geoJson: MultiPolygon): LatLngExpression[][] {
+        return geoJson.coordinates[0]
+            .map((positions: Position[]) => positions
+                .map((position: Position) => [position[1], position[0]]));
     }
 
 }

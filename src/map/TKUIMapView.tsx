@@ -1,6 +1,6 @@
 import React, { MutableRefObject, useContext, useMemo } from "react";
-import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps } from "react-leaflet";
-import L, { FitBoundsOptions, LatLngBounds } from "leaflet";
+import { Map as RLMap, Marker, Popup, ZoomControl, Viewport, TileLayerProps, Polygon } from "react-leaflet";
+import L, { FitBoundsOptions, LatLngBounds, LatLngExpression } from "leaflet";
 import NetworkUtil from "../util/NetworkUtil";
 import LatLng from "../model/LatLng";
 import Location from "../model/Location";
@@ -279,6 +279,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     }
 };
 
+interface MapLayer {
+    type: "mapboxGL" | string;
+    ref: any;
+}
+
 interface IState {
     menuPopupPosition?: L.LeafletMouseEvent;
     userLocation?: TKUserPosition;
@@ -286,6 +291,8 @@ interface IState {
     refreshTiles?: boolean;
     modeLocations?: ModeLocation[];
     onModeLocationClick?: (location: ModeLocation) => void;
+    coveragePolygon?: LatLngExpression[][];
+    layer?: MapLayer
 }
 
 type IDefaultProps = Required<Pick<IProps, "mapClickBehaviour" | "rightClickMenu" | "geocodingOptions" | "portrait" | "landscape">>;
@@ -319,6 +326,16 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+    }
+
+    public registerLayer(layer: MapLayer) {
+        this.setState({ layer });
+    }
+
+    public unregisterLayer(layer: MapLayer) {
+        if (this.state.layer?.ref === layer.ref) {
+            this.setState({ layer: undefined });
+        }
     }
 
     public setModeLocations(locations?: ModeLocation[], onClick?: (location: ModeLocation) => void) {
@@ -593,7 +610,13 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     keyboard={false}
                 >
                     {renderLayer()}
-                    {/* <Polygon positions={multiPolygon} /> */}
+                    {this.state.coveragePolygon && this.state.layer?.type !== "mapboxGL" &&
+                        <Polygon
+                            positions={this.state.coveragePolygon}
+                            color={this.props.theme.isDark ? '#f5faff' : '#212A33'}
+                            fillOpacity={.4}
+                            stroke={false}
+                        />}
                     {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
                         <TKUIConfigContext.Consumer>{config =>
@@ -887,6 +910,10 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
             this.props.mapboxGlLayerProps.style !== prevProps.mapboxGlLayerProps.style) {
             this.setState({ refreshTiles: true });
             setTimeout(() => this.setState({ refreshTiles: undefined }));
+        }
+
+        if (this.props.coverageGeoJson !== prevProps.coverageGeoJson) {
+            this.setState({ coveragePolygon: this.props.coverageGeoJson ? MapUtil.toLeafletMultiPolygon(this.props.coverageGeoJson) : undefined })
         }
     }
 
