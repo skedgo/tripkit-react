@@ -39,19 +39,17 @@ import { TKUIConfigContext, default as TKUIConfigProvider } from "../config/TKUI
 import { ERROR_GEOLOC_DENIED, TKUserPosition } from "../util/GeolocationUtil";
 import TKUITooltip from "../card/TKUITooltip";
 import TKErrorHelper from "../error/TKErrorHelper";
-import { TileLayer } from "react-leaflet";
 import TKGeocodingOptions, { getGeocodingOptions } from "../geocode/TKGeocodingOptions";
-import { MapboxGlLayer } from '@mongodb-js/react-mapbox-gl-leaflet/lib/react-mapbox-gl-leaflet';
-import Color from "../model/trip/Color";
-import Features from "../env/Features";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import ModeLocation from "../model/location/ModeLocation";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import { OptionsContext } from "../options/OptionsProvider";
 import TKUIMapLocationPopup from "./TKUIMapLocationPopup";
-import RegionsData from "../data/RegionsData";
 import { tKUIColors } from "../jss/TKUITheme";
 import { i18n } from "../i18n/TKI18nConstants";
+import TKMapboxGLLayer from "./TKMapboxGLLayer";
+import TKLeafletLayer from "./TKLeafletLayer";
+import { MultiPolygon } from "geojson";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -94,6 +92,7 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * Properties to be passed to [react-mapbox-gl-leaflet](https://github.com/mongodb-js/react-mapbox-gl-leaflet)
      * MapboxGlLayer component, e.g. to specify a Mapbox vector tiles server url.
      * @ctype [MapboxGLLayerProps](https://github.com/mongodb-js/react-mapbox-gl-leaflet#usage)
+     * @deprecated
      */
     mapboxGlLayerProps?: MapboxGLLayerProps;
 
@@ -240,6 +239,12 @@ interface IConsumedProps extends Partial<TKUIViewportUtilProps> {
      * @globaldefault
      */
     geocodingOptions?: TKGeocodingOptions;
+
+    /**
+     * @ctype
+     * @globaldefault
+     */
+    coverageGeoJson?: MultiPolygon;
 }
 
 interface MenuOptions {
@@ -301,7 +306,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
     private wasDoubleClick = false;
     private userLocTooltipRef?: any;
     public mapboxGlMap?: any;
-    private resolveMapboxGlMap?: any;
+    public resolveMapboxGlMap?: any;
     public mapboxGlMapP: Promise<any> = new Promise<any>((resolve, reject) => {
         this.resolveMapboxGlMap = resolve;
     });
@@ -521,6 +526,12 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         const paddingOptions = { paddingTopLeft: [padding.left, padding.top], paddingBottomRight: [padding.right, padding.bottom] } as FitBoundsOptions;
         const service = this.props.service;
         const t = this.props.t;
+        const renderLayer = this.props.renderLayer ??
+            (() => {
+                return this.props.mapboxGlLayerProps ?
+                    <TKMapboxGLLayer {...this.props.mapboxGlLayerProps} /> :
+                    <TKLeafletLayer {...this.props.tileLayerProps!} />
+            })
         return (
             <div className={classes.main}>
                 <RLMap
@@ -581,65 +592,8 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     // https://github.com/Leaflet/Leaflet/issues/6817#issuecomment-554788008
                     keyboard={false}
                 >
-                    {this.props.renderLayer ? this.props.renderLayer() :
-                        this.props.mapboxGlLayerProps !== undefined ?
-                            !this.state.refreshTiles &&
-                            <MapboxGlLayer {...this.props.mapboxGlLayerProps}
-                                ref={(ref: any) => {
-                                    if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
-                                        this.mapboxGlMap = ref.leafletElement.getMapboxMap();
-                                        this.resolveMapboxGlMap(this.mapboxGlMap);
-                                        this.mapboxGlMap.on('load', () =>
-                                            RegionsData.instance.requireRegions().then(() => {
-                                                try {
-                                                    if (!this.mapboxGlMap.getSource('coverage')) {
-                                                        this.mapboxGlMap.addSource('coverage', {
-                                                            'type': 'geojson',
-                                                            'data': {
-                                                                'type': 'Feature',
-                                                                'geometry': RegionsData.instance.getCoverageGeoJson()
-                                                            }
-                                                        });
-                                                        // Add a new layer to visualize the polygon.
-                                                        this.mapboxGlMap.addLayer({
-                                                            'id': 'coverageLayer',
-                                                            'type': 'fill',
-                                                            'source': 'coverage', // reference the data source
-                                                            'layout': {},
-                                                            'paint': {
-                                                                'fill-color': '#212A33',
-                                                                'fill-opacity': 0.4
-                                                            }
-                                                        });
-                                                        if (this.props.locale && this.props.locale !== 'en')
-                                                            this.mapboxGlMap.getStyle().layers.forEach(thisLayer => {
-                                                                if (thisLayer.type == 'symbol') {
-                                                                    this.mapboxGlMap.setLayoutProperty(thisLayer.id, 'text-field', [
-                                                                        "coalesce", // Evaluates each expression in turn until the first valid value is obtained. Invalid values are null...
-                                                                        ['get', 'name_' + this.props.locale],
-                                                                        ['get', 'name_en'],  // default to english if not found
-                                                                        ['get', 'name']  // default country language if not found. Original value: [['get', 'name_en'], ['get', 'name']]
-                                                                        // confirmed by looking at this.mapboxGlMap.getLayoutProperty(thisLayer.id, 'text-field').
-                                                                    ]);
-                                                                }
-                                                            });
-                                                    }
-                                                } catch (e) {
-                                                    // Catch exception inside getSource call probably caused by
-                                                    // using mode specific tiles.
-                                                    console.log(e);
-                                                }
-                                            })
-                                        );
-                                    }
-                                    if (this.mapboxGlMap) {
-                                        // Since this could be a consequence of a complete style change
-                                        // (switch dark / light appearance).
-                                        this.refreshModeSpecificTiles();
-                                    }
-                                }}
-                            /> :
-                            <TileLayer {...this.props.tileLayerProps!} />}
+                    {renderLayer()}
+                    {/* <Polygon positions={multiPolygon} /> */}
                     {this.props.landscape && <ZoomControl position={"topright"} />}
                     {this.state.userLocation &&
                         <TKUIConfigContext.Consumer>{config =>
@@ -934,36 +888,6 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
             this.setState({ refreshTiles: true });
             setTimeout(() => this.setState({ refreshTiles: undefined }));
         }
-
-        // Highlight walk paths for walking only trips.
-        if (trip !== prevProps.trip) {
-            this.refreshModeSpecificTiles();
-        }
-    }
-
-    private refreshModeSpecificTiles() {
-        if (!Features.instance.modeSpecificMapTilesEnabled) {
-            return
-        }
-        try {
-            if (!this.mapboxGlMap.getLayer(ROAD_PEDESTRIAN_HIGHLIGHT.id)) {
-                this.mapboxGlMap.addLayer(ROAD_PEDESTRIAN_HIGHLIGHT);
-                this.mapboxGlMap.addLayer(ROAD_PATH_HIGHLIGHT);
-            }
-            const { trip, tripSegment } = this.props;
-            const isWalkTrip = trip && trip.isWalkTrip() || tripSegment && tripSegment.isWalking();
-            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PEDESTRIAN_HIGHLIGHT.id, 'visibility',
-                isWalkTrip ? 'visible' : 'none');
-            this.mapboxGlMap && this.mapboxGlMap.setLayoutProperty(ROAD_PATH_HIGHLIGHT.id, 'visibility',
-                isWalkTrip ? 'visible' : 'none');
-        } catch (e) {
-            // To avoid break due to Error: Style is not done loading
-        }
-
-        // Other ways to change style dynamically:
-        // this.mapboxGlMap.setLayoutProperty('road-path', 'visibility', 'none');
-        // this.mapboxGlMap.setPaintProperty('road-path', 'line-color', '#ff0000');
-        // this.mapboxGlMap.setPaintProperty('road-pedestrian', 'line-color', 'rgba(255,0,0,.5)');
     }
 
     public getZoom(): number | undefined {
@@ -1009,19 +933,6 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                 console.error(error);
             }
         }
-    }
-
-    public refreshRegionsPolygons() {
-        if (!this.mapboxGlMap || !this.mapboxGlMap.isStyleLoaded()) {
-            return;
-        }
-        RegionsData.instance.requireRegions().then(() => {
-            this.mapboxGlMap.getSource("coverage")
-                .setData({
-                    'type': 'Feature',
-                    'geometry': RegionsData.instance.getCoverageGeoJson()
-                });
-        });
     }
 
     private toBBox(bounds: LatLngBounds) {
@@ -1104,10 +1015,11 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
 
 const Mapper: PropsMapper<IClientProps, IClientProps> = ({ inputProps, children }) => {
     const { geocoding } = useContext(TKUIConfigContext);
+    const { coverageGeoJson } = useContext(RoutingResultsContext);
     const geocodingOptions = useMemo(() => getGeocodingOptions(geocoding), [geocoding]);
     return (
         <>
-            {children!({ geocodingOptions, ...inputProps })}
+            {children!({ geocodingOptions, coverageGeoJson, ...inputProps })}
         </>
     );
 };
@@ -1149,253 +1061,3 @@ export const TKUIMapViewHelpers = {
     TKStateProps: Consumer,
     useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
 }
-
-const WALK_PATH_COLOR = "rgb(0, 220, 0)";
-
-const ROAD_PEDESTRIAN_HIGHLIGHT =
-{
-    "id": "road-pedestrian-highlight",
-    "type": "line",
-    "source": "composite",
-    "source-layer": "road",
-    "minzoom": 12,
-    "filter": [
-        "all",
-        [
-            "==",
-            [
-                "get",
-                "class"
-            ],
-            "pedestrian"
-        ],
-        [
-            "match",
-            [
-                "get",
-                "structure"
-            ],
-            [
-                "none",
-                "ford"
-            ],
-            true,
-            false
-        ],
-        [
-            "==",
-            [
-                "geometry-type"
-            ],
-            "LineString"
-        ]
-    ],
-    "layout": {
-        "line-join": [
-            "step",
-            [
-                "zoom"
-            ],
-            "miter",
-            14,
-            "round"
-        ],
-        "visibility": "none"
-    },
-    "paint": {
-        "line-width": [
-            "interpolate",
-            [
-                "exponential",
-                1.5
-            ],
-            [
-                "zoom"
-            ],
-            14,
-            0.5,
-            18,
-            12
-        ],
-        "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(.5),
-        "line-dasharray": [
-            "step",
-            [
-                "zoom"
-            ],
-            [
-                "literal",
-                [
-                    1,
-                    0
-                ]
-            ],
-            15,
-            [
-                "literal",
-                [
-                    1.5,
-                    0.4
-                ]
-            ],
-            16,
-            [
-                "literal",
-                [
-                    1,
-                    0.2
-                ]
-            ]
-        ]
-    },
-    "metadata": {
-        "mapbox:featureComponent": "walking-cycling",
-        "mapbox:group": "Walking, cycling, etc., surface"
-    }
-};
-
-const ROAD_PATH_HIGHLIGHT =
-{
-    "id": "road-path-highlight",
-    "type": "line",
-    "source": "composite",
-    "source-layer": "road",
-    "minzoom": 12,
-    "filter": [
-        "all",
-        [
-            "==",
-            [
-                "get",
-                "class"
-            ],
-            "path"
-        ],
-        [
-            "step",
-            [
-                "zoom"
-            ],
-            [
-                "!",
-                [
-                    "match",
-                    [
-                        "get",
-                        "type"
-                    ],
-                    [
-                        "steps",
-                        "sidewalk",
-                        "crossing"
-                    ],
-                    true,
-                    false
-                ]
-            ],
-            16,
-            [
-                "!=",
-                [
-                    "get",
-                    "type"
-                ],
-                "steps"
-            ]
-        ],
-        [
-            "match",
-            [
-                "get",
-                "structure"
-            ],
-            [
-                "none",
-                "ford"
-            ],
-            true,
-            false
-        ],
-        [
-            "==",
-            [
-                "geometry-type"
-            ],
-            "LineString"
-        ]
-    ],
-    "layout": {
-        "line-join": [
-            "step",
-            [
-                "zoom"
-            ],
-            "miter",
-            14,
-            "round"
-        ],
-        "visibility": "none"
-    },
-    "paint": {
-        "line-width": [
-            "interpolate",
-            [
-                "exponential",
-                1.5
-            ],
-            [
-                "zoom"
-            ],
-            13,
-            0.5,
-            14,
-            1,
-            15,
-            1,
-            18,
-            4
-        ],
-        "line-color": Color.createFromRGB(WALK_PATH_COLOR).toRGBA(1),
-        "line-dasharray": [
-            "step",
-            [
-                "zoom"
-            ],
-            [
-                "literal",
-                [
-                    1,
-                    0
-                ]
-            ],
-            15,
-            [
-                "literal",
-                [
-                    1.75,
-                    1
-                ]
-            ],
-            16,
-            [
-                "literal",
-                [
-                    1,
-                    0.75
-                ]
-            ],
-            17,
-            [
-                "literal",
-                [
-                    1,
-                    0.5
-                ]
-            ]
-        ]
-    },
-    "metadata": {
-        "mapbox:featureComponent": "walking-cycling",
-        "mapbox:group": "Walking, cycling, etc., surface"
-    }
-};

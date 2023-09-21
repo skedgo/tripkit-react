@@ -78,7 +78,6 @@ const TKUIStreetsChart: FunctionComponent<IProps> = (props: IProps) => {
         .concat(tagsToMetres["OTHER"] ? ["OTHER"] : []) as RoadTags[];
 
     const totalDistance = segment.streets!.reduce((acc: number, street: Street) => acc + (street.metres ?? 0), 0);
-    console.log(totalDistance);
 
     const options: ChartOptions<"bar"> = {
         indexAxis: 'y' as const,

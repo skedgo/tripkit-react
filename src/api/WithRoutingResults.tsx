@@ -28,6 +28,7 @@ import TKMapViewport from "../map/TKMapViewport";
 import ModeLocation from "../model/location/ModeLocation";
 import TKUserMode from "../account/TKUserMode";
 import { SignInStatus } from "../account/TKAccountContext";
+import { MultiPolygon } from "geojson";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -46,6 +47,7 @@ interface IWithRoutingResultsState {
     inputTextTo: string
     viewport?: TKMapViewport;
     region?: Region; // Once region gets instantiated (with a valid region), never becomes undefined.
+    coverageGeoJson?: MultiPolygon;
     computeTripsForQuery: boolean;    // It means: compute trips for query whenever it is complete.
     trips?: Trip[];
     selected?: Trip;
@@ -257,6 +259,12 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public refreshRegion() {
+            RegionsData.instance.requireRegions().then(() => {
+                const currentCoverageGeoJson = RegionsData.instance.getCoverageGeoJson();
+                if (this.state.coverageGeoJson !== currentCoverageGeoJson) {
+                    this.setState({ coverageGeoJson: currentCoverageGeoJson })
+                }
+            });
             // Implements the behaviour described in TKUIConfig.fixToInitViewportRegion
             if (this.props.initViewport?.center && this.props.fixToInitViewportRegion) {
                 RegionsData.instance.requireRegions().then(() => {
@@ -650,6 +658,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     }
                 }}
                 region={this.state.region}
+                coverageGeoJson={this.state.coverageGeoJson}
                 getRegionInfoP={() => this.state.region && RegionsData.instance.getRegionInfoP(this.state.region.name)}
                 viewport={this.state.viewport}
                 onViewportChange={this.onViewportChange}

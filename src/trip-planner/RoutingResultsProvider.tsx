@@ -15,6 +15,7 @@ import { TKUIMapViewClass } from "../map/TKUIMapView";
 import { TripSort } from "../model/trip/TripSort";
 import ModeLocation from "../model/location/ModeLocation";
 import RoutingResults from "../model/trip/RoutingResults";
+import { MultiPolygon } from "geojson";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -31,6 +32,7 @@ export interface IRoutingResultsContext {
     inputTextTo: string,
     onInputTextChange?: (from: boolean, text: string) => void,
     region?: Region;
+    coverageGeoJson?: MultiPolygon;
     getRegionInfoP: () => (Promise<RegionInfo> | undefined);
     viewport?: { center?: LatLng, zoom?: number };    // Maybe define viewport as required.
     setViewport: (center: LatLng, zoom: number) => void;
