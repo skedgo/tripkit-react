@@ -24,7 +24,6 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
     }, []);
 
     useEffect(() => {
-        console.log("coverageChanged");
         refreshCoverage();
     }, [coverageGeoJson]);
 
@@ -38,16 +37,12 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
     }, [locale]);
 
     function refreshCoverage() {
-        console.log(mapboxGlMap.current);
-        mapboxGlMap.current && !mapboxGlMap.current.isStyleLoaded() && console.log("style not loaded");
-        console.log(coverageGeoJson);
         if (!mapboxGlMap.current ||
             // Commented since it sometimes always returns false, even after 'load' was triggered, as pointed out here: https://github.com/mapbox/mapbox-gl-js/issues/2268#issuecomment-401979967
             // !mapboxGlMap.current.isStyleLoaded() ||
             !coverageGeoJson) {
             return;
         }
-        console.log("refreshCoverage")
         try {
             if (!mapboxGlMap.current.getSource('coverage')) {
                 mapboxGlMap.current.addSource('coverage', {
