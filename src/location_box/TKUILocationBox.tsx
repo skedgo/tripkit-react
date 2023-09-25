@@ -25,6 +25,7 @@ import { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import LocationUtil from "../util/LocationUtil";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
+import classNames from 'classnames';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -118,6 +119,11 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @default true
      */
     selectOnBlur?: boolean;
+
+    /**
+     * @ignore
+     */
+    disabled?: boolean;
 }
 
 interface IConsumedProps {
@@ -462,11 +468,12 @@ class TKUILocationBox extends Component<IProps, IState> {
                     autoCorrect="off"
                     autoCapitalize="off"
                     {...props}
-                    className={classes.input}
+                    className={classNames(classes.input, this.props.disabled && classes.disabled)}
+                    disabled={this.props.disabled}
                 />
                 {this.state.waiting || this.state.waitingResolveFor ?
                     <IconSpin className={classes.iconLoading} focusable="false" /> :
-                    (this.state.inputText ?
+                    (this.state.inputText && !this.props.disabled ?
                         <button onClick={this.onClearClicked}
                             className={classes.btnClear}
                             style={resetStyles.button as any}

@@ -29,6 +29,9 @@ export const tKUILocationBoxDefaultStyle = (theme: TKUITheme) => ({
             height: '30px'
         }
     },
+    disabled: {
+        color: black(1, theme.isDark)
+    },
     iconLoading: {
         margin: '0 5px',
         width: '16px',
