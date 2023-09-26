@@ -142,7 +142,14 @@ class SkedgoGeocoder implements IGeocoder {
                         resolvedLocation = Util.iAssign(new CarPodLocation(), unresolvedLocation);
                         resolvedLocation.name = locInfo.carPod.operator.name;
                         resolvedLocation.carPod = locInfo.carPod;
-                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(), { localIcon: "car-share" });
+                        const modeInfoId = locInfo.carPod.identifier.includes("|") ? locInfo.carPod.identifier.substring(0, locInfo.carPod.identifier.indexOf("|")) : locInfo.carPod.identifier;
+                        resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(),
+                            {                                
+                                identifier: modeInfoId,
+                                alt: locInfo.carPod.operator.name,
+                                localIcon: "car-share",
+                                color: locInfo.carPod.operator.color
+                            });
                         // Need this to force TKUILocationBox to resolve the location.
                         resolvedLocation.hasDetail = true;
                     } else if (locInfo.bikePod) {
