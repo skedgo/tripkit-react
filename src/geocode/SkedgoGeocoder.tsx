@@ -31,7 +31,16 @@ const defaultRenderIcon = (location: Location) =>
                 height: undefined,
                 background: tKUIColors.black1,
             }}
-        /> : <IconPin />;
+        /> :
+        location instanceof CarPodLocation ?
+            <TKUIModeLocationIcon
+                location={location as CarPodLocation}
+                style={{
+                    width: undefined,
+                    height: undefined,
+                    background: tKUIColors.black1,
+                }}
+            /> : <IconPin />;
 class SkedgoGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;

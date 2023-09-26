@@ -196,10 +196,16 @@ class TKStateUrl extends React.Component<IProps, {}> {
     }
 
     private getLocationFieldValue(location: Location): string {
+        // Workaround to avoid putting 'recent' src in the url, which then causes when trying to resolve the location.
+        // TODO: record the actual source of the location in some way, so I don't need to guess it from the id.
+        // We should not lose the original source. Maybe just leave the original, and find other way to determine if the
+        // location comes from recent to draw the clock icon in the result.
+        const source = location.source === TKDefaultGeocoderNames.recent && location.id?.startsWith("me_car-s") ?
+            TKDefaultGeocoderNames.skedgo : location.source;
         return location.lat + "," + location.lng
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(location.address || "")
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((location.id ? location.id : ""))
-            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((location.source ? location.source : ""));
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent(location.address ?? "")
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((location.id ?? ""))
+            + URL_VALUE_COMPONENT_SEPARATOR + encodeURIComponent((source ?? ""));
     }
 
     private parseLocationFieldValue(locationS: string): Location {
@@ -299,7 +305,7 @@ class TKStateUrl extends React.Component<IProps, {}> {
                             RoutingQuery.create(null, location);
                         tKState.onQueryChange(routingQuery);
                         if (queryMap.at) {
-                            tKState.onComputeTripsForQuery(true);                            
+                            tKState.onComputeTripsForQuery(true);
                         }
                         TKShareHelper.resetToHome();
                     }

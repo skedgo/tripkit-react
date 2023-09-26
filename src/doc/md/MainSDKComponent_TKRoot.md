@@ -40,7 +40,7 @@ const config = {
 const [location, setLocation] = useState();
 
 <TKRoot config={config}>
-    <div>
+    <div style={{width: '400px'}}>
         <TKUILocationSearch 
             value={location} 
             onChange={setLocation} 
