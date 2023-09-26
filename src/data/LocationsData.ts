@@ -54,13 +54,16 @@ class LocationsData {
         const refreshCells: { [key: string]: number } = {};
         for (const cellID of cellIDs) {
             const cellResults = this.cache.get(region, cellID);
-            if (cellResults) {
+            if (cellResults && cellResults.requestOptions.apiKey === TripGoApi.apiKey && cellResults.requestOptions.server === TripGoApi.server) {
                 cachedResults.add(cellResults);
             }
             if (!cellResults ||
+                cellResults.requestOptions.apiKey !== TripGoApi.apiKey ||
+                cellResults.requestOptions.server !== TripGoApi.server ||
                 !modes.every((mode: string) => cellResults.modes.includes(mode)) ||
                 ((Math.floor(DateTimeUtil.getNow().valueOf() / 1000) - cellResults.requestTime) > 300 && !cellResults.requesting)) {   // More than 5 minutes old.
-                if (!cellResults || !modes.every((mode: string) => cellResults.modes.includes(mode))) {
+                if (!cellResults || !modes.every((mode: string) => cellResults.modes.includes(mode)) || cellResults.requestOptions.apiKey !== TripGoApi.apiKey ||
+                    cellResults.requestOptions.server !== TripGoApi.server) {
                     requestCells.push(cellID);
                 } else { // !cellResults.fresh
                     refreshCells[cellID] = cellResults.hashCode;
