@@ -9,7 +9,7 @@ import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsP
 import TKUIServiceView, { TKUIServiceViewHelpers } from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
-import { tKUITripPlannerDefaultStyle } from "./TKUITripPlanner.css";
+import { tKUITripPlannerDefaultStyle, wideCardWidth } from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
 import TKUICardCarousel from "../card/TKUICardCarousel";
@@ -466,7 +466,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const mapPadding: TKUIMapPadding = {};
         if (this.props.landscape) {
             mapPadding.left = this.props.query.isEmpty() && !favouritesView && !serviceDetailView
-                && !locationDetailView ? 0 : 500;
+                && !locationDetailView ? 0 : locationHasVehicleAvailability ? wideCardWidth + 82 : 500;
         } else {
             if (directionsView && this.props.trips) {
                 mapPadding.bottom = this.getContainerHeight() * .50;
@@ -508,69 +508,65 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
             </TKUIMxMViewHelpers.TKStateProps>
         return (
-            <TKUIConfigContext.Consumer>
-                {(config: TKUIConfig) =>
-                    <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root, isUserTabbing && classes.ariaFocusEnabled)}
-                        ref={el => el && (this.ref = el)}
-                        role="none"
-                    >
-                        <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
-                            <div className={classes.queryPanel} role="none">
-                                {searchBar}
-                                {homeCard}
-                                {queryInput}
-                            </div>
-                            <div id="map-main" className={classes.mapMain}>
-                                <TKUIMapViewHelpers.TKStateProps>
-                                    {stateProps =>
-                                        <TKUIMapView
-                                            {...stateProps}
-                                            hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                            padding={mapPadding}
-                                            locationActionHandler={(loc: Location) => {
-                                                if (loc instanceof StopLocation) {
-                                                    return () => {
-                                                        this.showTimetableFor(loc as StopLocation);
-                                                        FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                                    }
-                                                } else if (loc.isCurrLoc()) {
-                                                    return undefined;
-                                                } else if (loc.isResolved() && !loc.isDroppedPin()) {
-                                                    return () => this.setState({ showLocationDetailsFor: loc });
-                                                }
-                                                return undefined;
-                                            }}
-                                            mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
-                                            rightClickMenu={[
-                                                { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
-                                                { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
-                                                ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
-                                            ]}
-                                        />
-                                    }
-                                </TKUIMapViewHelpers.TKStateProps>
-                            </div>
-                            <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
-                            {sideBar}
-                            {settings}
-                            {locationDetailView}
-                            {routingResultsView}
-                            {tripDetailView}
-                            {timetableView}
-                            {serviceDetailView}
-                            {transportSettings}
-                            {myBookings}
-                            {favouritesView}
-                            {waitingRequest}
-                            {this.props.renderTopRight &&
-                                <div className={classes.renderTopRight}>
-                                    {this.props.renderTopRight()}
-                                </div>}
-                            {mxMView}
-                        </div>
+            <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root, isUserTabbing && classes.ariaFocusEnabled)}
+                ref={el => el && (this.ref = el)}
+                role="none"
+            >
+                <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
+                    <div className={classes.queryPanel} role="none">
+                        {searchBar}
+                        {homeCard}
+                        {queryInput}
                     </div>
-                }
-            </TKUIConfigContext.Consumer>
+                    <div id="map-main" className={classes.mapMain}>
+                        <TKUIMapViewHelpers.TKStateProps>
+                            {stateProps =>
+                                <TKUIMapView
+                                    {...stateProps}
+                                    hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                    padding={mapPadding}
+                                    locationActionHandler={(loc: Location) => {
+                                        if (loc instanceof StopLocation) {
+                                            return () => {
+                                                this.showTimetableFor(loc as StopLocation);
+                                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                            }
+                                        } else if (loc.isCurrLoc()) {
+                                            return undefined;
+                                        } else if (loc.isResolved() && !loc.isDroppedPin()) {
+                                            return () => this.setState({ showLocationDetailsFor: loc });
+                                        }
+                                        return undefined;
+                                    }}
+                                    mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
+                                    rightClickMenu={[
+                                        { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
+                                        { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
+                                        ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
+                                    ]}
+                                />
+                            }
+                        </TKUIMapViewHelpers.TKStateProps>
+                    </div>
+                    <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
+                    {sideBar}
+                    {settings}
+                    {locationDetailView}
+                    {routingResultsView}
+                    {tripDetailView}
+                    {timetableView}
+                    {serviceDetailView}
+                    {transportSettings}
+                    {myBookings}
+                    {favouritesView}
+                    {waitingRequest}
+                    {this.props.renderTopRight &&
+                        <div className={classes.renderTopRight}>
+                            {this.props.renderTopRight()}
+                        </div>}
+                    {mxMView}
+                </div>
+            </div>
         );
     }
 

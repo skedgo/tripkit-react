@@ -3,6 +3,8 @@ import TKUIResponsiveUtil from "../util/TKUIResponsiveUtil";
 import { cardSpacing, queryWidth, TKUITheme, white } from "../jss/TKUITheme";
 import genStyles, { TK_FOCUS_TARGET_CLASS } from "../css/GenStyle.css";
 
+export const wideCardWidth = TKUIResponsiveUtil.getPortraitWidth() - 2 * cardSpacing();
+
 export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     modalMain: {
         ...genStyles.flex,
@@ -126,7 +128,7 @@ export const tKUITripPlannerDefaultStyle = (theme: TKUITheme) => ({
     },
     wideCard: {
         ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-            width: TKUIResponsiveUtil.getPortraitWidth() - 2 * cardSpacing() + 'px!important'
+            width: wideCardWidth + 'px!important'
         }
     }
 });
