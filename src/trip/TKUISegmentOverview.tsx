@@ -9,7 +9,7 @@ import {
     tKUISegmentOverviewDefaultStyle
 } from "./TKUISegmentOverview.css";
 import { ReactComponent as IconPinStart } from "../images/ic-pin-start.svg";
-import { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "./TKUIStreetsChart";
+import TKUIStreetsChart, { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "./TKUIStreetsChart";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -54,8 +54,11 @@ function platformText(platformS: string): string {
     return platformS.toLowerCase().startsWith("stop") ? platformS : "Platform " + platformS;
 }
 
-const TKUIStreetsChart = lazyComponent<TKUIStreetsChartProps, TKUIStreetsChartStyle>(() => import("./TKUIStreetsChart"));
-setTimeout(() => import("./TKUIStreetsChart"), 2000);
+// Disable lazy load of chart component (using heavy library) since it implies code splitting in chunks, which fail to load
+// on embedded web-apps, since code tries to load chunks from '/'. Static solution: configure publicPath on client project.
+// Dynamic solution (no config required): https://github.com/webpack/webpack/pull/11258 (didn't test).
+// const TKUIStreetsChart = lazyComponent<TKUIStreetsChartProps, TKUIStreetsChartStyle>(() => import("./TKUIStreetsChart"));
+// setTimeout(() => import("./TKUIStreetsChart"), 2000);
 
 class TKUISegmentOverview extends React.Component<IProps, {}> {
     public render(): React.ReactNode {
