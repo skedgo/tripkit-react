@@ -1,14 +1,13 @@
 import * as React from "react";
 import { Classes } from "jss";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle, withStyles} from "../../jss/StyleHelper";
-import {tKUIOccupancyInfoDefaultStyle} from "./TKUIOccupancyInfo.css";
-import {OccupancyStatus} from "../../model/service/VehicleComponent";
-import {ReactComponent as IconPassenger} from '../../images/ic-passenger.svg';
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../../jss/StyleHelper";
+import { tKUIOccupancyInfoDefaultStyle } from "./TKUIOccupancyInfo.css";
+import { OccupancyStatus } from "../../model/service/VehicleComponent";
+import { ReactComponent as IconPassenger } from '../../images/ic-passenger.svg';
 import classNames from "classnames";
-import {TKI18nContextProps, TKI18nContext, TranslationFunction} from "../../i18n/TKI18nProvider";
-import {connect, mapperFromFunction, PropsMapper} from "../../config/TKConfigHelper";
-import {Subtract} from "utility-types";
-import {TKComponentDefaultConfig} from "../../config/TKUIConfig";
+import { TranslationFunction } from "../../i18n/TKI18nProvider";
+import { connect, mapperFromFunction } from "../../config/TKConfigHelper";
+import { TKComponentDefaultConfig } from "../../config/TKUIConfig";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     status: OccupancyStatus;
@@ -36,14 +35,14 @@ export type ITKUIOccupancyInfoStyle = IStyle;
 export type ITKUIOccupancyInfoProps = IProps;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIOccupancyInfo {...props}/>,
+    render: props => <TKUIOccupancyInfo {...props} />,
     styles: tKUIOccupancyInfoDefaultStyle,
     classNamePrefix: "TKUIOccupancyInfo"
 };
 
 class TKUIOccupancyInfo extends React.Component<IProps, {}> {
 
-    private static toSlots(status: OccupancyStatus): number  {
+    private static toSlots(status: OccupancyStatus): number {
         switch (status) {
             case OccupancyStatus.EMPTY:
                 return 0;
@@ -77,19 +76,19 @@ class TKUIOccupancyInfo extends React.Component<IProps, {}> {
         const t = this.props.t;
         return (
             <div className={classes.main}
-                 aria-label={TKUIOccupancyInfo.getText(this.props.status, t)}
-                 tabIndex={this.props.tabIndex}
-                 role="none"
+                aria-label={TKUIOccupancyInfo.getText(this.props.status, t)}
+                tabIndex={this.props.tabIndex}
+                role="none"
             >
                 <div className={classes.passengers}>
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancyInfo.toSlots(this.props.status) > 0 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 0 ? classes.passenger : undefined)} />
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancyInfo.toSlots(this.props.status) > 1 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 1 ? classes.passenger : undefined)} />
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancyInfo.toSlots(this.props.status) > 2? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 2 ? classes.passenger : undefined)} />
                     <IconPassenger className={classNames(classes.passengerSlot,
-                        TKUIOccupancyInfo.toSlots(this.props.status) > 3 ? classes.passenger : undefined)}/>
+                        TKUIOccupancyInfo.toSlots(this.props.status) > 3 ? classes.passenger : undefined)} />
                 </div>
                 {!brief ?
                     <div className={classes.text}>

@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
-import {TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {tKUIServiceRealtimeInfoDefaultStyle} from "./TKUIServiceRealtimeInfo.css";
+import React, { useState } from 'react';
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { tKUIServiceRealtimeInfoDefaultStyle } from "./TKUIServiceRealtimeInfo.css";
 import genStyles from "../css/GenStyle.css";
 import RealTimeVehicle from "../model/service/RealTimeVehicle";
 import RealTimeAlert from "../model/service/RealTimeAlert";
@@ -12,8 +12,8 @@ import TKUIWheelchairInfo from "./occupancy/TKUIWheelchairInfo";
 import TKUITrainOccupancyInfo from "./occupancy/TKUITrainOccupancyInfo";
 import TKUIOccupancyInfo from "./occupancy/TKUIOccupancyInfo";
 import ModeInfo from "../model/trip/ModeInfo";
-import {ReactComponent as IconAngleDown} from "../images/ic-angle-down.svg";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import { ReactComponent as IconAngleDown } from "../images/ic-angle-down.svg";
+import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     wheelchairAccessible?: boolean;
@@ -24,7 +24,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     alertsSlideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 type IStyle = ReturnType<typeof tKUIServiceRealtimeInfoDefaultStyle>
 
@@ -32,14 +32,14 @@ export type TKUIServiceRealtimeInfoProps = IProps;
 export type TKUIServiceRealtimeInfoStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIServiceRealtimeInfo {...props}/>,
+    render: props => <TKUIServiceRealtimeInfo {...props} />,
     styles: tKUIServiceRealtimeInfoDefaultStyle,
     classNamePrefix: "TKUIServiceRealtimeInfo"
 };
 
 const TKUIServiceRealtimeInfo: React.SFC<IProps> = (props: IProps) => {
     const [open, setOpen] = useState<boolean>(false);
-    const {wheelchairAccessible, vehicle, alerts, options, modeInfo, alertsSlideUpOptions, t, classes} = props;
+    const { wheelchairAccessible, vehicle, alerts, options, modeInfo, alertsSlideUpOptions, t, classes } = props;
     const showWheelchair = options?.wheelchair || wheelchairAccessible === false;
     const occupancy = vehicle && vehicle.getOccupancyStatus();
     const alertElems = !alerts ? null :
@@ -51,28 +51,28 @@ const TKUIServiceRealtimeInfo: React.SFC<IProps> = (props: IProps) => {
                 />
             </div> :
             <div className={classes.alertsBrief}>
-                {t("X.alerts", {0: alerts.length})}
+                {t("X.alerts", { 0: alerts.length })}
             </div>;
-    return ((showWheelchair || occupancy || alertElems) &&
+    return ((showWheelchair || occupancy !== undefined || alertElems) &&
         <div className={classes.main}>
             <div className={open ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
                 {showWheelchair &&
-                <TKUIWheelchairInfo accessible={wheelchairAccessible} brief={!open}/>}
-                {occupancy ?
+                    <TKUIWheelchairInfo accessible={wheelchairAccessible} brief={!open} />}
+                {occupancy !== undefined ?
                     <TKUIOccupancyInfo status={occupancy}
-                                       brief={!open} tabIndex={0}/> : undefined}
-                {occupancy && open && modeInfo?.alt.includes("train") &&
-                <TKUITrainOccupancyInfo components={vehicle!.components!}/>}
+                        brief={!open} tabIndex={0} /> : undefined}
+                {occupancy !== undefined && open && modeInfo?.alt.includes("train") &&
+                    <TKUITrainOccupancyInfo components={vehicle!.components!} />}
                 {alertElems}
             </div>
             <button
                 onClick={() => setOpen(!open)}
                 className={classes.iconAngleDown}
-                style={open ? {...genStyles.rotate180 as any} : undefined}
+                style={open ? { ...genStyles.rotate180 as any } : undefined}
                 aria-expanded={open}
                 aria-label={"Show realtime info"}
             >
-                <IconAngleDown/>
+                <IconAngleDown />
             </button>
         </div>
     );

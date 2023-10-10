@@ -69,7 +69,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
         const from = segment.isFirst() ? t("Leave.X", { 0: fromLocS }) : segment.arrival ? t("Arrive.X", { 0: fromLocS }) : fromLocS;
         const hasBusOccupancy = segment.isPT() && segment.realtimeVehicle && segment.realtimeVehicle.components &&
             segment.realtimeVehicle.components.length === 1 && segment.realtimeVehicle.components[0].length === 1 &&
-            segment.realtimeVehicle.components[0][0].occupancy;
+            segment.realtimeVehicle.components[0][0].occupancy !== undefined;
         const showWheelchair = (this.props.options.wheelchair || segment.wheelchairAccessible === false) &&
             segment.isPT();
         const wheelchairInfo = showWheelchair &&
