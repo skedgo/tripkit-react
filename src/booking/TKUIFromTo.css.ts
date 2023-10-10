@@ -1,9 +1,9 @@
 import genStyles from "../css/GenStyle.css";
-import {tKUIMxMBookingCardDefaultStyle} from "../mxm/TKUIMxMBookingCard.css";
-import {TKUITheme} from "../jss/TKUITheme";
+import { tKUIMxMBookingCardDefaultStyle } from "../mxm/TKUIMxMBookingCard.css";
+import { TKUITheme } from "../jss/TKUITheme";
 
 export const tKUIFromToDefaultStyle = (theme: TKUITheme) => {
-    const {value, label} = tKUIMxMBookingCardDefaultStyle(theme);
+    const { value, label } = tKUIMxMBookingCardDefaultStyle(theme);
     return ({
         groupRight: {
             ...genStyles.flex,
@@ -41,6 +41,8 @@ export const tKUIFromToDefaultStyle = (theme: TKUITheme) => {
         },
         label: {
             ...label,
+            ...theme.textColorDefault,
+            ...theme.textWeightSemibold,
             '&:not(:first-child)': {
                 marginTop: '15px'
             }

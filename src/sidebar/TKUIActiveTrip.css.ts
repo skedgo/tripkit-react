@@ -36,8 +36,16 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '20px',
         cursor: 'pointer'
     },
+    header: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.spaceBetween,
+        ...theme.divider,
+        marginBottom: '10px',
+        paddingBottom: '10px'
+    },
     status: {
-        ...genStyles.alignSelfStart,
+        ...genStyles.alignSelfCenter,
         background: ({ activeTrip }) => {
             const status = activeTrip?.confirmation?.status?.value;
             switch (status) {
@@ -52,16 +60,24 @@ export const tKUIActiveTripDefaultStyle = (theme: TKUITheme) => ({
         },
         ...genStyles.borderRadius(6),
         color: white(),
-        padding: '1px 12px',
-        marginBottom: '16px'
+        padding: '1px 12px'
     },
     mode: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
         minWidth: 0,            // This is so this div does not overflow through parents limits, but init's width is
-        marginBottom: '16px',    // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
-        '& *:first-child': {
+        '& *:first-child': {    // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
             marginRight: '10px'
         }
+    },
+    modeAndDate: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    modeTitle: {
+
+    },
+    date: {
+        ...theme.textColorGray
     }
 });

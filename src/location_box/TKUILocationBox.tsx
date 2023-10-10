@@ -280,7 +280,6 @@ class TKUILocationBox extends Component<IProps, IState> {
                             this.setValue(resolvedLocation, locationValue === this.state.highlightedValue, true,
                                 () => {
                                     this.updateResolvedItem(locationValue, resolvedLocation);
-                                    console.log("Resolved: " + JSON.stringify(resolvedLocation));
                                 });
                         }
                         if (this.state.waitingResolveFor === locationValue) {

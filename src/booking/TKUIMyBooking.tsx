@@ -4,18 +4,16 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIMyBookingDefaultStyle } from "./TKUIMyBooking.css";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
-import TKUIRow from "../options/TKUIRow";
 import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIFromTo from "./TKUIFromTo";
 import TKUIBookingActions from "./TKUIBookingActions";
 import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
-import FormatUtil from '../util/FormatUtil';
 import TKUITicketSelect from '../stripekit/TKUITicketSelect';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
-    onShowTrip: (tripUrl: string) => void;
+    onShowTrip: () => void;
     requestRefresh: () => Promise<void>;
 }
 
@@ -33,39 +31,54 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { onShowTrip, requestRefresh, classes, theme } = props;
+    const { booking, onShowTrip, requestRefresh, classes, theme } = props;
     const { confirmation, mode, trips, time, timeZone, tripsInfo } = props.booking;
     const [waiting, setWaiting] = useState<boolean>(false);
     if (!confirmation) {
         return null;
     }
-    const tripUrl = trips?.[0];
+    const startTime = booking.datetime ? booking.datetime.split("[")[0] : undefined;
+    const timezone = booking.timeZone;
+    const dateText = startTime && DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime),
+        "MMM DD, YYYY", { justToday: true });
+    const modeIcon = booking.modeInfo ? TransportUtil.getTransIcon(booking.modeInfo, { onDark: theme.isDark }) : TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(booking.mode!), false, theme.isDark)
     return (
         <div className={classes.main}>
             <div className={classes.form}>
-                <div className={classes.timeStatus}>
-                    <div className={classes.mode}>
-                        <div className={classes.modeName}>
-                            {confirmation.provider?.title}
-                        </div>
-                        <img src={TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)} />
-                        {confirmation.purchase &&
-                            <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>}
-                    </div>
-                    <div className={classes.time}>
-                        {time ? DateTimeUtil.momentFromTimeTZ(time * 1000, timeZone)
-                            .format(DateTimeUtil.dayMonthFormat() + " " + DateTimeUtil.timeFormat()) : ""}
-                    </div>
-                </div>
-                <TKUIRow
+                {/* {confirmation.purchase &&
+                    <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>} */}
+                {/* <TKUIRow
                     title={confirmation.status!.title}
                     subtitle={confirmation.status?.subtitle}
-                />
-                <TKUIFromTo
-                    from={tripsInfo![0].origin!}
-                    to={tripsInfo![0].destination!}
-                    onClick={tripUrl ? () => onShowTrip(tripUrl) : undefined}
-                />
+                /> */}
+                <div className={classes.contentInfo} onClick={onShowTrip}>
+                    <div className={classes.header}>
+                        <div className={classes.mode}>
+                            <img src={modeIcon} />
+                            <div className={classes.modeAndDate}>
+                                <div className={classes.modeTitle}>
+                                    {booking.confirmation?.provider?.title}
+                                </div>
+                                <div className={classes.date}>
+                                    {dateText}
+                                </div>
+                            </div>
+                        </div>
+                        <div className={classes.status}>
+                            {booking.confirmation?.status?.title}
+                        </div>
+                    </div>
+                    {booking.tripsInfo?.[0].origin && booking.tripsInfo?.[0].destination &&
+                        <TKUIFromTo
+                            from={booking.tripsInfo[0].origin}
+                            to={booking.tripsInfo[0].destination}
+                            // This is since date string comes with timezone between square brackets, e.g. "2023-02-07T12:21:45-08:00[America/Los_Angeles]", 
+                            // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
+                            startTime={startTime}
+                            status={booking.confirmation?.status?.value}
+                            timezone={timezone}
+                        />}
+                </div>
                 {confirmation.tickets && confirmation.tickets?.length > 0 &&
                     <TKUITicketSelect
                         tickets={confirmation.tickets}

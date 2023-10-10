@@ -1,6 +1,6 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import VehicleLocation from "./VehicleLocation";
-import VehicleComponent, {OccupancyStatus} from "./VehicleComponent";
+import VehicleComponent, { OccupancyStatus } from "./VehicleComponent";
 
 @JsonObject
 class RealTimeVehicle {
@@ -18,7 +18,7 @@ class RealTimeVehicle {
         return this.components &&
             this.components.reduce((overallOccupancy: OccupancyStatus, connComponents: VehicleComponent[]) => {
                 const overallCompOccupancy = connComponents.reduce((overallCompOccupancy: OccupancyStatus, component: VehicleComponent) => {
-                    return Math.min(overallCompOccupancy, component.occupancy || OccupancyStatus.NOT_ACCEPTING_PASSENGERS);
+                    return Math.min(overallCompOccupancy, component.occupancy ?? OccupancyStatus.NOT_ACCEPTING_PASSENGERS);
                 }, OccupancyStatus.NOT_ACCEPTING_PASSENGERS);
                 return Math.min(overallOccupancy, overallCompOccupancy);
             }, OccupancyStatus.NOT_ACCEPTING_PASSENGERS)

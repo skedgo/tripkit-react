@@ -271,7 +271,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             }
             return groups;
         }, [] as string[][]);
-        console.log(JSON.stringify(requestDateGroups));
         requestDateGroups.forEach(async dateGroup => {
             const dateGStart = dateGroup[0];
             const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);

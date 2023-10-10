@@ -1,16 +1,6 @@
-import { Any, JsonObject, JsonProperty } from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import ModeLocation from "./ModeLocation";
 import CarPodInfo from "./CarPodInfo";
-
-@JsonObject
-export class NearbyPod {
-    // @JsonProperty("carPod", CarPodInfo, true)
-    @JsonProperty("carPod", Any, true)
-    // public readonly carPod: CarPodInfo = new CarPodInfo();
-    public readonly carPod: any = {};
-    @JsonProperty("walkingDistance", Number, true)
-    public readonly walkingDistance: number = 0;
-}
 
 @JsonObject
 class CarPodLocation extends ModeLocation {

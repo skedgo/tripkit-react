@@ -18,6 +18,9 @@ import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import { TKError } from "../error/TKError";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import Segment from "../model/trip/Segment";
+import Tabs from '@material-ui/core/Tabs/Tabs';
+import Tab from '@material-ui/core/Tab/Tab';
+import DateTimeUtil from '../util/DateTimeUtil';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -44,10 +47,15 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIMyBookings"
 };
 
-let refreshActiveTripInterval: any;
+enum Sections {
+    Valid = "Valid",
+    Expired = "Expired"
+}
 
-const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
-    const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);    
+const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
+    const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);
+    const validBookings = bookings?.filter(booking => DateTimeUtil.isoCompare(booking.datetime, DateTimeUtil.getNow().format()) >= 0);
+    const expiredBookings = bookings?.filter(booking => DateTimeUtil.isoCompare(booking.datetime, DateTimeUtil.getNow().format()) < 0);
     const refreshBookings = () =>
         TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
             .then((result: ConfirmedBookingsResult) => setBookings(result.bookings))
@@ -55,9 +63,9 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
     useEffect(() => {
         let refreshTimeout;
         refreshBookings()
-        .finally(() => {
-            refreshTimeout = setTimeout(refreshBookings, 30000);
-        });        
+            .finally(() => {
+                refreshTimeout = setTimeout(refreshBookings, 30000);
+            });
         return () => {
             if (refreshTimeout) {
                 clearTimeout(refreshTimeout);
@@ -65,6 +73,13 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
         }
     }, []);
     const { onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, slideUpOptions, t, landscape, classes } = props;
+    const [section, setSection] = useState<Sections>(Sections.Valid);
+    const tabs =
+        <Tabs value={section} onChange={(_event, newSection) => setSection(newSection)} aria-label="text formatting">
+            <Tab value={Sections.Valid} label={t(Sections.Valid)} disableFocusRipple disableTouchRipple />
+            <Tab value={Sections.Expired} label={t(Sections.Expired)} disableFocusRipple disableTouchRipple />
+        </Tabs>;
+    const tabBookings = section === Sections.Valid ? validBookings : expiredBookings;
     return (
         <TKUICard
             title={t("My.Bookings")}
@@ -73,38 +88,46 @@ const TKUIMyBookings: React.SFC<IProps> = (props: IProps) => {
             slideUpOptions={slideUpOptions}
             focusTrap={true}
         >
-            {!bookings ?
-                <div className={classes.loadingPanel}>
-                    <TKLoading />
-                </div> :
-                bookings.length === 0 ?
-                    <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
-                        {t("No.bookings.yet_n")}
+            <div className={classes.main}>
+                <div className={classes.tabs}>
+                    {tabs}
+                </div>
+                {!bookings ?
+                    <div className={classes.loadingPanel}>
+                        <TKLoading />
                     </div> :
-                    bookings.map((booking, i) =>
-                        <TKUIMyBooking booking={booking}
-                            onShowTrip={url => {
-                                onWaitingStateLoad(true);
-                                onTripJsonUrl(url)
-                                    .then((trips) => {
-                                        onWaitingStateLoad(false);
-                                        onTripDetailsView(true);
-                                        if (trips && trips.length > 0) {
-                                            const bookingId = booking?.id
-                                            const selectedTrip = trips[0];
-                                            const selectedSegment = selectedTrip.segments.find(segment =>
-                                                segment.booking?.confirmation?.purchase?.id === bookingId);
-                                            selectedSegment && setSelectedTripSegment(selectedSegment);
-                                        }
-                                        onRequestClose(true);
-                                    })
-                                    .catch((error: Error) => onWaitingStateLoad(false,
-                                        new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
-                            }}
-                            requestRefresh={refreshBookings}
-                            key={i}
-                        />)
-            }
+                    tabBookings!.length === 0 ?
+                        <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
+                            {t("No.bookings.yet_n")}
+                        </div> :
+                        <div className={classes.results}>
+                            {tabBookings!.map((booking, i) =>
+                                <TKUIMyBooking booking={booking}
+                                    onShowTrip={() => {
+                                        const url = booking.trips?.[0]!;
+                                        onWaitingStateLoad(true);
+                                        onTripJsonUrl(url)
+                                            .then((trips) => {
+                                                onWaitingStateLoad(false);
+                                                onTripDetailsView(true);
+                                                if (trips && trips.length > 0) {
+                                                    const bookingId = booking?.id
+                                                    const selectedTrip = trips[0];
+                                                    const selectedSegment = selectedTrip.segments.find(segment =>
+                                                        segment.booking?.confirmation?.purchase?.id === bookingId);
+                                                    selectedSegment && setSelectedTripSegment(selectedSegment);
+                                                }
+                                                onRequestClose(true);
+                                            })
+                                            .catch((error: Error) => onWaitingStateLoad(false,
+                                                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+                                    }}
+                                    requestRefresh={refreshBookings}
+                                    key={i}
+                                />)}
+                        </div>
+                }
+            </div>
         </TKUICard>
     );
 };

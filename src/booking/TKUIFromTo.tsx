@@ -31,8 +31,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
     const { from, to, startTime, endTime, timezone, status, onClick, classes, t } = props;
-    let startTimeText = startTime !== undefined && DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime),
-        DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() });
+    let startTimeText = startTime !== undefined && (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)).format(DateTimeUtil.timeFormat());
     if (startTimeText && status === "PROCESSING") {
         startTimeText = t("Requested.time.X", { 0: startTimeText });
     }
@@ -47,17 +46,17 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
             </div>
             <div className={classes.groupRight}>
                 <div className={classes.label}>
-                    Pickup
-                </div>
-                <div className={classes.value}>
-                    {from.getDisplayString(true)}
+                    {t("Pick-up")}
                 </div>
                 {startTimeText &&
                     <div className={classes.value}>
                         {startTimeText}
                     </div>}
+                <div className={classes.value}>
+                    {from.getDisplayString(true)}
+                </div>
                 <div className={classes.label}>
-                    Drop off
+                    {t("Drop-off")}
                 </div>
                 <div className={classes.value}>
                     {to.getDisplayString(true)}

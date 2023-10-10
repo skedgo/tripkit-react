@@ -70,6 +70,13 @@ class DateTimeUtil {
     }
 
     public static isoToMillis(time: string): number {
+        /**
+         * Remove timezone id, which [is not part of the standard](https://stackoverflow.com/a/42196445), but that JAVA (BE) uses.
+         */
+        const timezoneIdIndex = time.indexOf("[");
+        if (timezoneIdIndex !== -1) {
+            time = time.substring(0, timezoneIdIndex);
+        }
         return moment(time).valueOf();
     }
 
@@ -191,5 +198,7 @@ class DateTimeUtil {
     }
 
 }
+
+(window as any).DateTimeUtil = DateTimeUtil;
 
 export default DateTimeUtil;
