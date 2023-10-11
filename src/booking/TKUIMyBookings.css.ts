@@ -40,6 +40,11 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter
     },
     results: {
-        ...genStyles.scrollableY
+        ...genStyles.scrollableY,
+        '& > *': {
+            border: '1px solid ' + black(4, theme.isDark),
+            margin: '16px',
+            ...genStyles.borderRadius(12)
+        }
     }
 });

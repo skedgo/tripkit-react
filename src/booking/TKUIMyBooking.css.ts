@@ -6,9 +6,9 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         position: 'relative',
         ...genStyles.flex,
         ...genStyles.column,
-        border: '1px solid ' + black(4, theme.isDark),
-        margin: '16px',
-        ...genStyles.borderRadius(12)
+        '&:last-child button': {
+            borderBottom: 'none!important'
+        }
     },
     form: {
         ...genStyles.flex,
@@ -50,7 +50,8 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.spaceBetween,
         ...theme.divider,
         marginBottom: '10px',
-        paddingBottom: '10px'
+        paddingBottom: '10px',
+        cursor: 'pointer'
     },
     status: {
         ...genStyles.alignSelfCenter,
@@ -87,5 +88,21 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
     },
     date: {
         ...theme.textColorGray
+    },
+    type: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...theme.textColorGray
+    },
+    iconType: {
+        height: '24px',
+        width: '24px',
+        marginRight: '10px',
+        '& path': {
+            fill: theme.colorPrimary
+        }
+    },
+    fromTo: {
+        cursor: 'pointer'
     }
 });

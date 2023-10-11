@@ -8,13 +8,11 @@ import TKUIRow from "../options/TKUIRow";
 import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
 import { ReactComponent as IconSunClock } from "../images/ic-clocksand.svg";
 import { tKUIActiveTripDefaultStyle } from "./TKUIActiveTrip.css";
-import TKUIFromTo from "../booking/TKUIFromTo";
-import TransportUtil from "../trip/TransportUtil";
-import DateTimeUtil from '../util/DateTimeUtil';
+import TKUIMyBookingGroup from '../booking/TKUIMyBookingGroup';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     activeTrip: ConfirmedBookingData | undefined | null;
-    onShowTrip: () => void;
+    onShowTrip: (tripUrl: string) => void;
     onMyBookings: () => void;
 }
 
@@ -35,40 +33,20 @@ const TKUIActiveTrip: React.FunctionComponent<IProps> = (props: IProps) => {
     const { activeTrip, onShowTrip, onMyBookings, t, classes, theme } = props;
     let content;
     if (activeTrip) {
-        const startTime = activeTrip.datetime ? activeTrip.datetime.split("[")[0] : undefined;
-        const timezone = activeTrip.timeZone;
-        const dateText = startTime && DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime),
-            "MMM DD, YYYY", { justToday: true });
-        const modeIcon = activeTrip.modeInfo ? TransportUtil.getTransIcon(activeTrip.modeInfo, { onDark: theme.isDark }) : TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(activeTrip.mode!), false, theme.isDark)
         content =
-            <div className={classes.contentInfo} onClick={onShowTrip}>
-                <div className={classes.header}>
-                    <div className={classes.mode}>
-                        <img src={modeIcon} />
-                        <div className={classes.modeAndDate}>
-                            <div className={classes.modeTitle}>
-                                {activeTrip.confirmation?.provider?.title}
-                            </div>
-                            <div className={classes.date}>
-                                {dateText}
-                            </div>
-                        </div>
-                    </div>
-                    <div className={classes.status}>
-                        {activeTrip.confirmation?.status?.title}
-                    </div>
-                </div>
-                {activeTrip.tripsInfo?.[0].origin && activeTrip.tripsInfo?.[0].destination &&
-                    <TKUIFromTo
-                        from={activeTrip.tripsInfo[0].origin}
-                        to={activeTrip.tripsInfo[0].destination}
-                        // This is since date string comes with timezone between square brackets, e.g. "2023-02-07T12:21:45-08:00[America/Los_Angeles]", 
-                        // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
-                        startTime={startTime}
-                        status={activeTrip.confirmation?.status?.value}
-                        timezone={timezone}
-                    />}
-            </div>;
+            <TKUIMyBookingGroup
+                booking={activeTrip}
+                onShowTrip={onShowTrip}
+                showActions={false}
+                showTickets={false}
+                styles={{
+                    main: overrideClass({
+                        '&>*:not(:last-child)': {
+                            ...theme.divider
+                        }
+                    })
+                }}
+            />
     } else {
         const icon = activeTrip === undefined ? <IconSunClock /> : <IconTicket />;
         const title = activeTrip === undefined ? t("Getting.your.active.trip…") : t("Your.active.trip.will.be.shown.here.");

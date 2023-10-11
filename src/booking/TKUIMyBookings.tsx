@@ -21,6 +21,7 @@ import Segment from "../model/trip/Segment";
 import Tabs from '@material-ui/core/Tabs/Tabs';
 import Tab from '@material-ui/core/Tab/Tab';
 import DateTimeUtil from '../util/DateTimeUtil';
+import TKUIMyBookingGroup from './TKUIMyBookingGroup';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -102,9 +103,9 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                         </div> :
                         <div className={classes.results}>
                             {tabBookings!.map((booking, i) =>
-                                <TKUIMyBooking booking={booking}
-                                    onShowTrip={() => {
-                                        const url = booking.trips?.[0]!;
+                                <TKUIMyBookingGroup
+                                    booking={booking}
+                                    onShowTrip={url => {
                                         onWaitingStateLoad(true);
                                         onTripJsonUrl(url)
                                             .then((trips) => {
@@ -123,7 +124,7 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                                                 new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
                                     }}
                                     requestRefresh={refreshBookings}
-                                    key={i}
+                                    key={booking.id}
                                 />)}
                         </div>
                 }

@@ -85,6 +85,7 @@ import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../loc
 import { TKUISubscriptionProps, TKUISubscriptionStyle } from "../sidebar/TKUISubscription";
 import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar/TKUISubscriptionView";
 import { TripGoApiHeadersMap } from "../api/TripGoApi";
+import { TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle } from "../booking/TKUIMyBookingGroup";
 
 /**
  * SDK configuration
@@ -292,6 +293,7 @@ interface ITKUIConfigOptional {
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
+    TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;

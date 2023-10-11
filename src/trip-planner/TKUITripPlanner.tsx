@@ -8,7 +8,7 @@ import { IServiceResultsContext, ServiceResultsContext } from "../service/Servic
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
 import TKUIServiceView, { TKUIServiceViewHelpers } from "../service/TKUIServiceView";
 import TKUITripOverviewView from "../trip/TKUITripOverviewView";
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
 import { tKUITripPlannerDefaultStyle, wideCardWidth } from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
 import Trip from "../model/trip/Trip";
@@ -400,7 +400,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
         const homeCard = searchBar && !favouritesView && !this.isShowTimetable() &&
             <div className={this.state.fadeOutHome ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
-                <TKUIHomeCard onMyBookings={() => this.setState({ showMyBookings: true })} />
+                <TKUIHomeCard
+                    onMyBookings={() => this.setState({ showMyBookings: true })}
+                    styles={{
+                        main: overrideClass({
+                            maxHeight: this.getContainerHeight() - 48 - 3 * cardSpacing() // 48 is TKUILocationSearch height
+                        })
+                    }}
+                />
             </div>
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
