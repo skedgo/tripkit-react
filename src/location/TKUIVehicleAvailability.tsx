@@ -536,6 +536,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                     <TKUIButton
                                                         text={"Book"}
                                                         type={TKUIButtonType.PRIMARY}
+                                                        disabled={bookStartTime === undefined || bookEndTime === undefined}
                                                         onClick={() => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
                                                             onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
