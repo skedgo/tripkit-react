@@ -17,7 +17,7 @@ import { TranslationFunction } from "../i18n/TKI18nProvider";
 import TKUIServiceRealtimeInfo from "../service/TKUIServiceRealtimeInfo";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { OptionsContext } from "../options/OptionsProvider";
-import { cardSpacing } from "../jss/TKUITheme";
+import { cardSpacing, colorWithOpacity } from "../jss/TKUITheme";
 import { TKUIMapViewClass } from "../map/TKUIMapView";
 import MapUtil from "../util/MapUtil";
 import TKUIMxMTimetableCard from "./TKUIMxMTimetableCard";
@@ -32,6 +32,7 @@ import TKUILocationDetailField from '../location/TKUILocationDetailField';
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
+import TKUIButton from '../buttons/TKUIButton';
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
@@ -258,6 +259,27 @@ function getSegmentMxMCards(
                     showHandle: true
                 }}
             >
+                {segment.booking?.externalActions?.[0] &&
+                    <TKUIButton
+                        text={segment.booking.title}
+                        icon={<IconWebsite />}
+                        onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                        styles={{
+                            main: overrideClass({
+                                margin: '10px 0 0 16px'
+                            }),
+                            primary: overrideClass({
+                                backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .1),
+                                color: props => props.theme.colorPrimary,
+                                '&:hover': {
+                                    backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .3)
+                                },
+                                '&:active': {
+                                    backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .4)
+                                }
+                            })
+                        }}
+                    />}
                 <TKUILocationDetail location={freeFloatingVehicleLoc} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
             </TKUICard>
         ];
