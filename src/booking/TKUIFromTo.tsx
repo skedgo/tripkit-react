@@ -11,6 +11,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     to: Location;
     startTime?: string;
     endTime?: string;
+    showDate?: boolean;
     timezone?: string;
     status?: string;
     onClick?: () => void;
@@ -30,11 +31,18 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { from, to, startTime, endTime, timezone, status, onClick, classes, t } = props;
-    let startTimeText = startTime !== undefined && (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)).format(DateTimeUtil.timeFormat());
+    const { from, to, startTime, endTime, showDate, timezone, status, onClick, classes, t } = props;
+    const startMoment = startTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)) : undefined;
+    let startTimeText = startMoment !== undefined && (
+        showDate ? DateTimeUtil.formatRelativeDay(startMoment,
+            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() })
+            :
+            startMoment.format(DateTimeUtil.timeFormat())
+    );
     if (startTimeText && status === "PROCESSING") {
         startTimeText = t("Requested.time.X", { 0: startTimeText });
     }
+    const endMoment = endTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(endTime, timezone) : DateTimeUtil.moment(endTime)) : undefined;
     return (
         <div className={classes.group} onClick={onClick} style={onClick && { cursor: 'pointer' }}>
             <div className={classes.fromToTrack}>
@@ -58,14 +66,15 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.label}>
                     {t("Drop-off")}
                 </div>
+                {endMoment !== undefined &&
+                    <div className={classes.value}>
+                        {showDate ? DateTimeUtil.formatRelativeDay(endMoment,
+                            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() }) :
+                            endMoment.format(DateTimeUtil.timeFormat())}
+                    </div>}
                 <div className={classes.value}>
                     {to.getDisplayString(true)}
                 </div>
-                {endTime !== undefined &&
-                    <div className={classes.value}>
-                        {DateTimeUtil.formatRelativeDay(timezone ? DateTimeUtil.momentFromStringTZ(endTime, timezone) : DateTimeUtil.moment(endTime),
-                            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() })}
-                    </div>}
             </div>
         </div>
     );

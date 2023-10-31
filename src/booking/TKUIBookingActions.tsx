@@ -11,6 +11,8 @@ import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
 import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 import RoutingQuery from '../model/RoutingQuery';
+import { loadTripState } from '../state/TKStateUrl';
+import { useTKState } from '../config/TKStateProvider';
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
     setWaiting?: (waiting: boolean) => void;
@@ -34,6 +36,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
     const { action, setWaiting, requestRefresh, trip } = props;
     const { onQueryChange, onComputeTripsForQuery } = useContext(RoutingResultsContext);
+    const tKState = useTKState();
     return (
         <Fragment>
             <TKUIButton
@@ -43,6 +46,8 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
                     if (action.type === "REQUESTANOTHER") {
                         onQueryChange(RoutingQuery.create());
                         onComputeTripsForQuery(false);
+                    } else if (action.type === "SHOW_RELATED_TRIP") {
+                        loadTripState(tKState, action.internalURL);
                     } else if (action.confirmation || action.confirmationMessage) {
                         const confirmationPrompt = action.confirmation
                             ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.
