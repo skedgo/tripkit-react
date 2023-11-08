@@ -10,7 +10,6 @@ import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
 import { ConfirmedBookingsResult } from "../model/trip/ConfirmedBookingData";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
-import TKUIMyBooking from "./TKUIMyBooking";
 import TKLoading from "../card/TKLoading";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import Trip from "../model/trip/Trip";
@@ -105,24 +104,6 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                             {tabBookings!.map((booking, i) =>
                                 <TKUIMyBookingGroup
                                     booking={booking}
-                                    onShowTrip={url => {
-                                        onWaitingStateLoad(true);
-                                        onTripJsonUrl(url)
-                                            .then((trips) => {
-                                                onWaitingStateLoad(false);
-                                                onTripDetailsView(true);
-                                                if (trips && trips.length > 0) {
-                                                    const bookingId = booking?.id
-                                                    const selectedTrip = trips[0];
-                                                    const selectedSegment = selectedTrip.segments.find(segment =>
-                                                        segment.booking?.confirmation?.purchase?.id === bookingId);
-                                                    selectedSegment && setSelectedTripSegment(selectedSegment);
-                                                }
-                                                onRequestClose(true);
-                                            })
-                                            .catch((error: Error) => onWaitingStateLoad(false,
-                                                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
-                                    }}
                                     requestRefresh={refreshBookings}
                                     key={booking.id}
                                 />)}

@@ -14,7 +14,7 @@ const tKUIMyBookingGroupDefaultStyle = (theme: TKUITheme) => ({
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
-    onShowTrip: (tripUrl: string) => void;
+    onShowTrip?: (tripUrl: string) => void;
     requestRefresh?: () => Promise<void>;
     showTickets?: boolean;
     showActions?: boolean;

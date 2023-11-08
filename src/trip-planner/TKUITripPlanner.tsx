@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { ReactNode, useContext } from "react";
 import LatLng from "../model/LatLng";
 import Modal from 'react-modal';
 import Util from "../util/Util";
@@ -16,7 +16,7 @@ import TKUICardCarousel from "../card/TKUICardCarousel";
 import StopLocation from "../model/StopLocation";
 import TKUIProfileView from "../options/TKUIProfileView";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
-import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { connect, PropsMapper, TKPropsOverride } from "../config/TKConfigHelper";
 import { Subtract } from "utility-types";
 import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
@@ -27,14 +27,13 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import TKUIMapView, { TKUIMapPadding, TKUIMapViewHelpers } from "../map/TKUIMapView";
+import TKUIMapView, { TKUIMapPadding, TKUIMapViewClientProps, TKUIMapViewHelpers } from "../map/TKUIMapView";
 import TKUISidebar from "../sidebar/TKUISidebar";
-import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
+import { TKUIViewportUtilProps, useResponsiveUtil } from "../util/TKUIResponsiveUtil";
 import classNames from "classnames";
 import { TKUISlideUpPosition } from "../card/TKUISlideUp";
 import DateTimeUtil from "../util/DateTimeUtil";
 import GeolocationData from "../geocode/GeolocationData";
-import { TKUIConfigContext } from "../config/TKUIConfigProvider";
 import TKUIReportBtn from "../feedback/TKUIReportBtn";
 import TKUITransportOptionsView from "../options/TKUITransportOptionsView";
 import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
@@ -53,6 +52,14 @@ import TKUIMyBookings from "../booking/TKUIMyBookings";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import CarPodLocation from "../model/location/CarPodLocation";
 import TKUILocationDetail from "../location/TKUILocationDetailView";
+import { BookingAction, ConfirmationPrompt } from "../model/trip/BookingInfo";
+import UIUtil from "../util/UIUtil";
+import TripGoApi from "../api/TripGoApi";
+import NetworkUtil from "../util/NetworkUtil";
+import { TKError } from "../error/TKError";
+import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
+import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
+import RoutingResults from "../model/trip/RoutingResults";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -82,6 +89,12 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripPlanner"
 };
 
+interface CardViewData {
+    viewId: string;
+    renderCard: () => ReactNode;
+    mapProps?: TKUIMapViewClientProps;
+}
+
 interface IState {
     mapView: boolean;
     showSidebar: boolean;
@@ -94,6 +107,7 @@ interface IState {
     searchMenuPanelElem?: HTMLDivElement;
     fadeOutHome: boolean;
     fadeOutHomeBounce: boolean;
+    cardStack: CardViewData[];
 }
 
 const modalContainerId = "mv-modal-panel";
@@ -118,7 +132,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showFavourites: false,
             showLocationDetailsFor: undefined,
             fadeOutHome: false,
-            fadeOutHomeBounce: false
+            fadeOutHomeBounce: false,
+            cardStack: []
         };
         TKUICardRaw.modalContainerId = modalContainerId;
         TKUICardRaw.mainContainerId = mainContainerId;
@@ -146,6 +161,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onFavouriteClicked = this.onFavouriteClicked.bind(this);
         this.onRequestAlternativeRoutes = this.onRequestAlternativeRoutes.bind(this);
         this.setFadeOutHome = this.setFadeOutHome.bind(this);
+        this.onBookingAction = this.onBookingAction.bind(this);
+        this.onShowBookingTrip = this.onShowBookingTrip.bind(this);
+        this.pushCardView = this.pushCardView.bind(this);
+        this.popCardView = this.popCardView.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -210,12 +229,164 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.props.onTripDetailsView(false);
     }
 
+    private pushCardView(props: CardViewData) {
+        this.setState(prevState => {
+            const prevStack = prevState.cardStack.filter(cardData => cardData.viewId !== props.viewId);
+            return ({
+                cardStack: [...prevStack, props]
+            });
+        });
+    }
+
+    // private popCardView(props: { type?: string } = {}) {
+    private popCardView() {
+        this.setState(prevState => {
+            const prevCardStack = prevState.cardStack;
+            return ({
+                cardStack: prevCardStack.slice(0, prevState.cardStack.length - 1)
+            });
+        });
+    }
+
+    private onShowTripUrl(tripUrl: string) {
+        const { onWaitingStateLoad } = this.props;
+        onWaitingStateLoad(true);
+        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET, RoutingResults)
+            .then((routingResults: RoutingResults) => {
+                onWaitingStateLoad(false);
+                if (this.state.showMyBookings) {
+                    this.setState({ showMyBookings: false });
+                }
+                if (this.props.directionsView) {
+                    this.props.onDirectionsView(false);
+                    this.props.onQueryChange(RoutingQuery.create());
+                }
+                const trips = routingResults.groups;
+                if (trips && trips.length > 0) {
+                    const selectedTrip = trips[0];
+                    this.pushCardView({
+                        viewId: "RELATED_TRIP",
+                        renderCard: () =>
+                            <TKUIMxMView
+                                trip={trips[0]}
+                                onTripSegmentSelected={() => { }}
+                                onRequestClose={() => this.popCardView()}
+                            />,
+                        mapProps: {
+                            trip: selectedTrip
+                        }
+                    })
+                }
+            })
+            .catch((error: Error) => onWaitingStateLoad(false,
+                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+    }
+
+    private onShowBookingTrip(booking: ConfirmedBookingData) {
+        const { onWaitingStateLoad, onTripJsonUrl, onTripDetailsView, setSelectedTripSegment } = this.props;
+        const tripUrl = booking.trips?.[0]!;
+        onWaitingStateLoad(true);
+        TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET, RoutingResults)
+            .then((routingResults: RoutingResults) => {
+                onWaitingStateLoad(false);
+                if (this.state.showMyBookings) {
+                    this.setState({ showMyBookings: false });
+                }
+                const trips = routingResults.groups;
+                if (trips && trips.length > 0) {
+                    const bookingId = booking?.id
+                    const selectedTrip = trips[0];
+                    const selectedSegment = selectedTrip.segments.find(segment =>
+                        segment.booking?.confirmation?.purchase?.id === bookingId);
+                    this.pushCardView({
+                        viewId: "RELATED_TRIP",
+                        renderCard: () =>
+                            <TKUIMxMView
+                                trip={trips[0]}
+                                onTripSegmentSelected={() => { }}
+                                onRequestClose={() => this.popCardView()}
+                                selectedTripSegment={selectedSegment}
+                            />,
+                        mapProps: {
+                            trip: selectedTrip
+                        }
+                    })
+                }
+            })
+            .catch((error: Error) => onWaitingStateLoad(false,
+                new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+    }
+
+    private onBookingAction(action: BookingAction) {
+        const { onQueryChange, onComputeTripsForQuery, selectedTrip: trip, refreshSelectedTrip } = this.props;
+        const requestRefresh = () => refreshSelectedTrip().then(() => { });
+        if (action.type === "REQUESTANOTHER") {
+            onQueryChange(RoutingQuery.create());
+            onComputeTripsForQuery(false);
+        } else if (action.type === "SHOW_RELATED_TRIP") {
+            this.onShowTripUrl(action.internalURL);
+            // onWaitingStateLoad(true);
+            // onTripJsonUrl(action.internalURL)
+            //     .then((trips) => {
+            //         onWaitingStateLoad(false);
+            //         // if (selectedSegmentId && trips && trips.length > 0) {
+            //         //     const selectedTrip = trips[0];
+            //         //     const selectedSegment = selectedTrip.segments.find(segment => segment.id === selectedSegmentId);
+            //         //     selectedSegment && tKState.setSelectedTripSegment(selectedSegment);
+            //         // }
+            //         // tKState.onTripDetailsView(true);
+            //         if (trips && trips.length > 0) {
+            //             this.pushCardView({
+            //                 viewId: "RELATED_TRIP",
+            //                 renderCard: () =>
+            //                     <TKUIMxMView
+            //                         trip={trips[0]}
+            //                         onTripSegmentSelected={() => { }}
+            //                         onRequestClose={() => this.popCardView()}
+            //                     />,
+            //             });
+            //             onQueryChange(RoutingQuery.create());
+            //             // onComputeTripsForQuery(true);
+            //         }
+            //     })
+            //     .catch((error: Error) => onWaitingStateLoad(false,
+            //         new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
+        } else if (action.confirmation || action.confirmationMessage) {
+            const confirmationPrompt = action.confirmation
+                ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.
+            UIUtil.confirmMsg({
+                message: confirmationPrompt.message,
+                confirmLabel: confirmationPrompt.confirmActionTitle || "Yes",
+                cancelLabel: confirmationPrompt.abortActionTitle || "No",
+                onConfirm: () => {
+                    // setWaiting?.(true);
+                    TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
+                        // NetworkUtil.delayPromise(10)({})     // For testing
+                        .then(bookingForm => {
+                            // Workaround for (selected) trip with empty ("") updateUrl.
+                            if (trip && !trip.updateURL
+                                && bookingForm?.refreshURLForSourceObject) {    // Not sure if it always came a booking form.
+                                trip.updateURL = bookingForm.refreshURLForSourceObject;
+                            }
+                            return requestRefresh();
+                        })
+                        .catch(UIUtil.errorMsg)
+                    // .finally(() => setWaiting?.(false));
+                }
+            });
+        } else if (action.externalURL) {
+            window.open(action.externalURL, "_self");
+        }
+    }
+
     public render(): React.ReactNode {
         const props = this.props;
         const { isUserTabbing, classes, t } = this.props;
         const directionsView = this.props.directionsView;
+        const emptyCardStack = this.state.cardStack.length === 0;
         const searchBar =
             !this.props.hideSearch && !directionsView && !(this.props.portrait && this.props.selectedService) &&
+            emptyCardStack &&
             <div>
                 <TKUILocationSearchHelpers.TKStateProps>
                     {stateProps =>
@@ -275,6 +446,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const queryInput = directionsView &&
             !(this.props.tripDetailsView && this.props.selectedTrip) && // not displaying trip details view, and
             !this.props.selectedTripSegment &&    // not displaying MxM view
+            emptyCardStack &&
             <TKUIRoutingQueryInputHelpers.TKStateProps>
                 {stateProps =>
                     <TKUIRoutingQueryInput
@@ -398,7 +570,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         showTransportsBtn={this.props.portrait}
                     />}
             </TKUIRoutingResultsViewHelpers.TKStateProps> : null;
-        const homeCard = searchBar && !favouritesView && !this.isShowTimetable() &&
+        const homeCard = searchBar && !favouritesView && !this.isShowTimetable() && emptyCardStack &&
             <div className={this.state.fadeOutHome ? genClassNames.animateFadeOut : genClassNames.animateFadeIn}>
                 <TKUIHomeCard
                     onMyBookings={() => this.setState({ showMyBookings: true })}
@@ -514,66 +686,84 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKUIMxMViewHelpers.TKStateProps>
                 {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
             </TKUIMxMViewHelpers.TKStateProps>
+
+        const topCardView = this.state.cardStack.length > 0 ? this.state.cardStack[this.state.cardStack.length - 1] : undefined;
         return (
-            <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root, isUserTabbing && classes.ariaFocusEnabled)}
-                ref={el => el && (this.ref = el)}
-                role="none"
+            <TKPropsOverride
+                componentKey="TKUIBookingActions"
+                propsOverride={{
+                    onAction: this.onBookingAction
+                }}
             >
-                <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
-                    <div className={classes.queryPanel} role="none">
-                        {searchBar}
-                        {homeCard}
-                        {queryInput}
+                <TKPropsOverride
+                    componentKey="TKUIMyBooking"
+                    propsOverride={props => ({
+                        onShowTrip: () => this.onShowBookingTrip(props.booking)
+                    })}
+                >
+                    <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root, isUserTabbing && classes.ariaFocusEnabled)}
+                        ref={el => el && (this.ref = el)}
+                        role="none"
+                    >
+                        <div id={mainContainerId} className={classes.main} ref={el => el && (this.appMainRef = el)} role="none">
+                            <div className={classes.queryPanel} role="none">
+                                {searchBar}
+                                {homeCard}
+                                {queryInput}
+                            </div>
+                            <div id="map-main" className={classes.mapMain}>
+                                <TKUIMapViewHelpers.TKStateProps>
+                                    {stateProps =>
+                                        <TKUIMapView
+                                            {...stateProps}
+                                            hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
+                                            padding={mapPadding}
+                                            locationActionHandler={(loc: Location) => {
+                                                if (loc instanceof StopLocation) {
+                                                    return () => {
+                                                        this.showTimetableFor(loc as StopLocation);
+                                                        FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
+                                                    }
+                                                } else if (loc.isCurrLoc()) {
+                                                    return undefined;
+                                                } else if (loc.isResolved() && !loc.isDroppedPin()) {
+                                                    return () => this.setState({ showLocationDetailsFor: loc });
+                                                }
+                                                return undefined;
+                                            }}
+                                            mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
+                                            rightClickMenu={[
+                                                { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
+                                                { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
+                                                ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
+                                            ]}
+                                            {...topCardView?.mapProps}
+                                        />
+                                    }
+                                </TKUIMapViewHelpers.TKStateProps>
+                            </div>
+                            <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
+                            {sideBar}
+                            {settings}
+                            {locationDetailView}
+                            {routingResultsView}
+                            {tripDetailView}
+                            {timetableView}
+                            {serviceDetailView}
+                            {transportSettings}
+                            {myBookings}
+                            {favouritesView}
+                            {waitingRequest}
+                            {this.props.renderTopRight &&
+                                <div className={classes.renderTopRight}>
+                                    {this.props.renderTopRight()}
+                                </div>}
+                            {mxMView}
+                        </div>
+                        {topCardView?.renderCard()}
                     </div>
-                    <div id="map-main" className={classes.mapMain}>
-                        <TKUIMapViewHelpers.TKStateProps>
-                            {stateProps =>
-                                <TKUIMapView
-                                    {...stateProps}
-                                    hideLocations={this.props.trips !== undefined || this.props.selectedService !== undefined}
-                                    padding={mapPadding}
-                                    locationActionHandler={(loc: Location) => {
-                                        if (loc instanceof StopLocation) {
-                                            return () => {
-                                                this.showTimetableFor(loc as StopLocation);
-                                                FavouritesData.recInstance.add(FavouriteStop.create(loc as StopLocation))
-                                            }
-                                        } else if (loc.isCurrLoc()) {
-                                            return undefined;
-                                        } else if (loc.isResolved() && !loc.isDroppedPin()) {
-                                            return () => this.setState({ showLocationDetailsFor: loc });
-                                        }
-                                        return undefined;
-                                    }}
-                                    mapClickBehaviour={directionsView ? "SET_FROM_TO" : "SET_TO"}
-                                    rightClickMenu={[
-                                        { label: t("Directions.from.here"), effect: "SET_FROM", effectFc: () => this.props.onDirectionsView(true) },
-                                        { label: t("Directions.to.here"), effect: "SET_TO", effectFc: () => this.props.onDirectionsView(true) },
-                                        ...!directionsView ? [{ label: t("What's.here?"), effect: "SET_TO" as any }] : []
-                                    ]}
-                                />
-                            }
-                        </TKUIMapViewHelpers.TKStateProps>
-                    </div>
-                    <TKUIReportBtn className={classNames(classes.reportBtn, this.props.landscape ? classes.reportBtnLandscape : classes.reportBtnPortrait)} />
-                    {sideBar}
-                    {settings}
-                    {locationDetailView}
-                    {routingResultsView}
-                    {tripDetailView}
-                    {timetableView}
-                    {serviceDetailView}
-                    {transportSettings}
-                    {myBookings}
-                    {favouritesView}
-                    {waitingRequest}
-                    {this.props.renderTopRight &&
-                        <div className={classes.renderTopRight}>
-                            {this.props.renderTopRight()}
-                        </div>}
-                    {mxMView}
-                </div>
-            </div>
+                </TKPropsOverride>
+            </TKPropsOverride>
         );
     }
 
@@ -726,43 +916,27 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 }
 
-const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
-    return (
-        <TKUIConfigContext.Consumer>
-            {(config: TKUIConfig) =>
-                <TKAccessibilityContext.Consumer>
-                    {(accessibilityContext: IAccessibilityContext) =>
-                        <TKUIViewportUtil>
-                            {(viewportProps: TKUIViewportUtilProps) =>
-                                <OptionsContext.Consumer>
-                                    {(optionsContext: IOptionsContext) =>
-                                        <RoutingResultsContext.Consumer>
-                                            {(routingResultsContext: IRoutingResultsContext) =>
-                                                <ServiceResultsContext.Consumer>
-                                                    {(serviceContext: IServiceResultsContext) => (
-                                                        props.children!({
-                                                            ...routingResultsContext,
-                                                            directionsView: routingResultsContext.computeTripsForQuery,
-                                                            onDirectionsView: routingResultsContext.onComputeTripsForQuery,
-                                                            ...serviceContext,
-                                                            ...viewportProps,
-                                                            ...optionsContext,
-                                                            ...accessibilityContext
-                                                        })
-                                                    )}
-                                                </ServiceResultsContext.Consumer>
-                                            }
-                                        </RoutingResultsContext.Consumer>
-                                    }
-                                </OptionsContext.Consumer>
-                            }
-                        </TKUIViewportUtil>
-                    }
-                </TKAccessibilityContext.Consumer>
-            }
-        </TKUIConfigContext.Consumer>
-    );
-};
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> =
+    (props: { children: (props: IConsumedProps) => React.ReactNode }) => {
+        const accessibilityContext = useContext(TKAccessibilityContext);
+        const viewportProps = useResponsiveUtil();
+        const optionsContext = useContext(OptionsContext);
+        const routingContext = useContext(RoutingResultsContext);
+        const serviceContext = useContext(ServiceResultsContext);
+        return (
+            <>
+                {props.children!({
+                    ...routingContext,
+                    directionsView: routingContext.computeTripsForQuery,
+                    onDirectionsView: routingContext.onComputeTripsForQuery,
+                    ...serviceContext,
+                    ...viewportProps,
+                    ...optionsContext,
+                    ...accessibilityContext
+                })}
+            </>
+        );
+    };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
     ({ inputProps, children }) =>

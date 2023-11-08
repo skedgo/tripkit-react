@@ -267,6 +267,8 @@ type IStyle = ReturnType<typeof tKUIMapViewDefaultStyle>
 export type TKUIMapViewProps = IProps;
 export type TKUIMapViewStyle = IStyle;
 
+export type TKUIMapViewClientProps = IClientProps;
+
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMapView {...props} />,
     styles: tKUIMapViewDefaultStyle,

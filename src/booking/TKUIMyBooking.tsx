@@ -15,7 +15,7 @@ import { ReactComponent as IconReturn } from "../images/ic-return-arrow.svg";
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
     type?: string;
-    onShowTrip: (tripUrl: string) => void;
+    onShowTrip?: (tripUrl: string) => void;
     requestRefresh?: () => Promise<void>;
     showTickets?: boolean;
     showActions?: boolean;
@@ -45,7 +45,7 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
     const dateText = startTime && DateTimeUtil.formatRelativeDay(timeZone ? DateTimeUtil.momentFromStringTZ(startTime, timeZone) : DateTimeUtil.moment(startTime),
         "MMM DD, YYYY", { justToday: true });
     const modeIcon = booking.modeInfo ? TransportUtil.getTransIcon(booking.modeInfo, { onDark: theme.isDark }) : TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)
-    const showTripHandler = () => onShowTrip(trips?.[0]!);
+    const showTripHandler = () => onShowTrip?.(trips?.[0]!);
     return (
         <div className={classes.main}>
             <div className={classes.form}>
