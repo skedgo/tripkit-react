@@ -126,7 +126,6 @@ class TKGoogleGeocoder implements IGeocoder {
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
         this.getGoogleGeocoder().geocode({ location: { lat: coord.lat, lng: coord.lng } }, (results, status) => {
             if (status.toString() === 'OK' && results[0]) {
-                console.log(results[0]);
                 const geocodedLoc = TKGoogleGeocoder.locationFromGeocoderResult(results[0]);
                 geocodedLoc.lat = coord.lat;
                 geocodedLoc.lng = coord.lng;
