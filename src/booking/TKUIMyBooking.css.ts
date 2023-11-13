@@ -1,13 +1,14 @@
 import genStyles from "../css/GenStyle.css";
-import {black, TKUITheme, white} from "../jss/TKUITheme";
+import { black, TKUITheme, white } from "../jss/TKUITheme";
 
 export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
     main: {
         position: 'relative',
         ...genStyles.flex,
         ...genStyles.column,
-        border: '1px solid ' + black(4, theme.isDark),
-        margin: '16px'
+        '&:last-child button': {
+            borderBottom: 'none!important'
+        }
     },
     form: {
         ...genStyles.flex,
@@ -18,28 +19,6 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         '&>*:not(:last-child)': {
             ...theme.divider
         }
-    },
-    timeStatus: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        ...genStyles.spaceBetween
-    },
-    time: {
-        ...genStyles.noShrink
-    },
-    mode: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        minWidth: 0,            // This is so this div does not overflow through parents limits, but init's width is
-        marginRight: '40px',     // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
-        '& *:not(:first-child)': {
-            marginLeft: '16px'
-        }
-    },
-    modeName: {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis'
     },
     loadingPanel: {
         ...genStyles.flex,
@@ -60,4 +39,70 @@ export const tKUIMyBookingDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.animateSpin,
         ...genStyles.svgFillCurrColor
     },
+    contentInfo: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        cursor: 'pointer'
+    },
+    header: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...genStyles.spaceBetween,
+        ...theme.divider,
+        marginBottom: '10px',
+        paddingBottom: '10px',
+        cursor: 'pointer'
+    },
+    status: {
+        ...genStyles.alignSelfCenter,
+        background: ({ activeTrip }) => {
+            const status = activeTrip?.confirmation?.status?.value;
+            switch (status) {
+                case "ACCEPTED":
+                    return theme.colorSuccess;
+                case "USER_CANCELED":
+                case "PROVIDER_CANCELED":
+                    return theme.colorError;
+                default:
+                    return theme.colorPrimary
+            }
+        },
+        ...genStyles.borderRadius(6),
+        color: white(),
+        padding: '1px 12px'
+    },
+    mode: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        minWidth: 0,            // This is so this div does not overflow through parents limits, but init's width is
+        '& *:first-child': {    // adjusted to fit, and so overflow ellipsis of child works (https://css-tricks.com/flexbox-truncated-text/).
+            marginRight: '10px'
+        }
+    },
+    modeAndDate: {
+        ...genStyles.flex,
+        ...genStyles.column
+    },
+    modeTitle: {
+
+    },
+    date: {
+        ...theme.textColorGray
+    },
+    type: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        ...theme.textColorGray
+    },
+    iconType: {
+        height: '24px',
+        width: '24px',
+        marginRight: '10px',
+        '& path': {
+            fill: theme.colorPrimary
+        }
+    },
+    fromTo: {
+        cursor: 'pointer'
+    }
 });

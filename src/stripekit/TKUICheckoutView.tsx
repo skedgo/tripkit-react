@@ -138,7 +138,6 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
 
         // "INTERNAL" means FE does payment directly with Stripe, "EXTERNAL" means FE does payment indirectly through our BE. 
         const internalPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
-        console.log("render CheckoutView");
         useEffect(() => {
             setStripePromise(loadStripe(publicKey));
             if (internalPaymentOption) {

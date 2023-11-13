@@ -98,7 +98,8 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
     const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd }) => {
-        window.open(bookingURL + `${bookingURL.includes("?") ? "&" : "?"}identifier=${vehicleId}&start=${bookingStart}&end=${bookingEnd}`, '_blank');
+        const bookingUrlWithTimes = bookingURL.replace("<start_time>", bookingStart).replace("<end_time>", bookingEnd);
+        window.open(bookingUrlWithTimes, '_blank');
     }
     const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
@@ -271,7 +272,6 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             }
             return groups;
         }, [] as string[][]);
-        console.log(JSON.stringify(requestDateGroups));
         requestDateGroups.forEach(async dateGroup => {
             const dateGStart = dateGroup[0];
             const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);
@@ -537,6 +537,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                     <TKUIButton
                                                         text={"Book"}
                                                         type={TKUIButtonType.PRIMARY}
+                                                        disabled={bookStartTime === undefined || bookEndTime === undefined}
                                                         onClick={() => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
                                                             onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })

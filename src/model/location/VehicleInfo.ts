@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import CompanyInfo from "./CompanyInfo";
 import VehicleTypeInfo from "./VehicleTypeInfo";
 
@@ -18,6 +18,9 @@ class VehicleInfo {
 
     @JsonProperty("vehicleTypeInfo", VehicleTypeInfo, true) // Required according to spec.
     public vehicleTypeInfo: VehicleTypeInfo = new VehicleTypeInfo();
+
+    @JsonProperty("name", String, true)
+    public name?: string = undefined;
 }
 
 export default VehicleInfo;

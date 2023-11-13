@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import BikePodLocation from "./BikePodLocation";
 import FacilityLocation from "./FacilityLocation";
 import CarParkLocation from "./CarParkLocation";
@@ -8,6 +8,7 @@ import ModeLocation from "./ModeLocation";
 import FreeFloatingVehicleLocation from "./FreeFloatingVehicleLocation";
 import CarRentalLocation from "./CarRentalLocation";
 import CarPodLocation from "./CarPodLocation";
+import TripGoApi from "../../api/TripGoApi";
 
 enum ModeFields {
     bikePods = "bikePods",
@@ -17,6 +18,11 @@ enum ModeFields {
     carRentals = "carRentals",
     freeFloating = "freeFloating",
     stops = "stops",
+}
+
+interface ILocationsRequestOptions {
+    server: string;
+    apiKey: string;
 }
 
 @JsonObject
@@ -53,7 +59,7 @@ class LocationsResult {
      * from LS caché, reflecting it's old and will require a refresh. It is reset to now when it comes from a request (the first one
      * or a refresh).
      */
-     @JsonProperty("requestTime", Number, true)
+    @JsonProperty("requestTime", Number, true)
     public requestTime: number = 0;
 
     /**
@@ -62,6 +68,12 @@ class LocationsResult {
      * @type {boolean}
      */
     public requesting: boolean = false;
+
+    /**
+     * Cache related field. To make cache dependent on server and api key.     
+     */
+    @JsonProperty("requestOptions", Any, true)
+    public requestOptions: ILocationsRequestOptions = { server: TripGoApi.server, apiKey: TripGoApi.apiKey };
 
     /**
      * Requested modes. Fill this when building. Need to declare as JsonProperty so it's serialized / deserialized when
@@ -136,7 +148,7 @@ class LocationsResult {
 
     public getLocations(): ModeLocation[] {
         return Object.values(ModeFields).reduce((accum: ModeLocation[], current: ModeFields) =>
-                this[current] ? accum.concat(this[current] as ModeLocation[]) : accum, []);
+            this[current] ? accum.concat(this[current] as ModeLocation[]) : accum, []);
     }
 
     public isEmpty(): boolean {

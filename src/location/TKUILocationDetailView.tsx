@@ -190,6 +190,7 @@ const TKUILocationDetailView: React.FunctionComponent<IProps> = (props: IProps) 
                         </div>
                         <div className={classes.availabilityValueCont}>
                             <img src={TransportUtil.getTransportIconLocal(location.modeInfo.localIcon, false, theme.isDark)} className={classes.availabilityImage} />
+                            {vehicle.name && <div className={classes.vehicleName}>{vehicle.name}</div>}
                         </div>
                     </div>
                     {(vehicle.vehicleTypeInfo.propulsionType === "ELECTRIC" || vehicle.vehicleTypeInfo.propulsionType === "ELECTRIC_ASSIST") &&

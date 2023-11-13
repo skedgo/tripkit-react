@@ -159,7 +159,7 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
             </div>;
         const detailed = this.props.detailed;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
-        const briefOccupancy = !detailed && occupancy ?
+        const briefOccupancy = !detailed && occupancy !== undefined ?
             <TKUIOccupancySign status={occupancy} brief={true} /> : undefined;
         const briefWheelchair = !detailed &&
             (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&

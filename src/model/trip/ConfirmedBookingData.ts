@@ -1,6 +1,17 @@
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any} from "json2typescript";
-import {BookingConfirmation} from "./BookingInfo";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert, Any } from "json2typescript";
+import { BookingConfirmation } from "./BookingInfo";
 import Location from "../Location";
+import Util from "../../util/Util";
+import ModeInfo from "./ModeInfo";
+
+
+@JsonObject
+class TripLeg {
+    @JsonProperty("modeInfo", ModeInfo, true)
+    modeInfo?: ModeInfo
+    @JsonProperty("metric", Any, true)
+    metric?: any
+}
 
 @JsonObject
 class TripInfo {
@@ -8,6 +19,28 @@ class TripInfo {
     public origin?: Location = undefined;
     @JsonProperty("destination", Location, true)
     public destination?: Location = undefined;
+    @JsonProperty("legs", [TripLeg], true)
+    public legs?: TripLeg[] = undefined;
+}
+
+@JsonConverter
+class ConfirmedBookingDataConverter implements JsonCustomConvert<ConfirmedBookingData> {
+    public serialize(carPodInfo: ConfirmedBookingData): any {
+        return Util.serialize(carPodInfo);
+    }
+    public deserialize(carPodInfoJson: any): ConfirmedBookingData {
+        return Util.deserialize(carPodInfoJson, ConfirmedBookingData);
+    }
+}
+
+@JsonObject
+class RelatedBooking {
+    @JsonProperty("bookingId", String, true)
+    public bookingId: string = "";
+    @JsonProperty("type", String, true)
+    public type: string = "";
+    @JsonProperty("confirmedBookingData", ConfirmedBookingDataConverter, true)
+    public confirmedBookingData?: ConfirmedBookingData = undefined;
 }
 
 @JsonObject
@@ -33,6 +66,12 @@ class ConfirmedBookingData {
     public index?: number = undefined;
     @JsonProperty("id", String, true)
     public id: string = "";
+    @JsonProperty("relatedBookings", [RelatedBooking], true)
+    public relatedBookings?: RelatedBooking[] = undefined;
+
+    public get modeInfo(): ModeInfo | undefined {
+        return this.tripsInfo?.[0]?.legs?.find(leg => leg.modeInfo?.identifier === this.mode)?.modeInfo;
+    }
 }
 
 @JsonObject
@@ -44,4 +83,4 @@ class ConfirmedBookingsResult {
 }
 
 export default ConfirmedBookingData;
-export {ConfirmedBookingsResult};
+export { ConfirmedBookingsResult };

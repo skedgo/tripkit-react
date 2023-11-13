@@ -69,18 +69,18 @@ class TKGoogleGeocoder implements IGeocoder {
         // Other: https://developers.google.com/maps/documentation/javascript/place-autocomplete#address_forms
         // noinspection JSUnusedLocalSymbols
         this.getGoogleAutocomplete().getPlacePredictions({
+            // AutocompletionRequest interface: https://developers.google.com/maps/documentation/javascript/reference/places-autocomplete-service#AutocompletionRequest
             input: query,
-            bounds: latLngBounds,
-            strictBounds: this.options.restrictToBounds,     // It seems to be supported now, but it's not in the SDK version I'm using
-            location: focus ? new google.maps.LatLng(focus.lat, focus.lng) : undefined, // It seems to be just considered if no bounds are specified
-            // radius: 5000,    // It just makes sense together with location, and is alternative to bounds. TODO: parameterize
+            locationRestriction: this.options.restrictToBounds ? latLngBounds : undefined,     // `bounds` was deprecated            
+            locationBias: this.options.restrictToBounds ? undefined : latLngBounds,            // `location` was deprecated            
             componentRestrictions: this.options.lang && this.options.lang === 'ja' ? {
                 country: 'jp'
             } : undefined,
             sessionToken: this.getAutocompleteSessionToken()
 
         }, (results, status: google.maps.places.PlacesServiceStatus) => {
-            const locationResults = results?.map(result => TKGoogleGeocoder.locationFromAutocompleteResult(result)) ?? [];
+            const locationResults = (results ?? [])
+                .map(result => TKGoogleGeocoder.locationFromAutocompleteResult(result));
             callback(locationResults.slice(0, this.options.resultsLimit));
         });
         // Search shouldn't be necessary for now.
@@ -126,7 +126,6 @@ class TKGoogleGeocoder implements IGeocoder {
     public reverseGeocode(coord: LatLng, callback: (location: Location | null) => void) {
         this.getGoogleGeocoder().geocode({ location: { lat: coord.lat, lng: coord.lng } }, (results, status) => {
             if (status.toString() === 'OK' && results[0]) {
-                console.log(results[0]);
                 const geocodedLoc = TKGoogleGeocoder.locationFromGeocoderResult(results[0]);
                 geocodedLoc.lat = coord.lat;
                 geocodedLoc.lng = coord.lng;

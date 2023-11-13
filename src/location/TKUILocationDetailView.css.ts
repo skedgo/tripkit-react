@@ -104,7 +104,7 @@ export const tKUILocationDetailViewDefaultStyle = (theme: TKUITheme) => ({
         gridRowGap: '20px',
         borderBottom: '1px solid rgba(33, 42, 51, 0.12)',
         ['@media (min-width: ' + (TKUIResponsiveUtil.getPortraitWidth() + 1) + 'px)']: {
-            padding: '0 16px 16px 16px',            
+            padding: '0 16px 16px 16px',
             marginBottom: '24px'
         },
         ['@media (max-width: ' + TKUIResponsiveUtil.getPortraitWidth() + 'px)']: {
@@ -115,5 +115,9 @@ export const tKUILocationDetailViewDefaultStyle = (theme: TKUITheme) => ({
             ...genStyles.flex,
             ...genStyles.spaceAround
         }
+    },
+    vehicleName: {
+        color: '#47ade3',
+        marginLeft: '10px'
     }
 });

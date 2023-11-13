@@ -85,6 +85,8 @@ import { TKUILocationDetailViewProps, TKUILocationDetailViewStyle } from "../loc
 import { TKUISubscriptionProps, TKUISubscriptionStyle } from "../sidebar/TKUISubscription";
 import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar/TKUISubscriptionView";
 import { TripGoApiHeadersMap } from "../api/TripGoApi";
+import { TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle } from "../booking/TKUIMyBookingGroup";
+import { TKUIBookingActionsProps, TKUIBookingActionsStyle } from "../booking/TKUIBookingActions";
 
 /**
  * SDK configuration
@@ -113,7 +115,7 @@ export interface TKUIGAConfig {
     isOldUA?: boolean;
 }
 
-interface ITKUIConfigOptional {
+export interface ITKUIConfigOptional {
     /**
      * Allows to specify the base url of the TripGo api services.
      */
@@ -292,6 +294,7 @@ interface ITKUIConfigOptional {
     TKUIServiceRealtimeInfo: TKComponentConfig<TKUIServiceRealtimeInfoProps, TKUIServiceRealtimeInfoStyle>;
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
+    TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
@@ -301,6 +304,7 @@ interface ITKUIConfigOptional {
     TKUISubscriptionView: TKComponentConfig<TKUISubscriptionViewProps, TKUISubscriptionViewStyle>;
     TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
+    TKUIBookingActions: TKComponentConfig<TKUIBookingActionsProps, TKUIBookingActionsStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

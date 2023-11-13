@@ -282,10 +282,8 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     const reviews = Util.jsonConvert().deserializeArray(result.review, BookingReview);
                     // Add timezone to review's origin and destination since it's needed to pass it to TKUIFromTo.
                     reviews.forEach((review: BookingReview) => {
-                        console.log(review.origin);
                         if (review.origin) {
                             review.origin.timezone = segment.from.timezone;
-                            console.log(segment.from.timezone);
                         }
                         if (review.destination) {
                             review.destination.timezone = segment.to.timezone;

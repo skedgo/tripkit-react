@@ -1,18 +1,15 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import { TKComponentDefaultConfig } from "../config/TKUIConfig";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { default as TKUIButton, TKUIButtonType } from "../buttons/TKUIButton";
-import NetworkUtil from "../util/NetworkUtil";
-import TripGoApi from "../api/TripGoApi";
-import { BookingAction, ConfirmationPrompt } from "../model/trip/BookingInfo";
+import { BookingAction } from "../model/trip/BookingInfo";
 import { tKUIBookingActionsDefaultStyle } from "./TKUIBookingActions.css";
-import UIUtil from "../util/UIUtil";
 import Trip from '../model/trip/Trip';
-import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
-import RoutingQuery from '../model/RoutingQuery';
+import { Subtract } from 'utility-types';
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     actions: BookingAction[];
+    onAction?: (action: BookingAction) => void;
     setWaiting?: (waiting: boolean) => void;
     requestRefresh: () => Promise<void>;
     trip?: Trip;
@@ -31,44 +28,17 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingActions"
 };
 
-const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingAction }> = props => {
-    const { action, setWaiting, requestRefresh, trip } = props;
-    const { onQueryChange, onComputeTripsForQuery } = useContext(RoutingResultsContext);
+type TKUIBookingAction = Subtract<IClientProps, { actions: BookingAction[], onAction?: (action: BookingAction) => void, }> & { action: BookingAction; onAction?: () => void; }
+
+const TKUIBookingAction: React.FunctionComponent<TKUIBookingAction> = props => {
+    const { action, onAction } = props;
     return (
         <Fragment>
             <TKUIButton
                 text={action.title}
                 type={TKUIButtonType.PRIMARY_LINK}
                 onClick={() => {
-                    if (action.type === "REQUESTANOTHER") {
-                        onQueryChange(RoutingQuery.create());
-                        onComputeTripsForQuery(false);
-                    } else if (action.confirmation || action.confirmationMessage) {
-                        const confirmationPrompt = action.confirmation
-                            ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.
-                        UIUtil.confirmMsg({
-                            message: confirmationPrompt.message,
-                            confirmLabel: confirmationPrompt.confirmActionTitle || "Yes",
-                            cancelLabel: confirmationPrompt.abortActionTitle || "No",
-                            onConfirm: () => {
-                                setWaiting?.(true);
-                                TripGoApi.apiCallUrl(action.internalURL, NetworkUtil.MethodType.GET)
-                                    // NetworkUtil.delayPromise(10)({})     // For testing
-                                    .then(bookingForm => {
-                                        // Workaround for (selected) trip with empty ("") updateUrl.
-                                        if (trip && !trip.updateURL
-                                            && bookingForm?.refreshURLForSourceObject) {    // Not sure if it always came a booking form.
-                                            trip.updateURL = bookingForm.refreshURLForSourceObject;
-                                        }
-                                        return requestRefresh();
-                                    })
-                                    .catch(UIUtil.errorMsg)
-                                    .finally(() => setWaiting?.(false));
-                            }
-                        });
-                    } else if (action.externalURL) {
-                        window.open(action.externalURL, "_self");
-                    }
+                    onAction?.();
                 }}
             />
         </Fragment>
@@ -76,13 +46,14 @@ const TKUIBookingAction: React.FunctionComponent<IProps & { action: BookingActio
 };
 
 const TKUIBookingActions: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { actions, classes } = props;
+    const { actions, onAction, ...otherProps } = props;
+    const { classes } = props;
     return (
         <div className={classes.actions}>
-            {actions.map((action, i) => <TKUIBookingAction action={action} key={i} {...props} />)}
+            {actions.map((action, i) => <TKUIBookingAction action={action} onAction={() => onAction?.(action)} key={i} {...otherProps} />)}
         </div>
     );
 };
 
-export default connect(() => undefined, config,
+export default connect((config: TKUIConfig) => config.TKUIBookingActions, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));

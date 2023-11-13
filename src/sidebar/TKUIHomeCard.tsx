@@ -89,8 +89,7 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
             <div className={classes.main}>
                 <TKUIActiveTrip
                     activeTrip={activeTrip}
-                    onShowTrip={() => {
-                        const url = activeTrip?.trips?.[0]!;
+                    onShowTrip={url => {
                         onWaitingStateLoad(true);
                         onTripJsonUrl(url)
                             .then(trips => {

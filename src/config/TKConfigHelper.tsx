@@ -5,7 +5,7 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import { TKUIConfig, TKComponentDefaultConfig } from "./TKUIConfig";
+import { TKUIConfig, TKComponentDefaultConfig, ITKUIConfigOptional } from "./TKUIConfig";
 import { TKComponentConfig, TKUIPropsOverride } from "./TKComponentConfig";
 import { TKUIConfigContext, default as TKUIConfigProvider } from "./TKUIConfigProvider";
 import { Subtract } from "utility-types";
@@ -180,6 +180,13 @@ export function replaceProps<ST, PR extends TKUIWithClasses<ST, PR>>
     return resultConfig;
 }
 
+// type FilterKeysOfType<T, U> = {
+//     [K in keyof T]: T[K] extends U ? K : never;
+// }[keyof T];
+
+// type TKComponentKeys = FilterKeysOfType<ITKUIConfigOptional, TKComponentConfig<any, any>>;
+
+// export const TKPropsOverride = (props: { componentKey: TKComponentKeys, propsOverride: any, children: any }) => (
 export const TKPropsOverride = (props: { componentKey: string, propsOverride: any, children: any }) => (
     <TKUIConfigContext.Consumer>
         {(config: TKUIConfig) => {
