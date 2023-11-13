@@ -98,7 +98,8 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
     const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd }) => {
-        window.open(bookingURL + `${bookingURL.includes("?") ? "&" : "?"}identifier=${vehicleId}&start=${bookingStart}&end=${bookingEnd}`, '_blank');
+        const bookingUrlWithTimes = bookingURL.replace("<start_time>", bookingStart).replace("<end_time>", bookingEnd);
+        window.open(bookingUrlWithTimes, '_blank');
     }
     const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
