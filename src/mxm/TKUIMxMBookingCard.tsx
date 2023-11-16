@@ -323,6 +323,15 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     </div>
                     <img src={status.imageURL} className={classes.statusImg} />
                 </div>
+                <div className={classes.fromToDetails}>
+                    <TKUIFromTo
+                        from={segment.from}
+                        to={segment.to}
+                        startTime={segment.startTime}
+                        endTime={segment.endTime}
+                        timezone={segment.from.timezone}
+                    />
+                </div>
                 <div className={classes.service}>
                     <div className={classes.serviceImages}>
                         <IconPerson className={classes.iconPerson} />

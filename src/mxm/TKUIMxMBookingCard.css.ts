@@ -6,7 +6,7 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         padding: '16px'
-    },    
+    },
     form: {
         ...genStyles.flex,
         ...genStyles.column,
@@ -17,13 +17,16 @@ export const tKUIMxMBookingCardDefaultStyle = (theme: TKUITheme) => ({
     group: {
         ...genStyles.flex,
         ...genStyles.alignStart,
-        paddingBottom: '20px',        
+        paddingBottom: '20px',
         '&:not(:last-child)': {
             marginBottom: '20px'
         }
     },
     fromTo: {
-        paddingBottom: '20px'        
+        paddingBottom: '20px'
+    },
+    fromToDetails: {
+        padding: '20px 16px 16px'
     },
     icon: {
         marginRight: '16px',
