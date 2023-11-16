@@ -1,5 +1,5 @@
 import ModeIdentifier from "../region/ModeIdentifier";
-import {JsonObject, JsonProperty, JsonConverter, JsonCustomConvert} from "json2typescript";
+import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert } from "json2typescript";
 
 export enum DisplayConf {
     NORMAL, BRIEF, HIDDEN
@@ -34,8 +34,12 @@ class TKTransportOptions {
         if (mode === ModeIdentifier.WALK_ID && option === DisplayConf.NORMAL && this.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID)) {
             this.setTransportOption(ModeIdentifier.WHEELCHAIR_ID, DisplayConf.HIDDEN)
         }
-        if (mode === ModeIdentifier.WHEELCHAIR_ID && option === DisplayConf.NORMAL && this.isModeEnabled(ModeIdentifier.WALK_ID)) {
-            this.setTransportOption(ModeIdentifier.WALK_ID, DisplayConf.HIDDEN)
+        if (mode === ModeIdentifier.WHEELCHAIR_ID && option === DisplayConf.NORMAL) {
+            this.setTransportOption(ModeIdentifier.WALK_ID, DisplayConf.HIDDEN);
+            this.setTransportOption(ModeIdentifier.BICYCLE_ID, DisplayConf.HIDDEN);
+            this.setTransportOption(ModeIdentifier.BICYCLE_SHARE_ID, DisplayConf.HIDDEN);
+            this.setTransportOption(ModeIdentifier.MOTORCYCLE_ID, DisplayConf.HIDDEN);
+            this.setTransportOption(ModeIdentifier.MICROMOBILITY_SHARE_ID, DisplayConf.HIDDEN);
         }
     }
 

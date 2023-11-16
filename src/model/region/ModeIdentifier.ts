@@ -27,6 +27,8 @@ class ModeIdentifier {
     public static readonly WHEELCHAIR_ID = "wa_whe";
     public static readonly BICYCLE_ID = "cy_bic";
     public static readonly BICYCLE_SHARE_ID = "cy_bic-s";
+    public static readonly MOTORCYCLE_ID = "me_mot";
+    public static readonly MICROMOBILITY_SHARE_ID = "me_mic-s";
 
     public isPT() {
         return this.identifier.startsWith(ModeIdentifier.PUBLIC_TRANSIT_ID);
