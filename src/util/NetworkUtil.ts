@@ -20,18 +20,22 @@ class NetworkUtil {
         } else {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
-                return response.json().then(jsonData => {
-                    if (jsonData.error) {
-                        const tkError = new TKError(jsonData.error, jsonData.errorCode?.toString(), jsonData.usererror);
-                        tkError.title = jsonData.title;
-                        tkError.subtitle = jsonData.subtitle;
-                        throw tkError;
-                    } else {
-                        return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
-                    }
-                });
+                return response.json()
+                    .then(jsonData => {
+                        if (jsonData.error) {
+                            const tkError = new TKError(jsonData.error, jsonData.errorCode?.toString(), jsonData.usererror);
+                            tkError.title = jsonData.title;
+                            tkError.subtitle = jsonData.subtitle;
+                            throw tkError;
+                        } else {
+                            return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
+                        }
+                    }) // E.g. if "content-type" header is "application/json", but the body is actually not a valid json.
+                    .catch(_e => {
+                        throw new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false);
+                    });
             } else {
-                return Promise.reject(new TKError(i18n.t("Something.went.wrong."), response.status, false));
+                return Promise.reject(new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false));
             }
         }
     }

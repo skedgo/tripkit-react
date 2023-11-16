@@ -9,6 +9,7 @@ import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveU
 import { TKUISlideUpPosition } from "../card/TKUISlideUp";
 import { cardSpacing } from "../jss/TKUITheme";
 import { overrideClass } from "../jss/StyleHelper";
+import UIUtil from '../util/UIUtil';
 
 interface IProps {
     title: string;
@@ -32,8 +33,12 @@ const TKUIShareAction: React.FunctionComponent<IProps> = (props: IProps) => {
                     onClick={e => {
                         setShow(true);
                         Util.isFunction(props.link) &&
-                            (props.link as () => Promise<string>)().then((link: string) =>
-                                setLink(link));
+                            (props.link as () => Promise<string>)()
+                                .then((link: string) => setLink(link))
+                                .catch(e => {
+                                    UIUtil.errorMsg(e);
+                                    setShow(false);
+                                });
                         e.stopPropagation();
                     }}
                     key={"shareActionBtn"}
