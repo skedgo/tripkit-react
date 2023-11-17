@@ -152,6 +152,8 @@ class TKGoogleGeocoder implements IGeocoder {
             (result.structured_formatting.secondary_text ? ', ' + result.structured_formatting.secondary_text : "");
         const name = '';
         const location = Location.create(new LatLng(), address, result.place_id, name);
+        // Uncomment to highlight match.
+        // location.suggestion = result;
         return location;
     }
 

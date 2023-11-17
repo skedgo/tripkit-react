@@ -1,6 +1,6 @@
-import {black, colorWithOpacity, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle} from "./TKUIAutocompleteResult";
+import { TKUITheme, white } from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
+import { TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle } from "./TKUIAutocompleteResult";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResultStyle, TKUIAutocompleteResultProps> =
@@ -39,11 +39,11 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             ...genStyles.grow,
             whiteSpace: 'nowrap',
             overflowX: 'hidden',
-            textOverflow: 'ellipsis',
-            ...theme.textWeightBold
+            textOverflow: 'ellipsis'
         },
         mainAddress: {
-            ...theme.textColorDefault
+            ...theme.textColorDefault,
+            ...theme.textWeightRegular
         },
         matchingSubstr: {
             ...theme.textWeightBold

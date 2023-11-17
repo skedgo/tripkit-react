@@ -1,9 +1,8 @@
 import LatLng from '../model/LatLng';
 import Util from "../util/Util";
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
-import {TranslationFunction} from "../i18n/TKI18nProvider";
-// import RegionsData from "../data/RegionsData";
+import { TranslationFunction } from "../i18n/TKI18nProvider";
 
 @JsonObject
 class Location extends LatLng {
@@ -114,8 +113,8 @@ class Location extends LatLng {
         }
         return this.name ? this.name :
             this.address ?
-            (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address):
-            this.getLatLngDisplayString();
+                (this.address.includes(', ') ? this.address.substr(0, this.address.indexOf(', ')) : this.address) :
+                this.getLatLngDisplayString();
     }
 
     public isCurrLoc(): boolean {
@@ -138,8 +137,8 @@ class Location extends LatLng {
     equals(other: any): boolean {
         return other &&
             JSON.stringify(
-                Util.iAssign(this as any, {source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined})) ===
-            JSON.stringify(Util.iAssign(other, {source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined}));
+                Util.iAssign(this as any, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined })) ===
+            JSON.stringify(Util.iAssign(other, { source: undefined, suggestion: undefined, hasDetail: undefined, timezone: undefined }));
     }
 }
 
