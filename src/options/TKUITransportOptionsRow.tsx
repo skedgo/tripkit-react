@@ -86,6 +86,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
 
     private static walkingSpeedString(walkingSpeed: WalkingSpeed, t: TranslationFunction) {
         switch (walkingSpeed) {
+            case WalkingSpeed.IMPAIRED: return t("Impaired");
             case WalkingSpeed.SLOW: return t("Slow");
             case WalkingSpeed.AVERAGE: return t("Medium");
             default: return t("Fast");
@@ -153,7 +154,7 @@ class TKUITransportOptionsRow extends React.Component<IProps, IState> {
                     )}
                 </div>
             </div>;
-        
+
         const micromobilityOptions = this.hasOperatorsDetails() && regionInfo?.modes?.[mode.identifier] &&
             <div className={classes.section} tabIndex={0} aria-label="Preferred transport">
                 <div className={classes.sectionTitle}>

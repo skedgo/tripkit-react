@@ -10,18 +10,19 @@ import Util from "../../util/Util";
 import { SignInStatus } from "../../account/TKAccountContext";
 
 export enum WalkingSpeed {
-    SLOW,
-    AVERAGE,
-    FAST
+    IMPAIRED,   // -1
+    SLOW,       // 0
+    AVERAGE,    // 1
+    FAST        // 2
 }
 
 @JsonConverter
 export class WalkingSpeedConverter implements JsonCustomConvert<WalkingSpeed> {
     public serialize(value: WalkingSpeed): any {
-        return value;
+        return value - 1;
     }
     public deserialize(obj: any): WalkingSpeed {
-        return obj;
+        return obj + 1;
     }
 }
 

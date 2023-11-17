@@ -1,7 +1,7 @@
 import Location from "./Location";
 import { Moment } from "moment-timezone";
 import DateTimeUtil from "../util/DateTimeUtil";
-import TKUserProfile from "./options/TKUserProfile";
+import TKUserProfile, { WalkingSpeedConverter } from "./options/TKUserProfile";
 import Environment from "../env/Environment";
 import { i18n } from "../i18n/TKI18nConstants";
 import TripGoApi from "../api/TripGoApi";
@@ -38,8 +38,8 @@ class RoutingQuery {
             avoid: options.transportOptions.avoidTransports,    // Notice I include all avoid modes, even modes that are not present in the region.
             wp: options.weightingPrefs.toUrlParam(),
             tt: options.minimumTransferTime,
-            ws: options.walkingSpeed,
-            cs: options.cyclingSpeed,
+            ws: new WalkingSpeedConverter().serialize(options.walkingSpeed),
+            cs: new WalkingSpeedConverter().serialize(options.cyclingSpeed),
             ...options.transitConcessionPricing && {
                 conc: true
             },
@@ -49,12 +49,12 @@ class RoutingQuery {
             unit: i18n.distanceUnit(),
             v: TripGoApi.apiVersion,
             ir: 1,
-            includeStops: true,            
+            includeStops: true,
             ...(Environment.isBeta() || Environment.isStaging()) && {
                 bsb: true
             },
             ...options.routingQueryParams   // Profile params, have priority over the others
-        });        
+        });
     }
 
     /**
@@ -103,13 +103,13 @@ class RoutingQuery {
     public isComplete(checkResolved = false): boolean {
         return this.from !== null && (!checkResolved || this.from.isResolved()) &&
             this.to !== null && (!checkResolved || this.to.isResolved());
-    }    
+    }
 
     public getQueryUrl(modeSet: string[], options: TKUserProfile): string {
         if (this.from === null || this.to === null) {
             return "";
-        }        
-        const additional = RoutingQuery.buildAdditional(modeSet, options);        
+        }
+        const additional = RoutingQuery.buildAdditional(modeSet, options);
         const additionalParams = Object.keys(additional).reduce((params, key) => {
             if (Array.isArray(additional[key])) {
                 return params + (additional[key] as string[]).reduce((arrayParam, value) => arrayParam + '&' + key + '=' + value, "");
@@ -121,7 +121,7 @@ class RoutingQuery {
             `?from=(${this.from.lat},${this.from.lng})"${this.from.address}"` +
             `&to=(${this.to.lat},${this.to.lng})"${this.to.address}"` +
             `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}` +
-            additionalParams);            
+            additionalParams);
     }
 
     public isEmpty(): boolean {
