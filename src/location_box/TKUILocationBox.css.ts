@@ -57,6 +57,8 @@ export const tKUILocationBoxDefaultStyle = (theme: TKUITheme) => ({
     },
     menu: {
         ...theme.cardBackground,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
         padding: '5px 0',
         zIndex: '10',
         fontFamily: theme.fontFamily,

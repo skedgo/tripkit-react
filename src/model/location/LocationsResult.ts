@@ -38,7 +38,7 @@ class LocationsResult {
             case ModeFields.carPods: return mode.startsWith(ModeIdentifier.CAR_SHARE_ID);
             case ModeFields.carRentals: return mode.startsWith(ModeIdentifier.CAR_RENTAL_ID);
             case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
-            case ModeFields.freeFloating: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
+            case ModeFields.freeFloating: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID) || mode.startsWith(ModeIdentifier.MICROMOBILITY_SHARE_ID);
             case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
             case ModeFields.facilities: return true;
             default: return false;
