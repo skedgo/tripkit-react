@@ -222,7 +222,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
             FavouritesData.recInstance.add(FavouriteTrip.create(update.from!, update.to!));
         }
         if (this.props.onChange) {
-            this.props.onChange(update);            
+            this.props.onChange(update);
         }
     }
 
@@ -302,7 +302,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                         </button> :
                         <div className={classes.locSelector}>
                             <div className={classNames(classes.locIcon, !routingQuery.from && classes.locTarget)} />
-                            <div className={classes.locLine} />                            
+                            <div className={classes.locLine} />
                             <div className={classNames(classes.locIcon, routingQuery.from && classes.locTarget)} />
                         </div>}
                     <div className={classes.fromToInputsPanel}>

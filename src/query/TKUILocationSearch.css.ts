@@ -50,7 +50,9 @@ export const tKUILocationSearchDefaultStyle: TKUIStyles<TKUILocationSearchStyle,
         resultsMenu: {
             top: '43px',
             position: 'absolute',
-            minWidth: '211px'
+            minWidth: '211px',
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px'
         },
         glassIcon: {
             ...genStyles.svgFillCurrColor,
