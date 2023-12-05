@@ -1,5 +1,5 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
@@ -13,14 +13,14 @@ import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import TKLoading from "../card/TKLoading";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import Trip from "../model/trip/Trip";
-import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
-import { TKError } from "../error/TKError";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import Segment from "../model/trip/Segment";
 import Tabs from '@material-ui/core/Tabs/Tabs';
 import Tab from '@material-ui/core/Tab/Tab';
-import DateTimeUtil from '../util/DateTimeUtil';
 import TKUIMyBookingGroup from './TKUIMyBookingGroup';
+import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
+import genStyles from '../css/GenStyle.css';
+import TKUICardHeader from '../card/TKUICardHeader';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -53,25 +53,90 @@ enum Sections {
 }
 
 const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
-    const [bookings, setBookings] = useState<ConfirmedBookingData[] | undefined>(undefined);
-    const validBookings = bookings?.filter(booking => DateTimeUtil.isoCompare(booking.datetime, DateTimeUtil.getNow().format()) >= 0);
-    const expiredBookings = bookings?.filter(booking => DateTimeUtil.isoCompare(booking.datetime, DateTimeUtil.getNow().format()) < 0);
-    const refreshBookings = () =>
-        TripGoApi.apiCallT("booking", NetworkUtil.MethodType.GET, ConfirmedBookingsResult)
-            .then((result: ConfirmedBookingsResult) => setBookings(result.bookings))
-            .catch(e => console.log(e));
+    const [countValid, setCountValid] = useState<number | undefined>();
+    const [waitingValid, setWaitingValid] = useState<boolean>(false);
+    const [bookingsValid, setBookingsValid] = useState<ConfirmedBookingData[] | undefined>(undefined);
+    const [countExpired, setCountExpired] = useState<number | undefined>();
+    const [waitingExpired, setWaitingExpired] = useState<boolean>(false);
+    const [bookingsExpired, setBookingsExpired] = useState<ConfirmedBookingData[] | undefined>(undefined);
+    function requestBookings({ valid = true, start = 1, max = 5 }: { valid?: boolean, start?: number, max?: number } = {}): Promise<ConfirmedBookingsResult> {
+        return TripGoApi.apiCallT(`booking?valid=${valid}&start=${start}&max=${max}`, NetworkUtil.MethodType.GET, ConfirmedBookingsResult);
+    }
+    async function requestMoreBookings({ valid = true }: { valid?: boolean } = {}) {
+        if (valid) {
+            if (waitingValid || (bookingsValid && countValid && bookingsValid.length >= countValid)) {
+                return;
+            }
+            setWaitingValid(true);
+            const { bookings, count } = await requestBookings({ start: (bookingsValid ?? []).length + 1 });
+            if (countValid === undefined) {
+                setCountValid(count);
+            }
+            setBookingsValid(bookingsValid => (bookingsValid ?? []).concat(bookings ?? []));
+            setWaitingValid(false);
+        } else {
+            if (waitingExpired || (bookingsExpired && countExpired && bookingsExpired.length >= countExpired)) {
+                return;
+            }
+            setWaitingExpired(true);
+            const { bookings, count } = await requestBookings({ start: (bookingsExpired ?? []).length + 1, valid: false });
+            if (countExpired === undefined) {
+                setCountExpired(count);
+            }
+            setBookingsExpired(bookingsExpired => (bookingsExpired ?? []).concat(bookings ?? []));
+            setWaitingExpired(false);
+        }
+    }
+
     useEffect(() => {
-        let refreshTimeout;
-        refreshBookings()
+        requestMoreBookings();
+        requestMoreBookings({ valid: false });
+    }, []);
+
+    function refreshBookings({ valid = true, silent = true }: { valid?: boolean, silent?: boolean } = {}): Promise<boolean> {
+        const bookings = valid ? bookingsValid : bookingsExpired;
+        const setBookings = valid ? setBookingsValid : setBookingsExpired;
+        const waitingBookings = valid ? waitingValid : waitingExpired;
+        if (waitingBookings || bookings === undefined) {
+            return Promise.resolve(false);
+        }
+        const setWaiting = valid ? setWaitingValid : setWaitingExpired;
+        if (!silent) {
+            setBookings(undefined);
+            setCountValid(undefined);
+            setWaiting(true);
+        }
+        return requestBookings({ valid, max: silent ? (bookings ?? []).length + 1 : undefined })
+            .then((result: ConfirmedBookingsResult) => {
+                setBookings(result.bookings);
+                setCountValid(result.count);
+                return true;
+            })
+            .catch(e => {
+                console.log(e);
+                return false;
+            })
             .finally(() => {
-                refreshTimeout = setTimeout(refreshBookings, 30000);
-            });
+                !silent && setWaiting(false);
+            })
+    }
+
+    useEffect(() => {
+        const refreshInterval = setInterval(refreshBookings, 60000);
         return () => {
-            if (refreshTimeout) {
-                clearTimeout(refreshTimeout);
+            if (refreshInterval) {
+                clearTimeout(refreshInterval);
             }
         }
-    }, []);
+    }, [bookingsValid, bookingsExpired, setBookingsValid, setBookingsExpired, waitingValid, waitingExpired]);
+
+    const resultsRef = useRef<HTMLDivElement>(null);
+    function onScroll(e) {
+        const scrollPanel = e.target;
+        if (scrollPanel.scrollTop + scrollPanel.clientHeight > scrollPanel.scrollHeight - 30) {
+            requestMoreBookings({ valid: section === Sections.Valid });
+        }
+    }
     const { onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, slideUpOptions, t, landscape, classes } = props;
     const [section, setSection] = useState<Sections>(Sections.Valid);
     const tabs =
@@ -79,20 +144,43 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
             <Tab value={Sections.Valid} label={t(Sections.Valid)} disableFocusRipple disableTouchRipple />
             <Tab value={Sections.Expired} label={t(Sections.Expired)} disableFocusRipple disableTouchRipple />
         </Tabs>;
-    const tabBookings = section === Sections.Valid ? validBookings : expiredBookings;
+    const tabBookings = section === Sections.Valid ? bookingsValid : bookingsExpired;
+    const waiting = section === Sections.Valid ? waitingValid : waitingExpired;
     return (
         <TKUICard
-            title={t("My.Bookings")}
+            title={
+                <div className={classes.title}>
+                    {t("My.Bookings")}
+                    <button className={classes.refresh}
+                        onClick={() => {
+                            if (resultsRef.current) {
+                                resultsRef.current.scrollTop = 0;
+                            };
+                            refreshBookings({ silent: false });
+                            refreshBookings({ valid: false, silent: false });
+                        }}>
+                        <IconRefresh />
+                    </button>
+                </div>}
             onRequestClose={onRequestClose}
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={slideUpOptions}
             focusTrap={true}
+            renderHeader={props =>
+                <TKUICardHeader {...props}
+                    styles={{
+                        title: overrideClass({
+                            ...genStyles.grow
+                        })
+                    }}
+                />
+            }
         >
             <div className={classes.main}>
                 <div className={classes.tabs}>
                     {tabs}
                 </div>
-                {!bookings ?
+                {!tabBookings ?
                     <div className={classes.loadingPanel}>
                         <TKLoading />
                     </div> :
@@ -100,13 +188,17 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                         <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
                             {t("No.bookings.yet_n")}
                         </div> :
-                        <div className={classes.results}>
+                        <div className={classes.results} onScroll={onScroll} ref={resultsRef}>
                             {tabBookings!.map((booking, i) =>
-                                <TKUIMyBookingGroup
-                                    booking={booking}
-                                    requestRefresh={refreshBookings}
-                                    key={booking.id}
-                                />)}
+                                <div className={classes.bookingWrapper} key={booking.id}>
+                                    <TKUIMyBookingGroup
+                                        booking={booking}
+                                    />
+                                </div>)}
+                            {waiting ?
+                                <div className={classes.loadingMore}>
+                                    <TKLoading />
+                                </div> : null}
                         </div>
                 }
             </div>

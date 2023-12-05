@@ -395,9 +395,6 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 {confirmation.actions.length > 0 &&
                     <TKUIBookingActions
                         actions={confirmation.actions}
-                        setWaiting={setWaiting}
-                        requestRefresh={() => refreshSelectedTrip().then(() => { })}
-                        trip={trip}
                     />}
             </Fragment>
         )

@@ -1,4 +1,5 @@
 import genStyles from "../css/GenStyle.css";
+import { resetStyles } from "../css/ResetStyle.css";
 import { TKUITheme, black } from "../jss/TKUITheme";
 
 export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
@@ -6,6 +7,10 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.column,
         height: '100%'
+    },
+    title: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter
     },
     tabs: {
         '& .MuiTabs-root': {
@@ -41,10 +46,36 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
     },
     results: {
         ...genStyles.scrollableY,
-        '& > *': {
+        '& > $bookingWrapper': {
             border: '1px solid ' + black(4, theme.isDark),
             margin: '16px',
             ...genStyles.borderRadius(12)
+        }
+    },
+    bookingWrapper: {
+
+    },
+    loadingMore: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        marginBottom: '15px'
+    },
+    refresh: {
+        ...resetStyles.button,
+        width: '24px',
+        height: '24px',
+        padding: '2px',
+        border: 'none',
+        marginLeft: 'auto',
+        marginRight: '24px',
+        marginTop: '2px',
+        '& path': {
+            fill: black(1, theme.isDark),
+            stroke: black(1, theme.isDark),
+            strokeWidth: '0.5px'
+        },
+        '&:hover path, &:active path': {
+            fill: black(0, theme.isDark)
         }
     }
 });

@@ -325,32 +325,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             onComputeTripsForQuery(false);
         } else if (action.type === "SHOW_RELATED_TRIP") {
             this.onShowTripUrl(action.internalURL);
-            // onWaitingStateLoad(true);
-            // onTripJsonUrl(action.internalURL)
-            //     .then((trips) => {
-            //         onWaitingStateLoad(false);
-            //         // if (selectedSegmentId && trips && trips.length > 0) {
-            //         //     const selectedTrip = trips[0];
-            //         //     const selectedSegment = selectedTrip.segments.find(segment => segment.id === selectedSegmentId);
-            //         //     selectedSegment && tKState.setSelectedTripSegment(selectedSegment);
-            //         // }
-            //         // tKState.onTripDetailsView(true);
-            //         if (trips && trips.length > 0) {
-            //             this.pushCardView({
-            //                 viewId: "RELATED_TRIP",
-            //                 renderCard: () =>
-            //                     <TKUIMxMView
-            //                         trip={trips[0]}
-            //                         onTripSegmentSelected={() => { }}
-            //                         onRequestClose={() => this.popCardView()}
-            //                     />,
-            //             });
-            //             onQueryChange(RoutingQuery.create());
-            //             // onComputeTripsForQuery(true);
-            //         }
-            //     })
-            //     .catch((error: Error) => onWaitingStateLoad(false,
-            //         new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
         } else if (action.confirmation || action.confirmationMessage) {
             const confirmationPrompt = action.confirmation
                 ?? Object.assign(new ConfirmationPrompt(), { message: action.confirmationMessage }) // To maintain backward compatibility with old BE.

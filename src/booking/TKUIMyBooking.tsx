@@ -16,7 +16,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
     type?: string;
     onShowTrip?: (tripUrl: string) => void;
-    requestRefresh?: () => Promise<void>;
     showTickets?: boolean;
     showActions?: boolean;
 }
@@ -35,7 +34,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { booking, onShowTrip, requestRefresh, classes, theme, showTickets = true, showActions = true, type } = props;
+    const { booking, onShowTrip, classes, theme, showTickets = true, showActions = true, type } = props;
     const { confirmation, datetime, mode, timeZone, tripsInfo, trips } = props.booking;
     const [waiting, setWaiting] = useState<boolean>(false);
     if (!confirmation) {
@@ -100,8 +99,6 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
             {showActions && confirmation.actions.length > 0 &&
                 <TKUIBookingActions
                     actions={confirmation.actions}
-                    setWaiting={setWaiting}
-                    requestRefresh={requestRefresh ?? (() => Promise.resolve())}
                 />}
             {waiting &&
                 <div className={classes.loadingPanel}>

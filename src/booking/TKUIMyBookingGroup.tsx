@@ -40,7 +40,6 @@ const TKUIMyBookingGroup: React.FunctionComponent<IProps> = (props: IProps) => {
             <TKUIMyBooking
                 booking={booking}
                 onShowTrip={onShowTrip}
-                requestRefresh={requestRefresh}
                 showActions={showActions}
                 showTickets={showTickets}
             />
@@ -50,7 +49,6 @@ const TKUIMyBookingGroup: React.FunctionComponent<IProps> = (props: IProps) => {
                     booking={confirmedBookingData}
                     type={type}
                     onShowTrip={onShowTrip}
-                    requestRefresh={requestRefresh}
                     showActions={showActions}
                     showTickets={showTickets}
                     key={booking.id}
