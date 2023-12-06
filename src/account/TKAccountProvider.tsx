@@ -128,6 +128,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
         });
         AuthStorage.instance.save(new TKAuth0AuthResponse);
         setStatus(SignInStatus.signedOut);  // Not necessary given the logout call will trigger the first useEffect.
+        finishInitLoadingPromise = Promise.resolve(SignInStatus.signedOut);
         setUserToken(undefined);
         setUserAccount(undefined);
     };

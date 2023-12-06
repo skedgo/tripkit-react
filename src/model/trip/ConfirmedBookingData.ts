@@ -21,6 +21,12 @@ class TripInfo {
     public destination?: Location = undefined;
     @JsonProperty("legs", [TripLeg], true)
     public legs?: TripLeg[] = undefined;
+    @JsonProperty("depart", String, true)
+    public depart: string = "";
+    @JsonProperty("arrive", String, true)
+    public arrive: string = "";
+    @JsonProperty("queryIsLeaveAfter", Boolean, true)
+    public queryIsLeaveAfter: boolean = true;
 }
 
 @JsonConverter
@@ -47,10 +53,20 @@ class RelatedBooking {
 class ConfirmedBookingData {
     @JsonProperty("confirmation", BookingConfirmation, true)
     public confirmation?: BookingConfirmation = undefined;
+    /**
+     * @deprecated
+     */
     @JsonProperty("trips", [String], true)
     public trips?: string[] = undefined;
+    /**
+     * @deprecated
+     */
     @JsonProperty("tripsInfo", [TripInfo], true)
     public tripsInfo?: TripInfo[] = undefined;
+    @JsonProperty("trip", String, true)
+    public trip?: string = undefined;
+    @JsonProperty("tripInfo", TripInfo, true)
+    public tripInfo?: TripInfo = undefined;
     @JsonProperty("mode", String, true)
     public mode?: string = undefined;
     /**

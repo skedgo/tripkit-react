@@ -718,7 +718,7 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                     {tripSegments && tripSegments.map((segment: Segment, i: number) => (
                         <MapTripSegment
                             segment={segment}
-                            ondragend={(segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
+                            ondragend={!this.props.readonly && (segment.isFirst(Visibility.IN_SUMMARY) || segment.arrival) ?
                                 (latLng: LatLng) => this.onMapLocChanged(segment.isFirst(Visibility.IN_SUMMARY), latLng) : undefined}
                             segmentIconClassName={classes.segmentIconClassName}
                             vehicleClassName={classes.vehicleClassName}

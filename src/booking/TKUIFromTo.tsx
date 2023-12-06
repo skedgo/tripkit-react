@@ -11,6 +11,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     to: Location;
     startTime?: string;
     endTime?: string;
+    queryIsLeaveAfter?: boolean;
     showDate?: boolean;
     timezone?: string;
     status?: string;
@@ -31,18 +32,35 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { from, to, startTime, endTime, showDate, timezone, status, onClick, classes, t } = props;
+    const { from, to, startTime, endTime, queryIsLeaveAfter = true, showDate, timezone, status, onClick, classes, t } = props;
     const startMoment = startTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)) : undefined;
-    let startTimeText = startMoment !== undefined && (
+    let startTimeText = startMoment && (
         showDate ? DateTimeUtil.formatRelativeDay(startMoment,
             DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() })
             :
             startMoment.format(DateTimeUtil.timeFormat())
     );
-    if (startTimeText && status === "PROCESSING") {
-        startTimeText = t("Requested.time.X", { 0: startTimeText });
-    }
     const endMoment = endTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(endTime, timezone) : DateTimeUtil.moment(endTime)) : undefined;
+    let endTimeText = endMoment && (
+        showDate ? DateTimeUtil.formatRelativeDay(endMoment,
+            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() })
+            :
+            endMoment.format(DateTimeUtil.timeFormat())
+    );
+    if (status === "PROCESSING" && startTimeText) {
+        if (queryIsLeaveAfter) {
+            startTimeText = t("Requested.time.X", { 0: startTimeText });
+        } else {
+            startTimeText = undefined;
+        }
+    }
+    if (status === "PROCESSING" && endTimeText) {
+        if (!queryIsLeaveAfter) {
+            endTimeText = t("Requested.time.X", { 0: endTimeText });
+        } else {
+            endTimeText = undefined;
+        }
+    }
     return (
         <div className={classes.group} onClick={onClick} style={onClick && { cursor: 'pointer' }}>
             <div className={classes.fromToTrack}>
@@ -66,11 +84,9 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.label}>
                     {t("Drop-off")}
                 </div>
-                {endMoment !== undefined &&
+                {endTimeText &&
                     <div className={classes.value}>
-                        {showDate ? DateTimeUtil.formatRelativeDay(endMoment,
-                            DateTimeUtil.dateFormat() + " " + DateTimeUtil.timeFormat(), { partialReplace: DateTimeUtil.dateFormat() }) :
-                            endMoment.format(DateTimeUtil.timeFormat())}
+                        {endTimeText}
                     </div>}
                 <div className={classes.value}>
                     {to.getDisplayString(true)}

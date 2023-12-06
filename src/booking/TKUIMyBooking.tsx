@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -8,7 +8,6 @@ import TransportUtil from "../trip/TransportUtil";
 import DateTimeUtil from "../util/DateTimeUtil";
 import TKUIFromTo from "./TKUIFromTo";
 import TKUIBookingActions from "./TKUIBookingActions";
-import { ReactComponent as IconSpin } from '../images/ic-loading2.svg';
 import TKUITicketSelect from '../stripekit/TKUITicketSelect';
 import { ReactComponent as IconReturn } from "../images/ic-return-arrow.svg";
 
@@ -35,16 +34,16 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
     const { booking, onShowTrip, classes, theme, showTickets = true, showActions = true, type } = props;
-    const { confirmation, datetime, mode, timeZone, tripsInfo, trips } = props.booking;
-    const [waiting, setWaiting] = useState<boolean>(false);
+    const { confirmation, mode, timeZone, tripInfo, trip } = props.booking;
     if (!confirmation) {
         return null;
     }
-    const startTime = datetime ? datetime.split("[")[0] : undefined;
+    const startTime = tripInfo?.depart ? tripInfo.depart.split("[")[0] : undefined; // TODO: configure a custom resolver for doing this at model level.
+    const endTime = tripInfo?.arrive ? tripInfo.arrive.split("[")[0] : undefined; // TODO: configure a custom resolver for doing this at model level.
     const dateText = startTime && DateTimeUtil.formatRelativeDay(timeZone ? DateTimeUtil.momentFromStringTZ(startTime, timeZone) : DateTimeUtil.moment(startTime),
         "MMM DD, YYYY", { justToday: true });
     const modeIcon = booking.modeInfo ? TransportUtil.getTransIcon(booking.modeInfo, { onDark: theme.isDark }) : TransportUtil.getTransportIconLocal(TransportUtil.modeIdToIconS(mode!), false, theme.isDark)
-    const showTripHandler = () => onShowTrip?.(trips?.[0]!);
+    const showTripHandler = () => trip && onShowTrip?.(trip);
     return (
         <div className={classes.main}>
             <div className={classes.form}>
@@ -78,14 +77,16 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                         {confirmation?.status?.title}
                     </div>
                 </div>
-                {tripsInfo?.[0].origin && tripsInfo?.[0].destination &&
+                {tripInfo?.origin && tripInfo?.destination &&
                     <div className={classes.fromTo} onClick={showTripHandler}>
                         <TKUIFromTo
-                            from={tripsInfo[0].origin}
-                            to={tripsInfo[0].destination}
+                            from={tripInfo.origin}
+                            to={tripInfo.destination}
                             // This is since date string comes with timezone between square brackets, e.g. "2023-02-07T12:21:45-08:00[America/Los_Angeles]", 
                             // which AFAIK it's not part of the ISO spec, and momentjs doens't support it, so I remove it.
                             startTime={startTime}
+                            endTime={endTime}
+                            queryIsLeaveAfter={tripInfo.queryIsLeaveAfter}
                             status={confirmation?.status?.value}
                             timezone={timeZone}
                         />
@@ -100,10 +101,6 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                 <TKUIBookingActions
                     actions={confirmation.actions}
                 />}
-            {waiting &&
-                <div className={classes.loadingPanel}>
-                    <IconSpin className={classes.iconLoading} focusable="false" role="status" aria-label="Waiting results" />
-                </div>}
         </div>
     );
 };

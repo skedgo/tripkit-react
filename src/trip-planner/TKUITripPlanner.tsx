@@ -273,7 +273,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 onRequestClose={() => this.popCardView()}
                             />,
                         mapProps: {
-                            trip: selectedTrip
+                            trip: selectedTrip,
+                            readonly: true
                         }
                     })
                 }
@@ -308,7 +309,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 selectedTripSegment={selectedSegment}
                             />,
                         mapProps: {
-                            trip: selectedTrip
+                            trip: selectedTrip,
+                            readonly: true
                         }
                     })
                 }
