@@ -260,7 +260,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                 .catch((e) => setError(e))
                 .finally(() => setWaiting(false));
         } else if (status === SignInStatus.signedOut) {
-            UIUtil.errorMsg(new TKError("This feature requires an account. If you already have one, please log in, otherwise, please sign up."));
+            UIUtil.errorMsg(new TKError(t("This.feature.requires.an.account..If.you.already.have.one,.please.log.in,.otherwise,.please.sign.up.")));
             setWaiting(false);
         }
     }, [status]);

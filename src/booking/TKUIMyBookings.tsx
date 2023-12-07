@@ -17,10 +17,11 @@ import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import Segment from "../model/trip/Segment";
 import Tabs from '@material-ui/core/Tabs/Tabs';
 import Tab from '@material-ui/core/Tab/Tab';
-import TKUIMyBookingGroup from './TKUIMyBookingGroup';
 import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
 import genStyles from '../css/GenStyle.css';
 import TKUICardHeader from '../card/TKUICardHeader';
+import TKUIMyBooking from './TKUIMyBooking';
+import { SignInStatus, TKAccountContext } from "../account/TKAccountContext"
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -52,6 +53,14 @@ enum Sections {
     Expired = "Expired"
 }
 
+function flattenRelatedBookings(bookings: ConfirmedBookingData[]) {
+    return bookings.reduce((flatten: ConfirmedBookingData[], booking: ConfirmedBookingData) => {
+        return flatten.concat([booking, ...booking.relatedBookings
+            ?.filter(rb => !!rb.confirmedBookingData)    // Shouldn't happen, it's a workaround to avoid failing if confirmedBookingData doesn't come from the BE.
+            .map(rb => rb.confirmedBookingData!) ?? []])
+    }, []);
+}
+
 const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
     const [countValid, setCountValid] = useState<number | undefined>();
     const [waitingValid, setWaitingValid] = useState<boolean>(false);
@@ -59,8 +68,10 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
     const [countExpired, setCountExpired] = useState<number | undefined>();
     const [waitingExpired, setWaitingExpired] = useState<boolean>(false);
     const [bookingsExpired, setBookingsExpired] = useState<ConfirmedBookingData[] | undefined>(undefined);
-    function requestBookings({ valid = true, start = 1, max = 5 }: { valid?: boolean, start?: number, max?: number } = {}): Promise<ConfirmedBookingsResult> {
-        return TripGoApi.apiCallT(`booking?valid=${valid}&start=${start}&max=${max}`, NetworkUtil.MethodType.GET, ConfirmedBookingsResult);
+    async function requestBookings({ valid = true, start = 1, max = 5 }: { valid?: boolean, start?: number, max?: number } = {}): Promise<ConfirmedBookingsResult> {
+        const bookingsResult = await TripGoApi.apiCallT(`booking?valid=${valid}&first=${start}&max=${max}`, NetworkUtil.MethodType.GET, ConfirmedBookingsResult);
+        bookingsResult.bookings = bookingsResult.bookings && flattenRelatedBookings(bookingsResult.bookings);   // Flatten bookings coming from the BE.
+        return bookingsResult;
     }
     async function requestMoreBookings({ valid = true }: { valid?: boolean } = {}) {
         if (valid) {
@@ -88,14 +99,14 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     }
 
-    useEffect(() => {
-        requestMoreBookings();
-        requestMoreBookings({ valid: false });
-    }, []);
+    const resultsRef = useRef<HTMLDivElement>(null);
+    const { onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, slideUpOptions, t, landscape, classes } = props;
+    const [section, setSection] = useState<Sections>(Sections.Valid);
 
     function refreshBookings({ valid = true, silent = true }: { valid?: boolean, silent?: boolean } = {}): Promise<boolean> {
         const bookings = valid ? bookingsValid : bookingsExpired;
         const setBookings = valid ? setBookingsValid : setBookingsExpired;
+        const setCount = valid ? setCountValid : setCountExpired;
         const waitingBookings = valid ? waitingValid : waitingExpired;
         if (waitingBookings || bookings === undefined) {
             return Promise.resolve(false);
@@ -103,7 +114,7 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
         const setWaiting = valid ? setWaitingValid : setWaitingExpired;
         if (!silent) {
             setBookings(undefined);
-            setCountValid(undefined);
+            setCount(undefined);
             setWaiting(true);
         }
         return requestBookings({ valid, max: silent ? (bookings ?? []).length + 1 : undefined })
@@ -121,30 +132,53 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
             })
     }
 
-    useEffect(() => {
-        const refreshInterval = setInterval(refreshBookings, 60000);
-        return () => {
-            if (refreshInterval) {
-                clearTimeout(refreshInterval);
-            }
-        }
-    }, [bookingsValid, bookingsExpired, setBookingsValid, setBookingsExpired, waitingValid, waitingExpired]);
-
-    const resultsRef = useRef<HTMLDivElement>(null);
     function onScroll(e) {
         const scrollPanel = e.target;
         if (scrollPanel.scrollTop + scrollPanel.clientHeight > scrollPanel.scrollHeight - 30) {
             requestMoreBookings({ valid: section === Sections.Valid });
         }
     }
-    const { onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, slideUpOptions, t, landscape, classes } = props;
-    const [section, setSection] = useState<Sections>(Sections.Valid);
+
+    const accountContext = useContext(TKAccountContext);
+    const signedIn = accountContext.status === SignInStatus.signedIn;
+
+    useEffect(() => {
+        if (!signedIn) {
+            return;
+        }
+        requestMoreBookings();
+        requestMoreBookings({ valid: false });
+    }, [signedIn]);
+
+    useEffect(() => {
+        if (!signedIn) {
+            return;
+        }
+        const refreshInterval = setInterval(() => refreshBookings({ valid: section === Sections.Valid }), 60000);
+        return () => {
+            if (refreshInterval) {
+                clearTimeout(refreshInterval);
+            }
+        }
+    }, [bookingsValid, bookingsExpired, setBookingsValid, setBookingsExpired, waitingValid, waitingExpired, signedIn]);
+
     const tabs =
-        <Tabs value={section} onChange={(_event, newSection) => setSection(newSection)} aria-label="text formatting">
-            <Tab value={Sections.Valid} label={t(Sections.Valid)} disableFocusRipple disableTouchRipple />
-            <Tab value={Sections.Expired} label={t(Sections.Expired)} disableFocusRipple disableTouchRipple />
+        <Tabs
+            value={section}
+            onChange={(_event, newSection) => setSection(newSection)}
+            aria-label="text formatting"
+            TabIndicatorProps={!signedIn ? { className: classes.faded } : undefined}
+        >
+            <Tab value={Sections.Valid} label={t(Sections.Valid)} disableFocusRipple disableTouchRipple disabled={!signedIn} />
+            <Tab value={Sections.Expired} label={t(Sections.Expired)} disableFocusRipple disableTouchRipple disabled={!signedIn} />
         </Tabs>;
     const tabBookings = section === Sections.Valid ? bookingsValid : bookingsExpired;
+    // const tabBookings = useMemo(() => {
+    //     const tabBookings = section === Sections.Valid ? bookingsValid : bookingsExpired;
+    //     return tabBookings?.reduce((flatten: ConfirmedBookingData[], booking: ConfirmedBookingData) => {
+    //         return flatten.concat([booking, ...booking.relatedBookings?.map(rb => rb.confirmedBookingData!) ?? []])
+    //     }, []);
+    // }, [section, bookingsValid, bookingsExpired]);
     const waiting = section === Sections.Valid ? waitingValid : waitingExpired;
     return (
         <TKUICard
@@ -159,7 +193,8 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                             refreshBookings({ silent: false });
                             refreshBookings({ valid: false, silent: false });
                         }}>
-                        <IconRefresh />
+                        {signedIn ?
+                            <IconRefresh /> : null}
                     </button>
                 </div>}
             onRequestClose={onRequestClose}
@@ -180,26 +215,35 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.tabs}>
                     {tabs}
                 </div>
-                {!tabBookings ?
-                    <div className={classes.loadingPanel}>
-                        <TKLoading />
-                    </div> :
-                    tabBookings!.length === 0 ?
-                        <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
-                            {t("No.bookings.yet_n")}
-                        </div> :
-                        <div className={classes.results} onScroll={onScroll} ref={resultsRef}>
-                            {tabBookings!.map((booking, i) =>
-                                <div className={classes.bookingWrapper} key={booking.id}>
-                                    <TKUIMyBookingGroup
-                                        booking={booking}
-                                    />
-                                </div>)}
-                            {waiting ?
-                                <div className={classes.loadingMore}>
-                                    <TKLoading />
-                                </div> : null}
+                {accountContext.status === SignInStatus.signedOut ?
+                    <div className={classes.loggedOutMsg}>
+                        <div className={classes.loggedOutTitle}>
+                            {t("Your.bookings.will.be.shown.here.")}
                         </div>
+                        {t("This.feature.requires.an.account..If.you.already.have.one,.please.log.in,.otherwise,.please.sign.up.")}
+                    </div> :
+                    !tabBookings ?
+                        <div className={classes.loadingPanel}>
+                            <TKLoading />
+                        </div> :
+                        tabBookings!.length === 0 ?
+                            <div className={classes.noResults} role="status" aria-label={t("No.bookings.yet_n")}>
+                                {t("No.bookings.yet_n")}
+                            </div> :
+                            <div className={classes.results} onScroll={onScroll} ref={resultsRef}>
+                                {tabBookings!.map((booking, i) =>
+                                    <div className={classes.bookingWrapper} key={booking.id}>
+                                        <TKUIMyBooking
+                                            booking={booking}
+                                            type={booking.type}
+                                            key={booking.id}
+                                        />
+                                    </div>)}
+                                {waiting ?
+                                    <div className={classes.loadingMore}>
+                                        <TKLoading />
+                                    </div> : null}
+                            </div>
                 }
             </div>
         </TKUICard>

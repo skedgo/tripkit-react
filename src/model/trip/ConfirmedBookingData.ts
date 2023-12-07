@@ -85,6 +85,16 @@ class ConfirmedBookingData {
     @JsonProperty("relatedBookings", [RelatedBooking], true)
     public relatedBookings?: RelatedBooking[] = undefined;
 
+    /**
+     * Infer the type of the booking from (the types of) the related bookings.
+     */
+    public get type(): string | undefined {
+        return this.relatedBookings &&
+            (this.relatedBookings.find(rb => rb.type === "OUTBOUND") ? "RETURN" :
+                this.relatedBookings.find(rb => rb.type === "RETURN") ? "OUTBOUND" :
+                    undefined);
+    }
+
     public get modeInfo(): ModeInfo | undefined {
         return this.tripsInfo?.[0]?.legs?.find(leg => leg.modeInfo?.identifier === this.mode)?.modeInfo;
     }

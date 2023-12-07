@@ -15,7 +15,6 @@ const tKUIMyBookingGroupDefaultStyle = (theme: TKUITheme) => ({
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     booking: ConfirmedBookingData;
     onShowTrip?: (tripUrl: string) => void;
-    requestRefresh?: () => Promise<void>;
     showTickets?: boolean;
     showActions?: boolean;
 }
@@ -34,7 +33,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMyBookingGroup: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { booking, onShowTrip, requestRefresh, classes, theme, showActions, showTickets } = props;
+    const { booking, onShowTrip, classes, theme, showActions, showTickets } = props;
     return (
         <div className={classes.main}>
             <TKUIMyBooking

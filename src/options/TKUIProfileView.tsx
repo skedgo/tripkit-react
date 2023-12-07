@@ -184,7 +184,7 @@ class TKUIProfileView extends React.Component<IProps, IState> {
                             text={t("My.Personal.Data")}
                             onClick={() => this.setState({ showPersonalData: true })} />
                     </TKUISettingSection>
-                    {this.props.status === SignInStatus.signedIn &&
+                    {this.props.config.booking &&   // booking supported
                         <TKUISettingSection>
                             <TKUISettingLink
                                 text={t("My.Bookings")}

@@ -27,6 +27,9 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         },
         '& .MuiTabs-indicator': {
             backgroundColor: theme.colorPrimary + '!important'
+        },
+        '& .MuiTabs-indicator:disabled': {
+            opacity: '.5'
         }
     },
     loadingPanel: {
@@ -77,5 +80,18 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         '&:hover path, &:active path': {
             fill: black(0, theme.isDark)
         }
+    },
+    loggedOutMsg: {
+        ...genStyles.flex,
+        ...genStyles.column,
+        margin: '24px 16px'
+    },
+    loggedOutTitle: {
+        ...theme.textWeightBold,
+        fontSize: '18px',
+        marginBottom: '10px'
+    },
+    faded: {
+        opacity: 0.5
     }
 });
