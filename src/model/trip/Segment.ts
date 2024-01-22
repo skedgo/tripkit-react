@@ -100,7 +100,7 @@ class Segment extends SegmentTemplate {
     }
 
     get startTimeSeconds(): number {
-        return DateTimeUtil.isoToSeconds(this.startTime);        
+        return DateTimeUtil.isoToSeconds(this.startTime);
     }
 
     set startTime(value: string) {
@@ -108,11 +108,11 @@ class Segment extends SegmentTemplate {
     }
 
     get endTime(): string {
-        return typeof this._endTime === "string" ? this._endTime : DateTimeUtil.isoFromSeconds(this._endTime, this.to.timezone);        
+        return typeof this._endTime === "string" ? this._endTime : DateTimeUtil.isoFromSeconds(this._endTime, this.to.timezone);
     }
 
     get endTimeSeconds(): number {
-        return DateTimeUtil.isoToSeconds(this.endTime);        
+        return DateTimeUtil.isoToSeconds(this.endTime);
     }
 
     get segmentTemplateHashCode(): number {
@@ -268,7 +268,7 @@ class Segment extends SegmentTemplate {
         }
         if (result.includes("<DURATION>")) {
             const durationInMinutes = Math.floor(this.endTimeSeconds / 60) - Math.floor(this.startTimeSeconds / 60);
-            const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);
+            const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);  // TODO: Bug (Frontend / WL) #20369: don't pass the 'false'.
             result = result.replace("<DURATION>", " about " + duration)
         }
         if (result.includes("<TIME>: ")) {  // Remove time from action since now it's displayed elsewhere

@@ -19,7 +19,7 @@ export interface MsgOptions {
 class UIUtil {
 
     private static customConfirmAlert(options: ReactConfirmAlertProps) {
-        const { title, message, buttons, ...otherOptions } = options;        
+        const { title, message, buttons, ...otherOptions } = options;
         confirmAlert({
             customUI: ({ onClose }) => {
                 return (
@@ -30,7 +30,7 @@ class UIUtil {
                             <div className='react-confirm-alert-button-group'>
                                 {buttons?.map((button, i) => (
                                     <button
-                                        key={i}                                        
+                                        key={i}
                                         {...button}
                                         onClick={() => {
                                             if (button.onClick) {
@@ -46,7 +46,7 @@ class UIUtil {
                         </div>
                     </FocusTrap>
                 )
-            },            
+            },
             ...otherOptions
         });
     }
@@ -85,11 +85,12 @@ class UIUtil {
 
             }
         ];
+        const messageElems = (e.title && e.subtitle) ? [e.title, e.subtitle] : [e.message];
         UIUtil.customConfirmAlert({
             buttons,
-            message: e.message || e.title || e.subtitle,            
+            message: messageElems.join(". "),
             closeOnEscape: true,
-            closeOnClickOutside: true            
+            closeOnClickOutside: true
         });
     }
 
