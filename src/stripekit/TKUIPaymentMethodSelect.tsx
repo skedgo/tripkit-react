@@ -76,7 +76,7 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 
-export type SGPaymentMethod = { type: string, description: string, balance: number, currency?: string };
+export type SGPaymentMethod = { type: string, description: string, balance?: number, currency?: string };
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     value: PaymentMethod | SGPaymentMethod;
     options: (PaymentMethod | SGPaymentMethod)[];
@@ -140,23 +140,53 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
         }
 
         function renderSGOption(paymentMethod: SGPaymentMethod, i: number) {
-            return (
-                <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
-                    <StyledRadio checked={value === paymentMethod} />
-                    <div className={classNames(classes.icon, classes.iconBalance)}>
-                        <IconBalance />
+            if (paymentMethod.type === "INVOICE") {
+                return (
+                    <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                        <StyledRadio checked={value === paymentMethod} />
+                        <div className={classNames(classes.icon, classes.iconBalance)}>
+                            <IconBalance />
+                        </div>
+                        <div>{paymentMethod.description} to</div>
+                        { }
+                        <div style={{ marginLeft: '6px', color: black(1) }}>
+                            <TKUISelect
+                                options={this.walkSpeedOptions}
+                                value={this.walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
+                                onChange={(option) => {
+                                    const walkSpeed = option.value;
+                                    const userProfileUpdate = Util.deepClone(value);
+                                    userProfileUpdate.walkingSpeed = walkSpeed;
+                                    this.props.onChange(userProfileUpdate);
+                                }}
+                                styles={{
+                                    main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
+                                }}
+                            />
+                        </div>
                     </div>
-                    <div>{paymentMethod.description}</div>
-                    <div style={{ marginLeft: '6px', color: black(1) }}>
-                        {FormatUtil.toMoney(paymentMethod.balance, { nInCents: true, currency: paymentMethod.currency })}
+                );
+            } else {
+                paymentMethod.type === "WALLET"
+                return (
+                    <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                        <StyledRadio checked={value === paymentMethod} />
+                        <div className={classNames(classes.icon, classes.iconBalance)}>
+                            <IconBalance />
+                        </div>
+                        <div>{paymentMethod.description}</div>
+                        {paymentMethod.balance &&
+                            <div style={{ marginLeft: '6px', color: black(1) }}>
+                                {FormatUtil.toMoney(paymentMethod.balance, { nInCents: true, currency: paymentMethod.currency })}
+                            </div>}
                     </div>
-                </div>
-            );
+                );
+            }
         }
         return (
             <div className={classes.main}>
                 {options.map((paymentMethod, i) =>
-                    paymentMethod.type === "WALLET" ? renderSGOption(paymentMethod as SGPaymentMethod, i) : renderCardOption(paymentMethod as PaymentMethod, i))}
+                    (paymentMethod.type === "WALLET" || paymentMethod.type === "INVOICE") ? renderSGOption(paymentMethod as SGPaymentMethod, i) : renderCardOption(paymentMethod as PaymentMethod, i))}
                 <div className={classes.btnContainer}>
                     <TKUIButton
                         type={TKUIButtonType.PRIMARY_LINK}

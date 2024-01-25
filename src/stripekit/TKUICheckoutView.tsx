@@ -93,10 +93,10 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     value: {
 
     },
-    discountedPrice: {
+    actualPrice: {
         ...theme.textWeightBold,
     },
-    fullPrice: {
+    strikeThroughPrice: {
         textDecoration: 'line-through',
         ...theme.textSizeCaption,
         ...theme.textColorGray
@@ -289,7 +289,16 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         const walletPaymentMethod: SGPaymentMethod | undefined = useMemo(() =>
             walletPaymentOption && { type: walletPaymentOption.paymentMode, description: walletPaymentOption.description, balance: walletPaymentOption.currentBalance!, currency: walletPaymentOption.currency },
             [walletPaymentOption]);
-        const paymentSelectOptions: (PaymentMethod | SGPaymentMethod)[] | undefined = paymentMethods && [...walletPaymentMethod ? [walletPaymentMethod] : [], ...paymentMethods ?? []];
+        const invoicePaymentOption = paymentOptions.find(option => option.paymentMode === "INVOICE");
+        const invoicePaymentMethod: SGPaymentMethod | undefined = useMemo(() =>
+            invoicePaymentOption && { type: invoicePaymentOption.paymentMode, description: invoicePaymentOption.description, currency: invoicePaymentOption.currency },
+            [invoicePaymentOption]);
+        const paymentSelectOptions: (PaymentMethod | SGPaymentMethod)[] | undefined = paymentMethods &&
+            [
+                ...walletPaymentMethod ? [walletPaymentMethod] : [],
+                ...invoicePaymentMethod ? [invoicePaymentMethod] : [],
+                ...paymentMethods ?? []
+            ];
         const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | SGPaymentMethod | undefined>(undefined);
         const paymentOption = (newPaymentMethodAndPay || (selectedMethod && selectedMethod.type !== "WALLET") ? cardPaymentOption : walletPaymentOption) ?? paymentOptions[0]!;
 
@@ -446,22 +455,24 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                         onRemove={onRemovePM}
                                     />}
                             </div>}
-                        {(selectedMethod || newPaymentMethodAndPay) && paymentOption.discountedPrice &&
+                        {(selectedMethod || newPaymentMethodAndPay) &&
                             <div className={classes.review}>
                                 <TKUISettingSection styles={sectionStyles}>
-                                    <div className={classes.group}>
-                                        <div className={classes.label}>{"Discount"}</div>
-                                        <div className={classes.value}>{FormatUtil.toMoney(paymentOption.fullPrice - paymentOption.discountedPrice, { currency: paymentOption.currency, nInCents: true }) + " off"}</div>
-                                    </div>
+                                    {paymentOption.discountedPrice &&
+                                        <div className={classes.group}>
+                                            <div className={classes.label}>{"Discount"}</div>
+                                            <div className={classes.value}>{FormatUtil.toMoney(paymentOption.fullPrice - paymentOption.discountedPrice, { currency: paymentOption.currency, nInCents: true }) + " off"}</div>
+                                        </div>}
                                     <div className={classes.group}>
                                         <div className={classes.label}>{t("Price")}</div>
                                         <div className={classNames(classes.value, classes.priceValue)}>
-                                            <div className={classes.discountedPrice}>
-                                                {FormatUtil.toMoney(paymentOption.discountedPrice, { currency: paymentOption.currency, nInCents: true })}
+                                            <div className={classes.actualPrice}>
+                                                {FormatUtil.toMoney(paymentOption.discountedPrice ?? paymentOption.fullPrice, { currency: paymentOption.currency, nInCents: true })}
                                             </div>
-                                            <div className={classes.fullPrice}>
-                                                {FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency, nInCents: true })}
-                                            </div>
+                                            {paymentOption.discountedPrice &&
+                                                <div className={classes.strikeThroughPrice}>
+                                                    {FormatUtil.toMoney(paymentOption.fullPrice, { currency: paymentOption.currency, nInCents: true })}
+                                                </div>}
                                         </div>
                                     </div>
                                     {paymentOption.paymentMode === "WALLET" &&

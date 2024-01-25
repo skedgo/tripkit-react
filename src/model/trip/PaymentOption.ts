@@ -1,7 +1,7 @@
-interface PaymentOption {    
+interface PaymentOption {
     url: string;
     method: "GET" | "POST";
-    paymentMode: "INTERNAL" | "EXTERNAL" | "FREE" | "WALLET";
+    paymentMode: "INTERNAL" | "EXTERNAL" | "FREE" | "WALLET" | "INVOICE";
     currency: string;
     discountedPrice?: number;
     fullPrice: number;
