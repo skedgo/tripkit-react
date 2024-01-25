@@ -16,6 +16,7 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { resetStyles } from '../css/ResetStyle.css';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
+import TKUISelect from '../buttons/TKUISelect';
 
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -148,9 +149,8 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                             <IconBalance />
                         </div>
                         <div>{paymentMethod.description} to</div>
-                        { }
                         <div style={{ marginLeft: '6px', color: black(1) }}>
-                            <TKUISelect
+                            {/* <TKUISelect
                                 options={this.walkSpeedOptions}
                                 value={this.walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
                                 onChange={(option) => {
@@ -162,7 +162,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                                 styles={{
                                     main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
                                 }}
-                            />
+                            /> */}
                         </div>
                     </div>
                 );
