@@ -63,6 +63,7 @@ export type RoadTags =
     "SEGREGATED" |          // not listed in tripkit-ios
     "CCTV-CAMERA" |
     "STREET-LIGHT" |
+    "LIT-ROUTE" |
     "OTHER";
 
 const IGNORED_TAGS: RoadTags[] = ["UNPAVED/UNSEALED", "SERVICE-ROAD", "SEGREGATED"];
@@ -76,6 +77,7 @@ export function roadTagToSafety(tag: RoadTags): RoadSafety {
         case "BICYCLE-DESIGNATED":
         case "BICYCLE-BOULEVARD":
         case "CCTV-CAMERA":
+        case "LIT-ROUTE":
             return RoadSafety.DESIGNATED;
         case "SIDE-WALK":
         case "SIDE-ROAD":
