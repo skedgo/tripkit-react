@@ -660,7 +660,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const mxMView = props.selectedTripSegment &&
             <TKUIMxMViewHelpers.TKStateProps>
-                {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
+                {stateProps =>
+                    <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
             </TKUIMxMViewHelpers.TKStateProps>
 
         const topCardView = this.state.cardStack.length > 0 ? this.state.cardStack[this.state.cardStack.length - 1] : undefined;

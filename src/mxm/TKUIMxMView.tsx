@@ -32,7 +32,7 @@ import TKUILocationDetailField from '../location/TKUILocationDetailField';
 import { ReactComponent as IconWebsite } from "../images/location/ic-website.svg";
 import TKUIMxMCollectNearbyCard from './TKUIMxMCollectNearbyCard';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
-import TKUIButton from '../buttons/TKUIButton';
+import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     /**
@@ -227,6 +227,71 @@ function getSegmentMxMCards(
             tkconfig.booking.renderBookingCard({
                 segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
             })
+        ];
+    } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.modeIdentifier === "me_car-s_sgfleet-sydney" && segment.sharedVehicle) {
+        // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
+        // matches fields of VehicleInfo, and not CarPodVehicle.
+        const freeFloatingVehicleLoc = Util.iAssign(new FreeFloatingVehicleLocation(), segment.location);
+        // Need to ammend the local icon since modeInfo doesn't come in segment.location for collect segments. 
+        const localIcon = segment.sharedVehicle?.vehicleTypeInfo.vehicleTypeLocalIcon() ?? segment.nextSegment()?.modeInfo?.localIcon
+        if (localIcon) {
+            freeFloatingVehicleLoc.modeInfo.localIcon = localIcon;
+        }
+        freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
+        const collectCardIndex = generateCardIndex();
+        return [
+            <TKUIMxMCollectNearbyCard
+                segment={segment}
+                onRequestClose={onRequestClose}
+                mapAsync={mapAsync}
+                key={collectCardIndex}
+                isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
+                onAlternativeCollected={moveToNext}
+            />,
+            <TKUICard
+                title={segment.getAction()}
+                subtitle={segment.to.getDisplayString()}
+                onRequestClose={onRequestClose}
+                renderHeader={props => <TKUIMxMCardHeader segment={segment} {...props} />}
+                styles={cardStyles}
+                key={generateCardIndex()}
+                slideUpOptions={{
+                    showHandle: true
+                }}
+            >
+                {segment.booking?.externalActions?.[0] &&
+                    <TKUIButton
+                        text={segment.booking.title}
+                        icon={<IconWebsite />}
+                        onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                        styles={{
+                            main: overrideClass({
+                                margin: '10px 0 0 16px'
+                            }),
+                            primary: overrideClass({
+                                backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .1),
+                                color: props => props.theme.colorPrimary,
+                                '&:hover': {
+                                    backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .3)
+                                },
+                                '&:active': {
+                                    backgroundColor: props => colorWithOpacity(props.theme.colorPrimary, .4)
+                                }
+                            })
+                        }}
+                    />}
+                <TKUIButton
+                    text={"Change"}
+                    onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                    type={TKUIButtonType.PRIMARY_LINK}
+                    styles={{
+                        main: overrideClass({
+                            margin: '10px 0 0 16px'
+                        })
+                    }}
+                />
+                <TKUILocationDetail location={freeFloatingVehicleLoc} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
+            </TKUICard>
         ];
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.sharedVehicle) {
         // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle

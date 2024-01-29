@@ -1,0 +1,1826 @@
+{
+  "groups": [
+    {
+      "frequency": 35,
+      "sources": [
+        {
+          "provider": {
+            "appInfo": {
+              "appURLAndroid": "https://play.google.com/store/apps/details?id=com.goget.goget",
+              "appURLiOS": "https://itunes.apple.com/au/app/goget/id917053598"
+            },
+            "color": {
+              "blue": 106,
+              "green": 63,
+              "red": 0
+            },
+            "name": "GoGet",
+            "remoteDarkIcon": "goget-dark",
+            "remoteIcon": "goget",
+            "website": "http://www.goget.com.au/"
+          }
+        },
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        },
+        {
+          "provider": {
+            "color": {
+              "blue": 255,
+              "green": 74,
+              "red": 116
+            },
+            "name": "SG Fleet",
+            "website": "https://www.sgfleet.com/"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2023-11-10T07:48:53+11:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 357,
+          "carbonCost": 0.2,
+          "depart": "2023-11-10T06:44:00+11:00",
+          "hassleCost": 8.3,
+          "hideExactTimes": false,
+          "id": "718e1c41-8796-410a-9a95-8c59e08bc371",
+          "mainSegmentHashCode": -938686943,
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2023-11-10T06:44:00+11:00",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "externalActions": [
+                  "https://localhost:5000/bookings/createnew?resourceid=267&start_time=2023-11-09T19:44:00Z&end_time=2023-11-09T19:44:00Z"
+                ],
+                "title": "Unlock with SG Fleet"
+              },
+              "bookingHashCode": -252366475,
+              "endTime": "2023-11-10T06:44:00+11:00",
+              "id": "rwyCCfVH",
+              "segmentTemplateHashCode": -106482228,
+              "sharedVehicle": {
+                "deepLink": "https://localhost:5000/bookings/createnew?resourceid=267",
+                "deepLinks": {
+                  "web": "https://localhost:5000/bookings/createnew?resourceid=267"
+                },
+                "disabled": false,
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
+                "lastReported": "2024-01-29T15:29:57Z",
+                "name": "ABC169 - Toyota Prius",
+                "operator": {
+                  "color": {
+                    "blue": 255,
+                    "green": 74,
+                    "red": 116
+                  },
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/"
+                },
+                "reserved": false,
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                }
+              },
+              "startTime": "2023-11-10T06:44:00+11:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2023-11-10T07:48:53+11:00",
+              "id": "S747ONS7",
+              "segmentTemplateHashCode": -938686943,
+              "startTime": "2023-11-10T06:44:00+11:00"
+            }
+          ],
+          "weightedScore": 49.5
+        },
+        {
+          "arrive": "2023-11-10T07:15:45+11:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 37,
+          "carbonCost": 4.1,
+          "currency": "AUD",
+          "currencySymbol": "$",
+          "depart": "2023-11-10T06:44:00+11:00",
+          "hasRoundTripCost": true,
+          "hassleCost": 7.5,
+          "hideExactTimes": false,
+          "id": "6e838e46-3af3-4a02-928d-dad4d288e75f",
+          "mainSegmentHashCode": 1724091801,
+          "moneyCost": 36.33,
+          "moneyUSDCost": 26.16,
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2023-11-10T06:44:00+11:00",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2023-11-10T06:46:49+11:00",
+              "id": "mEi7CTwn",
+              "segmentTemplateHashCode": -1763092617,
+              "startTime": "2023-11-10T06:44:00+11:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "externalActions": [
+                  "https://go.goget.com.au/calendar"
+                ],
+                "title": "Book with GoGet"
+              },
+              "bookingHashCode": 710752409,
+              "endTime": "2023-11-10T06:49:49+11:00",
+              "id": "jmreOJeq",
+              "segmentTemplateHashCode": 894478227,
+              "sharedVehicle": {
+                "disabled": false,
+                "identifier": "me_car-s_GOG|AU_NSW_Sydney|5304",
+                "licensePlate": "DH95ZY",
+                "name": "Hendrike the Yaris",
+                "operator": {
+                  "appInfo": {
+                    "appURLAndroid": "https://play.google.com/store/apps/details?id=com.goget.goget",
+                    "appURLiOS": "https://itunes.apple.com/au/app/goget/id917053598"
+                  },
+                  "color": {
+                    "blue": 106,
+                    "green": 63,
+                    "red": 0
+                  },
+                  "name": "GoGet",
+                  "remoteDarkIcon": "goget-dark",
+                  "remoteIcon": "goget",
+                  "website": "http://www.goget.com.au/"
+                },
+                "reserved": false,
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                }
+              },
+              "startTime": "2023-11-10T06:46:49+11:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2023-11-10T07:15:45+11:00",
+              "id": "veiBrAuE",
+              "segmentTemplateHashCode": 1724091801,
+              "startTime": "2023-11-10T06:49:49+11:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2023-11-10T07:15:45+11:00",
+              "id": "f4NssaqS",
+              "segmentTemplateHashCode": 1700368700,
+              "startTime": "2023-11-10T07:15:45+11:00"
+            }
+          ],
+          "weightedScore": 51.2
+        }
+      ]
+    }
+  ],
+  "query": {
+    "depart": "2023-11-09T19:44:00Z",
+    "from": {
+      "address": "Pymble Station access",
+      "city": "AU.NSW.Sydney",
+      "class": "Location",
+      "lat": -33.74502,
+      "lng": 151.14247,
+      "region": "AU_NSW_Sydney",
+      "timezone": "Australia/Sydney"
+    },
+    "to": {
+      "address": "10A Cowles Road, Mosman, NSW, Australia",
+      "city": "AU.NSW.Sydney",
+      "class": "Location",
+      "lat": -33.83135,
+      "lng": 151.23706,
+      "region": "AU_NSW_Sydney",
+      "timezone": "Australia/Sydney"
+    }
+  },
+  "realTimeStamp": 1706539637,
+  "region": "AU_NSW_Sydney",
+  "regions": [
+    "AU_NSW_Sydney"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "Collect SG Fleet",
+      "hashCode": -106482228,
+      "location": {
+        "address": "Pymble Station access",
+        "bikeId": "267",
+        "city": "AU.NSW.Sydney",
+        "class": "FreeFloatingVehicle",
+        "isDisabled": false,
+        "isReserved": false,
+        "lastUpdate": 1706542197,
+        "lat": -33.74502,
+        "lng": 151.14247,
+        "name": "ABC169 - Toyota Prius",
+        "region": "AU_NSW_Sydney",
+        "rentalURIs": {
+          "queryParams": "&start_time=<start_time>&end_time=<end_time>",
+          "web": "https://localhost:5000/bookings/createnew?resourceid=267"
+        },
+        "timezone": "Australia/Sydney",
+        "type": "FreeFloatingVehicle",
+        "vehicleType": {
+          "formFactor": "CAR",
+          "name": "Car",
+          "propulsionType": "COMBUSTION"
+        }
+      },
+      "mapTiles": {
+        "name": "CyclOSM",
+        "sources": [
+          {
+            "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+            "provider": {
+              "name": "OpenStreetMap",
+              "website": "https://www.openstreetmap.org"
+            }
+          },
+          {
+            "disclaimer": "",
+            "provider": {
+              "name": "CyclOSM",
+              "website": "https://www.cyclosm.org"
+            }
+          }
+        ],
+        "urlTemplates": [
+          "https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+          "https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+          "https://c.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+        ]
+      },
+      "mini": {
+        "instruction": "Collect  SG Fleet",
+        "mainValue": "Free"
+      },
+      "modeIdentifier": "me_car-s_sgfleet-sydney",
+      "modeInfo": {
+        "alt": "Collect",
+        "identifier": "stationary_vehicle-collect",
+        "localIcon": "collect"
+      },
+      "notes": "ABC169 - Toyota Prius\nRequires paid membership",
+      "type": "stationary",
+      "visibility": "in details"
+    },
+    {
+      "action": "Ride SG Fleet<DURATION>",
+      "from": {
+        "address": "Pymble Station access",
+        "bikeId": "267",
+        "city": "AU.NSW.Sydney",
+        "class": "FreeFloatingVehicle",
+        "isDisabled": false,
+        "isReserved": false,
+        "lastUpdate": 1706542197,
+        "lat": -33.74502,
+        "lng": 151.14247,
+        "name": "ABC169 - Toyota Prius",
+        "region": "AU_NSW_Sydney",
+        "rentalURIs": {
+          "queryParams": "&start_time=<start_time>&end_time=<end_time>",
+          "web": "https://localhost:5000/bookings/createnew?resourceid=267"
+        },
+        "timezone": "Australia/Sydney",
+        "type": "FreeFloatingVehicle",
+        "vehicleType": {
+          "formFactor": "CAR",
+          "name": "Car",
+          "propulsionType": "COMBUSTION"
+        }
+      },
+      "geofences": [
+        {
+          "center": {
+            "lat": -33.831350026027394,
+            "lng": 151.23706019705787
+          },
+          "id": "TRIP_END_S747ONS7",
+          "messageBody": "You are about to arrive at 10A Cowles Road, Mosman, NSW, Australia",
+          "messageTitle": "Arriving at your destination",
+          "messageType": "TRIP_END",
+          "radius": 100,
+          "trigger": "ENTER",
+          "type": "CIRCLE"
+        }
+      ],
+      "hashCode": -938686943,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "costComponents": [],
+        "currency": "AUD"
+      },
+      "mapTiles": {
+        "name": "CyclOSM",
+        "sources": [
+          {
+            "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+            "provider": {
+              "name": "OpenStreetMap",
+              "website": "https://www.openstreetmap.org"
+            }
+          },
+          {
+            "disclaimer": "",
+            "provider": {
+              "name": "CyclOSM",
+              "website": "https://www.cyclosm.org"
+            }
+          }
+        ],
+        "urlTemplates": [
+          "https://a.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+          "https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png",
+          "https://c.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
+        ]
+      },
+      "metres": 19063,
+      "metresDismount": 11,
+      "metresSafe": 15250,
+      "metresUnsafe": 3813,
+      "mini": {
+        "description": "10A Cowles Road, Mosman, NSW, Australia",
+        "instruction": "Ride SG Fleet",
+        "mainValue": "20 km"
+      },
+      "modeIdentifier": "me_car-s_sgfleet-sydney",
+      "modeInfo": {
+        "alt": "SG Fleet",
+        "color": {
+          "blue": 255,
+          "green": 74,
+          "red": 116
+        },
+        "description": "SG Fleet",
+        "identifier": "me_car-s_sgfleet-sydney",
+        "localIcon": "car-share",
+        "remoteIconIsBranding": true
+      },
+      "notes": "20 km",
+      "streets": [
+        {
+          "dismount": true,
+          "encodedWaypoints": "bz}lEc_oy[QO",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 11,
+          "name": "Pymble Station access",
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "py}lEs_oy[VHDJ",
+          "instruction": "TURN_SHARPLY_RIGHT",
+          "metres": 19,
+          "name": "",
+          "roadTags": [
+            "SERVICE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "nz}lE}~ny[Vk@l@oADOFWDa@HiALq@Nc@FMXg@TYb@c@f@k@^WVQZKVE\\GnBQbAKj@I\\GXIZOXQZWDGjBqB\\Y\\WXMHCVOlAi@b@QDEp@c@bAeAT[Xg@Xc@d@eA\\gAZaAp@aB`@y@Te@Tg@pAaDR_@j@i@\\QdB}@F?",
+          "instruction": "TURN_SHARPLY_LEFT",
+          "metres": 1426,
+          "name": "Pacific Highway",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "hs_mEs{py[@SQ}@Mq@CMQ_AOq@Ke@I_@",
+          "instruction": "TURN_LEFT",
+          "metres": 162,
+          "name": "Park Avenue",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "np_mE}eqy[OD",
+          "instruction": "TURN_LEFT",
+          "metres": 8,
+          "name": "Pearson Avenue",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "cyclingNetwork": "St Ives - Gordon",
+          "dismount": false,
+          "encodedWaypoints": "~o_mEweqy[AI",
+          "instruction": "TURN_RIGHT",
+          "metres": 5,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "St Ives - Gordon",
+          "dismount": false,
+          "encodedWaypoints": "|o_mEafqy[eBoIe@{B",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 225,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "pk_mEmtqy[LE",
+          "instruction": "TURN_RIGHT",
+          "metres": 8,
+          "name": "",
+          "roadTags": [
+            "SERVICE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "~k_mEstqy[j@m@FCJEr@U`@OjA_@nBq@bBm@nAe@r@Wl@SjAa@xCeA",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 508,
+          "name": "Rosedale Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "lf`mEkary[kD{PQi@",
+          "instruction": "TURN_LEFT",
+          "metres": 302,
+          "name": "McIntosh Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "n``mEqtry[BA",
+          "instruction": "TURN_RIGHT",
+          "metres": 2,
+          "name": "Arthur Street",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "r``mEstry[F?",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 4,
+          "name": "Arthur Street",
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "z``mEstry[LQ",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 11,
+          "name": "Arthur Street",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "ha`mEeury[p@qAfAi@n@UTCfDANAxAi@",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 288,
+          "name": "Arthur Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "zo`mEi{ry[CGsBmJES?k@Bi@Le@HQh@g@^O`@Gj@?p@FRDJ?HCnAYb@EvACz@OVG",
+          "instruction": "TURN_LEFT",
+          "metres": 571,
+          "name": "Kylie Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "l}`mEsosy[q@wCa@gB_@gB[qA}@gEw@oDEQ",
+          "instruction": "TURN_LEFT",
+          "metres": 413,
+          "name": "Wattle Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "`u`mEwity[G?I??ECCBK@EPN",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 36,
+          "name": "",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "bu`mEcjty[HIz@[nAc@|@[^OJEtBs@nAe@",
+          "instruction": "TURN_LEFT",
+          "metres": 272,
+          "name": "Rosebery Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "hcamEypty[`EhFzC|D",
+          "instruction": "TURN_RIGHT",
+          "metres": 275,
+          "name": "Springdale Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "fnamEqcty[hHaC^EPEjFkB",
+          "instruction": "TURN_LEFT",
+          "metres": 344,
+          "name": "Redgum Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "n`bmEkkty[R~@z@xD",
+          "instruction": "TURN_RIGHT",
+          "metres": 124,
+          "name": "Stanhope Road",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "~bbmEqcty[jDkAtEaBz@]zI{Cv@SJIBa@a@mACKHi@TUjAa@pAg@hGuBxAi@",
+          "instruction": "TURN_LEFT",
+          "metres": 917,
+          "name": "Nelson Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|mcmE}|ty[^O",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 19,
+          "name": "Nelson Road",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|ncmEm}ty[DHdCbHFTpBxFVv@FT",
+          "instruction": "TURN_RIGHT",
+          "metres": 343,
+          "name": "Tryon Road",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "bxcmEaity[tBq@TIp@Mb@G",
+          "instruction": "TURN_LEFT",
+          "metres": 130,
+          "name": "Lindfield Avenue",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "d_dmEskty[EQwEyM",
+          "instruction": "TURN_LEFT",
+          "metres": 258,
+          "name": "Russell Avenue",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "fxcmE_{ty[|EmC",
+          "instruction": "TURN_RIGHT",
+          "metres": 140,
+          "name": "Trafalgar Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "d_dmEm_uy[BURH",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 22,
+          "name": "",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|_dmEy_uy[~D_C",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 122,
+          "name": "Trafalgar Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|edmEycuy[FSLD",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 18,
+          "name": "",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "rfdmEgduy[`CuADGRi@nBuEh@wALSDGnFsFzDsDjDaD",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 720,
+          "name": "Trafalgar Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "tcemEcevy[}AwC",
+          "instruction": "TURN_LEFT",
+          "metres": 87,
+          "name": "Roseville Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "v`emE{ivy[nDsD",
+          "instruction": "TURN_RIGHT",
+          "metres": 127,
+          "name": "Martin Lane",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "ffemEoovy[}AmD",
+          "instruction": "TURN_LEFT",
+          "metres": 95,
+          "name": "Lord Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "hcemE}tvy[fFaD",
+          "instruction": "TURN_RIGHT",
+          "metres": 149,
+          "name": "Glencroft Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "pjemE_zvy[aC}G{@gC",
+          "instruction": "TURN_LEFT",
+          "metres": 221,
+          "name": "Bancroft Avenue",
+          "roadTags": [
+            "CYCLE-LANE",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "rdemEegwy[tC{AzCuAh@WlDqB",
+          "instruction": "TURN_RIGHT",
+          "metres": 324,
+          "name": "Wandella Avenue",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|temEaqwy[k@qC",
+          "instruction": "TURN_LEFT",
+          "metres": 72,
+          "name": "Boundary Street",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "psemEsuwy[RIlAc@lFgB",
+          "instruction": "TURN_RIGHT",
+          "metres": 199,
+          "name": "Ferncourt Avenue",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "`~emEizwy[B?fDoA`@O\\?vBu@",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 211,
+          "name": "Ferncourt Avenue",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "East Chatswood to Chatswood CBD",
+          "dismount": false,
+          "encodedWaypoints": "difmE__xy[z@hE",
+          "instruction": "TURN_RIGHT",
+          "metres": 99,
+          "name": "Ashley Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "East Chatswood to Chatswood CBD",
+          "dismount": false,
+          "encodedWaypoints": "`kfmEuxwy[DAJF",
+          "instruction": "TURN_LEFT",
+          "metres": 11,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "East Chatswood to Chatswood CBD",
+          "dismount": false,
+          "encodedWaypoints": "rkfmEoxwy[lAa@|Ag@",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 101,
+          "name": "Darling Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "East Chatswood to Chatswood CBD",
+          "dismount": false,
+          "encodedWaypoints": "~pfmEyzwy[jDdCfDzAdAlA",
+          "instruction": "TURN_RIGHT",
+          "metres": 269,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "x}fmEiqwy[NE",
+          "instruction": "TURN_LEFT",
+          "metres": 8,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SERVICE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "h~fmEoqwy[NEhC_Ar@WnDmAhDmA^MLG",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 356,
+          "name": "Havilah Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "~pgmE_zwy[o@yC",
+          "instruction": "TURN_LEFT",
+          "metres": 75,
+          "name": "Victoria Avenue",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "nogmEy~wy[NEhC{@FC`Bk@",
+          "instruction": "TURN_RIGHT",
+          "metres": 153,
+          "name": "Hercules Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "rwgmEkbxy[RIF?",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 16,
+          "name": "Hercules Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "nxgmEubxy[?IFC?I?BNF",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 26,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "fygmEacxy[LGNG",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 17,
+          "name": "Hercules Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "dzgmEqcxy[vIwC",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 203,
+          "name": "Hercules Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "|dhmEihxy[^GJ?",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 25,
+          "name": "Hercules Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood - Castlecrag",
+          "dismount": false,
+          "encodedWaypoints": "hfhmEqhxy[HGFA?PB@KL@E",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 33,
+          "name": "Change platform",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood Middle Cove",
+          "dismount": false,
+          "encodedWaypoints": "tfhmE_hxy[EL",
+          "instruction": "TURN_SHARPLY_LEFT",
+          "metres": 6,
+          "name": "Change platform",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood Middle Cove",
+          "dismount": false,
+          "encodedWaypoints": "nfhmEqgxy[BBF\\Hf@XnALj@Ln@BP",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 130,
+          "name": "Johnson Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood Middle Cove",
+          "dismount": false,
+          "encodedWaypoints": "~hhmEi_xy[LDCR",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 17,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Chatswood Middle Cove",
+          "dismount": false,
+          "encodedWaypoints": "hihmEo~wy[@Ff@`Ch@hCDPDPh@jC",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 222,
+          "name": "Johnson Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "rmhmEkpwy[n@zC",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 76,
+          "name": "Johnson Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "bohmEokwy[LB",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 8,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "pohmEkkwy[DC|GiCRG|Ae@JE",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 249,
+          "name": "Devonshire Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "r|hmEmqwy[VI@A",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 15,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "l}hmEyqwy[hAW",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 42,
+          "name": "Tindale Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "v_imEqrwy[?CHS",
+          "instruction": "TURN_LEFT",
+          "metres": 12,
+          "name": "Stafford Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "``imEiswy[LBpDb@bEh@",
+          "instruction": "TURN_RIGHT",
+          "metres": 219,
+          "name": "Tindale Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "dlimEwpwy[b@yFZaF",
+          "instruction": "TURN_LEFT",
+          "metres": 222,
+          "name": "Shepherd Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "dnimEs_xy[nEf@",
+          "instruction": "TURN_RIGHT",
+          "metres": 117,
+          "name": "Weedon Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Naremburn-Chatswood",
+          "dismount": false,
+          "encodedWaypoints": "ttimEk~wy[BYNi@Lg@`@}@Gg@?OA]L}@f@w@Ns@Ls@`@Yr@}@`AQn@aAb@[v@ALARKf@Ir@Mf@Y^SdAcBv@Md@Ap@Nf@Tp@ZhAO@UCq@?k@HMRIH]d@[LMzAc@d@El@ORGLO?M`@a@",
+          "instruction": "TURN_LEFT",
+          "metres": 1074,
+          "name": "Cordia Way",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "t~jmE_cyy[HmAIo@RwADeACWOk@C[FaAP_APcAV{@Vq@BWC_@Pe@He@Hw@?OF_@",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 446,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK",
+            "SEGREGATED"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "`ckmE{_zy[`@c@hAeA",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 77,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "lfkmEeczy[XIZK^ATA",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 61,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK",
+            "SEGREGATED"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "xikmE_dzy[fAO|@m@p@[b@SHMvBsAhCsALG",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 314,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "nykmEkmzy[fAg@AE",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 46,
+          "name": "Quiamong Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "t{kmEynzy[AEDWFCVBCDB@",
+          "instruction": "TURN_RIGHT",
+          "metres": 39,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "x|kmEoozy[@E_@BMCWa@A]DC?Y@AV@H?H?VGlAm@x@e@LIxCyB`Au@nByA~AcAzAiAf@a@fBqAtAiAr@s@V[@IBSFa@CM",
+          "instruction": "TURN_LEFT",
+          "metres": 805,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "x{lmEmm{y[^kAJa@F]PqADKAu@@K",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 146,
+          "name": "West Street Exit",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "City to North Cycle Route",
+          "dismount": false,
+          "encodedWaypoints": "d~lmEyv{y[?ABQ?A",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 11,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "h~lmEow{y[BMBKBK",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 18,
+          "name": "Amherst Street",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "t~lmEux{y[Fk@TwC@MLeBHiAFe@?A@S",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 209,
+          "name": "Amherst Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "v`mmEsf|y[BM",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 7,
+          "name": "Amherst Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "z`mmEag|y[LAF@V@",
+          "instruction": "TURN_RIGHT",
+          "metres": 26,
+          "name": "Miller Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "hbmmE_g|y[fAHPD^B~B`@ZDJA`@FVD",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 196,
+          "name": "Miller Street",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "dmmmEwd|y[?Q?MDM\\uD@KL[TOVAfAJNC",
+          "instruction": "TURN_LEFT",
+          "metres": 205,
+          "name": "Rosalind Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "~rmmEmm|y[zARLF`@JzAB",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 131,
+          "name": "Anzac Avenue",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "fzmmEal|y[@UJw@LiEI}@DA",
+          "instruction": "TURN_LEFT",
+          "metres": 162,
+          "name": "",
+          "roadTags": [
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "~zmmEyv|y[Tk@?UPuBNqBJkA`@sDB]",
+          "instruction": "TURN_SLIGHTLY_RIGHT",
+          "metres": 278,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Route 2",
+          "dismount": false,
+          "encodedWaypoints": "h~mmEai}y[F@TDJ@zEn@",
+          "instruction": "TURN_RIGHT",
+          "metres": 147,
+          "name": "",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Route 2",
+          "dismount": false,
+          "encodedWaypoints": "nfnmEgg}y[LD?F",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 12,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "|fnmEyf}y[F@",
+          "instruction": "TURN_LEFT",
+          "metres": 4,
+          "name": "Merlin Street",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "dgnmEwf}y[HgAHODA",
+          "instruction": "TURN_LEFT",
+          "metres": 46,
+          "name": "Military Road",
+          "roadTags": [
+            "SIDE-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "~gnmEqi}y[?WNoBDi@H}@D[FS\\_AH[Jc@Le@Lc@ZiAn@cB",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 330,
+          "name": "Military Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "hnnmEi~}y[Rs@BK",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 32,
+          "name": "Military Road",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "`onmEi`~y[IKL?N@PDz@FhEb@",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 182,
+          "name": "Ben Boyd Road",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        },
+        {
+          "cyclingNetwork": "Route 5",
+          "dismount": false,
+          "encodedWaypoints": "lxnmEa_~y[@QLcA?OJyA@SPaDLgBB[JoA@U@UJiAPsCLkBBIOQ[YIK",
+          "instruction": "TURN_LEFT",
+          "metres": 494,
+          "name": "Yeo Street",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Route 5",
+          "dismount": false,
+          "encodedWaypoints": "xznmEc__z[FM|AkB|BeCPSHIHQd@yB@KAY",
+          "instruction": "TURN_RIGHT",
+          "metres": 282,
+          "name": "Rangers Road",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Route 5",
+          "dismount": false,
+          "encodedWaypoints": "hdomEsm_z[kAgHq@oEEU",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 252,
+          "name": "Rangers Road",
+          "roadTags": [
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Mosman T4",
+          "dismount": false,
+          "encodedWaypoints": "d`omEa~_z[sBYiAOo@IGAWA@?QFCI@CLK",
+          "instruction": "TURN_LEFT",
+          "metres": 180,
+          "name": "Spofforth Street",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Mosman T4",
+          "dismount": false,
+          "encodedWaypoints": "rwnmEk``z[ES`@qFh@yH?OFkAH_@TWz@UNO@KBK@Q?q@yAcKCS@S?S?C@ORc@d@q@H??EAK",
+          "instruction": "TURN_LEFT",
+          "metres": 723,
+          "name": "Rangers Avenue",
+          "roadTags": [
+            "CYCLE-NETWORK",
+            "MAIN-ROAD"
+          ],
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "||nmE}laz[s@oA",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 47,
+          "name": "",
+          "safe": true
+        },
+        {
+          "dismount": false,
+          "encodedWaypoints": "h{nmEmoaz[i@l@GBY@UEKA{AQ",
+          "instruction": "TURN_LEFT",
+          "metres": 122,
+          "name": "Cowles Road",
+          "roadTags": [
+            "MAIN-ROAD"
+          ],
+          "safe": false
+        }
+      ],
+      "to": {
+        "address": "10A Cowles Road, Mosman, NSW, Australia",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.83135,
+        "lng": 151.23706,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 113,
+      "turn-by-turn": "CYCLING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Walk<DURATION>",
+      "from": {
+        "address": "Pymble Station access",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.74502,
+        "lng": 151.14247,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": -1763092617,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "currency": "AUD"
+      },
+      "metres": 199,
+      "mini": {
+        "description": "Near Pymble Station, Pacific Hwy",
+        "instruction": "Walk",
+        "mainValue": "200 m"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "200 m",
+      "streets": [
+        {
+          "encodedWaypoints": "py}lEs_oy[PNDEWf@KLETAAYb@MX",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 94,
+          "name": "Pymble Station access"
+        },
+        {
+          "encodedWaypoints": "tw}lEa{ny[b@\\DFAHkAzB",
+          "instruction": "TURN_LEFT",
+          "metres": 105,
+          "name": "Tunnel"
+        }
+      ],
+      "to": {
+        "address": "Near Pymble Station, Pacific Hwy",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.74451,
+        "lng": 151.14095,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 290,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Collect GoGet",
+      "cost": 34.7,
+      "hashCode": 894478227,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 34.7,
+        "currency": "AUD"
+      },
+      "location": {
+        "address": "Near Pymble Station, Pacific Hwy",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.74451,
+        "lng": 151.14095,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "mini": {
+        "instruction": "Collect  GoGet",
+        "mainValue": "from $35 for a round trip (estimate)"
+      },
+      "modeIdentifier": "me_car-s_GOG",
+      "modeInfo": {
+        "alt": "Collect",
+        "identifier": "stationary_vehicle-collect",
+        "localIcon": "collect"
+      },
+      "notes": "Hendrike the Yaris\nSubject to availability\nCost: from $35 for a round trip (estimate)\nRequires paid membership\nRound-trip only",
+      "type": "stationary",
+      "visibility": "in details"
+    },
+    {
+      "action": "Drive GoGet<DURATION>",
+      "durationWithoutTraffic": 1284,
+      "from": {
+        "address": "Near Pymble Station, Pacific Hwy",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.74455,
+        "lng": 151.14092,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "hashCode": 1724091801,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 1.63,
+        "costComponents": [
+          {
+            "cost": 1.63,
+            "type": "TOLL"
+          }
+        ],
+        "currency": "AUD"
+      },
+      "metres": 20211,
+      "mini": {
+        "description": "10A Cowles Road, Mosman, NSW, Australia",
+        "instruction": "Drive GoGet",
+        "mainValue": "21 km"
+      },
+      "modeIdentifier": "me_car-s_GOG",
+      "modeInfo": {
+        "alt": "GoGet",
+        "color": {
+          "blue": 106,
+          "green": 63,
+          "red": 0
+        },
+        "description": "GoGet",
+        "identifier": "me_car-s_GOG",
+        "localIcon": "car-share",
+        "remoteDarkIcon": "goget-dark",
+        "remoteIcon": "goget",
+        "remoteIconIsBranding": true
+      },
+      "notes": "21 km ⋅ Includes toll ($1.63)",
+      "streets": [
+        {
+          "encodedWaypoints": "nv}lEuuny[DMVk@d@g@HCDE^P??RE??FGd@o@bCgDL[??yA}AMGGACG??Da@HiALq@Nc@FMXg@TYb@c@f@k@^WVQZKVE\\GnBQbAKj@I\\GXIZOXQZWDGjBqB\\Y\\WXMHCVOlAi@b@QDEp@c@??LVHNTXVf@??Vl@Tj@Pp@Pv@Jl@f@~F??L`@`@~@jAfCx@dB`@l@hAtAfDtD\\b@d@x@j@vARf@|@jCXx@d@lAZj@l@r@VTRNPLZL|@\\l@Fj@Bf@?VCb@EbAYpBm@ZI|@MdA?`A@bCD@CdAHdBd@l@PJBfJ~BjDv@xAB`B?bCEpDCbACrBLt@LJBbARzCt@?Bd@F`BXjFjA~FjAhAJh@@zACP?H?nFG`AA??jIM|@A|AAt@@v@Ht@Rz@Z^T^TzCtC`@f@^`@^\\^\\VV??r@Zb@NZDb@@d@E\\MrAe@pFwB`@@??rAYhBW|@G|@ClFEvAE|BA`AEz@EjCY~Bg@jCw@jA]~@Wv@Oz@Mz@ItIs@jAMjAOx@OlAWrA_@p@U|@]|@e@d@Yz@c@TMtAaArAmAbAcA`AeAp@}@r@cAb@q@`@u@b@y@h@mAr@oBZ{@lAgETw@`@iAfA{BtAaCh@aAr@kAd@m@??f@w@f@s@lCoDhA}Al@aArA}B~@qBnA{CBIt@kBCAh@eB~@gDpAqDl@wAbBcDx@uAjB_DrDqGfAgCrAyDbAiDn@wCLi@t@{Er@sGpB{QdAwHv@yEv@cEX_BBMX{A\\{AAAb@mDXuDFkBBeCAwBE{AAw@O{CQaCMgCEkB?qCDwBPiC\\}Ch@cD^eCj@iDb@iCRwA\\sBPqANwALeBLwBB{AByAAqCC}AMuC??Co@OkBOcB[mCOcAc@sBI[yBoJQmAOgBIkBA_ABcADy@Fy@RwAVkA^yAn@aBhAuBnAyAdA_Ax@i@`@YrDkBhB_AdCwAhAq@??pAu@zCgBdAu@t@g@`BwA|@w@lBeBvB_Bf@a@xDuCt@w@j@o@j@s@d@s@^s@v@kB\\{@To@b@_BXwAh@kDPoAL{@XiAXcAPq@d@oALWHYh@oAXi@Xi@R[^g@b@e@b@g@n@m@nA}@v@i@tAq@PI^KfA]`@Kx@OZGp@Ir@AnABn@FtAXb@L`Bt@jBxAxD|CzAjA~@j@??bB`@t@TnC|@v@RrB^dBRzALhABvEN\\Br@?h@C??USGCo@Oe@CiAAcD[{H}@{B[}A]qA[}Ai@OGyBsAu@m@aA_ACE_@]{@eAEM??DwAEUKOE?wEo@E@MIMG??_Au@g@]I[?WNoBDi@H}@D[FS\\_AH[Jc@Le@Lc@ZiAn@cBRs@BKH]lBiHJ_@dAaEH_@@GD_@?uBQ{@eB{GWcAMa@_@oAc@sAKUAEK_@IWQu@e@_Ac@u@]i@_AgAo@w@_@w@q@cBEQwAyDQa@??FEFEH@FB\\FDC`@BjBVPB`D`@??@Q?KZeFpAyQFq@dAiO??lAL"
+        }
+      ],
+      "to": {
+        "address": "10A Cowles Road, Mosman, NSW, Australia",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.83135,
+        "lng": 151.23706,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "travelDirection": 134,
+      "turn-by-turn": "DRIVING",
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Find parking nearby",
+      "hasCarParks": true,
+      "hashCode": 1700368700,
+      "isParking": true,
+      "location": {
+        "address": "10A Cowles Road, Mosman, NSW, Australia",
+        "city": "AU.NSW.Sydney",
+        "class": "Location",
+        "lat": -33.83135,
+        "lng": 151.23706,
+        "region": "AU_NSW_Sydney",
+        "timezone": "Australia/Sydney"
+      },
+      "mini": {
+        "instruction": "Find parking nearby",
+        "mainValue": "<DURATION>"
+      },
+      "modeIdentifier": "me_car-s_GOG",
+      "modeInfo": {
+        "alt": "Parking",
+        "identifier": "stationary_parking-onstreet",
+        "localIcon": "parking"
+      },
+      "type": "stationary",
+      "visibility": "in details"
+    }
+  ]
+}
