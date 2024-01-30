@@ -10,7 +10,7 @@ const worker = setupWorker(
     rest.get("https://*/v1/routing.json", (req, res, ctx) => {
         if (req.url.searchParams.get("modes") === "me_car-s") {
             return res(
-                ctx.json(require(`./data/routing-sgfleet.json`))
+                ctx.json(require(`./data/routing-sgfleet-2023-07-19.json`))
             )
         }
         return;

@@ -46,12 +46,7 @@
                     "intervals": [
                         {
                             "status": "AVAILABLE",
-                            "start": "2023-07-19T10:00:00+10:00",
-                            "end": "2023-07-19T12:30:00+10:00"
-                        },
-                        {
-                            "status": "AVAILABLE",
-                            "start": "2023-07-19T14:00:00+10:00",
+                            "start": "2023-07-19T00:00:00+10:00",
                             "end": "2023-07-19T23:59:59+10:00"
                         }
                     ]
@@ -95,6 +90,44 @@
                     ]
                 },
                 "bookingURL": "https://www.sgfleet.com/book?vehicleID=10701"
+            },
+            {
+                "car": {
+                    "disabled": false,
+                    "vehicleTypeInfo": {
+                        "formFactor": "CAR",
+                        "name": "Car",
+                        "propulsionType": "COMBUSTION"
+                    },
+                    "identifier": "rwyCCfVH",
+                    "licensePlate": "ABC169",
+                    "operator": {
+                        "color": {
+                            "blue": 106,
+                            "green": 63,
+                            "red": 0
+                        },
+                        "name": "GoGet",
+                        "website": "https://www.goget.com.au"
+                    },
+                    "name": "Toyota Prius"
+                },
+                "availability": {
+                    "timestamp": "2023-07-19T14:48:00.000Z",
+                    "intervals": [
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T06:00:00+10:00",
+                            "end": "2023-07-19T16:30:00+10:00"
+                        },
+                        {
+                            "status": "AVAILABLE",
+                            "start": "2023-07-19T19:00:00+10:00",
+                            "end": "2023-07-19T22:00:00+10:00"
+                        }
+                    ]
+                },
+                "bookingURL": "https://www.sgfleet.com/book?vehicleID=267"
             }
         ],
         "nearbyPods": [
@@ -246,7 +279,7 @@
                                 "intervals": [
                                     {
                                         "status": "AVAILABLE",
-                                        "start": "2023-07-19T11:00:00+10:00",
+                                        "start": "2023-07-19T00:00:00+10:00",
                                         "end": "2023-07-19T15:30:00+10:00"
                                     },
                                     {

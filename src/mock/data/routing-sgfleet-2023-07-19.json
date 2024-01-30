@@ -41,18 +41,18 @@
       ],
       "trips": [
         {
-          "arrive": "2023-11-10T07:48:53+11:00",
+          "arrive": "2023-07-19T07:48:53+10:00",
           "availability": "AVAILABLE",
           "caloriesCost": 357,
           "carbonCost": 0.2,
-          "depart": "2023-11-10T06:44:00+11:00",
+          "depart": "2023-07-19T06:44:00+10:00",
           "hassleCost": 8.3,
           "hideExactTimes": false,
           "id": "718e1c41-8796-410a-9a95-8c59e08bc371",
           "mainSegmentHashCode": -938686943,
           "queryIsLeaveAfter": true,
           "queryMinimumTransferSeconds": 0,
-          "queryTime": "2023-11-10T06:44:00+11:00",
+          "queryTime": "2023-07-19T06:44:00+10:00",
           "segments": [
             {
               "availability": "AVAILABLE",
@@ -63,7 +63,7 @@
                 "title": "Unlock with SG Fleet"
               },
               "bookingHashCode": -252366475,
-              "endTime": "2023-11-10T06:44:00+11:00",
+              "endTime": "2023-07-19T06:44:00+10:00",
               "id": "rwyCCfVH",
               "segmentTemplateHashCode": -106482228,
               "sharedVehicle": {
@@ -91,26 +91,26 @@
                   "propulsionType": "COMBUSTION"
                 }
               },
-              "startTime": "2023-11-10T06:44:00+11:00"
+              "startTime": "2023-07-19T06:44:00+10:00"
             },
             {
               "availability": "AVAILABLE",
-              "endTime": "2023-11-10T07:48:53+11:00",
+              "endTime": "2023-07-19T07:48:53+10:00",
               "id": "S747ONS7",
               "segmentTemplateHashCode": -938686943,
-              "startTime": "2023-11-10T06:44:00+11:00"
+              "startTime": "2023-07-19T06:44:00+10:00"
             }
           ],
           "weightedScore": 49.5
         },
         {
-          "arrive": "2023-11-10T07:15:45+11:00",
+          "arrive": "2023-07-19T07:15:45+10:00",
           "availability": "AVAILABLE",
           "caloriesCost": 37,
           "carbonCost": 4.1,
           "currency": "AUD",
           "currencySymbol": "$",
-          "depart": "2023-11-10T06:44:00+11:00",
+          "depart": "2023-07-19T06:44:00+10:00",
           "hasRoundTripCost": true,
           "hassleCost": 7.5,
           "hideExactTimes": false,
@@ -120,14 +120,14 @@
           "moneyUSDCost": 26.16,
           "queryIsLeaveAfter": true,
           "queryMinimumTransferSeconds": 0,
-          "queryTime": "2023-11-10T06:44:00+11:00",
+          "queryTime": "2023-07-19T06:44:00+10:00",
           "segments": [
             {
               "availability": "AVAILABLE",
-              "endTime": "2023-11-10T06:46:49+11:00",
+              "endTime": "2023-07-19T06:46:49+10:00",
               "id": "mEi7CTwn",
               "segmentTemplateHashCode": -1763092617,
-              "startTime": "2023-11-10T06:44:00+11:00"
+              "startTime": "2023-07-19T06:44:00+10:00"
             },
             {
               "availability": "AVAILABLE",
@@ -138,7 +138,7 @@
                 "title": "Book with GoGet"
               },
               "bookingHashCode": 710752409,
-              "endTime": "2023-11-10T06:49:49+11:00",
+              "endTime": "2023-07-19T06:49:49+10:00",
               "id": "jmreOJeq",
               "segmentTemplateHashCode": 894478227,
               "sharedVehicle": {
@@ -168,21 +168,21 @@
                   "propulsionType": "COMBUSTION"
                 }
               },
-              "startTime": "2023-11-10T06:46:49+11:00"
+              "startTime": "2023-07-19T06:46:49+10:00"
             },
             {
               "availability": "AVAILABLE",
-              "endTime": "2023-11-10T07:15:45+11:00",
+              "endTime": "2023-07-19T07:15:45+10:00",
               "id": "veiBrAuE",
               "segmentTemplateHashCode": 1724091801,
-              "startTime": "2023-11-10T06:49:49+11:00"
+              "startTime": "2023-07-19T06:49:49+10:00"
             },
             {
               "availability": "AVAILABLE",
-              "endTime": "2023-11-10T07:15:45+11:00",
+              "endTime": "2023-07-19T07:15:45+10:00",
               "id": "f4NssaqS",
               "segmentTemplateHashCode": 1700368700,
-              "startTime": "2023-11-10T07:15:45+11:00"
+              "startTime": "2023-07-19T07:15:45+10:00"
             }
           ],
           "weightedScore": 51.2

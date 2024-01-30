@@ -26,12 +26,14 @@ import { white } from "../jss/TKUITheme";
 import TripGoApi from "../api/TripGoApi";
 import RegionsData from "../data/RegionsData";
 import Util from "../util/Util";
+import Segment from "../model/trip/Segment";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
      * @ctype
      */
     location: CarPodLocation;
+    segment?: Segment;
     /**
      * Handler for `Book` button click.
      * @ctype
@@ -101,18 +103,22 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         const bookingUrlWithTimes = bookingURL.replace("<start_time>", bookingStart).replace("<end_time>", bookingEnd);
         window.open(bookingUrlWithTimes, '_blank');
     }
-    const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
+    const { location, segment, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
     const SCROLL_HORIZONT_WIDTH = portrait ? 20 : 32;
-    const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.toJustDate(DateTimeUtil.getNow(region?.timezone)).format());
+    const rideSegment = segment?.nextSegment();
+    const initBookStartTime = rideSegment?.startTime && DateTimeUtil.toIsoJustTime(rideSegment?.startTime, 30 * 60 * 1000)
+    const initBookEndTime = rideSegment?.endTime && DateTimeUtil.toIsoJustTime(rideSegment?.endTime, 30 * 60 * 1000, { direction: "ceil" })
+    const initDisplayStartTime = rideSegment?.startTime && DateTimeUtil.toIsoJustDate(rideSegment?.startTime);
+    const [displayStartTime, setDisplayStartTime] = useState<string>(initDisplayStartTime ?? DateTimeUtil.toJustDate(DateTimeUtil.getNow(region?.timezone)).format());
     // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
-    const [bookStartTime, setBookStartTime] = useState<string | undefined>();
-    const [bookEndTime, setBookEndTime] = useState<string | undefined>();
+    const [bookStartTime, setBookStartTime] = useState<string | undefined>(initBookStartTime);
+    const [bookEndTime, setBookEndTime] = useState<string | undefined>(initBookEndTime);
     const slots = getSlots(displayStartTime, displayEndTime);
 
     /**
@@ -230,9 +236,17 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     useEffect(() => {
+        // Effect called the first time vehicles arrive.
+        const availabilities = vehicleAvailabilitiesByDate.get(displayStartTime);
         // Move scroll to 8am by default on display start date change.
-        if (vehicleAvailabilitiesByDate.get(displayStartTime)) {
+        if (availabilities) {
             setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+        }
+        if (availabilities && segment?.sharedVehicle?.identifier) {
+            const initSelectedVehicle = availabilities.find(av => av.car.identifier === segment!.sharedVehicle!.identifier)?.car;
+            if (initSelectedVehicle) {
+                setSelectedVehicle(initSelectedVehicle);
+            }
         }
     }, [vehicleAvailabilitiesByDate.get(displayStartTime)]);
 

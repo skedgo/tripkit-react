@@ -193,6 +193,24 @@ class DateTimeUtil {
         return this.momentFromIsoWithTimezone(date).set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).format();
     }
 
+    /**
+     * 
+     * @param date 
+     * @param slotInMillis should be <= 60 * 60 * 1000 (that is, hour granularity at most), otherwise timezones mess with the rounding.
+     * @param options 
+     * @returns 
+     */
+    public static toIsoJustTime(date: string, slotInMillis: number, options: { direction?: 'floor' | 'ceil' } = {}): string {
+        const { direction = 'floor' } = options;
+        const justMillis = (
+            direction === 'floor' ?
+                Math.floor(DateTimeUtil.momentFromIsoWithTimezone(date).valueOf() / slotInMillis) :
+                Math.ceil(DateTimeUtil.momentFromIsoWithTimezone(date).valueOf() / slotInMillis)
+        ) * slotInMillis;
+        const originalMillis = DateTimeUtil.momentFromIsoWithTimezone(date).valueOf();
+        return DateTimeUtil.momentFromIsoWithTimezone(date).add('milliseconds', justMillis - originalMillis).format();
+    }
+
     public static isoFormatRelativeDay(date: string, formatWithDay: string, options: { partialReplace?: string, justToday?: boolean } = {}): string {
         return this.formatRelativeDay(this.momentFromIsoWithTimezone(date), formatWithDay, options);
     }

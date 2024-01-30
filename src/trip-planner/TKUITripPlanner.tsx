@@ -40,7 +40,7 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import { TKUserPosition } from "../util/GeolocationUtil";
 import TKUIWaitingRequest, { TKRequestStatus } from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
-import { CardPresentation, TKUICardRaw } from "../card/TKUICard";
+import TKUICard, { CardPresentation, TKUICardRaw } from "../card/TKUICard";
 import { genClassNames } from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import { cardSpacing } from "../jss/TKUITheme";
@@ -60,6 +60,7 @@ import { TKError } from "../error/TKError";
 import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import RoutingResults from "../model/trip/RoutingResults";
+import TKUIVehicleAvailability from "../location/TKUIVehicleAvailability";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -661,7 +662,29 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         const mxMView = props.selectedTripSegment &&
             <TKUIMxMViewHelpers.TKStateProps>
                 {stateProps =>
-                    <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
+                    <TKUIMxMView
+                        {...stateProps}
+                        onRequestClose={() => props.setSelectedTripSegment(undefined)}
+                        parentElement={this.ref}
+                        onShowVehicleAvailabilityForSegment={({ segment }) =>
+                            this.pushCardView({
+                                viewId: "AVAILABILITY",
+                                renderCard: () =>
+                                    <TKUICard
+                                        presentation={CardPresentation.MODAL}
+                                        styles={{
+                                            modalContent: overrideClass({
+                                                width: '800px'
+                                            })
+                                        }}
+                                    >
+                                        <TKUIVehicleAvailability
+                                            location={segment.location as CarPodLocation}
+                                            segment={segment}
+                                        />
+                                    </TKUICard>
+                            })}
+                    />}
             </TKUIMxMViewHelpers.TKStateProps>
 
         const topCardView = this.state.cardStack.length > 0 ? this.state.cardStack[this.state.cardStack.length - 1] : undefined;

@@ -51,6 +51,8 @@ interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
      * @ctype     
      */
     onRequestClose?: () => void;
+
+    onShowVehicleAvailabilityForSegment?: (data: { segment: Segment }) => void;
 }
 
 interface IConsumedProps {
@@ -130,6 +132,7 @@ export interface SegmentMxMCardsProps {
     signInStatus?: SignInStatus;
     isSelectedCard?: () => boolean;
     tkconfig: TKUIConfig;
+    onShowVehicleAvailabilityForSegment?: (data: { segment: Segment }) => void;
 }
 
 const cardStyles = {
@@ -219,7 +222,7 @@ function getSegmentMxMCards(
     isSelectedCardBuilder: (cardIndex: number) => () => boolean,
     moveToNext: () => void
 ): JSX.Element[] {
-    const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, tkconfig } = props;
+    const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, tkconfig, onShowVehicleAvailabilityForSegment } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
     } else if (tkconfig.booking && tkconfig.booking.renderBookingCard && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
@@ -282,7 +285,7 @@ function getSegmentMxMCards(
                     />}
                 <TKUIButton
                     text={"Change"}
-                    onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                    onClick={() => onShowVehicleAvailabilityForSegment?.({ segment })}
                     type={TKUIButtonType.PRIMARY_LINK}
                     styles={{
                         main: overrideClass({
@@ -430,7 +433,7 @@ const findNextInSummary = (selectedSegment: Segment, segments: Segment[]): Segme
         .find(segment => segment.hasVisibility(Visibility.IN_SUMMARY))!;
 
 const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { trip, selectedTripSegment, refreshSelectedTrip = () => Promise.resolve(true), portrait, mapAsync, t, classes } = props;
+    const { trip, selectedTripSegment, refreshSelectedTrip = () => Promise.resolve(true), portrait, mapAsync, onShowVehicleAvailabilityForSegment, t, classes } = props;
     const accountContext = useContext(TKAccountContext);
     const segments = trip.getSegments()
         .filter(segment => !segment.isContinuation);  // Don't display MxM card for continuation segments.
@@ -469,7 +472,8 @@ const TKUIMxMView: React.FunctionComponent<IProps> = (props: IProps) => {
             trip,
             accountsSupported: accountContext.accountsSupported,
             signInStatus: accountContext.status,
-            tkconfig
+            tkconfig,
+            onShowVehicleAvailabilityForSegment
         }, generateCardIndex, isSelectedCardBuilder, () => moveToNext()));
         return map;
     }, new Map<Segment, JSX.Element[]>());
