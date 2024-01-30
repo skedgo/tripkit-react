@@ -38,7 +38,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pic
      * Handler for `Book` button click.
      * @ctype
      */
-    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string }) => void
+    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean }) => void
 }
 
 type IStyle = ReturnType<typeof tKUIVehicleAvailabilityDefaultStyle>;
@@ -240,10 +240,16 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         const availabilities = vehicleAvailabilitiesByDate.get(displayStartTime);
         // Move scroll to 8am by default on display start date change.
         if (availabilities) {
-            setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+            if (initBookStartTime) {    // segment was provided
+                setScrollLeftToTime(initBookStartTime);
+            } else {
+                setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+            }
         }
         if (availabilities && segment?.sharedVehicle?.identifier) {
-            const initSelectedVehicle = availabilities.find(av => av.car.identifier === segment!.sharedVehicle!.identifier)?.car;
+            // TODO: Fix ids mismatch. BE returns the external id in av.car.identifier, and an internal id `id me_car-s_sgfleet-sydney|AU_NSW_Sydney|${externalId}` in segment.sharedVehicle.identifier
+            const initSelectedVehicle = availabilities
+                .find(av => av.car.identifier === segment!.sharedVehicle!.identifier)?.car;
             if (initSelectedVehicle) {
                 setSelectedVehicle(initSelectedVehicle);
             }
@@ -554,7 +560,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                         disabled={bookStartTime === undefined || bookEndTime === undefined}
                                                         onClick={() => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
-                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
+                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
                                                         }}
                                                     />
                                                 </div>
@@ -571,6 +577,27 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
                     </div>
                 </div>
+                {segment &&
+                    <div className={classes.buttonsPanel}>
+                        <TKUIButton
+                            text={"Update trip"}
+                            type={TKUIButtonType.PRIMARY}
+                            disabled={bookStartTime === undefined || bookEndTime === undefined}
+                            onClick={() => {
+                                const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
+                                onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
+                            }}
+                        />
+                        {/* <TKUIButton
+                            text={"Update trip & Book"}
+                            type={TKUIButtonType.PRIMARY}
+                            disabled={bookStartTime === undefined || bookEndTime === undefined}
+                            onClick={() => {
+                                const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
+                                onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
+                            }}
+                        /> */}
+                    </div>}
             </div>
         </ScrollSync>
     );

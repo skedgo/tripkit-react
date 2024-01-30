@@ -243,14 +243,14 @@ function getSegmentMxMCards(
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
         const collectCardIndex = generateCardIndex();
         return [
-            <TKUIMxMCollectNearbyCard
-                segment={segment}
-                onRequestClose={onRequestClose}
-                mapAsync={mapAsync}
-                key={collectCardIndex}
-                isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
-                onAlternativeCollected={moveToNext}
-            />,
+            // <TKUIMxMCollectNearbyCard
+            //     segment={segment}
+            //     onRequestClose={onRequestClose}
+            //     mapAsync={mapAsync}
+            //     key={collectCardIndex}
+            //     isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
+            //     onAlternativeCollected={moveToNext}
+            // />,
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}

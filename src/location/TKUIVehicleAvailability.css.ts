@@ -290,7 +290,7 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         },
         '&:hover $slotTime': {
             display: 'none'
-        },                        
+        },
         '&:hover svg': {
             display: 'block'
         },
@@ -305,12 +305,20 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
         },
         '&:hover $slotTime': {
             display: 'none'
-        },                        
+        },
         '&:hover svg': {
             display: 'block'
         },
         '&:hover path': {
             fill: white(0, theme.isDark)
+        }
+    },
+    buttonsPanel: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        margin: '24px',
+        '&>*:not(:first-child)': {
+            marginLeft: '30px'
         }
     }
 });

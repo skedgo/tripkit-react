@@ -72,7 +72,8 @@
                   "web": "https://localhost:5000/bookings/createnew?resourceid=267"
                 },
                 "disabled": false,
-                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
+                "identifier": "267",
+                "__identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
                 "lastReported": "2024-01-29T15:29:57Z",
                 "name": "ABC169 - Toyota Prius",
                 "operator": {
