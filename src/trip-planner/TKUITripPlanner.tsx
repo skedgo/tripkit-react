@@ -674,7 +674,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                     <TKUICard
                                         title={segment.sharedVehicle?.operator.name}
                                         subtitle={"Change vehicle and / or booking range"}
-                                        presentation={CardPresentation.MODAL}
+                                        presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                                         styles={{
                                             modalContent: overrideClass({
                                                 width: '800px'
@@ -685,21 +685,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                         <TKUIVehicleAvailability
                                             location={segment.location as CarPodLocation}
                                             segment={segment}
-                                            onBookClick={async ({ bookingURL, bookingStart, bookingEnd, vehicleId, bookingStartChanged }) => {
+                                            onUpdateTrip={async ({ bookingStart, bookingEnd, vehicleId, bookingStartChanged }) => {
                                                 const vehicleChanged = vehicleId !== segment.sharedVehicle?.identifier
                                                 // TODO: if can pick a vehicle from a different car-pod location, then we need to pass that location to the following call.
                                                 const trip = (vehicleChanged || bookingStartChanged) ?
-                                                    // await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { bookingStart, bookingEnd, vehicleId }) :
-                                                    // SEGUIR ACÁ: 
-                                                    // Solo mando los datos que cambiaron. Si start no cambió, entonces preservo el rango del segmento, si cambió mando el start y el end preservando longitud del segmento. 
-                                                    // ver como unificar lo de los ids, tal vez por ahora como workaround concatenarle "me_car-s_sgfleet-sydney|AU_NSW_Sydney|"
-                                                    await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { ...bookingStartChanged ? { bookingStart, bookingEnd } : {}, ...vehicleChanged ? { vehicleId: "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267" } : {} }) :
-                                                    segment.trip
-                                                const bookingUrlWithTimes = bookingURL
-                                                    .replace("<start_time>", bookingStart)
-                                                    .replace("<end_time>", bookingEnd)
-                                                    .concat(trip ? "&trip_id=" + trip.id : "");
-                                                window.open(bookingUrlWithTimes, '_blank');
+                                                    await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { ...bookingStartChanged ? { bookingStart, bookingEnd } : {}, ...vehicleChanged ? { vehicleId } : {} }) :
+                                                    segment.trip;
+                                                this.popCardView();
+                                                return trip;
                                             }}
                                         />
                                     </TKUICard>

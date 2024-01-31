@@ -625,7 +625,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
         }
 
-        public onSegmentCollectBookingChange(segment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string }): Promise<Trip | undefined> {
+        public onSegmentCollectBookingChange(segment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart?: string, bookingEnd?: string, vehicleId?: string }): Promise<Trip | undefined> {
             const selectedTrip = this.state.selected;
             const { bookingStart, bookingEnd, vehicleId } = data;
             if (!selectedTrip) {
@@ -644,12 +644,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         return {
                             start: `(${location.lat},${location.lng})`,
                             end: `(${location.lat},${location.lng})`,
-                            modes: [vehicleId],
-                            // startTime: segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
-                            // endTime: segment.endTimeSeconds,
-                            startTime: DateTimeUtil.isoToSeconds(bookingStart),    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
-                            endTime: DateTimeUtil.isoToSeconds(bookingStart) + segment.endTimeSeconds - segment.startTimeSeconds,
-                            sharedVehicleID: location.id,
+                            modes: [segment.modeIdentifier],
+                            // modes: [segment.modeInfo?.identifier],
+                            startTime: bookingStart ? DateTimeUtil.isoToSeconds(bookingStart) : segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                            endTime: bookingStart ? DateTimeUtil.isoToSeconds(bookingStart) + segment.endTimeSeconds - segment.startTimeSeconds : segment.endTimeSeconds,
+                            sharedVehicleID: vehicleId ?? location.id,
                             region: segmentRegions[0].name,
                             ...segmentRegions[0] !== segmentRegions[1] ? {
                                 disembarkationRegion: segmentRegions[1].name
@@ -663,7 +662,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                             start: `(${startLoc.lat},${startLoc.lng})`,
                             end: `(${endLoc.lat},${endLoc.lng})`,
                             // If changed of vehicle provider, then also need to update all trip segments that also have the original modeIdentifier.
-                            modes: tripSegment.modeIdentifier
+                            modes: [tripSegment.modeIdentifier],
+                            // _modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
+                            //     location.modeInfo.identifier : tripSegment.modeIdentifier]
                         };
                     }
                 });

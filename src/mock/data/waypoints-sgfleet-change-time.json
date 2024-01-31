@@ -1,27 +1,9 @@
 {
   "groups": [
     {
-      "frequency": 35,
       "sources": [
         {
-          "provider": {
-            "appInfo": {
-              "appURLAndroid": "https://play.google.com/store/apps/details?id=com.goget.goget",
-              "appURLiOS": "https://itunes.apple.com/au/app/goget/id917053598"
-            },
-            "color": {
-              "blue": 106,
-              "green": 63,
-              "red": 0
-            },
-            "name": "GoGet",
-            "remoteDarkIcon": "goget-dark",
-            "remoteIcon": "goget",
-            "website": "http://www.goget.com.au/"
-          }
-        },
-        {
-          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "disclaimer": "© OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
           "provider": {
             "name": "OpenStreetMap",
             "website": "https://www.openstreetmap.org"
@@ -41,30 +23,30 @@
       ],
       "trips": [
         {
-          "arrive": "2023-07-19T07:48:53+10:00",
+          "arrive": "2023-07-19T10:04:49+10:00",
           "availability": "AVAILABLE",
-          "caloriesCost": 357,
+          "caloriesCost": 358,
           "carbonCost": 0.2,
-          "depart": "2023-07-19T06:44:00+10:00",
-          "hassleCost": 8.3,
+          "depart": "2023-07-19T09:00:00+10:00",
+          "hassleCost": 7.8,
           "hideExactTimes": false,
-          "id": "718e1c41-8796-410a-9a95-8c59e08bc371",
-          "mainSegmentHashCode": -938686943,
+          "id": "37c1d5f1-5004-4e05-8e2c-2ef44773459f",
+          "mainSegmentHashCode": -1943124496,
           "queryIsLeaveAfter": true,
           "queryMinimumTransferSeconds": 0,
-          "queryTime": "2023-07-19T06:44:00+10:00",
+          "queryTime": "2023-07-19T09:00:00+10:00",
           "segments": [
             {
               "availability": "AVAILABLE",
               "booking": {
                 "externalActions": [
-                  "https://localhost:5000/bookings/createnew?resourceid=267&start_time=2023-11-09T19:44:00Z&end_time=2023-11-09T19:44:00Z"
+                  "https://localhost:5000/bookings/createnew?resourceid=267&start_time=2023-07-18T23:00:00Z&end_time=2023-07-18T23:00:00Z"
                 ],
                 "title": "Unlock with SG Fleet"
               },
-              "bookingHashCode": -252366475,
-              "endTime": "2023-07-19T06:44:00+10:00",
-              "id": "rwyCCfVH",
+              "bookingHashCode": -1719950671,
+              "endTime": "2023-07-19T09:00:00+10:00",
+              "id": "fGAGASWd",
               "segmentTemplateHashCode": -106482228,
               "sharedVehicle": {
                 "deepLink": "https://localhost:5000/bookings/createnew?resourceid=267",
@@ -73,7 +55,7 @@
                 },
                 "disabled": false,
                 "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
-                "lastReported": "2024-01-29T15:29:57Z",
+                "lastReported": "2024-01-29T16:14:12Z",
                 "name": "ABC169 - Toyota Prius",
                 "operator": {
                   "color": {
@@ -91,43 +73,22 @@
                   "propulsionType": "COMBUSTION"
                 }
               },
-              "startTime": "2023-07-19T06:44:00+10:00"
+              "startTime": "2023-07-19T09:00:00+10:00"
             },
             {
               "availability": "AVAILABLE",
-              "endTime": "2023-07-19T07:48:53+10:00",
-              "id": "S747ONS7",
-              "segmentTemplateHashCode": -938686943,
-              "startTime": "2023-07-19T06:44:00+10:00"
+              "endTime": "2023-07-19T10:04:49+10:00",
+              "id": "QBWQ5B03",
+              "segmentTemplateHashCode": -1943124496,
+              "startTime": "2023-07-19T09:00:00+10:00"
             }
           ],
-          "weightedScore": 49.5
+          "weightedScore": 49.1
         }
       ]
     }
   ],
-  "query": {
-    "depart": "2023-11-09T19:44:00Z",
-    "from": {
-      "address": "Pymble Station access",
-      "city": "AU.NSW.Sydney",
-      "class": "Location",
-      "lat": -33.74502,
-      "lng": 151.14247,
-      "region": "AU_NSW_Sydney",
-      "timezone": "Australia/Sydney"
-    },
-    "to": {
-      "address": "10A Cowles Road, Mosman, NSW, Australia",
-      "city": "AU.NSW.Sydney",
-      "class": "Location",
-      "lat": -33.83135,
-      "lng": 151.23706,
-      "region": "AU_NSW_Sydney",
-      "timezone": "Australia/Sydney"
-    }
-  },
-  "realTimeStamp": 1706539637,
+  "realTimeStamp": 1706719845,
   "region": "AU_NSW_Sydney",
   "regions": [
     "AU_NSW_Sydney"
@@ -137,14 +98,14 @@
       "action": "Collect SG Fleet",
       "hashCode": -106482228,
       "location": {
-        "id": "sgfleet",
         "address": "Pymble Station access",
+        "id": "sgfleet",
         "bikeId": "267",
         "city": "AU.NSW.Sydney",
         "class": "FreeFloatingVehicle",
         "isDisabled": false,
         "isReserved": false,
-        "lastUpdate": 1706542197,
+        "lastUpdate": 1706544852,
         "lat": -33.74502,
         "lng": 151.14247,
         "name": "ABC169 - Toyota Prius",
@@ -165,7 +126,7 @@
         "name": "CyclOSM",
         "sources": [
           {
-            "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+            "disclaimer": "© OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
             "provider": {
               "name": "OpenStreetMap",
               "website": "https://www.openstreetmap.org"
@@ -208,7 +169,7 @@
         "class": "FreeFloatingVehicle",
         "isDisabled": false,
         "isReserved": false,
-        "lastUpdate": 1706542197,
+        "lastUpdate": 1706544852,
         "lat": -33.74502,
         "lng": 151.14247,
         "name": "ABC169 - Toyota Prius",
@@ -228,11 +189,11 @@
       "geofences": [
         {
           "center": {
-            "lat": -33.831350026027394,
-            "lng": 151.23706019705787
+            "lat": -33.8313500273364,
+            "lng": 151.2370602067706
           },
-          "id": "TRIP_END_S747ONS7",
-          "messageBody": "You are about to arrive at 10A Cowles Road, Mosman, NSW, Australia",
+          "id": "TRIP_END_null",
+          "messageBody": "You are about to arrive at Cowles Road & Spencer Road",
           "messageTitle": "Arriving at your destination",
           "messageType": "TRIP_END",
           "radius": 100,
@@ -240,7 +201,7 @@
           "type": "CIRCLE"
         }
       ],
-      "hashCode": -938686943,
+      "hashCode": -1943124496,
       "localCost": {
         "accuracy": "internal_estimate",
         "cost": 0,
@@ -251,7 +212,7 @@
         "name": "CyclOSM",
         "sources": [
           {
-            "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+            "disclaimer": "© OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
             "provider": {
               "name": "OpenStreetMap",
               "website": "https://www.openstreetmap.org"
@@ -271,12 +232,12 @@
           "https://c.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png"
         ]
       },
-      "metres": 19063,
+      "metres": 19086,
       "metresDismount": 11,
-      "metresSafe": 15250,
-      "metresUnsafe": 3813,
+      "metresSafe": 15469,
+      "metresUnsafe": 3617,
       "mini": {
-        "description": "10A Cowles Road, Mosman, NSW, Australia",
+        "description": "Near Cowles Road & Spencer Road",
         "instruction": "Ride SG Fleet",
         "mainValue": "20 km"
       },
@@ -305,9 +266,9 @@
         },
         {
           "dismount": false,
-          "encodedWaypoints": "py}lEs_oy[VHDJ",
+          "encodedWaypoints": "py}lEs_oy[VHBH",
           "instruction": "TURN_SHARPLY_RIGHT",
-          "metres": 19,
+          "metres": 18,
           "name": "",
           "roadTags": [
             "SERVICE-ROAD"
@@ -316,9 +277,9 @@
         },
         {
           "dismount": false,
-          "encodedWaypoints": "nz}lE}~ny[Vk@l@oADOFWDa@HiALq@Nc@FMXg@TYb@c@f@k@^WVQZKVE\\GnBQbAKj@I\\GXIZOXQZWDGjBqB\\Y\\WXMHCVOlAi@b@QDEp@c@bAeAT[Xg@Xc@d@eA\\gAZaAp@aB`@y@Te@Tg@pAaDR_@j@i@\\QdB}@F?",
+          "encodedWaypoints": "lz}lE__oy[Xk@p@sADKBUDa@HiALq@Nc@FMXg@TYb@c@f@k@^WVQZKVE\\GnBQbAKj@I\\GXIZOXQZWDGjBqB\\Y\\WXMHCVOlAi@b@QDEp@c@bAeAT[Xg@Xc@d@eA\\gAZaAp@aB`@y@Te@Tg@pAaDR_@j@i@\\QdB}@F?",
           "instruction": "TURN_SHARPLY_LEFT",
-          "metres": 1426,
+          "metres": 1427,
           "name": "Pacific Highway",
           "roadTags": [
             "MAIN-ROAD"
@@ -1218,7 +1179,7 @@
         {
           "cyclingNetwork": "City to North Cycle Route",
           "dismount": false,
-          "encodedWaypoints": "x|kmEoozy[@E_@BMCWa@A]DC?Y@AV@H?H?VGlAm@x@e@LIxCyB`Au@nByA~AcAzAiAf@a@fBqAtAiAr@s@V[@IBSFa@CM",
+          "encodedWaypoints": "x|kmEoozy[@E_@BMCWa@A]DC?Y@AV@H?H?VGlAm@x@e@LIxCyB`Au@nByA~AcArAcAn@g@fBqAtAiAr@s@V[@IBSFa@CM",
           "instruction": "TURN_LEFT",
           "metres": 805,
           "name": "",
@@ -1296,36 +1257,38 @@
           "safe": true
         },
         {
-          "cyclingNetwork": "Cammeray Local Routes",
           "dismount": false,
-          "encodedWaypoints": "z`mmEag|y[LAF@V@",
-          "instruction": "TURN_RIGHT",
-          "metres": 26,
-          "name": "Miller Street",
+          "encodedWaypoints": "z`mmEag|y[?SJoA@c@HeALkAEWLE@OFgAj@wIBSB_@@O@Y@MNuBBI",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 465,
+          "name": "Amherst Street",
           "roadTags": [
-            "CYCLE-NETWORK",
-            "MAIN-ROAD"
+            "CYCLE-LANE",
+            "SIDE-ROAD"
           ],
           "safe": true
         },
         {
+          "cyclingNetwork": "Cammeray Local Routes",
           "dismount": false,
-          "encodedWaypoints": "hbmmE_g|y[fAHPD^B~B`@ZDJA`@FVD",
-          "instruction": "CONTINUE_STRAIGHT",
-          "metres": 196,
-          "name": "Miller Street",
+          "encodedWaypoints": "`emmEue}y[IULIJN",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 31,
+          "name": "",
           "roadTags": [
-            "MAIN-ROAD"
+            "CYCLE-LANE",
+            "CYCLE-NETWORK",
+            "SIDE-ROAD"
           ],
-          "safe": false
+          "safe": true
         },
         {
           "cyclingNetwork": "Cammeray Local Routes",
           "dismount": false,
-          "encodedWaypoints": "dmmmEwd|y[?Q?MDM\\uD@KL[TOVAfAJNC",
-          "instruction": "TURN_LEFT",
-          "metres": 205,
-          "name": "Rosalind Street",
+          "encodedWaypoints": "pemmEef}y[DBV@nAv@BF",
+          "instruction": "TURN_SLIGHTLY_LEFT",
+          "metres": 73,
+          "name": "Warringa Road",
           "roadTags": [
             "CYCLE-NETWORK",
             "SIDE-ROAD"
@@ -1334,21 +1297,9 @@
         },
         {
           "dismount": false,
-          "encodedWaypoints": "~rmmEmm|y[zARLF`@JzAB",
+          "encodedWaypoints": "bimmE_d}y[|@Pf@[nIyBpAQpBwAXK\\DFD",
           "instruction": "CONTINUE_STRAIGHT",
-          "metres": 131,
-          "name": "Anzac Avenue",
-          "roadTags": [
-            "CYCLE-NETWORK",
-            "SIDE-ROAD"
-          ],
-          "safe": true
-        },
-        {
-          "dismount": false,
-          "encodedWaypoints": "fzmmEal|y[@UJw@LiEI}@DA",
-          "instruction": "TURN_LEFT",
-          "metres": 162,
+          "metres": 414,
           "name": "",
           "roadTags": [
             "CYCLE-TRACK"
@@ -1358,9 +1309,24 @@
         {
           "cyclingNetwork": "Cammeray Local Routes",
           "dismount": false,
-          "encodedWaypoints": "~zmmEyv|y[Tk@?UPuBNqBJkA`@sDB]",
-          "instruction": "TURN_SLIGHTLY_RIGHT",
-          "metres": 278,
+          "encodedWaypoints": "|~mmEmk}y[Ox@",
+          "instruction": "TURN_RIGHT",
+          "metres": 28,
+          "name": "",
+          "roadTags": [
+            "BICYCLE-DESIGNATED",
+            "CYCLE-NETWORK",
+            "CYCLE-TRACK",
+            "SEGREGATED"
+          ],
+          "safe": true
+        },
+        {
+          "cyclingNetwork": "Cammeray Local Routes",
+          "dismount": false,
+          "encodedWaypoints": "l~mmEsi}y[AHAF",
+          "instruction": "CONTINUE_STRAIGHT",
+          "metres": 8,
           "name": "",
           "roadTags": [
             "BICYCLE-DESIGNATED",
@@ -1373,7 +1339,7 @@
           "cyclingNetwork": "Route 2",
           "dismount": false,
           "encodedWaypoints": "h~mmEai}y[F@TDJ@zEn@",
-          "instruction": "TURN_RIGHT",
+          "instruction": "TURN_LEFT",
           "metres": 147,
           "name": "",
           "roadTags": [
@@ -1540,7 +1506,7 @@
         }
       ],
       "to": {
-        "address": "10A Cowles Road, Mosman, NSW, Australia",
+        "address": "Near Cowles Road & Spencer Road",
         "city": "AU.NSW.Sydney",
         "class": "Location",
         "lat": -33.83135,
@@ -1552,192 +1518,6 @@
       "turn-by-turn": "CYCLING",
       "type": "unscheduled",
       "visibility": "in summary"
-    },
-    {
-      "action": "Walk<DURATION>",
-      "from": {
-        "address": "Pymble Station access",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.74502,
-        "lng": 151.14247,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "hashCode": -1763092617,
-      "localCost": {
-        "accuracy": "internal_estimate",
-        "cost": 0,
-        "currency": "AUD"
-      },
-      "metres": 199,
-      "mini": {
-        "description": "Near Pymble Station, Pacific Hwy",
-        "instruction": "Walk",
-        "mainValue": "200 m"
-      },
-      "modeIdentifier": "wa_wal",
-      "modeInfo": {
-        "alt": "Walk",
-        "color": {
-          "blue": 99,
-          "green": 199,
-          "red": 30
-        },
-        "identifier": "wa_wal",
-        "localIcon": "walk"
-      },
-      "notes": "200 m",
-      "streets": [
-        {
-          "encodedWaypoints": "py}lEs_oy[PNDEWf@KLETAAYb@MX",
-          "instruction": "HEAD_TOWARDS",
-          "metres": 94,
-          "name": "Pymble Station access"
-        },
-        {
-          "encodedWaypoints": "tw}lEa{ny[b@\\DFAHkAzB",
-          "instruction": "TURN_LEFT",
-          "metres": 105,
-          "name": "Tunnel"
-        }
-      ],
-      "to": {
-        "address": "Near Pymble Station, Pacific Hwy",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.74451,
-        "lng": 151.14095,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "travelDirection": 290,
-      "type": "unscheduled",
-      "visibility": "in summary"
-    },
-    {
-      "action": "Collect GoGet",
-      "cost": 34.7,
-      "hashCode": 894478227,
-      "localCost": {
-        "accuracy": "internal_estimate",
-        "cost": 34.7,
-        "currency": "AUD"
-      },
-      "location": {
-        "address": "Near Pymble Station, Pacific Hwy",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.74451,
-        "lng": 151.14095,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "mini": {
-        "instruction": "Collect  GoGet",
-        "mainValue": "from $35 for a round trip (estimate)"
-      },
-      "modeIdentifier": "me_car-s_GOG",
-      "modeInfo": {
-        "alt": "Collect",
-        "identifier": "stationary_vehicle-collect",
-        "localIcon": "collect"
-      },
-      "notes": "Hendrike the Yaris\nSubject to availability\nCost: from $35 for a round trip (estimate)\nRequires paid membership\nRound-trip only",
-      "type": "stationary",
-      "visibility": "in details"
-    },
-    {
-      "action": "Drive GoGet<DURATION>",
-      "durationWithoutTraffic": 1284,
-      "from": {
-        "address": "Near Pymble Station, Pacific Hwy",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.74455,
-        "lng": 151.14092,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "hashCode": 1724091801,
-      "localCost": {
-        "accuracy": "internal_estimate",
-        "cost": 1.63,
-        "costComponents": [
-          {
-            "cost": 1.63,
-            "type": "TOLL"
-          }
-        ],
-        "currency": "AUD"
-      },
-      "metres": 20211,
-      "mini": {
-        "description": "10A Cowles Road, Mosman, NSW, Australia",
-        "instruction": "Drive GoGet",
-        "mainValue": "21 km"
-      },
-      "modeIdentifier": "me_car-s_GOG",
-      "modeInfo": {
-        "alt": "GoGet",
-        "color": {
-          "blue": 106,
-          "green": 63,
-          "red": 0
-        },
-        "description": "GoGet",
-        "identifier": "me_car-s_GOG",
-        "localIcon": "car-share",
-        "remoteDarkIcon": "goget-dark",
-        "remoteIcon": "goget",
-        "remoteIconIsBranding": true
-      },
-      "notes": "21 km ⋅ Includes toll ($1.63)",
-      "streets": [
-        {
-          "encodedWaypoints": "nv}lEuuny[DMVk@d@g@HCDE^P??RE??FGd@o@bCgDL[??yA}AMGGACG??Da@HiALq@Nc@FMXg@TYb@c@f@k@^WVQZKVE\\GnBQbAKj@I\\GXIZOXQZWDGjBqB\\Y\\WXMHCVOlAi@b@QDEp@c@??LVHNTXVf@??Vl@Tj@Pp@Pv@Jl@f@~F??L`@`@~@jAfCx@dB`@l@hAtAfDtD\\b@d@x@j@vARf@|@jCXx@d@lAZj@l@r@VTRNPLZL|@\\l@Fj@Bf@?VCb@EbAYpBm@ZI|@MdA?`A@bCD@CdAHdBd@l@PJBfJ~BjDv@xAB`B?bCEpDCbACrBLt@LJBbARzCt@?Bd@F`BXjFjA~FjAhAJh@@zACP?H?nFG`AA??jIM|@A|AAt@@v@Ht@Rz@Z^T^TzCtC`@f@^`@^\\^\\VV??r@Zb@NZDb@@d@E\\MrAe@pFwB`@@??rAYhBW|@G|@ClFEvAE|BA`AEz@EjCY~Bg@jCw@jA]~@Wv@Oz@Mz@ItIs@jAMjAOx@OlAWrA_@p@U|@]|@e@d@Yz@c@TMtAaArAmAbAcA`AeAp@}@r@cAb@q@`@u@b@y@h@mAr@oBZ{@lAgETw@`@iAfA{BtAaCh@aAr@kAd@m@??f@w@f@s@lCoDhA}Al@aArA}B~@qBnA{CBIt@kBCAh@eB~@gDpAqDl@wAbBcDx@uAjB_DrDqGfAgCrAyDbAiDn@wCLi@t@{Er@sGpB{QdAwHv@yEv@cEX_BBMX{A\\{AAAb@mDXuDFkBBeCAwBE{AAw@O{CQaCMgCEkB?qCDwBPiC\\}Ch@cD^eCj@iDb@iCRwA\\sBPqANwALeBLwBB{AByAAqCC}AMuC??Co@OkBOcB[mCOcAc@sBI[yBoJQmAOgBIkBA_ABcADy@Fy@RwAVkA^yAn@aBhAuBnAyAdA_Ax@i@`@YrDkBhB_AdCwAhAq@??pAu@zCgBdAu@t@g@`BwA|@w@lBeBvB_Bf@a@xDuCt@w@j@o@j@s@d@s@^s@v@kB\\{@To@b@_BXwAh@kDPoAL{@XiAXcAPq@d@oALWHYh@oAXi@Xi@R[^g@b@e@b@g@n@m@nA}@v@i@tAq@PI^KfA]`@Kx@OZGp@Ir@AnABn@FtAXb@L`Bt@jBxAxD|CzAjA~@j@??bB`@t@TnC|@v@RrB^dBRzALhABvEN\\Br@?h@C??USGCo@Oe@CiAAcD[{H}@{B[}A]qA[}Ai@OGyBsAu@m@aA_ACE_@]{@eAEM??DwAEUKOE?wEo@E@MIMG??_Au@g@]I[?WNoBDi@H}@D[FS\\_AH[Jc@Le@Lc@ZiAn@cBRs@BKH]lBiHJ_@dAaEH_@@GD_@?uBQ{@eB{GWcAMa@_@oAc@sAKUAEK_@IWQu@e@_Ac@u@]i@_AgAo@w@_@w@q@cBEQwAyDQa@??FEFEH@FB\\FDC`@BjBVPB`D`@??@Q?KZeFpAyQFq@dAiO??lAL"
-        }
-      ],
-      "to": {
-        "address": "10A Cowles Road, Mosman, NSW, Australia",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.83135,
-        "lng": 151.23706,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "travelDirection": 134,
-      "turn-by-turn": "DRIVING",
-      "type": "unscheduled",
-      "visibility": "in summary"
-    },
-    {
-      "action": "Find parking nearby",
-      "hasCarParks": true,
-      "hashCode": 1700368700,
-      "isParking": true,
-      "location": {
-        "address": "10A Cowles Road, Mosman, NSW, Australia",
-        "city": "AU.NSW.Sydney",
-        "class": "Location",
-        "lat": -33.83135,
-        "lng": 151.23706,
-        "region": "AU_NSW_Sydney",
-        "timezone": "Australia/Sydney"
-      },
-      "mini": {
-        "instruction": "Find parking nearby",
-        "mainValue": "<DURATION>"
-      },
-      "modeIdentifier": "me_car-s_GOG",
-      "modeInfo": {
-        "alt": "Parking",
-        "identifier": "stationary_parking-onstreet",
-        "localIcon": "parking"
-      },
-      "type": "stationary",
-      "visibility": "in details"
     }
   ]
 }

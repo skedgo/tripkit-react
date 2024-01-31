@@ -27,6 +27,7 @@ import TripGoApi from "../api/TripGoApi";
 import RegionsData from "../data/RegionsData";
 import Util from "../util/Util";
 import Segment from "../model/trip/Segment";
+import Trip from "../model/trip/Trip";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
@@ -38,7 +39,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pic
      * Handler for `Book` button click.
      * @ctype
      */
-    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean }) => void
+    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean, trip?: Trip }) => void;
+    onUpdateTrip?: (data: { bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean }) => Promise<Trip | undefined>;
 }
 
 type IStyle = ReturnType<typeof tKUIVehicleAvailabilityDefaultStyle>;
@@ -99,11 +101,14 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
-    const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd }) => {
-        const bookingUrlWithTimes = bookingURL.replace("<start_time>", bookingStart).replace("<end_time>", bookingEnd);
+    const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd, trip }) => {
+        const bookingUrlWithTimes = bookingURL
+            .replace("<start_time>", bookingStart)
+            .replace("<end_time>", bookingEnd)
+            .concat(trip ? "&trip_id=" + trip.id : "");
         window.open(bookingUrlWithTimes, '_blank');
     }
-    const { location, segment, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
+    const { location, segment, onBookClick = onBookClickDefault, onUpdateTrip, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
@@ -558,9 +563,10 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                         text={"Book"}
                                                         type={TKUIButtonType.PRIMARY}
                                                         disabled={bookStartTime === undefined || bookEndTime === undefined}
-                                                        onClick={() => {
+                                                        onClick={async () => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
-                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
+                                                            const updatedTrip = onUpdateTrip ? await onUpdateTrip({ bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime }) : undefined;
+                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime, trip: updatedTrip })
                                                         }}
                                                     />
                                                 </div>
@@ -577,15 +583,14 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
                     </div>
                 </div>
-                {segment &&
+                {onUpdateTrip &&
                     <div className={classes.buttonsPanel}>
                         <TKUIButton
                             text={"Update trip"}
                             type={TKUIButtonType.PRIMARY}
                             disabled={bookStartTime === undefined || bookEndTime === undefined}
                             onClick={() => {
-                                const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
-                                onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
+                                onUpdateTrip({ bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
                             }}
                         />
                         {/* <TKUIButton

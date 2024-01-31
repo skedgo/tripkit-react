@@ -241,16 +241,7 @@ function getSegmentMxMCards(
             freeFloatingVehicleLoc.modeInfo.localIcon = localIcon;
         }
         freeFloatingVehicleLoc.vehicle = segment.sharedVehicle;
-        const collectCardIndex = generateCardIndex();
         return [
-            // <TKUIMxMCollectNearbyCard
-            //     segment={segment}
-            //     onRequestClose={onRequestClose}
-            //     mapAsync={mapAsync}
-            //     key={collectCardIndex}
-            //     isSelectedCard={isSelectedCardBuilder(collectCardIndex)}
-            //     onAlternativeCollected={moveToNext}
-            // />,
             <TKUICard
                 title={segment.getAction()}
                 subtitle={segment.to.getDisplayString()}
@@ -266,7 +257,8 @@ function getSegmentMxMCards(
                     <TKUIButton
                         text={segment.booking.title}
                         icon={<IconWebsite />}
-                        onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                        // onClick={() => window.open(segment.booking!.externalActions![0], '_blank')}
+                        onClick={() => onShowVehicleAvailabilityForSegment?.({ segment })}
                         styles={{
                             main: overrideClass({
                                 margin: '10px 0 0 16px'
@@ -283,7 +275,7 @@ function getSegmentMxMCards(
                             })
                         }}
                     />}
-                <TKUIButton
+                {/* <TKUIButton
                     text={"Change"}
                     onClick={() => onShowVehicleAvailabilityForSegment?.({ segment })}
                     type={TKUIButtonType.PRIMARY_LINK}
@@ -292,7 +284,7 @@ function getSegmentMxMCards(
                             margin: '10px 0 0 16px'
                         })
                     }}
-                />
+                /> */}
                 <TKUILocationDetail location={freeFloatingVehicleLoc} actions={() => null} cardProps={{ presentation: CardPresentation.CONTENT }} />
             </TKUICard>
         ];

@@ -34,7 +34,7 @@ const worker = setupWorker(
             }
             try {
                 return res(
-                    ctx.json(require(`./data/locationInfo-carPod-sgfleet-${start}${(end && end !== start) ? "-" + end : ""}.json`))
+                    ctx.json(require(`./data/locationInfo-carPod-sgfleet-2-${start}${(end && end !== start) ? "-" + end : ""}.json`))
                 )
             } catch {
                 // Mock json does not exist, so proceed with network request.
@@ -46,6 +46,12 @@ const worker = setupWorker(
             )
         }
         return;
+    }),
+    rest.post("https://*/v1/waypoint.json", (req, res, ctx) => {
+        return res(
+            // ctx.json(require(`./data/waypoints-sgfleet-kermit-the-yaris.json`))
+            ctx.json(require(`./data/waypoints-sgfleet-change-time.json`))
+        )
     })
 );
 

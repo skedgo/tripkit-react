@@ -316,7 +316,8 @@ export const tKUIVehicleAvailabilityDefaultStyle = (theme: TKUITheme) => ({
     buttonsPanel: {
         ...genStyles.flex,
         ...genStyles.center,
-        margin: '24px',
+        padding: '10px',
+        borderTop: '1px solid ' + black(4, theme.isDark),
         '&>*:not(:first-child)': {
             marginLeft: '30px'
         }
