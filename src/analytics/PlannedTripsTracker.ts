@@ -3,7 +3,7 @@ import PlannedTrip from "./model/PlannedTrip";
 import Environment from "../env/Environment";
 import TripGoApi from "../api/TripGoApi";
 import NetworkUtil from "../util/NetworkUtil";
-import {JsonConvert} from "json2typescript";
+import { JsonConvert } from "json2typescript";
 
 class PlannedTripsTracker {
 
@@ -34,15 +34,15 @@ class PlannedTripsTracker {
         this._selected = value;
     }
 
-    public scheduleTrack(props: {long?: boolean, anonymous?: boolean}) {
-        const {long, anonymous} = props;
+    public scheduleTrack(props: { long?: boolean, anonymous?: boolean }) {
+        const { long, anonymous } = props;
         if (this.timeoutId !== null) {
             clearTimeout(this.timeoutId);
         }
         this.timeoutId = setTimeout(() => this.track(!!anonymous), long ? 10000 : 2000);
     }
 
-    private track(anonymous: boolean) {
+    public track(anonymous: boolean) {
         if (!this._trips || !this._selected) {
             return
         }

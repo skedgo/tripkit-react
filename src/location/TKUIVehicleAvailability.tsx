@@ -28,6 +28,8 @@ import RegionsData from "../data/RegionsData";
 import Util from "../util/Util";
 import Segment from "../model/trip/Segment";
 import Trip from "../model/trip/Trip";
+import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
+import { OptionsContext } from "../options/OptionsProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
@@ -101,6 +103,7 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
+    const { userProfile } = useContext(OptionsContext);
     const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd, trip }) => {
         const bookingUrlWithTimes = bookingURL
             .replace("<start_time>", bookingStart)
@@ -302,7 +305,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);
             try {
                 // const locationInfo = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/locationInfo-carPod-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));                
-                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${dateGStart}&region=${region}&end=${dateGEnd}`, NetworkUtil.MethodType.GET, TKLocationInfo)
+                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${encodeURIComponent(dateGStart)}&region=${region}&end=${encodeURIComponent(dateGEnd)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
                 setVehicleAvailabilitiesByDate(availabilitiesAByDate => {
                     const availabilitiesByDateUpdate = new Map(availabilitiesAByDate);
                     dateGroup.forEach(date => {
@@ -567,6 +570,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
                                                             const updatedTrip = onUpdateTrip ? await onUpdateTrip({ bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime }) : undefined;
                                                             onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime, trip: updatedTrip })
+                                                            if (updatedTrip) {
+                                                                PlannedTripsTracker.instance.track(!userProfile.trackTripSelections);
+                                                            }
                                                         }}
                                                     />
                                                 </div>
