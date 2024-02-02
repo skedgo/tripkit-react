@@ -26,17 +26,23 @@ import { white } from "../jss/TKUITheme";
 import TripGoApi from "../api/TripGoApi";
 import RegionsData from "../data/RegionsData";
 import Util from "../util/Util";
+import Segment from "../model/trip/Segment";
+import Trip from "../model/trip/Trip";
+import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
+import { OptionsContext } from "../options/OptionsProvider";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Partial<Pick<TKUIViewportUtilProps, "portrait">> {
     /**
      * @ctype
      */
     location: CarPodLocation;
+    segment?: Segment;
     /**
      * Handler for `Book` button click.
      * @ctype
      */
-    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string }) => void
+    onBookClick?: (data: { bookingURL: string, bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean, trip?: Trip }) => void;
+    onUpdateTrip?: (data: { bookingStart: string, bookingEnd: string, vehicleId: string, bookingStartChanged: boolean }) => Promise<Trip | undefined>;
 }
 
 type IStyle = ReturnType<typeof tKUIVehicleAvailabilityDefaultStyle>;
@@ -97,22 +103,30 @@ const SCROLL_X_PANEL_ID = "scroll-x-panel";
 
 const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps) => {
     const { region } = useContext(RoutingResultsContext);
-    const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd }) => {
-        const bookingUrlWithTimes = bookingURL.replace("<start_time>", bookingStart).replace("<end_time>", bookingEnd);
+    const { userProfile } = useContext(OptionsContext);
+    const onBookClickDefault = ({ bookingURL, vehicleId, bookingStart, bookingEnd, trip }) => {
+        const bookingUrlWithTimes = bookingURL
+            .replace("<start_time>", bookingStart)
+            .replace("<end_time>", bookingEnd)
+            .concat(trip ? "&trip_id=" + trip.id : "");
         window.open(bookingUrlWithTimes, '_blank');
     }
-    const { location, onBookClick = onBookClickDefault, portrait, t, classes, theme } = props;
+    const { location, segment, onBookClick = onBookClickDefault, onUpdateTrip, portrait, t, classes, theme } = props;
     const SLOT_WIDTH = portrait ? 80 : 32;
     const SLOT_HEIGHT = portrait ? 40 : 24;
     const VEHICLE_LABEL_WIDTH = 200;
     const SCROLL_HORIZONT_WIDTH = portrait ? 20 : 32;
-    const [displayStartTime, setDisplayStartTime] = useState<string>(DateTimeUtil.toJustDate(DateTimeUtil.getNow(region?.timezone)).format());
+    const rideSegment = segment?.nextSegment();
+    const initBookStartTime = rideSegment?.startTime && DateTimeUtil.toIsoJustTime(rideSegment?.startTime, 30 * 60 * 1000)
+    const initBookEndTime = rideSegment?.endTime && DateTimeUtil.toIsoJustTime(rideSegment?.endTime, 30 * 60 * 1000, { direction: "ceil" })
+    const initDisplayStartTime = rideSegment?.startTime && DateTimeUtil.toIsoJustDate(rideSegment?.startTime);
+    const [displayStartTime, setDisplayStartTime] = useState<string>(initDisplayStartTime ?? DateTimeUtil.toJustDate(DateTimeUtil.getNow(region?.timezone)).format());
     // const [displayStartTime, setDisplayStartTime] = useState<string>("2023-07-19T00:00:00+10:00");
     const [displayEndTime, setDisplayEndTime] = useState<string>(DateTimeUtil.isoAddMinutes(displayStartTime, 24 * 60 - 1));
     const [displayDate, setDisplayDate] = useState<string>(DateTimeUtil.toIsoJustDate(displayStartTime));
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
-    const [bookStartTime, setBookStartTime] = useState<string | undefined>();
-    const [bookEndTime, setBookEndTime] = useState<string | undefined>();
+    const [bookStartTime, setBookStartTime] = useState<string | undefined>(initBookStartTime);
+    const [bookEndTime, setBookEndTime] = useState<string | undefined>(initBookEndTime);
     const slots = getSlots(displayStartTime, displayEndTime);
 
     /**
@@ -230,9 +244,23 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     useEffect(() => {
+        // Effect called the first time vehicles arrive.
+        const availabilities = vehicleAvailabilitiesByDate.get(displayStartTime);
         // Move scroll to 8am by default on display start date change.
-        if (vehicleAvailabilitiesByDate.get(displayStartTime)) {
-            setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+        if (availabilities) {
+            if (initBookStartTime) {    // segment was provided
+                setScrollLeftToTime(initBookStartTime);
+            } else {
+                setScrollLeftToTime(DateTimeUtil.isoAddMinutes(displayStartTime, 8 * 60));
+            }
+        }
+        if (availabilities && segment?.sharedVehicle?.identifier) {
+            // TODO: Fix ids mismatch. BE returns the external id in av.car.identifier, and an internal id `id me_car-s_sgfleet-sydney|AU_NSW_Sydney|${externalId}` in segment.sharedVehicle.identifier
+            const initSelectedVehicle = availabilities
+                .find(av => av.car.identifier === segment!.sharedVehicle!.identifier)?.car;
+            if (initSelectedVehicle) {
+                setSelectedVehicle(initSelectedVehicle);
+            }
         }
     }, [vehicleAvailabilitiesByDate.get(displayStartTime)]);
 
@@ -277,7 +305,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);
             try {
                 // const locationInfo = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/locationInfo-carPod-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));                
-                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${dateGStart}&region=${region}&end=${dateGEnd}`, NetworkUtil.MethodType.GET, TKLocationInfo)
+                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${encodeURIComponent(dateGStart)}&region=${region}&end=${encodeURIComponent(dateGEnd)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
                 setVehicleAvailabilitiesByDate(availabilitiesAByDate => {
                     const availabilitiesByDateUpdate = new Map(availabilitiesAByDate);
                     dateGroup.forEach(date => {
@@ -538,9 +566,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                         text={"Book"}
                                                         type={TKUIButtonType.PRIMARY}
                                                         disabled={bookStartTime === undefined || bookEndTime === undefined}
-                                                        onClick={() => {
+                                                        onClick={async () => {
                                                             const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
-                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
+                                                            const updatedTrip = onUpdateTrip ? await onUpdateTrip({ bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime }) : undefined;
+                                                            onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime, trip: updatedTrip })
+                                                            if (updatedTrip) {
+                                                                PlannedTripsTracker.instance.track(!userProfile.trackTripSelections);
+                                                            }
                                                         }}
                                                     />
                                                 </div>
@@ -557,6 +589,26 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         {noVehicles && <div className={classes.noVehicles}>No vehicles</div>}
                     </div>
                 </div>
+                {onUpdateTrip &&
+                    <div className={classes.buttonsPanel}>
+                        <TKUIButton
+                            text={"Update trip"}
+                            type={TKUIButtonType.PRIMARY}
+                            disabled={bookStartTime === undefined || bookEndTime === undefined}
+                            onClick={() => {
+                                onUpdateTrip({ bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier, bookingStartChanged: bookStartTime !== initBookStartTime })
+                            }}
+                        />
+                        {/* <TKUIButton
+                            text={"Update trip & Book"}
+                            type={TKUIButtonType.PRIMARY}
+                            disabled={bookStartTime === undefined || bookEndTime === undefined}
+                            onClick={() => {
+                                const selectedAvailability: CarAvailability = vehicleAvailabilities.find(va => va.car === selectedVehicle)!;
+                                onBookClick({ bookingURL: selectedAvailability.bookingURL!, bookingStart: bookStartTime!, bookingEnd: DateTimeUtil.isoAddMinutes(bookEndTime!, 30)!, vehicleId: selectedVehicle!.identifier })
+                            }}
+                        /> */}
+                    </div>}
             </div>
         </ScrollSync>
     );

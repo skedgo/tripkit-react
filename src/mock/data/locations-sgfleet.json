@@ -1,0 +1,723 @@
+{
+  "groups": [
+    {
+      "key": "AU_NSW_Sydney",
+      "hashCode": -269389115,
+      "carPods": [
+        {
+          "lat": -33.74502,
+          "lng": 151.14247,
+          "timezone": "Australia/Sydney",
+          "city": "AU.NSW.Sydney",
+          "address": "32 Angus Road, North Jesseport, Kyrgyz Republic, Pymble 2073, AU",
+          "region": "AU_NSW_Sydney",
+          "id": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|sgfleet-sydney-6200763350955313488",
+          "name": "SG Fleet",
+          "carPod": {
+            "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|sgfleet-sydney-6200763350955313488",
+            "operator": {
+              "name": "SG Fleet",
+              "website": "https://www.sgfleet.com/",
+              "color": {
+                "red": 116,
+                "green": 74,
+                "blue": 255
+              }
+            },
+            "availabilities": [
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "ABC169 - Toyota Prius",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|276",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "ABC178 - Toyota Prius",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|278",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "CT03FZ - FORD",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|319",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "NNN223 - Toyota Hiace",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|382",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "John",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|383",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Bob",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|384",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Bill",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|385",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Wayne",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|386",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Andy",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|387",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "James",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|388",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Susan",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|389",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Alice",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|390",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "Lily",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|1010",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "HBG123 - Toyota Tarago",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|24456",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "BE08WM - TOYOTA",
+                  "disabled": false,
+                  "reserved": false
+                }
+              },
+              {
+                "car": {
+                  "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|25626",
+                  "operator": {
+                    "name": "SG Fleet",
+                    "website": "https://www.sgfleet.com/",
+                    "color": {
+                      "red": 116,
+                      "green": 74,
+                      "blue": 255
+                    }
+                  },
+                  "vehicleTypeInfo": {
+                    "formFactor": "CAR",
+                    "name": "Car",
+                    "propulsionType": "COMBUSTION"
+                  },
+                  "name": "123ABC - Toyota RAV4@",
+                  "disabled": false,
+                  "reserved": false
+                }
+              }
+            ],
+            "availabilityMode": "NONE",
+            "inService": true,
+            "vehicles": [
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|267",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "ABC169 - Toyota Prius",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|276",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "ABC178 - Toyota Prius",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|278",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "CT03FZ - FORD",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|319",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "NNN223 - Toyota Hiace",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|382",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "John",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|383",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Bob",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|384",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Bill",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|385",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Wayne",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|386",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Andy",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|387",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "James",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|388",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Susan",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|389",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Alice",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|390",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "Lily",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|1010",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "HBG123 - Toyota Tarago",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|24456",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "BE08WM - TOYOTA",
+                "disabled": false,
+                "reserved": false
+              },
+              {
+                "identifier": "me_car-s_sgfleet-sydney|AU_NSW_Sydney|25626",
+                "operator": {
+                  "name": "SG Fleet",
+                  "website": "https://www.sgfleet.com/",
+                  "color": {
+                    "red": 116,
+                    "green": 74,
+                    "blue": 255
+                  }
+                },
+                "vehicleTypeInfo": {
+                  "formFactor": "CAR",
+                  "name": "Car",
+                  "propulsionType": "COMBUSTION"
+                },
+                "name": "123ABC - Toyota RAV4@",
+                "disabled": false,
+                "reserved": false
+              }
+            ]
+          },
+          "modeInfo": {
+            "identifier": "me_car-s_sgfleet-sydney",
+            "alt": "SG Fleet",
+            "localIcon": "car-share",
+            "description": "SG Fleet",
+            "color": {
+              "red": 116,
+              "green": 74,
+              "blue": 255
+            },
+            "remoteIconIsBranding": true
+          },
+          "class": "Location"
+        }
+      ]
+    }
+  ]
+}

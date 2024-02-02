@@ -40,7 +40,7 @@ import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 import { TKUserPosition } from "../util/GeolocationUtil";
 import TKUIWaitingRequest, { TKRequestStatus } from "../card/TKUIWaitingRequest";
 import DeviceUtil from "../util/DeviceUtil";
-import { CardPresentation, TKUICardRaw } from "../card/TKUICard";
+import TKUICard, { CardPresentation, TKUICardRaw } from "../card/TKUICard";
 import { genClassNames } from "../css/GenStyle.css";
 import Segment from "../model/trip/Segment";
 import { cardSpacing } from "../jss/TKUITheme";
@@ -60,6 +60,9 @@ import { TKError } from "../error/TKError";
 import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import RoutingResults from "../model/trip/RoutingResults";
+import TKUIVehicleAvailability from "../location/TKUIVehicleAvailability";
+import ModeLocation from "../model/location/ModeLocation";
+import LocationsResult from "../model/location/LocationsResult";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -660,7 +663,49 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             />;
         const mxMView = props.selectedTripSegment &&
             <TKUIMxMViewHelpers.TKStateProps>
-                {stateProps => <TKUIMxMView {...stateProps} onRequestClose={() => props.setSelectedTripSegment(undefined)} parentElement={this.ref} />}
+                {stateProps =>
+                    <TKUIMxMView
+                        {...stateProps}
+                        onRequestClose={() => props.setSelectedTripSegment(undefined)}
+                        parentElement={this.ref}
+                        onShowVehicleAvailabilityForSegment={async ({ segment }) => {
+                            this.props.onWaitingStateLoad(true);
+                            const groupsJSON = await TripGoApi.apiCall(`locations.json?lat=${segment.from.lat}&lng=${segment.from.lng}&radius=1000&modes=${segment.modeIdentifier}&strictModeMatch=false`, NetworkUtil.MethodType.GET)
+                            this.props.onWaitingStateLoad(false);
+                            const carPod = Util.deserialize(groupsJSON.groups[0], LocationsResult)
+                                .getLocations()[0];
+                            if (!carPod) {
+                                return; // TODO: display error.
+                            }
+                            this.pushCardView({
+                                viewId: "AVAILABILITY",
+                                renderCard: () => <TKUICard
+                                    title={segment.sharedVehicle?.operator.name}
+                                    subtitle={"Change vehicle and / or booking range"}
+                                    presentation={this.props.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                                    styles={{
+                                        modalContent: overrideClass({
+                                            width: '800px'
+                                        })
+                                    }}
+                                    onRequestClose={() => this.popCardView()}
+                                >
+                                    <TKUIVehicleAvailability
+                                        location={carPod as CarPodLocation}
+                                        segment={segment}
+                                        onUpdateTrip={async ({ bookingStart, bookingEnd, vehicleId, bookingStartChanged }) => {
+                                            const vehicleChanged = vehicleId !== segment.sharedVehicle?.identifier;
+                                            // TODO: if can pick a vehicle from a different car-pod location, then we need to pass that location to the following call.
+                                            const trip = (vehicleChanged || bookingStartChanged) ?
+                                                await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { ...bookingStartChanged ? { bookingStart, bookingEnd } : {}, ...vehicleChanged ? { vehicleId } : {} }) :
+                                                segment.trip;
+                                            this.popCardView();
+                                            return trip;
+                                        }} />
+                                </TKUICard>
+                            });
+                        }}
+                    />}
             </TKUIMxMViewHelpers.TKStateProps>
 
         const topCardView = this.state.cardStack.length > 0 ? this.state.cardStack[this.state.cardStack.length - 1] : undefined;

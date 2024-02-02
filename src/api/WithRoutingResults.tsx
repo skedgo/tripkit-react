@@ -109,6 +109,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             this.onAlternativeChange = this.onAlternativeChange.bind(this);
             this.onSegmentServiceChange = this.onSegmentServiceChange.bind(this);
             this.onSegmentCollectChange = this.onSegmentCollectChange.bind(this);
+            this.onSegmentCollectBookingChange = this.onSegmentCollectBookingChange.bind(this);
             this.refreshRegion = this.refreshRegion.bind(this);
             this.onWaitingStateLoad = this.onWaitingStateLoad.bind(this);
             this.computeModeSets = this.computeModeSets.bind(this);
@@ -624,6 +625,80 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
         }
 
+        public onSegmentCollectBookingChange(segment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart?: string, bookingEnd?: string, vehicleId?: string }): Promise<Trip | undefined> {
+            const selectedTrip = this.state.selected;
+            const { bookingStart, bookingEnd, vehicleId } = data;
+            if (!selectedTrip) {
+                return Promise.resolve(undefined);
+            }
+            this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
+            const tripSegments = selectedTrip.segments
+                .filter(tripSegment => tripSegment.modeIdentifier);
+            let waypointSegments: any[];
+            // segment.modeInfo?.identifier === "stationary_vehicle-collect";
+            waypointSegments = tripSegments
+                .map((tripSegment, i) => {
+                    if (tripSegment === segment) {
+                        const segmentRegions = RegionsData.instance.getSegmentRegions(segment);
+
+                        return {
+                            start: `(${location.lat},${location.lng})`,
+                            end: `(${location.lat},${location.lng})`,
+                            modes: [segment.modeIdentifier],
+                            // modes: [segment.modeInfo?.identifier],
+                            startTime: bookingStart ? DateTimeUtil.isoToSeconds(bookingStart) : segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).
+                            endTime: bookingStart ? DateTimeUtil.isoToSeconds(bookingStart) + segment.endTimeSeconds - segment.startTimeSeconds : segment.endTimeSeconds,
+                            sharedVehicleID: vehicleId ?? location.id,
+                            region: segmentRegions[0].name,
+                            ...segmentRegions[0] !== segmentRegions[1] ? {
+                                disembarkationRegion: segmentRegions[1].name
+                            } : undefined
+                        };
+                    } else {
+                        // The end location of the previous segment and the start location of the next segment should be the new location.
+                        const startLoc = i > 0 && tripSegments[i - 1] === segment ? location : tripSegment.from;
+                        const endLoc = i < tripSegments.length - 1 && tripSegments[i + 1] === segment ? location : tripSegment.to;
+                        return {
+                            start: `(${startLoc.lat},${startLoc.lng})`,
+                            end: `(${endLoc.lat},${endLoc.lng})`,
+                            // If changed of vehicle provider, then also need to update all trip segments that also have the original modeIdentifier.
+                            modes: [tripSegment.modeIdentifier],
+                            // _modes: [location.modeInfo.identifier !== segment.modeIdentifier && tripSegment.modeIdentifier === segment.modeIdentifier ?
+                            //     location.modeInfo.identifier : tripSegment.modeIdentifier]
+                        };
+                    }
+                });
+            const requestBody = {
+                config: { v: TripGoApi.apiVersion },
+                segments: waypointSegments
+            };
+            return TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody)
+                .then((result: RoutingResults) => {
+                    const updatedTrip = result.groups[0];
+                    // Compare by id (instead of equiality between trips) since segment.trip is Trip, while prevState.trips and prevState.selected are TripGroups.
+                    this.setState(prevState => {
+                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment.trip.id)) {
+                            return null;
+                        }
+                        const stateUpdate = {
+                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
+                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
+                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
+                        }
+                        return stateUpdate;
+                    });
+                    this.setState({ waitingTripUpdate: false });
+                    return updatedTrip;
+                })
+                .catch(() => {
+                    this.setState({
+                        waitingTripUpdate: false,
+                        tripUpdateError: new TKError("Error updating trip")
+                    });
+                    return undefined;
+                });
+        }
+
         public onWaitingStateLoad(waiting: boolean, error?: Error) {
             this.setState({
                 waitingStateLoad: waiting,
@@ -682,6 +757,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 onAlternativeChange={this.onAlternativeChange}
                 onSegmentServiceChange={this.onSegmentServiceChange}
                 onSegmentCollectChange={this.onSegmentCollectChange}
+                onSegmentCollectBookingChange={this.onSegmentCollectBookingChange}
                 waitingStateLoad={this.state.waitingStateLoad}
                 stateLoadError={this.state.stateLoadError}
                 onWaitingStateLoad={this.onWaitingStateLoad}

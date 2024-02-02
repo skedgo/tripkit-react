@@ -145,6 +145,7 @@ export { default as TKUIVehicleAvailability } from "./location/TKUIVehicleAvaila
  * IMPORTANT: Uncomment to compile TripGo web-app.
  */
 if (process.env.NODE_ENV === 'development' && document.getElementById("tripgo-sample-root")) {
+    // require("./mock/mock.js");
     /* eslint-disable import/first */
     import("./tripgo/index");
 }

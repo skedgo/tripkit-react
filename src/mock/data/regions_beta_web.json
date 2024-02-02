@@ -1,0 +1,2524 @@
+{
+  "modes": {
+      "cy_bic": {
+          "title": "Bicycle",
+          "color": {
+              "red": 0,
+              "green": 180,
+              "blue": 99
+          }
+      },
+      "cy_bic-s": {
+          "title": "Bike-sharing",
+          "color": {
+              "red": 30,
+              "green": 199,
+              "blue": 99
+          }
+      },
+      "in_air": {
+          "title": "Flight",
+          "subtitle": "Flight",
+          "icon": "aeroplane",
+          "color": {
+              "red": 0,
+              "green": 180,
+              "blue": 99
+          },
+          "isTemplate": true
+      },
+      "me_car": {
+          "title": "Car",
+          "color": {
+              "red": 66,
+              "green": 149,
+              "blue": 240
+          }
+      },
+      "me_car-p_BlaBlaCar": {
+          "title": "BlaBlaCar",
+          "subtitle": "Carpooling",
+          "icon": "blablacar",
+          "color": {
+              "red": 19,
+              "green": 132,
+              "blue": 184
+          },
+          "URL": "https://www.blablacar.com",
+          "isBranding": true
+      },
+      "me_car-s": {
+          "title": "Car-sharing",
+          "color": {
+              "red": 115,
+              "green": 169,
+              "blue": 243
+          }
+      },
+      "me_car-s_FLX": {
+          "title": "Flexicar",
+          "subtitle": "Car-sharing",
+          "icon": "flexicar",
+          "color": {
+              "red": 115,
+              "green": 169,
+              "blue": 243
+          },
+          "URL": "http://www.flexicar.com.au",
+          "isBranding": true
+      },
+      "me_car-s_ZIP": {
+          "title": "Zipcar",
+          "subtitle": "Car-sharing",
+          "icon": "zipcar",
+          "darkIcon": "zipcar-dark",
+          "color": {
+              "red": 84,
+              "green": 164,
+              "blue": 28
+          },
+          "URL": "http://www.zipcar.com/",
+          "isBranding": true
+      },
+      "me_mic-s": {
+          "title": "Shared micromobility",
+          "color": {
+              "red": 30,
+              "green": 199,
+              "blue": 99
+          }
+      },
+      "me_mot": {
+          "title": "Motorbike",
+          "color": {
+              "red": 46,
+              "green": 196,
+              "blue": 199
+          }
+      },
+      "ps_tax": {
+          "title": "Taxi",
+          "color": {
+              "red": 221,
+              "green": 202,
+              "blue": 62
+          }
+      },
+      "ps_tnc_ODB": {
+          "title": "Skedgo",
+          "subtitle": "Ride-hailing",
+          "icon": "skedgo",
+          "color": {
+              "red": 47,
+              "green": 255,
+              "blue": 47
+          },
+          "URL": "https://www.skedgo.com",
+          "isBranding": true
+      },
+      "pt_ltd_MON": {
+          "title": "Inter-campus bus",
+          "subtitle": "Private transit",
+          "color": {
+              "red": 45,
+              "green": 197,
+              "blue": 104
+          },
+          "implies": [
+              "pt_pub"
+          ],
+          "URL": "https://www.monash.edu/people/transport-parking/inter-campus-shuttle-bus"
+      },
+      "pt_ltd_SCHOOLBUS": {
+          "title": "School bus",
+          "subtitle": "Private transit",
+          "icon": "school-bus",
+          "color": {
+              "red": 45,
+              "green": 197,
+              "blue": 104
+          },
+          "implies": [
+              "pt_pub"
+          ],
+          "isTemplate": true
+      },
+      "pt_pub": {
+          "title": "Public transport",
+          "color": {
+              "red": 45,
+              "green": 197,
+              "blue": 104
+          }
+      },
+      "wa_wal": {
+          "title": "Walking",
+          "color": {
+              "red": 30,
+              "green": 199,
+              "blue": 99
+          },
+          "required": true
+      },
+      "wa_whe": {
+          "title": "Wheelchair",
+          "color": {
+              "red": 66,
+              "green": 149,
+              "blue": 240
+          }
+      }
+  },
+  "regions": [
+      {
+          "name": "AU_SA_Adelaide",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Adelaide",
+          "cities": [
+              {
+                  "lat": -34.92861,
+                  "lng": 138.59996,
+                  "identifier": "AU.SA.Adelaide",
+                  "title": "Adelaide, SA, Australia",
+                  "timezone": "Australia/Adelaide",
+                  "region": "AU_SA_Adelaide"
+              }
+          ],
+          "polygon": "~{vvEwa}kYooxC??_pvBnoxC?",
+          "urls": [
+              "https://granduni.skedgo.com/satapp",
+              "https://darkages.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_Oppland",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 62.47181,
+                  "lng": 6.14873,
+                  "identifier": "NO.Alesund",
+                  "title": "Alesund, Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_Oppland"
+              }
+          ],
+          "polygon": "}eurJyzdXy~_G{m}BempDyloHlgfDazpc@x~iBfb\\vpYqdkAp`h@i{fAp`{@ria@~hZ~flA",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NL_NH_Amsterdam",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Amsterdam",
+          "cities": [
+              {
+                  "lat": 52.37115,
+                  "lng": 4.89793,
+                  "identifier": "NL.NH.Amsterdam",
+                  "title": "Amsterdam, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_NH_Amsterdam"
+              }
+          ],
+          "polygon": "_o}}Hu_t_@q[r`Y{p@fwe@uuAdz`Akf@~|m@avqCinc@mcbA}qbAupI{_iAtxeF`O",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://hadron.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_MI_AnnArbor",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "US/Eastern",
+          "cities": [
+              {
+                  "lat": 42.28117,
+                  "lng": -83.74701,
+                  "identifier": "US.MI.Ann-Arbor",
+                  "title": "Ann Arbor, MI, USA",
+                  "timezone": "US/Eastern",
+                  "region": "US_MI_AnnArbor"
+              }
+          ],
+          "polygon": "gkifGrel{NfriAia@nxZrpd@~}x@vXngP{i@zr]lT`tKzM_g\\fzuBmrrExU_Xim`A_q@kvzAfhUbP",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_Bergen",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 60.38883,
+                  "lng": 5.32984,
+                  "identifier": "NO.Bergen",
+                  "title": "Bergen, Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_Bergen"
+              }
+          ],
+          "polygon": "snyrJctcX?}rub@r`cEhoFn~DbbkDuqMbxc[",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_BE_Berlin",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 52.52115,
+                  "lng": 13.41035,
+                  "identifier": "DE.BE.Berlin",
+                  "title": "Berlin, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BE_Berlin"
+              },
+              {
+                  "lat": 52.396,
+                  "lng": 13.0617,
+                  "identifier": "DE.BE.Potsdam",
+                  "title": "Potsdam, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BE_Berlin"
+              }
+          ],
+          "polygon": "}yx}HecqkAar~B}ce@CoauGjxAvXbfDz{DtfB}i@tm@gfOnuFcpJzvCwcMpjQwgWjtGqgVdhHqjI|rFdrDxdFowDzpHjkHzcD~sHvpXmkHreGe_Wx_OnTdvGjfDfuCcgHhrDmdErhJbrDgoj@zblL",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "UK_Birmingham",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/London",
+          "cities": [
+              {
+                  "lat": 52.48603,
+                  "lng": -1.89261,
+                  "identifier": "GB.ENG.Birmingham",
+                  "title": "Birmingham, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_Birmingham"
+              }
+          ],
+          "polygon": "_qnbI~kuP?_~cH~ugC??~}cH",
+          "urls": [
+              "https://stars.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://draco.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "BE_NorthEastBelgium",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Brussels",
+          "cities": [
+              {
+                  "lat": 50.84656,
+                  "lng": 4.3517,
+                  "identifier": "BE.Brussels",
+                  "title": "Brussels, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_NorthEastBelgium"
+              },
+              {
+                  "lat": 51.22111,
+                  "lng": 4.39971,
+                  "identifier": "BE.Antwerp",
+                  "title": "Antwerp, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_NorthEastBelgium"
+              }
+          ],
+          "polygon": "sjaxHiuiXklJauNygDzpCwKmqW|xBwkJuvRv_CwdDo`^zvAgvChqFnpAzs@wyP}~Ns`YphC{_OleKpd@glDuqM_|B{zPegBkiCdaBkyHvcGsxDzqFruEhxGqhJvfEqs@qp@_`JrqBijHdiFdiBbQ}bTehAkb@neAwcM_dBasCatBkmGx[yiEdvDimGhlGe_@r{CaoPriA_\\eSecP|[krEtxDyJmrAaiG|oD{vFp|C`uHfuAoyCl}GxdG}YxqBtoDxcBj_@ikBv{EzuAtyC`}E~{@qnEjuGjkEbpEr}Hzk@d}DhpHm|@piAutF|kDwg@jfFrlC?hdjHsziB?",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "FR_J_NorthWest",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Paris",
+          "cities": [
+              {
+                  "lat": 49.04883,
+                  "lng": 2.03277,
+                  "identifier": "FR.J.Cergy",
+                  "title": "Cergy, France",
+                  "timezone": "Europe/Paris",
+                  "region": "FR_J_NorthWest"
+              }
+          ],
+          "polygon": "wnviHskkOrY`pdI{sJkf@_cmAsq_Eek@ar`CliyA_cA",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "BE_SouthWestBelgium",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Brussels",
+          "cities": [
+              {
+                  "lat": 50.41203,
+                  "lng": 4.44362,
+                  "identifier": "BE.Charleroi",
+                  "title": "Charleroi, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_SouthWestBelgium"
+              }
+          ],
+          "polygon": "w|xtHugo\\byrB?rxPl}XzqNf`@xiHzla@hlAvtL}}Ap`SwyA~jFhlAbcUm~CtjJo}Fnc@y{D}_DexBwfL{mFdaEmmCgBzPxsGqg@bcDuvNeuCerGakL}|AzyEj`B~eBjKpxDsoI|mJieGxnI`fDr`YyaCj~FnDxgFuLprLldFvu@bu@vnCehDrsFw_GvbBawOtWyzErbG`_@nyTyyApV{}Bm{BsfAdmFf}ClgD~cBpoMgfEdeOecA|dBk_Ol{BeqHlxCmwAu~BqzDnr@_PvuF_zAn~Ak}AtW{vBz|A?icdI",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "FR_J_SouthWest",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Paris",
+          "cities": [
+              {
+                  "lat": 48.44195,
+                  "lng": 1.49027,
+                  "identifier": "FR.J.Chartres",
+                  "title": "Chartres, France",
+                  "timezone": "Europe/Paris",
+                  "region": "FR_J_SouthWest"
+              }
+          ],
+          "polygon": "__~cH{x}F_ibE|uu@?ydlEzpoDzFbwQ~euC",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_NW_Cologne",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 50.93734,
+                  "lng": 6.95984,
+                  "identifier": "DE.NW.Cologne",
+                  "title": "Cologne, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Cologne"
+              },
+              {
+                  "lat": 50.73722,
+                  "lng": 7.09906,
+                  "identifier": "DE.NW.Bonn",
+                  "title": "Bonn, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Cologne"
+              },
+              {
+                  "lat": 50.7764,
+                  "lng": 6.08345,
+                  "identifier": "DE.NW.Aachen",
+                  "title": "Aachen, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Cologne"
+              }
+          ],
+          "polygon": "sccsHw}re@su@fdDzTjjNmaDdmFw`GlyCm|J{lPyEvrMciRjqKjUvmO{jJre@oqCdeIc}BqpAln@wnCmn@g{A_yBj_A}nAe_@qmA_vGlp@qbAmqBmoA{nAlr@{eB`N{eB}gA{MnfE{d@cAm_@dmFm_CvIw\\`jAuwC{aCrWnjIsn@`xAvnA`kIef@`qAkcCk}AsjAzpCs~A||@urMoihH~f{Ayl[je[l~jF",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_NT_Darwin",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Darwin",
+          "cities": [
+              {
+                  "lat": -12.4542,
+                  "lng": 130.8391,
+                  "identifier": "AU.NT.Darwin",
+                  "title": "Darwin, NT, Australia",
+                  "timezone": "Australia/Darwin",
+                  "region": "AU_NT_Darwin"
+              }
+          ],
+          "polygon": "~ovmA_ho{W_g{C??_xnD~f{C?",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_MI_Detroit",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "US/Eastern",
+          "cities": [
+              {
+                  "lat": 42.33693,
+                  "lng": -83.0507,
+                  "identifier": "US.MI.Detroit",
+                  "title": "Detroit, MI, USA",
+                  "timezone": "US/Eastern",
+                  "region": "US_MI_Detroit"
+              }
+          ],
+          "polygon": "kzw}Fjpc|NtxBdlLmbaBnr@_flAbPuq[yza@mpBehjBqKu}|@ji_@xbHtxt@~_~@|sq@b{n@f}KdqPdiu@v}q@",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_NW_Dortmund",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 51.51396,
+                  "lng": 7.46439,
+                  "identifier": "DE.NW.Dortmund",
+                  "title": "Dortmund, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              },
+              {
+                  "lat": 51.4818,
+                  "lng": 7.2154,
+                  "identifier": "DE.NW.Bochum",
+                  "title": "Bochum, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              },
+              {
+                  "lat": 51.2715,
+                  "lng": 7.2006,
+                  "identifier": "DE.NW.Wuppertal",
+                  "title": "Wuppertal, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              },
+              {
+                  "lat": 51.4586,
+                  "lng": 7.0166,
+                  "identifier": "DE.NW.Essen",
+                  "title": "Essen, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              },
+              {
+                  "lat": 51.9562,
+                  "lng": 7.6278,
+                  "identifier": "DE.NW.Münster",
+                  "title": "Münster, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              },
+              {
+                  "lat": 51.9609,
+                  "lng": 7.6289,
+                  "identifier": "DE.NW.Gelsenkirchen",
+                  "title": "Gelsenkirchen, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dortmund"
+              }
+          ],
+          "polygon": "}iwvHmb|i@kk_Bxmc@yjq@xwQqwLvkDsuDkcKuh@ut@csCsWy{@oeEiwBhRi@hyBqj@lEwgEteLys@vmIgkBbAckBwv@mr@q~GejAwXcm@k_Ac`Cal@iBcdOoeAerDuyCkq@ewA}_Dyi@uH{]axG}oDmxCyfBqs@uTs}B`PgxBggAgnFkrArgBuo@|q@zcl@{nvCjtfBaaoApnmAxgaDfpBvgeA",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_MN_Duluth",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "America/Chicago",
+          "cities": [
+              {
+                  "lat": 46.78831,
+                  "lng": -92.10036,
+                  "identifier": "US.MN.Duluth",
+                  "title": "Duluth, MN, USA",
+                  "timezone": "America/Chicago",
+                  "region": "US_MN_Duluth"
+              }
+          ],
+          "polygon": "sdzhHbna`QxxRcx}CoaF{rlCbhe@{zrBd{\\gbjAfgRub^fwb@{p_BanT}uu@kqLslq@~_]ig`@gvDiyYlhC{wbBdaS_wXyqB}nr@t_Diuf@psLcsObsoF~xfOvm\\fxv@lpaB?|wLngJb~]p}gAb}n@tmTjgGufQltPsmT~oNpGraNxyPsdNhxiMuy_L~lEcflH?~vq@ghjB",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_NW_Dusseldorf",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 51.22652,
+                  "lng": 6.77704,
+                  "identifier": "DE.NW.Düsseldorf",
+                  "title": "Düsseldorf, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dusseldorf"
+              },
+              {
+                  "lat": 51.435,
+                  "lng": 6.7608,
+                  "identifier": "DE.NW.Duisburg",
+                  "title": "Duisburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dusseldorf"
+              },
+              {
+                  "lat": 51.1924,
+                  "lng": 6.4309,
+                  "identifier": "DE.NW.Mönchengladbach",
+                  "title": "Mönchengladbach, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NW_Dusseldorf"
+              }
+          ],
+          "polygon": "eblvHg`yb@wzAaNkyA~gAqhC}mJdaEmsE_nCglAeiEuqGyMw_CctFerJexBawMatBrbGzt@p_BlLduCq`BtaBycGd_@cQ}eBofB~hA}cF_cIc_JkjHmT_fB_iCc~EayCf}@gs@wXaWbyAqyIcjAwgJ`l@opBjfDotE~qCkx@zaCugBflA}~AviEsoAhCwtEctCc~Br|NmfF~y@e|@e|@ieBteFkBf}FisAfn@igBkpFoc@fRmy@cPoYloAunAe_@qpApwD}gA|[ceBumCvd@}}Ds~@efCc^miCsyB_aDb_B}fGbb@ecJcyAiC{RztAeZxh@k~A`l@oY`iA}HxtAqKb|@km@m`AcXip@fNor@ah@wzDh`BubG`b@dP|Jvu@tp@}fA`j@omB{RupBfJctCkk@waBhq@mvDb}Awg@|Bu`Hx_BehBzVoyCwgBgRsz@~tBucBut@z_Ag_Lhy@g{AueEo_M_GurAgdEkgX|cBsdFfr`Dy_}@teJb|cF",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "UK_SouthScotland",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/London",
+          "cities": [
+              {
+                  "lat": 55.95392,
+                  "lng": -3.18553,
+                  "identifier": "GB.SCT.Edinburgh",
+                  "title": "Edinburgh, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_SouthScotland"
+              },
+              {
+                  "lat": 55.86398,
+                  "lng": -4.24918,
+                  "identifier": "GB.SCT.Glasgow",
+                  "title": "Glasgow, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_SouthScotland"
+              }
+          ],
+          "polygon": "oiivI~nyo@?_oyo@~qy@nihJ~iwC~r|V",
+          "urls": [
+              "https://stars.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://draco.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NL_SouthNetherlands",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Amsterdam",
+          "cities": [
+              {
+                  "lat": 51.44128,
+                  "lng": 5.47564,
+                  "identifier": "NL.Eindhoven",
+                  "title": "Eindhoven, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_SouthNetherlands"
+              },
+              {
+                  "lat": 51.56101,
+                  "lng": 5.09225,
+                  "identifier": "NL.Tilburg",
+                  "title": "Tilburg, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_SouthNetherlands"
+              },
+              {
+                  "lat": 51.58912,
+                  "lng": 4.77579,
+                  "identifier": "NL.Breda",
+                  "title": "Breda, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_SouthNetherlands"
+              }
+          ],
+          "polygon": "wh_{HohmS?sjbO`y@ok@rfBvfFbl@mEhDk~FzkC{`It_GtrAleC_`PtfHzpC|zF}mJziG}dHfrH}pC`cMv_ClT{aCvvFhCpnDlsElLzpCx_Jn`GxqEdeIzoB_hAneHja@edCgwNfbAwpBnkE~Md_HdaVdnDjaL~eGbqDnk@b`EywDv}C~sAnqF|uFe~EbaDdPsfAgiHng@}tMjjHl`A`aB{bNlaG`]rfFl}Acq@feDdu@vzDxvCknA|zC`nElgBeaEn`Dha@hO|bTq_@|~`@~@b}KsfI{tAybA`zFw|D~eBemC{K}yPypNabMquE_ePwmImmBmdEujBppAzt@liIc~DtcAcOpqR_qF~fSy{Gnr@chDvmIbsEh}L`Gptb@{lApnBwuEor@abAfuCj_AtfF}q@vfFqyNvtLgmFy{DirEtaBiDvfF~eN~hR}aA~{\\o_CxbHuzImwO}yB~zKpgM|mPlZ~qZahJlTvdDncWh~No~GbbBliIwQdcJgzB|i@jL|zK~fNnuPz{HzsS~cHrd]ez@f}WgaHlTw`Ghg`@nzB~_Pj`EucA|a@roSicFfaKcgFdfCaeK{HyqmA?",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://hadron.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_HE_Frankfurt",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 50.11042,
+                  "lng": 8.68314,
+                  "identifier": "DE.HE.Frankfurt",
+                  "title": "Frankfurt, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_HE_Frankfurt"
+              },
+              {
+                  "lat": 50.0817,
+                  "lng": 8.2415,
+                  "identifier": "DE.HE.Wiesbaden",
+                  "title": "Wiesbaden, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_HE_Frankfurt"
+              },
+              {
+                  "lat": 50.0005,
+                  "lng": 8.2773,
+                  "identifier": "DE.HE.Mainz",
+                  "title": "Mainz, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_HE_Frankfurt"
+              }
+          ],
+          "polygon": "okvmHox_q@{lmEnn{AujFemrLv~dEt{{BtO`kpCbhN|tgA",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_VIC_West",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_FLX",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Melbourne",
+          "cities": [
+              {
+                  "lat": -38.1489,
+                  "lng": 144.36104,
+                  "identifier": "AU.VIC.Geelong",
+                  "title": "Geelong, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_West"
+              },
+              {
+                  "lat": -36.72278,
+                  "lng": 144.43973,
+                  "identifier": "AU.VIC.Bendigo",
+                  "title": "Bendigo, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_West"
+              },
+              {
+                  "lat": -37.51899,
+                  "lng": 143.77287,
+                  "identifier": "AU.VIC.Ballarat",
+                  "title": "Ballarat, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_West"
+              },
+              {
+                  "lat": -37.07054,
+                  "lng": 142.8112,
+                  "identifier": "AU.VIC.Stawell",
+                  "title": "Stawell, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_West"
+              }
+          ],
+          "polygon": "hfcnEgrj{Y`qd@eeqBctKww\\eMkb_AlpPq~j@rn^o_d@z_k@q|H~ab@_bOaoh@iyYbMirVpeTapJlrGwvn@vcVqpo@|vc@hhCj~d@apJd~@}re@daYewB`zi@mhtAzil@wr{@xkZghNttc@yn}@w_m@mu[{oJ}oU?sxXJzK`_cIwsAlrA`biAlie@ney@txn@}nDtip@{u`Ap`_@dbt@dgyB~t~A`J~`gR",
+          "urls": [
+              "https://granduni.skedgo.com/satapp",
+              "https://darkages.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "BE_NorthWestBelgium",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Brussels",
+          "cities": [
+              {
+                  "lat": 51.05383,
+                  "lng": 3.72501,
+                  "identifier": "BE.Ghent",
+                  "title": "Ghent, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_NorthWestBelgium"
+              },
+              {
+                  "lat": 51.2085,
+                  "lng": 3.2249,
+                  "identifier": "BE.Bruges",
+                  "title": "Bruges, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_NorthWestBelgium"
+              }
+          ],
+          "polygon": "_{nxHa`{QoiBcmt@raGe~B|yJjKh|Dq|HwCshPiqF`{@m|BkmMp~De~Yh}AguLdgH_Ne`AygPbIw`Gtl@y}@ouBgsGmfAo~DdEclFwlHoiU|wiB??dz_EyiFt{InuAxnFnXh{JvtCh{Ln{Dr~A~rC`cEm{A|aC|LxcBwnBliC|^jfD_gAjdEi}NfwNq_@n}MitFh`FoiAopAoyIfyBkkDyyEslGfgCgSvqBo}A~eBecAe_@{mHtrA{iCdwBglt@_bkB",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_Gothenburg",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 57.70723,
+                  "lng": 11.96702,
+                  "identifier": "SE.Gothenburg",
+                  "title": "Gothenburg, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_Gothenburg"
+              }
+          ],
+          "polygon": "uzrbJqjfwBrhfGjvI?`r}p@shfG|nr@",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_MI_GrandRapids",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "US/Eastern",
+          "cities": [
+              {
+                  "lat": 42.96336,
+                  "lng": -85.66809,
+                  "identifier": "US.MI.Grand-Rapids",
+                  "title": "Grand Rapids, MI, USA",
+                  "timezone": "US/Eastern",
+                  "region": "US_MI_GrandRapids"
+              }
+          ],
+          "polygon": "_segGdlyjO{CqfaBzcvBrbAzWhhbB{wvBkdB",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NL_NorthNetherlands",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Amsterdam",
+          "cities": [
+              {
+                  "lat": 53.21946,
+                  "lng": 6.56684,
+                  "identifier": "NL.Groningen",
+                  "title": "Groningen, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_NorthNetherlands"
+              }
+          ],
+          "polygon": "sv_fIulo_@_jLwbtF~kPc~JzpJujr@~o_@qyOj`AgwNbm@q_Y`xIa{@rvN}pCx_D~lEz}Fe_@tpScyA~vJfsDv~YleV~k_@bjAv|AzaCykAf_Lfk@rkIcmAnyCjMbhYpdB|dH~cAsrAleBlc@?nxoGsh~DxQ",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://hadron.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_NI_Gottingen",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 51.53244,
+                  "lng": 9.93602,
+                  "identifier": "DE.NI.Göttingen",
+                  "title": "Göttingen, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Gottingen"
+              },
+              {
+                  "lat": 51.3124,
+                  "lng": 9.4924,
+                  "identifier": "DE.NI.Kassel",
+                  "title": "Kassel, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Gottingen"
+              }
+          ],
+          "polygon": "_j_tHqf}l@ea{Av{ZkxlAu|_Dszz@wwdG`uQcz`IpmdEh`yBdyGrsiPjwCz}f@",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_HH_Hamburg",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 53.555,
+                  "lng": 9.97877,
+                  "identifier": "DE.HH.Hamburg",
+                  "title": "Hamburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_HH_Hamburg"
+              },
+              {
+                  "lat": 53.86525,
+                  "lng": 10.68516,
+                  "identifier": "DE.HH.Lübeck",
+                  "title": "Lübeck, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_HH_Hamburg"
+              }
+          ],
+          "polygon": "kgxbIsrsw@sl|C|vy@yvCmqh@e{c@_ngIe_W_lq@|e~EnCcD~phJ",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_NI_Hanover",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 52.37662,
+                  "lng": 9.73423,
+                  "identifier": "DE.NI.Hanover",
+                  "title": "Hanover, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Hanover"
+              },
+              {
+                  "lat": 52.1317,
+                  "lng": 11.6403,
+                  "identifier": "DE.NI.Magdeburg",
+                  "title": "Magdeburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Hanover"
+              },
+              {
+                  "lat": 52.2647,
+                  "lng": 10.5248,
+                  "identifier": "DE.NI.Braunschwaig",
+                  "title": "Braunschwaig, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Hanover"
+              },
+              {
+                  "lat": 52.40382,
+                  "lng": 12.55636,
+                  "identifier": "DE.NI.Brandenburg",
+                  "title": "Brandenburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_NI_Hanover"
+              }
+          ],
+          "polygon": "cv{_Im{su@yp|Ash_AGexfJv``@kf|Hhl~Bfde@bzfBplgGaaRzqaIauvCncsB",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_MI_Jackson",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "America/Detroit",
+          "cities": [
+              {
+                  "lat": 42.24568,
+                  "lng": -84.40391,
+                  "identifier": "US.MI.Jackson",
+                  "title": "Jackson",
+                  "timezone": "America/Detroit",
+                  "region": "US_MI_Jackson"
+              },
+              {
+                  "lat": 41.92249,
+                  "lng": -84.63189,
+                  "identifier": "US.MI.Hillsdale",
+                  "title": "Hillsdale",
+                  "timezone": "America/Detroit",
+                  "region": "US_MI_Jackson"
+              },
+              {
+                  "lat": 41.89754,
+                  "lng": -84.03741,
+                  "identifier": "US.MI.Adrian",
+                  "title": "Adrian",
+                  "timezone": "America/Detroit",
+                  "region": "US_MI_Jackson"
+              }
+          ],
+          "polygon": "_~}`Gx_ndOam^ko@vIwpcC`_r@cInd\\gjuB`vu@kZtcCx|~F_}jB}iA",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_Karlstad",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 59.37991,
+                  "lng": 13.50295,
+                  "identifier": "SE.Karlstad",
+                  "title": "Karlstad, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_Karlstad"
+              }
+          ],
+          "polygon": "s}opJcbczA|roM?d|AberW_osCkFiq`@a}m@mrGmvl@vdi@{f^gfb@g`h@wu_@ybHicgAxl[owMakt@ayZ|sSikKgk^|K}yh@i`x@_`~@srW`bD}vi@goK",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_SH_Kiel",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 54.32352,
+                  "lng": 10.1227,
+                  "identifier": "DE.SH.Kiel",
+                  "title": "Kiel, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_SH_Kiel"
+              },
+              {
+                  "lat": 54.79337,
+                  "lng": 9.44854,
+                  "identifier": "DE.SH.Flensburg",
+                  "title": "Flensburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_SH_Kiel"
+              }
+          ],
+          "polygon": "isygI}cgw@h~Ctjn@a|\\tauBc{]~`wBaljBawnAs|oAsah@bzHe`QbeLkxThiPuxJzH{hF`~BmiIk[ylDfUuaBkeAefCe@ooGxr@{cBiu@kuDdj@mhOxvCgwNjFa~P~aD__VjtBflA~qBoaApf@cdOo~Cc`E{n@abAcVsnElzAo|Byg@m_GwpIm`Xd_AyxE`}Cdn@h}D{iW`y@ukl@hr@}pq@byZgwe@n_QwlvDrpk@aoz@lh]|tiBpoWpwr@jwc@h_cI",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_NV_LasVegas",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "America/Los_Angeles",
+          "cities": [
+              {
+                  "lat": 36.16727,
+                  "lng": -115.1361,
+                  "identifier": "US.NV.Las-Vegas",
+                  "title": "Las Vegas, NV, USA",
+                  "timezone": "America/Los_Angeles",
+                  "region": "US_NV_LasVegas"
+              }
+          ],
+          "polygon": "gpgiFxx_wTvvrLiVbhd@vmXkbVldaBtfrDsgY~dJn~Gljt@|Z}wDxgLyzZmTuthStszY",
+          "urls": [
+              "https://lepton.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://stars.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "UK_Leicester",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/London",
+          "cities": [
+              {
+                  "lat": 52.63624,
+                  "lng": -1.14009,
+                  "identifier": "GB.ENG.Leicester",
+                  "title": "Leicester, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_Leicester"
+              }
+          ],
+          "polygon": "_ze~H~}cH_vgC??_owH~{|F??~ugC_etB~wnD",
+          "urls": [
+              "https://stars.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://draco.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "BE_SouthEastBelgium",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Brussels",
+          "cities": [
+              {
+                  "lat": 50.64514,
+                  "lng": 5.57342,
+                  "identifier": "BE.Liege",
+                  "title": "Liege, Belgium",
+                  "timezone": "Europe/Brussels",
+                  "region": "BE_SouthEastBelgium"
+              }
+          ],
+          "polygon": "}qcpHazj\\oyL_]{}DayBy_G}jG_kAfh@}RjvFiUlpAkytB??ayiDw_@c}AuPmdDecCk}EvdD{~F_pA}fMllBqfEmk@akFf`@uvKtv@ihCnxBgQra@_gM|gJ}bInBgfDlbBe_AxDe|H|mBixDlqLdhHrqD`}Et|Dw_CmQotKvjA_lKhbExXxc@wyDfzD{i@pyHb`E~eDmzHvhDyv@heCjdIytB|eFfzExcFvq@eb@pnAptA~n@nmIf}B`fDle@l~Bv~Cgy@vfDoYbfAhlGvgDem@tuAvnCkx@riDuiD_\\a\\`pDzqAb^|UnoGizCroBf]hlGnaG|Z`wAfaKlaFf`BteBrbCbnDu[`fDjrGdoB_xBf~CrvDhnA`jF|}EzpBr_BfvBbtCq~GzrBx}Cb_Kvv@an@ujD~nIqmHbmC_NmImdEnqB}pCd~DneBppActFbpDjSzgDfsDjiFd_@~eC|lEpo@h}CzXv_Fde@~qMak@~uLrvFrbD_tBjmGngDloR{wCv|CknLdpBmoEfzJljAt{IapCdaByrCi~CqbDllHo~@lqWyfJnvJeoGdgTb{@dgKqd@jyKw{FscBwtEjsCa~CgvDu`Dcb@wdDncFe|AdeIs{C_N_oA}pC",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://hadron.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "UK_London",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/London",
+          "cities": [
+              {
+                  "lat": 51.519,
+                  "lng": -0.118,
+                  "identifier": "GB.ENG.London",
+                  "title": "London, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_London"
+              }
+          ],
+          "polygon": "owxwH~dtB_t`B??_ibE~s`B?",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://stars.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://draco.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_SouthSweden",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 55.60529,
+                  "lng": 13.00016,
+                  "identifier": "SE.Malmö",
+                  "title": "Malmö, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_SouthSweden"
+              }
+          ],
+          "polygon": "_|}rI_vnmAodkA~wq@_{m@~tu@oweC~pdB?olli@~f{Cnj}HnkuCnsqHnyo@~tiP",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "UK_GM_Manchester",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/London",
+          "cities": [
+              {
+                  "lat": 53.48,
+                  "lng": -2.241,
+                  "identifier": "GB.ENG.Manchester",
+                  "title": "Manchester, UK",
+                  "timezone": "Europe/London",
+                  "region": "UK_GM_Manchester"
+              }
+          ],
+          "polygon": "ulbfIhwzOypRuw\\ulJmiw@eNa`~@|dpAjFtwBn}j@wxCfygAesSrb^",
+          "urls": [
+              "https://stars.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://draco.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "FR_J_NorthEast",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Paris",
+          "cities": [
+              {
+                  "lat": 48.96,
+                  "lng": 2.87,
+                  "identifier": "FR.J.Meaux",
+                  "title": "Meaux, France",
+                  "timezone": "Europe/Paris",
+                  "region": "FR_J_NorthEast"
+              }
+          ],
+          "polygon": "g{mgHoplToLn_eDwfsCfJ~p@wjh@veOovs@nz]_ieA~_cBo}@",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_VIC_Melbourne",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_FLX",
+              "me_mot",
+              "wa_wal",
+              "pt_ltd_MON"
+          ],
+          "timezone": "Australia/Melbourne",
+          "cities": [
+              {
+                  "lat": -37.81137,
+                  "lng": 144.97183,
+                  "identifier": "AU.VIC.Melbourne",
+                  "title": "Melbourne, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_Melbourne"
+              }
+          ],
+          "polygon": "vk{gFqwfsZ{bp@pq`A{bo@tjDgpe@{iy@a`BwrrA`ds@ubiBfvfBr~iAxuJ}vQvsLogCdgD`eTrcFdwBkvAjqh@tea@fo_A{lu@ben@",
+          "urls": [
+              "https://granduni.skedgo.com/satapp",
+              "https://darkages.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "FR_J_SouthEast",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Paris",
+          "cities": [
+              {
+                  "lat": 48.53,
+                  "lng": 2.65,
+                  "identifier": "FR.J.Melun",
+                  "title": "Melun, France",
+                  "timezone": "Europe/Paris",
+                  "region": "FR_J_SouthEast"
+              }
+          ],
+          "polygon": "_oudHeylKuy~Ahg@qBcijHd}iCseBmdGbxhDoya@hnbC",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_BV_Munich",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 48.13758,
+                  "lng": 11.58862,
+                  "identifier": "DE.BV.Munich",
+                  "title": "Munich, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Munich"
+              }
+          ],
+          "polygon": "eup`Hivo|@qfcC{o`Coo{@ohoBa}Mofg@rnEcvmAlndAsecDdeD|i@`qJ{nOtzL{tMzdAiqBrkR}|M`yHtoHfhBnjCd~Ae_@dxBrt@vcCfsDnkAcnKcnBwuFpbBsdF~zCyjEpyCka@xlDctCdaEpcFruBsG~iH`sCpiHmT||EbvHyq@vfFw`JzzVweC~eBcIh`FsuC`bDiqBmTgxDabDw`EfxHsxAen@_gBxrM~lA|lEgSf|FlpFv}Cl@j|Gnt@`dChCl{BgeD`kF_kDddDwlB`]pkAptKggAzwFtn@dmFdtAnjC{cCjuDw_Hq}BppDfbEdtAxqHbqIuhEncFal@nk@`sFk]j~FmQvgTw{@rlCh~BtrXzoBzpCgp@bfNhStlO|[zvL~vC`uBnkCaNvxBjwCh}@xiKud@vcM~lD`kF`mDyuFvqAvaB{Q~xL|hBpmHt~D`l@dY`~Pu~EeuChjE`|Qlp@pqRugAzpNemE{rB{oF~qIuaAqGz^fzG{uB~eBwoEwhE`v@|eMnj@jmGcjCrjD{^bgHqqAzaC_v@jjNxyDdwB}NbvH{^`zFsnApuE~aJbjAjPoyC``C}i@rhF{i@zhDh~FrtD_Na\\~tBdcFzqHbiDzpCtzAvpBlvEtuQuZthEfi@vuFumEwX{dAqfEszAbjAaiIiqE_\\bgH`yAzK~^bqDyt@|_DrgChhCasHljC}^|x@_|@`]ecBgqEwhA`bB",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NL_Gelderland",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Amsterdam",
+          "cities": [
+              {
+                  "lat": 51.81317,
+                  "lng": 5.83541,
+                  "identifier": "NL.Nijmegen",
+                  "title": "Nijmegen, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_Gelderland"
+              },
+              {
+                  "lat": 52.21003,
+                  "lng": 5.96798,
+                  "identifier": "NL.Apeldoorn",
+                  "title": "Apeldoorn, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_Gelderland"
+              },
+              {
+                  "lat": 51.98436,
+                  "lng": 5.90104,
+                  "identifier": "NL.Arnhem",
+                  "title": "Arnhem, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_Gelderland"
+              },
+              {
+                  "lat": 52.22096,
+                  "lng": 6.89548,
+                  "identifier": "NL.Enschede",
+                  "title": "Enschede, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_Gelderland"
+              }
+          ],
+          "polygon": "okb`Io_p_@?sapGh{BhJt`DqmHz~@zi@yd@rsFr{Art@qRpwDbuCs}BzdF`l@xjC}|J`L}yQnqC_bOi{DqfE}SycB~~K{bHnZohDnkGg{A`bHfbE`jCl{BfeEycBliB}pCro@|Zv~@xgF{HrgEh@?~|G~gGvT|zE~{BxjE~`Dfn@naAllBpK~eB_CbvNvdEre@vnAhyBtZ|hFxoDrt@}BasCfhAoqFrwE}cNr`EwXnf@tqEhvDx^raE||JzNxtAwbClpFt_BdhHbxB|fMprDhrPmg@zwF{eAvuF`d@jS~w@ihC|}D`@cf@~xFmhBj`LguBly@wj@n{Bxd@jgApF|rHio@v_C}aAn~Aae@kw@{z@~lBnSbWuk@du@jh@neEaMjb@p`@|x@`n@urDt`Bas@rv@y`CnkClE_v@n_Mc~A|dE|gA`l@||@jzBzqAbqG{TnjCqOdn@h|@npAneF}xF`mC{a@i@vaaCyycD?",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://hadron.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "JP_Fukuoka",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Asia/Tokyo",
+          "cities": [
+              {
+                  "lat": 33.75364,
+                  "lng": 130.75133,
+                  "identifier": "JP.Nogata",
+                  "title": "Nogata, Japan",
+                  "timezone": "Asia/Tokyo",
+                  "region": "JP_Fukuoka"
+              }
+          ],
+          "polygon": "uulhE_uj{Wn\\j~Ns}ChYmaIpgBk}FllBirKhR}_ArnA_wBGshMk`Rk|HsbGoeCgcJ{iN~Cio@nOiZvlAhMjfA{Mpv@f`DtgGdWtrAlfBx`@rSddAtNjdByeElsEuhBdmFyrEp{Jzg@jqDys@xsGzlAfdDi^vz[{gGnFegN_iAaoJcwMsxCi~Fa~D{gLitN_dZcbNqpAauJ{rBm}CwcMwdP}xn@xp@csOh{LsrI`bGyoFzdAadCsr@y{AqnImsEqsAm}JfoUu`HduIre@zqI{rBzfEglAdyHelL`xHysC|iVty@mWzgf@djKhoNvyQ~{I`}IguC~kFd_Gl_MybKp~LnnEcvIbh_@fgHxnDroAp|QvaS~}O",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "DE_BV_Nuremberg",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Berlin",
+          "cities": [
+              {
+                  "lat": 49.45787,
+                  "lng": 11.07587,
+                  "identifier": "DE.BV.Nuremberg",
+                  "title": "Nuremberg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Nuremberg"
+              },
+              {
+                  "lat": 49.90056,
+                  "lng": 10.90027,
+                  "identifier": "DE.BV.Bamberg",
+                  "title": "Bamberg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Nuremberg"
+              },
+              {
+                  "lat": 49.47493,
+                  "lng": 10.98998,
+                  "identifier": "DE.BV.Fürth",
+                  "title": "Fürth, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Nuremberg"
+              },
+              {
+                  "lat": 49.59838,
+                  "lng": 11.00776,
+                  "identifier": "DE.BV.Erlangen",
+                  "title": "Erlangen, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Nuremberg"
+              },
+              {
+                  "lat": 49.7943,
+                  "lng": 9.9281,
+                  "identifier": "DE.BV.Würzburg",
+                  "title": "Würzburg, Germany",
+                  "timezone": "Europe/Berlin",
+                  "region": "DE_BV_Nuremberg"
+              }
+          ],
+          "polygon": "_sfnH{vxw@gjdE}g{Bss@wtyBlbfAcgnJveBllBj@rxDpgDoFdwCtcGdcEsWds@hfDpjKqGwLhxH{xCv}CqpCa{@wnDbgHgrBytAmO|uGa}H~cClZ~uGvjFsnBdhChoFjfA}uGreFwdGxyDqwDljIhhChjFcsOxvBhhCdN_kFroCgkGfbBihCv^gbEtfA_fBhRibEfqC_~J~_Fx}ChoCqeQj|O`wM~~GfjB~nDxrMftHobFpsBsnNnbL_hAj@a`EjyLasChnC_mId~|BtamIwrzCpk}H",
+          "urls": [
+              "https://recombination.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_Oslo",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 59.91433,
+                  "lng": 10.74772,
+                  "identifier": "NO.Oslo",
+                  "title": "Oslo, Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_Oslo"
+              }
+          ],
+          "polygon": "q|plJe~dv@}oEqccDwpaEehN_Wo`sMdbw@c|_Ab_`BxpNhst@ftcAbzCntm@l~\\ka@djPrwg@pkbAmnMx{hAl_d@ft@rlq@exc@rtW~qWllgAhcM~agEdqSnvlB",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "FR_J_Paris",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_ZIP",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Paris",
+          "cities": [
+              {
+                  "lat": 48.8545,
+                  "lng": 2.33686,
+                  "identifier": "FR.J.Paris",
+                  "title": "Paris, France",
+                  "timezone": "Europe/Paris",
+                  "region": "FR_J_Paris"
+              }
+          ],
+          "polygon": "o{rjHmhsK?aetB~pdB??`etB",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_WA_Perth",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Perth",
+          "cities": [
+              {
+                  "lat": -31.95299,
+                  "lng": 115.85747,
+                  "identifier": "AU.WA.Perth",
+                  "title": "Perth, WA, Australia",
+                  "timezone": "Australia/Perth",
+                  "region": "AU_WA_Perth"
+              },
+              {
+                  "lat": -33.65841,
+                  "lng": 115.33595,
+                  "identifier": "AU.WA.Busselton",
+                  "title": "Busselton, WA, Australia",
+                  "timezone": "Australia/Perth",
+                  "region": "AU_WA_Perth"
+              },
+              {
+                  "lat": -33.35634,
+                  "lng": 115.662,
+                  "identifier": "AU.WA.Bunbury",
+                  "title": "Bunbury, WA, Australia",
+                  "timezone": "Australia/Perth",
+                  "region": "AU_WA_Perth"
+              }
+          ],
+          "polygon": "~qtwE_sxvT_zwl@??_oyo@~ywl@?",
+          "urls": [
+              "https://granduni.skedgo.com/satapp",
+              "https://darkages.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_NorthSweden",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 65.31348,
+                  "lng": 21.48994,
+                  "identifier": "SE.Piteå",
+                  "title": "Piteå, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_NorthSweden"
+              },
+              {
+                  "lat": 67.13458,
+                  "lng": 20.65994,
+                  "identifier": "SE.Gällivare",
+                  "title": "Gällivare, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_NorthSweden"
+              },
+              {
+                  "lat": 67.85394,
+                  "lng": 20.22715,
+                  "identifier": "SE.Kiruna",
+                  "title": "Kiruna, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_NorthSweden"
+              }
+          ],
+          "polygon": "ogbiKabzqAwkpCex}CsuaDs_No~[y{|Dite@~hRge{BeldEae_ArdkAwphCmteFpxRq~qCwfnBgnc@lk^sdtI{rvB}d_@ugFqjkBvieEyyfR|veM{zrBny_HhpuC?`u_y@",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_NV_Reno",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "America/Los_Angeles",
+          "cities": [
+              {
+                  "lat": 39.51454,
+                  "lng": -119.80252,
+                  "identifier": "US.NV.Reno",
+                  "title": "Reno, NV, USA",
+                  "timezone": "America/Los_Angeles",
+                  "region": "US_NV_Reno"
+              }
+          ],
+          "polygon": "}}~lFtaq{Um`kQk{@`Z{foc@jocUh\\jnHlbp]",
+          "urls": [
+              "https://lepton.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://stars.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NL_ZH_Rotterdam",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_car-p_BlaBlaCar",
+              "me_mot",
+              "me_mic-s",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Amsterdam",
+          "cities": [
+              {
+                  "lat": 51.92321,
+                  "lng": 4.47479,
+                  "identifier": "NL.ZH.Rotterdam",
+                  "title": "Rotterdam, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_ZH_Rotterdam"
+              },
+              {
+                  "lat": 52.07049,
+                  "lng": 4.30626,
+                  "identifier": "NL.ZH.The-Hague",
+                  "title": "The Hague, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_ZH_Rotterdam"
+              },
+              {
+                  "lat": 52.09125,
+                  "lng": 5.1194,
+                  "identifier": "NL.ZH.Utrecht",
+                  "title": "Utrecht, Netherlands",
+                  "timezone": "Europe/Amsterdam",
+                  "region": "NL_ZH_Rotterdam"
+              }
+          ],
+          "polygon": "kq}zHs~s_@hHl{mHy~k@uaYcgz@}i|A~_G{nvDr|~A`@",
+          "urls": [
+              "https://hadron.skedgo.com/satapp",
+              "https://recombination.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_VIC_East",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s_FLX",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Melbourne",
+          "cities": [
+              {
+                  "lat": -36.37482,
+                  "lng": 145.40558,
+                  "identifier": "AU.VIC.Shepparton",
+                  "title": "Shepparton, VIC, Australia",
+                  "timezone": "Australia/Melbourne",
+                  "region": "AU_VIC_East"
+              }
+          ],
+          "polygon": "b{niFmgauZjvAcph@a}EugBw`DylTsgLteCiyJl_RctfBedjAs_s@nthBvJ~pHi`cIrfAym@wkcAzzXuyiArbMykx@sbM_`~@~aW}xeAaf[{byAk`Bi{fA~a\\}j_AxgvB_og@f}WzlPrzjCmkmJj_kI~y{GyKns|Mi}~B~yaF",
+          "urls": [
+              "https://granduni.skedgo.com/satapp",
+              "https://darkages.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_Rogaland",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 58.96633,
+                  "lng": 5.73138,
+                  "identifier": "NO.Stavanger",
+                  "title": "Stavanger, Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_Rogaland"
+              }
+          ],
+          "polygon": "gcqlJqbgv@fe}E}c|@f`|Cr_NlbLlxx\\{ftK_mE",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_Stockholm",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 59.32512,
+                  "lng": 18.07109,
+                  "identifier": "SE.Stockholm",
+                  "title": "Stockholm, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_Stockholm"
+              }
+          ],
+          "polygon": "s}opJapiqBzwnEkaiG`z_G??h`c_@}roM?",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "JP_Sukagawa",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Asia/Tokyo",
+          "cities": [
+              {
+                  "lat": 37.28521,
+                  "lng": 140.37464,
+                  "identifier": "JP.Sukagawa",
+                  "title": "Sukagawa, Japan",
+                  "timezone": "Asia/Tokyo",
+                  "region": "JP_Sukagawa"
+              },
+              {
+                  "lat": 37.39562,
+                  "lng": 140.38146,
+                  "identifier": "JP.Koriyama",
+                  "title": "Koriyama, Japan",
+                  "timezone": "Asia/Tokyo",
+                  "region": "JP_Sukagawa"
+              }
+          ],
+          "polygon": "uiwcFmjmwYpj@_W{M_u@qVyXqBmc@`U}_@dSekAsi@kwCa^_zAck@aq@|]kuB_D{fHdx@gsAphE`z@hvAj\\`cA~xErpAijArVoRrq@zJbQsbChXk`CyVwlEpjDsxEldIqXd~F`UvcA~{Fz~Fvd@vmDtqBvdBovDf|@ij@pk@sk@jhAgFxg@nbAtpAoSru@xv@bz@`dBnCteAv_BqeAlfBjmBlPbuCwbEfv@{`BpgQ}hByJomBwxB{Sk]_w@umAkqCrb@ejAzUgjAmXqOheIhUjxCw]b]_JjsAzFrhCpHdgAeWpxGiuCtfPhyGtwObaAfjJqiD~`HonKozAkqJscKgaPonEgaF_~RpRqwCgpE_Wq_EpbDynDygD}u@umCtd@czAkkEkoAecFk_Hnu@ks@hrBvUhsF}DlvFwxDd~FuI",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_Sundsvall",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 62.3921,
+                  "lng": 17.30989,
+                  "identifier": "SE.Sundsvall",
+                  "title": "Sundsvall, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_Sundsvall"
+              }
+          ],
+          "polygon": "igpsJuyfiAyvD{luAuao@_se@aqnApihCudiByl[mwbAjqh@wejB??o{|l@bkqO?pOtv}i@",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_NSW_Sydney",
+          "modes": [
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_car-s",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Sydney",
+          "cities": [
+              {
+                  "lat": -33.86749,
+                  "lng": 151.20699,
+                  "identifier": "AU.NSW.Sydney",
+                  "title": "Sydney, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_NSW_Sydney"
+              },
+              {
+                  "lat": -34.41567,
+                  "lng": 150.88072,
+                  "identifier": "AU.NSW.Wollongong",
+                  "title": "Wollongong, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_NSW_Sydney"
+              },
+              {
+                  "lat": -32.92676,
+                  "lng": 151.77358,
+                  "identifier": "AU.NSW.Newcastle",
+                  "title": "Newcastle, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_NSW_Sydney"
+              },
+              {
+                  "lat": -33.31281,
+                  "lng": 151.30804,
+                  "identifier": "AU.NSW.Central-Coast",
+                  "title": "Central Coast, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_NSW_Sydney"
+              },
+              {
+                  "lat": -32.21132,
+                  "lng": 152.50657,
+                  "identifier": "AU.NSW.Forster",
+                  "title": "Forster, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_NSW_Sydney"
+              }
+          ],
+          "polygon": "`e|pEggoq[?f``AaerM??mcjRnwyR??dbiP",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_QLD_Southern",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Brisbane",
+          "cities": [
+              {
+                  "lat": -27.47957,
+                  "lng": 151.48633,
+                  "identifier": "AU.QLD.Toowoomba",
+                  "title": "Toowoomba, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -28.02592,
+                  "lng": 153.41091,
+                  "identifier": "AU.QLD.Gold-Coast",
+                  "title": "Gold Coast, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -27.4651,
+                  "lng": 153.0175,
+                  "identifier": "AU.QLD.Brisbane",
+                  "title": "Brisbane, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -23.41726,
+                  "lng": 150.29559,
+                  "identifier": "AU.QLD.Rockhampton",
+                  "title": "Rockhampton, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -26.66372,
+                  "lng": 153.10577,
+                  "identifier": "AU.QLD.Sunshine-Coast",
+                  "title": "Sunshine Coast, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -25.29899,
+                  "lng": 152.8339,
+                  "identifier": "AU.QLD.Hervey-Bay",
+                  "title": "Hervey Bay, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -24.01541,
+                  "lng": 151.3617,
+                  "identifier": "AU.QLD.Gladstone",
+                  "title": "Gladstone, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              },
+              {
+                  "lat": -24.96775,
+                  "lng": 151.99242,
+                  "identifier": "AU.QLD.Bundaberg",
+                  "title": "Bundaberg, QLD, Australia",
+                  "timezone": "Australia/Brisbane",
+                  "region": "AU_QLD_Southern"
+              }
+          ],
+          "polygon": "`x|pDamoh[aosh@_{KykhBmhuOprjAecdOdkpc@pbq@j[``A~TfNbUzTjIzEsCfCeF`PiBJcWr{@}`AzbDqT`w@zElTClEvEvj@bN|LldBfpAxS~T?tWfL|SfCvQpXfdAzb@v`@d_@nj@ju@rm@xSlq@|a@pd@fo@|i@xd@nU|Pa@heD`iGe]p~GvmLjnXz}E~|m@pFx}q@mgGb}b@hfm@nvoAjwqAhdPxtp@pxqBo|NvhpQ",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_NorthNorway",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 69.64925,
+                  "lng": 18.95558,
+                  "identifier": "NO.Tromsø-",
+                  "title": "Tromsø , Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_NorthNorway"
+              }
+          ],
+          "polygon": "{yn|K{dtdBopnB`daUoavR{kkv@zizB}w|z@lxrGr|uD~eqBpiqKqtl@ftcAslkA{llBoqhAlaiG`h`@jooGdoiDfzcBdmkAb~}Dsu`@x}rNehsApihCtv]x~lElj_Ctwg@kf`@hsiJlfbBdomBk|YfdwB",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "NO_MiddleNorway",
+          "modes": [
+              "in_air",
+              "pt_pub",
+              "pt_ltd_SCHOOLBUS",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Oslo",
+          "cities": [
+              {
+                  "lat": 63.43658,
+                  "lng": 10.39894,
+                  "identifier": "NO.Trondheim",
+                  "title": "Trondheim, Norway",
+                  "timezone": "Europe/Oslo",
+                  "region": "NO_MiddleNorway"
+              }
+          ],
+          "polygon": "ak_`L}ionAhjoBcxeUf`i@j_d@faOx}q@zmm@kmj@ll_@vbHx~gBthfDjo~@|vAndKd|{CbabDdoQngiCvxwDpdR{dxAnlw@y`Flyc@b`e@{rIzk`Db`zAhdqDfedGiuOqecDtqqc@",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "SE_Umea",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Stockholm",
+          "cities": [
+              {
+                  "lat": 63.82566,
+                  "lng": 20.26307,
+                  "identifier": "SE.Umea",
+                  "title": "Umea, Sweden",
+                  "timezone": "Europe/Stockholm",
+                  "region": "SE_Umea"
+              }
+          ],
+          "polygon": "oadaK{`}gAgy~@ahd@osmAizxA{vYgwsAjpIyxlDcx|@ocW?ezxx@bgdG~puU?nrgn@",
+          "urls": [
+              "https://energy.skedgo.com/satapp",
+              "https://andromeda.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AT_W_Vienna",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "cy_bic-s",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Europe/Vienna",
+          "cities": [
+              {
+                  "lat": 48.20806,
+                  "lng": 16.37394,
+                  "identifier": "AT.W.Vienna",
+                  "title": "Vienna, Austria",
+                  "timezone": "Europe/Vienna",
+                  "region": "AT_W_Vienna"
+              }
+          ],
+          "polygon": "w_}cHo_}aB_d{@??_laA~c{@?",
+          "urls": [
+              "https://matter.skedgo.com/satapp",
+              "https://energy.skedgo.com/satapp",
+              "https://baryogenesis.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "AU_ACT_Canberra",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tax",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "Australia/Sydney",
+          "cities": [
+              {
+                  "lat": -35.19233,
+                  "lng": 147.3543,
+                  "identifier": "AU.NSW.Wagga-Wagga",
+                  "title": "Wagga Wagga, NSW, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_ACT_Canberra"
+              },
+              {
+                  "lat": -35.26016,
+                  "lng": 149.13244,
+                  "identifier": "AU.ACT.Canberra",
+                  "title": "Canberra, ACT, Australia",
+                  "timezone": "Australia/Sydney",
+                  "region": "AU_ACT_Canberra"
+              }
+          ],
+          "polygon": "~pf{Eajgb[|Ef`]o{^z~[w|zHswg@tw@ygfOvuoDdPai@aocCnilMzebB_vvCfkcKyra@smTsrGblL}kGztAy~IpnBqtMngJu}K`{@oya@dwBsuWrmTu_Ll_d@||Jh`]u{Gh}LlrSt{Z",
+          "urls": [
+              "https://darkages.skedgo.com/satapp",
+              "https://granduni.skedgo.com/satapp",
+              "https://matter.skedgo.com/satapp"
+          ]
+      },
+      {
+          "name": "US_WI_Waupaca",
+          "modes": [
+              "pt_pub",
+              "cy_bic",
+              "ps_tnc_ODB",
+              "me_car",
+              "me_mot",
+              "wa_wal"
+          ],
+          "timezone": "America/Chicago",
+          "cities": [
+              {
+                  "lat": 44.35604,
+                  "lng": -89.08483,
+                  "identifier": "US.WI.Waupaca",
+                  "title": "Waupaca",
+                  "timezone": "America/Chicago",
+                  "region": "US_WI_Waupaca"
+              },
+              {
+                  "lat": 44.3927,
+                  "lng": -88.7399,
+                  "identifier": "US.WI.New-London",
+                  "title": "New London",
+                  "timezone": "America/Chicago",
+                  "region": "US_WI_Waupaca"
+              }
+          ],
+          "polygon": "a`hoGlldaP??wf@_no@{q_@?v\\obhCfsc@_M~HibjA`yjA}h@?xor@bvM}Z~HzwrEq{}A?",
+          "urls": [
+              "https://baryogenesis.skedgo.com/satapp",
+              "https://lepton.skedgo.com/satapp",
+              "https://stars.skedgo.com/satapp"
+          ]
+      }
+  ],
+  "hashCode": -76720320
+}
