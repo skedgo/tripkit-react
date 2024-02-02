@@ -101,7 +101,7 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     onAlternativeChange: (group: TripGroup, alt: Trip) => { },
     onSegmentServiceChange: (segment: Segment, service: ServiceDeparture, callback?: (segmentReplacement: Segment) => void) => { },
     onSegmentCollectChange: (segment: Segment, location: ModeLocation) => Promise.resolve(undefined),
-    onSegmentCollectBookingChange: (segment: Segment, location: ModeLocation, data: { bookingStart: string, bookingEnd: string, vehicleId: string }) => Promise.resolve(undefined),
+    onSegmentCollectBookingChange: (segment: Segment, location: ModeLocation, data: { bookingStart?: string, bookingEnd?: string, vehicleId?: string }) => Promise.resolve(undefined),
     inputTextFrom: "",
     inputTextTo: "",
     getRegionInfoP: () => undefined,
