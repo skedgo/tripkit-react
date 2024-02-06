@@ -29,6 +29,7 @@ import ModeLocation from "../model/location/ModeLocation";
 import TKUserMode from "../account/TKUserMode";
 import { SignInStatus } from "../account/TKAccountContext";
 import { MultiPolygon } from "geojson";
+import { SegmentType } from "../model/trip/SegmentTemplate";
 
 export interface IWithRoutingResultsProps {
     initViewport?: TKMapViewport;
@@ -625,7 +626,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 });
         }
 
-        public onSegmentCollectBookingChange(segment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart?: string, bookingEnd?: string, vehicleId?: string }): Promise<Trip | undefined> {
+        public onSegmentCollectBookingChange(stationarySegment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart?: string, bookingEnd?: string, vehicleId?: string }): Promise<Trip | undefined> {
             const selectedTrip = this.state.selected;
             const { bookingStart, bookingEnd, vehicleId } = data;
             if (!selectedTrip) {
@@ -633,9 +634,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             }
             this.setState({ waitingTripUpdate: true, tripUpdateError: undefined });
             const tripSegments = selectedTrip.segments
-                .filter(tripSegment => tripSegment.modeIdentifier);
+                .filter(tripSegment => tripSegment.modeIdentifier)
+                .filter(tripSegment => tripSegment.type !== SegmentType.stationary);
             let waypointSegments: any[];
             // segment.modeInfo?.identifier === "stationary_vehicle-collect";
+            const segment = stationarySegment.nextSegment();
             waypointSegments = tripSegments
                 .map((tripSegment, i) => {
                     if (tripSegment === segment) {
@@ -643,7 +646,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
                         return {
                             start: `(${location.lat},${location.lng})`,
-                            end: `(${location.lat},${location.lng})`,
+                            end: `(${segment.to.lat},${segment.to.lng})`,
                             modes: [segment.modeIdentifier],
                             // modes: [segment.modeInfo?.identifier],
                             startTime: bookingStart ? DateTimeUtil.isoToSeconds(bookingStart) : segment.startTimeSeconds,    // API issue: waypoints.json in v13 still expects times in seconds (though results come in ISO).

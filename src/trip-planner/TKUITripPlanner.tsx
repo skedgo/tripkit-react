@@ -697,7 +697,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                             const vehicleChanged = vehicleId !== segment.sharedVehicle?.identifier;
                                             // TODO: if can pick a vehicle from a different car-pod location, then we need to pass that location to the following call.
                                             const trip = (vehicleChanged || bookingStartChanged) ?
-                                                await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { ...bookingStartChanged ? { bookingStart, bookingEnd } : {}, ...vehicleChanged ? { vehicleId } : {} }) :
+                                                await this.props.onSegmentCollectBookingChange(segment, segment.location as ModeLocation, { ...bookingStartChanged ? { bookingStart, bookingEnd } : {}, vehicleId }) :
                                                 segment.trip;
                                             this.popCardView();
                                             return trip;
