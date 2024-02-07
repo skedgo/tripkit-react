@@ -1,5 +1,5 @@
 import { PaymentMethod } from '@stripe/stripe-js/types/api/payment-methods';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import genStyles from '../css/GenStyle.css';
 import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
 import { TKUITheme, black, colorWithOpacity } from '../jss/TKUITheme';
@@ -16,7 +16,8 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { resetStyles } from '../css/ResetStyle.css';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
-import TKUISelect from '../buttons/TKUISelect';
+import TKUISelect, { SelectOption } from '../buttons/TKUISelect';
+import PaymentOption from '../model/trip/PaymentOption';
 
 const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -35,10 +36,6 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         '& span': {
             ...theme.textWeightBold,
             marginLeft: '5px'
-        },
-        '& svg': {
-            marginRight: '10px',
-            width: '36px'
         },
         '&:hover': {
             background: '#80808033'
@@ -61,6 +58,10 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     icon: {
+        '& svg': {
+            marginRight: '10px',
+            width: '36px'
+        },
         '& path': {
             fill: black(0, theme.isDark)
         }
@@ -77,11 +78,13 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIPaymentMethodSelectDefaultStyle>
 
-export type SGPaymentMethod = { type: string, description: string, balance?: number, currency?: string };
+export type SGPaymentMethod = { paymentOption: PaymentOption, data?: { stripePaymentMethod?: PaymentMethod, subOptions?: SelectOption[], selectedSubOption?: SelectOption } };
+// selectedSubOption will be changed by mutating the object, so the clients of this component won't be aware of an update on this. That shouldn't be a problem since just need
+// to check the value on "Purchase" click (and, e.g. show a "required" error if no option was selected).
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
-    value: PaymentMethod | SGPaymentMethod;
-    options: (PaymentMethod | SGPaymentMethod)[];
-    onChange: (value: PaymentMethod | SGPaymentMethod) => void;
+    value: SGPaymentMethod;
+    options: SGPaymentMethod[];
+    onChange: (value: SGPaymentMethod) => void;
     onRemove: (value: PaymentMethod) => void;
 }
 
@@ -108,85 +111,87 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             checked: {},
         })(Radio));
         const [editing, setEditing] = useState<boolean>(false);
-
-        function renderCardOption(paymentMethod: PaymentMethod, i: number) {
-            const { card } = paymentMethod;
-            if (!card) {
-                return null;
-            }
-            const { brand, last4 } = card;
-            return (
-                <div className={classes.cardNRemove} key={i}>
-                    <div className={classes.card} onClick={() => onChange(paymentMethod)}>
-                        <StyledRadio checked={value === paymentMethod} />
-                        <div className={classes.icon}>
-                            {iconFromBrand(brand)}
+        const [selectedSubOption, setSelectedSubOption] = useState<SelectOption | undefined>(undefined);
+        function renderPaymentMethod(paymentMethod: SGPaymentMethod, i: number): ReactNode {
+            switch (paymentMethod.paymentOption.paymentMode) {
+                case "INTERNAL":
+                    const stripePaymentMethod = paymentMethod.data!.stripePaymentMethod!;
+                    const { card } = stripePaymentMethod;
+                    if (!card) {
+                        return null;
+                    }
+                    const { brand, last4 } = card;
+                    return (
+                        <div className={classes.cardNRemove} key={i}>
+                            <div className={classes.card} onClick={() => onChange(paymentMethod)}>
+                                <StyledRadio checked={value === paymentMethod} />
+                                <div className={classes.icon}>
+                                    {iconFromBrand(brand)}
+                                </div>
+                                <span>{Util.toFirstUpperCase(brand)}</span>
+                                <span>ending in</span>
+                                <span>{last4}</span>
+                            </div>
+                            {editing &&
+                                <button
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        onRemove(stripePaymentMethod);
+                                    }}
+                                    className={classes.btnRemove}
+                                >
+                                    <IconRemove />
+                                </button>}
                         </div>
-                        <span>{Util.toFirstUpperCase(brand)}</span>
-                        <span>ending in</span>
-                        <span>{last4}</span>
-                    </div>
-                    {editing &&
-                        <button
-                            onClick={e => {
-                                e.preventDefault();
-                                onRemove(paymentMethod);
-                            }}
-                            className={classes.btnRemove}
-                        >
-                            <IconRemove />
-                        </button>}
-                </div>
-            );
-        }
-
-        function renderSGOption(paymentMethod: SGPaymentMethod, i: number) {
-            if (paymentMethod.type === "INVOICE") {
-                return (
-                    <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
-                        <StyledRadio checked={value === paymentMethod} />
-                        <div className={classNames(classes.icon, classes.iconBalance)}>
-                            <IconBalance />
+                    );
+                case "WALLET":
+                    return (
+                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                            <StyledRadio checked={value === paymentMethod} />
+                            <div className={classNames(classes.icon, classes.iconBalance)}>
+                                <IconBalance />
+                            </div>
+                            <div>{paymentMethod.paymentOption.description}</div>
+                            {paymentMethod.paymentOption.currentBalance &&
+                                <div style={{ marginLeft: '6px', color: black(1) }}>
+                                    {FormatUtil.toMoney(paymentMethod.paymentOption.currentBalance, { nInCents: true, currency: paymentMethod.paymentOption.currency })}
+                                </div>}
                         </div>
-                        <div>{paymentMethod.description} to</div>
-                        <div style={{ marginLeft: '6px', color: black(1) }}>
-                            {/* <TKUISelect
-                                options={this.walkSpeedOptions}
-                                value={this.walkSpeedOptions.find((option: any) => option.value === value.walkingSpeed)}
-                                onChange={(option) => {
-                                    const walkSpeed = option.value;
-                                    const userProfileUpdate = Util.deepClone(value);
-                                    userProfileUpdate.walkingSpeed = walkSpeed;
-                                    this.props.onChange(userProfileUpdate);
-                                }}
-                                styles={{
-                                    main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
-                                }}
-                            /> */}
-                        </div>
-                    </div>
-                );
-            } else {
-                paymentMethod.type === "WALLET"
-                return (
-                    <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
-                        <StyledRadio checked={value === paymentMethod} />
-                        <div className={classNames(classes.icon, classes.iconBalance)}>
-                            <IconBalance />
-                        </div>
-                        <div>{paymentMethod.description}</div>
-                        {paymentMethod.balance &&
+                    );
+                case "INVOICE":
+                    const selectOptions = paymentMethod.data!.subOptions!;
+                    return (
+                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                            <StyledRadio checked={value === paymentMethod} />
+                            <div className={classNames(classes.icon, classes.iconBalance)}>
+                                <IconBalance />
+                            </div>
+                            <div>{paymentMethod.paymentOption.description} to</div>
                             <div style={{ marginLeft: '6px', color: black(1) }}>
-                                {FormatUtil.toMoney(paymentMethod.balance, { nInCents: true, currency: paymentMethod.currency })}
-                            </div>}
-                    </div>
-                );
+                                <TKUISelect
+                                    options={selectOptions}
+                                    value={selectedSubOption}
+                                    onChange={(option) => {
+                                        paymentMethod.data!.selectedSubOption = option;
+                                        setSelectedSubOption(option);
+                                        onChange(paymentMethod);
+                                    }}
+                                    isDisabled={paymentMethod !== value}
+                                // styles={{
+                                //     main: overrideClass(this.props.injectedStyles.walkSpeedSelect),
+                                // }}
+                                />
+                            </div>
+                        </div>
+                    );
+                default:
+                    return null;
             }
         }
+
         return (
             <div className={classes.main}>
-                {options.map((paymentMethod, i) =>
-                    (paymentMethod.type === "WALLET" || paymentMethod.type === "INVOICE") ? renderSGOption(paymentMethod as SGPaymentMethod, i) : renderCardOption(paymentMethod as PaymentMethod, i))}
+                {options.map((paymentMethod, i) => renderPaymentMethod(paymentMethod, i))}
                 <div className={classes.btnContainer}>
                     <TKUIButton
                         type={TKUIButtonType.PRIMARY_LINK}
