@@ -12,6 +12,7 @@ import TKTransportOptions from "../model/options/TKTransportOptions";
 import Util from "../util/Util";
 import TripGoApi from "../api/TripGoApi";
 import TKUserProfile from "../model/options/TKUserProfile";
+import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 
 class TKShareHelper {
 
@@ -150,7 +151,7 @@ class TKShareHelper {
         if (queryMap) {
             const { flat, flng, fname, fid, fsrc, tlat, tlng, tname, tid, tsrc, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
             let from: Location | null = null;
-            if (flat || fname) {
+            if (flat || fname || fsrc === TKDefaultGeocoderNames.geolocation) {
                 const fromLatLng = flat ? LatLng.createLatLng(Number(flat), Number(flng)) : new LatLng();
                 from = Location.create(fromLatLng, fname, fid ? fid : "", "", fsrc);
             }
