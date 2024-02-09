@@ -340,7 +340,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             if (paymentMethods && selectedMethod && !paymentMethods.includes(selectedMethod)) {
                 setSelectedMethod(paymentMethods.length > 0 ? paymentMethods[0] : undefined);
             }
-        }, [stripePaymentMethods]);
+        }, [paymentMethods]);
 
         const refreshData = () => {
             setWaiting?.(true);
@@ -366,10 +366,10 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         }, []);
 
         useEffect(() => {
-            if (stripePaymentMethods && stripePaymentMethods.length === 0) {
+            if (paymentMethods && paymentMethods.length === 0) {
                 setNewPaymentMethodAndPay(true);
             }
-        }, [stripePaymentMethods]);
+        }, [paymentMethods]);
 
         const [StyledCheckbox] = useState<React.ComponentType<any>>(muiWithStyles({
             root: {
