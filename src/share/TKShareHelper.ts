@@ -144,26 +144,33 @@ class TKShareHelper {
         return goURL;
     }
 
-    public static parseSharedQueryLink(): RoutingQuery | undefined {
-        const searchStr = this.getSearch();
+    public static parseSharedQueryFromUrlSearch(searchStr: string): RoutingQuery | undefined {
         const queryMap = queryString.parse(searchStr.startsWith("?") ? searchStr.substr(1) : searchStr);
         let routingQuery: RoutingQuery | undefined;
         if (queryMap) {
+            const { flat, flng, fname, fid, fsrc, tlat, tlng, tname, tid, tsrc, type = "0", time = DateTimeUtil.getNow().valueOf() / 1000, modes } = queryMap;
             let from: Location | null = null;
-            if (queryMap.flat || queryMap.fname) {
-                const fromLatLng = queryMap.flat ? LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)) : new LatLng();
-                from = Location.create(fromLatLng, queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc);
+            if (flat || fname) {
+                const fromLatLng = flat ? LatLng.createLatLng(Number(flat), Number(flng)) : new LatLng();
+                from = Location.create(fromLatLng, fname, fid ? fid : "", "", fsrc);
             }
             let to: Location | null = null;
-            if (queryMap.tlat || queryMap.tlng) {
-                const toLatlng = queryMap.tlat ? LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)) : new LatLng();
-                to = Location.create(toLatlng, queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc);
+            if (tlat || tlng) {
+                const toLatlng = tlat ? LatLng.createLatLng(Number(tlat), Number(tlng)) : new LatLng();
+                to = Location.create(toLatlng, tname, tid ? tid : "", "", tsrc);
             }
             routingQuery = RoutingQuery.create(from, to,
-                queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
-                queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000))
+                type === "0" ? TimePreference.NOW : (type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
+                type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(time * 1000));
+            if (modes) {
+                routingQuery.additional = { modes: modes };
+            }
         }
         return routingQuery;
+    }
+
+    public static parseSharedQueryLink(): RoutingQuery | undefined {
+        return this.parseSharedQueryFromUrlSearch(this.getSearch());
     }
 
     public static parseSharedQueryUrl(url: string): RoutingQuery | undefined {
@@ -171,28 +178,7 @@ class TKShareHelper {
         if (!uRL.pathname.startsWith("/go")) {
             return undefined;
         };
-        const searchStr = uRL.search;
-        const queryMap = queryString.parse(searchStr);
-        let routingQuery: RoutingQuery | undefined;
-        if (queryMap) {
-            let from: Location | null = null;
-            if (queryMap.flat || queryMap.fname) {
-                const fromLatLng = queryMap.flat ? LatLng.createLatLng(Number(queryMap.flat), Number(queryMap.flng)) : new LatLng();
-                from = Location.create(fromLatLng, queryMap.fname, queryMap.fid ? queryMap.fid : "", "", queryMap.fsrc);
-            }
-            let to: Location | null = null;
-            if (queryMap.tlat || queryMap.tlng) {
-                const toLatlng = queryMap.tlat ? LatLng.createLatLng(Number(queryMap.tlat), Number(queryMap.tlng)) : new LatLng();
-                to = Location.create(toLatlng, queryMap.tname, queryMap.tid ? queryMap.tid : "", "", queryMap.tsrc);
-            }
-            routingQuery = RoutingQuery.create(from, to,
-                queryMap.type === "0" ? TimePreference.NOW : (queryMap.type === "1" ? TimePreference.LEAVE : TimePreference.ARRIVE),
-                queryMap.type === "0" ? DateTimeUtil.getNow() : DateTimeUtil.momentFromTimeTZ(queryMap.time * 1000))
-            if (queryMap.modes) {
-                routingQuery.additional = { modes: queryMap.modes };
-            }
-        }
-        return routingQuery;
+        return this.parseSharedQueryFromUrlSearch(uRL.search);
     }
 
     public static parseLocation(locS: string) {
