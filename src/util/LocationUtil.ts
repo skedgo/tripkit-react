@@ -4,8 +4,7 @@ import { TranslationFunction } from "../i18n/TKI18nProvider";
 
 class LocationUtil {
     public static getMainText(loc: Location, t?: TranslationFunction): string {
-        // If Google result, should use structured_formatting.main_text. 
-        // Currently, it will be the case, given how TKGoogleGeocoder.locationFromAutocompleteResult sets the address.
+        // If Google result, this will be equals to `structured_formatting.main_text` (given how the address is set in TKGoogleGeocoder.locationFromAutocompleteResult)        
         if (loc.isCurrLoc() && t) {
             return t("Current.Location");
         }
@@ -141,8 +140,6 @@ class LocationUtil {
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord) + matchingSecondaryWord.indexOf(queryWord), length: queryWord.length });
                         }
-                        const a = {};
-                        console.log((a as any).b.c);
                     }
                     secondaryTextWords!.splice(secondaryTextWords!.indexOf(matchingSecondaryWord), 1);
                     continue;

@@ -77,11 +77,7 @@ class SkedgoGeocoder implements IGeocoder {
             }
         }
 
-        const endpoint = "geocode.json?"
-            + "q=" + query
-            + "&allowGoogle=false"
-            + (center ? "&near=" + "(" + center.lat + "," + center.lng + ")" : "")
-            + (autocomplete ? "&a=true" : "");
+        const endpoint = `geocode.json?q=${query}&allowGoogle=false${center ? "&near=" + "(" + center.lat + "," + center.lng + ")" : ""}${autocomplete ? "&a=true" : ""}`;
 
         const results: Location[] = [];
 
@@ -185,10 +181,7 @@ class SkedgoGeocoder implements IGeocoder {
     }
 
     public reverseGeocode(coord: LatLng, callback: (location: (Location | null)) => void): void {
-        const endpoint = "geocode.json?"
-            + "q=" + coord.lat + "," + coord.lng
-            + "&allowGoogle=false"
-            + "&near=" + "(" + coord.lat + "," + coord.lng + ")";
+        const endpoint = `geocode.json?q=${coord.lat},${coord.lng}&allowGoogle=false&near=(${coord.lat},${coord.lng})`;
 
         TripGoApi.apiCall(endpoint, NetworkUtil.MethodType.GET).then((json: any) => {
             if (!json.choices || json.choices.length === 0) {

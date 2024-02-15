@@ -57,8 +57,6 @@ interface ITKUIGenStyleCreators {
     transformRotate: (angle: number, unit?: string) => any;
 }
 
-interface ITKUIGenStyle extends ITKUIGenStyleClasses, ITKUIGenStyleCreators { }
-
 // TODO: confirm automatic vendor prefixing works. See: https://cssinjs.org/jss-plugin-vendor-prefixer/?v=v10.1.1.
 // See if need to import it, probably yes:
 const keyframesStyle = {

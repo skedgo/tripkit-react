@@ -118,6 +118,7 @@ class MultiGeocoder {
                     }
                     return true;    // found analogous, so don't add to depurated    
                 }
+                return false;
             });
             if (!analogous) { // if didn't find analogous, add to depurated
                 depuratedResults.push(result);
@@ -142,7 +143,7 @@ class MultiGeocoder {
                 return this._options.compare(l1, l2, query);
             });
             jointSuggestions.push(firsts[0]);
-            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevanceStr(query, firsts[0].address || ""), null);
+            Util.log(`${firsts[0].address || firsts[0].name} (${firsts[0].source}) - ${LocationUtil.relevanceStr(query, firsts[0].address || "")}`, null);
             MultiGeocoder.removeFirst(firsts[0], suggestionListsFromSources);
         }
         return jointSuggestions;

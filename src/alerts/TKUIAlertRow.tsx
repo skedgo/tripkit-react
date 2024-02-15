@@ -1,10 +1,10 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import RealTimeAlert from "../model/service/RealTimeAlert";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {ReactComponent as AlertIcon} from "../images/ic-alert.svg";
-import {tKUIAlertRowDefaultStyle} from "./TKUIAlertRow.css";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
+import { tKUIAlertRowDefaultStyle } from "./TKUIAlertRow.css";
 import classNames from "classnames";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -14,7 +14,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onClick?: () => void;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -29,15 +29,15 @@ export type TKUIAlertRowProps = IProps;
 export type TKUIAlertRowStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIAlertRow {...props}/>,
+    render: props => <TKUIAlertRow {...props} />,
     styles: tKUIAlertRowDefaultStyle,
     classNamePrefix: "TKUIAlertRow"
 };
 
 function urlify(text) {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    return text.replace(urlRegex, function(url) {
-        return '<a href="' + url + '" ' + 'target="_blank"'+'>' + url + '</a>';
+    return text.replace(urlRegex, (url) => {
+        return `<a href="${url}" target="_blank">${url}</a>`;
     });
 }
 
@@ -48,17 +48,17 @@ class TKUIAlertRow extends React.Component<IProps, {}> {
         const alert = this.props.alert;
         return (
             <div className={classNames(classes.main, this.props.asCard && classes.asCard)}
-                 onClick={this.props.onClick} tabIndex={0}>
-                <AlertIcon className={classes.alertIcon} aria-hidden={true}/>
+                onClick={this.props.onClick} tabIndex={0}>
+                <AlertIcon className={classes.alertIcon} aria-hidden={true} />
                 <div className={classes.content}>
                     <div className={classes.title}>
                         {alert.title}
                     </div>
                     {!this.props.brief &&
-                    <div className={classes.text}
-                         dangerouslySetInnerHTML={{__html: urlify(alert.text)}}
-                    >
-                    </div>}
+                        <div className={classes.text}
+                            dangerouslySetInnerHTML={{ __html: urlify(alert.text) }}
+                        >
+                        </div>}
                 </div>
             </div>
         );

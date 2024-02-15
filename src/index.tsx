@@ -53,7 +53,6 @@ import { TKUIRoutingResultsViewProps as TKUIRoutingResultsViewPropsForExport } f
 import { TKUIMapViewProps as TKUIMapViewPropsForExport } from "./map/TKUIMapView"
 import { TKUIWithStyle as TKUIWithStyleForExport, TKUIWithClasses as TKUIWithClassesForExport } from "./jss/StyleHelper";
 import { default as TKGeocodingOptionsForExport } from "./geocode/TKGeocodingOptions";
-import { TKUISlideUpPosition } from "./card/TKUISlideUp";
 import { SelectOption } from "./buttons/TKUISelect";
 import { PeliasGeocoderOptions as PeliasGeocoderOptionsForExport } from "./geocode/PeliasGeocoder";
 export { default as TKUITripPlanner } from "./trip-planner/TKUITripPlanner";

@@ -1,7 +1,7 @@
 import LatLng from "../model/LatLng";
 import iplocation from "iplocation";
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
-import {tKRequestCurrentLocation, TKUserPosition} from "../util/GeolocationUtil";
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tKRequestCurrentLocation, TKUserPosition } from "../util/GeolocationUtil";
 
 class GeolocationData {
 

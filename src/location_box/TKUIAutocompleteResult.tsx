@@ -55,7 +55,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
             const structuredFormatting = location.structured_formatting;
             const mainAddressComponents: JSX.Element[] = renderAddressComponents(structuredFormatting.main_text, structuredFormatting.main_text_matched_substrings);
             mainAddressComponent = <span key={1} className={classes.mainAddress}>{mainAddressComponents}</span>;
-            const secondaryAddressComponents: JSX.Element[] = structuredFormatting.secondary_text_matched_substrings ? renderAddressComponents(structuredFormatting.secondary_text, structuredFormatting.secondary_text_matched_substrings!) : [<>{structuredFormatting.secondary_text}</>];
+            const secondaryAddressComponents: React.ReactNode = structuredFormatting.secondary_text_matched_substrings ? renderAddressComponents(structuredFormatting.secondary_text, structuredFormatting.secondary_text_matched_substrings!) : structuredFormatting.secondary_text;
             const secondaryAddressComponent = <span key={2} className={classes.secondaryAddress}>{secondaryAddressComponents}</span>;
             addressComponent = <span className={classes.address} role="none"> {[
                 mainAddressComponent,

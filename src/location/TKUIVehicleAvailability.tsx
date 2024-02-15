@@ -60,7 +60,6 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 function getSlots(start: string, end): string[] {
     const slots: string[] = [];
-    let i = 0;
     for (let slot = start; DateTimeUtil.isoCompare(slot, end) < 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
         slots.push(slot);
     }

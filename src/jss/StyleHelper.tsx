@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { JssProvider, useTheme, createUseStyles } from "react-jss";
 import { Subtract } from "utility-types";
 import { Classes } from "jss";
-// import { JssStyle } from "react-jss/node_modules/jss";
 import { Styles } from "react-jss";
 import * as CSS from 'csstype';
 import { generateClassNameFactory, generateClassNameSeed, TKUITheme } from "./TKUITheme";
@@ -171,7 +170,7 @@ export function mergeStyleOverrides<ST, PR>(styleOverride1: TKUICustomStyles<ST,
 export function withStyleInjection<
     STYLE,
     IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>,
-    ExtS extends string,
+    _ExtS extends string,
     P extends Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>> & {
         defaultStyles: TKUIStyles<STYLE, IMPL_PROPS>,
         propStyles?: TKUICustomStyles<STYLE, IMPL_PROPS>,

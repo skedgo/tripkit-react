@@ -46,7 +46,7 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
     const showTripHandler = () => trip && onShowTrip?.(trip);
     return (
         <div className={classes.main}>
-            <div className={classes.form}>
+            <div className={classes.form}>π
                 {/* {confirmation.purchase &&
                     <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>} */}
                 {/* <TKUIRow
@@ -57,7 +57,7 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.header} onClick={showTripHandler}>
                     <div>
                         <div className={classes.mode}>
-                            <img src={modeIcon} />
+                            <img src={modeIcon} alt='' />
                             <div className={classes.modeAndDate}>
                                 <div className={classes.modeTitle}>
                                     {confirmation?.provider?.title}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Auth0Provider, User as Auth0User, useAuth0 } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
 import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
@@ -18,14 +18,6 @@ class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
         }
         return this._instance;
     }
-}
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    });
-    return ref.current;
 }
 
 // Doing this with useState have problems when component is re-constructed.
@@ -68,7 +60,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
         // Not Authenticated in Auth0, so cleanup our token + set status to SignInStatus.signedOut.
         if (!isLoading && !isAuthenticated) {
             setStatus(SignInStatus.signedOut);
-            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            AuthStorage.instance.save(new TKAuth0AuthResponse());
             setUserToken(undefined);
             setUserAccount(undefined);
             // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines couses an infinite redirection loop.
@@ -126,7 +118,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
         logout({
             localOnly: true // skips the request to the logout endpoint on the authorization server, and the redirect.
         });
-        AuthStorage.instance.save(new TKAuth0AuthResponse);
+        AuthStorage.instance.save(new TKAuth0AuthResponse());
         setStatus(SignInStatus.signedOut);  // Not necessary given the logout call will trigger the first useEffect.
         finishInitLoadingPromise = Promise.resolve(SignInStatus.signedOut);
         setUserToken(undefined);
@@ -149,7 +141,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
     const resetUserToken = () => {
         if (TripGoApi.userToken) {
             TripGoApi.userToken = undefined;
-            AuthStorage.instance.save(new TKAuth0AuthResponse);
+            AuthStorage.instance.save(new TKAuth0AuthResponse());
             setUserToken(undefined);
             setUserAccount(undefined);
             setStatus(SignInStatus.loading);

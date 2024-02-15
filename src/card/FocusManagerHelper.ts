@@ -104,7 +104,7 @@ function hidesContents(element) {
         ? style.getPropertyValue("overflow") !== "visible" ||
         // if 'overflow: visible' set, check if there is actually any overflow
         (element.scrollWidth <= 0 && element.scrollHeight <= 0)
-        : style.getPropertyValue("display") == "none";
+        : style.getPropertyValue("display") === "none";
 }
 
 function visible(element) {
