@@ -1,6 +1,6 @@
 import StopLocation from "../StopLocation";
 import Location from "../Location";
-import {JsonConverter, JsonCustomConvert, JsonConvert} from "json2typescript";
+import { JsonConverter, JsonCustomConvert, JsonConvert } from "json2typescript";
 import Util from "../../util/Util";
 import ModeInfo from "../trip/ModeInfo";
 import City from "./City";
@@ -8,6 +8,18 @@ import CarPodLocation from "./CarPodLocation";
 
 @JsonConverter
 export class LocationConverter implements JsonCustomConvert<Location> {
+
+    private static _instance: LocationConverter;
+
+    public static get instance(): LocationConverter {
+        if (!LocationConverter._instance) {
+            LocationConverter._instance = new LocationConverter();
+        }
+        return LocationConverter._instance;
+    }
+
+
+
     public serialize(location: Location): any {
         const jsonConvert = new JsonConvert();
         return jsonConvert.serialize(location);

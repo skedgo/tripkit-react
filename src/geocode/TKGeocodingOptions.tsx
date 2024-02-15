@@ -43,7 +43,7 @@ interface TKGeocodingOptions {
      * If specified and returs false, then the location is not included.
      * 
     */
-    filter?: (l: Location, context: {query: string}) => boolean;
+    filter?: (l: Location, context: { query: string }) => boolean;
     maxResults?: number;
     /**
      * If true then the coverage bounds will be used to restrict geocoding results.
@@ -135,15 +135,15 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
             return 1
         }
 
-        const relevanceDiff = LocationUtil.relevance(query, l2.address || "") - LocationUtil.relevance(query, l1.address || "");
+        const relevanceDiff = LocationUtil.relevance(query, l2) - LocationUtil.relevance(query, l1);
 
         // Prioritize skedgo geocoder result if
         // - query has 3 or more characters, and
         // - query is related to "airport" or "stop", and
         // - relevance is not less than 0.1 from other source result
         if (query.length >= 3 &&
-            (LocationUtil.relevance(query, "airport") >= .7 ||
-                LocationUtil.relevance(query, "stop") >= .7)) {
+            (LocationUtil.relevanceStr(query, "airport") >= .7 ||
+                LocationUtil.relevanceStr(query, "stop") >= .7)) {
             if (l1.source === TKDefaultGeocoderNames.skedgo && relevanceDiff <= 0.1) {
                 return -1;
             } else if (l2.source === TKDefaultGeocoderNames.skedgo && relevanceDiff >= -0.1) {
@@ -161,7 +161,7 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     // It's used to remove duplicates from different sources. We assume results returned
     // by each source is free of duplicates (is responsibility of the source to ensure that)
     const analogResults = (r1: Location, r2: Location) => {
-        const relevance = Math.max(LocationUtil.relevance(r1.address || "", r2.address || ""), LocationUtil.relevance(r2.address || "", r1.address || ""));
+        const relevance = Math.max(LocationUtil.relevanceStr(r1.address || "", r2.address || ""), LocationUtil.relevanceStr(r2.address || "", r1.address || ""));
         const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
         if (r1.source !== r2.source) {
             Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);

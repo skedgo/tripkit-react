@@ -1,5 +1,5 @@
 import Location from "../Location";
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 
 @JsonObject
 class City extends Location {
@@ -24,7 +24,7 @@ class City extends Location {
     }
 
     get name(): string {
-        return this.title;
+        return this.title.includes(",") ? this.title.substring(0, this.title.indexOf(",")) : this.title;
     }
 }
 

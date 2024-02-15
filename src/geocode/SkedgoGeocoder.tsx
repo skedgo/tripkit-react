@@ -21,6 +21,7 @@ import BikePodLocation from "../model/location/BikePodLocation";
 import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import CarPodLocation from "../model/location/CarPodLocation";
+import LocationUtil from "../util/LocationUtil";
 
 const defaultRenderIcon = (location: Location) =>
     location instanceof StopLocation ?
@@ -105,10 +106,8 @@ class SkedgoGeocoder implements IGeocoder {
                 callback(results);
                 return
             }
-            const jsonConvert = new LocationConverter();
             for (const locJson of json.choices) {
-                const loc = jsonConvert.deserialize(locJson);
-                results.push(loc);
+                results.push(SkedgoGeocoder.locationFromAutocompleteResult(locJson, query));
             }
             if (center) {
                 this.cache.addResults(query, autocomplete, center, results);
@@ -153,7 +152,7 @@ class SkedgoGeocoder implements IGeocoder {
                         resolvedLocation.carPod = locInfo.carPod;
                         const modeInfoId = locInfo.carPod.identifier.includes("|") ? locInfo.carPod.identifier.substring(0, locInfo.carPod.identifier.indexOf("|")) : locInfo.carPod.identifier;
                         resolvedLocation.modeInfo = Util.iAssign(new ModeInfo(),
-                            {                                
+                            {
                                 identifier: modeInfoId,
                                 alt: locInfo.carPod.operator.name,
                                 localIcon: "car-share",
@@ -202,6 +201,12 @@ class SkedgoGeocoder implements IGeocoder {
             Util.log(endpoint + " failed. Reason: " + reason);
             callback(null);
         });
+    }
+
+    private static locationFromAutocompleteResult(result: any, query: string): Location {
+        const location = LocationConverter.instance.deserialize(result);
+        location.structured_formatting = LocationUtil.match(query, location, { fillStructuredFormatting: true }).structuredFormatting;
+        return location;
     }
 
 }
