@@ -74,7 +74,6 @@ class LocationUtil {
             targetText = targetText.toLowerCase();
             if (fillStructuredFormatting) {
                 result.structuredFormatting = { main_text: mainText, main_text_matched_substrings: [], secondary_text: secondaryText || "", secondary_text_matched_substrings: [] };
-                // result.structuredFormatting = { main_text: mainText, main_text_matched_substrings: [], secondary_text: secondaryText || "" };
             }
             if (query === targetText) { // query equals to search result
                 if (fillStructuredFormatting) {

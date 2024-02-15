@@ -106,7 +106,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                 if (offset < substrOffset) {
                     mainAddressComponents.push(<span key={offset}>{text.substring(offset, substrOffset)}</span>);
                 }
-                mainAddressComponents.push(<span key={substrOffset} className={classes.matchingSubstr}>{text.substring(substrOffset, substrOffset + substrLength)}</span>);
+                mainAddressComponents.push(<span key={"s-" + substrOffset} className={classes.matchingSubstr}>{text.substring(substrOffset, substrOffset + substrLength)}</span>);
                 offset = substrOffset + substrLength;
             }
             mainAddressComponents.push(<span key={offset}>{text.substring(offset, text.length)}</span>);
