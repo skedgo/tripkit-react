@@ -1,9 +1,11 @@
-import Location from "../model/Location";
+import Location, { AutocompleteStructuredFormatting } from "../model/Location";
 import LatLng from "../model/LatLng";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 
 class LocationUtil {
     public static getMainText(loc: Location, t?: TranslationFunction): string {
+        // If Google result, should use structured_formatting.main_text. 
+        // Currently, it will be the case, given how TKGoogleGeocoder.locationFromAutocompleteResult sets the address.
         if (loc.isCurrLoc() && t) {
             return t("Current.Location");
         }
@@ -51,49 +53,122 @@ class LocationUtil {
         return distance[str1.length][str2.length];
     }
 
-    public static relevance(query: string, searchResult: string, preferShorter: boolean = false): number {
-        query = query.toLowerCase();
-        searchResult = searchResult.toLowerCase();
-        if (query === searchResult) {
-            return 1;
-        }
-        if (searchResult.includes(",") && query === searchResult.substring(0, searchResult.indexOf(","))) { // query equals to first term
-            return .9;
-        }
-        const searchResultWords = searchResult.split(" ");
-        if (searchResult.startsWith(query)) {
-            return .85 * (preferShorter ? 40 / (40 + searchResultWords.length) : 1);
-        }
-        let relevance = 0;
-        const queryWords = query.split(" ");
-        for (const queryWord of queryWords) {
-            let queryWordInResult = false;
-            let queryWordAsPrefix = false;
-            for (const searchResultWord of searchResultWords) {
-                if (searchResultWord === queryWord) {
-                    queryWordInResult = true;
-                    break;
-                }
-                if (searchResultWord.startsWith(queryWord)) {
-                    queryWordAsPrefix = true;
-                    break;
-                }
+    public static relevanceStr(query: string, searchResult: string, options: { preferShorter?: boolean } = {}): number {
+        return this.relevance(query, Location.create(LatLng.createLatLng(0, 0), searchResult, "", ""), options);
+    }
+
+    public static relevance(query: string, searchResult: Location, options: { preferShorter?: boolean } = {}): number {
+        return this.match(query, searchResult, options).relevance;
+    }
+
+    public static match(query: string, searchResult: Location, options: { preferShorter?: boolean, fillStructuredFormatting?: boolean } = {}): { relevance: number, structuredFormatting?: AutocompleteStructuredFormatting } {
+        query = query.toLowerCase().trim();
+        const result: { relevance: number, structuredFormatting?: AutocompleteStructuredFormatting } = { relevance: 0, structuredFormatting: undefined };
+        try {
+            const { preferShorter, fillStructuredFormatting } = options;
+            const mainText = this.getMainText(searchResult);
+            const secondaryText = this.getSecondaryText(searchResult);
+            const targetMainText = mainText.toLowerCase();
+            const targetSecondaryText = secondaryText?.toLowerCase();
+            let targetText = targetMainText + (targetSecondaryText ? ", " + targetSecondaryText : "");
+            targetText = targetText.toLowerCase();
+            if (fillStructuredFormatting) {
+                result.structuredFormatting = { main_text: mainText, main_text_matched_substrings: [], secondary_text: secondaryText || "", secondary_text_matched_substrings: [] };
+                // result.structuredFormatting = { main_text: mainText, main_text_matched_substrings: [], secondary_text: secondaryText || "" };
             }
-            if (queryWordInResult) {
-                relevance += .8 / queryWords.length;
-            } else if (queryWordAsPrefix) {
-                relevance += .7 / queryWords.length;
-            } else if (searchResult.includes(queryWord)) {
-                relevance += .6 / queryWords.length;
-            } else {
+            if (query === targetText) { // query equals to search result
+                if (fillStructuredFormatting) {
+                    result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: targetMainText.length }];
+                    result.structuredFormatting!.secondary_text_matched_substrings = targetSecondaryText ? [{ offset: 0, length: targetSecondaryText.length }] : undefined;
+                }
+                result.relevance = 1;
+                return result;
+            }
+            if (query === targetMainText) { // query equals to main text
+                if (fillStructuredFormatting) {
+                    result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: targetMainText.length }];
+                }
+                result.relevance = .9;
+                return result;
+            }
+            const targetTextWords = targetText.split(" ");
+            const mainTextWords = targetMainText.split(" ");
+            const secondaryTextWords = targetSecondaryText?.split(" ");
+            if (targetMainText.startsWith(query)) {   // query is a prefix of main text
+                if (fillStructuredFormatting) {
+                    result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: query.length }];
+                }
+                result.relevance = .85 * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);    // reduce weight if the result is longer (has more words)           
+                return result;
+            }
+            let relevance = 0;
+            const queryWords = query.split(" ");
+            for (const queryWord of queryWords) {
+                const matchingMainWord = mainTextWords.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
+                if (matchingMainWord) {
+                    if (matchingMainWord === queryWord) {
+                        relevance += .8 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord), length: queryWord.length });
+                        }
+                    } else if (matchingMainWord.startsWith(queryWord)) {
+                        relevance += .7 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord), length: queryWord.length });
+                        }
+                    } else {
+                        relevance += .6 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord) + matchingMainWord.indexOf(queryWord), length: queryWord.length });
+                        }
+                    }
+                    mainTextWords.splice(mainTextWords.indexOf(matchingMainWord), 1);
+                    continue;
+                }
+                const matchingSecondaryWord = secondaryTextWords?.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
+                if (matchingSecondaryWord) {
+                    if (matchingSecondaryWord === queryWord) {
+                        relevance += .7 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord), length: queryWord.length });
+                        }
+                    } else if (matchingSecondaryWord.startsWith(queryWord)) {
+                        relevance += .6 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord), length: queryWord.length });
+                        }
+                    } else {
+                        relevance += .5 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord) + matchingSecondaryWord.indexOf(queryWord), length: queryWord.length });
+                        }
+                        const a = {};
+                        console.log((a as any).b.c);
+                    }
+                    secondaryTextWords!.splice(secondaryTextWords!.indexOf(matchingSecondaryWord), 1);
+                    continue;
+                }
                 let minDistance = Number.MAX_VALUE;
-                for (const searchResultWord of searchResultWords) {
+                for (const searchResultWord of targetTextWords) {
                     minDistance = Math.min(minDistance, LocationUtil.computeLevenshteinDistance(queryWord, searchResultWord));
                 }
                 relevance += .5 / (queryWords.length + minDistance);
             }
+            result.structuredFormatting?.main_text_matched_substrings?.sort((s1, s2) => s1.offset - s2.offset);
+            if (result.structuredFormatting?.secondary_text_matched_substrings) {
+                if (result.structuredFormatting?.secondary_text_matched_substrings.length === 0) {
+                    delete result.structuredFormatting.secondary_text_matched_substrings;
+                } else {
+                    result.structuredFormatting.secondary_text_matched_substrings.sort((s1, s2) => s1.offset - s2.offset);
+                }
+            }
+            result.relevance = relevance * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);
+            return result
+        } catch (e) {
+            console.log(e);
+            console.log(result);
+            return result;
         }
-        return relevance * (preferShorter ? 40 / (40 + searchResultWords.length) : 1);
     }
 
     private static readonly earthRadius = 6371000;
@@ -111,7 +186,7 @@ class LocationUtil {
     }
 
     public static standarizeForMatch(text: string): string {
-        return text.toLowerCase().replace(/,/g,' ').replace(/\s+/g,' ');
+        return text.toLowerCase().replace(/,/g, ' ').replace(/\s+/g, ' ');
     }
 }
 
