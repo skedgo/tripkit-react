@@ -1,10 +1,10 @@
-import {Any, JsonObject, JsonProperty} from "json2typescript";
-import Segment, {TripAvailability} from "./Segment";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
+import Segment, { TripAvailability, TripAvailabilityConverter } from "./Segment";
 import Util from "../../util/Util";
-import {SegmentType, Visibility} from "./SegmentTemplate";
+import { SegmentType, Visibility } from "./SegmentTemplate";
 import DateTimeUtil from "../../util/DateTimeUtil";
 import TransportUtil from "../../trip/TransportUtil";
-import {TranslationFunction} from "../../i18n/TKI18nProvider";
+import { TranslationFunction } from "../../i18n/TKI18nProvider";
 import TripUtil from "../../trip/TripUtil";
 
 @JsonObject
@@ -47,28 +47,32 @@ class Trip {
     @JsonProperty("mainSegmentHashCode", Number, true)  // Required according to spec, need to mark as optional since
     public mainSegmentHashCode: number = 0;             // TripGroup extends Trip, but it should always be present.
     @JsonProperty("hideExactTimes", Boolean, true)
-    public hideExactTimes?: boolean = false;     
+    public hideExactTimes?: boolean = false;
+    @JsonProperty("availability", TripAvailabilityConverter, true)
+    public availability: TripAvailability = TripAvailability.AVAILABLE;
+    @JsonProperty("availabilityInfo", String, true)
+    public availabilityInfo?: string = undefined;
 
     private _satappQuery: string = "";
     private _arrivalSegment: Segment | undefined;
 
-    get depart(): string {    
+    get depart(): string {
         return typeof this._depart === "string" ? this._depart : DateTimeUtil.isoFromSeconds(this._depart, this.segments[0].from.timezone);
     }
 
     get departSeconds(): number {
-        return DateTimeUtil.isoToSeconds(this.depart);        
+        return DateTimeUtil.isoToSeconds(this.depart);
     }
 
     get arrive(): string {
-        return typeof this._arrive === "string" ? this._arrive : DateTimeUtil.isoFromSeconds(this._arrive, this.segments[this.segments.length - 1].from.timezone);        
+        return typeof this._arrive === "string" ? this._arrive : DateTimeUtil.isoFromSeconds(this._arrive, this.segments[this.segments.length - 1].from.timezone);
     }
 
     get arriveSeconds(): number {
-        return DateTimeUtil.isoToSeconds(this.arrive);        
+        return DateTimeUtil.isoToSeconds(this.arrive);
     }
 
-    get queryTime(): string | null {    
+    get queryTime(): string | null {
         return this._queryTime === null || typeof this._queryTime === "string" ? this._queryTime as string | null : DateTimeUtil.isoFromSeconds(this._queryTime, this.segments[0].from.timezone);
     }
 
@@ -267,7 +271,7 @@ class Trip {
                 const friendlinessPct = (segment.metresSafe !== undefined && segment.metres !== undefined) ? Math.floor(segment.metresSafe * 100 / segment.metres) : undefined;
                 if (friendlinessPct) {
                     infoTitle = mainInfo;
-                    infoSubtitle = segment.isBicycle() ? t("X.cycle.friendly", {0: friendlinessPct + "%"}) : t("X.wheelchair.friendly", {0: friendlinessPct + "%"});
+                    infoSubtitle = segment.isBicycle() ? t("X.cycle.friendly", { 0: friendlinessPct + "%" }) : t("X.wheelchair.friendly", { 0: friendlinessPct + "%" });
                 } else {
                     infoSubtitle = mainInfo;
                 }
@@ -285,18 +289,18 @@ class Trip {
             description += segment.modeInfo!.alt + (infoTitle ? " " + infoTitle : "") + (infoSubtitle ? " " + infoSubtitle : "")
                 + (segment !== summarySegments[summarySegments.length - 1] ? ", then " : ". ");
         }
-        const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(this);
+        const { departureTime, arrivalTime, hasPT } = TripUtil.getTripTimeData(this);
         description += hasPT ?
-            t("departs.X", {0: departureTime}) + ", " + t("arrives.X", {0: arrivalTime}) :
-            this.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime});
+            t("departs.X", { 0: departureTime }) + ", " + t("arrives.X", { 0: arrivalTime }) :
+            this.queryIsLeaveAfter ? t("arrives.X", { 0: arrivalTime }) : t("departs.X", { 0: departureTime });
         return description;
     }
 
     public getAriaTimeDescription(t: TranslationFunction): string {
-        const {departureTime, arrivalTime, duration, hasPT} = TripUtil.getTripTimeData(this);
+        const { departureTime, arrivalTime, hasPT } = TripUtil.getTripTimeData(this);
         return hasPT ?
-            t("departs.X", {0: departureTime}) + ", " + t("arrives.X", {0: arrivalTime}) :
-            this.queryIsLeaveAfter ? t("arrives.X", {0: arrivalTime}) : t("departs.X", {0: departureTime});
+            t("departs.X", { 0: departureTime }) + ", " + t("arrives.X", { 0: arrivalTime }) :
+            this.queryIsLeaveAfter ? t("arrives.X", { 0: arrivalTime }) : t("departs.X", { 0: departureTime });
     }
 }
 

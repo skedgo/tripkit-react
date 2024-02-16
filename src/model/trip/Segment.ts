@@ -14,7 +14,8 @@ import VehicleInfo from "../location/VehicleInfo";
 export enum TripAvailability {
     AVAILABLE = "AVAILABLE",
     MISSED_PREBOOKING_WINDOW = "MISSED_PREBOOKING_WINDOW",
-    CANCELLED = "CANCELLED"
+    CANCELLED = "CANCELLED",
+    OUTSIDE_SERVICED_AREA = "OUTSIDE_SERVICED_AREA"
 }
 
 @JsonConverter

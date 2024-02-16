@@ -18,10 +18,12 @@ import { TKUIConfig, TKComponentDefaultConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil from "../util/DeviceUtil";
-import Segment from "../model/trip/Segment";
+import Segment, { TripAvailability } from "../model/trip/Segment";
 import { moveToNext } from "../mxm/TKUIMxMView";
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
 import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
+import { colorWithOpacity } from "../jss/TKUITheme";
 
 export enum TKTripCostType {
     price, calories, carbon, score
@@ -226,9 +228,14 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
         .map(metric => tripMetricString(metric, trip, t))
         .filter(metricS => metricS !== undefined)
         .join(" · ");
-    const info = metricsS !== "" &&
+    const availabilityInfo = trip.availabilityInfo &&
+        <div className={classes.availabilityInfo}>
+            <AlertIcon />
+            {trip.availabilityInfo}
+        </div>
+    const info = (availabilityInfo || metricsS !== "") &&
         <div className={classes.info}>
-            {metricsS}
+            {availabilityInfo ?? metricsS}
         </div>;
     const { status } = useContext(TKAccountContext);
     const more = (props.expanded || alternatives.length > visibleAlternatives.length) &&
@@ -267,7 +274,18 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
                 e.stopPropagation();
             }}
             role={"button"}
-            aria-label={t("Book")} />;
+            aria-label={t("Book")}
+            disabled={trip.availability === TripAvailability.MISSED_PREBOOKING_WINDOW}
+            styles={theme => ({
+                link: defaultStyles => ({
+                    ...defaultStyles,
+                    '&:disabled': {
+                        color: colorWithOpacity(theme.colorPrimary, .4),
+                        cursor: 'initial'
+                    }
+                })
+            })}
+        />;
     return (
         <div className={classes.main}
             onClick={props.onClick}
@@ -292,7 +310,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
                 const isSelectedAlt = altTrip === selectedAlt;
                 return (
                     <div className={classNames(classes.alternative,
-                        props.selected && isSelectedAlt && classes.selectedAlternative)}
+                        props.selected && isSelectedAlt && classes.selectedAlternative, altTrip.availability === TripAvailability.MISSED_PREBOOKING_WINDOW && classes.pastAlternative)}
                         onClick={() => props.onAlternativeClick &&
                             props.onAlternativeClick(trip as TripGroup, altTrip)}
                         onKeyDown={(e) => {

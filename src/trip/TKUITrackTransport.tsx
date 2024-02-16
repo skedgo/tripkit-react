@@ -75,7 +75,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
         const isRemote = transportIconUrl === TransportUtil.getTransportIconRemote(modeInfo);
         return (
             <div className={classes.main}>
-                <div className={classNames(classes.compositeIcon, theme.isDark && isRemote && classes.circleWhite)}>
+                <div className={classes.compositeIcon}>
                     {modeInfo.remoteIconIsBranding && modeInfo.remoteIcon &&
                         <img src={TransportUtil.getTransIcon(modeInfo, { onDark: this.props.theme.isDark, useLocal: true })}
                             className={classes.icon}
@@ -83,7 +83,7 @@ class TKUITrackTransport extends React.Component<IProps, {}> {
                     <img src={transportIconUrl}
                         alt={modeInfo.alt}
                         role="img" // Needed to be read by iOS VoiceOver
-                        className={classes.icon}
+                        className={classNames(classes.icon, theme.isDark && isRemote && classes.circleWhite)}
                         aria-label={ariaLabel}
                     />
                     {segment.hasAlerts && <AlertIcon className={classes.alertIcon} />}
