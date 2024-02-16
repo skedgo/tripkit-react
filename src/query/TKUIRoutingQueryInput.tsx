@@ -13,7 +13,7 @@ import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIRoutingQueryInputDefaultStyle } from "./TKUIRoutingQueryInput.css";
 import { ReactComponent as IconArrowBack } from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
@@ -22,13 +22,14 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
-import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import TKUISelect, { SelectOption, reactSelectComponents } from "../buttons/TKUISelect";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import { ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE } from "../util/GeolocationUtil";
 import TKErrorHelper, { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
-import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import { colorWithOpacity, tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -447,11 +448,25 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
                                     // a theme update would not be reflected (e.g. switch dark / light mode).
                                     // This will not be needed anymore when get dynamic style updates working.
-                                    main: overrideClass(this.props.injectedStyles.timePrefSelect),
+                                    main: this.props.injectedStyles.timePrefSelect as any,
                                     menu: overrideClass({ marginTop: '3px' }),
                                     container: overrideClass({ minWidth: '100%' }),
+                                    control: overrideClass({
+                                        minHeight: 'initial',
+                                        '& svg': {
+                                            marginRight: '9px'
+                                        }
+                                    }),
                                 })}
                                 ariaLabel={"Time preference"}
+                                components={{
+                                    Control: (props) => (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <IconClock className={classes.timePrefIcon} />
+                                            {reactSelectComponents.Control(props)}
+                                        </div>
+                                    )
+                                }}
                             />}
                         {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
