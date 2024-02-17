@@ -78,26 +78,19 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
         borderTop: '1px solid ' + tKUIColors.black4,
-        padding: '0 6px',
+        padding: '6px 12px',
         ...genStyles.flex,
         ...genStyles.alignCenter,
-        ...genStyles.spaceBetween
-    },
-    transportsBtn: {
-        ...resetStyles.button,
-        padding: '10px 10px 10px 0',
-        whiteSpace: 'nowrap',
-        ...theme.textSizeCaption,
-        ...theme.textWeightSemibold,
-        ...theme.textColorDefault
-    },
-    datePicker: {
-        ...theme.textColorDefault
+        ...genStyles.spaceBetween,
+        '& > *, button': {
+            height: '28px!important'
+        }
     },
     timePrefSelect: {
         minWidth: '97px',
         border: '1px solid ' + black(4, theme.isDark),
-        borderRadius: '40px',
+        borderRightColor: ({ value }) => value.value !== TimePreference.NOW ? colorWithOpacity(theme.colorPrimary, .5) : undefined,
+        borderRadius: ({ value }) => value.value !== TimePreference.NOW ? '40px 0 0 40px' : '40px',
         background: ({ value }) => value.value !== TimePreference.NOW ? colorWithOpacity(theme.colorPrimary, .2) : 'none',
         '& *': {
             ...theme.textSizeCaption,
@@ -112,5 +105,27 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         width: '18px',
         height: '18px',
         marginLeft: '6px'
+    },
+    datePicker: {
+        ...theme.textColorDefault,
+        border: '1px solid ' + black(4, theme.isDark),
+        minWidth: '97px',
+        borderRadius: '0 40px 40px 0!important',
+        padding: '4px 11px 5px',
+        background: colorWithOpacity(theme.colorPrimary, .2),
+        marginRight: 'auto',
+        borderLeft: 'none',
+        color: theme.colorPrimary
+    },
+    transportsBtn: {
+        ...resetStyles.button,
+        border: '1px solid ' + black(4, theme.isDark),
+        borderRadius: '40px',
+        padding: '3px 10px',
+        whiteSpace: 'nowrap',
+        ...theme.textSizeCaption,
+        ...theme.textWeightSemibold,
+        ...theme.textColorDefault,
+        marginLeft: 'auto'
     }
 });

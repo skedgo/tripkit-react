@@ -28,7 +28,7 @@ import { ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE } from "../util/Geolocatio
 import TKErrorHelper, { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
-import { colorWithOpacity, tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
 import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
@@ -456,7 +456,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         '& svg': {
                                             marginRight: '9px'
                                         }
-                                    }),
+                                    })
                                 })}
                                 ariaLabel={"Time preference"}
                                 components={{

@@ -18,7 +18,7 @@ import TKUITransportSwitchesView from "../options/TKUITransportSwitchesView";
 import GATracker, { ACTION_SELECT_TIME_PREF, CATEGORY_QUERY_INPUT } from "../analytics/GATracker";
 import { Moment } from "moment-timezone";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
-import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import TKUISelect, { SelectOption, reactSelectComponents } from "../buttons/TKUISelect";
 import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import LocationsData from "../data/LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
@@ -43,6 +43,7 @@ import Segment from "../model/trip/Segment";
 import { TripSort } from "../model/trip/TripSort";
 import { IAccessibilityContext, TKAccessibilityContext } from "../config/TKAccessibilityProvider";
 import Util from "../util/Util";
+import { ReactComponent as IconClock } from '../images/ic-clock.svg';
 
 interface IClientProps extends IConsumedProps, Partial<TKUIViewportUtilProps>, Partial<IAccessibilityContext>, TKUIWithStyle<IStyle, IProps>,
     Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
@@ -222,18 +223,7 @@ interface IConsumedProps {
     transportBtnText?: string;
 }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    row: CSSProps<IProps>;
-    iconLoading: CSSProps<IProps>;
-    sortBar: CSSProps<IProps>;
-    sortSelect: CSSProps<IProps>;
-    sortSelectControl: CSSProps<IProps>;
-    transportsBtn: CSSProps<IProps>;
-    footer: CSSProps<IProps>;
-    timePrefSelect: CSSProps<IProps>;
-    noResults: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUIResultsDefaultStyle>;
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -403,9 +393,23 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                                 value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
                                 onChange={(option) => this.onPrefChange(option.value)}
                                 styles={() => ({
-                                    main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                                    menu: overrideClass({ marginTop: '3px' })
+                                    main: overrideClass(this.props.injectedStyles.timePrefSelect as any),
+                                    menu: overrideClass({ marginTop: '3px' }),
+                                    control: overrideClass({
+                                        minHeight: 'initial',
+                                        '& svg': {
+                                            marginRight: '9px'
+                                        }
+                                    })
                                 })}
+                                components={{
+                                    Control: (props) => (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <IconClock className={classes.timePrefIcon} />
+                                            {reactSelectComponents.Control(props)}
+                                        </div>
+                                    )
+                                }}
                             />}
                         {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
@@ -414,6 +418,13 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                                 onChange={(date: Moment) => this.onQueryUpdate({ time: date })}
                                 timeFormat={DateTimeUtil.timeFormat()}
                                 dateFormat={DateTimeUtil.dateTimeFormat()}
+                                styles={(theme: TKUITheme) => ({
+                                    datePicker: overrideClass(this.props.injectedStyles.datePicker),
+                                    inputElem: overrideClass({
+                                        ...this.props.injectedStyles.datePicker as any,
+                                        padding: '1px 11px 2px'
+                                    })
+                                })}
                             />
                         }
                         {showTransportsBtn &&
