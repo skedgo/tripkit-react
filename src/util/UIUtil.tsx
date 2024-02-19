@@ -18,7 +18,7 @@ export interface MsgOptions {
 
 class UIUtil {
 
-    private static customConfirmAlert(options: ReactConfirmAlertProps) {
+    public static customConfirmAlert(options: ReactConfirmAlertProps) {
         const { title, message, buttons, ...otherOptions } = options;
         confirmAlert({
             customUI: ({ onClose }) => {
