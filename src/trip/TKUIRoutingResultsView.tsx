@@ -387,51 +387,54 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                             justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
                         } : undefined}
                     >
-                        {showTimeSelect && routingQuery &&
-                            <TKUISelect
-                                options={this.timePrefOptions}
-                                value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
-                                onChange={(option) => this.onPrefChange(option.value)}
-                                styles={() => ({
-                                    main: overrideClass(this.props.injectedStyles.timePrefSelect as any),
-                                    menu: overrideClass({ marginTop: '3px' }),
-                                    control: overrideClass({
-                                        minHeight: 'initial',
-                                        ...genStyles.grow,
-                                        '& svg': {
-                                            marginRight: '9px'
-                                        }
-                                    }),
-                                    valueContainer: overrideClass({
-                                        padding: '2px'
-                                    })
-                                })}
-                                components={{
-                                    Control: (props) => (
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <IconClock className={classes.timePrefIcon} />
-                                            {reactSelectComponents.Control(props)}
-                                        </div>
-                                    )
-                                }}
-                            />}
-                        {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW &&
-                            // this.props.timezone &&
-                            <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                                value={routingQuery.time}
-                                timeZone={this.props.timezone}
-                                onChange={(date: Moment) => this.onQueryUpdate({ time: date })}
-                                timeFormat={DateTimeUtil.timeFormat()}
-                                dateFormat={DateTimeUtil.dateTimeFormat()}
-                                styles={(theme: TKUITheme) => ({
-                                    datePicker: overrideClass(this.props.injectedStyles.datePicker),
-                                    inputElem: overrideClass({
-                                        ...this.props.injectedStyles.datePicker as any,
-                                        padding: '1px 11px 2px'
-                                    })
-                                })}
-                            />
-                        }
+                        <div className={classes.timeContainer}>
+                            {showTimeSelect && routingQuery &&
+                                <TKUISelect
+                                    options={this.timePrefOptions}
+                                    value={this.timePrefOptions.find((option: any) => option.value === routingQuery.timePref)}
+                                    onChange={(option) => this.onPrefChange(option.value)}
+                                    styles={() => ({
+                                        main: overrideClass(this.props.injectedStyles.timePrefSelect as any),
+                                        menu: overrideClass({ marginTop: '3px' }),
+                                        container: overrideClass({ display: 'flex' }),
+                                        control: overrideClass({
+                                            minHeight: 'initial',
+                                            ...genStyles.grow,
+                                            '& svg': {
+                                                marginRight: '9px'
+                                            }
+                                        }),
+                                        valueContainer: overrideClass({
+                                            padding: '0 2px'
+                                        })
+                                    })}
+                                    components={{
+                                        Control: (props) => (
+                                            <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                                                <IconClock className={classes.timePrefIcon} />
+                                                {reactSelectComponents.Control(props)}
+                                            </div>
+                                        )
+                                    }}
+                                />}
+                            {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW &&
+                                // this.props.timezone &&
+                                <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                    value={routingQuery.time}
+                                    timeZone={this.props.timezone}
+                                    onChange={(date: Moment) => this.onQueryUpdate({ time: date })}
+                                    timeFormat={DateTimeUtil.timeFormat()}
+                                    dateFormat={DateTimeUtil.dateTimeFormat()}
+                                    styles={(theme: TKUITheme) => ({
+                                        datePicker: overrideClass(this.props.injectedStyles.datePicker),
+                                        inputElem: overrideClass({
+                                            ...this.props.injectedStyles.datePicker as any,
+                                            padding: '1px 11px 2px'
+                                        })
+                                    })}
+                                />
+                            }
+                        </div>
                         {showTransportsBtn &&
                             <button className={classes.transportsBtn}
                                 onClick={this.props.onTransportButtonClick ?? (() => this.setState({ showTransportSwitches: !this.state.showTransportSwitches }))}

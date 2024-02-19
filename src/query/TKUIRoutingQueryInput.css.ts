@@ -74,7 +74,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         }
     },
     footer: {
-        // ...theme.secondaryBackground,
+        flexWrap: 'wrap',
         borderBottomLeftRadius: '12px',
         borderBottomRightRadius: '12px',
         borderTop: '1px solid ' + tKUIColors.black4,
@@ -86,7 +86,11 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
             height: '28px!important'
         }
     },
+    timeContainer: {
+        ...genStyles.flex
+    },
     timePrefSelect: {
+        ...genStyles.flex,
         minWidth: '97px',
         border: '1px solid ' + black(4, theme.isDark),
         borderRightColor: ({ value }) => value.value !== TimePreference.NOW ? colorWithOpacity(theme.colorPrimary, .5) : undefined,
@@ -110,7 +114,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         border: '1px solid ' + black(4, theme.isDark),
         minWidth: '97px',
         borderRadius: '0 40px 40px 0!important',
-        padding: '4px 11px 5px',
+        padding: '0 11px',
         background: colorWithOpacity(theme.colorPrimary, .2),
         borderLeft: 'none',
         color: theme.colorPrimary,

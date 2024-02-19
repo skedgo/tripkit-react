@@ -54,6 +54,7 @@ export const tKUIResultsDefaultStyle = (theme: TKUITheme) => ({
         textAlign: 'center'
     },
     footer: {
+        flexWrap: 'wrap',
         ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.spaceBetween,
@@ -68,7 +69,11 @@ export const tKUIResultsDefaultStyle = (theme: TKUITheme) => ({
             height: '28px!important'
         }
     },
+    timeContainer: {
+        ...genStyles.flex
+    },
     timePrefSelect: {
+        ...genStyles.flex,
         minWidth: '97px',
         border: '1px solid ' + black(4, theme.isDark),
         borderRightColor: (({ value }) => (value && value.value !== TimePreference.NOW) ? colorWithOpacity(theme.colorPrimary, .5) : undefined) as any,
@@ -92,7 +97,7 @@ export const tKUIResultsDefaultStyle = (theme: TKUITheme) => ({
         border: '1px solid ' + black(4, theme.isDark),
         minWidth: '97px',
         borderRadius: '0 40px 40px 0!important',
-        padding: '4px 11px 5px',
+        padding: '0 11px',
         background: colorWithOpacity(theme.colorPrimary, .2),
         borderLeft: 'none',
         color: theme.colorPrimary,
