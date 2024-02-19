@@ -82,7 +82,7 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.flex,
         ...genStyles.alignCenter,
         ...genStyles.spaceBetween,
-        '& > *, button': {
+        '& > *': {
             height: '28px!important'
         }
     },
@@ -107,15 +107,16 @@ export const tKUIRoutingQueryInputDefaultStyle = (theme: TKUITheme) => ({
         marginLeft: '6px'
     },
     datePicker: {
-        ...theme.textColorDefault,
         border: '1px solid ' + black(4, theme.isDark),
         minWidth: '97px',
         borderRadius: '0 40px 40px 0!important',
         padding: '4px 11px 5px',
         background: colorWithOpacity(theme.colorPrimary, .2),
-        marginRight: 'auto',
         borderLeft: 'none',
-        color: theme.colorPrimary
+        color: theme.colorPrimary,
+        marginRight: '5px',
+        whiteSpace: 'nowrap',
+        height: '28px!important'
     },
     transportsBtn: {
         ...resetStyles.button,

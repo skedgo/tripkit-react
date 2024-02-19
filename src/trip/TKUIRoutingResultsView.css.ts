@@ -64,19 +64,11 @@ export const tKUIResultsDefaultStyle = (theme: TKUITheme) => ({
             }
         },
         padding: '6px 5px',
-        '& > *, button': {
+        '& > *': {
             height: '28px!important'
         }
     },
     timePrefSelect: {
-        // minWidth: '92px',
-        // '& *': {
-        //     ...theme.textWeightSemibold,
-        //     ...important(theme.textColorGray)
-        // },
-        // '& path': {
-        //     fill: black(1, theme.isDark)
-        // }
         minWidth: '97px',
         border: '1px solid ' + black(4, theme.isDark),
         borderRightColor: (({ value }) => (value && value.value !== TimePreference.NOW) ? colorWithOpacity(theme.colorPrimary, .5) : undefined) as any,
@@ -97,24 +89,18 @@ export const tKUIResultsDefaultStyle = (theme: TKUITheme) => ({
         marginLeft: '6px'
     },
     datePicker: {
-        ...theme.textColorDefault,
         border: '1px solid ' + black(4, theme.isDark),
         minWidth: '97px',
         borderRadius: '0 40px 40px 0!important',
         padding: '4px 11px 5px',
         background: colorWithOpacity(theme.colorPrimary, .2),
         borderLeft: 'none',
-        color: theme.colorPrimary
+        color: theme.colorPrimary,
+        marginRight: '5px',
+        whiteSpace: 'nowrap',
+        height: '28px'
     },
     transportsBtn: {
-        // ...resetStyles.button,
-        // padding: '10px',
-        // ...theme.textColorGray,
-        // whiteSpace: 'nowrap',
-        // '& svg': {
-        //     marginLeft: '5px',
-        //     ...genStyles.svgFillCurrColor
-        // }
         ...resetStyles.button,
         border: '1px solid ' + black(4, theme.isDark),
         borderRadius: '40px',

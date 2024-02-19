@@ -30,6 +30,7 @@ import TKUICard, { CardPresentation } from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
 import { ReactComponent as IconClock } from '../images/ic-clock.svg';
+import genStyles from "../css/GenStyle.css";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -453,9 +454,13 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                     container: overrideClass({ minWidth: '100%' }),
                                     control: overrideClass({
                                         minHeight: 'initial',
+                                        ...genStyles.grow,
                                         '& svg': {
                                             marginRight: '9px'
                                         }
+                                    }),
+                                    valueContainer: overrideClass({
+                                        padding: '2px'
                                     })
                                 })}
                                 ariaLabel={"Time preference"}

@@ -397,9 +397,13 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                                     menu: overrideClass({ marginTop: '3px' }),
                                     control: overrideClass({
                                         minHeight: 'initial',
+                                        ...genStyles.grow,
                                         '& svg': {
                                             marginRight: '9px'
                                         }
+                                    }),
+                                    valueContainer: overrideClass({
+                                        padding: '2px'
                                     })
                                 })}
                                 components={{
@@ -411,7 +415,8 @@ class TKUIRoutingResultsView extends React.Component<IProps & IDefaultProps, ISt
                                     )
                                 }}
                             />}
-                        {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW && this.props.timezone &&
+                        {showTimeSelect && routingQuery && routingQuery.timePref !== TimePreference.NOW &&
+                            // this.props.timezone &&
                             <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
                                 value={routingQuery.time}
                                 timeZone={this.props.timezone}
