@@ -268,7 +268,7 @@ class Segment extends SegmentTemplate {
         }
         if (result.includes("<DURATION>")) {
             const durationInMinutes = Math.floor(this.endTimeSeconds / 60) - Math.floor(this.startTimeSeconds / 60);
-            const duration = DateTimeUtil.durationToBriefString(durationInMinutes, false);  // TODO: Bug (Frontend / WL) #20369: don't pass the 'false'.
+            const duration = DateTimeUtil.durationToBriefString(durationInMinutes);
             result = result.replace("<DURATION>", " about " + duration)
         }
         if (result.includes("<TIME>: ")) {  // Remove time from action since now it's displayed elsewhere
