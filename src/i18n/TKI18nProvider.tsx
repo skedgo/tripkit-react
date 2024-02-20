@@ -50,8 +50,6 @@ interface IState {
 
 class TKI18nProvider extends React.Component<IProps, IState> {
 
-    static distanceUnit: () => "metric" | "imperial" = () => i18n.locale === "en-US" ? "imperial" : "metric";
-
     constructor(props: IProps) {
         super(props);
         // Compose messages by overriding untranslated with messages_en.
