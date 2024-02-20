@@ -46,7 +46,7 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
     const showTripHandler = () => trip && onShowTrip?.(trip);
     return (
         <div className={classes.main}>
-            <div className={classes.form}>π
+            <div className={classes.form}>
                 {/* {confirmation.purchase &&
                     <div>{FormatUtil.toMoney(confirmation.purchase.price, { currency: confirmation.purchase.currency, forceDecimals: true })}</div>} */}
                 {/* <TKUIRow
