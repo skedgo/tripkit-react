@@ -419,6 +419,7 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
                     <Fragment>
                         <div className={classes.separator} />
                         <TKUITicketSelect
+                            title={"Select tickets"}
                             tickets={requestBookingForm.tickets}
                             onChange={update => setRequestBookingForm(Util.iAssign(requestBookingForm, { tickets: update }))}
                         />
