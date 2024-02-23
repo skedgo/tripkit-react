@@ -310,7 +310,7 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
                 const isSelectedAlt = altTrip === selectedAlt;
                 return (
                     <div className={classNames(classes.alternative,
-                        props.selected && isSelectedAlt && classes.selectedAlternative, altTrip.availability === TripAvailability.MISSED_PREBOOKING_WINDOW && classes.pastAlternative)}
+                        props.selected && isSelectedAlt && classes.selectedAlternative, altTrip.availability === TripAvailability.MISSED_PREBOOKING_WINDOW && classes.unavailableAlternative)}
                         onClick={() => props.onAlternativeClick &&
                             props.onAlternativeClick(trip as TripGroup, altTrip)}
                         onKeyDown={(e) => {

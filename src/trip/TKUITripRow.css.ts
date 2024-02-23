@@ -70,10 +70,13 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
         width: '100%',
         zIndex: '1'
     },
+    unavailableAlternative: {
+        opacity: '.4'
+    },
     availabilityInfo: {
         ...genStyles.flex,
         ...genStyles.alignCenter,
-        color: theme.colorPrimary,
+        color: theme.colorError,
         '& svg': {
             width: '20px',
             height: '20px',
@@ -81,7 +84,7 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
             ...genStyles.noShrink
         },
         '& path': {
-            fill: theme.colorPrimary
+            fill: theme.colorError
         }
     }
 });
