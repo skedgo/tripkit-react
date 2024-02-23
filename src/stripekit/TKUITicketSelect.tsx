@@ -41,7 +41,7 @@ const ticketSelectJss = (theme: TKUITheme) => ({
         ...genStyles.column,
         ...genStyles.grow,
         '&>*:not(:first-child)': {
-            marginTop: '10px' 
+            marginTop: '10px'
         }
     },
     infoReadonly: {
@@ -88,6 +88,7 @@ const ticketSelectJss = (theme: TKUITheme) => ({
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     tickets: TicketOption[];
+    title?: string;
     onChange?: (update: TicketOption[]) => void;
 }
 
@@ -102,7 +103,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUITicketSelect: React.FunctionComponent<IProps> =
-    ({ tickets, onChange, classes, injectedStyles }) => {
+    ({ tickets, title, onChange, classes, injectedStyles }) => {
         const readonly = !onChange;
         const onTicketValueChange = (ticketNumber: number, increase: boolean) => {
             const update = tickets.slice();
@@ -138,9 +139,10 @@ const TKUITicketSelect: React.FunctionComponent<IProps> =
                 </div>
                 :
                 <div className={classes.main}>
-                    <div className={classes.title}>
-                        Select tickets
-                    </div>
+                    {title &&
+                        <div className={classes.title}>
+                            {title}
+                        </div>}
                     <div className={classes.form}>
                         {tickets.map((ticket, i) =>
                             <div className={classes.option} key={i}>
