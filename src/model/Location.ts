@@ -4,6 +4,16 @@ import { JsonObject, JsonProperty } from "json2typescript";
 import TKDefaultGeocoderNames from "../geocode/TKDefaultGeocoderNames";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 
+export interface PredictionSubstring {
+    length: number;
+    offset: number;
+}
+export interface AutocompleteStructuredFormatting {
+    main_text: string;
+    main_text_matched_substrings: PredictionSubstring[];
+    secondary_text: string;
+    secondary_text_matched_substrings?: PredictionSubstring[];
+}
 @JsonObject
 class Location extends LatLng {
     @JsonProperty('class', String, true)
@@ -17,6 +27,7 @@ class Location extends LatLng {
     @JsonProperty('source', String, true)
     public source: string | undefined = undefined;
     public suggestion?: any;
+    public structured_formatting?: AutocompleteStructuredFormatting;
     public hasDetail?: boolean;
     // Set as optional since sometimes doesn't come. In docs it says it's required. See comment below.
     @JsonProperty('timezone', String, true)

@@ -42,7 +42,7 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
     footer: {
         ...genStyles.flex,
         ...genStyles.spaceBetween,
-        padding: '12px 0'        
+        padding: '12px 0'
     },
     footerButtons: {
         ...genStyles.flex,
@@ -69,5 +69,22 @@ export const tKUITripRowDefaultStyle = (theme: TKUITheme) => ({
         top: '50%',
         width: '100%',
         zIndex: '1'
+    },
+    unavailableAlternative: {
+        opacity: '.4'
+    },
+    availabilityInfo: {
+        ...genStyles.flex,
+        ...genStyles.alignCenter,
+        color: theme.colorError,
+        '& svg': {
+            width: '20px',
+            height: '20px',
+            marginRight: '10px',
+            ...genStyles.noShrink
+        },
+        '& path': {
+            fill: theme.colorError
+        }
     }
 });

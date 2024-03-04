@@ -1,8 +1,7 @@
-import TripGoApi from "../api/TripGoApi";
 import StopLocation from "../model/StopLocation";
 import LocationsData from "./LocationsData";
 import TKLocationInfo from "../model/location/TKLocationInfo";
-import {TKError} from "../error/TKError";
+import { TKError } from "../error/TKError";
 
 class StopsData {
 

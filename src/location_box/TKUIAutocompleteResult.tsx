@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Location from "../model/Location";
+import Location, { PredictionSubstring } from "../model/Location";
 import { ReactComponent as IconPin } from '../images/ic-pin-start.svg';
 import { ReactComponent as IconCurrLoc } from '../images/location/ic-curr-loc.svg';
 import LocationUtil from "../util/LocationUtil";
@@ -50,28 +50,16 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
     public render(): React.ReactNode {
         const { location, classes } = this.props;
         let addressComponent: JSX.Element;
-        if (location.suggestion
-            && this.props.location.suggestion.structured_formatting) { // Google result
+        if (location.structured_formatting) { // Result with structured formatting
             let mainAddressComponent: JSX.Element;
-            const structuredFormatting = this.props.location.suggestion.structured_formatting;
-            const mainText = structuredFormatting.main_text;
-            const matchedSubstrings = structuredFormatting.main_text_matched_substrings;
-            let offset: number = 0;
-            const mainAddressComponents: JSX.Element[] = [];
-            for (const matchedSubstring of matchedSubstrings) {
-                const substrOffset = matchedSubstring.offset;
-                const substrLength = matchedSubstring.length;
-                if (offset < substrOffset) {
-                    mainAddressComponents.push(<span key={offset}>{mainText.substr(offset, substrOffset)}</span>);
-                }
-                mainAddressComponents.push(<span key={substrOffset} className={classes.matchingSubstr}>{mainText.substr(substrOffset, substrLength)}</span>);
-                offset = substrOffset + substrLength;
-            }
-            mainAddressComponents.push(<span key={offset}>{mainText.substr(offset, mainText.length)}</span>);
+            const structuredFormatting = location.structured_formatting;
+            const mainAddressComponents: JSX.Element[] = renderAddressComponents(structuredFormatting.main_text, structuredFormatting.main_text_matched_substrings);
             mainAddressComponent = <span key={1} className={classes.mainAddress}>{mainAddressComponents}</span>;
+            const secondaryAddressComponents: React.ReactNode = structuredFormatting.secondary_text_matched_substrings ? renderAddressComponents(structuredFormatting.secondary_text, structuredFormatting.secondary_text_matched_substrings!) : structuredFormatting.secondary_text;
+            const secondaryAddressComponent = <span key={2} className={classes.secondaryAddress}>{secondaryAddressComponents}</span>;
             addressComponent = <span className={classes.address} role="none"> {[
                 mainAddressComponent,
-                <span key={2} className={classes.secondaryAddress}>{structuredFormatting.secondary_text}</span>
+                secondaryAddressComponent
             ]}
             </span>;
         } else {
@@ -108,6 +96,22 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
                 {addressComponent}
             </div>
         );
+
+        function renderAddressComponents(text: string, matchedSubstrings: PredictionSubstring[]): JSX.Element[] {
+            let offset: number = 0;
+            const mainAddressComponents: JSX.Element[] = [];
+            for (const matchedSubstring of matchedSubstrings) {
+                const substrOffset = matchedSubstring.offset;
+                const substrLength = matchedSubstring.length;
+                if (offset < substrOffset) {
+                    mainAddressComponents.push(<span key={offset}>{text.substring(offset, substrOffset)}</span>);
+                }
+                mainAddressComponents.push(<span key={"s-" + substrOffset} className={classes.matchingSubstr}>{text.substring(substrOffset, substrOffset + substrLength)}</span>);
+                offset = substrOffset + substrLength;
+            }
+            mainAddressComponents.push(<span key={offset}>{text.substring(offset, text.length)}</span>);
+            return mainAddressComponents;
+        }
     }
 }
 

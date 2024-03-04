@@ -57,7 +57,7 @@ const TKUIMyBooking: React.FunctionComponent<IProps> = (props: IProps) => {
                 <div className={classes.header} onClick={showTripHandler}>
                     <div>
                         <div className={classes.mode}>
-                            <img src={modeIcon} />
+                            <img src={modeIcon} alt='' />
                             <div className={classes.modeAndDate}>
                                 <div className={classes.modeTitle}>
                                     {confirmation?.provider?.title}

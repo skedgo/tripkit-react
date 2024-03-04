@@ -100,7 +100,7 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
     }
 
     const resultsRef = useRef<HTMLDivElement>(null);
-    const { onRequestClose, onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, slideUpOptions, t, landscape, classes } = props;
+    const { onRequestClose, slideUpOptions, t, landscape, classes } = props;
     const [section, setSection] = useState<Sections>(Sections.Valid);
 
     function refreshBookings({ valid = true, silent = true }: { valid?: boolean, silent?: boolean } = {}): Promise<boolean> {

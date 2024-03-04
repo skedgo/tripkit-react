@@ -25,12 +25,24 @@
     <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/images/favicon/apple-touch-icon-180x180.png">
 
     <!--Generated from https://appsco.pe/developer/splash-screens -->
-    <link href="%PUBLIC_URL%/images/favicon/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-    <link href="%PUBLIC_URL%/images/favicon/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-    <link href="%PUBLIC_URL%/images/favicon/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
-    <link href="%PUBLIC_URL%/images/favicon/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
-    <link href="%PUBLIC_URL%/images/favicon/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
-    <link href="%PUBLIC_URL%/images/favicon/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphone5_splash.png"
+        media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphone6_splash.png"
+        media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphoneplus_splash.png"
+        media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
+        rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphonex_splash.png"
+        media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+        rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphonexr_splash.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
+        rel="apple-touch-startup-image" />
+    <link href="%PUBLIC_URL%/images/favicon/iphonexsmax_splash.png"
+        media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
+        rel="apple-touch-startup-image" />
     <!-- Disable since on landscape it displays distorted, until I find how to specify a different splash for landscape -->
     <!--<link href="%PUBLIC_URL%/images/favicon/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />-->
     <!--<link href="%PUBLIC_URL%/images/favicon/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />-->
@@ -61,7 +73,8 @@
     Downgraded to v5 of query-string since latest is written in es6 (e.g. includes fat arrow functions)
     and ie11 does not support them.
     -->
-    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Array.prototype.findIndex,Math.trunc"></script>
+    <script
+        src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.find,Array.prototype.findIndex,Math.trunc"></script>
 
     <style>
         html,
@@ -74,7 +87,7 @@
             display: flex;
             overflow-x: hidden;
         }
-        
+
         html {
             height: 100%;
             /* Prevent overscroll/bounce effect on main element. See
@@ -82,11 +95,37 @@
             position: fixed;
             overflow: hidden;
         }
-        
+
         @font-face {
             font-family: 'ProximaNova';
-            src: url('/fonts/269860_3_0.eot');
-            src: url('/fonts/269860_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/269860_3_0.woff') format('woff'), url('/fonts/269860_3_0.ttf') format('truetype');
+            src: url('/fonts/234DF5_3_0.eot');
+            src: url('/fonts/234DF5_3_0.eot?#iefix') format('embedded-opentype'), url('/fonts/234DF5_3_0.woff') format('woff'), url('/fonts/234DF5_3_0.ttf') format('truetype');
+            /* normal */
+            font-weight: 400;
+        }
+
+        @font-face {
+            font-family: 'ProximaNova';
+            src: url('/fonts/234DF5_0_0.eot');
+            src: url('/fonts/234DF5_0_0.eot?#iefix') format('embedded-opentype'), url('/fonts/234DF5_0_0.woff') format('woff'), url('/fonts/234DF5_0_0.ttf') format('truetype');
+            /* medium */
+            font-weight: 500;
+        }
+
+        @font-face {
+            font-family: 'ProximaNova';
+            src: url('/fonts/234DF5_1_0.eot');
+            src: url('/fonts/234DF5_1_0.eot?#iefix') format('embedded-opentype'), url('/fonts/234DF5_1_0.woff') format('woff'), url('/fonts/234DF5_1_0.ttf') format('truetype');
+            /* semi bold */
+            font-weight: 600;
+        }
+
+        @font-face {
+            font-family: 'ProximaNova';
+            src: url('/fonts/234DF5_2_0.eot');
+            src: url('/fonts/234DF5_2_0.eot?#iefix') format('embedded-opentype'), url('/fonts/234DF5_2_0.woff') format('woff'), url('/fonts/234DF5_2_0.ttf') format('truetype');
+            /* bold */
+            font-weight: 700;
         }
     </style>
     <script>
@@ -94,22 +133,22 @@
 
         function tKRequestIPLocation() {
             return fetch("https://ipapi.co/json/")
-                .then(function(response) {
+                .then(function (response) {
                     return response.json()
                 })
-                .then(function(responseJson) {
+                .then(function (responseJson) {
                     return [responseJson.latitude, responseJson.longitude];
                 });
         }
 
         function tKRequestCurrentLocationHTML5() {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
-                        function(result) {
+                        function (result) {
                             resolve([result.coords.latitude, result.coords.longitude])
                         },
-                        function(error) {
+                        function (error) {
                             reject(error)
                         });
                 }
@@ -117,12 +156,12 @@
         }
 
         function tKCheckGeolocationPermission() {
-            return new Promise(function(resolve, reject) {
+            return new Promise(function (resolve, reject) {
                 navigator.permissions ?
                     // Permission API is supported
                     navigator.permissions.query({
                         name: 'geolocation'
-                    }).then(function(permission) {
+                    }).then(function (permission) {
                         // is geolocation granted?
                         resolve(permission.state === "granted")
                     }) :
@@ -134,18 +173,18 @@
         function tKRequestCurrentLocation(dontAskUser) {
             if (dontAskUser) {
                 return tKCheckGeolocationPermission()
-                    .then(function(granted) {
+                    .then(function (granted) {
                         // Permission API is supported
                         return granted ? tKRequestCurrentLocationHTML5() : tKRequestIPLocation();
                     })
-                    .catch(function() {
+                    .catch(function () {
                         // Permission API is not supported
                         return tKRequestIPLocation();
                     });
                 // return requestCurrentLocationGMaps();
             }
             return tKRequestCurrentLocationHTML5()
-                .catch(function() {
+                .catch(function () {
                     return tKRequestIPLocation();
                 });
         }

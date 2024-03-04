@@ -4,7 +4,7 @@ import { generateClassNameSeed, tKUIDeaultTheme, TKUITheme } from "../jss/TKUITh
 import { JssProvider, ThemeProvider, useTheme } from "react-jss";
 import GATracker from "../analytics/GATracker";
 import Util from "../util/Util";
-import { IOptionsContext, default as OptionsProvider, OptionsContext } from "../options/OptionsProvider";
+import { IOptionsContext, OptionsContext } from "../options/OptionsProvider";
 
 export const TKUIConfigContext = React.createContext<TKUIConfig>({} as TKUIConfig);
 

@@ -628,7 +628,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public onSegmentCollectBookingChange(stationarySegment: Segment, location: ModeLocation, data: { bookingURL: string, bookingStart?: string, bookingEnd?: string, vehicleId?: string }): Promise<Trip | undefined> {
             const selectedTrip = this.state.selected;
-            const { bookingStart, bookingEnd, vehicleId } = data;
+            const { bookingStart, vehicleId } = data;
             if (!selectedTrip) {
                 return Promise.resolve(undefined);
             }

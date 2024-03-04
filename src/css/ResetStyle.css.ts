@@ -1,4 +1,3 @@
-import {CSSProps} from "../jss/StyleHelper";
 import jss from 'jss';
 import genStyles from "./GenStyle.css";
 import DeviceUtil from "../util/DeviceUtil";

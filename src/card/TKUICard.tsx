@@ -238,7 +238,6 @@ class TKUICard extends React.Component<IProps, IState> {
         if (presentation === CardPresentation.CONTENT) {
             return children;
         }
-        const draggable = !this.props.slideUpOptions || this.props.slideUpOptions.draggable !== false;
         let cardAriaLabel = this.props.ariaLabel;
         if (!cardAriaLabel) {
             if (this.props.title && typeof this.props.title === "string") {

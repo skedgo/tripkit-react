@@ -13,7 +13,7 @@ import DeviceUtil, { BROWSER } from "../util/DeviceUtil";
 import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import FavouritesData from "../data/FavouritesData";
-import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { tKUIRoutingQueryInputDefaultStyle } from "./TKUIRoutingQueryInput.css";
 import { ReactComponent as IconArrowBack } from '../images/ic-arrow-back.svg';
 import classNames from "classnames";
@@ -22,13 +22,15 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
 import TKUITooltip from "../card/TKUITooltip";
-import TKUISelect, { SelectOption } from "../buttons/TKUISelect";
+import TKUISelect, { SelectOption, reactSelectComponents } from "../buttons/TKUISelect";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import { ERROR_GEOLOC_DENIED, ERROR_GEOLOC_INACCURATE } from "../util/GeolocationUtil";
 import TKErrorHelper, { ERROR_UNABLE_TO_RESOLVE_ADDRESS } from "../error/TKErrorHelper";
 import TKUICard, { CardPresentation } from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import { tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import { ReactComponent as IconClock } from '../images/ic-clock.svg';
+import genStyles from "../css/GenStyle.css";
 
 interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.title> {
 
@@ -438,34 +440,54 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                             justifyContent: 'flex-end' // When making JSS styles updates dynamic this can be moved to .css.ts
                         } : undefined}
                     >
-                        {showTimeSelect &&
-                            <TKUISelect
-                                options={this.timePrefOptions}
-                                value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
-                                onChange={(option) => this.onPrefChange(option.value)}
-                                styles={() => ({
-                                    // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
-                                    // a theme update would not be reflected (e.g. switch dark / light mode).
-                                    // This will not be needed anymore when get dynamic style updates working.
-                                    main: overrideClass(this.props.injectedStyles.timePrefSelect),
-                                    menu: overrideClass({ marginTop: '3px' }),
-                                    container: overrideClass({ minWidth: '100%' }),
-                                })}
-                                ariaLabel={"Time preference"}
-                            />}
-                        {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
-                            <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
-                                value={routingQuery.time}
-                                timeZone={this.props.timezone}
-                                onChange={(date: Moment) => this.updateQuery({ time: date })}
-                                timeFormat={DateTimeUtil.timeFormat()}
-                                dateFormat={DateTimeUtil.dateTimeFormat()}
-                                disabled={datePickerDisabled}
-                                styles={(theme: TKUITheme) => ({
-                                    datePicker: overrideClass(this.props.injectedStyles.datePicker)
-                                })}
-                            />
-                        }
+                        <div className={classes.timeContainer}>
+                            {showTimeSelect &&
+                                <TKUISelect
+                                    options={this.timePrefOptions}
+                                    value={this.timePrefOptions.find((option: any) => option.value === this.props.value.timePref)}
+                                    onChange={(option) => this.onPrefChange(option.value)}
+                                    styles={() => ({
+                                        // Pass a function since injectedStyles.timePrefSelect depends on theme, and if not
+                                        // a theme update would not be reflected (e.g. switch dark / light mode).
+                                        // This will not be needed anymore when get dynamic style updates working.
+                                        main: this.props.injectedStyles.timePrefSelect as any,
+                                        menu: overrideClass({ marginTop: '3px' }),
+                                        container: overrideClass({ minWidth: '100%', display: 'flex' }),
+                                        control: overrideClass({
+                                            minHeight: 'initial',
+                                            ...genStyles.grow,
+                                            '& svg': {
+                                                marginRight: '9px'
+                                            }
+                                        }),
+                                        valueContainer: overrideClass({
+                                            padding: '0 2px'
+                                        })
+                                    })}
+                                    ariaLabel={"Time preference"}
+                                    components={{
+                                        Control: (props) => (
+                                            <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
+                                                <IconClock className={classes.timePrefIcon} />
+                                                {reactSelectComponents.Control(props)}
+                                            </div>
+                                        )
+                                    }}
+                                />}
+                            {showTimeSelect && routingQuery.timePref !== TimePreference.NOW &&
+                                <TKUIDateTimePicker     // Switch rotingQuery.time to region timezone.
+                                    value={routingQuery.time}
+                                    timeZone={this.props.timezone}
+                                    onChange={(date: Moment) => this.updateQuery({ time: date })}
+                                    timeFormat={DateTimeUtil.timeFormat()}
+                                    dateFormat={DateTimeUtil.dateTimeFormat()}
+                                    disabled={datePickerDisabled}
+                                    styles={(theme: TKUITheme) => ({
+                                        datePicker: overrideClass(this.props.injectedStyles.datePicker)
+                                    })}
+                                />
+                            }
+                        </div>
                         {showTransportsBtn &&
                             <TKUITooltip
                                 placement="right"
@@ -557,16 +579,16 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
  *  _time to depart_ or the _time to arrive_, and select what _transport modes_ should be considered.
  *
  *  It can be seen as building or updating a [routing query object]() in a controlled way, through
- *  ```query``` and ```onChange``` properties. 
- *  
+ *  ```query``` and ```onChange``` properties.
+ *
  *  You can connect the component with the SDK global state, {@link TKState}, by forwarding the props
  *  provided by TKUIRoutingQueryInputHelpers.TKStateProps, in the following way:
- * 
+ *
  *  ```
  *   <TKUIRoutingQueryInputHelpers.TKStateProps>
  *      {stateProps => 
  *          <TKUIRoutingQueryInput 
- *              {...stateProps}
+ *              { ...stateProps }
  *              // Other props
  *          />}
  *   </TKUIRoutingQueryInputHelpers.TKStateProps>

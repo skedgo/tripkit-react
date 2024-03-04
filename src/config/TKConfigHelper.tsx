@@ -5,7 +5,7 @@ import {
     TKUIWithClasses,
     TKUIWithStyle, withStyleInjection
 } from "../jss/StyleHelper";
-import { TKUIConfig, TKComponentDefaultConfig, ITKUIConfigOptional } from "./TKUIConfig";
+import { TKUIConfig, TKComponentDefaultConfig } from "./TKUIConfig";
 import { TKComponentConfig, TKUIPropsOverride } from "./TKComponentConfig";
 import { TKUIConfigContext, default as TKUIConfigProvider } from "./TKUIConfigProvider";
 import { Subtract } from "utility-types";
@@ -96,8 +96,8 @@ export function connect<
                     {(config: TKUIConfig) => {
                         const componentConfig = confToCompMapper(config);
                         const randomizeClassNamesToPass = props.randomizeClassNames !== undefined ? props.randomizeClassNames :
-                            componentConfig && componentConfig.randomizeClassNames != undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
-                        const verboseClassNamesToPass = componentConfig && componentConfig.verboseClassNames != undefined ? componentConfig.verboseClassNames : defaultConfig.verboseClassNames;
+                            componentConfig && componentConfig.randomizeClassNames !== undefined ? componentConfig.randomizeClassNames : defaultConfig.randomizeClassNames;
+                        const verboseClassNamesToPass = componentConfig && componentConfig.verboseClassNames !== undefined ? componentConfig.verboseClassNames : defaultConfig.verboseClassNames;
                         return <WithI18nInjector {...implProps}
                             defaultStyles={defaultConfig.styles}
                             propStyles={props.styles}

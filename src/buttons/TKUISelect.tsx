@@ -1,11 +1,11 @@
 import React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUISelectDefaultStyle} from "./TKUISelect.css";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
+import { CSSProps, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { tKUISelectDefaultStyle } from "./TKUISelect.css";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Select from 'react-select';
-import {ReactComponent as IconTriangleDown} from '../images/ic-triangle-down.svg';
-export {components as reactSelectComponents} from "react-select";
+import { ReactComponent as IconTriangleDown } from '../images/ic-triangle-down.svg';
+export { components as reactSelectComponents } from "react-select";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -60,7 +60,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     placeholder?: string;
 }
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 interface IStyle {
     main: CSSProps<IProps>;
@@ -80,7 +80,7 @@ export type TKUISelectProps = IProps;
 export type TKUISelectStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUISelect {...props}/>,
+    render: props => <TKUISelect {...props} />,
     styles: tKUISelectDefaultStyle,
     classNamePrefix: "TKUISelect"
 };
@@ -96,10 +96,10 @@ export interface SelectOption {
 class TKUISelect extends React.Component<IProps, {}> {
 
     public render(): React.ReactNode {
-        const SelectDownArrow = (props: any) => <IconTriangleDown style={{width: '9px', height: '9px'}}/>;
-        const {isMulti, value, classes, injectedStyles} = this.props;
+        const SelectDownArrow = (props: any) => <IconTriangleDown style={{ width: '9px', height: '9px' }} />;
+        const { isMulti, value, classes, injectedStyles } = this.props;
         if (isMulti && value !== undefined && !Array.isArray(value)) {
-            throw "If multi we always expect an array as value, but comes: " + value;
+            throw new Error("If multi we always expect an array as value, but comes: " + value);
         }
         return (
             <div className={classes.main}>
@@ -114,19 +114,19 @@ class TKUISelect extends React.Component<IProps, {}> {
                     isSearchable={false}
                     menuIsOpen={this.props.menuIsOpen}
                     styles={{
-                        container: (styles: any) => ({...styles, ...injectedStyles.container as any}),
-                        control: (styles: any) => ({...styles, ...injectedStyles.control as any}),
-                        indicatorsContainer: (styles: any) => ({...styles, display: 'none'}),
-                        menu: (styles: any) => ({...styles, ...injectedStyles.menu as any}),
+                        container: (styles: any) => ({ ...styles, ...injectedStyles.container as any }),
+                        control: (styles: any) => ({ ...styles, ...injectedStyles.control as any }),
+                        indicatorsContainer: (styles: any) => ({ ...styles, display: 'none' }),
+                        menu: (styles: any) => ({ ...styles, ...injectedStyles.menu as any }),
                         option: (styles: any, state: any) => ({
                             ...styles, ...injectedStyles.option as any,
                             ...(state.isFocused && injectedStyles.optionFocused as any),
                             ...(state.isSelected && injectedStyles.optionSelected as any)
                         }),
-                        singleValue: (styles: any) => ({...styles, ...injectedStyles.singleValue as any}),
-                        multiValue: (styles: any) => ({...styles, ...injectedStyles.multiValue as any}),
-                        placeholder: (styles: any) => ({...styles, ...injectedStyles.placeholder as any}),
-                        valueContainer: (styles: any) => ({...styles, ...injectedStyles.valueContainer as any})
+                        singleValue: (styles: any) => ({ ...styles, ...injectedStyles.singleValue as any }),
+                        multiValue: (styles: any) => ({ ...styles, ...injectedStyles.multiValue as any }),
+                        placeholder: (styles: any) => ({ ...styles, ...injectedStyles.placeholder as any }),
+                        valueContainer: (styles: any) => ({ ...styles, ...injectedStyles.valueContainer as any })
                     }}
                     isDisabled={this.props.isDisabled}
                     aria-label={this.props.ariaLabel}

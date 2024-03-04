@@ -24,9 +24,9 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBookingActions"
 };
 
-type TKUIBookingAction = Subtract<IClientProps, { actions: BookingAction[], onAction?: (action: BookingAction) => void, }> & { action: BookingAction; onAction?: () => void; }
+type TKUIBookingActionProps = Subtract<IClientProps, { actions: BookingAction[], onAction?: (action: BookingAction) => void, }> & { action: BookingAction; onAction?: () => void; }
 
-const TKUIBookingAction: React.FunctionComponent<TKUIBookingAction> = props => {
+const TKUIBookingAction: React.FunctionComponent<TKUIBookingActionProps> = props => {
     const { action, onAction } = props;
     return (
         <Fragment>

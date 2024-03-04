@@ -82,7 +82,11 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
     },
 
     link: {
-        color: theme.colorPrimary
+        color: theme.colorPrimary,
+        '&:disabled': {
+            color: colorWithOpacity(theme.colorPrimary, .5),
+            cursor: 'initial'
+        }
     },
 
     iconContainer: {

@@ -82,9 +82,9 @@ class MultiGeocoder {
 
     private compareDuplicates(l1: Location, l2: Location, query: string): -1 | 0 | 1 {
         if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {
-            return LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) < 0.2 ? 1 : -1
+            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") < 0.2 ? 1 : -1
         } else if (l1.source === TKDefaultGeocoderNames.skedgo && l2.source !== TKDefaultGeocoderNames.skedgo) {
-            return LocationUtil.relevance(l1.address ?? "", query) - LocationUtil.relevance(l2.address ?? "", query) > -0.2 ? -1 : 1
+            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") > -0.2 ? -1 : 1
         }
         return 0;
     }
@@ -118,6 +118,7 @@ class MultiGeocoder {
                     }
                     return true;    // found analogous, so don't add to depurated    
                 }
+                return false;
             });
             if (!analogous) { // if didn't find analogous, add to depurated
                 depuratedResults.push(result);
@@ -142,7 +143,7 @@ class MultiGeocoder {
                 return this._options.compare(l1, l2, query);
             });
             jointSuggestions.push(firsts[0]);
-            Util.log((firsts[0].address || firsts[0].name) + " (" + firsts[0].source + ")" + " - " + LocationUtil.relevance(query, firsts[0].address || ""), null);
+            Util.log(`${firsts[0].address || firsts[0].name} (${firsts[0].source}) - ${LocationUtil.relevanceStr(query, firsts[0].address || "")}`, null);
             MultiGeocoder.removeFirst(firsts[0], suggestionListsFromSources);
         }
         return jointSuggestions;

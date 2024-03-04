@@ -21,6 +21,7 @@ import TKUISettingSection from '../options/TKUISettingSection';
 import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
 import { SelectOption } from '../buttons/TKUISelect';
+import { i18n } from '../i18n/TKI18nConstants';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -136,6 +137,26 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     organizationOptions?: SelectOption[];
 }
 
+function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, data?: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
+    setWaiting?.(true);
+    request.then(data => {
+        if (data.warning) {
+            UIUtil.customConfirmAlert({
+                title: "Warning",
+                message: data.warning,
+                buttons: [{
+                    label: i18n.t("OK"),
+                    onClick: () => { }
+                }]
+            })
+        }
+        return data;
+    })
+        .then(data => onClose(true, data))
+        .catch(UIUtil.errorMsg)
+        .finally(() => setWaiting?.(false));
+}
+
 const TKUICheckoutView: React.FunctionComponent<IProps> =
     ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
@@ -173,17 +194,9 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                 const paymentOption = paymentMethod.paymentOption;
                 let stripePaymentMethod = paymentMethod.data?.stripePaymentMethod;
                 if (paymentOption.paymentMode === "WALLET") {
-                    setWaiting?.(true);
-                    TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method)
-                        .then(data => onClose(true, data))
-                        .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting?.(false));
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method), onClose, setWaiting);
                 } else if (paymentOption.paymentMode === "INVOICE") {
-                    setWaiting?.(true);
-                    TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value })
-                        .then(data => onClose(true, data))
-                        .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting?.(false));
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value }), onClose, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;
                     if (!stripe || !stripePaymentMethod && !elements) {
@@ -222,12 +235,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         console.log(result.error.message);
                         setWaiting?.(false);
                     } else {
-                        TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET)
-                            .then(data => onClose(true, data))
-                            .catch(e => {
-                                UIUtil.errorMsg(e, { onClose });
-                            })
-                            .finally(() => setWaiting?.(false));
+                        handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onClose, setWaiting);
                     }
                 } else {    // paymentOption.paymentMode === "EXTERNAL"
                     const stripe = await stripePromise;
@@ -260,10 +268,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 .then(NetworkUtil.jsonCallback);
                         }
                     }
-                    TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id })
-                        .then(data => onClose(true, data))
-                        .catch(UIUtil.errorMsg)
-                        .finally(() => setWaiting?.(false));
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id }), onClose, setWaiting);
                 }
             }
         return (

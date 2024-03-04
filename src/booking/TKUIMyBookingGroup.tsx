@@ -6,7 +6,7 @@ import ConfirmedBookingData from "../model/trip/ConfirmedBookingData";
 import { TKUITheme } from '../jss/TKUITheme';
 import TKUIMyBooking from './TKUIMyBooking';
 
-const tKUIMyBookingGroupDefaultStyle = (theme: TKUITheme) => ({
+const tKUIMyBookingGroupDefaultStyle = (_theme: TKUITheme) => ({
     main: {
 
     }
@@ -33,7 +33,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIMyBookingGroup: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { booking, onShowTrip, classes, theme, showActions, showTickets } = props;
+    const { booking, onShowTrip, classes, showActions, showTickets } = props;
     return (
         <div className={classes.main}>
             <TKUIMyBooking

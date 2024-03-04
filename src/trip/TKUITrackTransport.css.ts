@@ -31,8 +31,8 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
     },
     circleWhite: {
         padding: '2px',
-        width: '28px',
-        height: '28px',
+        width: '28px!important',
+        height: '28px!important',
         background: 'white',
         borderRadius: '50%'
     },
