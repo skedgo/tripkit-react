@@ -465,6 +465,7 @@ class TKUIRoutingQueryInput extends React.Component<IProps, IState> {
                                         })
                                     })}
                                     ariaLabel={"Time preference"}
+                                    key={this.props.value.timePref} // Force a re-render when timePref changes so dynamic styles get updated.
                                     components={{
                                         Control: (props) => (
                                             <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
