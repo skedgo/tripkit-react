@@ -193,6 +193,10 @@ class DateTimeUtil {
         return this.momentFromIsoWithTimezone(date).set('hour', 0).set('minute', 0).set('second', 0).set('millisecond', 0).format();
     }
 
+    public static toIsoJustDateEfficient(date: string): string {
+        return date.substring(0, 10);
+    }
+
     /**
      * 
      * @param date 

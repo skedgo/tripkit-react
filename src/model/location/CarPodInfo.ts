@@ -40,7 +40,7 @@ export interface BookingAvailability {
     timestamp: string;
     intervals: BookingAvailabilityInterval[];
 }
-interface BookingAvailabilityInterval {
+export interface BookingAvailabilityInterval {
     status: "AVAILABLE" | "NOT_AVAILABLE" | "UNKNOWN";
     start: string;
     end: string;
@@ -51,7 +51,7 @@ export class CarAvailability {
     @JsonProperty("car", CarPodVehicle, true)   // Required
     public car: CarPodVehicle = new CarPodVehicle();
     @JsonProperty("availability", Any, true)
-    public availability?: BookingAvailability = undefined;    
+    public availability?: BookingAvailability = undefined;
     @JsonProperty("bookingURL", String, true)
     public bookingURL?: string = undefined;
     @JsonProperty("appInfo", AppInfo, true)
