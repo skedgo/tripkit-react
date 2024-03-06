@@ -7,7 +7,7 @@ import { tKUIVehicleAvailabilityDefaultStyle } from "./TKUIVehicleAvailability.c
 import CarPodLocation from "../model/location/CarPodLocation";
 import DateTimeUtil from "../util/DateTimeUtil";
 import classNames from "classnames";
-import { BookingAvailability, CarAvailability, CarPodVehicle } from "../model/location/CarPodInfo";
+import { BookingAvailability, BookingAvailabilityInterval, CarAvailability, CarPodVehicle } from "../model/location/CarPodInfo";
 import { ReactComponent as IconStartSlot } from "../images/ic-arrow-start-slot.svg";
 import { ReactComponent as IconEndSlot } from "../images/ic-arrow-end-slot.svg";
 import { ReactComponent as IconLeftArrow } from "../images/ic-chevron-left.svg";
@@ -60,20 +60,23 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 function getSlots(start: string, end): string[] {
     const slots: string[] = [];
-    for (let slot = start; DateTimeUtil.isoCompare(slot, end) < 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+    // for (let slot = start; DateTimeUtil.isoCompare(slot, end) < 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+    for (let slot = start; slot < end; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {   // More efficient comparison (requires iso dates in same timezone)
         slots.push(slot);
     }
     return slots;
 }
 
 function betweenTimes(time: string, startTime: string, endTime: string): boolean {
-    return DateTimeUtil.isoToMillis(startTime) <= DateTimeUtil.isoToMillis(time) &&
-        DateTimeUtil.isoToMillis(time) <= DateTimeUtil.isoToMillis(endTime);
+    // return DateTimeUtil.isoToMillis(startTime) <= DateTimeUtil.isoToMillis(time) &&
+    //     DateTimeUtil.isoToMillis(time) <= DateTimeUtil.isoToMillis(endTime);    
+    return startTime <= time && time <= endTime;    // More efficient comparison (requires iso dates in same timezone)
 }
 
 function available(slot: string, vehicleAvailability: BookingAvailability): boolean {
     return vehicleAvailability.intervals.some(interval =>
-        interval.status === "AVAILABLE" && betweenTimes(slot, interval.start, interval.end));
+        // interval.status === "AVAILABLE" && betweenTimes(slot, interval.start, interval.end));
+        interval.status === "AVAILABLE" && interval.start <= slot && slot <= interval.end);   // More efficient comparison (requires iso dates in same timezone)
 }
 
 function availableRange(startTime: string | undefined, endTime: string | undefined, vehicleAvailability: BookingAvailability): boolean {
@@ -87,15 +90,51 @@ function availableRange(startTime: string | undefined, endTime: string | undefin
         return true;
     }
 
-    if (DateTimeUtil.isoCompare(startTime, endTime) > 0) {
+    if (startTime > endTime) {
         return false;
     }
-    for (let slot = startTime; DateTimeUtil.isoCompare(slot, endTime) <= 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+    // for (let slot = startTime; DateTimeUtil.isoCompare(slot, endTime) <= 0; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {
+    for (let slot = startTime; slot <= endTime; slot = DateTimeUtil.isoAddMinutes(slot, 30)) {  // More efficient comparison (requires iso dates in same timezone)
         if (!available(slot, vehicleAvailability)) {
             return false;
         }
     }
     return true;
+}
+
+function getClickableSlots(slots: string[], selectedVehicle: CarAvailability, bookStartTime?: string, bookEndTime?: string): { clickableSlots: string[], previewStartSlots: string[], previewEndSlots: string[] } {
+    const vehicleAvailabilityIntervals = selectedVehicle.availability!.intervals;
+    const matchingIntervals = vehicleAvailabilityIntervals.filter(interval => interval.status === "AVAILABLE" &&
+        (!bookStartTime || interval.start <= bookStartTime) && (!bookEndTime || bookEndTime <= interval.end));
+    const clickableSlots = new Array(slots.length).fill(false);
+    const previewStartSlots = new Array(slots.length).fill(false);
+    const previewEndSlots = new Array(slots.length).fill(false);
+    for (let i = 0; i < slots.length; i++) {
+        const slot = slots[i];
+        const clickable = matchingIntervals.some(interval =>
+            interval.start <= slot && slot <= interval.end);   // More efficient comparison (requires iso dates in same timezone)
+        clickableSlots[i] = clickable;
+        previewStartSlots[i] = clickable && (bookStartTime ? slot < bookStartTime : bookEndTime ? slot < bookEndTime : true);
+        previewEndSlots[i] = clickable && (bookEndTime ? slot > bookEndTime : bookStartTime ? slot > bookStartTime : false);
+    }
+    return { clickableSlots, previewStartSlots, previewEndSlots };
+}
+
+function mergeIntervals(intervals1: BookingAvailabilityInterval[], intervals2: BookingAvailabilityInterval[]): BookingAvailabilityInterval[] {
+    if (intervals1.length === 0) {
+        return intervals2;
+    } else if (intervals2.length === 0) {
+        return intervals1;
+    }
+    const lastInterval1 = intervals1[intervals1.length - 1];
+    const firstInterval2 = intervals2[0];
+    const unionInterval = lastInterval1.status === firstInterval2.status && DateTimeUtil.isoAddMinutes(lastInterval1.end, 2) >= firstInterval2.start ?
+        {
+            status: lastInterval1.status,
+            start: lastInterval1.start,
+            end: lastInterval1.end > firstInterval2.end ? lastInterval1.end : firstInterval2.end
+        } : undefined;
+    return unionInterval ? intervals1.slice(0, -1).concat([unionInterval]).concat(intervals2.slice(1)) : intervals1.concat(intervals2);
 }
 
 const SCROLL_X_PANEL_ID = "scroll-x-panel";
@@ -126,7 +165,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const [selectedVehicle, setSelectedVehicle] = useState<CarPodVehicle | undefined>();
     const [bookStartTime, setBookStartTime] = useState<string | undefined>(initBookStartTime);
     const [bookEndTime, setBookEndTime] = useState<string | undefined>(initBookEndTime);
-    const slots = getSlots(displayStartTime, displayEndTime);
+    const slots = useMemo(() => getSlots(displayStartTime, displayEndTime), [displayStartTime, displayEndTime]);
 
     /**
      * undefined: not requested
@@ -137,6 +176,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     const vehicleAvailabilities = useMemo(() => getMergedVehicles(), [vehicleAvailabilitiesByDate]);
     const loadingVehicles = vehicleAvailabilities.length === 0 && Array.from(vehicleAvailabilitiesByDate.values()).some(value => value === null);
     const noVehicles = vehicleAvailabilities.length === 0 && !Array.from(vehicleAvailabilitiesByDate.values()).some(value => value === null);
+    const { clickableSlots = [], previewStartSlots = [], previewEndSlots = [] } = useMemo<{ clickableSlots?: boolean[], previewStartSlots?: boolean[], previewEndSlots?: boolean[] }>(() => {
+        if (!selectedVehicle) {
+            return {};
+        }
+        const selectedVehicleAvailability = vehicleAvailabilities.find(av => av.car === selectedVehicle);
+        return selectedVehicleAvailability ? getClickableSlots(slots, selectedVehicleAvailability, bookStartTime, bookEndTime) : {};
+    }, [selectedVehicle, bookStartTime, bookEndTime, vehicleAvailabilities]);
 
     function getMergedVehicles(): CarAvailability[] {
         // This shouldn't happen, we should always have data for displayStartTime(?)
@@ -152,7 +198,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             } else if (dateAvailabilities) {
                 result.forEach(availability => {
                     const dateAvailability = dateAvailabilities.find(a => a.car.identifier === availability.car.identifier);
-                    availability.availability!.intervals = availability.availability!.intervals.concat(dateAvailability?.availability?.intervals ?? []);
+                    // availability.availability!.intervals = availability.availability!.intervals.concat(dateAvailability?.availability?.intervals ?? []);
+                    // Need to merge intervals so getClickableSlots works correctly.
+                    availability.availability!.intervals = mergeIntervals(availability.availability!.intervals, dateAvailability?.availability?.intervals ?? []);
                 })
             }
         }
@@ -170,9 +218,12 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
         if (slot === bookEndTime) {
             return { clickable: true, endUpdate: null };
         }
-        const isStart = !bookStartTime && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) < 0)
-            || bookStartTime && DateTimeUtil.isoCompare(slot, bookStartTime) < 0;
-        const isEnd = !isStart && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) > 0);
+        // const isStart = !bookStartTime && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) < 0)
+        //     || bookStartTime && DateTimeUtil.isoCompare(slot, bookStartTime) < 0;
+        const isStart = !bookStartTime && (!bookEndTime || slot < bookEndTime)  // More efficient comparison (requires iso dates in same timezone)
+            || bookStartTime && slot < bookStartTime;
+        // const isEnd = !isStart && (!bookEndTime || DateTimeUtil.isoCompare(slot, bookEndTime) > 0);
+        const isEnd = !isStart && (!bookEndTime || slot > bookEndTime);
         const resultingRangeStart = isStart ? slot : bookStartTime;
         const resultingRangeEnd = isEnd ? slot : bookEndTime;
         if (resultingRangeStart && resultingRangeEnd && !availableRange(resultingRangeStart, resultingRangeEnd, slotVehicle.availability!)) {
@@ -213,7 +264,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             return false;
         }
         return bookStartTime === slot || bookEndTime === slot ||
-            (!!bookStartTime && !!bookEndTime && betweenTimes(slot, bookStartTime, bookEndTime));
+            // (!!bookStartTime && !!bookEndTime && betweenTimes(slot, bookStartTime, bookEndTime));
+            (!!bookStartTime && !!bookEndTime && bookStartTime < slot && slot < bookEndTime);   // More efficient comparison (requires iso dates in same timezone)
     }
 
     function onPrevNext(prev: boolean) {
@@ -287,7 +339,8 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             return vehiclesByDateUpdate;
         });
         await RegionsData.instance.requireRegions();
-        const region = RegionsData.instance.getRegion(location)?.name;
+        const region = RegionsData.instance.getRegion(location);
+        const regionCode = region?.name;
         // Merge consecutive days into (multi-days) intervals to optimize requests.
         const requestDateGroups = requestDates.reduce((groups, date) => {
             const lastGroup = groups[groups.length - 1];
@@ -304,7 +357,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
             const dateGEnd = DateTimeUtil.isoAddMinutes(dateGroup[dateGroup.length - 1], 24 * 60 - 1);
             try {
                 // const locationInfo = await NetworkUtil.delayPromise<CarPodLocation>(1000)(Util.deserialize(require(`../mock/data/locationInfo-carPod-sgfleet-${date.substring(0, 10)}.json`), CarPodLocation));                
-                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${encodeURIComponent(dateGStart)}&region=${region}&end=${encodeURIComponent(dateGEnd)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
+                const locationInfo = await TripGoApi.apiCallT(`locationInfo.json?identifier=${location.id}&start=${encodeURIComponent(dateGStart)}&region=${regionCode}&end=${encodeURIComponent(dateGEnd)}`, NetworkUtil.MethodType.GET, TKLocationInfo)
                 setVehicleAvailabilitiesByDate(availabilitiesAByDate => {
                     const availabilitiesByDateUpdate = new Map(availabilitiesAByDate);
                     dateGroup.forEach(date => {
@@ -312,6 +365,13 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                             return;
                         }
                         const podAvailabilities = (locationInfo.carPod!.availabilities ?? []);
+                        // Convert iso dates in intervals to region timezone, since needs this for efficient date campares.
+                        podAvailabilities.forEach((availabilty: CarAvailability) => {
+                            availabilty.availability?.intervals.forEach(interval => {
+                                interval.start = DateTimeUtil.isoFromMillis(DateTimeUtil.isoToMillis(interval.start), region?.timezone);
+                                interval.end = DateTimeUtil.isoFromMillis(DateTimeUtil.isoToMillis(interval.end), region?.timezone);
+                            });
+                        });
                         const nearPodsAvailabilities = locationInfo.carPod!.nearbyPods
                             ?.reduce((acc, nearbyPod) => {
                                 acc.push(...nearbyPod.carPod.availabilities ?? []);
@@ -350,7 +410,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
     }
 
     function isFetching(slot): boolean {
-        return vehicleAvailabilitiesByDate.get(DateTimeUtil.toJustDate(DateTimeUtil.momentFromIsoWithTimezone(slot)).format()) === null;
+        return vehicleAvailabilitiesByDate.get(DateTimeUtil.toIsoJustDateEfficient(slot)) === null;
     }
 
     function onClearClick() {
@@ -421,9 +481,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                 </button>}
             <div className={classes.timeIndexes}>
                 {!portrait && slots.filter((_slot, i) => i % 2 === 0).map((slot, i) => {
-                    const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                    const isDayStart = slot === DateTimeUtil.toIsoJustDateEfficient(slot);
                     return (
-                        <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={i}>
+                        <div style={{ width: SLOT_WIDTH * 2 }} className={classes.timeIndex} key={slot}>
                             {isDayStart && <div className={classes.dayIndex}>{DateTimeUtil.formatRelativeDay(DateTimeUtil.momentFromIsoWithTimezone(slot), "ddd D", { justToday: true })}</div>}
                             {DateTimeUtil.isoFormat(slot, "ha")}
                         </div>
@@ -486,20 +546,22 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                             {!portrait && !scrollSync && header}
                             {vehicleAvailabilities?.map((availability, i) => {
                                 const vehicle = availability.car;
+                                const isVehicleAvailableInRange = availableRange(bookStartTime, bookEndTime, availability.availability!);
+                                const displayEndTimeMinus30 = DateTimeUtil.isoAddMinutes(displayEndTime, -30);
                                 return (
                                     <div className={classNames(classes.vehicle,
-                                        !availableRange(bookStartTime, bookEndTime, availability.availability!) ? classes.fadeVehicle : vehicle !== selectedVehicle && classes.availableVehicle,
+                                        !isVehicleAvailableInRange ? classes.fadeVehicle : vehicle !== selectedVehicle && classes.availableVehicle,
                                         selectedVehicle && vehicle !== selectedVehicle && classes.unselectedVehicle,
                                     )}
                                         onClick={() => {
-                                            vehicle !== selectedVehicle && availableRange(bookStartTime, bookEndTime, availability.availability!) && setSelectedVehicle(availability.car)
+                                            vehicle !== selectedVehicle && isVehicleAvailableInRange && setSelectedVehicle(availability.car)
                                         }}
                                         style={{
                                             ...portrait ? { paddingLeft: 15, paddingTop: 65 } : { paddingLeft: VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH },
                                             ...vehicle === selectedVehicle && { paddingBottom: SLOT_HEIGHT + 50 },
                                             width: SLOT_WIDTH * slots.length + (!portrait ? VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH : 0)
                                         }}
-                                        key={i}
+                                        key={availability.car.identifier}
                                     >
                                         <div className={classes.vehicleLabel} style={{ ...portrait ? { transform: 'translateY(-55px)' } : { width: VEHICLE_LABEL_WIDTH } }}>
                                             <div className={classes.vehicleIcon}>
@@ -513,18 +575,19 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                         <div className={classes.whiteToTransparent} style={{ position: 'absolute', zIndex: 1, width: SCROLL_HORIZONT_WIDTH / 2, height: '54px', left: portrait ? SCROLL_HORIZONT_WIDTH / 2 : VEHICLE_LABEL_WIDTH + SCROLL_HORIZONT_WIDTH / 2 }} />
                                         <div className={classes.slots}>
                                             {slots.map((slot, i) => {
-                                                const isDayStart = slot === DateTimeUtil.toIsoJustDate(slot);
+                                                const isDayStart = slot === DateTimeUtil.toIsoJustDateEfficient(slot);
                                                 const isSelectedVehicle = vehicle === selectedVehicle;
-                                                const { clickable, startUpdate, endUpdate } = isSelectedVehicle ? slotClickHelper(slot, availability) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
+                                                // const { clickable, startUpdate, endUpdate } = isSelectedVehicle ? slotClickHelper(slot, availability) : { clickable: false, startUpdate: undefined, endUpdate: undefined };
+                                                const { clickable, startUpdate, endUpdate } = isSelectedVehicle ? { clickable: clickableSlots[i], startUpdate: previewStartSlots[i], endUpdate: previewEndSlots[i] } : { clickable: false, startUpdate: undefined, endUpdate: undefined }; // More efficient comparison (requires iso dates in same timezone)
                                                 const isStartPreview = !!startUpdate;
                                                 const isEndPreview = !!endUpdate;
                                                 return (
                                                     <div className={classes.slot}
                                                         style={{ width: SLOT_WIDTH, height: SLOT_HEIGHT, ...portrait && { position: 'relative' } }}
                                                         onClick={() => onSlotClick(slot, availability)}
-                                                        key={i}
+                                                        key={slot}
                                                     >
-                                                        {selectedSlot(slot, availability, !!bookStartTime && !!bookEndTime && availableRange(bookStartTime, bookEndTime, availability.availability!)) ?
+                                                        {selectedSlot(slot, availability, !!bookStartTime && !!bookEndTime && isVehicleAvailableInRange) ?
                                                             <div className={classNames(classes.selectedSlot, slot === bookStartTime && classes.firstSelectedSlot, ((!bookEndTime && slot === bookStartTime) || slot === bookEndTime) && classes.lastSelectedSlot)}>
                                                                 {slot === bookStartTime ? <IconStartSlot /> : slot === bookEndTime ? <IconEndSlot /> : undefined}
                                                             </div>
@@ -532,7 +595,7 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                                                             <div className={classNames(
                                                                 isFetching(slot) ? classes.loadingSlot : available(slot, availability.availability!) ? classes.availableSlot : classes.unavailableSlot,
                                                                 slot === displayStartTime && classes.firstSlot,
-                                                                DateTimeUtil.isoAddMinutes(slot, 30) === displayEndTime && classes.lastSlot,
+                                                                slot === displayEndTimeMinus30 && classes.lastSlot, // More efficient comparison (requires iso dates in same timezone)
                                                                 vehicle === selectedVehicle && !clickable && classes.fadeSlot,
                                                                 isStartPreview && classes.startPreview,
                                                                 isEndPreview && classes.endPreview
