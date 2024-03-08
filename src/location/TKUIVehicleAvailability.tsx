@@ -364,6 +364,9 @@ const TKUIVehicleAvailability: React.FunctionComponent<IProps> = (props: IProps)
                         if (availabilitiesAByDate.get(date) !== null) {
                             return;
                         }
+                        if (!locationInfo.carPod) {
+                            return;
+                        }
                         const podAvailabilities = (locationInfo.carPod!.availabilities ?? []);
                         // Convert iso dates in intervals to region timezone, since needs this for efficient date campares.
                         podAvailabilities.forEach((availabilty: CarAvailability) => {

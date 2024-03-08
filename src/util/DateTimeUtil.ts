@@ -194,7 +194,7 @@ class DateTimeUtil {
     }
 
     public static toIsoJustDateEfficient(date: string): string {
-        return date.substring(0, 10);
+        return `${date.substring(0, 10)}T00:00:00${date.substring(19)}`;
     }
 
     /**

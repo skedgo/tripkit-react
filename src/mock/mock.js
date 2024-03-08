@@ -40,7 +40,8 @@ const worker = setupWorker(
                 // Mock json does not exist, so proceed with network request.
                 return;
             }
-        } else {
+        }
+        else {
             return res(
                 ctx.json(require(`./data/locationInfo.json`))
             )
