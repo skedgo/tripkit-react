@@ -167,7 +167,7 @@ function badgeLabel(badge: Badges, t: TranslationFunction): string {
         case Badges.EASIEST: return t("Easiest");
         case Badges.FASTEST: return t("Fastest");
         case Badges.GREENEST: return t("Greenest");
-        case Badges.HEALTHIEST: return t("Healthiest");
+        case Badges.HEALTHIEST: return t("Most.Active");
         default: return t("Recommended");
     }
 }
