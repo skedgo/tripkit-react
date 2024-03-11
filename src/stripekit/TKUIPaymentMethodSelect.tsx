@@ -111,7 +111,15 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             checked: {},
         })(Radio));
         const [editing, setEditing] = useState<boolean>(false);
-        const [selectedSubOption, setSelectedSubOption] = useState<SelectOption | undefined>(undefined);
+        const [selectedSubOptionMap, setSelectedSubOptionMap] = useState<Map<SGPaymentMethod, SelectOption | undefined>>(() => {
+            const map = new Map<SGPaymentMethod, SelectOption | undefined>();
+            options.forEach(paymentMethod => {
+                if (paymentMethod.data?.selectedSubOption) {    // Option specified as the default.
+                    map.set(paymentMethod, paymentMethod.data?.selectedSubOption);
+                }
+            });
+            return map;
+        });
         function renderPaymentMethod(paymentMethod: SGPaymentMethod, i: number): ReactNode {
             switch (paymentMethod.paymentOption.paymentMode) {
                 case "INTERNAL":
@@ -170,10 +178,12 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                             <div style={{ marginLeft: '6px', color: black(1) }}>
                                 <TKUISelect
                                     options={selectOptions}
-                                    value={selectedSubOption}
+                                    value={selectedSubOptionMap.get(paymentMethod)}
                                     onChange={(option) => {
                                         paymentMethod.data!.selectedSubOption = option;
-                                        setSelectedSubOption(option);
+                                        const update = new Map(selectedSubOptionMap);
+                                        update.set(paymentMethod, option);
+                                        setSelectedSubOptionMap(update);
                                         onChange(paymentMethod);
                                     }}
                                     isDisabled={paymentMethod !== value}

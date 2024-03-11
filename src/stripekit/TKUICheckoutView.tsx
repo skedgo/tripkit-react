@@ -135,6 +135,7 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     onClose: (success?: boolean, data?: { updateURL?: string }) => void;
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
+    defaultOrganizationOption?: SelectOption;
 }
 
 function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, data?: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
@@ -292,10 +293,11 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     setWaiting?: (waiting: boolean) => void;
     onClose: (success?: boolean) => void;
     organizationOptions?: SelectOption[];
+    defaultOrganizationOption?: SelectOption;
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
-    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, t, classes, theme, injectedStyles }) => {
+    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, t, classes, theme, injectedStyles }) => {
         const ephemeralKey = ephemeralKeyObj.secret;
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
@@ -314,7 +316,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                 } else {
                     const paymentMethod: SGPaymentMethod = { paymentOption: option };
                     if (option.paymentMode === "INVOICE") {
-                        paymentMethod.data = { subOptions: organizationOptions };
+                        paymentMethod.data = { subOptions: organizationOptions, selectedSubOption: defaultOrganizationOption };
                     }
                     pms.push(paymentMethod);
                 }
