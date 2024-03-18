@@ -202,16 +202,17 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
         return (
             <div className={classes.main}>
                 {options.map((paymentMethod, i) => renderPaymentMethod(paymentMethod, i))}
-                <div className={classes.btnContainer}>
-                    <TKUIButton
-                        type={TKUIButtonType.PRIMARY_LINK}
-                        text={editing ? "Editing done" : "Edit Cards"}
-                        onClick={e => {
-                            e.preventDefault();
-                            setEditing(!editing);
-                        }}
-                    />
-                </div>
+                {options.find(paymentMethod => paymentMethod.paymentOption.paymentMode === "INTERNAL") &&
+                    <div className={classes.btnContainer}>
+                        <TKUIButton
+                            type={TKUIButtonType.PRIMARY_LINK}
+                            text={editing ? "Editing done" : "Edit Cards"}
+                            onClick={e => {
+                                e.preventDefault();
+                                setEditing(!editing);
+                            }}
+                        />
+                    </div>}
             </div>
         );
     }
