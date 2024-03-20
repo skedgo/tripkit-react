@@ -32,6 +32,7 @@ export class RegionsData {
     // Set this to hardcode regions json
     public static regionsJsonPromise: Promise<any> | undefined = undefined;
     public static regionsJsonFallback: any = undefined;
+    public static regionsFilterRegex?: RegExp = undefined;
 
     constructor() {
         this.regionsRequest = (RegionsData.regionsJsonPromise !== undefined ? RegionsData.regionsJsonPromise :
@@ -49,7 +50,10 @@ export class RegionsData {
             });
         this.regionsPromise = this.regionsRequest.then((regionResults: RegionResults) => {
             this.regions = new Map<string, Region>();
-            for (const region of regionResults.regions) {
+            const filteredRegions = RegionsData.regionsFilterRegex ?
+                regionResults.regions.filter(region => RegionsData.regionsFilterRegex!.test(region.name)) :
+                regionResults.regions;
+            for (const region of filteredRegions) {
                 this.regions.set(region.name, region);
             }
             this._regionList = Array.from(this.regions.values());
@@ -112,7 +116,7 @@ export class RegionsData {
     public requireRegions(): Promise<void> {
         return this.regionsPromise.then(() => {
             // This may happen after a RegionsData.reset(), so make subscribers to the old instance to become subscribers of the new one.
-            if (this !== RegionsData.instance) {                
+            if (this !== RegionsData.instance) {
                 return RegionsData.instance.requireRegions();
             }
             return Promise.resolve();

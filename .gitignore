@@ -34,3 +34,4 @@ yarn-error.log*
 
 # IDE
 .idea/workspace.xml
+.vscode/settings.json
