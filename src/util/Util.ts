@@ -5,6 +5,8 @@ export type Update<T> = {
     [P in keyof T]?: T[P]
 }
 
+const SKEDGO_TERMS_OF_USE_URL = "https://skedgo.com/home/terms-of-use";
+
 class Util {
 
     public static getWindowHeight(): number {
@@ -166,6 +168,10 @@ class Util {
             }
             return cookieObject
         }, {});
+    }
+
+    public static addSkedGoTermsToMapAttribution(attribution?: string): string {
+        return (attribution ? attribution + ' | ' : "") + `<a href='${SKEDGO_TERMS_OF_USE_URL}' tabindex='-1' target='_blank'>SkedGo Terms</a>`
     }
 
 }

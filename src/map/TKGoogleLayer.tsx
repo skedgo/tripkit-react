@@ -2,6 +2,7 @@ import React from 'react';
 import ReactLeafletGoogleLayer from 'react-leaflet-google-layer';
 import { TKUITheme } from '..';
 import { useTheme } from 'react-jss';
+import Util from '../util/Util';
 
 
 type TKGoogleLayerProps = Partial<React.ComponentProps<typeof ReactLeafletGoogleLayer>> & { googleMapsLoaderConf: { KEY: string } }
@@ -9,11 +10,13 @@ type TKGoogleLayerProps = Partial<React.ComponentProps<typeof ReactLeafletGoogle
 const TKGoogleLayer: React.FunctionComponent<TKGoogleLayerProps> =
     props => {
         const theme = useTheme<TKUITheme>();
+        const { attribution, ...restProps } = props;
         return (
             <ReactLeafletGoogleLayer
                 styles={theme.isDark ? darkStyles : undefined}
                 key={theme.isDark ? "dark" : "light"}   // Do this to re-create the component on appearance change to force refresh.
-                {...props}
+                {...restProps}
+                attribution={Util.addSkedGoTermsToMapAttribution(attribution)}
             />
         )
     }

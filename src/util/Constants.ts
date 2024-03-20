@@ -5,7 +5,7 @@ class Constants {
     // TODO: avoid this.
     public static RESOURCES_URL: string = "https://tripgo.com";
 
-    private static isMe(scriptElem: any){
+    private static isMe(scriptElem: any) {
         return scriptElem.getAttribute('src') && scriptElem.getAttribute('src').includes("/embed.js");
     }
 
@@ -16,7 +16,7 @@ class Constants {
         let currentScript = null;
         const scripts = Array.prototype.slice.call(document.getElementsByTagName("script"));
         for (const script of scripts) {
-            if(Constants.isMe(script)){
+            if (Constants.isMe(script)) {
                 currentScript = script;
             }
         }

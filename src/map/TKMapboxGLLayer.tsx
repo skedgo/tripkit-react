@@ -6,6 +6,7 @@ import Color from '../model/trip/Color';
 import { TKI18nContext } from '../i18n/TKI18nProvider';
 import { useTheme } from 'react-jss';
 import { TKUITheme } from '../jss/TKUITheme';
+import Util from '../util/Util';
 
 const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
     const mapboxGlMap = useRef<MapboxGlLayer>();
@@ -128,9 +129,11 @@ const TKMapboxGLLayer: React.FunctionComponent<any> = props => {
         refreshMapLocale();
     }
 
+    const { attribution, ...restProps } = props;
     return (
         <MapboxGlLayer
-            {...props}
+            {...restProps}
+            attribution={Util.addSkedGoTermsToMapAttribution(attribution)}
             key={style}   // Do this to re-create the component on style change to force refresh.
             ref={(ref: any) => {
                 if (ref && ref.leafletElement && ref.leafletElement.getMapboxMap) {
