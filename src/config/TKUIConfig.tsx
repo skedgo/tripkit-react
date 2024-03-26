@@ -49,7 +49,6 @@ import { TKUIAutocompleteResultProps, TKUIAutocompleteResultStyle } from "../loc
 import { TKUILocationBoxProps, TKUILocationBoxStyle } from "../location_box/TKUILocationBox";
 import { TKUICardCarouselProps, TKUICardCarouselStyle } from "../card/TKUICardCarousel";
 import { TKUIAlertRowProps, TKUIAlertRowStyle } from "../alerts/TKUIAlertRow";
-import { Tracker, InitializeOptions } from 'react-ga';
 import { TrackerOptions } from "../analytics/GATracker";
 import { TKUIErrorViewProps, TKUIErrorViewStyle } from "../error/TKUIErrorView";
 import { TKState } from "./TKState";
@@ -87,6 +86,8 @@ import { TKUISubscriptionViewProps, TKUISubscriptionViewStyle } from "../sidebar
 import { TripGoApiHeadersMap } from "../api/TripGoApi";
 import { TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle } from "../booking/TKUIMyBookingGroup";
 import { TKUIBookingActionsProps, TKUIBookingActionsStyle } from "../booking/TKUIBookingActions";
+import { TKUIBicycleInfoProps, TKUIBicycleInfoStyle } from "../service/TKUIBicycleInfo";
+import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
 
 /**
  * SDK configuration
@@ -305,6 +306,8 @@ export interface ITKUIConfigOptional {
     TKUIStripePaymentCard: TKComponentConfig<TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle>;
     TKUIPagerControl: TKComponentConfig<TKUIPagerControlProps, TKUIPagerControlStyle>;
     TKUIBookingActions: TKComponentConfig<TKUIBookingActionsProps, TKUIBookingActionsStyle>;
+    TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;
+    TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;

@@ -68,10 +68,26 @@ export const tKUITrackTransportDefaultStyle = (theme: TKUITheme) => ({
         padding: (props: TKUITrackTransportProps) => props.brief === false ? '0 5px' : undefined
     },
     title: {
-        maxWidth: '200px',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        textOverflow: 'ellipsis'
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter,
+        '& > div': {
+            maxWidth: '200px',
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis'
+        },
+        '& > img, > svg': {
+            width: '12px!important',
+            height: '12px',
+            ...theme.isDark && {
+                opacity: (props: TKUITrackTransportProps) =>
+                    (!props.segment.modeInfo || !isRemoteIcon(props.segment.modeInfo)) ? '.8' : undefined
+            },
+            '&:not(:first-child)': {
+                marginLeft: '5px'
+            }
+        }
     },
     subtitle: {
         color: black(1, theme.isDark),

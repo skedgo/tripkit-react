@@ -42,7 +42,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                     componentKey={"TKUITransportPin"}
                                     renderOverride={renderProps => {
                                         const render = config["TKUITransportPin"]?.render ?? tKUITransportPinConfig.render;
-                                        const transIconHTML = renderToStaticMarkup(render(renderProps));
+                                        const transIconHTML = renderToStaticMarkup(render(renderProps, tKUITransportPinConfig.render));
                                         const icon = L.divIcon({
                                             html: transIconHTML,
                                             className: this.props.segmentIconClassName,
@@ -104,7 +104,7 @@ class MapTripSegment extends React.Component<IProps, {}> {
                                         return <Marker
                                             position={segment.realtimeVehicle!.location}
                                             icon={L.divIcon({
-                                                html: renderToStaticMarkup(render(renderProps)),
+                                                html: renderToStaticMarkup(render(renderProps, tKUIRealtimeVehicleConfig.render)),
                                                 iconSize: [40, 40],
                                                 iconAnchor: [20, 20],
                                                 className: this.props.vehicleClassName

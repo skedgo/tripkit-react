@@ -20,7 +20,7 @@ function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS
             {(config: TKUIConfig) => {
                 // Dependency (renderer) injection
                 const renderFromConfig = confToCompMapper(config) ? confToCompMapper(config)!.render : undefined;
-                const render = renderFromConfig || defaultConfig.render;
+                const render = renderFromConfig ?? defaultConfig.render;
 
                 // Config props injection
                 const defaultConfigProps = Util.isFunction(defaultConfig.props) ?
@@ -31,7 +31,7 @@ function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS
                     (Util.isFunction(componentConfig.props) ?
                         (componentConfig.props as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({ ...defaultConfigProps, ...props }) :
                         componentConfig.props);
-                return render({ ...defaultConfigProps, ...props, ...configProps });
+                return render({ ...defaultConfigProps, ...props, ...configProps }, defaultConfig.render);
             }}
         </TKUIConfigContext.Consumer>;
 }

@@ -55,6 +55,7 @@ export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
             TKComponentDefaultConfig<P, S>,
             {
                 styles: TKUIStyles<S, P>;
+                render: (props: P) => JSX.Element;
             }
         > & {
             /**
@@ -63,6 +64,7 @@ export type TKComponentConfig<P extends TKUIWithClasses<S, P>, S> =
              * @ctype object | (theme: TKUITheme) => object
              */
             styles: TKUICustomStyles<S, P>;
+            render: (props: P, defaultRender: (props: P) => JSX.Element) => JSX.Element;
         }>;
 
 export type TKUIPropsOverride<P extends TKUIWithClasses<S, P>, S> = Partial<P> | ((implProps: P) => Partial<P>);

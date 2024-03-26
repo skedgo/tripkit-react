@@ -35,7 +35,7 @@ class MapService extends React.Component<IProps, {}> {
                                     componentKey={"TKUITransportPin"}
                                     renderOverride={renderProps => {
                                         const render = config["TKUITransportPin"]?.render ?? tKUITransportPinConfig.render;
-                                        const transIconHTML = renderToStaticMarkup(render(renderProps));
+                                        const transIconHTML = renderToStaticMarkup(render(renderProps, tKUITransportPinConfig.render));
                                         const icon = L.divIcon({
                                             html: transIconHTML,
                                             className: this.props.segmentIconClassName,
