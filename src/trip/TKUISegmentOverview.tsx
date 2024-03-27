@@ -9,7 +9,7 @@ import {
     tKUISegmentOverviewDefaultStyle
 } from "./TKUISegmentOverview.css";
 import { ReactComponent as IconPinStart } from "../images/ic-pin-start.svg";
-import TKUIStreetsChart, { TKUIStreetsChartProps, TKUIStreetsChartStyle } from "./TKUIStreetsChart";
+import TKUIStreetsChart from "./TKUIStreetsChart";
 import TKUIOccupancySign from "../service/occupancy/TKUIOccupancyInfo";
 import TKUIWheelchairInfo from "../service/occupancy/TKUIWheelchairInfo";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
@@ -24,7 +24,8 @@ import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveU
 import { SegmentType } from "../model/trip/SegmentTemplate";
 import classNames from "classnames";
 import DeviceUtil from "../util/DeviceUtil";
-import { lazyComponent } from "../lazy/TKLazy";
+import ModeIdentifier from "../model/region/ModeIdentifier";
+import TKUIBicycleInfo from "../service/TKUIBicycleInfo";
 
 type IStyle = ReturnType<typeof tKUISegmentOverviewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -76,6 +77,12 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             <div className={classes.occupancy}>
                 <TKUIWheelchairInfo accessible={segment.wheelchairAccessible} />
             </div>;
+        const bikeInfo = (this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID)) &&
+            segment.isPT() &&
+            <div className={classes.occupancy}>
+                <TKUIBicycleInfo accessible={segment.bicycleAccessible ?? undefined} />
+            </div>;
+
         const occupancyInfo = hasBusOccupancy ?
             <div className={classes.occupancy}>
                 <TKUIOccupancySign status={segment.realtimeVehicle!.components![0][0].occupancy!} />
@@ -180,6 +187,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
                                 {segment.getAction()}
                             </div>
                             {wheelchairInfo}
+                            {bikeInfo}
                             {occupancyInfo}
                             {wcSegmentInfo}
                             <div className={classes.notes}>

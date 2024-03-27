@@ -4,12 +4,10 @@ import {
     TKUIWithStyle
 } from "../jss/StyleHelper";
 import { tKUIBicycleInfoDefaultStyle } from "./TKUIBicycleInfo.css";
-import { ReactComponent as IconWCAccessible } from '../../images/service/ic_wheelchair_accessible.svg';
-import { ReactComponent as IconWCInaccessible } from '../../images/service/ic_wheelchair_inaccessible.svg';
-import { ReactComponent as IconWCUnknown } from '../../images/service/ic_wheelchair_unknown.svg';
 import { TKComponentDefaultConfig } from "../config/TKComponentConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKUIConfig } from "../config/TKUIConfig";
+import TKUIIcon, { TKUIIconName } from "./TKUIIcon";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     accessible?: boolean;
@@ -31,27 +29,28 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIBicycleInfo"
 };
 
-function getIcon(accessible?: boolean) {
+function getIcon(accessible?: boolean): React.ReactNode {
     switch (accessible) {
-        case true: return IconWCAccessible;
-        case false: return IconWCInaccessible;
-        default: return IconWCUnknown;
+        case true: return <TKUIIcon iconName={TKUIIconName.bicycleAccessibleSmall} />;
+        case false: return null;
+        default: return null;
     }
 }
 
 function getText(accessible?: boolean): string {
     switch (accessible) {
-        case true: return "Wheelchair accessible";
-        case false: return "Wheelchair inaccessible";
-        default: return "Wheelchair accessibility unknown";
+        case true: return "Bicycle accessible";
+        case false: return "Bicycle inaccessible";
+        default: return "Bicycle accessibility unknown";
     }
 }
 
 const TKUIBicycleInfo: FunctionComponent<IProps> = ({ accessible, brief, classes }) => {
-    const WCIcon = getIcon(accessible);
+    const icon = getIcon(accessible);
+    if (!icon) return null;
     return (
         <div className={classes.main}>
-            <WCIcon className={classes.icon} />
+            {icon}
             {!brief ?
                 <div className={classes.text}>
                     {getText(accessible)}

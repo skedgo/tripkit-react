@@ -16,6 +16,8 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import DeviceUtil from "../util/DeviceUtil";
+import ModeIdentifier from "../model/region/ModeIdentifier";
+import TKUIBicycleInfo from "./TKUIBicycleInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
@@ -164,6 +166,8 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         const briefWheelchair = !detailed &&
             (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&
             <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true} />;
+        const bikeInfo = (this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID)) &&
+            <TKUIBicycleInfo accessible={departure.bicycleAccessible} brief={true} />;
         let ariaLabel = "";
         if (departure.serviceNumber) {
             ariaLabel += departure.serviceNumber + " ";
@@ -198,11 +202,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                                 {departure.serviceNumber}
                             </div>}
                         {briefWheelchair}
-                        {briefOccupancy}
-                        {departure.hasAlerts && <AlertIcon className={classes.alertIcon} />}
+                        {bikeInfo}
                     </div>
                     <div className={classes.timeAndOccupancy}>
                         {time}
+                        {briefOccupancy}
+                        {departure.hasAlerts && <AlertIcon className={classes.alertIcon} />}
                     </div>
                     {lineText &&
                         <div className={classes.serviceDescription}>{lineText}</div>}

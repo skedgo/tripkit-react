@@ -1,7 +1,6 @@
-import {TKUIStyles} from "../../jss/StyleHelper";
-import {black, tKUIColors, TKUITheme} from "../../jss/TKUITheme";
+import { black, TKUITheme } from "../../jss/TKUITheme";
 import genStyles from "../../css/GenStyle.css";
-import {ITKUIWheelchairInfoProps, ITKUIWheelchairInfoStyle} from "./TKUIWheelchairInfo";
+import { ITKUIWheelchairInfoProps } from "./TKUIWheelchairInfo";
 
 export const tKUIWheelchairInfoDefaultStyle =
     (theme: TKUITheme) => ({
@@ -13,13 +12,13 @@ export const tKUIWheelchairInfoDefaultStyle =
         },
         icon: {
             color: (props: ITKUIWheelchairInfoProps) => props.accessible === false ? theme.colorWarning : black(1, theme.isDark),
-            width: (props: ITKUIWheelchairInfoProps) => !props.brief ? '25px' : '16px',
+            width: (props: ITKUIWheelchairInfoProps) => '16px',
             height: '16px',
             ...genStyles.svgFillCurrColor
         },
         text: {
             ...genStyles.fontS,
             ...theme.textColorGray,
-            marginLeft: '5px'
+            marginLeft: '10px'
         }
     });

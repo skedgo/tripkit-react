@@ -1,8 +1,8 @@
 import genStyles from "../css/GenStyle.css";
-import {TKUITimetableViewProps, TKUITimetableViewStyle} from "./TKUITimetableView";
-import {resetStyles} from "../css/ResetStyle.css";
-import {black, tKUIColors, TKUITheme, white} from "../jss/TKUITheme";
-import {TKUIStyles} from "../jss/StyleHelper";
+import { TKUITimetableViewProps, TKUITimetableViewStyle } from "./TKUITimetableView";
+import { resetStyles } from "../css/ResetStyle.css";
+import { black, tKUIColors, TKUITheme, white } from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
 import DeviceUtil from "../util/DeviceUtil";
 
 export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUITimetableViewProps> =
@@ -40,10 +40,11 @@ export const tKUITimetableDefaultStyle: TKUIStyles<TKUITimetableViewStyle, TKUIT
             ...genStyles.wrap
         },
         serviceNumber: {
-            borderRadius: '4px',
-            padding: '2px 4px',
+            borderRadius: '3px',
+            padding: '0 4px',
             marginRight: '4px',
-            ...genStyles.fontSM
+            ...theme.textSizeCaption,
+            lineHeight: '16px'
         },
         actionsPanel: {
             margin: '24px 0 16px',

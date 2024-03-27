@@ -7,20 +7,29 @@ import { TKUITheme } from "../jss/TKUITheme";
 
 export enum TKUIIconName {
     bicycle = "bicycle",
-    bicycleMini = "bicycleMini"
+    bicycleAccessibleMini = "bicycleMini",
+    bicycleAccessibleSmall = "bicycleAccessibleSmall",
+    wheelchairAccessibleSmall = "wheelchairAccessibleSmall"
 }
 
 function getDefaultIconUrl(iconName: TKUIIconName, isDark: boolean): string {
     switch (iconName) {
         case TKUIIconName.bicycle:
-            return TransportUtil.getTransportIconLocal("bike", false, isDark);
-        case TKUIIconName.bicycleMini:
-            return TransportUtil.getTransportIconLocal("bike-mini", false, isDark);
+            return TransportUtil.getTransportIconLocal("bicycle", false, isDark);
+        case TKUIIconName.bicycleAccessibleMini:
+            return TransportUtil.getTransportIconLocal("bicycle-accessible-mini", false, isDark);
+        case TKUIIconName.bicycleAccessibleSmall:
+            return TransportUtil.getTransportIconLocal("bicycle-accessible-small");
+        case TKUIIconName.wheelchairAccessibleSmall:
+            return TransportUtil.getTransportIconLocal("wheelchair-accessible-small");
+        default:
+            return TransportUtil.getTransportIconLocal("");
     }
 }
 
 function getSizeInPx(iconName: TKUIIconName): number {
-    return iconName.toLocaleLowerCase().endsWith("mini") ? 12 : 24;
+    return iconName.toLocaleLowerCase().endsWith("mini") ? 12 :
+        iconName.toLocaleLowerCase().endsWith("small") ? 16 : 24;
 }
 
 const tKUIIconNameDefaultStyle = (theme: TKUITheme) => ({

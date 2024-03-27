@@ -3,11 +3,11 @@ import {
     TKUIServiceDepartureRowProps,
     TKUIServiceDepartureRowStyle
 } from "./TKUIServiceDepartureRow";
-import {black, colorWithOpacity, tKUIColors, TKUITheme} from "../jss/TKUITheme";
-import {TKUIStyles} from "../jss/StyleHelper";
+import { black, colorWithOpacity, tKUIColors, TKUITheme } from "../jss/TKUITheme";
+import { TKUIStyles } from "../jss/StyleHelper";
 import TransportUtil from "../trip/TransportUtil";
-import {severityColor} from "../trip/TKUITrackTransport.css";
-import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
+import { severityColor } from "../trip/TKUITrackTransport.css";
+import { isRemoteIcon } from "../map/TKUIMapLocationIcon.css";
 import ServiceDeparture from "../model/service/ServiceDeparture";
 import DateTimeUtil from "../util/DateTimeUtil";
 
@@ -15,10 +15,10 @@ export const rowStyle = (theme: TKUITheme) => ({
     padding: '16px',
     '&:hover': {
         backgroundColor: black(5, theme.isDark)
-},
+    },
     '&:active': {
-    backgroundColor: black(4, theme.isDark)
-}
+        backgroundColor: black(4, theme.isDark)
+    }
 });
 
 export const rowSelectedStyle = (theme: TKUITheme) => ({
@@ -54,16 +54,17 @@ export const tKUIServiceDepartureRowDefaultStyle: TKUIStyles<TKUIServiceDepartur
                 marginRight: '4px'
             }
         },
-        transIcon:{
+        transIcon: {
             opacity: (props: TKUIServiceDepartureRowProps) => !isRemoteIcon(props.value.modeInfo) ? '.4' : undefined
         },
         serviceNumber: {
             color: (props: TKUIServiceDepartureRowProps) => serviceTextColor(props.value),
-            borderRadius: '4px',
-            padding: '2px 4px',
+            borderRadius: '3px',
+            padding: '0 4px',
             backgroundColor: (props: TKUIServiceDepartureRowProps) =>
                 TransportUtil.getServiceDepartureColor(props.value),
-            ...genStyles.fontSM
+            ...theme.textSizeCaption,
+            lineHeight: '16px'
         },
         time: {
             ...theme.textColorGray,

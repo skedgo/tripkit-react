@@ -19,6 +19,6 @@ export const tKUIBicycleInfoDefaultStyle =
         text: {
             ...genStyles.fontS,
             ...theme.textColorGray,
-            marginLeft: '5px'
+            marginLeft: '10px'
         }
     });
