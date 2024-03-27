@@ -98,7 +98,7 @@ const TKUITrackTransport: React.FunctionComponent<IProps> = ({ segment, t, theme
                         {infoTitle ? <div>{infoTitle}</div> : null}
                         {segment.isPT() && segment.wheelchairAccessible && userProfile.transportOptions.isModeEnabled(ModeIdentifier.WHEELCHAIR_ID) &&
                             <img src={TransportUtil.getTransportIconLocal("wheelchair-accessible-mini", false, theme.isDark)} />}
-                        {segment.isPT() && segment.bicycleAccessible && (userProfile.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_ID) || userProfile.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID)) &&
+                        {segment.isPT() && segment.bicycleAccessible && userProfile.transportOptions.isBicycleEnabled &&
                             <TKUIIcon iconName={TKUIIconName.bicycleAccessibleMini} />}
                     </div>
                     <div className={classes.subtitle}>

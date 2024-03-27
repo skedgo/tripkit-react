@@ -125,11 +125,12 @@ class TKUIServiceView extends React.Component<IProps, IState> {
                     <div className={this.props.classes.serviceOverview} id="serviceViewHeader">
                         <TKUIServiceDepartureRow
                             value={this.props.departure}
-                            detailed={true}
+                            detailed={false}
                             showLineText={false}
                         />
                         <TKUIServiceRealtimeInfo
                             wheelchairAccessible={departure.isWheelchairAccessible()}
+                            bicycleAccessible={departure.bicycleAccessible}
                             vehicle={departure.realtimeVehicle}
                             alerts={departure.hasAlerts ? departure.alerts : undefined}
                             modeInfo={departure.modeInfo}

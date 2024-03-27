@@ -16,11 +16,13 @@ import TKUserProfile from "../model/options/TKUserProfile";
 import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import DeviceUtil from "../util/DeviceUtil";
-import ModeIdentifier from "../model/region/ModeIdentifier";
 import TKUIBicycleInfo from "./TKUIBicycleInfo";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: ServiceDeparture;
+    /**
+     * default true
+     */
     detailed?: boolean;
     onClick?: () => void;
     selected?: boolean;
@@ -159,14 +161,14 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
                     {serviceTime}
                 </span>
             </div>;
-        const detailed = this.props.detailed;
+        const detailed = this.props.detailed ?? true;
         const occupancy = departure.realtimeVehicle && departure.realtimeVehicle.getOccupancyStatus();
-        const briefOccupancy = !detailed && occupancy !== undefined ?
+        const briefOccupancy = detailed && occupancy !== undefined ?
             <TKUIOccupancySign status={occupancy} brief={true} /> : undefined;
-        const briefWheelchair = !detailed &&
-            (this.props.options.wheelchair || departure.isWheelchairAccessible() === false) &&
-            <TKUIWheelchairInfo accessible={departure.isWheelchairAccessible()} brief={true} />;
-        const bikeInfo = (this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID)) &&
+        const briefWheelchair = detailed &&
+            (this.props.options.wheelchair || departure.wheelchairAccessible === false) &&
+            <TKUIWheelchairInfo accessible={departure.wheelchairAccessible} brief={true} />;
+        const bikeInfo = detailed && this.props.options.transportOptions.isBicycleEnabled &&
             <TKUIBicycleInfo accessible={departure.bicycleAccessible} brief={true} />;
         let ariaLabel = "";
         if (departure.serviceNumber) {
@@ -182,12 +184,12 @@ class TKUIServiceDepartureRow extends React.Component<IProps, {}> {
         if (lineText) {
             ariaLabel += lineText.replace(" ·", ",") + ". ";
         }
-        if (!detailed) {
+        if (detailed) {
             ariaLabel += departure.endStopCode ? "Press enter to select." : "Press enter for details.";
         }
         return (
             <div className={classNames(classes.main, this.props.onClick && classes.clickable,
-                !detailed && classes.row, this.props.selected && classes.rowSelected)}
+                detailed && classes.row, this.props.selected && classes.rowSelected)}
                 onClick={this.props.onClick}
                 onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
                 tabIndex={0}

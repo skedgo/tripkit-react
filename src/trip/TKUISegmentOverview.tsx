@@ -77,8 +77,7 @@ class TKUISegmentOverview extends React.Component<IProps, {}> {
             <div className={classes.occupancy}>
                 <TKUIWheelchairInfo accessible={segment.wheelchairAccessible} />
             </div>;
-        const bikeInfo = (this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.props.options.transportOptions.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID)) &&
-            segment.isPT() &&
+        const bikeInfo = this.props.options.transportOptions.isBicycleEnabled && segment.isPT() &&
             <div className={classes.occupancy}>
                 <TKUIBicycleInfo accessible={segment.bicycleAccessible ?? undefined} />
             </div>;

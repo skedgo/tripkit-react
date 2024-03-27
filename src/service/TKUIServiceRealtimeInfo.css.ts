@@ -1,9 +1,9 @@
-import {black, colorWithOpacity, TKUITheme} from "../jss/TKUITheme";
-import {alertSeverity} from "../model/trip/Segment";
-import {severityColor} from "../trip/TKUITrackTransport.css";
+import { black, colorWithOpacity, TKUITheme } from "../jss/TKUITheme";
+import { alertSeverity } from "../model/trip/Segment";
+import { severityColor } from "../trip/TKUITrackTransport.css";
 import genStyles from "../css/GenStyle.css";
-import {resetStyles} from "../css/ResetStyle.css";
-import {TKUIServiceRealtimeInfoProps} from "./TKUIServiceRealtimeInfo";
+import { resetStyles } from "../css/ResetStyle.css";
+import { TKUIServiceRealtimeInfoProps } from "./TKUIServiceRealtimeInfo";
 
 export const tKUIServiceRealtimeInfoDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -13,6 +13,7 @@ export const tKUIServiceRealtimeInfoDefaultStyle = (theme: TKUITheme) => ({
     },
     iconAngleDown: {
         ...resetStyles.button,
+        ...genStyles.flex,
         width: '24px',
         height: '24px',
         padding: '7px',

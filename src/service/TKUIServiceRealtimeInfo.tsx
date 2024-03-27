@@ -14,9 +14,11 @@ import TKUIOccupancyInfo from "./occupancy/TKUIOccupancyInfo";
 import ModeInfo from "../model/trip/ModeInfo";
 import { ReactComponent as IconAngleDown } from "../images/ic-angle-down.svg";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
+import TKUIBicycleInfo from './TKUIBicycleInfo';
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     wheelchairAccessible?: boolean;
+    bicycleAccessible?: boolean;
     vehicle?: RealTimeVehicle;
     alerts?: RealTimeAlert[];
     options?: TKUserProfile;
@@ -37,10 +39,11 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIServiceRealtimeInfo"
 };
 
-const TKUIServiceRealtimeInfo: React.SFC<IProps> = (props: IProps) => {
+const TKUIServiceRealtimeInfo: React.FunctionComponent<IProps> = (props: IProps) => {
     const [open, setOpen] = useState<boolean>(false);
-    const { wheelchairAccessible, vehicle, alerts, options, modeInfo, alertsSlideUpOptions, t, classes } = props;
-    const showWheelchair = options?.wheelchair || wheelchairAccessible === false;
+    const { wheelchairAccessible, bicycleAccessible, vehicle, alerts, options, modeInfo, alertsSlideUpOptions, t, classes } = props;
+    const showWheelchair = true;
+    const showBicycle = bicycleAccessible;
     const occupancy = vehicle && vehicle.getOccupancyStatus();
     const alertElems = !alerts ? null :
         open ?
@@ -53,11 +56,13 @@ const TKUIServiceRealtimeInfo: React.SFC<IProps> = (props: IProps) => {
             <div className={classes.alertsBrief}>
                 {t("X.alerts", { 0: alerts.length })}
             </div>;
-    return ((showWheelchair || occupancy !== undefined || alertElems) &&
+    return ((showWheelchair || showBicycle || occupancy !== undefined || alertElems) &&
         <div className={classes.main}>
             <div className={open ? classes.realtimeInfoDetailed : classes.realtimeInfo}>
                 {showWheelchair &&
                     <TKUIWheelchairInfo accessible={wheelchairAccessible} brief={!open} />}
+                {showBicycle &&
+                    <TKUIBicycleInfo accessible={bicycleAccessible} brief={!open} />}
                 {occupancy !== undefined ?
                     <TKUIOccupancyInfo status={occupancy}
                         brief={!open} tabIndex={0} /> : undefined}

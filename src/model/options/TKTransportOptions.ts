@@ -52,6 +52,10 @@ class TKTransportOptions {
         return this.getTransportOption(mode) !== DisplayConf.HIDDEN;
     }
 
+    get isBicycleEnabled(): boolean {
+        return this.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID);
+    }
+
     public setPreferredTransport(mode: string, enabled: boolean) {
         if (enabled) {
             if (this.avoidTransports.indexOf(mode) !== -1) { // remove from avoided list, if present

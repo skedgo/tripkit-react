@@ -155,6 +155,7 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
             renderSubHeader={() => (
                 <TKUIServiceRealtimeInfo
                     wheelchairAccessible={segment.wheelchairAccessible}
+                    bicycleAccessible={segment.bicycleAccessible ?? undefined}
                     vehicle={segment.realtimeVehicle}
                     alerts={segment.hasAlerts ? segment.alerts : undefined}
                     modeInfo={segment.modeInfo}
