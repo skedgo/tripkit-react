@@ -34,6 +34,8 @@ export class RegionsData {
     public static regionsJsonFallback: any = undefined;
     public static regionsFilterRegex?: RegExp = undefined;
 
+    public static currentRegion?: Region;
+
     constructor() {
         this.regionsRequest = (RegionsData.regionsJsonPromise !== undefined ? RegionsData.regionsJsonPromise :
             TripGoApi.apiCall("regions.json", NetworkUtil.MethodType.POST, { v: 2 }))

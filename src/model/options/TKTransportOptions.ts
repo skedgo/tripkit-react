@@ -1,3 +1,4 @@
+import RegionsData from "../../data/RegionsData";
 import ModeIdentifier from "../region/ModeIdentifier";
 import { JsonObject, JsonProperty, JsonConverter, JsonCustomConvert } from "json2typescript";
 
@@ -53,7 +54,8 @@ class TKTransportOptions {
     }
 
     get isBicycleEnabled(): boolean {
-        return this.isModeEnabled(ModeIdentifier.BICYCLE_ID) || this.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID);
+        return this.isModeEnabled(ModeIdentifier.BICYCLE_ID) ||
+            (!!RegionsData.currentRegion?.modes.includes(ModeIdentifier.BICYCLE_SHARE_ID) && this.isModeEnabled(ModeIdentifier.BICYCLE_SHARE_ID));
     }
 
     public setPreferredTransport(mode: string, enabled: boolean) {
