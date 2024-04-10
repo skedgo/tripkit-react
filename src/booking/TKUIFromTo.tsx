@@ -14,6 +14,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     queryIsLeaveAfter?: boolean;
     showDate?: boolean;
     timezone?: string;
+    showGMT?: boolean;
     status?: string;
     onClick?: () => void;
 }
@@ -32,7 +33,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { from, to, startTime, endTime, queryIsLeaveAfter = true, showDate, timezone, status, onClick, classes, t } = props;
+    const { from, to, startTime, endTime, queryIsLeaveAfter = true, showDate, timezone, showGMT, status, onClick, classes, t } = props;
     const startMoment = startTime !== undefined ? (timezone ? DateTimeUtil.momentFromStringTZ(startTime, timezone) : DateTimeUtil.moment(startTime)) : undefined;
     let startTimeText = startMoment && (
         showDate ? DateTimeUtil.formatRelativeDay(startMoment,
@@ -47,6 +48,12 @@ const TKUIFromTo: React.FunctionComponent<IProps> = (props: IProps) => {
             :
             endMoment.format(DateTimeUtil.timeFormat())
     );
+    if (startTimeText && timezone && showGMT) {
+        startTimeText += " " + DateTimeUtil.timezoneToGMTString(timezone);
+    }
+    if (endTimeText && timezone && showGMT) {
+        endTimeText += " " + DateTimeUtil.timezoneToGMTString(timezone);
+    }
     if (status === "PROCESSING" && startTimeText) {
         if (queryIsLeaveAfter) {
             startTimeText = t("Requested.time.X", { 0: startTimeText });

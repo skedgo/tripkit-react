@@ -135,6 +135,14 @@ class DateTimeUtil {
         return result;
     }
 
+    public static timezoneToGMTString(timezone: string): string {
+        return this.toGMTString(DateTimeUtil.getNow(timezone));
+    }
+
+    public static toGMTString(moment: Moment): string {
+        return `(GMT${moment.utcOffset() / 60})`;
+    }
+
     public static minutesToDepartToString(minutes: number) {
         const t = i18n.t;
         minutes = Math.floor(minutes);
