@@ -8,6 +8,8 @@ import { isRemoteIcon, tKUIMapLocationIconDefaultStyle } from "./TKUIMapLocation
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import classNames from "classnames";
 import ModeLocation from "../model/location/ModeLocation";
+import FacilityLocation from "../model/location/FacilityLocation";
+import TKUIIcon, { iconNameByFacilityType } from "../service/TKUIIcon";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -15,6 +17,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     selected?: boolean; // TODO: if false it's a circle, if true is a drop. MapLocations changes selected for drop,
     // and from/to pin uses this always as drop. MapLocations pin will be behind from/to pin (at least until dissapears)
     // but will be identical. Selected is on MapLocations state, so update should be without delay?
+    renderIcon?: () => React.ReactNode;
 }
 
 export interface IStyle {
@@ -66,25 +69,30 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
 
     public render(): React.ReactNode {
         const location = this.props.location;
-        let transIcon: string | undefined;
+        let transIcon: React.ReactNode;
         let invertedWrtMode = false;
-        if (location instanceof ModeLocation) {
+        if (location instanceof FacilityLocation && iconNameByFacilityType(location.facilityType)) {
+            transIcon = <TKUIIcon iconName={iconNameByFacilityType(location.facilityType)!} onDark={true} />
+            // transIcon = <TKUIIconBase iconName={iconNameByFacilityType(location.facilityType)!} {...this.props} />;
+            // transIcon = this.props.children;
+        } else if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).
             const wantLocalIcon = !!modeInfo.identifier &&
                 (modeInfo.identifier.startsWith("me_car-s") || modeInfo.identifier.startsWith("cy_bic-s"));
-            transIcon = TransportUtil.getTransIcon(modeInfo,
-                {
-                    isRealtime: false,
-                    onDark: wantIconForDark,
-                    useLocal: wantLocalIcon
-                });
+            transIcon =
+                <img src={TransportUtil.getTransIcon(modeInfo,
+                    {
+                        isRealtime: false,
+                        onDark: wantIconForDark,
+                        useLocal: wantLocalIcon
+                    })} />
             invertedWrtMode = !wantLocalIcon && isRemoteIcon(modeInfo);
         }
         const classes = this.props.classes;
         const icon = transIcon &&
             <div className={classNames(classes.icon, invertedWrtMode && classes.iconInverted)}>
-                <img src={transIcon} />
+                {transIcon}
             </div>;
         return <div className={classes.main}
             id={this.id}>

@@ -141,7 +141,11 @@ class LocationsResult {
                 if (!this[modeField]) {
                     this[modeField] = [];
                 }
-                this[modeField] = (this[modeField] as any[])!.concat(other[modeField]);
+                this[modeField] = (this[modeField] as any[])!
+                    .concat((other[modeField] as any[])!.filter(loc =>
+                        // Filter out those facilities that we still don't support.
+                        modeField === ModeFields.facilities ?
+                            ((loc as FacilityLocation).facilityType === "MyWay-Retail-Agent" || (loc as FacilityLocation).facilityType === "Water-Fountain") : true));
             }
         }
     }

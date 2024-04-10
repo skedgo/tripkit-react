@@ -10,10 +10,10 @@ import LocationsResult from "../model/location/LocationsResult";
 import RegionsData from "../data/RegionsData";
 import { EventSubscription } from "fbemitter";
 import LocationUtil from "../util/LocationUtil";
-import { TKUIConfig } from "../config/TKUIConfig";
 import TKTransportOptions from "../model/options/TKTransportOptions";
 import { renderToStaticMarkup } from "../jss/StyleHelper";
 import ModeLocation from "../model/location/ModeLocation";
+import TKUIConfigProvider, { TKUIConfigContext } from "../config/TKUIConfigProvider";
 
 interface TKUIModeLocationMarkerProps {
     loc: ModeLocation;
@@ -23,9 +23,12 @@ interface TKUIModeLocationMarkerProps {
 
 export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMarkerProps> =
     ({ loc, onClick, isDarkMode }) => {
+        const config = React.useContext(TKUIConfigContext);
         const key = loc.getKey();
         const transIconHTML = renderToStaticMarkup(
-            <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
+            <TKUIConfigProvider config={config}>
+                <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
+            </TKUIConfigProvider>
         );
         const icon = L.divIcon({
             html: transIconHTML,

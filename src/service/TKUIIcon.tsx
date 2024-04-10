@@ -9,7 +9,9 @@ export enum TKUIIconName {
     bicycle = "bicycle",
     bicycleAccessibleMini = "bicycleMini",
     bicycleAccessibleSmall = "bicycleAccessibleSmall",
-    wheelchairAccessibleSmall = "wheelchairAccessibleSmall"
+    wheelchairAccessibleSmall = "wheelchairAccessibleSmall",
+    myWayRetailAgent = "myWayRetailAgent",
+    waterFountain = "waterFountain",
 }
 
 function getDefaultIconUrl(iconName: TKUIIconName, isDark: boolean): string {
@@ -22,14 +24,18 @@ function getDefaultIconUrl(iconName: TKUIIconName, isDark: boolean): string {
             return TransportUtil.getTransportIconLocal("bicycle-accessible-small");
         case TKUIIconName.wheelchairAccessibleSmall:
             return TransportUtil.getTransportIconLocal("wheelchair-accessible-small");
+        case TKUIIconName.myWayRetailAgent:
+            return TransportUtil.getTransportIconLocal("myway-retail-agent");
+        case TKUIIconName.waterFountain:
+            return TransportUtil.getTransportIconLocal("water-fountain-2");
         default:
             return TransportUtil.getTransportIconLocal("");
     }
 }
 
-function getSizeInPx(iconName: TKUIIconName): number {
+function getSizeInPx(iconName: TKUIIconName): number | undefined {
     return iconName.toLocaleLowerCase().endsWith("mini") ? 12 :
-        iconName.toLocaleLowerCase().endsWith("small") ? 16 : 24;
+        iconName.toLocaleLowerCase().endsWith("small") ? 16 : undefined;
 }
 
 const tKUIIconNameDefaultStyle = (theme: TKUITheme) => ({
@@ -39,7 +45,11 @@ type IStyle = ReturnType<typeof tKUIIconNameDefaultStyle>;
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     iconName: TKUIIconName;
+    onDark?: boolean;
     className?: string;
+    style?: React.CSSProperties;
+    width?: number | string;
+    height?: number | string;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -53,10 +63,23 @@ const config: TKComponentDefaultConfig<IProps, {}> = {
     classNamePrefix: ""
 };
 
-const TKUIIcon: FunctionComponent<IProps> = ({ iconName, theme, className }) => {
-    const iconSize = getSizeInPx(iconName);
-    return <img src={getDefaultIconUrl(iconName, theme.isDark)} width={iconSize} height={iconSize} className={className} />;
+const TKUIIcon: FunctionComponent<IProps> = ({ iconName, onDark, theme, className, style }) => {
+    style = { width: getSizeInPx(iconName), height: getSizeInPx(iconName), ...style };
+    return <img src={getDefaultIconUrl(iconName, onDark ?? theme.isDark)} className={className} style={style} aria-hidden={true} />;
 }
 
 export default connect((config: TKUIConfig) => config.TKUIIcon, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export { TKUIIcon as TKUIIconBase, config as tKUIIconConfig }
+
+export function iconNameByFacilityType(facilityType: string): TKUIIconName | undefined {
+    switch (facilityType) {
+        case "MyWay-Retail-Agent":
+            return TKUIIconName.myWayRetailAgent;
+        case "Water-Fountain":
+            return TKUIIconName.waterFountain;
+        default:
+            return undefined;
+    }
+}
