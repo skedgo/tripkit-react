@@ -142,6 +142,13 @@ class Util {
             .replace(/^./, function (str) { return str.toUpperCase(); })
     }
 
+    public static spacedToKebabCase(text: string): string {
+        return text
+            // lowercase all characters
+            .toLowerCase()
+            // replace spaces with hyphens
+            .replace(/([ ])/g, '-')
+    }
 
     public static camelCaseToSpaced(text: string): string {
         return text
@@ -149,6 +156,34 @@ class Util {
             .replace(/([A-Z])/g, ' $1')
             // uppercase the first character
             .replace(/^./, function (str) { return str.toUpperCase(); })
+    }
+
+    public static spacedToCamelCase(text: string): string {
+        return text
+            // lowercase the first character
+            .replace(/^./, function (str) { return str.toLowerCase(); })
+            // remove the spaces
+            .replace(/([ ])/g, '')
+    }
+
+    public static upperCaseToSpaced(text: string): string {
+        return text.toLowerCase()
+            // insert a space before all caps
+            .replace(/(_[a-z])/g, (str) => ' ' + str.substring(1).toUpperCase())
+            // uppercase the first character
+            .replace(/^./, function (str) { return str.toUpperCase(); })
+    }
+
+    public static camelCaseToKebab(text: string): string {
+        return this.spacedToKebabCase(this.camelCaseToSpaced(text));
+    }
+
+    public static kebabCaseToCamel(text: string): string {
+        return this.spacedToCamelCase(this.kebabCaseToSpaced(text));
+    }
+
+    public static upperCaseToKebab(text: string): string {
+        return this.spacedToKebabCase(this.upperCaseToSpaced(text));
     }
 
     public static toFirstUpperCase(text: string): string {

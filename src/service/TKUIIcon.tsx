@@ -4,6 +4,7 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import TransportUtil from "../trip/TransportUtil";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKUITheme } from "../jss/TKUITheme";
+import Util from "../util/Util";
 
 export enum TKUIIconName {
     bicycle = "bicycle",
@@ -12,9 +13,11 @@ export enum TKUIIconName {
     wheelchairAccessibleSmall = "wheelchairAccessibleSmall",
     myWayRetailAgent = "myWayRetailAgent",
     waterFountain = "waterFountain",
+    parkAndRide = "parkAndRide",
+    kissAndRide = "kissAndRide"
 }
 
-function getDefaultIconUrl(iconName: TKUIIconName, isDark: boolean): string {
+function getDefaultIconUrl(iconName: TKUIIconName | string, isDark: boolean): string {
     switch (iconName) {
         case TKUIIconName.bicycle:
             return TransportUtil.getTransportIconLocal("bicycle", false, isDark);
@@ -29,11 +32,11 @@ function getDefaultIconUrl(iconName: TKUIIconName, isDark: boolean): string {
         case TKUIIconName.waterFountain:
             return TransportUtil.getTransportIconLocal("water-fountain-2");
         default:
-            return TransportUtil.getTransportIconLocal("");
+            return TransportUtil.getTransportIconLocal(Util.camelCaseToKebab(iconName), false, isDark);
     }
 }
 
-function getSizeInPx(iconName: TKUIIconName): number | undefined {
+function getSizeInPx(iconName: TKUIIconName | string): number | undefined {
     return iconName.toLocaleLowerCase().endsWith("mini") ? 12 :
         iconName.toLocaleLowerCase().endsWith("small") ? 16 : undefined;
 }
@@ -44,7 +47,7 @@ const tKUIIconNameDefaultStyle = (theme: TKUITheme) => ({
 type IStyle = ReturnType<typeof tKUIIconNameDefaultStyle>;
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    iconName: TKUIIconName;
+    iconName: TKUIIconName | string;
     onDark?: boolean;
     className?: string;
     style?: React.CSSProperties;

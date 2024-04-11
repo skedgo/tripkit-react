@@ -9,7 +9,9 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import classNames from "classnames";
 import ModeLocation from "../model/location/ModeLocation";
 import FacilityLocation from "../model/location/FacilityLocation";
-import TKUIIcon, { iconNameByFacilityType } from "../service/TKUIIcon";
+import TKUIIcon from "../service/TKUIIcon";
+import CarParkLocation from "../model/location/CarParkLocation";
+import Util from "../util/Util";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -71,10 +73,10 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
         const location = this.props.location;
         let transIcon: React.ReactNode;
         let invertedWrtMode = false;
-        if (location instanceof FacilityLocation && iconNameByFacilityType(location.facilityType)) {
-            transIcon = <TKUIIcon iconName={iconNameByFacilityType(location.facilityType)!} onDark={true} />
-            // transIcon = <TKUIIconBase iconName={iconNameByFacilityType(location.facilityType)!} {...this.props} />;
-            // transIcon = this.props.children;
+        if (location instanceof FacilityLocation) {
+            transIcon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} />;
+        } else if (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE")) {
+            transIcon = <TKUIIcon iconName={Util.upperCaseToKebab(location.carPark.parkingType)} onDark={false} />;
         } else if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).

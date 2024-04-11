@@ -7,7 +7,9 @@ import { getTransIconOpacity, isRemoteIcon } from "./TKUIMapLocationIcon.css";
 import ModeLocation from "../model/location/ModeLocation";
 import FreeFloatingVehicleLocation from "../model/location/FreeFloatingVehicleLocation";
 import FacilityLocation from "../model/location/FacilityLocation";
-import TKUIIcon, { iconNameByFacilityType } from "../service/TKUIIcon";
+import TKUIIcon from "../service/TKUIIcon";
+import Util from "../util/Util";
+import CarParkLocation from "../model/location/CarParkLocation";
 
 interface IProps {
     location: ModeLocation;
@@ -70,8 +72,12 @@ class TKUIModeLocationIcon extends React.Component<IProps, {}> {
             height: '100%'
         };
         let icon;
-        if (location instanceof FacilityLocation && iconNameByFacilityType(location.facilityType)) {
-            icon = <TKUIIcon iconName={iconNameByFacilityType(location.facilityType)!} onDark={wantIconForDark} style={imgStyle} />;
+        if (location instanceof FacilityLocation) {
+            icon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} style={imgStyle} />;
+            style.background = white();
+            style.padding = 0;
+        } else if (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE")) {
+            icon = <TKUIIcon iconName={Util.kebabCaseToCamel(Util.upperCaseToKebab(location.carPark.parkingType))} onDark={false} style={imgStyle} />;
             style.background = white();
             style.padding = 0;
         } else {

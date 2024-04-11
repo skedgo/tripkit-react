@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty, Any} from "json2typescript";
+import { JsonObject, JsonProperty, Any } from "json2typescript";
 import LatLng from "../LatLng";
 import DataSourceAttribution from "./DataSourceAttribution";
 import CompanyInfo from "./CompanyInfo";
@@ -130,6 +130,22 @@ class CarParkInfo {
 
     @JsonProperty("source", DataSourceAttribution, true)
     public source: DataSourceAttribution = new DataSourceAttribution();
+
+    @JsonProperty("isParkAndRide", Boolean, true)
+    private _isParkAndRide?: boolean = undefined;
+
+    public get isParkAndRide(): boolean | undefined {
+        return this._isParkAndRide || this.identifier.includes("ACT-PR") || this.identifier.includes("KissAndRide");   // Remove when isParkAndRide flag starts coming from the BE.
+    }
+
+    @JsonProperty("parkingType", String, true)
+    private _parkingType?: 'OFF_STREET' | 'ON_STREET' | 'PARK_AND_RIDE' | 'KISS_AND_RIDE';
+
+    public get parkingType(): 'OFF_STREET' | 'ON_STREET' | 'PARK_AND_RIDE' | 'KISS_AND_RIDE' {
+        return this._parkingType ||
+            (this.identifier.includes("ACT-PR") ? 'PARK_AND_RIDE' : (this.identifier.includes("KissAndRide") ? 'KISS_AND_RIDE' : 'OFF_STREET'));   // Remove when parkingType value starts coming from the BE.
+    }
+
 }
 
 export default CarParkInfo;
