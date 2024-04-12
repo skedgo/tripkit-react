@@ -5,6 +5,7 @@ import Util from "../../util/Util";
 import ModeInfo from "../trip/ModeInfo";
 import City from "./City";
 import CarPodLocation from "./CarPodLocation";
+import SchoolLocation from "./SchoolLocation";
 
 @JsonConverter
 export class LocationConverter implements JsonCustomConvert<Location> {
@@ -39,6 +40,8 @@ export class LocationConverter implements JsonCustomConvert<Location> {
         }
         else if (locationJson.class === "CityLocation") {
             location = Util.deserialize(locationJson, City);
+        } else if (locationJson.class === "SchoolLocation") {
+            location = Util.deserialize(locationJson, SchoolLocation);
         } else {
             location = Util.deserialize(locationJson, Location);
         }

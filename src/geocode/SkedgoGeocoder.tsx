@@ -1,7 +1,6 @@
 import React from "react";
 import IGeocoder from "./IGeocoder";
 import GeocoderOptions from "./GeocoderOptions";
-import GeocodingCache from "./GeocodingCache";
 import BBox from "../model/BBox";
 import NetworkUtil from "../util/NetworkUtil";
 import Location from "../model/Location";
@@ -22,6 +21,9 @@ import RegionsData from "../data/RegionsData";
 import Region from "../model/region/Region";
 import CarPodLocation from "../model/location/CarPodLocation";
 import LocationUtil from "../util/LocationUtil";
+import SchoolLocation from "../model/location/SchoolLocation";
+import TKUIIcon from "../service/TKUIIcon";
+import OptionsData from "../data/OptionsData";
 
 const defaultRenderIcon = (location: Location) =>
     location instanceof StopLocation ?
@@ -41,11 +43,14 @@ const defaultRenderIcon = (location: Location) =>
                     height: undefined,
                     background: tKUIColors.black1,
                 }}
-            /> : <IconPin />;
+            /> :
+            location instanceof SchoolLocation ?
+                <TKUIIcon iconName="schoolBus" /> :
+                <IconPin />;
 class SkedgoGeocoder implements IGeocoder {
 
     private options: GeocoderOptions;
-    private cache: GeocodingCache;
+    private cache: Map<string, Location[]>;
 
     constructor(options: GeocoderOptions = {}) {
         this.options = options;
@@ -55,11 +60,17 @@ class SkedgoGeocoder implements IGeocoder {
         if (this.options.reverseGeocoding === undefined) {  // Default reverseGeocoding to true.
             this.options.reverseGeocoding = true;
         }
-        this.cache = new GeocodingCache();
+        this.cache = new Map<string, Location[]>();
     }
 
     public getOptions(): GeocoderOptions {
         return this.options;
+    }
+
+    private enabledModes(reference: LatLng): string[] | undefined {
+        const region = RegionsData.instance.getRegion(reference);
+        const transportOptions = OptionsData.instance.get().transportOptions
+        return region?.modes.filter((mode: string) => transportOptions.isModeEnabled(mode));
     }
 
     public geocode(query: string, autocomplete: boolean, bounds: BBox | null, focus: LatLng | null, callback: (results: Location[]) => void): void {
@@ -69,15 +80,20 @@ class SkedgoGeocoder implements IGeocoder {
         }
 
         const center = focus ? focus : (bounds ? bounds.getCenter() : null);
-        if (center !== null) {
-            const cachedResults = this.cache.getResults(query, autocomplete, center);
-            if (cachedResults !== null) {
-                callback(cachedResults.slice(0, this.options.resultsLimit));
-                return;
-            }
+
+        const modes = center ? this.enabledModes(center) : undefined;
+        if (modes && modes.length === 0) {  // No modes enabled.
+            callback([]);
+            return;
         }
 
-        const endpoint = `geocode.json?q=${query}&allowGoogle=false${center ? "&near=" + "(" + center.lat + "," + center.lng + ")" : ""}${autocomplete ? "&a=true" : ""}`;
+        const endpoint = `geocode.json?q=${query}&allowGoogle=false${center ? "&near=" + "(" + center.lat + "," + center.lng + ")" : ""}${autocomplete ? "&a=true" : ""}${modes ? modes.map(mode => "&modes=" + mode).join("") : ""}`;
+
+        const cachedResults = this.cache.get(endpoint);
+        if (cachedResults) {
+            callback(cachedResults.slice(0, this.options.resultsLimit));
+            return;
+        }
 
         const results: Location[] = [];
 
@@ -105,9 +121,7 @@ class SkedgoGeocoder implements IGeocoder {
             for (const locJson of json.choices) {
                 results.push(SkedgoGeocoder.locationFromAutocompleteResult(locJson, query));
             }
-            if (center) {
-                this.cache.addResults(query, autocomplete, center, results);
-            }
+            this.cache.set(endpoint, results);
             callback(results.slice(0, this.options.resultsLimit));
         }).catch(reason => {
             Util.log(endpoint + " failed. Reason: " + reason);
