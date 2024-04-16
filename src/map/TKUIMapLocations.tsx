@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useContext, useMemo } from "react";
 import BBox from "../model/BBox";
 import LocationsData from "../data/LocationsData";
 import Location from "../model/Location";
@@ -23,19 +23,21 @@ interface TKUIModeLocationMarkerProps {
 
 export const TKUIModeLocationMarker: React.FunctionComponent<TKUIModeLocationMarkerProps> =
     ({ loc, onClick, isDarkMode }) => {
-        const config = React.useContext(TKUIConfigContext);
+        const config = useContext(TKUIConfigContext);
         const key = loc.getKey();
-        const transIconHTML = renderToStaticMarkup(
-            <TKUIConfigProvider config={config}>
-                <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
-            </TKUIConfigProvider>
-        );
-        const icon = L.divIcon({
-            html: transIconHTML,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10],
-            className: ""
-        });
+        const icon = useMemo(() => {
+            const transIconHTML = renderToStaticMarkup(
+                <TKUIConfigProvider config={config}>
+                    <TKUIModeLocationIcon location={loc} isDarkMode={isDarkMode} />
+                </TKUIConfigProvider>
+            );
+            return L.divIcon({
+                html: transIconHTML,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10],
+                className: ""
+            });
+        }, [loc, isDarkMode]);
         return (
             <Marker
                 position={loc}

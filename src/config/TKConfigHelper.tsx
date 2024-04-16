@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
     mergeStyleOverrides,
     TKUICustomStyles,
@@ -15,25 +15,24 @@ import { TKI18nContextProps, TKI18nContext } from "../i18n/TKI18nProvider";
 function dependencyInjector<IMPL_PROPS extends TKUIWithClasses<STYLE, IMPL_PROPS>, STYLE>(
     confToCompMapper: (config: TKUIConfig) => Partial<TKComponentConfig<IMPL_PROPS, STYLE>> | undefined,
     defaultConfig: TKComponentDefaultConfig<IMPL_PROPS, STYLE>): (props: IMPL_PROPS) => JSX.Element {
-    return (props: IMPL_PROPS) =>
-        <TKUIConfigContext.Consumer>
-            {(config: TKUIConfig) => {
-                // Dependency (renderer) injection
-                const renderFromConfig = confToCompMapper(config) ? confToCompMapper(config)!.render : undefined;
-                const render = renderFromConfig ?? defaultConfig.render;
+    return (props: IMPL_PROPS) => {
+        const config = useContext(TKUIConfigContext);
 
-                // Config props injection
-                const defaultConfigProps = Util.isFunction(defaultConfig.props) ?
-                    (defaultConfig.props as ((defaultConfigProps: IMPL_PROPS) => Partial<IMPL_PROPS>))(props) : defaultConfig.props;
+        // Dependency (renderer) injection
+        const renderFromConfig = confToCompMapper(config) ? confToCompMapper(config)!.render : undefined;
+        const render = renderFromConfig ?? defaultConfig.render;
 
-                const componentConfig = confToCompMapper(config);
-                const configProps = componentConfig &&
-                    (Util.isFunction(componentConfig.props) ?
-                        (componentConfig.props as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({ ...defaultConfigProps, ...props }) :
-                        componentConfig.props);
-                return render({ ...defaultConfigProps, ...props, ...configProps }, defaultConfig.render);
-            }}
-        </TKUIConfigContext.Consumer>;
+        // Config props injection
+        const defaultConfigProps = Util.isFunction(defaultConfig.props) ?
+            (defaultConfig.props as ((defaultConfigProps: IMPL_PROPS) => Partial<IMPL_PROPS>))(props) : defaultConfig.props;
+
+        const componentConfig = confToCompMapper(config);
+        const configProps = componentConfig &&
+            (Util.isFunction(componentConfig.props) ?
+                (componentConfig.props as ((defaultConfigProps: Subtract<IMPL_PROPS, TKUIWithClasses<STYLE, IMPL_PROPS>>) => Partial<IMPL_PROPS>))({ ...defaultConfigProps, ...props }) :
+                componentConfig.props);
+        return render({ ...defaultConfigProps, ...props, ...configProps }, defaultConfig.render);
+    };
 }
 
 function i18nInjector<IMPL_PROPS extends TKI18nContextProps>(
@@ -147,18 +146,15 @@ export function replaceRender<ST, PR extends TKUIWithClasses<ST, PR>>
     return resultConfig;
 }
 
-export const TKRenderOverride = (props: { componentKey: string, renderOverride: (props: any, configRender?: (props: any) => JSX.Element) => JSX.Element, children: any }) => (
-    <TKUIConfigContext.Consumer>
-        {(config: TKUIConfig) => {
-            const configOverride = replaceRender(config, props.componentKey, props.renderOverride);
-            return (
-                <TKUIConfigContext.Provider value={configOverride}>
-                    {props.children}
-                </TKUIConfigContext.Provider>
-            )
-        }}
-    </TKUIConfigContext.Consumer>
-);
+export const TKRenderOverride = (props: { componentKey: string, renderOverride: (props: any, configRender?: (props: any) => JSX.Element) => JSX.Element, children: any }) => {
+    const config = useContext(TKUIConfigContext);
+    const configOverride = replaceRender(config, props.componentKey, props.renderOverride);
+    return (
+        <TKUIConfigContext.Provider value={configOverride}>
+            {props.children}
+        </TKUIConfigContext.Provider>
+    );
+};
 
 function mergeProps<ST, PR extends TKUIWithClasses<ST, PR>>
     (props1: TKUIPropsOverride<PR, ST>, props2: TKUIPropsOverride<PR, ST>): (implProps: PR) => Partial<PR> {

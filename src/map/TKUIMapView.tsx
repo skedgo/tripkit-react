@@ -50,6 +50,7 @@ import { i18n } from "../i18n/TKI18nConstants";
 import TKMapboxGLLayer from "./TKMapboxGLLayer";
 import TKLeafletLayer from "./TKLeafletLayer";
 import { MultiPolygon } from "geojson";
+import MemoMarker from "./MemoMarker";
 
 export type TKUIMapPadding = { top?: number, right?: number, bottom?: number, left?: number };
 
@@ -641,84 +642,78 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
                         }</TKUIConfigContext.Consumer>}
                     {!this.props.trip && this.props.from && this.props.from.isResolved() &&
                         !(this.props.from.isCurrLoc() && this.state.userLocation) &&
-                        <TKUIConfigContext.Consumer>
-                            {config =>
-                                // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
-                                <TKRenderOverride
-                                    componentKey={"TKUIMapLocationIcon"}
-                                    renderOverride={(renderProps, configRender) => {
-                                        const render = configRender ?? tKUIMapLocationIconConfig.render;
-                                        return <Marker
-                                            position={this.props.from!}
-                                            icon={L.divIcon({
-                                                html: renderToStaticMarkup(
-                                                    // This is to make TKUIIcon work (it has no style injection, so no issue with jss styles getting broken).
-                                                    <TKUIConfigProvider config={config}>
-                                                        {render(renderProps)}
-                                                    </TKUIConfigProvider>
-                                                ),
-                                                iconSize: [26, 39],
-                                                iconAnchor: [13, 39],
-                                                className: "LeafletMap-pinTo"
-                                            })}
-                                            draggable={!this.props.readonly}
-                                            riseOnHover={true}
-                                            ondragend={(event: L.DragEndEvent) => {
-                                                const latLng = event.target.getLatLng();
-                                                this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                            }}
-                                            keyboard={false}
-                                            onadd={event => event.target.openPopup()}
-                                        >
-                                            {this.getLocationPopup(this.props.from!)}
-                                        </Marker>;
-                                    }}
-                                >
-                                    <TKUIMapLocationIcon
-                                        from={true}
-                                        location={this.props.from!}
-                                    />
-                                </TKRenderOverride>
-                            }
-                        </TKUIConfigContext.Consumer>}
+                        // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
+                        <TKRenderOverride
+                            componentKey={"TKUIMapLocationIcon"}
+                            renderOverride={(renderProps, configRender) => {
+                                const render = configRender ?? tKUIMapLocationIconConfig.render;
+                                return (
+                                    <MemoMarker
+                                        position={this.props.from!}
+                                        renderIcon={render}
+                                        renderIconProps={renderProps}
+                                        reactiveIconProps={{
+                                            location: this.props.from!,
+                                            theme: renderProps.theme
+                                        }}
+                                        iconSize={[26, 39]}
+                                        iconAnchor={[13, 39]}
+                                        iconClass="LeafletMap-pinTo"
+                                        draggable={!this.props.readonly}
+                                        riseOnHover={true}
+                                        ondragend={(event: L.DragEndEvent) => {
+                                            const latLng = event.target.getLatLng();
+                                            this.onMapLocChanged(true, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                        }}
+                                        keyboard={false}
+                                        onadd={event => event.target.openPopup()}
+                                    >
+                                        {this.getLocationPopup(this.props.from!)}
+                                    </MemoMarker>
+                                );
+                            }}
+                        >
+                            <TKUIMapLocationIcon
+                                from={true}
+                                location={this.props.from!}
+                            />
+                        </TKRenderOverride>
+                    }
                     {!this.props.trip && this.props.to && this.props.to.isResolved() && !service &&
-                        <TKUIConfigContext.Consumer>
-                            {config =>
-                                // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
-                                <TKRenderOverride
-                                    componentKey={"TKUIMapLocationIcon"}
-                                    renderOverride={(renderProps, configRender) => {
-                                        const render = configRender ?? tKUIMapLocationIconConfig.render;
-                                        return <Marker
-                                            position={this.props.to!}
-                                            icon={L.divIcon({
-                                                html: renderToStaticMarkup(
-                                                    // This is to make TKUIIcon work (it has no style injection, so no issue with jss styles getting broken).
-                                                    <TKUIConfigProvider config={config}>
-                                                        {render(renderProps)}
-                                                    </TKUIConfigProvider>
-                                                ),
-                                                iconSize: [26, 39],
-                                                iconAnchor: [13, 39],
-                                                className: "LeafletMap-pinTo"
-                                            })}
-                                            draggable={!this.props.readonly}
-                                            riseOnHover={true}
-                                            ondragend={(event: L.DragEndEvent) => {
-                                                const latLng = event.target.getLatLng();
-                                                this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
-                                            }}
-                                            keyboard={false}
-                                            onadd={event => event.target.openPopup()}
-                                        >
-                                            {this.getLocationPopup(this.props.to!)}
-                                        </Marker>;
-                                    }}
-                                >
-                                    <TKUIMapLocationIcon location={this.props.to!} />
-                                </TKRenderOverride>
-                            }
-                        </TKUIConfigContext.Consumer>}
+                        // This is to move jss injection outside renderToStaticMarkup, since otherwise styles get broken.
+                        <TKRenderOverride
+                            componentKey={"TKUIMapLocationIcon"}
+                            renderOverride={(renderProps, configRender) => {
+                                const render = configRender ?? tKUIMapLocationIconConfig.render;
+                                return (
+                                    <MemoMarker
+                                        position={this.props.to!}
+                                        renderIcon={render}
+                                        renderIconProps={renderProps}
+                                        reactiveIconProps={{
+                                            location: this.props.to!,
+                                            theme: renderProps.theme
+                                        }}
+                                        iconSize={[26, 39]}
+                                        iconAnchor={[13, 39]}
+                                        iconClass="LeafletMap-pinTo"
+                                        draggable={!this.props.readonly}
+                                        riseOnHover={true}
+                                        ondragend={(event: L.DragEndEvent) => {
+                                            const latLng = event.target.getLatLng();
+                                            this.onMapLocChanged(false, LatLng.createLatLng(latLng.lat, latLng.lng));
+                                        }}
+                                        keyboard={false}
+                                        onadd={event => event.target.openPopup()}
+                                    >
+                                        {this.getLocationPopup(this.props.to!)}
+                                    </MemoMarker>
+                                );
+                            }}
+                        >
+                            <TKUIMapLocationIcon location={this.props.to!} />
+                        </TKRenderOverride>
+                    }
                     {this.leafletElement && this.props.hideLocations !== true &&
                         <TKUIMapLocations
                             bounds={this.toBBox(this.leafletElement.getBounds())}
