@@ -63,7 +63,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
             AuthStorage.instance.save(new TKAuth0AuthResponse());
             setUserToken(undefined);
             setUserAccount(undefined);
-            // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines couses an infinite redirection loop.
+            // logoutHandler(); // Calling this (which calls Auth0 logout()) instead of the previous 4 lines causes an infinite redirection loop.
         }
     }, [isLoading, isAuthenticated]);
     function refreshUserProfile(): Promise<TKUserAccount> {
@@ -163,7 +163,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
     }
     TripGoApi.resetUserToken = resetUserToken;
     return (
-        <React.Fragment>
+        <>
             {props.children({
                 status: status,
                 userAccount,
@@ -174,7 +174,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
                 resetUserToken,
                 refreshUserProfile
             })}
-        </React.Fragment>
+        </>
     );
 };
 
