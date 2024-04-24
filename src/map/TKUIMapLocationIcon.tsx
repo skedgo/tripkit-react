@@ -12,6 +12,7 @@ import FacilityLocation from "../model/location/FacilityLocation";
 import TKUIIcon from "../service/TKUIIcon";
 import CarParkLocation from "../model/location/CarParkLocation";
 import Util from "../util/Util";
+import SchoolLocation from "../model/location/SchoolLocation";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     location: Location;
@@ -77,6 +78,8 @@ class TKUIMapLocationIcon extends React.PureComponent<IProps, {}> {
             transIcon = <TKUIIcon iconName={Util.kebabCaseToCamel(location.facilityType.toLowerCase())} onDark={false} />;
         } else if (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE")) {
             transIcon = <TKUIIcon iconName={Util.upperCaseToKebab(location.carPark.parkingType)} onDark={false} />;
+        } else if (location instanceof SchoolLocation) {
+            transIcon = <TKUIIcon iconName={"school-location"} onDark={false} />;
         } else if (location instanceof ModeLocation) {
             const modeInfo = location.modeInfo;
             const wantIconForDark = true;   // Always true, since pin background will always be dark (coloured).

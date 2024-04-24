@@ -24,6 +24,7 @@ import LocationUtil from "../util/LocationUtil";
 import SchoolLocation from "../model/location/SchoolLocation";
 import TKUIIcon from "../service/TKUIIcon";
 import OptionsData from "../data/OptionsData";
+import { isRemoteIcon } from "../map/TKUIMapLocationIcon.css";
 
 const defaultRenderIcon = (location: Location) =>
     location instanceof StopLocation ?
@@ -32,7 +33,9 @@ const defaultRenderIcon = (location: Location) =>
             style={{
                 width: undefined,
                 height: undefined,
-                background: tKUIColors.black1,
+                ...!isRemoteIcon(location.modeInfo) && {
+                    background: tKUIColors.black1
+                }
             }}
         /> :
         location instanceof CarPodLocation ?
@@ -45,7 +48,7 @@ const defaultRenderIcon = (location: Location) =>
                 }}
             /> :
             location instanceof SchoolLocation ?
-                <TKUIIcon iconName="schoolBus" /> :
+                <TKUIIcon iconName="schoolLocation" /> :
                 <IconPin />;
 class SkedgoGeocoder implements IGeocoder {
 
