@@ -38,6 +38,8 @@ interface TKGeocodingOptions {
     compare: (l1: Location, l2: Location, query: string) => number;
     /** @ctype */
     analogResults: (r1: Location, r2: Location) => boolean;
+    /** @ctype */
+    compareAnalog: (l1: Location, l2: Location, query: string) => number;
     /** 
      * @ctype 
      * If specified and returs false, then the location is not included.
@@ -173,6 +175,16 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         }
         return false;
     };
+
+    const compareAnalog = (l1: Location, l2: Location, query: string): -1 | 0 | 1 => {
+        if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {
+            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") < 0.2 ? 1 : -1
+        } else if (l1.source === TKDefaultGeocoderNames.skedgo && l2.source !== TKDefaultGeocoderNames.skedgo) {
+            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") > -0.2 ? -1 : 1
+        }
+        return 0;
+    }
+
     return {
         geocoders: {
             [TKDefaultGeocoderNames.geolocation]: currLocGeocoder,
@@ -181,8 +193,9 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
             [TKDefaultGeocoderNames.skedgo]: skedgoGeocoder,
             [TKDefaultGeocoderNames.cities]: citiesGeocoder
         },
-        compare: compare,
-        analogResults: analogResults
+        compare,
+        analogResults,
+        compareAnalog
     };
 }
 

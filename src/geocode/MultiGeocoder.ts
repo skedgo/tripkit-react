@@ -75,20 +75,6 @@ class MultiGeocoder {
         });
     }
 
-    /**
-     * Parameterize as a geocoding option (as the compare). Used just to compare
-     * duplicates.
-     */
-
-    private compareDuplicates(l1: Location, l2: Location, query: string): -1 | 0 | 1 {
-        if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {
-            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") < 0.2 ? 1 : -1
-        } else if (l1.source === TKDefaultGeocoderNames.skedgo && l2.source !== TKDefaultGeocoderNames.skedgo) {
-            return LocationUtil.relevanceStr(query, l1.address ?? "") - LocationUtil.relevanceStr(query, l2.address ?? "") > -0.2 ? -1 : 1
-        }
-        return 0;
-    }
-
     private merge(query: string, results: Map<string, Location[]>): Location[] {
         // let mergedResults: Location[] = [];
         const suggestionListsFromSources: Location[][] = [];
@@ -106,15 +92,16 @@ class MultiGeocoder {
         Util.log("Remove repeated results: \n", null);
         Util.log("------------------------ \n", null);
         const depuratedResults: Location[] = [];
+        const compareAnalog = this._options.compareAnalog;
         mergedResults.forEach(result => {
             // Some of the depurated results is analogous to result, so don't add result to depurated;
             const analogous = depuratedResults.some((depuratedResult, j) => {
                 if (this._options.analogResults(result, depuratedResult)) {
-                    if (this.compareDuplicates(result, depuratedResult, query) === -1) {
+                    if (compareAnalog(result, depuratedResult, query) === -1) {
                         depuratedResults[j] = result;
-                        Util.log("Removing " + depuratedResult.address + " in favor of " + result.address + ".", Env.PRODUCTION);
+                        Util.log("Removing " + depuratedResult.getDisplayString(true) + " in favor of " + result.getDisplayString(true) + ".", Env.PRODUCTION);
                     } else {
-                        Util.log("Removing " + result.address + " in favor of " + depuratedResult.address + ".", Env.PRODUCTION);
+                        Util.log("Removing " + result.getDisplayString(true) + " in favor of " + depuratedResult.getDisplayString(true) + ".", Env.PRODUCTION);
                     }
                     return true;    // found analogous, so don't add to depurated    
                 }
