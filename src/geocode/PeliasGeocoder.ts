@@ -132,6 +132,9 @@ class PeliasGeocoder implements IGeocoder {
                     locationResults = locationResults.filter(result => !this.options.region || this.options.region.contains(result as any))
                 }
                 locationResults = this.applyAbsorb(locationResults);
+                if (this.options.compare) {
+                    locationResults.sort((a, b) => this.options.compare!(a, b, query));
+                }
                 if (center) {
                     this.cache.addResults(query, autocomplete, center, locationResults);
                 }

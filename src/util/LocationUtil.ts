@@ -89,6 +89,13 @@ class LocationUtil {
                 result.relevance = .9;
                 return result;
             }
+            if (targetText.startsWith(query)) { // main text starts with query
+                if (fillStructuredFormatting) {
+                    result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: query.length }];
+                }
+                result.relevance = .8;
+                return result;
+            }
             const targetTextWords = targetText.split(" ");
             const mainTextWords = targetMainText.split(" ");
             const secondaryTextWords = targetSecondaryText?.split(" ");
@@ -96,26 +103,26 @@ class LocationUtil {
                 if (fillStructuredFormatting) {
                     result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: query.length }];
                 }
-                result.relevance = .85 * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);    // reduce weight if the result is longer (has more words)           
+                result.relevance = .75 * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);    // reduce weight if the result is longer (has more words)           
                 return result;
             }
             let relevance = 0;
-            const queryWords = query.split(" ");
+            const queryWords = query.split(" ").filter(w => w.length > 0);
             for (const queryWord of queryWords) {
                 const matchingMainWord = mainTextWords.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
                 if (matchingMainWord) {
                     if (matchingMainWord === queryWord) {
-                        relevance += .8 / queryWords.length;
-                        if (fillStructuredFormatting) {
-                            result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord), length: queryWord.length });
-                        }
-                    } else if (matchingMainWord.startsWith(queryWord)) {
                         relevance += .7 / queryWords.length;
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord), length: queryWord.length });
                         }
-                    } else {
+                    } else if (matchingMainWord.startsWith(queryWord)) {
                         relevance += .6 / queryWords.length;
+                        if (fillStructuredFormatting) {
+                            result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord), length: queryWord.length });
+                        }
+                    } else {
+                        relevance += .5 / queryWords.length;
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.main_text_matched_substrings!.push({ offset: targetMainText.indexOf(matchingMainWord) + matchingMainWord.indexOf(queryWord), length: queryWord.length });
                         }
@@ -126,17 +133,17 @@ class LocationUtil {
                 const matchingSecondaryWord = secondaryTextWords?.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
                 if (matchingSecondaryWord) {
                     if (matchingSecondaryWord === queryWord) {
-                        relevance += .7 / queryWords.length;
+                        relevance += .4 / queryWords.length;
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord), length: queryWord.length });
                         }
                     } else if (matchingSecondaryWord.startsWith(queryWord)) {
-                        relevance += .6 / queryWords.length;
+                        relevance += .3 / queryWords.length;
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord), length: queryWord.length });
                         }
                     } else {
-                        relevance += .5 / queryWords.length;
+                        relevance += .2 / queryWords.length;
                         if (fillStructuredFormatting) {
                             result.structuredFormatting!.secondary_text_matched_substrings!.push({ offset: targetSecondaryText!.indexOf(matchingSecondaryWord) + matchingSecondaryWord.indexOf(queryWord), length: queryWord.length });
                         }
