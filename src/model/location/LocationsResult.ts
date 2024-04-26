@@ -39,7 +39,7 @@ class LocationsResult {
             case ModeFields.carRentals: return mode.startsWith(ModeIdentifier.CAR_RENTAL_ID);
             case ModeFields.bikePods: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID);
             case ModeFields.freeFloating: return mode.startsWith(ModeIdentifier.BICYCLE_SHARE_ID) || mode.startsWith(ModeIdentifier.MICROMOBILITY_SHARE_ID);
-            case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID);
+            case ModeFields.stops: return mode.startsWith(ModeIdentifier.PUBLIC_TRANSPORT_ID) || mode.startsWith(ModeIdentifier.SCHOOLBUS_ID);
             case ModeFields.facilities: return true;
             default: return false;
         }
@@ -142,10 +142,16 @@ class LocationsResult {
                     this[modeField] = [];
                 }
                 this[modeField] = (this[modeField] as any[])!
-                    .concat((other[modeField] as any[])!.filter(loc =>
-                        // Filter out those facilities that we still don't support.
-                        modeField === ModeFields.facilities ?
-                            ((loc as FacilityLocation).facilityType === "MyWay-Retail-Agent" || (loc as FacilityLocation).facilityType === "Water-Fountain") : true));
+                    .concat((other[modeField] as any[])!.filter(loc => {
+                        /* Filter out those facilities that we still don't support.*/
+                        if (modeField === ModeFields.facilities) {
+                            return (loc as FacilityLocation).facilityType === "MyWay-Retail-Agent" || (loc as FacilityLocation).facilityType === "Water-Fountain";
+                        } else if (modeField === ModeFields.stops && !this.modes.includes(ModeIdentifier.SCHOOLBUS_ID)) {
+                            return (loc as StopLocation).modeInfo.identifier !== ModeIdentifier.SCHOOLBUS_ID;
+                        } else {
+                            return true;
+                        }
+                    }));
             }
         }
     }
