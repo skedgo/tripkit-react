@@ -165,16 +165,15 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
     const analogResults = (r1: Location, r2: Location) => {
         const relevance = Math.max(LocationUtil.relevanceStr(r1.address || "", r2.address || ""), LocationUtil.relevanceStr(r2.address || "", r1.address || ""));
         const distanceInMetres = LocationUtil.distanceInMetres(r1, r2);
-        if (r1.source !== r2.source) {
-            Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);
+        if (r1.source === r2.source) {
+            return false;
         }
-        if (r1.source !== r2.source &&
-            ((r1 instanceof StopLocation && r2 instanceof StopLocation) ? r1.equals(r2) :
-                relevance > .7 && (LocationUtil.distanceInMetres(r1, r2) < 100))) {
-            return true;
+        Util.log(r1.address + " (" + r1.source + ") | " + r2.address + " (" + r2.source + ") dist: " + distanceInMetres + " relevance: " + relevance, null);
+        if (r1 instanceof StopLocation && r2 instanceof StopLocation) {
+            return r1.equals(r2);
         }
-        return false;
-    };
+        return relevance > .7 && LocationUtil.distanceInMetres(r1, r2) < 100;
+    }
 
     const compareAnalog = (l1: Location, l2: Location, query: string): -1 | 0 | 1 => {
         if (l1.source !== TKDefaultGeocoderNames.skedgo && l2.source === TKDefaultGeocoderNames.skedgo) {

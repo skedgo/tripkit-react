@@ -99,9 +99,9 @@ class MultiGeocoder {
                 if (this._options.analogResults(result, depuratedResult)) {
                     if (compareAnalog(result, depuratedResult, query) === -1) {
                         depuratedResults[j] = result;
-                        Util.log("Removing " + depuratedResult.getDisplayString(true) + " in favor of " + result.getDisplayString(true) + ".", Env.PRODUCTION);
+                        Util.log(`Removing ${depuratedResult.getDisplayString(true)} [${depuratedResult.class}] in favor of ${result.getDisplayString(true)} [${result.class}].`, Env.PRODUCTION);
                     } else {
-                        Util.log("Removing " + result.getDisplayString(true) + " in favor of " + depuratedResult.getDisplayString(true) + ".", Env.PRODUCTION);
+                        Util.log(`Removing ${result.getDisplayString(true)} [${result.class}] in favor of ${depuratedResult.getDisplayString(true)} [${depuratedResult.class}].`, Env.PRODUCTION);
                     }
                     return true;    // found analogous, so don't add to depurated    
                 }
