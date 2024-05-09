@@ -61,10 +61,10 @@ class LocationUtil {
     }
 
     public static match(query: string, searchResult: Location, options: { preferShorter?: boolean, fillStructuredFormatting?: boolean } = {}): { relevance: number, structuredFormatting?: AutocompleteStructuredFormatting } {
-        query = query.toLowerCase().trim();
+        const { preferShorter, fillStructuredFormatting } = options;
         const result: { relevance: number, structuredFormatting?: AutocompleteStructuredFormatting } = { relevance: 0, structuredFormatting: undefined };
         try {
-            const { preferShorter, fillStructuredFormatting } = options;
+            query = query.toLowerCase().trim();
             const mainText = this.getMainText(searchResult);
             const secondaryText = this.getSecondaryText(searchResult);
             const targetMainText = mainText.toLowerCase();
@@ -89,27 +89,20 @@ class LocationUtil {
                 result.relevance = .9;
                 return result;
             }
+            const targetTextWords = targetText.split(" ");
+            const mainTextWords = targetMainText.split(" ");
+            const secondaryTextWords = targetSecondaryText?.split(" ");
             if (targetText.startsWith(query)) { // main text starts with query
                 if (fillStructuredFormatting) {
                     result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: query.length }];
                 }
-                result.relevance = .8;
-                return result;
-            }
-            const targetTextWords = targetText.split(" ");
-            const mainTextWords = targetMainText.split(" ");
-            const secondaryTextWords = targetSecondaryText?.split(" ");
-            if (targetMainText.startsWith(query)) {   // query is a prefix of main text
-                if (fillStructuredFormatting) {
-                    result.structuredFormatting!.main_text_matched_substrings = [{ offset: 0, length: query.length }];
-                }
-                result.relevance = .75 * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);    // reduce weight if the result is longer (has more words)           
+                result.relevance = .8 * (preferShorter ? 40 / (40 + targetTextWords.length) : 1);    // reduce weight if the result is longer (has more words);
                 return result;
             }
             let relevance = 0;
             const queryWords = query.split(" ").filter(w => w.length > 0);
             for (const queryWord of queryWords) {
-                const matchingMainWord = mainTextWords.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
+                const matchingMainWord = mainTextWords.find(w => w === queryWord) ?? mainTextWords.find(w => w.startsWith(queryWord)) ?? mainTextWords.find(w => w.includes(queryWord));
                 if (matchingMainWord) {
                     if (matchingMainWord === queryWord) {
                         relevance += .7 / queryWords.length;
@@ -130,7 +123,7 @@ class LocationUtil {
                     mainTextWords.splice(mainTextWords.indexOf(matchingMainWord), 1);
                     continue;
                 }
-                const matchingSecondaryWord = secondaryTextWords?.find(w => w === queryWord || w.startsWith(queryWord) || w.includes(queryWord));
+                const matchingSecondaryWord = secondaryTextWords?.find(w => w === queryWord) ?? secondaryTextWords?.find(w => w.startsWith(queryWord)) ?? secondaryTextWords?.find(w => w.includes(queryWord));
                 if (matchingSecondaryWord) {
                     if (matchingSecondaryWord === queryWord) {
                         relevance += .4 / queryWords.length;
