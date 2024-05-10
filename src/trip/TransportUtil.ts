@@ -9,6 +9,8 @@ import { i18n } from "../i18n/TKI18nConstants";
 
 class TransportUtil {
 
+    public static remoteIconResourcesBaseUrl?: string;
+
     /**
      * @param {ModeInfo} modeInfo
      * @param options     
@@ -39,7 +41,7 @@ class TransportUtil {
 
     public static getTransportIconRemote(modeInfo: ModeInfo): string | undefined {
         if (modeInfo.remoteIcon) {
-            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeInfo.remoteIcon + ".svg";
+            return `${this.remoteIconResourcesBaseUrl ?? (TripGoApi.getServer() + "/modeicons/")}icon-mode-${modeInfo.remoteIcon}.svg`;
         }
         return undefined;
     }
@@ -47,7 +49,7 @@ class TransportUtil {
     public static getTransportIconModeId(modeIdentifier: ModeIdentifier, isRealtime = false, onDark = false): string {
         if (modeIdentifier.icon !== null
             && !modeIdentifier.identifier.startsWith(ModeIdentifier.SCHOOLBUS_ID)) { // TODO: Hardcoded for TC
-            return TripGoApi.getServer() + "/modeicons/icon-mode-" + modeIdentifier.icon + ".svg";
+            return `${this.remoteIconResourcesBaseUrl ?? (TripGoApi.getServer() + "/modeicons/")}icon-mode-${modeIdentifier.icon}.svg`;
         }
         return this.getTransportIconLocal(this.modeIdToIconS(modeIdentifier.identifier), isRealtime, onDark);
     }

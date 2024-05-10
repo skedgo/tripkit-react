@@ -5,6 +5,7 @@ import TransportUtil from "../trip/TransportUtil";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKUITheme } from "../jss/TKUITheme";
 import Util from "../util/Util";
+import Constants from "../util/Constants";
 
 export enum TKUIIconName {
     bicycle = "bicycle",
@@ -15,6 +16,11 @@ export enum TKUIIconName {
     waterFountain = "waterFountain",
     parkAndRide = "parkAndRide",
     kissAndRide = "kissAndRide"
+}
+
+function getIconUrl(iconName: string, options: { onDark?: boolean; } = {}): string {
+    const { onDark } = options;
+    return Constants.absUrl("/images/modeicons/") + (onDark ? "ondark/" : "") + `ic-${iconName}-24px.svg`;  // TODO: remove the "-24px" since it makes no sense given they are .svg. Also rename modeicons to icons.
 }
 
 function getDefaultIconUrl(iconName: TKUIIconName | string, isDark: boolean): string {
@@ -32,7 +38,7 @@ function getDefaultIconUrl(iconName: TKUIIconName | string, isDark: boolean): st
         case TKUIIconName.waterFountain:
             return TransportUtil.getTransportIconLocal("water-fountain-2");
         default:
-            return TransportUtil.getTransportIconLocal(Util.camelCaseToKebab(iconName), false, isDark);
+            return getIconUrl(Util.camelCaseToKebab(iconName), { onDark: isDark });
     }
 }
 

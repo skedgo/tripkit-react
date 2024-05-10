@@ -6,6 +6,7 @@ import ModeInfo from "../model/trip/ModeInfo";
 import ModeLocation from "../model/location/ModeLocation";
 import FacilityLocation from "../model/location/FacilityLocation";
 import CarParkLocation from "../model/location/CarParkLocation";
+import SchoolLocation from "../model/location/SchoolLocation";
 
 export function isRemoteIcon(modeInfo: ModeInfo): boolean {
     return modeInfo.remoteIcon !== undefined || modeInfo.remoteDarkIcon !== undefined;
@@ -26,7 +27,9 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                     fill: (props: TKUIMapLocationIconProps) => {
                         const location = props.location;
                         let iconPinColor = props.from ? theme.colorPrimary : theme.colorError;
-                        if (location instanceof FacilityLocation || (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE"))) {
+                        if (location instanceof FacilityLocation ||
+                            (location instanceof CarParkLocation && (location.carPark.parkingType === "PARK_AND_RIDE" || location.carPark.parkingType === "KISS_AND_RIDE"))
+                            || location instanceof SchoolLocation) {
                             iconPinColor = white(0);
                         } else if (location instanceof ModeLocation) {
                             let transportColor = TransportUtil.getTransportColor(location.modeInfo);
@@ -40,6 +43,9 @@ export const tKUIMapLocationIconDefaultStyle: TKUIStyles<TKUIMapLocationIconStyl
                     stroke: (props: TKUIMapLocationIconProps) => {
                         // Put stroke just if theme is dark, to separate from background (dark map)
                         const location = props.location;
+                        if (location instanceof SchoolLocation) {
+                            return theme.isDark ? white(1) : black(1);
+                        }
                         return (location instanceof ModeLocation && theme.isDark) ? white(1) : undefined;
                     }
                 },
