@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { User as Auth0User, useAuth0 } from "@auth0/auth0-react";
+import React, { useState, useEffect, useContext, useMemo } from 'react';
+import { User as Auth0User } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
 import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
 import TKUserAccount from "./TKUserAccount";
@@ -8,6 +8,9 @@ import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
 import Util from '../util/Util';
 import { OptionsContext } from '../options/OptionsProvider';
+import { Amplify, ResourcesConfig } from 'aws-amplify';
+import { signIn, SignInInput, fetchUserAttributes, getCurrentUser, fetchAuthSession } from '@aws-amplify/auth';
+// import { signIn, type SignInInput } from '@aws-amplify/auth';
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
     private static _instance: AuthStorage;
@@ -24,20 +27,69 @@ class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
 let finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
 let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.signedOut) => void;
 
+async function handleFetchUserAttributes() {
+    try {
+        const attributes = await fetchUserAttributes()
+        console.log(attributes);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+function useAWSCognitoHostedUI(): { isLoading?: boolean; accessToken?: string } {
+    const [isLoading, setIsLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+    useEffect(() => {
+        const awsCognitoAccessToken = new URLSearchParams(window.location.hash.substring(1)).get('access_token') ?? undefined;
+        // TODO: possibly store in LS, and invalidate after some time.
+        if (awsCognitoAccessToken) {
+            setAccessToken(awsCognitoAccessToken);
+            history.pushState("", document.title, window.location.pathname + window.location.search);
+        }
+        setIsLoading(false);
+    }, []);
+    return { isLoading, accessToken };
+}
+
+function useAWSCognitoDA(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined } {
+    const [isLoading, setIsLoading] = useState(true);
+    const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
+    const isAuthenticated = !!accessToken;
+    useEffect(() => {
+        if (!accessToken) {
+            fetchAuthSession()
+                .then((session) => {
+                    setAccessToken(session.tokens?.accessToken.toString());
+                    console.log(session);
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        }
+    });
+    return { isLoading, isAuthenticated, accessToken };
+}
+
 const AWSCognitoToTKAccount: React.FunctionComponent<{
-    clientId: string;
-    domain: string;
-    redirectURI: string;
-    scopes: string;
+    amplifyConfig: ResourcesConfig;
     requestUserToken?: (auth0AccessToken: string) => Promise<TKAuth0AuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
     children: (context: IAccountContext) => React.ReactNode,
     withPopup?: boolean
 }> = (props) => {
-    const { clientId, domain, redirectURI, scopes, requestUserToken, requestUserProfile, withPopup } = props;
-    const awsCognitoAccessToken = new URLSearchParams(window.location.hash.substring(1)).get('access_token');
+    const { amplifyConfig, requestUserToken, requestUserProfile, withPopup } = props;
+    useMemo(() => Amplify.configure(amplifyConfig), []);
+
+    const { userPoolClientId: clientId } = amplifyConfig.Auth!.Cognito;
+    const { domain, scopes, redirectSignIn } = amplifyConfig.Auth!.Cognito.loginWith!.oauth!;
+
+    const { isLoading: isLoadingHUI, accessToken: accessTokenHUI } = useAWSCognitoHostedUI();
+    const { isLoading: isLoadingDA, isAuthenticated, accessToken: accessTokenDA } = useAWSCognitoDA();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
-    const initStatus = userToken ? SignInStatus.signedIn : awsCognitoAccessToken ? SignInStatus.loading : SignInStatus.signedOut;
+    const initStatus = userToken ? SignInStatus.signedIn : SignInStatus.loading;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
@@ -47,10 +99,14 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
         TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount));
     useEffect(() => {
-        // Authenticated in Auth0 but not on our BE (no userToken), e.g. when returning from loginWithRedirect or
-        // on login pupup closed, so login to our BE.
-        if (awsCognitoAccessToken && !userToken) {
-            requestUserTokenFc(awsCognitoAccessToken)
+        if (!isLoadingHUI && !accessTokenHUI && !isLoadingDA && !accessTokenDA) {
+            setStatus(SignInStatus.signedOut);
+        }
+    }, [isLoadingHUI, isLoadingDA]);
+    useEffect(() => {
+        // Authenticated in Cognito but not on our BE (no userToken), so login to our BE.
+        if ((accessTokenHUI ?? accessTokenDA) && !userToken) {
+            requestUserTokenFc((accessTokenHUI ?? accessTokenDA)!)
                 .then((result: TKAuth0AuthResponse) => {
                     AuthStorage.instance.save(result);
                     setUserToken(result.userToken);
@@ -60,7 +116,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                     setStatus(SignInStatus.signedOut);
                 });
         }
-    }, [awsCognitoAccessToken, userToken]);
+    }, [accessTokenHUI, accessTokenDA, userToken]);
     function refreshUserProfile(): Promise<TKUserAccount> {
         if (userToken) {
             return requestUserProfileFc({})
@@ -89,18 +145,53 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 });
         }
     }, [userToken]);
-    const login = () => {
+    const loginWebHostedUI = () => {
         setStatus(SignInStatus.loading);
         onWaitingStateLoad(true);
         const searchParams = new URLSearchParams({
-            client_id: clientId,
+            client_id: clientId!,
             response_type: 'token',
-            scope: scopes,
-            redirect_uri: redirectURI,
+            scope: scopes.join(' '), // 'phone email profile openid aws.cognito.signin.user.admin',
+            redirect_uri: redirectSignIn[0],
         });
         const loginUrl = `https://${domain}/oauth2/authorize?${searchParams.toString()}`;
         window.location.href = loginUrl;
     };
+
+    (window as any).loginHostedUI = loginWebHostedUI;
+
+    async function login({ username, password }: SignInInput) {
+        try {
+            const { isSignedIn, nextStep } = await signIn({ username, password });
+            console.log('isSignedIn', isSignedIn);
+            console.log('nextStep', nextStep);
+            if (nextStep.signInStep === 'DONE') {
+                console.log('signed in');
+                // handleFetchUserAttributes();
+            }
+        } catch (error) {
+            console.log('error signing in', error);
+        }
+    }
+
+    // async function handleFetchUserAttributes() {
+    //     try {
+    //         const userAttributes = await fetchUserAttributes();
+    //         console.log(userAttributes);
+    //         userAttributes.sub && requestUserTokenFc(userAttributes.sub)
+    //             .then((result: TKAuth0AuthResponse) => {
+    //                 AuthStorage.instance.save(result);
+    //                 setUserToken(result.userToken);
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error);
+    //                 setStatus(SignInStatus.signedOut);
+    //             });
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
+
     const logoutHandler = () => {
         // logout({
         //     localOnly: true // skips the request to the logout endpoint on the authorization server, and the redirect.
@@ -154,7 +245,8 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             {props.children({
                 status: status,
                 userAccount,
-                login,
+                login: () => login({ username: "mauro", password: "hit me.." }),
+                // login: loginWebHostedUI,
                 logout: logoutHandler,
                 accountsSupported: true,
                 finishInitLoadingPromise,
@@ -166,11 +258,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
 };
 
 interface IProps {
-    clientId: string;
-    domain: string;
-    redirectURI: string;
-    scopes: string;
-
+    amplifyConfig: ResourcesConfig;
     // exclusiveModes?: boolean;
     requestUserToken?: (auth0AccessToken: string) => Promise<TKAuth0AuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
@@ -202,3 +290,4 @@ const TKAWSCognitoAccountProvider: React.FunctionComponent<IProps> = (props: IPr
 };
 
 export default TKAWSCognitoAccountProvider;
+export type AWSAmplifyConfig = ResourcesConfig;
