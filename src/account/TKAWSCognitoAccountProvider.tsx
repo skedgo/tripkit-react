@@ -84,7 +84,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     useMemo(() => Amplify.configure(amplifyConfig), []);
 
     const { userPoolClientId: clientId } = amplifyConfig.Auth!.Cognito;
-    const { domain, scopes, redirectSignIn } = amplifyConfig.Auth!.Cognito.loginWith!.oauth!;
+    const { domain, scopes, redirectSignIn, responseType } = amplifyConfig.Auth!.Cognito.loginWith!.oauth!;
 
     const { isLoading: isLoadingHUI, accessToken: accessTokenHUI } = useAWSCognitoHostedUI();
     const { isLoading: isLoadingDA, isAuthenticated, accessToken: accessTokenDA } = useAWSCognitoDA();
@@ -150,7 +150,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         onWaitingStateLoad(true);
         const searchParams = new URLSearchParams({
             client_id: clientId!,
-            response_type: 'token',
+            response_type: responseType,
             scope: scopes.join(' '), // 'phone email profile openid aws.cognito.signin.user.admin',
             redirect_uri: redirectSignIn[0],
         });
