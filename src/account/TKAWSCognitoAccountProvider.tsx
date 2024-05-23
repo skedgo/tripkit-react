@@ -221,7 +221,8 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     function login() {
         setStatus(SignInStatus.loading);
         // onWaitingStateLoad(true);    // Just if login with redirect.
-        loginDA({ username: "mauro", password: "hit me.." });
+        // loginDA({ username: "mauro", password: "hit me.." });
+        loginDA({ username: "moinak_c99", password: "Abc@12345" });
     };
 
     (window as any).loginWithRedirect = loginWithRedirect;
