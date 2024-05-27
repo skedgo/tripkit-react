@@ -47,7 +47,7 @@
         "chart.js": "^3.9.1",
         "classnames": "^2.2.6",
         "copy-to-clipboard": "^3.3.1",
-        "date-fns-tz": "^1.1.2",
+        "date-fns-tz": "^2.0.1",
         "date-time-format-timezone": "^1.0.22",
         "fbemitter": "^2.1.1",
         "focus-trap-react": "^8.8.2",
