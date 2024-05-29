@@ -88,6 +88,7 @@ import { TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle } from "../booking/TKU
 import { TKUIBookingActionsProps, TKUIBookingActionsStyle } from "../booking/TKUIBookingActions";
 import { TKUIBicycleInfoProps, TKUIBicycleInfoStyle } from "../service/TKUIBicycleInfo";
 import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
+import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
 
 /**
  * SDK configuration
@@ -308,6 +309,7 @@ export interface ITKUIConfigOptional {
     TKUIBookingActions: TKComponentConfig<TKUIBookingActionsProps, TKUIBookingActionsStyle>;
     TKUIBicycleInfo: TKComponentConfig<TKUIBicycleInfoProps, TKUIBicycleInfoStyle>;
     TKUIIcon: TKComponentConfig<TKUIIconProps, TKUIIconStyle>;
+    TKUIFromTo: TKComponentConfig<TKUIFromToProps, TKUIFromToStyle>;
 }
 
 export type TKUIConfig = ITKUIConfigRequired & Partial<ITKUIConfigOptional>;
