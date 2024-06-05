@@ -11,6 +11,7 @@ export const tKUIAutocompleteResultDefaultStyle: TKUIStyles<TKUIAutocompleteResu
             ...genStyles.spaceBetween,
             padding: '12px 5px',
             fontSize: '13px',
+            lineHeight: '16px',
             cursor: 'pointer',
             ...theme.divider,
             margin: '0 5px',
