@@ -50,12 +50,12 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         '&>*:not(:first-child)': {
             marginLeft: '20px'
         },
-        paddingBottom: '15px'
+        padding: '15px 0'
     },
     card: {
         ...genStyles.noShrink,
-        height: '150px',
-        margin: '15px 0 30px',
+        height: '110px',
+        marginBottom: '10px',
         '& path': {
             fill: theme.colorPrimary,
             opacity: '.8'
@@ -89,7 +89,7 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.spaceBetween
     },
     label: {
-        ...theme.textWeightSemibold
+
     },
     value: {
 
@@ -111,14 +111,27 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         border: '1px solid ' + black(4, theme.isDark),
         ...genStyles.borderRadius(8)
     },
-    review: {
-        marginTop: '30px'
+    imageSection: {
+        border: 'none!important'
+    },
+    sectionTitle: {
+        textTransform: 'capitalize',
+        ...theme.textWeightSemibold
     },
     selectPaymentMethod: {
-        ...theme.textWeightBold,
         ...genStyles.flex,
-        marginLeft: '19px'
+        ...genStyles.column,
+        ...genStyles.grow,
+        marginLeft: '-18px'
     },
+    review: {
+        // marginTop: '30px'
+    },
+    // selectPaymentMethod: {
+    //     ...theme.textWeightBold,
+    //     ...genStyles.flex,
+    //     marginLeft: '19px'
+    // },
     error: {
         margin: '12px 15px 0',
         color: 'red',
@@ -435,14 +448,20 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //     );
         // }
 
-        const sectionStyles = { sectionBody: overrideClass(injectedStyles.section) };
+        const sectionStyles = { sectionBody: overrideClass(injectedStyles.section), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
+        const imageSectionStyles = { sectionBody: overrideClass(injectedStyles.imageSection), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
 
         let review: ReactNode = null;
         if (selectedMethod || newPaymentMethodAndPay) {
             const paymentOption = newPaymentMethodAndPay ? cardPaymentOption! : selectedMethod!.paymentOption;
             review =
                 <div className={classes.review}>
-                    <TKUISettingSection styles={sectionStyles}>
+                    <TKUISettingSection styles={sectionStyles} title={paymentOption.paymentMode === "WALLET" ? "Balance" : undefined}>
+                        {paymentOption.paymentMode === "WALLET" &&
+                            <div className={classes.group}>
+                                <div className={classes.label}>{"Current Balance"}</div>
+                                <div className={classes.value}>{FormatUtil.toMoney(paymentOption.currentBalance!, { currency: paymentOption.currency, nInCents: true })}</div>
+                            </div>}
                         {paymentOption.discountedPrice &&
                             <div className={classes.group}>
                                 <div className={classes.label}>{"Discount"}</div>
@@ -466,6 +485,10 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                                 <div className={classes.value}>{FormatUtil.toMoney(paymentOption.newBalance!, { currency: paymentOption.currency, nInCents: true })}</div>
                             </div>}
                     </TKUISettingSection>
+                    {paymentOption.paymentMode === "WALLET" && paymentOption.sponsorImageURL &&
+                        <TKUISettingSection styles={imageSectionStyles} title='Sponsored by'>
+                            <img src={paymentOption.sponsorImageURL} alt={paymentOption.sponsorTitle} />
+                        </TKUISettingSection>}
                 </div>
         }
 
@@ -473,57 +496,56 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
             <Fragment>
                 <div className={classes.main}>
                     <div className={classes.body}>
-                        <IconCard className={classes.card} />
-                        {paymentMethods && paymentMethods.length > 0 &&
-                            <>
-                                <div className={classes.selectPaymentMethod}>
-                                    Select payment method
-                                </div>
-                                <div className={classes.tabs}>
-                                    <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                        <TKUIButton
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            text={"Existing"}
-                                            onClick={() => {
-                                                setNewPaymentMethodAndPay(false);
-                                            }}
-                                        />
+                        <TKUISettingSection styles={sectionStyles} title={paymentMethods && paymentMethods.length > 0 ? 'Select payment method' : undefined}>
+                            <div className={classes.selectPaymentMethod}>
+                                {paymentMethods && paymentMethods.length > 0 &&
+                                    <div className={classes.tabs}>
+                                        <div className={!newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                            <TKUIButton
+                                                type={TKUIButtonType.PRIMARY_LINK}
+                                                text={"Existing"}
+                                                onClick={() => {
+                                                    setNewPaymentMethodAndPay(false);
+                                                }}
+                                            />
+                                        </div>
+                                        <div className={classes.tabSeparator} />
+                                        <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
+                                            <TKUIButton
+                                                type={TKUIButtonType.PRIMARY_LINK}
+                                                text={"New card"}
+                                                onClick={() => {
+                                                    setNewPaymentMethodAndPay(true);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>}
+                                {newPaymentMethodAndPay ?
+                                    <div className={classes.newPayment}>
+                                        <IconCard className={classes.card} />
+                                        <CardElement className={classes.cardElement} />
+                                        <div className={classes.futurePayment}>
+                                            <StyledCheckbox
+                                                checked={saveForFuture}
+                                                onChange={e => setSaveForFuture(e.target.checked)}
+                                            />
+                                            Save for future payments
+                                        </div>
                                     </div>
-                                    <div className={classes.tabSeparator} />
-                                    <div className={newPaymentMethodAndPay ? classes.tabSelected : undefined}>
-                                        <TKUIButton
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            text={"New card"}
-                                            onClick={() => {
-                                                setNewPaymentMethodAndPay(true);
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            </>}
-                        {newPaymentMethodAndPay ?
-                            <div className={classes.newPayment}>
-                                <CardElement className={classes.cardElement} />
-                                <div className={classes.futurePayment}>
-                                    <StyledCheckbox
-                                        checked={saveForFuture}
-                                        onChange={e => setSaveForFuture(e.target.checked)}
-                                    />
-                                    Save for future payments
-                                </div>
+                                    :
+                                    <div>
+                                        {paymentMethods && selectedMethod &&
+                                            <TKUIPaymentMethodSelect
+                                                value={selectedMethod}
+                                                options={paymentMethods}
+                                                onChange={setSelectedMethod}
+                                                onRemove={onRemovePM}
+                                            />}
+                                    </div>}
+                                {errorMsg &&
+                                    <div className={classes.error}>{errorMsg}</div>}
                             </div>
-                            :
-                            <div>
-                                {paymentMethods && selectedMethod &&
-                                    <TKUIPaymentMethodSelect
-                                        value={selectedMethod}
-                                        options={paymentMethods}
-                                        onChange={setSelectedMethod}
-                                        onRemove={onRemovePM}
-                                    />}
-                            </div>}
-                        {errorMsg &&
-                            <div className={classes.error}>{errorMsg}</div>}
+                        </TKUISettingSection>
                         {review}
                     </div>
                     <div className={classes.buttonsPanel}>

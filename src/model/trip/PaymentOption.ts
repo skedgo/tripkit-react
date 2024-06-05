@@ -8,6 +8,9 @@ interface PaymentOption {
     description: string;
     currentBalance?: number;
     newBalance?: number;
+    sponsorImageURL?: string;
+    sponsorTitle?: string;
+    sponsorDescription?: string;
 }
 
 export default PaymentOption;

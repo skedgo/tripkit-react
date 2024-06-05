@@ -161,8 +161,8 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                             </div>
                             <div>{paymentMethod.paymentOption.description}</div>
                             {paymentMethod.paymentOption.currentBalance &&
-                                <div style={{ marginLeft: '6px', color: black(1) }}>
-                                    {FormatUtil.toMoney(paymentMethod.paymentOption.currentBalance, { nInCents: true, currency: paymentMethod.paymentOption.currency })}
+                                <div style={{ marginLeft: '6px', color: black(1), fontStyle: 'italic' }}>
+                                    {`(${FormatUtil.toMoney(paymentMethod.paymentOption.currentBalance, { nInCents: true, currency: paymentMethod.paymentOption.currency })})`}
                                 </div>}
                         </div>
                     );
