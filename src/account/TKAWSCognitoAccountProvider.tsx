@@ -9,7 +9,7 @@ import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountCont
 import Util from '../util/Util';
 import { OptionsContext } from '../options/OptionsProvider';
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, getCurrentUser, fetchAuthSession, signInWithRedirect } from '@aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, getCurrentUser, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
 // import { signIn, type SignInInput } from '@aws-amplify/auth';
 
 class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
@@ -36,7 +36,7 @@ async function handleFetchUserAttributes() {
     }
 }
 
-function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined, loginDA: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void } {
+function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined, loginDA: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
     const [isLoading, setIsLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
     const isAuthenticated = !!accessToken;
@@ -78,7 +78,7 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, access
             fetchSession();
         }
     }, []);
-    return { isLoading, isAuthenticated, accessToken, loginDA, loginWithRedirect };
+    return { isLoading, isAuthenticated, accessToken, loginDA, loginWithRedirect, logout: signOut };
 }
 
 const AWSCognitoToTKAccount: React.FunctionComponent<{
@@ -91,7 +91,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const { amplifyConfig, requestUserToken, requestUserProfile, withPopup } = props;
     useMemo(() => Amplify.configure(amplifyConfig), []);
 
-    const { isLoading: isLoadingDA, isAuthenticated, accessToken: accessTokenDA, loginDA, loginWithRedirect } = useAWSCognito();
+    const { isLoading: isLoadingDA, isAuthenticated, accessToken: accessTokenDA, loginDA, loginWithRedirect, logout } = useAWSCognito();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = userToken ? SignInStatus.signedIn : SignInStatus.loading;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
@@ -169,9 +169,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     // }
 
     const logoutHandler = () => {
-        // logout({
-        //     localOnly: true // skips the request to the logout endpoint on the authorization server, and the redirect.
-        // });
+        logout();
         AuthStorage.instance.save(new TKAuth0AuthResponse());
         setStatus(SignInStatus.signedOut);  // Not necessary given the logout call will trigger the first useEffect.
         finishInitLoadingPromise = Promise.resolve(SignInStatus.signedOut);
