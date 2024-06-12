@@ -36,7 +36,7 @@ async function handleFetchUserAttributes() {
     }
 }
 
-function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined, loginDA: (input: SignInInput) => void, loginWithRedirect: () => void } {
+function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined, loginDA: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void } {
     const [isLoading, setIsLoading] = useState(true);
     const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
     const isAuthenticated = !!accessToken;
@@ -56,8 +56,6 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, access
                 console.log('signed in');
                 return await fetchSession();
             }
-        } catch (error) {
-            console.log('error signing in', error);
         } finally {
             setIsLoading(false);
         }
@@ -218,13 +216,19 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         }
     }
     TripGoApi.resetUserToken = resetUserToken;
-    function login(props?: { user: string, password: string }) {
+    async function login(props?: { user: string, password: string }): Promise<void> {
         setStatus(SignInStatus.loading);
         if (props) {
-            loginDA({ username: props.user, password: props.password });
+            try {
+                return await loginDA({ username: props.user, password: props.password });
+            } catch (error) {
+                setStatus(SignInStatus.signedOut);
+                throw error;
+            }
         } else {
             loginWithRedirect();
             onWaitingStateLoad(true);    // Just if login with redirect.
+            return Promise.resolve();
         }
     };
 

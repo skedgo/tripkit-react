@@ -100,7 +100,7 @@ const Auth0ToTKAccount: React.FunctionComponent<{
             onWaitingStateLoad(true);
         }
         // prompt 'login' to always show login dialog to user if logged out.
-        (withPopup ? loginWithPopup({ prompt: 'login' }, { timeoutInSeconds: 600 }) :
+        return (withPopup ? loginWithPopup({ prompt: 'login' }, { timeoutInSeconds: 600 }) :
             loginWithRedirect({
                 prompt: 'login',
                 appState: { returnTo: window.location.href }

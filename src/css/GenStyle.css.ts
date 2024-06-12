@@ -368,9 +368,6 @@ const genStyleClasses: ITKUIGenStyleClasses = {
         '& input::-ms-clear': {
             display: 'none'
         },
-        '& input[type=text]': {
-            padding: '1px'
-        },
         // --------------------------------------------------------------------------------------------------------
         // TODO: check if following rules are still necessary / convenient. Preserve them for now to avoid breaks.
         '& a[href*="//"]': {
