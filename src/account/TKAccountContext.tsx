@@ -9,7 +9,7 @@ export interface IAccountContext {
     status: SignInStatus;
     userAccount?: TKUserAccount;
     returnToAfterLogin?: string;
-    login: () => void;
+    login: (props?: { user: string, password: string }) => void;
     logout: () => void;
     finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
     accountsSupported?: boolean;

@@ -218,11 +218,14 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         }
     }
     TripGoApi.resetUserToken = resetUserToken;
-    function login() {
+    function login(props?: { user: string, password: string }) {
         setStatus(SignInStatus.loading);
-        // onWaitingStateLoad(true);    // Just if login with redirect.
-        // loginDA({ username: "mauro", password: "hit me.." });
-        loginDA({ username: "moinak_c99", password: "Abc@12345" });
+        if (props) {
+            loginDA({ username: props.user, password: props.password });
+        } else {
+            loginWithRedirect();
+            onWaitingStateLoad(true);    // Just if login with redirect.
+        }
     };
 
     (window as any).loginWithRedirect = loginWithRedirect;
