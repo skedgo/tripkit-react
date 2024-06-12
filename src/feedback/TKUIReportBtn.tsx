@@ -52,7 +52,7 @@ function feedbackTextFromState(state: TKState): string {
 
     feedbackS += "Client URL: " + window.location.href + "\n";
     feedbackS += "\n";
-    
+
     feedbackS += "Client User Agent: " + window.navigator.userAgent + "\n";
     feedbackS += "\n";
 
@@ -186,21 +186,6 @@ class TKUIReportBtn extends React.Component<IProps, IState> {
                 />
             ]
         );
-    }
-
-    public componentDidUpdate(prevProps: IProps) {
-        // TODO: Maybe create a separate non-displayable component called TKTracker that tracks app state and user
-        // interaction, either hitting a tracking endpoint (e.g. for planned trips) or storing that info in local
-        // storage to (possibly) be queried by feedback button.
-        const tKState = this.props.tKState;
-        if (tKState.selectedTrip !== prevProps.tKState.selectedTrip) {
-            PlannedTripsTracker.instance.selected = tKState.selectedTrip;
-            PlannedTripsTracker.instance.scheduleTrack({ long: true, anonymous: !tKState.userProfile.trackTripSelections });
-        }
-
-        if (tKState.trips !== prevProps.tKState.trips) {
-            PlannedTripsTracker.instance.trips = tKState.trips;
-        }
     }
 }
 

@@ -63,6 +63,7 @@ import RoutingResults from "../model/trip/RoutingResults";
 import TKUIVehicleAvailability from "../location/TKUIVehicleAvailability";
 import ModeLocation from "../model/location/ModeLocation";
 import LocationsResult from "../model/location/LocationsResult";
+import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -913,6 +914,16 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     tripUpdateStatus: undefined
                 }), 4000);
             }
+        }
+
+        // Planned trips tracking.
+        if (this.props.selectedTrip !== prevProps.selectedTrip) {
+            PlannedTripsTracker.instance.selected = this.props.selectedTrip;
+            PlannedTripsTracker.instance.scheduleTrack({ long: true, anonymous: this.props.userProfile.trackTripSelections });
+        }
+
+        if (this.props.trips !== prevProps.trips) {
+            PlannedTripsTracker.instance.trips = this.props.trips;
         }
 
         // Need to re-inject styles so css properties based on portrait / landscape take effect.
