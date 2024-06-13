@@ -47,8 +47,8 @@ const TKUISignInForm: React.FunctionComponent<IProps> = (props: IProps) => {
 
     return (
         <div className={classes.main}>
-            <input type="text" placeholder="Username or email" value={username} onChange={handleUserChange} />
-            <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
+            <input type="text" placeholder="Username or email" value={username} onChange={handleUserChange} autoComplete="username" />
+            <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} autoComplete="current-password" />
             <div className={classes.errorMessage}>
                 {errorMsg}
             </div>

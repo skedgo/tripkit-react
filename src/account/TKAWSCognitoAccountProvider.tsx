@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { User as Auth0User } from "@auth0/auth0-react";
 import TripGoApi from "../api/TripGoApi";
-import TKAuth0AuthResponse from "./TKAuth0AuthResponse";
+import TKAuthResponse from "./TKAuthResponse";
 import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
@@ -9,15 +9,14 @@ import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountCont
 import Util from '../util/Util';
 import { OptionsContext } from '../options/OptionsProvider';
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, getCurrentUser, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
-// import { signIn, type SignInInput } from '@aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, getCurrentUser, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
 
-class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
+class AuthStorage extends LocalStorageItem<TKAuthResponse> {
     private static _instance: AuthStorage;
 
     public static get instance(): AuthStorage {
         if (!this._instance) {
-            this._instance = new AuthStorage(TKAuth0AuthResponse, "AUTH");
+            this._instance = new AuthStorage(TKAuthResponse, "AUTH");
         }
         return this._instance;
     }
@@ -27,27 +26,37 @@ class AuthStorage extends LocalStorageItem<TKAuth0AuthResponse> {
 let finishInitLoadingPromise: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
 let finishInitLoadingResolver: (value: SignInStatus.signedIn | SignInStatus.signedOut) => void;
 
-async function handleFetchUserAttributes() {
-    try {
-        const attributes = await fetchUserAttributes()
-        console.log(attributes);
-    } catch (error) {
-        console.log(error);
-    }
+export async function getUserAttributes(): Promise<FetchUserAttributesOutput> {
+    const attributes = await fetchUserAttributes();
+    console.log(attributes);
+    return attributes;
 }
 
-function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, accessToken: string | undefined, loginDA: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
+interface AuthTokens {
+    accessToken: string;
+    idToken?: string;
+    refreshToken?: string;
+}
+
+function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, authTokens: AuthTokens | undefined, loginWithUserPass: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
     const [isLoading, setIsLoading] = useState(true);
-    const [accessToken, setAccessToken] = useState<string | undefined>(undefined);
-    const isAuthenticated = !!accessToken;
+    const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(undefined);
+    const isAuthenticated = !!authTokens;
+
+    /**
+     * External web login - Hosted UI flow.
+     */
 
     async function loginWithRedirect() {
         setIsLoading(true);
         await signInWithRedirect();
-        fetchSession();
+        return await fetchSession();
     };
 
-    async function loginDA({ username, password }: SignInInput): Promise<void> {
+    /**
+     * In app login - User and password are collected in the app.     
+     */
+    async function loginWithUserPass({ username, password }: SignInInput): Promise<void> {
         try {
             const { isSignedIn, nextStep } = await signIn({ username, password });
             console.log('isSignedIn', isSignedIn);
@@ -61,11 +70,22 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, access
         }
     }
 
-    async function fetchSession() {
+    async function fetchSession(): Promise<void> {
         try {
             const session = await fetchAuthSession()
-            setAccessToken(session.tokens?.accessToken.toString());
-            console.log(session);
+            const accessToken = session.tokens?.accessToken.toString();
+            const idToken = session.tokens?.idToken?.toString();
+            // Need to get the refresh token from LS since, as per amplify v6 docs ([here](https://docs.amplify.aws/gen1/javascript/build-a-backend/auth/auth-migration-guide/#authcurrentsession)),
+            // it is not returned in the session anymore.
+            let refreshToken: string | undefined;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key?.startsWith("CognitoIdentityServiceProvider") && key.endsWith(".refreshToken")) {
+                    refreshToken = localStorage.getItem(key) ?? undefined;
+                    break;
+                }
+            }
+            setAuthTokens(accessToken ? { accessToken: accessToken, idToken, refreshToken } : undefined);
         } catch (error) {
             console.log(error);
         } finally {
@@ -73,17 +93,22 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, access
         }
     }
 
+    function logout(): Promise<void> {
+        setAuthTokens(undefined);
+        return signOut();
+    }
+
     useEffect(() => {
-        if (!accessToken) {
+        if (!authTokens) {
             fetchSession();
         }
     }, []);
-    return { isLoading, isAuthenticated, accessToken, loginDA, loginWithRedirect, logout: signOut };
+    return { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout };
 }
 
 const AWSCognitoToTKAccount: React.FunctionComponent<{
     amplifyConfig: ResourcesConfig;
-    requestUserToken?: (auth0AccessToken: string) => Promise<TKAuth0AuthResponse>;
+    requestUserToken?: (input: RequestUserTokenInput) => Promise<TKAuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
     children: (context: IAccountContext) => React.ReactNode,
     withPopup?: boolean
@@ -91,27 +116,27 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const { amplifyConfig, requestUserToken, requestUserProfile, withPopup } = props;
     useMemo(() => Amplify.configure(amplifyConfig), []);
 
-    const { isLoading: isLoadingDA, isAuthenticated, accessToken: accessTokenDA, loginDA, loginWithRedirect, logout } = useAWSCognito();
+    const { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout } = useAWSCognito();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     const initStatus = userToken ? SignInStatus.signedIn : SignInStatus.loading;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     const { onUserProfileChange } = useContext(OptionsContext);
-    const requestUserTokenFc = requestUserToken ?? ((cognitoAccessToken: string) =>
-        TripGoApi.apiCallT("/data/user/auth/cognito/" + cognitoAccessToken, "POST", TKAuth0AuthResponse));
+    const requestUserTokenFc = requestUserToken ?? (({ accessToken }) =>
+        TripGoApi.apiCallT("/data/user/auth/cognito/" + accessToken, "POST", TKAuthResponse));
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
         TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount));
     useEffect(() => {
-        if (!isLoadingDA && !accessTokenDA) {
+        if (!isLoading && !authTokens) {
             setStatus(SignInStatus.signedOut);
         }
-    }, [isLoadingDA]);
+    }, [isLoading]);
     useEffect(() => {
-        // Authenticated in Cognito but not on our BE (no userToken), so login to our BE.
-        if (accessTokenDA && !userToken) {
-            requestUserTokenFc(accessTokenDA!)
-                .then((result: TKAuth0AuthResponse) => {
+        // Authenticated in Cognito but not on our BE (no userToken), so login to our BE.        
+        if (authTokens && !userToken) { // Maybe group in a single object / filed *tokens*
+            requestUserTokenFc({ ...authTokens, fetchUserAttributes })
+                .then((result: TKAuthResponse) => {
                     AuthStorage.instance.save(result);
                     setUserToken(result.userToken);
                 })
@@ -120,7 +145,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                     setStatus(SignInStatus.signedOut);
                 });
         }
-    }, [accessTokenDA, userToken]);
+    }, [authTokens, userToken]);
     function refreshUserProfile(): Promise<TKUserAccount> {
         if (userToken) {
             return requestUserProfileFc({})
@@ -155,7 +180,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     //         const userAttributes = await fetchUserAttributes();
     //         console.log(userAttributes);
     //         userAttributes.sub && requestUserTokenFc(userAttributes.sub)
-    //             .then((result: TKAuth0AuthResponse) => {
+    //             .then((result: TKAuthResponse) => {
     //                 AuthStorage.instance.save(result);
     //                 setUserToken(result.userToken);
     //             })
@@ -170,7 +195,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
 
     const logoutHandler = () => {
         logout();
-        AuthStorage.instance.save(new TKAuth0AuthResponse());
+        AuthStorage.instance.save(new TKAuthResponse());
         setStatus(SignInStatus.signedOut);  // Not necessary given the logout call will trigger the first useEffect.
         finishInitLoadingPromise = Promise.resolve(SignInStatus.signedOut);
         setUserToken(undefined);
@@ -193,7 +218,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const resetUserToken = () => {
         if (TripGoApi.userToken) {
             TripGoApi.userToken = undefined;
-            AuthStorage.instance.save(new TKAuth0AuthResponse());
+            AuthStorage.instance.save(new TKAuthResponse());
             setUserToken(undefined);
             setUserAccount(undefined);
             setStatus(SignInStatus.loading);
@@ -203,7 +228,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
             // getAccessTokenSilently()
             //     .then(requestUserTokenFc)
-            //     .then((result: TKAuth0AuthResponse) => {
+            //     .then((result: TKAuthResponse) => {
             //         AuthStorage.instance.save(result);
             //         setUserToken(result.userToken);
             //     })
@@ -218,7 +243,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         setStatus(SignInStatus.loading);
         if (props) {
             try {
-                return await loginDA({ username: props.user, password: props.password });
+                return await loginWithUserPass({ username: props.user, password: props.password });
             } catch (error) {
                 setStatus(SignInStatus.signedOut);
                 throw error;
@@ -248,10 +273,14 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     );
 };
 
+export interface RequestUserTokenInput extends AuthTokens {
+    fetchUserAttributes: () => Promise<FetchUserAttributesOutput>;
+}
+
 interface IProps {
     amplifyConfig: ResourcesConfig;
     // exclusiveModes?: boolean;
-    requestUserToken?: (auth0AccessToken: string) => Promise<TKAuth0AuthResponse>;
+    requestUserToken?: (input: RequestUserTokenInput) => Promise<TKAuthResponse>;
     requestUserProfile?: (auth0user: Auth0User) => Promise<TKUserAccount>;
     children: ((account: IAccountContext) => React.ReactNode) | React.ReactNode;
 }

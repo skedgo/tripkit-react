@@ -1,7 +1,7 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 
 @JsonObject
-class TKAuth0AuthResponse {
+class TKAuthResponse {
     @JsonProperty('changed', Boolean)
     public changed: boolean = false;
     @JsonProperty('userToken', String, true)
@@ -12,4 +12,4 @@ class TKAuth0AuthResponse {
     public userID?: string = undefined;
 }
 
-export default TKAuth0AuthResponse;
+export default TKAuthResponse;
