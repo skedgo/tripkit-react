@@ -5,7 +5,8 @@ export type Update<T> = {
     [P in keyof T]?: T[P]
 }
 
-const SKEDGO_TERMS_OF_USE_URL = "https://skedgo.com/home/terms-of-use";
+export const SKEDGO_TERMS_OF_USE_URL = "https://skedgo.com/home/terms-of-use";
+export const SKEDGO_PRIVACY_POLICY_URL = "https://skedgo.com/privacy-policy";
 
 class Util {
 
