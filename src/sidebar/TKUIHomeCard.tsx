@@ -18,6 +18,7 @@ import { ERROR_LOADING_DEEP_LINK } from "../error/TKErrorHelper";
 import { TKError } from "../error/TKError";
 import Segment from "../model/trip/Segment";
 import TKUISubscription from './TKUISubscription';
+import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onMyBookings: () => void;
@@ -49,6 +50,7 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const { onTripJsonUrl, onWaitingStateLoad, onTripDetailsView, setSelectedTripSegment, onMyBookings, userAccount, t, landscape, status, classes } = props;
     const [activeTrip, setActiveTrip] = useState<ConfirmedBookingData | undefined | null>(undefined);
     const [waitingForActiveTrip, setWaitingForActiveTrip] = useState<boolean>(false);
+    const tKConfig = useContext(TKUIConfigContext);
 
     const refreshActiveTrip = () => {
         // Split the refresh implementation into this function + the useEffect below to ensure the api all is done after the 
@@ -79,9 +81,18 @@ const TKUIHomeCard: React.FunctionComponent<IProps> = (props: IProps) => {
             }
         }
     }, [status]);
+
     if (status !== SignInStatus.signedIn) {
         return null;
     }
+
+    const bookingSupport = !!tKConfig.booking;
+
+    // For now just display home card if booking is supported. TODO: contemplate other features that also require the home card, as the mobility bundles / wallet.
+    if (!bookingSupport) {
+        return null;
+    }
+
     // Hide subscription component if waiting for user or no bundle
     const showSubscription = userAccount?.currentBundle || userAccount?.futureBundle;
     return (
