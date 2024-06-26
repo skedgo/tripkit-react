@@ -149,6 +149,7 @@ interface IProps extends TKUIWithClasses<IStyle, IProps> {
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
+    defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
 }
 
 function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, data?: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
@@ -307,10 +308,11 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     onClose: (success?: boolean) => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
+    defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
 }
 
 const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
-    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, t, classes, theme, injectedStyles }) => {
+    ({ ephemeralKeyObj, paymentOptions, onConfirmPayment, onClose, setWaiting, organizationOptions, defaultOrganizationOption, defaultPaymentMethodFc, t, classes, theme, injectedStyles }) => {
         const ephemeralKey = ephemeralKeyObj.secret;
         const customerId = ephemeralKeyObj?.associated_objects[0]?.id;
         const elements = useElements();
@@ -349,7 +351,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         useEffect(() => {
             // Initially select first payment option by default.
             if (paymentMethods && paymentMethods.length > 0 && !selectedMethod) {
-                setSelectedMethod(paymentMethods[0]);
+                setSelectedMethod(defaultPaymentMethodFc?.(paymentMethods) ?? paymentMethods[0]);
             }
             // This will happen if removed the selected payment method.
             if (paymentMethods && selectedMethod && !paymentMethods.includes(selectedMethod)) {
