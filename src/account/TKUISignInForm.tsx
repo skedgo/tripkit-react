@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useContext, useState } from 'react';
+import React, { ChangeEvent, useContext, useState, useRef } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from '../jss/StyleHelper';
 import { connect, mapperFromFunction } from '../config/TKConfigHelper';
 import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
@@ -45,10 +45,15 @@ const TKUISignInForm: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     }
 
+    function handleEnterKeyPress(e: React.KeyboardEvent<HTMLInputElement>): void {
+        if (e.key === 'Enter') {
+            handleSignInClick();
+        }
+    };
     return (
         <div className={classes.main}>
             <input type="text" placeholder="Username or email" value={username} onChange={handleUserChange} autoComplete="username" />
-            <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} autoComplete="current-password" />
+            <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} autoComplete="current-password" onKeyPress={handleEnterKeyPress} />
             <div className={classes.errorMessage}>
                 {errorMsg}
             </div>

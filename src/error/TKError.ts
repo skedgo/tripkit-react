@@ -1,11 +1,11 @@
 class TKError extends Error {
 
-    public code?: string;
+    public code?: string | number;
     public usererror?: boolean;
     public title?: string;
     public subtitle?: string;
 
-    constructor(message: string, code?: string, usererror?: boolean, stack?: string) {
+    constructor(message: string, code?: string | number, usererror?: boolean, stack?: string) {
         super(message);
         this.code = code;
         this.usererror = usererror;
@@ -20,4 +20,4 @@ class TKError extends Error {
 
 }
 
-export {TKError};
+export { TKError };
