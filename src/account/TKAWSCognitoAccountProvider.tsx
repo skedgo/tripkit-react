@@ -128,10 +128,14 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
         TripGoApi.apiCallT("/data/user/", "GET", TKUserAccount));
     useEffect(() => {
-        if (!isLoading && !authTokens) {
+        // Not Authenticated in Cognito, so cleanup our token + set status to SignInStatus.signedOut.
+        if (!isLoading && !isAuthenticated) {
+            AuthStorage.instance.save(new TKAuthResponse());
             setStatus(SignInStatus.signedOut);
+            setUserToken(undefined);
+            setUserAccount(undefined);
         }
-    }, [isLoading]);
+    }, [isLoading, isAuthenticated]);
     useEffect(() => {
         // Authenticated in Cognito but not on our BE (no userToken), so login to our BE.        
         if (authTokens && !userToken) { // Maybe group in a single object / filed *tokens*
@@ -161,7 +165,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         // Set userToken to be used by SDK
         TripGoApi.userToken = userToken;
         // Request user profile
-        if (userToken) {
+        if (userToken && !isLoading && isAuthenticated) {
             requestUserProfileFc({})
                 .then((result) => {
                     setUserAccount(result);
@@ -173,7 +177,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                     logoutHandler();
                 });
         }
-    }, [userToken]);
+    }, [userToken, isLoading]);
 
     // async function handleFetchUserAttributes() {
     //     try {

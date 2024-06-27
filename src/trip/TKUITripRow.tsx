@@ -222,8 +222,12 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
     // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
     // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
     // by default.
-    const bookingSegment = trip.segments.find(segment =>
-        (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking);
+    const bookingSegment = trip.segments.find(segment => {
+        if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
+            return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && status === SignInStatus.signedIn;
+        }
+        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking;
+    });
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
         .filter(metricS => metricS !== undefined)
