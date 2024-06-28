@@ -249,6 +249,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         // Show error to your customer (for example, payment details incomplete)
                         console.log(result.error.message);
                         setWaiting?.(false);
+                        UIUtil.errorMsg(new TKError("The payment was not successful. Please try again.", undefined, true));
                     } else {
                         handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onClose, setWaiting);
                     }
