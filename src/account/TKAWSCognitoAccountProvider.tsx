@@ -118,6 +118,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
 
     const { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout } = useAWSCognito();
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
+    // const [userToken, setUserToken] = useState<string | undefined>(undefined);  // FOR testing
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
@@ -146,7 +147,8 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 })
                 .catch((error) => {
                     console.log(error);
-                    setStatus(SignInStatus.signedOut);
+                    // setStatus(SignInStatus.signedOut);
+                    logoutHandler();
                 });
         }
     }, [authTokens, userToken]);
