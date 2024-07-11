@@ -7,8 +7,8 @@ import TKUserProfile from "../options/TKUserProfile";
 @JsonObject
 class FavouriteTrip extends Favourite {
 
-    @JsonProperty('type')
-    public type = "FavouriteTrip";
+    // @JsonProperty('type')
+    // public type = "FavouriteTrip";
     @JsonProperty('from', LocationConverter)
     private _from: Location = new Location();   // need to specify default value in order for json2typescript to work
     @JsonProperty('to', LocationConverter)

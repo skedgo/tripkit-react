@@ -16,6 +16,7 @@ import { TripSort } from "../model/trip/TripSort";
 import ModeLocation from "../model/location/ModeLocation";
 import RoutingResults from "../model/trip/RoutingResults";
 import { MultiPolygon } from "geojson";
+import { TKAccountContext } from "../account/TKAccountContext";
 
 // TODO: Documentation -> follow scheme of ServiceResultsProvider and TKUITimetableView
 export interface IRoutingResultsContext {
@@ -113,18 +114,16 @@ export const RoutingResultsContext = React.createContext<IRoutingResultsContext>
     setViewport: (center: LatLng, zoom: number) => { }
 });
 
-class RoutingResultsProvider extends React.Component<IWithRoutingResultsProps, {}> {
-    private ContextWithValue = withRoutingResults((props: IRoutingResultsContext) => {
-        props = { ...props };
-        return <RoutingResultsContext.Provider value={props}>{this.props.children}</RoutingResultsContext.Provider>;
-    });
+const ContextWithValue = withRoutingResults((props: IRoutingResultsContext & { children: React.ReactNode }) => {
+    const { children, ...contextProps } = props;
+    return <RoutingResultsContext.Provider value={contextProps}>{children}</RoutingResultsContext.Provider>;
+});
 
-    public render(): React.ReactNode {
-        return (
-            <this.ContextWithValue {...this.props} />
-        );
-    }
-
+const RoutingResultsProvider: React.FunctionComponent<IWithRoutingResultsProps> = (props) => {
+    const { finishInitLoadingPromise } = React.useContext(TKAccountContext)
+    return (
+        <ContextWithValue {...props} finishInitLoadingPromise={finishInitLoadingPromise} />
+    );
 }
 
 export default RoutingResultsProvider;

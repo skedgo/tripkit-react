@@ -1,6 +1,12 @@
-import * as React from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import Favourite from "../model/favourite/Favourite";
 import FavouritesData from "../data/FavouritesData";
+import TripGoApi from "../api/TripGoApi";
+import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
+import FavouriteStop from "../model/favourite/FavouriteStop";
+import Util from "../util/Util";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 
 export interface IFavouritesContext {
     favouriteList: Favourite[];
@@ -14,46 +20,72 @@ export interface IFavouritesContext {
 export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     favouriteList: [],
     recentList: [],
-    onAddFavourite: (value: Favourite) => {},
-    onAddRecent: (value: Favourite) => {},
-    onRemoveFavourite: (value: Favourite) => {},
-    onRemoveRecent: (value: Favourite) => {}
+    onAddFavourite: (value: Favourite) => { },
+    onAddRecent: (value: Favourite) => { },
+    onRemoveFavourite: (value: Favourite) => { },
+    onRemoveRecent: (value: Favourite) => { }
 });
 
-interface IState {
-    favouriteList: Favourite[];
-    recentList: Favourite[];
+interface IProps {
+    children: ReactNode
 }
 
-class TKFavouritesProvider extends React.Component<{}, IState> {
+// TODO: do it with a custom converter of json2typescript.
+function deserialize(itemJson: any): Favourite {
+    return itemJson.type === "stop" ? Util.deserialize(itemJson, FavouriteStop) :
+        itemJson.type === "location" ? Util.deserialize(itemJson, FavouriteLocation) :
+            Util.deserialize(itemJson, FavouriteTrip)
+}
 
-    constructor(props: {}) {
-        super(props);
-        this.state = {
-            favouriteList: FavouritesData.instance.get(),
-            recentList: FavouritesData.recInstance.get()
-        };
+const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { children } = props;
+    const [isLoading, setIsLoading] = useState<boolean>(true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
+    const [favourites, setFavourites] = useState<Favourite[]>([]);
+    const [recents, setRecents] = useState<Favourite[]>(FavouritesData.recInstance.get());
+    const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.
+    // const { userProfile } = useContext(OptionsContext);
+    // console.log(userProfile.finishSignInStatusP);
+    console.log(favourites);
+    useEffect(() => {
+        if (status === SignInStatus.signedIn) {
+            TripGoApi.apiCall("/data/user/favorite", "GET").then((data) => {
+                console.log(data);
+                setFavourites(data.result.map(favJson => deserialize(favJson)));
+                setIsLoading(false);
+            });
+        } else {
+            setFavourites([]);
+        }
+    }, [status]);
+
+    async function addFavouriteHandler(value: Favourite) {
+        if (value instanceof FavouriteStop) {
+            value.order = favourites.length;
+            const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
+            setFavourites([...favourites, addedFav]);
+        }
+    }
+
+    useEffect(() => {
         // In case favourites are changed directly through FavouritesData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
-        FavouritesData.instance.addChangeListener((update: Favourite[]) => this.setState({favouriteList: update}));
-        FavouritesData.recInstance.addChangeListener((update: Favourite[]) => this.setState({recentList: update}));
-    }
+        // FavouritesData.instance.addChangeListener(setFavourites);        
+        FavouritesData.recInstance.addChangeListener(setRecents);
+    }, []);
 
-    public render(): React.ReactNode {
-        return (
-            <TKFavouritesContext.Provider
-                value={{
-                    favouriteList: this.state.favouriteList,
-                    recentList: this.state.recentList,
-                    onAddFavourite: (value: Favourite) => {FavouritesData.instance.add(value)},
-                    onAddRecent: (value: Favourite) => {FavouritesData.recInstance.add(value)},
-                    onRemoveFavourite: (value: Favourite) => {FavouritesData.instance.remove(value)},
-                    onRemoveRecent: (value: Favourite) => {FavouritesData.recInstance.remove(value)}
-                }}>
-                {this.props.children}
-            </TKFavouritesContext.Provider>
-        );
-    }
+    return (
+        <TKFavouritesContext.Provider
+            value={{
+                favouriteList: favourites,
+                recentList: recents,
+                onAddFavourite: addFavouriteHandler,
+                onAddRecent: (value: Favourite) => { FavouritesData.recInstance.add(value) },
+                onRemoveFavourite: (value: Favourite) => { FavouritesData.instance.remove(value) },
+                onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) }
+            }}>
+            {children}
+        </TKFavouritesContext.Provider>
+    );
 }
 
 export default TKFavouritesProvider;

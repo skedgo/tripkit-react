@@ -122,8 +122,9 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
     const [status, setStatus] = useState<SignInStatus>(initStatus);
     const [userAccount, setUserAccount] = useState<TKUserAccount | undefined>(undefined);
+    // TODO: this won't work anymore since TKAccountContext.Provider is not below TKRoot anymore.
+    // Indicate waiting other way, or provide a method setWaitingStateLoadHandler that RoutingResultsProviders sets.
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
-    const { onUserProfileChange } = useContext(OptionsContext);
     const requestUserTokenFc = requestUserToken ?? (({ accessToken }) =>
         TripGoApi.apiCallT("/data/user/auth/cognito/" + accessToken, "POST", TKAuthResponse));
     const requestUserProfileFc: ((auth0user: Auth0User) => Promise<TKUserAccount>) = requestUserProfile ?? (() =>
@@ -207,20 +208,17 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
         setUserToken(undefined);
         setUserAccount(undefined);
     };
-    // if (!finishInitLoadingPromise) {
-    //     finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) :
-    //         new Promise(resolve => {
-    //             finishInitLoadingResolver = resolve;
-    //         });
-    // }
-    // useEffect(() => {
-    //     onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
-    // }, [finishInitLoadingPromise]);
-    // useEffect(() => {
-    //     if (status !== SignInStatus.loading) {
-    //         finishInitLoadingResolver?.(status);
-    //     }
-    // }, [status]);
+    if (!finishInitLoadingPromise) {
+        finishInitLoadingPromise = initStatus === SignInStatus.signedOut ? Promise.resolve(SignInStatus.signedOut) :
+            new Promise(resolve => {
+                finishInitLoadingResolver = resolve;
+            });
+    }
+    useEffect(() => {
+        if (status !== SignInStatus.loading) {
+            finishInitLoadingResolver?.(status);
+        }
+    }, [status]);
     const resetUserToken = () => {
         if (TripGoApi.userToken) {
             TripGoApi.userToken = undefined;
@@ -231,7 +229,6 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
             finishInitLoadingPromise = new Promise(resolve => {
                 finishInitLoadingResolver = resolve;
             });
-            onUserProfileChange(userProfile => Util.iAssign(userProfile, { finishSignInStatusP: finishInitLoadingPromise }));
             // getAccessTokenSilently()
             //     .then(requestUserTokenFc)
             //     .then((result: TKAuthResponse) => {

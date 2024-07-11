@@ -38,6 +38,7 @@ export interface IWithRoutingResultsProps {
     computeModeSetsBuilder?: (defaultFunction: (query: RoutingQuery, options: TKUserProfile) => string[][]) => (query: RoutingQuery, options: TKUserProfile) => string[][];
     locale?: string;
     preferredTripCompareFc?: (trip1: Trip, trip2: Trip) => number;
+    finishInitLoadingPromise?: Promise<SignInStatus.signedIn | SignInStatus.signedOut>;
 }
 
 interface IWithRoutingResultsState {
@@ -680,13 +681,13 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                     const updatedTrip = result.groups[0];
                     // Compare by id (instead of equiality between trips) since segment.trip is Trip, while prevState.trips and prevState.selected are TripGroups.
                     this.setState(prevState => {
-                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment.trip.id)) {
+                        if (!prevState.trips || !prevState.trips.some(origTrip => origTrip.id === segment?.trip.id)) {
                             return null;
                         }
                         const stateUpdate = {
-                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment.trip.id ? updatedTrip : trip), prevState.sort),
-                            selected: prevState.selected?.id === segment.trip.id ? updatedTrip : prevState.selected,
-                            selectedSegment: prevState.selected && prevState.selected.id === segment.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
+                            trips: this.sortTrips(prevState.trips.map(trip => trip.id === segment?.trip.id ? updatedTrip : trip), prevState.sort),
+                            selected: prevState.selected?.id === segment?.trip.id ? updatedTrip : prevState.selected,
+                            selectedSegment: prevState.selected && prevState.selected.id === segment?.trip.id && prevState.selectedSegment ? updatedTrip.segments[prevState.selected.segments.indexOf(prevState.selectedSegment)] : prevState.selectedSegment
                         }
                         return stateUpdate;
                     });
@@ -851,10 +852,11 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
             // Pre-fetch modes on region change (see also trigger it on demand getQueryUrlsWaitRegions) to save time when
             // triggering compute trips.
             if (this.state.region && prevState.region !== this.state.region) {
-                this.props.options.finishSignInStatusP &&
-                    this.props.options.finishSignInStatusP.then(status => {
-                        status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
-                    });
+                // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
+                const finishSignInP = this.props.finishInitLoadingPromise ?? this.props.options.finishSignInStatusP
+                finishSignInP?.then(status => {
+                    status === SignInStatus.signedIn && this.props.options.exclusiveModes && this.props.options.getUserModeRulesByRegionP(this.state.region!.name);
+                });
                 RegionsData.currentRegion = this.state.region;
             }
         }
@@ -902,7 +904,9 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
 
         public getQueryUrlsWaitRegions(query: RoutingQuery): Promise<string[]> {
             return RegionsData.instance.requireRegions().then(() => {
-                return (this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut))
+                // TODO: remove this workaround (options.finishSignInStatusP) by moving TKAccountProvider in Feonix WL above TKRoot.
+                const finishSignInP = this.props.finishInitLoadingPromise ?? this.props.options.finishSignInStatusP ?? Promise.resolve(SignInStatus.signedOut);
+                return finishSignInP
                     .then(status =>
                         (status === SignInStatus.signedIn && this.props.options.exclusiveModes ?
                             RegionsData.instance.getRegionP(query.from!)

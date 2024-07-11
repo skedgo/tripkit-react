@@ -104,7 +104,8 @@ const TKUILocationDetailView: React.FunctionComponent<IProps> = (props: IProps) 
         ] : [])
             .concat([
                 <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2} />,
-                <TKUIFavouriteAction key={3}
+                <TKUIFavouriteAction
+                    key={3}
                     favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
                     vertical={true} />,
                 <TKUIShareAction
