@@ -40,9 +40,9 @@ import TKUIFavouriteAction from "../favourite/TKUIFavouriteAction";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKUIShareAction from "../action/TKUIShareAction";
 import TKShareHelper from "../share/TKShareHelper";
-import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import TKUIActionsView from "../action/TKUIActionsView";
 import LocationUtil from "../util/LocationUtil";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -106,7 +106,7 @@ const TKUILocationDetailView: React.FunctionComponent<IProps> = (props: IProps) 
                 <TKUIRouteToLocationAction location={location} buttonType={TKUIButtonType.PRIMARY_VERTICAL} key={2} />,
                 <TKUIFavouriteAction
                     key={3}
-                    favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteTrip.createForLocation(location)}
+                    favourite={location instanceof StopLocation ? FavouriteStop.create(location) : FavouriteLocation.create(location)}
                     vertical={true} />,
                 <TKUIShareAction
                     title={t("Share")}

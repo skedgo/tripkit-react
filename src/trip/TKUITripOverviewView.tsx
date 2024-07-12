@@ -119,7 +119,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                 {(routingResultsContext: IRoutingResultsContext) => // Avoid this connection with the routing context, maybe get this value from the trip.
                     routingResultsContext.query.from && routingResultsContext.query.to &&
                     <TKUIFavouriteAction
-                        favourite={FavouriteTrip.create(routingResultsContext.query.from, routingResultsContext.query.to)}
+                        favourite={FavouriteTrip.create(trip)}
                         vertical={true}
                     />}
             </RoutingResultsContext.Consumer>,

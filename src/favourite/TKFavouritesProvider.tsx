@@ -7,6 +7,7 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import Util from "../util/Util";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
+import { v4 as uuidv4 } from 'uuid';
 
 export interface IFavouritesContext {
     favouriteList: Favourite[];
@@ -59,11 +60,18 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }, [status]);
 
     async function addFavouriteHandler(value: Favourite) {
-        if (value instanceof FavouriteStop) {
-            value.order = favourites.length;
-            const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
-            setFavourites([...favourites, addedFav]);
-        }
+        value.order = favourites.length;
+        value.uuid = uuidv4();
+        const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
+        setFavourites([...favourites, addedFav]);
+    }
+
+    async function removeFavouriteHandler(value: Favourite) {
+        console.assert(favourites.indexOf(value) !== -1);
+        await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "DELETE");
+        const updatedFavourites = [...favourites];
+        updatedFavourites.splice(favourites.indexOf(value), 1);
+        setFavourites(updatedFavourites);
     }
 
     useEffect(() => {
@@ -80,7 +88,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 recentList: recents,
                 onAddFavourite: addFavouriteHandler,
                 onAddRecent: (value: Favourite) => { FavouritesData.recInstance.add(value) },
-                onRemoveFavourite: (value: Favourite) => { FavouritesData.instance.remove(value) },
+                onRemoveFavourite: removeFavouriteHandler,
                 onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) }
             }}>
             {children}

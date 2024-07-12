@@ -1,7 +1,6 @@
 import { JsonObject, JsonProperty } from "json2typescript";
 import StopLocation from "../StopLocation";
 import Favourite from "./Favourite";
-import { v4 as uuidv4 } from 'uuid';
 
 @JsonObject
 class FavouriteStop extends Favourite {
@@ -20,8 +19,6 @@ class FavouriteStop extends Favourite {
         instance.region = stop.region ?? "";
         instance.stopCode = stop.code;
         instance.type = "stop";
-        instance.uuid = uuidv4();
-
         return instance;
     }
 

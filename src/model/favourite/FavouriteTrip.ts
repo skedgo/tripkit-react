@@ -1,67 +1,83 @@
 import Location from "../Location";
-import { JsonObject, JsonProperty } from "json2typescript";
+import { Any, JsonObject, JsonProperty } from "json2typescript";
 import { LocationConverter } from "../location/LocationConverter";
 import Favourite from "./Favourite";
 import TKUserProfile from "../options/TKUserProfile";
+import Trip from "../trip/Trip";
+
+interface WaypointSegment {
+    start: string;
+    end: string;
+    modes: string[];
+}
 
 @JsonObject
 class FavouriteTrip extends Favourite {
 
-    // @JsonProperty('type')
-    // public type = "FavouriteTrip";
-    @JsonProperty('from', LocationConverter)
-    private _from: Location = new Location();   // need to specify default value in order for json2typescript to work
-    @JsonProperty('to', LocationConverter)
-    private _to: Location = new Location();     // need to specify default value in order for json2typescript to work
-    @JsonProperty('options', TKUserProfile, true)
-    private _options: TKUserProfile | undefined = undefined;
+    @JsonProperty('startLocation', LocationConverter)
+    public startLocation: Location = new Location();   // need to specify default value in order for json2typescript to work
+    @JsonProperty('endLocation', LocationConverter)
+    public endLocation: Location = new Location();     // need to specify default value in order for json2typescript to work
+    @JsonProperty('pattern', [Any])
+    public pattern: WaypointSegment[] = [];
 
-    public static createForLocation(to: Location): FavouriteTrip {
-        return this.create(Location.createCurrLoc(), to);
-    }
-
-    public static create(from: Location, to: Location): FavouriteTrip {
+    public static create(trip: Trip): FavouriteTrip {
         const instance = new FavouriteTrip();
-        instance._from = from;
-        instance._to = to;
+        instance.startLocation = trip.segments[0].from;
+        instance.endLocation = trip.segments[trip.segments.length - 1].to;
+        instance.pattern = trip.segments.reduce((waypoints, segment) => {
+            if (segment.modeIdentifier) {
+                waypoints.push({
+                    start: "(" + segment.from.lat + "," + segment.from.lng + ")",
+                    end: "(" + segment.to.lat + "," + segment.to.lng + ")",
+                    modes: [segment.modeIdentifier]
+                });
+            }
+            return waypoints;
+        }, [] as WaypointSegment[]);
+        instance.name = `${instance.startLocation.getDisplayString()} to ${instance.endLocation.getDisplayString()}`
+        instance.type = "trip";
         return instance;
     }
 
+    // TODO: delete all below once remove all uses.
+
     get from(): Location {
-        return this._from;
+        return new Location();
     }
 
     set from(value: Location) {
-        this._from = value;
+
     }
 
     get to(): Location {
-        return this._to;
+        return new Location();
     }
 
     set to(value: Location) {
-        this._to = value;
+
     }
 
     get options(): TKUserProfile | undefined {
-        return this._options;
+        return new TKUserProfile();
     }
 
     set options(value: TKUserProfile | undefined) {
-        this._options = value;
+
     }
 
-    public getKey(): string {
-        // Give priority to the id, since, for instance, getKey for a CarParkLocation returns an id, while for the same object deserialized as a location it returns the lat,lng.
-        return (this.from.isCurrLoc() ? "CurrLoc" : this.from.id ?? this.from.getKey()) + (this.to.isCurrLoc() ? "CurrLoc" : this.to.id ?? this.to.getKey());
-    }
+    // public getKey(): string {
+    //     // TODO: Revise this, for the trip to be the same we need to check the pattern, or just if it has the same uuid.
+    //     // Give priority to the id, since, for instance, getKey for a CarParkLocation returns an id, while for the same object deserialized as a location it returns the lat,lng.
+    //     return (this.startLocation.isCurrLoc() ? "CurrLoc" : this.startLocation.id ?? this.startLocation.getKey()) + (this.endLocation.isCurrLoc() ? "CurrLoc" : this.endLocation.id ?? this.endLocation.getKey());
+    // }
 
-    public equals(other: any): boolean {
-        if (other === undefined || other === null || !(other instanceof FavouriteTrip)) {
-            return false;
-        }
-        return this.getKey() === other.getKey();
-    }
+    // public equals(other: any): boolean {
+    //     if (other === undefined || other === null || !(other instanceof FavouriteTrip)) {
+    //         return false;
+    //     }
+    //     return this.getKey() === other.getKey();
+    // }
 }
 
 export default FavouriteTrip;
