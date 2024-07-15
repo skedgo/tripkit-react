@@ -8,6 +8,7 @@ import Util from "../util/Util";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import { v4 as uuidv4 } from 'uuid';
+import StopLocation from "../model/StopLocation";
 
 export interface IFavouritesContext {
     favouriteList: Favourite[];
@@ -47,16 +48,33 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     // const { userProfile } = useContext(OptionsContext);
     // console.log(userProfile.finishSignInStatusP);
     console.log(favourites);
-    useEffect(() => {
+    async function requestFavourites() {
         if (status === SignInStatus.signedIn) {
-            TripGoApi.apiCall("/data/user/favorite", "GET").then((data) => {
-                console.log(data);
-                setFavourites(data.result.map(favJson => deserialize(favJson)));
-                setIsLoading(false);
-            });
+            const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
+            console.log(data);
+            const favouritesResult = data.result.map(favJson => deserialize(favJson));
+            setFavourites(favouritesResult);
+            setIsLoading(false);
+            await Promise.all(favouritesResult.map(async fav => {
+                if (!(fav instanceof FavouriteStop)) return;
+                try {
+                    const { stop: stopJson } = await TripGoApi.apiCallUrl(TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`, "GET", undefined, true);
+                    fav.stop = Util.deserialize(stopJson, StopLocation);
+                    return;
+                } catch (error) {
+                    console.log("catched")
+                    return;
+                }
+            }));
+            console.log("All!!!")
+            console.log(favouritesResult);
+            setFavourites(favouritesResult);
         } else {
             setFavourites([]);
         }
+    }
+    useEffect(() => {
+        requestFavourites();
     }, [status]);
 
     async function addFavouriteHandler(value: Favourite) {

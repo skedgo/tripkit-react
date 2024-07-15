@@ -1,19 +1,20 @@
 import * as React from "react";
-import {CSSProps, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Favourite from "../model/favourite/Favourite";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, mapperFromFunction} from "../config/TKConfigHelper";
-import {tKUIFavouriteRowDefaultStyle} from "./TKUIFavouriteRow.css";
-import {ReactComponent as IconFavLoc} from "../images/favourite/ic-favourite-location.svg";
-import {ReactComponent as IconFavTrip} from "../images/favourite/ic-favourite-trip.svg";
-import {black} from "../jss/TKUITheme";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { tKUIFavouriteRowDefaultStyle } from "./TKUIFavouriteRow.css";
+import { ReactComponent as IconFavLoc } from "../images/favourite/ic-favourite-location.svg";
+import { ReactComponent as IconFavTrip } from "../images/favourite/ic-favourite-trip.svg";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import LocationUtil from "../util/LocationUtil";
-import {ReactComponent as IconRemove} from '../images/ic-cross.svg';
-import {isRemoteIcon} from "../map/TKUIMapLocationIcon.css";
+import { ReactComponent as IconRemove } from '../images/ic-cross.svg';
 import WaiAriaUtil from "../util/WaiAriaUtil";
+import StopLocation from "../model/StopLocation";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import classNames from "classnames";
 
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -22,75 +23,68 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRemove?: () => void;
 }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    iconPanel: CSSProps<IProps>;
-    text: CSSProps<IProps>;
-    removeBtn: CSSProps<IProps>;
-}
+type IStyle = ReturnType<typeof tKUIFavouriteRowDefaultStyle>;
 
-interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIFavouriteRowProps = IProps;
 export type TKUIFavouriteRowStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIFavouriteRow {...props}/>,
+    render: props => <TKUIFavouriteRow {...props} />,
     styles: tKUIFavouriteRowDefaultStyle,
     classNamePrefix: "TKUIFavouriteRow"
 };
-
-class TKUIFavouriteRow extends React.Component<IProps, {}> {
-    public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const t = this.props.t;
-        const value = this.props.value;
-        let text: string;
-        let icon: JSX.Element;
-        if (value instanceof FavouriteStop) {
-            icon =
-                <TKUIModeLocationIcon
-                    location={value.stop}
-                    style={{
-                        width: '20px',
-                        height: '20px',
-                        background: !isRemoteIcon(value.stop.modeInfo) ? black(1) : undefined
-                    }}
-                    isDarkMode={this.props.theme.isDark}
-                />;
-            text = value.stop.name;
-        } else {
-            const favTrip = value as FavouriteTrip;
-            icon = favTrip.from.isCurrLoc() ? <IconFavLoc/> : <IconFavTrip/>;
-            text = favTrip.from.isCurrLoc() ?
-                "To " + LocationUtil.getMainText(favTrip.to, t) :
-                LocationUtil.getMainText(favTrip.from, t) + " to " + LocationUtil.getMainText(favTrip.to, t);
-        }
-        const removeBtn = this.props.onRemove &&
-            <button className={classes.removeBtn}
-                    onClick={(e: any) => {
-                        this.props.onRemove!();
-                        e.stopPropagation();
-
-                    }}>
-                <IconRemove/>
-            </button>;
-        return (
-            <div className={classes.main}
-                 onClick={this.props.onClick}
-                 onKeyDown={this.props.onClick && WaiAriaUtil.keyDownToClick(this.props.onClick)}
-                 tabIndex={0}
-            >
-                <span className={classes.iconPanel}>
-                {icon}
-                </span>
-                <span className={classes.text}>
-                {text}
-                </span>
-                {removeBtn}
-            </div>
-        );
+const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
+    const { value, onClick, onRemove, classes, t, theme } = props;
+    console.log(value);
+    let text: string;
+    let icon: JSX.Element;
+    if (value instanceof FavouriteStop) {
+        icon =
+            <TKUIModeLocationIcon
+                location={value.stop ?? new StopLocation()}
+                style={{
+                    width: '40px',
+                    height: '40px',
+                    padding: '6px',
+                    // background: value.stop && !isRemoteIcon(value.stop.modeInfo) ? black(1) : undefined
+                }}
+                isDarkMode={theme.isDark}
+            />;
+        text = value.name ?? LocationUtil.getMainText(value.stop ?? new StopLocation(), t);
+    } else if (value instanceof FavouriteLocation) {
+        icon = <IconFavLoc />;
+        text = `To ${value.name ?? LocationUtil.getMainText(value.location, t)}`;
+    } else {
+        const favTrip = value as FavouriteTrip;
+        icon = <IconFavTrip />;
+        text = favTrip.name ?? (LocationUtil.getMainText(favTrip.startLocation, t) + " to " + LocationUtil.getMainText(favTrip.endLocation, t));
     }
+    const removeBtn = onRemove &&
+        <button className={classes.removeBtn}
+            onClick={(e: any) => {
+                onRemove!();
+                e.stopPropagation();
+
+            }}>
+            <IconRemove />
+        </button>;
+    return (
+        <div className={classes.main}
+            onClick={onClick}
+            onKeyDown={onClick && WaiAriaUtil.keyDownToClick(onClick)}
+            tabIndex={0}
+        >
+            <div className={classNames(classes.iconPanel, value instanceof FavouriteLocation || value instanceof FavouriteTrip ? classes.iconBackground : "")}>
+                {icon}
+            </div>
+            <span className={classes.text}>
+                {text}
+            </span>
+            {removeBtn}
+        </div>
+    );
 }
 
 export default connect((config: TKUIConfig) => config.TKUIFavouriteRow, config,

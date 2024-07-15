@@ -21,7 +21,7 @@ import { Subtract } from "utility-types";
 import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
-import TKUIFavouritesView from "../favourite/TKUIFavouritesView";
+import TKUIFavouritesView, { TKUIFavouritesViewHelpers } from "../favourite/TKUIFavouritesView";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
@@ -517,17 +517,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />}
             </TKUIServiceViewHelpers.TKStateProps> : null;
         const favouritesView = this.state.showFavourites && !directionsView &&
-            <TKUIFavouritesView
-                onFavouriteClicked={this.onFavouriteClicked}
-                onRequestClose={() => { this.setState({ showFavourites: false }) }}
-                slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalMiddle: { top: 55, unit: '%' },
-                    modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
-                }}
-            />;
+            <TKUIFavouritesViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIFavouritesView
+                        onFavouriteClicked={this.onFavouriteClicked}
+                        onRequestClose={() => { this.setState({ showFavourites: false }) }}
+                        slideUpOptions={{
+                            initPosition: TKUISlideUpPosition.UP,
+                            draggable: DeviceUtil.isTouch(),
+                            modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalMiddle: { top: 55, unit: '%' },
+                            modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
+                        }}
+                        {...stateProps}
+                    />
+                }
+            </TKUIFavouritesViewHelpers.TKStateProps>;
         const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips ?
             <TKUIRoutingResultsViewHelpers.TKStateProps>
                 {stateProps =>

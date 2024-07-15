@@ -176,8 +176,8 @@ class NetworkUtil {
         }
         const cacheKey = url + JSON.stringify(options);
         if (!NetworkUtil.getCache().has(cacheKey)) {
-            const fetchPromise = fetch(url, options).then(NetworkUtil.jsonCallback);
-            fetchPromise
+            const fetchPromise = fetch(url, options).then(NetworkUtil.fetchApiCallback);
+            const resultP = fetchPromise
                 .then((json: any) => NetworkUtil.setCache(cacheKey, json))
                 .catch((reason: Error) => {
                     // Our api answers 200 with a null json when there is no update, so return undefined;
@@ -187,7 +187,7 @@ class NetworkUtil {
                     Util.log(reason, Env.PRODUCTION);
                     throw reason;
                 });
-            return fetchPromise;
+            return resultP;
         }
         return Promise.resolve(NetworkUtil.getCache().get(cacheKey));
     }

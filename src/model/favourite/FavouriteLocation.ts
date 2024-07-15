@@ -12,7 +12,7 @@ class FavouriteLocation extends Favourite {
     public static create(location: Location): FavouriteLocation {
         const instance = new FavouriteLocation();
         instance.location = location;
-        instance.name = location.name ?? location.address;
+        instance.name = location.name || location.address;
         instance.type = "location";
         return instance;
     }

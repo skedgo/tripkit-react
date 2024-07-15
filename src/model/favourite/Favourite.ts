@@ -3,7 +3,7 @@ import { JsonObject, JsonProperty } from "json2typescript";
 @JsonObject
 class Favourite {
     @JsonProperty('name', String, true)
-    public name: string = "";
+    public name?: string = undefined;
     @JsonProperty('order', Number, true)
     public order: number = 0;
     @JsonProperty('uuid', String, true)

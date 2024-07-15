@@ -20,6 +20,7 @@ import TKDefaultGeocoderNames from "./TKDefaultGeocoderNames";
 import LatLng from "../model/LatLng";
 import TKMapViewport from "../map/TKMapViewport";
 import Region from "../model/region/Region";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 export const TKGeocodingOptionsForDoc = (props: Partial<TKGeocodingOptions>) => null;
 TKGeocodingOptionsForDoc.displayName = 'TKGeocodingOptions';
@@ -79,7 +80,8 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         const locations = favourites
             .map((favourite: Favourite) => Util.iAssign(
                 // TODO: for trips it's just adding to, see if should add also from.
-                favourite instanceof FavouriteStop ? favourite.stop : (favourite as FavouriteTrip).to,
+                favourite instanceof FavouriteStop && favourite.stop ? favourite.stop :
+                    favourite instanceof FavouriteLocation ? favourite.location : (favourite as FavouriteTrip).endLocation,
                 { // To avoid mutating original location.
                     source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites
                 }));

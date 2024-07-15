@@ -18,7 +18,7 @@ class FavouriteTrip extends Favourite {
     public startLocation: Location = new Location();   // need to specify default value in order for json2typescript to work
     @JsonProperty('endLocation', LocationConverter)
     public endLocation: Location = new Location();     // need to specify default value in order for json2typescript to work
-    @JsonProperty('pattern', [Any])
+    @JsonProperty('pattern', [Any], true)
     public pattern: WaypointSegment[] = [];
 
     public static create(trip: Trip): FavouriteTrip {
