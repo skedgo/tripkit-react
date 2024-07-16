@@ -5,10 +5,11 @@ import { tKUIFavouritesViewDefaultStyle } from "./TKUIFavouritesView.css";
 import Favourite from "../model/favourite/Favourite";
 import { CardPresentation, default as TKUICard } from "../card/TKUICard";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import { TKFavouritesContext } from "./TKFavouritesProvider";
+import { IFavouritesContext, TKFavouritesContext } from "./TKFavouritesProvider";
 import TKUIFavouriteRow from "./TKUIFavouriteRow";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
+import TKUIReorderList from "../util_components/TKUIReorderList";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -17,11 +18,7 @@ export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IPro
     slideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IConsumedProps {
-    favouriteList: Favourite[];
-    recentList: Favourite[];
-    onRemoveFavourite: (value: Favourite) => void;
-}
+interface IConsumedProps extends IFavouritesContext { }
 
 export interface IStyle {
     main: CSSProps<IProps>;
@@ -40,16 +37,8 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIFavouritesView"
 };
 
-// function filter: (favouriteList: Favourite[], recentList: Favourite[]) => {
-//     // Sort favourites based on recent list:
-//     // - filter (in) those recent that are also favourites.
-//     const sortedFavs = recentList.filter((recent: Favourite) => favouriteList.find((fav: Favourite) => fav.equals(recent)));
-//     // - append the remaining favourites
-//     return sortedFavs.concat(favouriteList.filter((fav: Favourite) => !sortedFavs.find((sfav: Favourite) => sfav.equals(fav))));
-// }
-
 const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
-    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite } = props;
+    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite } = props;
     const [editing, setEditing] = React.useState<boolean>(false);
     return (
         <TKUICard
@@ -69,13 +58,21 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
             slideUpOptions={slideUpOptions}
         >
             <div className={classes.main}>
-                {favouriteList.map((item, i) =>
-                    <TKUIFavouriteRow
-                        value={item}
-                        onClick={() => onFavouriteClicked?.(item)}
-                        onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
-                        key={i}
-                    />)}
+                <TKUIReorderList
+                    onDragEnd={onReorderFavourite}
+                >
+                    {(onHandleMouseDown) =>
+                        favouriteList.map((item, i) =>
+                            <TKUIFavouriteRow
+                                value={item}
+                                onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
+                                onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
+                                onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
+                                key={i}
+                            />)
+                    }
+                    { }
+                </TKUIReorderList>
             </div>
         </TKUICard>
     );
@@ -83,8 +80,8 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
 
 
 const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props) => {
-    const { favouriteList, recentList, onRemoveFavourite } = useContext(TKFavouritesContext);
-    return <>{props.children!({ favouriteList, recentList, onRemoveFavourite })}</>;
+    const favouritesContext = useContext(TKFavouritesContext);
+    return <>{props.children!({ ...favouritesContext })}</>;
 };
 
 export default connect((config: TKUIConfig) => config.TKUIFavouritesView, config, mapperFromFunction((clientProps: IClientProps) => clientProps));

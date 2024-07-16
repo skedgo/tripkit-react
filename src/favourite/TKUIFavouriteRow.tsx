@@ -11,16 +11,17 @@ import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import LocationUtil from "../util/LocationUtil";
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg';
+import { ReactComponent as IconDrag } from '../images/ic-drag-handle.svg';
 import WaiAriaUtil from "../util/WaiAriaUtil";
 import StopLocation from "../model/StopLocation";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import classNames from "classnames";
 
-
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Favourite;
     onClick?: () => void;
     onRemove?: () => void;
+    onHandleMouseDown?: React.MouseEventHandler;
 }
 
 type IStyle = ReturnType<typeof tKUIFavouriteRowDefaultStyle>;
@@ -36,7 +37,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIFavouriteRow"
 };
 const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
-    const { value, onClick, onRemove, classes, t, theme } = props;
+    const { value, onClick, onRemove, onHandleMouseDown, classes, t, theme } = props;
     console.log(value);
     let text: string;
     let icon: JSX.Element;
@@ -71,11 +72,16 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
             <IconRemove />
         </button>;
     return (
-        <div className={classes.main}
+        <div
+            className={classNames(classes.main, onClick && classes.pointer)}
             onClick={onClick}
             onKeyDown={onClick && WaiAriaUtil.keyDownToClick(onClick)}
             tabIndex={0}
         >
+            {onHandleMouseDown &&
+                <button className={classes.dragHandle} onMouseDown={onHandleMouseDown}>
+                    <IconDrag />
+                </button>}
             <div className={classNames(classes.iconPanel, value instanceof FavouriteLocation || value instanceof FavouriteTrip ? classes.iconBackground : "")}>
                 {icon}
             </div>

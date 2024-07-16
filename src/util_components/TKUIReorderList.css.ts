@@ -5,9 +5,7 @@ export const tKUIReorderListStyle = (theme: TKUITheme) => ({
         margin: 0,
         padding: 0,
         position: 'relative',
-        listStyle: 'none',
-        paddingTop: '8px',
-        paddingBottom: '8px'
+        listStyle: 'none'
     },
     smoothDndContainer: {
         position: 'relative',

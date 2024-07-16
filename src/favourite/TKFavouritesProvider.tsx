@@ -9,6 +9,7 @@ import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import { v4 as uuidv4 } from 'uuid';
 import StopLocation from "../model/StopLocation";
+import { moveFromTo } from "../util_components/TKUIReorderList";
 
 export interface IFavouritesContext {
     favouriteList: Favourite[];
@@ -17,6 +18,7 @@ export interface IFavouritesContext {
     onAddRecent: (value: Favourite) => void;
     onRemoveFavourite: (value: Favourite) => void;
     onRemoveRecent: (value: Favourite) => void;
+    onReorderFavourite: (from: number, to: number) => void;
 }
 
 export const TKFavouritesContext = React.createContext<IFavouritesContext>({
@@ -25,7 +27,8 @@ export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     onAddFavourite: (value: Favourite) => { },
     onAddRecent: (value: Favourite) => { },
     onRemoveFavourite: (value: Favourite) => { },
-    onRemoveRecent: (value: Favourite) => { }
+    onRemoveRecent: (value: Favourite) => { },
+    onReorderFavourite: (from: number, to: number) => { }
 });
 
 interface IProps {
@@ -92,6 +95,10 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         setFavourites(updatedFavourites);
     }
 
+    function reorderFavouriteHandler(from: number, to: number) {
+        setFavourites(moveFromTo([...favourites], from, to));
+    }
+
     useEffect(() => {
         // In case favourites are changed directly through FavouritesData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
@@ -107,7 +114,8 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 onAddFavourite: addFavouriteHandler,
                 onAddRecent: (value: Favourite) => { FavouritesData.recInstance.add(value) },
                 onRemoveFavourite: removeFavouriteHandler,
-                onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) }
+                onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) },
+                onReorderFavourite: reorderFavouriteHandler
             }}>
             {children}
         </TKFavouritesContext.Provider>

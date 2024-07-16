@@ -1,6 +1,5 @@
-import { TKUIFavouriteRowProps } from "./TKUIFavouriteRow";
 import genStyles from "../css/GenStyle.css";
-import { black, TKUITheme } from "../jss/TKUITheme";
+import { black, TKUITheme, white } from "../jss/TKUITheme";
 import { resetStyles } from "../css/ResetStyle.css";
 
 export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
@@ -9,10 +8,13 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter,
         padding: '10px 15px',
         ...theme.divider,
-        cursor: (props: TKUIFavouriteRowProps) => props.onClick && 'pointer',
+        background: white(0, theme.isDark),
         '&:hover': {
             background: black(5, theme.isDark)
         }
+    },
+    pointer: {
+        cursor: 'pointer'
     },
     iconPanel: {
         width: '40px',
@@ -34,9 +36,19 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
     },
     removeBtn: {
         ...resetStyles.button,
+        cursor: 'pointer',
         '& svg': {
             height: '20px',
             width: '20px'
         }
+    },
+    dragHandle: {
+        ...resetStyles.button,
+        ...genStyles.flex,
+        ...genStyles.alignSelfStretch,
+        ...genStyles.alignCenter,
+        padding: '0 10px',
+        marginLeft: '-15px',
+        cursor: 'pointer'
     }
 });
