@@ -93,7 +93,7 @@ class TripGoApi {
                 ...locale && locale !== 'en' && {
                     'accept-language': [locale, 'en'].join(',')
                 },
-                ...options.headers as any
+                ...options.headers instanceof Headers ? Object.fromEntries((options.headers as any).entries()) : options.headers
             };
             let apiHeadersOverride: TripGoApiHeadersMap | undefined;
             if (Util.isFunction(this.apiHeadersOverride)) {
@@ -125,7 +125,7 @@ class TripGoApi {
             return NetworkUtil.fetch(url, {
                 ...fetchOptions,
                 headers,
-                body: options.body ? JSON.stringify(options.body) : undefined
+                body: options.body ? (typeof options.body === 'string' ? options.body : JSON.stringify(options.body)) : undefined
             }, tkcache);
         }
         );

@@ -55,7 +55,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         if (status === SignInStatus.signedIn) {
             const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
             console.log(data);
-            const favouritesResult = data.result.map(favJson => deserialize(favJson));
+            const favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
             setFavourites(favouritesResult);
             setIsLoading(false);
             await Promise.all(favouritesResult.map(async fav => {
