@@ -34,12 +34,14 @@ const tKUIPaymentMethodSelectDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.grow,
         cursor: 'pointer',
         '& span': {
-            ...theme.textWeightBold,
             marginLeft: '5px'
         },
         '&:hover': {
             background: '#80808033'
         }
+    },
+    selected: {
+        ...theme.textWeightBold
     },
     btnContainer: {
         ...genStyles.alignSelfStart,
@@ -121,6 +123,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
             return map;
         });
         function renderPaymentMethod(paymentMethod: SGPaymentMethod, i: number): ReactNode {
+            const paymentMethodClass = classNames(classes.card, value === paymentMethod && classes.selected);
             switch (paymentMethod.paymentOption.paymentMode) {
                 case "INTERNAL":
                     const stripePaymentMethod = paymentMethod.data!.stripePaymentMethod!;
@@ -131,7 +134,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     const { brand, last4 } = card;
                     return (
                         <div className={classes.cardNRemove} key={i}>
-                            <div className={classes.card} onClick={() => onChange(paymentMethod)}>
+                            <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)}>
                                 <StyledRadio checked={value === paymentMethod} />
                                 <div className={classes.icon}>
                                     {iconFromBrand(brand)}
@@ -154,7 +157,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                     );
                 case "WALLET":
                     return (
-                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                        <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
                             <StyledRadio checked={value === paymentMethod} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
@@ -169,7 +172,7 @@ const TKUIPaymentMethodSelect: React.FunctionComponent<IProps> =
                 case "INVOICE":
                     const selectOptions = paymentMethod.data!.subOptions!;
                     return (
-                        <div className={classes.card} onClick={() => onChange(paymentMethod)} key={i}>
+                        <div className={paymentMethodClass} onClick={() => onChange(paymentMethod)} key={i}>
                             <StyledRadio checked={value === paymentMethod} />
                             <div className={classNames(classes.icon, classes.iconBalance)}>
                                 <IconBalance />
