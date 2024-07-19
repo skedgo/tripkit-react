@@ -47,14 +47,10 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     const [isLoading, setIsLoading] = useState<boolean>(true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
     const [favourites, setFavourites] = useState<Favourite[]>([]);
     const [recents, setRecents] = useState<Favourite[]>(FavouritesData.recInstance.get());
-    const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.
-    // const { userProfile } = useContext(OptionsContext);
-    // console.log(userProfile.finishSignInStatusP);
-    console.log(favourites);
+    const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.    
     async function requestFavourites() {
         if (status === SignInStatus.signedIn) {
             const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
-            console.log(data);
             const favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
             setFavourites(favouritesResult);
             setIsLoading(false);
@@ -65,12 +61,10 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                     fav.stop = Util.deserialize(stopJson, StopLocation);
                     return;
                 } catch (error) {
-                    console.log("catched")
+                    console.log(error);
                     return;
                 }
             }));
-            console.log("All!!!")
-            console.log(favouritesResult);
             setFavourites(favouritesResult);
         } else {
             setFavourites([]);

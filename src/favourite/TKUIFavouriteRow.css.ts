@@ -50,5 +50,9 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
         padding: '0 10px',
         marginLeft: '-15px',
         cursor: 'pointer'
+    },
+    confirmRemove: {
+        background: theme.colorError,
+        color: white()
     }
 });

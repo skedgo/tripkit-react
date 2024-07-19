@@ -178,7 +178,10 @@ class NetworkUtil {
         if (!NetworkUtil.getCache().has(cacheKey)) {
             const fetchPromise = fetch(url, options).then(NetworkUtil.fetchApiCallback);
             const resultP = fetchPromise
-                .then((json: any) => NetworkUtil.setCache(cacheKey, json))
+                .then((json: any) => {
+                    NetworkUtil.setCache(cacheKey, json);
+                    return json;
+                })
                 .catch((reason: Error) => {
                     // Our api answers 200 with a null json when there is no update, so return undefined;
                     if (reason.message.includes("Unexpected end of JSON input")) {

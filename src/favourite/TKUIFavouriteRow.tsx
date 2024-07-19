@@ -38,7 +38,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
     const { value, onClick, onRemove, onHandleMouseDown, classes, t, theme } = props;
-    console.log(value);
+    const [confirmRemove, setConfirmRemove] = React.useState(false);
     let text: string;
     let icon: JSX.Element;
     if (value instanceof FavouriteStop) {
@@ -63,14 +63,29 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
         text = favTrip.name ?? (LocationUtil.getMainText(favTrip.startLocation, t) + " to " + LocationUtil.getMainText(favTrip.endLocation, t));
     }
     const removeBtn = onRemove &&
-        <button className={classes.removeBtn}
-            onClick={(e: any) => {
-                onRemove!();
-                e.stopPropagation();
+        <>
+            {confirmRemove ?
+                <div
+                    className={classes.confirmRemove}
+                    onClick={(e) => {
+                    }}
+                >
+                    Delete
+                </div> :
+                <button className={classes.removeBtn}
+                    onClick={(e: any) => {
+                        setConfirmRemove(true);
+                        // (window as any).addEventListener("click", () => setConfirmRemove(false), { once: true });
+                        // It doesn't work since a lot of components are listening to the click event and stop propagation, e.g. Favourites card.
+                        // TODO: Maybe put just two buttons Delete | Cancel, wich slide to the left displacing all the row (transform animation?)
+                        (window as any).addEventListener("click", () => setConfirmRemove(false));
+                        // onRemove!();
+                        e.stopPropagation();
 
-            }}>
-            <IconRemove />
-        </button>;
+                    }}>
+                    <IconRemove />
+                </button>}
+        </>;
     return (
         <div
             className={classNames(classes.main, onClick && classes.pointer)}

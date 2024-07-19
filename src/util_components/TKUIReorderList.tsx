@@ -10,7 +10,6 @@ export function moveFromTo(array: any[], from: number, to: number): any[] {
         const bubble = array[i];
         array[i] = array[bubbleTargetI];
         array[bubbleTargetI] = bubble;
-        console.log(array);
     }
     return array;
 }
