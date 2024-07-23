@@ -189,7 +189,7 @@ class NetworkUtil {
         return now - dateValue > maxAgeValue * 1000
     }
 
-    public static async fetch(url: string, options: any, useCache: boolean = true): Promise<any> {
+    public static async fetch(url: string, options: any, useCache: boolean = true, cacheRefreshCallback: (response: any) => void = () => { }): Promise<any> {
         if (!useCache) {
             return fetch(url, options).then(NetworkUtil.fetchApiCallback);
         }
@@ -198,19 +198,28 @@ class NetworkUtil {
         const cacheName = new URL(fetchRequest.url).hostname;
         const cache = await caches.open(cacheName);
         const cacheResponse = await cache.match(fetchRequest);
-        let response;
-        if (cacheResponse
-            && !NetworkUtil.isExpired((await cache.keys(fetchRequest))[0])
-        ) {
-            response = cacheResponse;
-        } else {
-            // Remove custom browser cache headers, they shouldn't be sent to the server (e.g. CORS can complain).
-            options.headers = { ...options.headers };
-            delete options.headers["x-cache-control"];
-            delete options.headers["x-date"];
-            response = await fetch(url, options);
-            cache.put(fetchRequest, response.clone());
+        const cacheAndNetwork = options.headers["x-fetch-policy"] === "cache-and-network";
+        if (cacheResponse && !NetworkUtil.isExpired(fetchRequest) && !cacheAndNetwork) {
+            return NetworkUtil.fetchApiCallback(cacheResponse);
         }
+        // Remove custom browser cache headers, they shouldn't be sent to the server (e.g. CORS can complain).
+        options.headers = { ...options.headers };
+        delete options.headers["x-fetch-policy"];
+        delete options.headers["x-cache-control"];
+        delete options.headers["x-date"];
+        if (cacheResponse && !NetworkUtil.isExpired(fetchRequest) && cacheAndNetwork) {
+            fetch(url, options)
+                .then(response => {
+                    cache.put(fetchRequest, response.clone());
+                    return response;
+                })
+                .then(NetworkUtil.fetchApiCallback)
+                .then(cacheRefreshCallback)
+                .catch(e => { });
+            return NetworkUtil.fetchApiCallback(cacheResponse);
+        }
+        const response = await fetch(url, options);
+        cache.put(fetchRequest, response.clone());
         return NetworkUtil.fetchApiCallback(response);
     }
 

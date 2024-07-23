@@ -63,9 +63,15 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                     const { stop: stopJson } = await TripGoApi.fetchAPI(
                         TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
                         {
-                            method: "GET", tkcache: true,
+                            method: "GET",
+                            tkcache: true,
+                            cacheRefreshCallback: (response: any) => {
+                                fav.stop = Util.deserialize(stopJson, StopLocation);
+                                setFavourites([...favouritesResult]);
+                            },
                             headers: {
-                                "x-cache-control": "max-age=10",
+                                "x-fetch-policy": "cache-and-network",
+                                "x-cache-control": `max-age=${24 * 60 * 60}`,
                                 "x-date": new Date().toUTCString()
                             }
                         }

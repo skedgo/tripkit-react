@@ -67,9 +67,10 @@ class TripGoApi {
     public static fetchAPI(
         url: string,
         options: RequestInit & {
-            tkcache?: boolean
+            tkcache?: boolean,
+            cacheRefreshCallback?: (response: any) => void
         }): Promise<any> {
-        const { tkcache = false, ...fetchOptions } = options
+        const { tkcache = false, cacheRefreshCallback, ...fetchOptions } = options
         // TODO: Fetch with cache, just for development, to avoid doing so much api calls and accelerating answers.
         return Promise.resolve(this.locale).then(locale => {
             const defaultHeaders: TripGoApiHeadersMap = {
@@ -125,7 +126,8 @@ class TripGoApi {
             return NetworkUtil.fetch(url, {
                 ...fetchOptions,
                 headers,
-                body: options.body ? (typeof options.body === 'string' ? options.body : JSON.stringify(options.body)) : undefined
+                body: options.body ? (typeof options.body === 'string' ? options.body : JSON.stringify(options.body)) : undefined,
+                cacheRefreshCallback,
             }, tkcache);
         }
         );
