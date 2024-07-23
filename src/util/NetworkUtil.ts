@@ -170,29 +170,48 @@ class NetworkUtil {
     //     return options.headers?.['Accept']?.contains("html") ? fetchPromise.then(result => result.text()) : fetchPromise.then(NetworkUtil.jsonCallback);
     // }
 
-    public static fetch(url: string, options: any, cache: boolean = true): Promise<any> {
-        if (!cache) {
+    private static isExpired(request: Request): boolean {
+        const cacheControl = request.headers.get("x-cache-control");
+        if (!cacheControl) {
+            return false;
+        }
+        const maxAge = cacheControl.match(/max-age=(\d+)/);
+        if (!maxAge) {
+            return false;
+        }
+        const maxAgeValue = parseInt(maxAge[1]);
+        const date = request.headers.get("x-date");
+        if (!date) {
+            return false;
+        }
+        const dateValue = new Date(date).getTime();
+        const now = new Date().getTime();
+        return now - dateValue > maxAgeValue * 1000
+    }
+
+    public static async fetch(url: string, options: any, useCache: boolean = true): Promise<any> {
+        if (!useCache) {
             return fetch(url, options).then(NetworkUtil.fetchApiCallback);
         }
-        const cacheKey = url + JSON.stringify(options);
-        if (!NetworkUtil.getCache().has(cacheKey)) {
-            const fetchPromise = fetch(url, options).then(NetworkUtil.fetchApiCallback);
-            const resultP = fetchPromise
-                .then((json: any) => {
-                    NetworkUtil.setCache(cacheKey, json);
-                    return json;
-                })
-                .catch((reason: Error) => {
-                    // Our api answers 200 with a null json when there is no update, so return undefined;
-                    if (reason.message.includes("Unexpected end of JSON input")) {
-                        return undefined;
-                    }
-                    Util.log(reason, Env.PRODUCTION);
-                    throw reason;
-                });
-            return resultP;
+        options.headers = options.headers || {};
+        const fetchRequest = new Request(url, options);
+        const cacheName = new URL(fetchRequest.url).hostname;
+        const cache = await caches.open(cacheName);
+        const cacheResponse = await cache.match(fetchRequest);
+        let response;
+        if (cacheResponse
+            && !NetworkUtil.isExpired((await cache.keys(fetchRequest))[0])
+        ) {
+            response = cacheResponse;
+        } else {
+            // Remove custom browser cache headers, they shouldn't be sent to the server (e.g. CORS can complain).
+            options.headers = { ...options.headers };
+            delete options.headers["x-cache-control"];
+            delete options.headers["x-date"];
+            response = await fetch(url, options);
+            cache.put(fetchRequest, response.clone());
         }
-        return Promise.resolve(NetworkUtil.getCache().get(cacheKey));
+        return NetworkUtil.fetchApiCallback(response);
     }
 
     public static delayPromise<T>(duration: number): ((data: T) => Promise<T>) {

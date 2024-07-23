@@ -60,7 +60,16 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             await Promise.all(favouritesResult.map(async fav => {
                 if (!(fav instanceof FavouriteStop)) return;
                 try {
-                    const { stop: stopJson } = await TripGoApi.apiCallUrl(TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`, "GET", undefined, true);
+                    const { stop: stopJson } = await TripGoApi.fetchAPI(
+                        TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
+                        {
+                            method: "GET", tkcache: true,
+                            headers: {
+                                "x-cache-control": "max-age=10",
+                                "x-date": new Date().toUTCString()
+                            }
+                        }
+                    );
                     fav.stop = Util.deserialize(stopJson, StopLocation);
                     return;
                 } catch (error) {

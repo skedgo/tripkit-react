@@ -16,6 +16,7 @@ import TKUIMapView from "../map/TKUIMapView";
 import Location from "../model/Location";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import StopLocation from "../model/StopLocation";
+import FavouriteTrip from "../model/favourite/FavouriteTrip";
 
 const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
     main: {
@@ -145,7 +146,24 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
             </>
         );
     } else {
-        content = null;
+        const placeholder = t("Name")
+        content = (
+            <>
+                <div className={classes.formGroup}>
+                    <label>Name</label>
+                    <input type="text" value={update.name} placeholder={placeholder} onChange={handleNameChange} />
+                </div>
+                <div className={classes.map}>
+                    <TKUIMapView
+                        from={(value as FavouriteTrip).startLocation}
+                        to={(value as FavouriteTrip).endLocation}
+                        hideLocations={true}
+                        showCurrLocBtn={false}
+                        readonly={true}
+                    />
+                </div>
+            </>
+        );
     }
     return (
         <TKUICard title={t("Favourite")} presentation={CardPresentation.MODAL} onRequestClose={() => onRequestClose()} slideUpOptions={slideUpOptions}>
@@ -153,7 +171,7 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                 {content}
                 <div className={classes.buttonsPanel}>
                     <TKUIButton text={t("Cancel")} onClick={() => onRequestClose(update)} type={TKUIButtonType.SECONDARY} />
-                    <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={!searchValue} />
+                    <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={value instanceof FavouriteTrip ? false : !searchValue} />
                 </div>
             </div>
         </TKUICard>

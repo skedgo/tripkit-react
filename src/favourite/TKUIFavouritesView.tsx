@@ -11,6 +11,7 @@ import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import TKUIReorderList from "../util_components/TKUIReorderList";
 import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
+import FavouriteStop from "../model/favourite/FavouriteStop";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -80,7 +81,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                     value={item}
                                     onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
                                     onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
-                                    onEdit={!editing ? () => setEditingFav(item) : undefined}
+                                    onEdit={!editing && (item instanceof FavouriteStop ? item.stop : true) ? () => setEditingFav(item) : undefined}
                                     onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
                                     key={i}
                                 />)
