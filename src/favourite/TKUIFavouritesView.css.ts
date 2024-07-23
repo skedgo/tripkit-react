@@ -1,8 +1,7 @@
-import {TKUIStyles} from "../jss/StyleHelper";
-import {TKUIFavouritesViewProps, TKUIFavouritesViewStyle} from "./TKUIFavouritesView";
 import genStyles from "../css/GenStyle.css";
+import { TKUITheme } from "..";
 
-export const tKUIFavouritesViewDefaultStyle: TKUIStyles<TKUIFavouritesViewStyle, TKUIFavouritesViewProps> = {
+export const tKUIFavouritesViewDefaultStyle = (theme: TKUITheme) => ({
     main: {
 
     },
@@ -13,4 +12,4 @@ export const tKUIFavouritesViewDefaultStyle: TKUIStyles<TKUIFavouritesViewStyle,
     editBtn: {
         padding: '0'
     }
-};
+});

@@ -15,16 +15,18 @@ export interface IFavouritesContext {
     favouriteList: Favourite[];
     recentList: Favourite[];
     onAddFavourite: (value: Favourite) => void;
-    onAddRecent: (value: Favourite) => void;
+    onUpdateFavourite: (value: Favourite) => void;
     onRemoveFavourite: (value: Favourite) => void;
-    onRemoveRecent: (value: Favourite) => void;
     onReorderFavourite: (from: number, to: number) => void;
+    onAddRecent: (value: Favourite) => void;
+    onRemoveRecent: (value: Favourite) => void;
 }
 
 export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     favouriteList: [],
     recentList: [],
     onAddFavourite: (value: Favourite) => { },
+    onUpdateFavourite: (value: Favourite) => { },
     onAddRecent: (value: Favourite) => { },
     onRemoveFavourite: (value: Favourite) => { },
     onRemoveRecent: (value: Favourite) => { },
@@ -52,6 +54,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         if (status === SignInStatus.signedIn) {
             const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
             const favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
+            favouritesResult.sort((a, b) => a.order - b.order);
             setFavourites(favouritesResult);
             setIsLoading(false);
             await Promise.all(favouritesResult.map(async fav => {
@@ -65,7 +68,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                     return;
                 }
             }));
-            setFavourites(favouritesResult);
+            setFavourites([...favouritesResult]);
         } else {
             setFavourites([]);
         }
@@ -81,6 +84,15 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         setFavourites([...favourites, addedFav]);
     }
 
+    async function updateFavouriteHandler(value: Favourite) {
+        const addedFav = deserialize(await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "PUT", Util.serialize(value)));
+        const favouritesUpdate = [...favourites];
+        // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
+        // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
+        favouritesUpdate.splice(favourites.findIndex(fav => fav.uuid === value.uuid), 1, value);
+        setFavourites(favouritesUpdate);
+    }
+
     async function removeFavouriteHandler(value: Favourite) {
         console.assert(favourites.indexOf(value) !== -1);
         await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "DELETE");
@@ -90,7 +102,15 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }
 
     function reorderFavouriteHandler(from: number, to: number) {
-        setFavourites(moveFromTo([...favourites], from, to));
+        const reordered = moveFromTo([...favourites], from, to);
+        reordered.forEach((fav, i) => {
+            const update = fav.order !== i;
+            fav.order = i;
+            if (update) {
+                TripGoApi.apiCall(`/data/user/favorite/${fav.uuid}`, "PUT", Util.serialize(fav));
+            }
+        });
+        setFavourites(reordered);
     }
 
     useEffect(() => {
@@ -106,6 +126,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 favouriteList: favourites,
                 recentList: recents,
                 onAddFavourite: addFavouriteHandler,
+                onUpdateFavourite: updateFavouriteHandler,
                 onAddRecent: (value: Favourite) => { FavouritesData.recInstance.add(value) },
                 onRemoveFavourite: removeFavouriteHandler,
                 onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) },

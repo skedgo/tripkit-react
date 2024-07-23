@@ -145,6 +145,14 @@ const keyframesStyle = {
         '0%': { backgroundColor: 'white' },
         '50%': { backgroundColor: '#00000014' },
         '100%': { backgroundColor: 'white' }
+    },
+    '@keyframes loadingFavourite': {
+        '0%': {
+            backgroundPosition: '100% 50%',
+        },
+        '100%': {
+            backgroundPosition: '0 50%',
+        }
     }
     // See doc: https://cssinjs.org/jss-syntax/?v=v10.1.1#font-face
     // '@font-face': [

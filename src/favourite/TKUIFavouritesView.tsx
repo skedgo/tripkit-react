@@ -1,5 +1,5 @@
-import React, { FunctionComponent, useContext } from "react";
-import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import React, { FunctionComponent, useContext, useEffect } from "react";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIFavouritesViewDefaultStyle } from "./TKUIFavouritesView.css";
 import Favourite from "../model/favourite/Favourite";
@@ -10,6 +10,7 @@ import TKUIFavouriteRow from "./TKUIFavouriteRow";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import TKUIReorderList from "../util_components/TKUIReorderList";
+import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -20,11 +21,7 @@ export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IPro
 
 interface IConsumedProps extends IFavouritesContext { }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    subHeader: CSSProps<IProps>;
-    editBtn: CSSProps<IProps>;
-}
+export type IStyle = ReturnType<typeof tKUIFavouritesViewDefaultStyle>
 
 interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -40,41 +37,60 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite } = props;
     const [editing, setEditing] = React.useState<boolean>(false);
+    const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
+    if (process.env.NODE_ENV === "development") {
+        useEffect(() => {   // TODO: remove, just for development.
+            if (favouriteList.length !== 0) {
+                // setEditingFav(favouriteList[0]);
+                console.log(favouriteList);
+            }
+        }, [favouriteList]);
+    }
+    const handleEditClose = (update?: Favourite) => {
+        if (update) {
+            props.onUpdateFavourite(update);
+        }
+        setEditingFav(undefined);
+    };
     return (
-        <TKUICard
-            title={title}
-            presentation={CardPresentation.SLIDE_UP}
-            renderSubHeader={() =>
-                <div className={classes.subHeader}>
-                    <TKUIButton text={editing ? t("Done") : t("edit")}
-                        onClick={() => setEditing(!editing)}
-                        type={TKUIButtonType.PRIMARY_LINK}
-                        styles={{
-                            main: overrideClass(injectedStyles.editBtn)
-                        }}
-                    />
-                </div>}
-            onRequestClose={onRequestClose}
-            slideUpOptions={slideUpOptions}
-        >
-            <div className={classes.main}>
-                <TKUIReorderList
-                    onDragEnd={onReorderFavourite}
-                >
-                    {(onHandleMouseDown) =>
-                        favouriteList.map((item, i) =>
-                            <TKUIFavouriteRow
-                                value={item}
-                                onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
-                                onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
-                                onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
-                                key={i}
-                            />)
-                    }
-                    { }
-                </TKUIReorderList>
-            </div>
-        </TKUICard>
+        <>
+            <TKUICard
+                title={title}
+                presentation={CardPresentation.SLIDE_UP}
+                renderSubHeader={() =>
+                    <div className={classes.subHeader}>
+                        <TKUIButton text={editing ? t("Done") : t("edit")}
+                            onClick={() => setEditing(!editing)}
+                            type={TKUIButtonType.PRIMARY_LINK}
+                            styles={{
+                                main: overrideClass(injectedStyles.editBtn)
+                            }}
+                        />
+                    </div>}
+                onRequestClose={onRequestClose}
+                slideUpOptions={slideUpOptions}
+            >
+                <div className={classes.main}>
+                    <TKUIReorderList
+                        onDragEnd={onReorderFavourite}
+                    >
+                        {(onHandleMouseDown) =>
+                            favouriteList.map((item, i) =>
+                                <TKUIFavouriteRow
+                                    value={item}
+                                    onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
+                                    onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
+                                    onEdit={!editing ? () => setEditingFav(item) : undefined}
+                                    onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
+                                    key={i}
+                                />)
+                        }
+                        { }
+                    </TKUIReorderList>
+                </div>
+            </TKUICard>
+            {editingFav && <TKUIEditFavouriteView value={editingFav} onRequestClose={handleEditClose} />}
+        </>
     );
 }
 

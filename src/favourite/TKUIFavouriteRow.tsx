@@ -1,11 +1,12 @@
 import * as React from "react";
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import Favourite from "../model/favourite/Favourite";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { tKUIFavouriteRowDefaultStyle } from "./TKUIFavouriteRow.css";
 import { ReactComponent as IconFavLoc } from "../images/favourite/ic-favourite-location.svg";
 import { ReactComponent as IconFavTrip } from "../images/favourite/ic-favourite-trip.svg";
+import { ReactComponent as IconInfo } from "../images/ic-info.svg";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
@@ -13,13 +14,16 @@ import LocationUtil from "../util/LocationUtil";
 import { ReactComponent as IconRemove } from '../images/ic-cross.svg';
 import { ReactComponent as IconDrag } from '../images/ic-drag-handle.svg';
 import WaiAriaUtil from "../util/WaiAriaUtil";
-import StopLocation from "../model/StopLocation";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import classNames from "classnames";
+import UIUtil from "../util/UIUtil";
+import TKUIRow from "../options/TKUIRow";
+import { genStylesJSS } from "..";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: Favourite;
     onClick?: () => void;
+    onEdit?: () => void;
     onRemove?: () => void;
     onHandleMouseDown?: React.MouseEventHandler;
 }
@@ -37,23 +41,21 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUIFavouriteRow"
 };
 const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
-    const { value, onClick, onRemove, onHandleMouseDown, classes, t, theme } = props;
-    const [confirmRemove, setConfirmRemove] = React.useState(false);
+    const { value, onClick, onEdit, onRemove, onHandleMouseDown, classes, t, theme } = props;
     let text: string;
     let icon: JSX.Element;
     if (value instanceof FavouriteStop) {
-        icon =
+        icon = value.stop ?
             <TKUIModeLocationIcon
-                location={value.stop ?? new StopLocation()}
+                location={value.stop}
                 style={{
                     width: '40px',
                     height: '40px',
-                    padding: '6px',
-                    // background: value.stop && !isRemoteIcon(value.stop.modeInfo) ? black(1) : undefined
+                    padding: '6px'
                 }}
                 isDarkMode={theme.isDark}
-            />;
-        text = value.name ?? LocationUtil.getMainText(value.stop ?? new StopLocation(), t);
+            /> : <div className={classes.loadingFav} />;
+        text = value.name ?? (value.stop ? LocationUtil.getMainText(value.stop, t) : "");
     } else if (value instanceof FavouriteLocation) {
         icon = <IconFavLoc />;
         text = `To ${value.name ?? LocationUtil.getMainText(value.location, t)}`;
@@ -63,29 +65,29 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
         text = favTrip.name ?? (LocationUtil.getMainText(favTrip.startLocation, t) + " to " + LocationUtil.getMainText(favTrip.endLocation, t));
     }
     const removeBtn = onRemove &&
-        <>
-            {confirmRemove ?
-                <div
-                    className={classes.confirmRemove}
-                    onClick={(e) => {
-                    }}
-                >
-                    Delete
-                </div> :
-                <button className={classes.removeBtn}
-                    onClick={(e: any) => {
-                        setConfirmRemove(true);
-                        // (window as any).addEventListener("click", () => setConfirmRemove(false), { once: true });
-                        // It doesn't work since a lot of components are listening to the click event and stop propagation, e.g. Favourites card.
-                        // TODO: Maybe put just two buttons Delete | Cancel, wich slide to the left displacing all the row (transform animation?)
-                        (window as any).addEventListener("click", () => setConfirmRemove(false));
-                        // onRemove!();
-                        e.stopPropagation();
-
-                    }}>
-                    <IconRemove />
-                </button>}
-        </>;
+        <button className={classes.removeBtn}
+            onClick={(e: any) => {
+                UIUtil.confirmMsg({
+                    title: "Delete",
+                    message: "Are you sure you want to delete this favourite?",
+                    onConfirm: () => {
+                        onRemove!();
+                    }
+                });
+                e.stopPropagation();
+            }}>
+            <IconRemove />
+        </button>;
+    const infoBtn = onEdit &&
+        <button
+            className={classes.editBtn}
+            onClick={e => {
+                onEdit!();
+                e.stopPropagation();
+            }}
+        >
+            <IconInfo />
+        </button>;
     return (
         <div
             className={classNames(classes.main, onClick && classes.pointer)}
@@ -100,9 +102,16 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
             <div className={classNames(classes.iconPanel, value instanceof FavouriteLocation || value instanceof FavouriteTrip ? classes.iconBackground : "")}>
                 {icon}
             </div>
-            <span className={classes.text}>
-                {text}
-            </span>
+            <TKUIRow
+                title={text}
+                subtitle={(value instanceof FavouriteStop && value.stop?.services) ? value.stop?.services : undefined}
+                styles={{
+                    main: overrideClass({
+                        ...genStylesJSS.grow
+                    })
+                }}
+            />
+            {infoBtn}
             {removeBtn}
         </div>
     );

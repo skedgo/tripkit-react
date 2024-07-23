@@ -133,7 +133,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSidebar: false,
             showTransportSettings: false,
             mapView: false,
-            showFavourites: false,
+            showFavourites: true,
             showLocationDetailsFor: undefined,
             fadeOutHome: false,
             fadeOutHomeBounce: false,
@@ -805,6 +805,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             }
             if (e.shiftKey && e.metaKey && e.key === "b") {
                 this.setState({ showMyBookings: true });
+                e.preventDefault();
+            }
+            if (e.shiftKey && e.metaKey && e.key === "f") {
+                this.setState({ showFavourites: true });
                 e.preventDefault();
             }
         });

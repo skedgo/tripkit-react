@@ -9,8 +9,7 @@ class FavouriteStop extends Favourite {
     @JsonProperty('stopCode', String, true)
     public stopCode: string = "";
 
-    // TODO: remove initialization, just leave undefined, which means that it needs to be fetched. See usage.
-    public stop?: StopLocation = new StopLocation();
+    public stop?: StopLocation;
 
     public static create(stop: StopLocation): FavouriteStop {
         const instance = new FavouriteStop();
