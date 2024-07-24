@@ -6,10 +6,9 @@ import TKUserAccount from "./TKUserAccount";
 import LocalStorageItem from "../data/LocalStorageItem";
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { IAccountContext, SignInStatus, TKAccountContext } from "./TKAccountContext";
-import Util from '../util/Util';
-import { OptionsContext } from '../options/OptionsProvider';
 import { Amplify, ResourcesConfig } from 'aws-amplify';
-import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, getCurrentUser, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
+import { signIn, SignInInput, fetchUserAttributes, FetchUserAttributesOutput, fetchAuthSession, signInWithRedirect, signOut, SignOutInput } from '@aws-amplify/auth';
+import UIUtil from '../util/UIUtil';
 
 class AuthStorage extends LocalStorageItem<TKAuthResponse> {
     private static _instance: AuthStorage;
@@ -86,8 +85,6 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, authTo
                 }
             }
             setAuthTokens(accessToken ? { accessToken: accessToken, idToken, refreshToken } : undefined);
-        } catch (error) {
-            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -148,7 +145,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 })
                 .catch((error) => {
                     console.log(error);
-                    // setStatus(SignInStatus.signedOut);
+                    UIUtil.errorMsg(error)
                     logoutHandler();
                 });
         }
@@ -177,6 +174,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 .catch((error) => {
                     // E.g. {"usererror":true,"errorCode":447,"title":"Invalid userToken","error":"You need to sign in first"}
                     console.log(error);
+                    UIUtil.errorMsg(error);
                     logoutHandler();
                 });
         }

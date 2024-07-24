@@ -32,7 +32,7 @@ class NetworkUtil {
                             tkError.subtitle = jsonData.subtitle;
                             throw tkError;
                         } else {
-                            return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
+                            return Promise.reject(new TKError(response.statusText ? response.statusText : response.status));
                         }
                     })
             } else {

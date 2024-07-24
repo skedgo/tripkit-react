@@ -133,7 +133,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             showSidebar: false,
             showTransportSettings: false,
             mapView: false,
-            showFavourites: true,
+            showFavourites: false,
             showLocationDetailsFor: undefined,
             fadeOutHome: false,
             fadeOutHomeBounce: false,

@@ -89,7 +89,9 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         }
     }
     useEffect(() => {
-        requestFavourites();
+        if (process.env.NODE_ENV === "development") {   // TODO: remove
+            requestFavourites();
+        }
     }, [status]);
 
     async function addFavouriteHandler(value: Favourite) {
