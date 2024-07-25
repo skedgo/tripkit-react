@@ -21,22 +21,20 @@ class NetworkUtil {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json()
-                    .catch(_e => {  // E.g. if "content-type" header is "application/json", but the body is actually not a valid json.                    
-                        throw new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false);
+                    .catch(_e => {  // E.g. if "content-type" header is "application/json", but the body is actually not a valid json.                                            
+                        throw TKError.create({ message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), code: response.status, usererror: false, response });
                     })
                     .then(jsonData => {
                         if (jsonData.error || jsonData.errorCode) {    // To contemplate new error format, which comes with fields `errorCode`, `title`, `subtitle`, and `userError`.
                             const messageElems = jsonData.error ? [jsonData.error] : [jsonData.title, jsonData.subtitle].filter(text => text);
-                            const tkError = new TKError(messageElems.join(". "), jsonData.errorCode?.toString(), jsonData.usererror);
-                            tkError.title = jsonData.title;
-                            tkError.subtitle = jsonData.subtitle;
+                            const tkError = TKError.create({ message: messageElems.join(". "), code: jsonData.errorCode?.toString(), usererror: jsonData.usererror, response });
                             throw tkError;
                         } else {
-                            return Promise.reject(new TKError(response.statusText ? response.statusText : response.status));
+                            return Promise.reject(TKError.create({ message: response.statusText ? response.statusText : response.status, code: response.status, usererror: false, response }));
                         }
                     })
             } else {
-                return Promise.reject(new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false));
+                return Promise.reject(TKError.create({ message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), code: response.status, usererror: false, response }));
             }
         }
     }
@@ -50,9 +48,7 @@ class NetworkUtil {
         }
         return response.json().then(jsonData => {
             if (jsonData.error) {
-                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
-                tkError.title = jsonData.title;
-                tkError.subtitle = jsonData.subtitle;
+                const tkError = TKError.create({ message: jsonData.error, code: jsonData.errorCode ? jsonData.errorCode.toString() : undefined, usererror: jsonData.usererror, response, title: jsonData.title, subtitle: jsonData.subtitle });
                 throw tkError;
             }
             return jsonData;
@@ -81,9 +77,7 @@ class NetworkUtil {
         }).then(content => {
             if (typeof content === 'object' && content?.error) {
                 const jsonData = content;
-                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
-                tkError.title = jsonData.title;
-                tkError.subtitle = jsonData.subtitle;
+                const tkError = TKError.create({ message: jsonData.error, code: jsonData.errorCode ? jsonData.errorCode.toString() : undefined, usererror: jsonData.usererror, response });
                 throw tkError;
             }
             return content;
@@ -191,7 +185,17 @@ class NetworkUtil {
 
     public static async fetch(url: string, options: any, useCache: boolean = true, cacheRefreshCallback: (response: any) => void = () => { }): Promise<any> {
         if (!useCache) {
-            return fetch(url, options).then(NetworkUtil.fetchApiCallback);
+            try {
+                const response = await fetch(url, options);
+                return this.fetchApiCallback(response);
+            } catch (e) {
+                if (e instanceof TKError) {
+                    throw e;
+                }
+                throw TKError.create({
+                    message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), usererror: false, requestUrl: url
+                });
+            }
         }
         options.headers = options.headers || {};
         const fetchRequest = new Request(url, options);

@@ -90,7 +90,23 @@ class UIUtil {
             buttons,
             message: messageElems.join(". "),
             closeOnEscape: true,
-            closeOnClickOutside: true
+            closeOnClickOutside: true,
+            //     customUI: ({ title, message, onClose }) =>
+            //         <div className={classNames(genClassNames.flex, genClassNames.column)}>
+            //             <div>
+            //                 {title}
+            //             </div>
+            //             <div>
+            //                 {message}
+            //             </div>
+            //             {e.response &&
+            //                 <div>
+            //                     {"Response url: " + e.response.url}
+            //                 </div>}
+            //             <div>
+            //                 <button onClick={onClose}>{i18n.t("OK")}</button>
+            //             </div>
+            //         </div>
         });
     }
 

@@ -499,7 +499,8 @@ const otherStyles = {
         },
         '.react-confirm-alert-body': {
             boxSizing: 'border-box',
-            width: '100%!important'
+            width: '100%!important',
+            maxWidth: '1000px'
         }
     }
 };
