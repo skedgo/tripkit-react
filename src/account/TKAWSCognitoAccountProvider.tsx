@@ -37,7 +37,7 @@ interface AuthTokens {
     refreshToken?: string;
 }
 
-function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, authTokens: AuthTokens | undefined, loginWithUserPass: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
+function useAWSCognito(amplifyConfig: ResourcesConfig): { isLoading: boolean, isAuthenticated: boolean, authTokens: AuthTokens | undefined, loginWithUserPass: (input: SignInInput) => Promise<void>, loginWithRedirect: () => void, logout: (input?: SignOutInput) => Promise<void> } {
     const [isLoading, setIsLoading] = useState(true);
     const [authTokens, setAuthTokens] = useState<AuthTokens | undefined>(undefined);
     const isAuthenticated = !!authTokens;
@@ -48,7 +48,8 @@ function useAWSCognito(): { isLoading: boolean, isAuthenticated: boolean, authTo
 
     async function loginWithRedirect() {
         setIsLoading(true);
-        await signInWithRedirect();
+        const defaultIdentityProvider = amplifyConfig.Auth?.Cognito?.loginWith?.oauth?.providers?.[0];
+        await signInWithRedirect(defaultIdentityProvider ? { provider: defaultIdentityProvider } : undefined);
         return await fetchSession();
     };
 
@@ -113,7 +114,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
     const { amplifyConfig, requestUserToken, requestUserProfile, withPopup } = props;
     useMemo(() => Amplify.configure(amplifyConfig), []);
 
-    const { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout } = useAWSCognito();
+    const { isLoading, isAuthenticated, authTokens, loginWithUserPass, loginWithRedirect, logout } = useAWSCognito(amplifyConfig);
     const [userToken, setUserToken] = useState<string | undefined>(AuthStorage.instance.get().userToken);
     // const [userToken, setUserToken] = useState<string | undefined>(undefined);  // FOR testing
     const initStatus = (isLoading || isAuthenticated) ? SignInStatus.loading : SignInStatus.signedOut;
@@ -145,8 +146,7 @@ const AWSCognitoToTKAccount: React.FunctionComponent<{
                 })
                 .catch((error) => {
                     console.log(error);
-                    UIUtil.errorMsg(error)
-                    logoutHandler();
+                    UIUtil.errorMsg(error, { onClose: () => logoutHandler() });
                 });
         }
     }, [authTokens, userToken]);
