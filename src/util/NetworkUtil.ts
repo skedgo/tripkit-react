@@ -211,6 +211,19 @@ class NetworkUtil {
         delete options.headers["x-fetch-policy"];
         delete options.headers["x-cache-control"];
         delete options.headers["x-date"];
+        // Alternative behaviour when "cache-and-network" always return immediatly with caché result, with undefined if it's a miss, and the network
+        // call on the callback.
+        // if (cacheAndNetwork) {
+        //     fetch(url, options)
+        //         .then(response => {
+        //             cache.put(fetchRequest, response.clone());
+        //             return response;
+        //         })
+        //         .then(NetworkUtil.fetchApiCallback)
+        //         .then(cacheRefreshCallback)
+        //         .catch(e => { });
+        //     return cacheResponse && !NetworkUtil.isExpired(fetchRequest) ? NetworkUtil.fetchApiCallback(cacheResponse) : undefined;
+        // }
         if (cacheResponse && !NetworkUtil.isExpired(fetchRequest) && cacheAndNetwork) {
             fetch(url, options)
                 .then(response => {

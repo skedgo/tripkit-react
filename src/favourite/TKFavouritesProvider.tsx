@@ -12,6 +12,8 @@ import StopLocation from "../model/StopLocation";
 import { moveFromTo } from "../util_components/TKUIReorderList";
 
 export interface IFavouritesContext {
+    isLoadingFavourites: boolean;
+    isSupportedFavourites: boolean;
     favouriteList: Favourite[];
     recentList: Favourite[];
     onAddFavourite: (value: Favourite) => void;
@@ -20,9 +22,12 @@ export interface IFavouritesContext {
     onReorderFavourite: (from: number, to: number) => void;
     onAddRecent: (value: Favourite) => void;
     onRemoveRecent: (value: Favourite) => void;
+    onRefreshFavourites: (props?: { silent?: boolean, refreshStops?: boolean }) => void;
 }
 
 export const TKFavouritesContext = React.createContext<IFavouritesContext>({
+    isLoadingFavourites: false,
+    isSupportedFavourites: false,
     favouriteList: [],
     recentList: [],
     onAddFavourite: (value: Favourite) => { },
@@ -30,7 +35,8 @@ export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     onAddRecent: (value: Favourite) => { },
     onRemoveFavourite: (value: Favourite) => { },
     onRemoveRecent: (value: Favourite) => { },
-    onReorderFavourite: (from: number, to: number) => { }
+    onReorderFavourite: (from: number, to: number) => { },
+    onRefreshFavourites: () => { }
 });
 
 interface IProps {
@@ -46,11 +52,36 @@ function deserialize(itemJson: any): Favourite {
 
 const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) => {
     const { children } = props;
+    const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.
+    function isSupportedDefault({ signInStatus }: { signInStatus: SignInStatus }) {
+        return signInStatus === SignInStatus.signedIn;
+    }
     const [isLoading, setIsLoading] = useState<boolean>(true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
+    const [isSupported, setIsSupported] = useState<boolean>(isSupportedDefault({ signInStatus: status }));
     const [favourites, setFavourites] = useState<Favourite[]>([]);
     const [recents, setRecents] = useState<Favourite[]>(FavouritesData.recInstance.get());
-    const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.    
-    async function requestFavourites() {
+    useEffect(() => {
+        // if (process.env.NODE_ENV === "development") {   // TODO: remove
+        refreshFavourites();
+        // }
+        const isSupportedFavourites = isSupportedDefault({ signInStatus: status });
+        setIsSupported(isSupportedFavourites);
+        let refreshInterval
+        if (isSupportedFavourites) {
+            refreshInterval = setInterval(() => refreshFavourites({ silent: true }), 24 * 60 * 60 * 1000);   // Once a day.
+        }
+        return () => {
+            if (refreshInterval) {
+                clearTimeout(refreshInterval);
+            }
+        }
+    }, [status]);
+
+    async function refreshFavourites({ silent, refreshStops }: { silent?: boolean, refreshStops?: boolean } = {}) {
+        if (!silent) {
+            setIsLoading(true);
+            setFavourites([]);
+        }
         if (status === SignInStatus.signedIn) {
             const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
             const favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
@@ -59,6 +90,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             setIsLoading(false);
             await Promise.all(favouritesResult.map(async fav => {
                 if (!(fav instanceof FavouriteStop)) return;
+                if (fav.stop && !refreshStops) return;
                 try {
                     const { stop: stopJson } = await TripGoApi.fetchAPI(
                         TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
@@ -66,39 +98,39 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                             method: "GET",
                             tkcache: true,
                             cacheRefreshCallback: (response: any) => {
-                                fav.stop = Util.deserialize(stopJson, StopLocation);
-                                setFavourites([...favouritesResult]);
+                                fav.stop = Util.deserialize(response.stop, StopLocation);
+                                setFavourites((favourites) => [...favourites]);
                             },
                             headers: {
-                                "x-fetch-policy": "cache-and-network",
+                                "x-fetch-policy": refreshStops ? "cache-and-network" : "cache-first",
                                 "x-cache-control": `max-age=${24 * 60 * 60}`,
                                 "x-date": new Date().toUTCString()
                             }
                         }
                     );
-                    fav.stop = Util.deserialize(stopJson, StopLocation);
+                    if (stopJson) {
+                        fav.stop = Util.deserialize(stopJson, StopLocation);
+                        setFavourites(favourites => [...favourites]); // Update each fav stop immediatly when the request arrives, so those that hit caché are displayed immediatly in the UI.
+                    }
                     return;
                 } catch (error) {
                     console.log(error);
                     return;
                 }
             }));
-            setFavourites([...favouritesResult]);
+            setFavourites([...favouritesResult]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.            
         } else {
             setFavourites([]);
         }
     }
-    useEffect(() => {
-        if (process.env.NODE_ENV === "development") {   // TODO: remove
-            requestFavourites();
-        }
-    }, [status]);
 
     async function addFavouriteHandler(value: Favourite) {
         value.order = favourites.length;
         value.uuid = uuidv4();
         const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
-        setFavourites([...favourites, addedFav]);
+        // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
+        // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
+        setFavourites([...favourites, value]);
     }
 
     async function updateFavouriteHandler(value: Favourite) {
@@ -140,6 +172,8 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     return (
         <TKFavouritesContext.Provider
             value={{
+                isLoadingFavourites: isLoading,
+                isSupportedFavourites: isSupported,
                 favouriteList: favourites,
                 recentList: recents,
                 onAddFavourite: addFavouriteHandler,
@@ -147,7 +181,8 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 onAddRecent: (value: Favourite) => { FavouritesData.recInstance.add(value) },
                 onRemoveFavourite: removeFavouriteHandler,
                 onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) },
-                onReorderFavourite: reorderFavouriteHandler
+                onReorderFavourite: reorderFavouriteHandler,
+                onRefreshFavourites: refreshFavourites
             }}>
             {children}
         </TKFavouritesContext.Provider>

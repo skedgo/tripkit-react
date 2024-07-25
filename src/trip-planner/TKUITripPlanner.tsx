@@ -64,6 +64,7 @@ import TKUIVehicleAvailability from "../location/TKUIVehicleAvailability";
 import ModeLocation from "../model/location/ModeLocation";
 import LocationsResult from "../model/location/LocationsResult";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
+import { IFavouritesContext, TKFavouritesContext } from "../favourite/TKFavouritesProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -75,7 +76,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext {
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext {
     directionsView: boolean,
     onDirectionsView: (onDirectionsView: boolean) => void
 }
@@ -879,6 +880,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (!this.isShowTimetable(prevProps) && this.isShowTimetable() // Start displaying timetable
             || (this.isShowTimetable() && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
             || !prevState.showLocationDetailsFor && this.state.showLocationDetailsFor // Start displaying location details
+            || prevProps.isSupportedFavourites && !this.props.isSupportedFavourites // Favourites became unsupported (e.g. on signout)
         ) {
             this.setState({ showFavourites: false });
         }
@@ -964,6 +966,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
         const optionsContext = useContext(OptionsContext);
         const routingContext = useContext(RoutingResultsContext);
         const serviceContext = useContext(ServiceResultsContext);
+        const favouritesContext = useContext(TKFavouritesContext);
         return (
             <>
                 {props.children!({
@@ -973,7 +976,8 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                     ...serviceContext,
                     ...viewportProps,
                     ...optionsContext,
-                    ...accessibilityContext
+                    ...accessibilityContext,
+                    ...favouritesContext
                 })}
             </>
         );

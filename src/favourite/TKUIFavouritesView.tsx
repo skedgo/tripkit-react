@@ -12,6 +12,8 @@ import { TKUISlideUpOptions } from "../card/TKUISlideUp";
 import TKUIReorderList from "../util_components/TKUIReorderList";
 import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
 import FavouriteStop from "../model/favourite/FavouriteStop";
+import TKLoading from "../card/TKLoading";
+import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -36,7 +38,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
-    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite } = props;
+    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
     if (process.env.NODE_ENV === "development") {
@@ -67,6 +69,15 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 main: overrideClass(injectedStyles.editBtn)
                             }}
                         />
+                        <button className={classes.refresh}
+                            onClick={() => {
+                                // if (resultsRef.current) {
+                                //     resultsRef.current.scrollTop = 0;
+                                // };
+                                onRefreshFavourites({ refreshStops: true });
+                            }}>
+                            <IconRefresh />
+                        </button>
                     </div>}
                 onRequestClose={onRequestClose}
                 slideUpOptions={slideUpOptions}
@@ -86,8 +97,11 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                     key={i}
                                 />)
                         }
-                        { }
                     </TKUIReorderList>
+                    {isLoadingFavourites &&
+                        <div className={classes.loadingPanel}>
+                            <TKLoading />
+                        </div>}
                 </div>
             </TKUICard>
             {editingFav && <TKUIEditFavouriteView value={editingFav} onRequestClose={handleEditClose} />}
