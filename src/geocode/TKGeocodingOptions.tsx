@@ -21,6 +21,7 @@ import LatLng from "../model/LatLng";
 import TKMapViewport from "../map/TKMapViewport";
 import Region from "../model/region/Region";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import { staticFavouriteData } from "../favourite/TKFavouritesProvider";
 
 export const TKGeocodingOptionsForDoc = (props: Partial<TKGeocodingOptions>) => null;
 TKGeocodingOptionsForDoc.displayName = 'TKGeocodingOptions';
@@ -78,13 +79,15 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
 
     const favToLocations = (favourites: Favourite[], recent: boolean) => {
         const locations = favourites
-            .map((favourite: Favourite) => Util.iAssign(
-                // TODO: for trips it's just adding to, see if should add also from.
-                favourite instanceof FavouriteStop && favourite.stop ? favourite.stop :
-                    favourite instanceof FavouriteLocation ? favourite.location : (favourite as FavouriteTrip).endLocation,
-                { // To avoid mutating original location.
-                    source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites
-                }));
+            .filter(favourite => favourite instanceof FavouriteStop ? favourite.stop : true)    // Filter out uninstantiated favourite stops
+            .map((favourite: Favourite) =>
+                Util.iAssign(
+                    // TODO: for trips it's just adding to, see if should add also from.
+                    favourite instanceof FavouriteStop ? favourite.stop! :
+                        favourite instanceof FavouriteLocation ? favourite.location : (favourite as FavouriteTrip).endLocation,
+                    { // To avoid mutating original location.
+                        source: recent ? TKDefaultGeocoderNames.recent : TKDefaultGeocoderNames.favourites
+                    }));
         // TODO: remove redundant / analogous favourites, which may happen since they come
         // from different sources. Probably use the analogResults function below, but
         // before overriding source to that of Favourite / Recent.
@@ -110,9 +113,9 @@ function getDefaultGeocodingOptions(): TKGeocodingOptions {
         resultsLimit: 5,
         renderIcon: () => <IconFavourite />
     });
-    const favLocations = favToLocations(FavouritesData.instance.get(), false);
+    const favLocations = favToLocations(staticFavouriteData.values, false);
     favouritesGeocoder.setValues(favLocations);
-    FavouritesData.instance.addChangeListener((update: Favourite[]) =>
+    staticFavouriteData.addChangeListener((update: Favourite[]) =>
         favouritesGeocoder.setValues(favToLocations(update, false)));
 
     const compare = (l1: Location, l2: Location, query: string) => {

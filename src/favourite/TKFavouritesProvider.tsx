@@ -10,6 +10,7 @@ import FavouriteTrip from "../model/favourite/FavouriteTrip";
 import { v4 as uuidv4 } from 'uuid';
 import StopLocation from "../model/StopLocation";
 import { moveFromTo } from "../util_components/TKUIReorderList";
+import { EventEmitter, EventSubscription } from "fbemitter";
 
 export interface IFavouritesContext {
     isLoadingFavourites: boolean;
@@ -46,9 +47,21 @@ interface IProps {
 // TODO: do it with a custom converter of json2typescript.
 function deserialize(itemJson: any): Favourite {
     return itemJson.type === "stop" ? Util.deserialize(itemJson, FavouriteStop) :
-        itemJson.type === "location" ? Util.deserialize(itemJson, FavouriteLocation) :
-            Util.deserialize(itemJson, FavouriteTrip)
+        itemJson.type === "trip" ? Util.deserialize(itemJson, FavouriteTrip) :
+            Util.deserialize(itemJson, FavouriteLocation);  // Home and work favs falls under FavouriteLocation.
 }
+
+const eventEmitter: EventEmitter = new EventEmitter();
+function fireChangeEvent(update: Favourite[]) {
+    staticFavouriteData.values = update;
+    eventEmitter.emit('change', update);
+}
+export const staticFavouriteData: { values: Favourite[], addChangeListener: (callback: (update: Favourite[]) => void) => EventSubscription } = {
+    values: [],
+    addChangeListener(callback) {
+        return eventEmitter.addListener('change', callback);
+    }
+};
 
 const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) => {
     const { children } = props;
@@ -76,6 +89,10 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             }
         }
     }, [status]);
+
+    useEffect(() => {
+        fireChangeEvent(favourites);
+    }, [favourites])
 
     async function refreshFavourites({ silent, refreshStops }: { silent?: boolean, refreshStops?: boolean } = {}) {
         if (!silent) {
