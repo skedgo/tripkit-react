@@ -6,6 +6,8 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { tKUIFavouriteRowDefaultStyle } from "./TKUIFavouriteRow.css";
 import { ReactComponent as IconFavLoc } from "../images/favourite/ic-favourite-location.svg";
 import { ReactComponent as IconFavTrip } from "../images/favourite/ic-favourite-trip.svg";
+import { ReactComponent as IconHome } from "../images/favourite/ic-home.svg";
+import { ReactComponent as IconWork } from "../images/favourite/ic-work.svg";
 import { ReactComponent as IconInfo } from "../images/ic-info.svg";
 import TKUIModeLocationIcon from "../map/TKUIModeLocationIcon";
 import FavouriteStop from "../model/favourite/FavouriteStop";
@@ -57,7 +59,8 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
             /> : <div className={classes.loadingFav} />;
         text = value.name ?? (value.stop ? LocationUtil.getMainText(value.stop, t) : "");
     } else if (value instanceof FavouriteLocation) {
-        icon = <IconFavLoc />;
+        icon = value.type === "home" ? <IconHome /> :
+            value.type === "work" ? <IconWork /> : <IconFavLoc />;
         text = `To ${value.name ?? LocationUtil.getMainText(value.location, t)}`;
     } else {
         const favTrip = value as FavouriteTrip;

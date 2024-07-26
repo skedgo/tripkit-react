@@ -9,7 +9,7 @@ class Favourite {
     @JsonProperty('uuid', String, true)
     public uuid: string = "";
     @JsonProperty('type', String, true)
-    public type: "stop" | "trip" | "location" = "location";
+    public type: "stop" | "trip" | "location" | "home" | "work" = "location";
 
     constructor() {
 
