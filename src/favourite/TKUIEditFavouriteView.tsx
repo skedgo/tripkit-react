@@ -182,7 +182,7 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
             <div className={classes.main}>
                 {content}
                 <div className={classes.buttonsPanel}>
-                    <TKUIButton text={t("Cancel")} onClick={() => onRequestClose(update)} type={TKUIButtonType.SECONDARY} />
+                    <TKUIButton text={t("Cancel")} onClick={() => onRequestClose()} type={TKUIButtonType.SECONDARY} />
                     <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={value instanceof FavouriteTrip ? false : !searchValue} />
                 </div>
                 {isWaiting &&

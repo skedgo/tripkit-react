@@ -17,6 +17,7 @@ import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import UIUtil from "../util/UIUtil";
 import { TKError } from "../error/TKError";
+import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -80,6 +81,13 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 main: overrideClass(injectedStyles.editBtn)
                             }}
                         />
+                        {/* <TKUIButton text={"Add"}
+                            onClick={() => setEditingFav(FavouriteLocation.create())}
+                            type={TKUIButtonType.PRIMARY_LINK}
+                            styles={{
+                                main: overrideClass(injectedStyles.editBtn)
+                            }}
+                        /> */}
                         <button className={classes.refresh}
                             onClick={() => {
                                 // if (resultsRef.current) {
