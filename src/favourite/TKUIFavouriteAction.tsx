@@ -10,6 +10,7 @@ import { overrideClass } from "../jss/StyleHelper";
 import { TKFavouritesContext } from "./TKFavouritesProvider";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
+import Util from "../util/Util";
 
 interface IProps {
     favourite: Favourite;
@@ -34,8 +35,7 @@ const TKUIFavouriteAction: React.FunctionComponent<IProps> = (props) => {
                 return favourite.location.getKey() === (fav as FavouriteLocation).location.getKey();
             }
             if (favourite instanceof FavouriteTrip) {
-                // TODO
-                return false;
+                return Util.deepEqualJSON(favourite.pattern, (fav as FavouriteTrip).pattern);
             }
         }) ?? false;
     }

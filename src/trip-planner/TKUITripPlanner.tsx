@@ -170,6 +170,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onShowBookingTrip = this.onShowBookingTrip.bind(this);
         this.pushCardView = this.pushCardView.bind(this);
         this.popCardView = this.popCardView.bind(this);
+        this.onFavouriteTripQuery = this.onFavouriteTripQuery.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -193,6 +194,59 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.setState({ showTransportSettings: true });
     }
 
+    private async onFavouriteTripQuery(favourite: FavouriteTrip) {
+        const segmentsCopy = JSON.parse(JSON.stringify(favourite.pattern));
+        segmentsCopy[0].startTime = DateTimeUtil.getNow().valueOf() / 1000;
+        const requestBody = {
+            config: { v: TripGoApi.apiVersion },
+            segments: segmentsCopy
+        };
+        try {
+            this.props.onWaitingStateLoad(true);
+            const routingResults = await TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody);
+            this.props.onWaitingStateLoad(false);
+            if (this.state.showFavourites) {
+                this.setState({ showFavourites: false });
+            }
+            const trips = routingResults.groups;
+            const selectedTrip = trips[0];
+            if (trips && trips.length > 0) {
+                // Need to do this since TKUIMxMView doesn't render if there's no selected trip.
+                // TODO: consider removing that limitation.
+                this.props.onSelectedTripChange(selectedTrip);
+                this.pushCardView({
+                    viewId: "RELATED_TRIP",
+                    renderCard: () =>
+                        <TKUITripOverviewView
+                            value={selectedTrip}
+                            onTripSegmentSelected={this.props.setSelectedTripSegment}
+                            cardProps={{
+                                onRequestClose: () => {
+                                    this.popCardView();
+                                    this.props.onSelectedTripChange(undefined);
+                                },
+                                slideUpOptions: {
+                                    position: this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
+                                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                    draggable: true,
+                                    modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                    modalMiddle: { top: 55, unit: '%' },
+                                    modalDown: { top: 90, unit: '%' }
+                                },
+                                presentation: CardPresentation.SLIDE_UP
+                            }}
+                        />,
+                    mapProps: {
+                        trip: selectedTrip,
+                        readonly: true
+                    }
+                })
+            }
+        } catch (e) {
+            this.props.onWaitingStateLoad(false, new TKError("Error loading trip", "", false));
+        }
+    }
+
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
             this.props.onQueryUpdate({ to: favourite.stop });
@@ -201,8 +255,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.props.onQueryUpdate({ from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW });
             this.props.onDirectionsView(true);
         } else if (favourite instanceof FavouriteTrip) {
-            this.props.onQueryUpdate({ from: favourite.from, to: favourite.to, timePref: TimePreference.NOW });
-            this.props.onDirectionsView(true);
+            this.onFavouriteTripQuery(favourite);
         }
         FavouritesData.recInstance.add(favourite);
     }
