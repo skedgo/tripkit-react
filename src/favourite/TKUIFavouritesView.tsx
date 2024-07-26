@@ -14,6 +14,9 @@ import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKLoading from "../card/TKLoading";
 import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import UIUtil from "../util/UIUtil";
+import { TKError } from "../error/TKError";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -41,6 +44,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     if (process.env.NODE_ENV === "development") {
         useEffect(() => {   // TODO: remove, just for development.
             if (favouriteList.length !== 0) {
@@ -49,11 +53,18 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
             }
         }, [favouriteList]);
     }
-    const handleEditClose = (update?: Favourite) => {
-        if (update) {
-            props.onUpdateFavourite(update);
-        }
+    const handleEditClose = async (update?: Favourite) => {
         setEditingFav(undefined);
+        if (update) {
+            try {
+                onWaitingStateLoad(true);
+                await props.onUpdateFavourite(update);
+            } catch (e) {
+                UIUtil.errorMsg(new TKError("Failed to update favourite."))
+            } finally {
+                onWaitingStateLoad(false);
+            }
+        }
     };
     return (
         <>

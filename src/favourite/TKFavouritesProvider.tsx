@@ -18,7 +18,7 @@ export interface IFavouritesContext {
     favouriteList: Favourite[];
     recentList: Favourite[];
     onAddFavourite: (value: Favourite) => void;
-    onUpdateFavourite: (value: Favourite) => void;
+    onUpdateFavourite: (value: Favourite) => Promise<Favourite[]>;
     onRemoveFavourite: (value: Favourite) => void;
     onReorderFavourite: (from: number, to: number) => void;
     onAddRecent: (value: Favourite) => void;
@@ -32,7 +32,7 @@ export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     favouriteList: [],
     recentList: [],
     onAddFavourite: (value: Favourite) => { },
-    onUpdateFavourite: (value: Favourite) => { },
+    onUpdateFavourite: (value: Favourite) => { return Promise.resolve([]) },
     onAddRecent: (value: Favourite) => { },
     onRemoveFavourite: (value: Favourite) => { },
     onRemoveRecent: (value: Favourite) => { },
@@ -100,11 +100,17 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             setFavourites([]);
         }
         if (status === SignInStatus.signedIn) {
-            const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
-            const favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
-            favouritesResult.sort((a, b) => a.order - b.order);
-            setFavourites(favouritesResult);
-            setIsLoading(false);
+            let favouritesResult: Favourite[];
+            try {
+                const data = await TripGoApi.apiCall("/data/user/favorite", "GET");
+                favouritesResult = data.result?.map(favJson => deserialize(favJson)) ?? [];   // Since if no favourites result property doesn't come. TODO: re-check
+                favouritesResult.sort((a, b) => a.order - b.order);
+                setFavourites(favouritesResult);
+                setIsLoading(false);
+            } catch (e) {
+                console.log(e);
+                favouritesResult = [];
+            }
             await Promise.all(favouritesResult.map(async fav => {
                 if (!(fav instanceof FavouriteStop)) return;
                 if (fav.stop && !refreshStops) return;
@@ -141,30 +147,34 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         }
     }
 
-    async function addFavouriteHandler(value: Favourite) {
+    async function addFavouriteHandler(value: Favourite): Promise<Favourite[]> {
         value.order = favourites.length;
         value.uuid = uuidv4();
         const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
         // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
         // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
-        setFavourites([...favourites, value]);
+        const update = [...favourites, value];
+        setFavourites(update);
+        return update;
     }
 
-    async function updateFavouriteHandler(value: Favourite) {
+    async function updateFavouriteHandler(value: Favourite): Promise<Favourite[]> {
         const addedFav = deserialize(await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "PUT", Util.serialize(value)));
         const favouritesUpdate = [...favourites];
         // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
         // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
         favouritesUpdate.splice(favourites.findIndex(fav => fav.uuid === value.uuid), 1, value);
         setFavourites(favouritesUpdate);
+        return favouritesUpdate;
     }
 
-    async function removeFavouriteHandler(value: Favourite) {
+    async function removeFavouriteHandler(value: Favourite): Promise<Favourite[]> {
         console.assert(favourites.indexOf(value) !== -1);
         await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "DELETE");
         const updatedFavourites = [...favourites];
         updatedFavourites.splice(favourites.indexOf(value), 1);
         setFavourites(updatedFavourites);
+        return updatedFavourites;
     }
 
     function reorderFavouriteHandler(from: number, to: number) {

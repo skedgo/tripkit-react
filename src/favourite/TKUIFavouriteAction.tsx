@@ -6,21 +6,36 @@ import TKUIButton, { TKUIButtonProps, TKUIButtonType } from "../buttons/TKUIButt
 import Favourite from "../model/favourite/Favourite";
 import { TKI18nContext } from "../i18n/TKI18nProvider";
 import { black, colorWithOpacity, TKUITheme } from "../jss/TKUITheme";
-import { overrideClass } from "../jss/StyleHelper";
+import { overrideClass, TKUIWithClasses, withStyles } from "../jss/StyleHelper";
 import { TKFavouritesContext } from "./TKFavouritesProvider";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import Util from "../util/Util";
+import { keyFramesStyles } from "../css/GenStyle.css";
 
-interface IProps {
+interface IProps extends TKUIWithClasses<IStyle, IProps> {
     favourite: Favourite;
     vertical?: boolean;
 }
 
+type IStyle = ReturnType<typeof tKUIFavouriteActionJss>;
+
+const tKUIFavouriteActionJss = (theme: TKUITheme) => ({
+    loadingFav: {
+        '& button > div': {
+            color: 'transparent',
+            background: `linear-gradient(100deg, ${colorWithOpacity(theme.colorPrimary, .10)} 30%, ${colorWithOpacity(theme.colorPrimary, .40)} 50%, ${colorWithOpacity(theme.colorPrimary, .10)} 70%)`,
+            backgroundSize: '400%',
+            animation: keyFramesStyles.keyframes.loadingFavourite + ' 1.2s ease-in-out infinite'
+        }
+    }
+});
+
 const TKUIFavouriteAction: React.FunctionComponent<IProps> = (props) => {
 
-    const { favourite, vertical } = props;
+    const { favourite, vertical, classes } = props;
     const { favouriteList, onAddFavourite, onRemoveFavourite } = React.useContext(TKFavouritesContext);
+    const [isWaiting, setIsWaiting] = React.useState<boolean>(false);
     const { t } = React.useContext(TKI18nContext);
 
     function exists(): Favourite | false {
@@ -44,59 +59,67 @@ const TKUIFavouriteAction: React.FunctionComponent<IProps> = (props) => {
         return exists() ? <IconRemove /> : <IconAdd />;
     }
 
-    function onClick() {
+    async function onClick() {
         const existingFav = exists();
+        setIsWaiting(true);
         if (existingFav) {
-            onRemoveFavourite(existingFav);
+            await onRemoveFavourite(existingFav);
         } else {
-            onAddFavourite(favourite);
+            await onAddFavourite(favourite);
         }
+        setIsWaiting(false);
     }
 
     return (
-        <TKUIButton
-            type={vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
-            icon={renderIcon()}
-            text={exists() ? t("Remove.from.favourites") : t("Add.to.favourites")}
-            styles={(theme: TKUITheme) => ({
-                main: overrideClass({
-                    minWidth: '90px'
-                }),
-                // Needed to do this until get working dynamic style refreshes (see StyleHelper.onRefreshStyles doc).
-                secondary: defaultStyle => ({
-                    ...defaultStyle,
-                    background: (props: TKUIButtonProps) => {
-                        const exists = props.text === t("Remove.from.favourites");
-                        return exists ? colorWithOpacity(theme.colorPrimary, .08) : 'none';
-                    },
-                    border: (props: TKUIButtonProps) => {
-                        const exists = props.text === t("Remove.from.favourites");
-                        return exists ? '2px solid ' + theme.colorPrimary : '2px solid ' + black(4, theme.isDark);
-                    },
-                    '& svg': {
-                        color: (props: TKUIButtonProps) => {
+        <div className={isWaiting ? classes.loadingFav : undefined}>
+            <TKUIButton
+                type={vertical ? TKUIButtonType.SECONDARY_VERTICAL : TKUIButtonType.SECONDARY}
+                icon={renderIcon()}
+                text={exists() ? t("Remove.from.favourites") : t("Add.to.favourites")}
+                styles={(theme: TKUITheme) => ({
+                    main: overrideClass({
+                        minWidth: '90px',
+                        // ...loadingFav
+                    }),
+                    // Needed to do this until get working dynamic style refreshes (see StyleHelper.onRefreshStyles doc).
+                    secondary: defaultStyle => ({
+                        ...defaultStyle,
+                        background: (props: TKUIButtonProps) => {
+                            if (isWaiting) {
+                                return `linear-gradient(100deg, ${colorWithOpacity(theme.colorPrimary, .10)} 30%, ${colorWithOpacity(theme.colorPrimary, .20)} 50%, ${colorWithOpacity(theme.colorPrimary, .10)} 70%)`;
+                            }
                             const exists = props.text === t("Remove.from.favourites");
-                            return exists ? theme.colorPrimary : black(1, theme.isDark);
+                            return exists ? colorWithOpacity(theme.colorPrimary, .08) : 'none';
                         },
-                    },
-                    '&:hover': {
-                        ...defaultStyle['&:hover'] as any,  // Workaround until I support override (overrideClass / default => OverrideObject) of 2nd level styles.
-                        borderColor: (props: TKUIButtonProps) => {
+                        border: (props: TKUIButtonProps) => {
                             const exists = props.text === t("Remove.from.favourites");
-                            return exists ? colorWithOpacity(theme.colorPrimary, .3) : black(2, theme.isDark);
-                        }
-                    },
-                    // '&:active': {
-                    //     borderColor: colorWithOpacity(theme.colorPrimary, .12),
-                    //     backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
-                    // }
-                })
-            })}
-            onClick={onClick}
-            role={"button"}
-            aria-pressed={!!exists()}
-        />
+                            return exists ? '2px solid ' + theme.colorPrimary : '2px solid ' + black(4, theme.isDark);
+                        },
+                        '& svg': {
+                            color: (props: TKUIButtonProps) => {
+                                const exists = props.text === t("Remove.from.favourites");
+                                return exists ? theme.colorPrimary : black(1, theme.isDark);
+                            },
+                        },
+                        '&:hover': {
+                            ...defaultStyle['&:hover'] as any, // Workaround until I support override (overrideClass / default => OverrideObject) of 2nd level styles.
+                            borderColor: (props: TKUIButtonProps) => {
+                                const exists = props.text === t("Remove.from.favourites");
+                                return exists ? colorWithOpacity(theme.colorPrimary, .3) : black(2, theme.isDark);
+                            }
+                        },
+                        // '&:active': {
+                        //     borderColor: colorWithOpacity(theme.colorPrimary, .12),
+                        //     backgroundColor: colorWithOpacity(theme.colorPrimary, .08)
+                        // }                        
+                    })
+                })}
+                onClick={onClick}
+                role={"button"}
+                aria-pressed={!!exists()}
+            />
+        </div>
     );
 }
 
-export default TKUIFavouriteAction;
+export default withStyles(TKUIFavouriteAction, tKUIFavouriteActionJss);

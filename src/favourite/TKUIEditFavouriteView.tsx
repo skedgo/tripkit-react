@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from "../css/GenStyle.css";
-import { black, TKUITheme } from "../jss/TKUITheme";
+import { black, TKUITheme, white } from "../jss/TKUITheme";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKComponentConfig";
 import Favourite from "../model/favourite/Favourite";
@@ -17,6 +17,7 @@ import Location from "../model/Location";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import StopLocation from "../model/StopLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
+import TKLoading from "../card/TKLoading";
 
 const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
     main: {
@@ -59,6 +60,16 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
         '&>*:not(:first-child)': {
             marginLeft: '20px'
         }
+    },
+    loadingPanel: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter,
+        height: '100%',
+        width: '100%',
+        position: 'absolute',
+        top: '0',
+        background: white(1, theme.isDark)
     }
 });
 
@@ -78,6 +89,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { value, onRequestClose, slideUpOptions, classes, t, theme } = props;
     const [update, setUpdate] = useState<Favourite>(value);
+    const [isWaiting, setIsWaiting] = useState<boolean>(false);
     // Use this to track location input value, which can be null, in which case `Save` button is disabled.
     const [searchValue, setSearchValue] = useState<Location | null>(update instanceof FavouriteLocation ? update.location : (update instanceof FavouriteStop) ? update.stop! : null);
     const [highlightValue, setHighlightValue] = useState<Location | null>(null);
@@ -173,6 +185,10 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                     <TKUIButton text={t("Cancel")} onClick={() => onRequestClose(update)} type={TKUIButtonType.SECONDARY} />
                     <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={value instanceof FavouriteTrip ? false : !searchValue} />
                 </div>
+                {isWaiting &&
+                    <div className={classes.loadingPanel}>
+                        <TKLoading />
+                    </div>}
             </div>
         </TKUICard>
     );

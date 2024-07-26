@@ -74,13 +74,5 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
         height: '100%',
         width: '100%',
         ...genStyles.borderRadius(50, '%')
-    },
-    '@keyframes loadingFavourite': {
-        '0%': {
-            backgroundPosition: '100% 50%',
-        },
-        '100%': {
-            backgroundPosition: '0 50%',
-        }
     }
 });
