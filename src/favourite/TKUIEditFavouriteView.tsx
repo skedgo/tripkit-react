@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from "../css/GenStyle.css";
 import { black, colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
@@ -101,6 +101,10 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
     const [highlightValue, setHighlightValue] = useState<Location | null>(null);
     const mapRef = useRef<TKUIMapViewClass>(null);
     const { viewport } = useContext(RoutingResultsContext);
+    const closerCity = useMemo(() => {
+        const region = viewport && RegionsData.instance.getCloserRegion(viewport.center!);
+        return region?.cities.sort((c1, c2) => LocationUtil.distanceInMetres(c1, viewport!.center!) - LocationUtil.distanceInMetres(c2, viewport!.center!))[0];
+    }, [viewport?.center?.getKey(), !!RegionsData.instance.getRegionList()]);
     useEffect(() => {
         // OBSERVATION - mapRef.current is null after the first render. No problem in this case since we are waiting for regions
         // which causes mapRef.current to be instantiated.
@@ -170,9 +174,9 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                             }
                         }}
                         showCurrLoc={false}
-                        // TODO
-                        // bounds={defaultRegion?.bounds}
-                        // focus={defaultCityLatLng}
+                        // Maybe this is not necessary given the logic in TKUILocationBox connector.
+                        bounds={RegionsData.instance.getCoverageBounds()}
+                        focus={closerCity}
                         placeholder={"Search location or drop pin on map"}
                     />
                 </div>
