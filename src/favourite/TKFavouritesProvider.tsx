@@ -17,9 +17,9 @@ export interface IFavouritesContext {
     isSupportedFavourites: boolean;
     favouriteList: Favourite[];
     recentList: Favourite[];
-    onAddFavourite: (value: Favourite) => void;
+    onAddFavourite: (value: Favourite) => Promise<Favourite[]>;
     onUpdateFavourite: (value: Favourite) => Promise<Favourite[]>;
-    onRemoveFavourite: (value: Favourite) => void;
+    onRemoveFavourite: (value: Favourite) => Promise<Favourite[]>;
     onReorderFavourite: (from: number, to: number) => void;
     onAddRecent: (value: Favourite) => void;
     onRemoveRecent: (value: Favourite) => void;
@@ -31,10 +31,10 @@ export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     isSupportedFavourites: false,
     favouriteList: [],
     recentList: [],
-    onAddFavourite: (value: Favourite) => { },
+    onAddFavourite: (value: Favourite) => { return Promise.resolve([]) },
     onUpdateFavourite: (value: Favourite) => { return Promise.resolve([]) },
     onAddRecent: (value: Favourite) => { },
-    onRemoveFavourite: (value: Favourite) => { },
+    onRemoveFavourite: (value: Favourite) => { return Promise.resolve([]) },
     onRemoveRecent: (value: Favourite) => { },
     onReorderFavourite: (from: number, to: number) => { },
     onRefreshFavourites: () => { }

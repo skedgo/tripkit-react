@@ -70,13 +70,7 @@ const TKUIFavouriteRow: React.FunctionComponent<IProps> = (props) => {
     const removeBtn = onRemove &&
         <button className={classes.removeBtn}
             onClick={(e: any) => {
-                UIUtil.confirmMsg({
-                    title: "Delete",
-                    message: "Are you sure you want to delete this favourite?",
-                    onConfirm: () => {
-                        onRemove!();
-                    }
-                });
+                onRemove!();
                 e.stopPropagation();
             }}>
             <IconRemove />

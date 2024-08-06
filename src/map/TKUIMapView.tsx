@@ -329,6 +329,9 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+        if (this.props.reference && !Util.isFunction(this.props.reference)) {
+            (this.props.reference as MutableRefObject<TKUIMapView | null>).current = this;
+        }
     }
 
     public registerLayer(layer: MapLayer) {

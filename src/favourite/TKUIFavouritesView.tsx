@@ -14,10 +14,10 @@ import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import TKLoading from "../card/TKLoading";
 import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
+import { ReactComponent as IconAdd } from '../images/ic-plus-circle.svg';
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import UIUtil from "../util/UIUtil";
 import { TKError } from "../error/TKError";
-import FavouriteLocation from "../model/favourite/FavouriteLocation";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -45,6 +45,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
+    const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
     const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     if (process.env.NODE_ENV === "development") {
         useEffect(() => {   // TODO: remove, just for development.
@@ -59,14 +60,32 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
         if (update) {
             try {
                 onWaitingStateLoad(true);
-                await props.onUpdateFavourite(update);
+                await (isCreatingFav ? props.onAddFavourite(update) : props.onUpdateFavourite(update));
             } catch (e) {
-                UIUtil.errorMsg(new TKError("Failed to update favourite."))
+                UIUtil.errorMsg(new TKError(isCreatingFav ? "Failed to create favourite." : "Failed to update favourite."));
             } finally {
                 onWaitingStateLoad(false);
             }
         }
+        setIsCreatingFav(false);
     };
+    const handleRemoveFavourite = (favourite: Favourite) => {
+        UIUtil.confirmMsg({
+            title: "Delete",
+            message: "Are you sure you want to delete this favourite?",
+            onConfirm: async () => {
+                try {
+                    onWaitingStateLoad(true);
+                    await onRemoveFavourite?.(favourite);
+                } catch (e) {
+                    UIUtil.errorMsg(new TKError("Failed to delete favourite."));
+                } finally {
+                    onWaitingStateLoad(false);
+                    setEditingFav(undefined);
+                }
+            }
+        });
+    }
     return (
         <>
             <TKUICard
@@ -81,13 +100,6 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 main: overrideClass(injectedStyles.editBtn)
                             }}
                         />
-                        {/* <TKUIButton text={"Add"}
-                            onClick={() => setEditingFav(FavouriteLocation.create())}
-                            type={TKUIButtonType.PRIMARY_LINK}
-                            styles={{
-                                main: overrideClass(injectedStyles.editBtn)
-                            }}
-                        /> */}
                         <button className={classes.refresh}
                             onClick={() => {
                                 // if (resultsRef.current) {
@@ -96,6 +108,12 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 onRefreshFavourites({ refreshStops: true });
                             }}>
                             <IconRefresh />
+                        </button>
+                        <button className={classes.add}
+                            onClick={() => {
+                                setIsCreatingFav(true);
+                            }}>
+                            <IconAdd />
                         </button>
                     </div>}
                 onRequestClose={onRequestClose}
@@ -110,7 +128,7 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 <TKUIFavouriteRow
                                     value={item}
                                     onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
-                                    onRemove={editing ? () => onRemoveFavourite?.(item) : undefined}
+                                    onRemove={editing ? () => handleRemoveFavourite(item) : undefined}
                                     onEdit={!editing && (item instanceof FavouriteStop ? item.stop : true) ? () => setEditingFav(item) : undefined}
                                     onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
                                     key={i}
@@ -123,7 +141,8 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                         </div>}
                 </div>
             </TKUICard>
-            {editingFav && <TKUIEditFavouriteView value={editingFav} onRequestClose={handleEditClose} />}
+            {(editingFav || isCreatingFav) &&
+                <TKUIEditFavouriteView value={editingFav} onRequestClose={handleEditClose} onRemove={editingFav ? () => handleRemoveFavourite(editingFav) : undefined} />}
         </>
     );
 }

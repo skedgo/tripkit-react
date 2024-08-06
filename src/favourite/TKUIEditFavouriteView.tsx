@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import genStyles from "../css/GenStyle.css";
-import { black, TKUITheme, white } from "../jss/TKUITheme";
+import { black, colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKComponentConfig";
 import Favourite from "../model/favourite/Favourite";
@@ -12,12 +12,14 @@ import FavouriteLocation from "../model/favourite/FavouriteLocation";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import Util from "../util/Util";
 import LocationUtil from "../util/LocationUtil";
-import TKUIMapView from "../map/TKUIMapView";
+import TKUIMapView, { TKUIMapViewClass } from "../map/TKUIMapView";
 import Location from "../model/Location";
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import StopLocation from "../model/StopLocation";
 import FavouriteTrip from "../model/favourite/FavouriteTrip";
-import TKLoading from "../card/TKLoading";
+import LatLng from "../model/LatLng";
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import RegionsData from "../data/RegionsData";
 
 const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
     main: {
@@ -57,8 +59,11 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
         marginTop: 'auto',
         display: 'flex',
         ...genStyles.justifyEnd,
-        '&>*:not(:first-child)': {
+        '&>*:last-child': {
             marginLeft: '20px'
+        },
+        '&>*:nth-last-child(2)': {
+            marginLeft: 'auto'
         }
     },
     loadingPanel: {
@@ -75,8 +80,9 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof tKUIEditFavouriteViewJss>
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.slideUpOptions> {
-    value: Favourite;
+    value?: Favourite;
     onRequestClose: (update?: Favourite) => void;
+    onRemove?: () => void;
 }
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -87,12 +93,25 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { value, onRequestClose, slideUpOptions, classes, t, theme } = props;
-    const [update, setUpdate] = useState<Favourite>(value);
-    const [isWaiting, setIsWaiting] = useState<boolean>(false);
+    const { value, onRequestClose, onRemove, slideUpOptions, classes, t, theme } = props;
+    const isCreate = value === undefined;
+    const [update, setUpdate] = useState<Favourite>(isCreate ? Util.iAssign(FavouriteLocation.create(Location.create(new LatLng(), "", "", "")), { name: "" }) : value);
     // Use this to track location input value, which can be null, in which case `Save` button is disabled.
-    const [searchValue, setSearchValue] = useState<Location | null>(update instanceof FavouriteLocation ? update.location : (update instanceof FavouriteStop) ? update.stop! : null);
+    const [searchValue, setSearchValue] = useState<Location | null>(isCreate ? null : update instanceof FavouriteLocation ? update.location : (update instanceof FavouriteStop) ? update.stop! : null);
     const [highlightValue, setHighlightValue] = useState<Location | null>(null);
+    const mapRef = useRef<TKUIMapViewClass>(null);
+    const { viewport } = useContext(RoutingResultsContext);
+    useEffect(() => {
+        // OBSERVATION - mapRef.current is null after the first render. No problem in this case since we are waiting for regions
+        // which causes mapRef.current to be instantiated.
+        RegionsData.instance.requireRegions().then(() => {
+            if (isCreate && viewport) {
+                const region = RegionsData.instance.getCloserRegion(viewport.center!);
+                const closerCity = region?.cities.sort((c1, c2) => LocationUtil.distanceInMetres(c1, viewport.center!) - LocationUtil.distanceInMetres(c2, viewport.center!))[0];
+                mapRef.current?.setViewport(closerCity ?? viewport.center!, viewport.zoom!);
+            }
+        })
+    }, []);
     // Favourite location was updated. It's not called when location input is cleared (null location),
     // nor for unresolved dropped pins.    
     function onLocationUpdate(location: Location) {
@@ -134,6 +153,8 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                             }
                             onLocationUpdate(location);
                         }}
+                        mapClickBehaviour="SET_TO"
+                        ref={mapRef}
                     />
                     <TKUILocationBox
                         value={searchValue}
@@ -182,13 +203,22 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
             <div className={classes.main}>
                 {content}
                 <div className={classes.buttonsPanel}>
+                    {onRemove && !isCreate &&
+                        <TKUIButton
+                            text={t("Delete")} onClick={() => onRemove()} type={TKUIButtonType.SECONDARY}
+                            styles={{
+                                secondary: overrideClass({
+                                    color: theme.colorError,
+                                    borderColor: colorWithOpacity(theme.colorError, .12),
+                                    '&:hover': {
+                                        borderColor: colorWithOpacity(theme.colorError, .5)
+                                    }
+                                })
+                            }}
+                        />}
                     <TKUIButton text={t("Cancel")} onClick={() => onRequestClose()} type={TKUIButtonType.SECONDARY} />
                     <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={value instanceof FavouriteTrip ? false : !searchValue} />
                 </div>
-                {isWaiting &&
-                    <div className={classes.loadingPanel}>
-                        <TKLoading />
-                    </div>}
             </div>
         </TKUICard>
     );

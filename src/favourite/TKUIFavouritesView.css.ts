@@ -21,12 +21,26 @@ export const tKUIFavouritesViewDefaultStyle = (theme: TKUITheme) => ({
     },
     refresh: {
         ...resetStyles.button,
-        width: '26px',
-        height: '26px',
-        padding: '3px',
+        width: '24px',
+        height: '24px',
+        padding: '1px',
         border: 'none',
         marginLeft: 'auto',
-        marginRight: '-5px',
+        marginRight: '20px',
+        '& path': {
+            fill: theme.colorPrimary,
+            stroke: theme.colorPrimary,
+            strokeWidth: '0.5px'
+        },
+        '&:hover path, &:active path': {
+            fill: black(0, theme.isDark)
+        }
+    },
+    add: {
+        ...resetStyles.button,
+        width: '26px',
+        height: '26px',
+        border: 'none',
         '& path': {
             fill: theme.colorPrimary,
             stroke: theme.colorPrimary,
