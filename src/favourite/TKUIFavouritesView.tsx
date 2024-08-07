@@ -18,6 +18,7 @@ import { ReactComponent as IconAdd } from '../images/ic-plus-circle.svg';
 import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import UIUtil from "../util/UIUtil";
 import { TKError } from "../error/TKError";
+import { useResponsiveUtil } from "../util/TKUIResponsiveUtil";
 
 export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
@@ -43,6 +44,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
     const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
+    const { landscape } = useResponsiveUtil();
     const [editing, setEditing] = React.useState<boolean>(false);
     const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
     const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
@@ -118,6 +120,9 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                     </div>}
                 onRequestClose={onRequestClose}
                 slideUpOptions={slideUpOptions}
+                styles={{
+                    subHeader: overrideClass({ padding: '0 16px' })
+                }}
             >
                 <div className={classes.main}>
                     <TKUIReorderList
@@ -142,7 +147,13 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                 </div>
             </TKUICard>
             {(editingFav || isCreatingFav) &&
-                <TKUIEditFavouriteView value={editingFav} onRequestClose={handleEditClose} onRemove={editingFav ? () => handleRemoveFavourite(editingFav) : undefined} />}
+                <TKUIEditFavouriteView
+                    value={editingFav}
+                    onRequestClose={handleEditClose}
+                    onRemove={editingFav ? () => handleRemoveFavourite(editingFav) : undefined}
+                    cardPresentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                    slideUpOptions={{ draggable: false }}
+                />}
         </>
     );
 }

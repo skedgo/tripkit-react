@@ -5,7 +5,7 @@ import { black, colorWithOpacity, TKUITheme, white } from "../jss/TKUITheme";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig } from "../config/TKComponentConfig";
 import Favourite from "../model/favourite/Favourite";
-import TKUICard, { CardPresentation } from "../card/TKUICard";
+import TKUICard from "../card/TKUICard";
 import HasCard, { HasCardKeys } from "../card/HasCard";
 import TKUILocationBox from "../location_box/TKUILocationBox";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
@@ -79,7 +79,7 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
 });
 
 type IStyle = ReturnType<typeof tKUIEditFavouriteViewJss>
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.slideUpOptions> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
     value?: Favourite;
     onRequestClose: (update?: Favourite) => void;
     onRemove?: () => void;
@@ -93,7 +93,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { value, onRequestClose, onRemove, slideUpOptions, classes, t, theme } = props;
+    const { value, onRequestClose, onRemove, cardPresentation, slideUpOptions, classes, t, theme } = props;
     const isCreate = value === undefined;
     const [update, setUpdate] = useState<Favourite>(isCreate ? Util.iAssign(FavouriteLocation.create(Location.create(new LatLng(), "", "", "")), { name: "" }) : value);
     // Use this to track location input value, which can be null, in which case `Save` button is disabled.
@@ -203,7 +203,12 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
         );
     }
     return (
-        <TKUICard title={t("Favourite")} presentation={CardPresentation.MODAL} onRequestClose={() => onRequestClose()} slideUpOptions={slideUpOptions}>
+        <TKUICard
+            title={t("Favourite")}
+            presentation={cardPresentation}
+            onRequestClose={() => onRequestClose()}
+            slideUpOptions={slideUpOptions}
+        >
             <div className={classes.main}>
                 {content}
                 <div className={classes.buttonsPanel}>
