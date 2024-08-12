@@ -15,6 +15,10 @@ export enum TimePreference {
 // type URLQueryParam = "wp" | "tt";
 type RoutingQueryAdditional = { [key: string]: string | string[] | boolean | number };
 
+function minEncodeURIComponent(str: string): string {
+    return str.replace(/#/g, "%23");
+}
+
 class RoutingQuery {
 
     private _from: Location | null;
@@ -118,8 +122,8 @@ class RoutingQuery {
             }
         }, "");
         return encodeURI("routing.json" +
-            `?from=(${this.from.lat},${this.from.lng})"${this.from.address}"` +
-            `&to=(${this.to.lat},${this.to.lng})"${this.to.address}"` +
+            `?from=(${this.from.lat},${this.from.lng})"${minEncodeURIComponent(this.from.address ?? "")}"` +
+            `&to=(${this.to.lat},${this.to.lng})"${minEncodeURIComponent(this.to.address ?? "")}"` +
             `&${this.timePref === TimePreference.ARRIVE ? "arriveBefore" : "departAfter"}=${Math.floor(this.time.valueOf() / 1000)}` +
             additionalParams);
     }
