@@ -167,7 +167,7 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                         type={TKUIButtonType.SECONDARY}
                         onClick={() => onClose()}
                     />
-                    <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onContinue()} />
+                    <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onContinue()} name={"confirm-review-btn"} />
                 </div>
             </div>
         );

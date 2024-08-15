@@ -124,6 +124,8 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     disabled?: boolean;
+
+    name?: string;
 }
 
 interface IConsumedProps {
@@ -662,7 +664,8 @@ class TKUILocationBox extends Component<IProps, IState> {
                     "aria-owns": this.isDDOpen() ? popupId : undefined,
                     "aria-haspopup": this.isDDOpen(),
                     tabIndex: 0,
-                    "aria-live": "polite"
+                    "aria-live": "polite",
+                    name: this.props.name
                 }}
                 autoHighlight={false}
                 ref={this.autocompleteRef}

@@ -564,6 +564,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             type={TKUIButtonType.PRIMARY}
                             disabled={!newPaymentMethodAndPay && !selectedMethod}
                             onClick={handleSubmit}
+                            name={"confirm-payment-btn"}
                         />
                     </div>
                 </div>
