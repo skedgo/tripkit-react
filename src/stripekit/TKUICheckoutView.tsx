@@ -22,6 +22,7 @@ import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
 import { SelectOption } from '../buttons/TKUISelect';
 import { i18n } from '../i18n/TKI18nConstants';
+import TKUINewCardView from './TKUINewCardView';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -320,6 +321,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         const [newPaymentMethodAndPay, setNewPaymentMethodAndPay] = useState<boolean>(false);
         const [stripePaymentMethods, setStripePaymentMethods] = useState<PaymentMethod[] | undefined>(undefined);
         const [saveForFuture, setSaveForFuture] = useState<boolean>(true);
+        // const [newCard, setNewCard] = useState<boolean>(true);
         const cardPaymentOption = paymentOptions.find(option => option.paymentMode === "INTERNAL");
         // organizationOptions = organizationOptions ?? [{ label: "Hospital A1", value: "48bb5fdd-448b-4706-8f36-b018ed1ca45d" }, { label: "Hospital A2", value: "f40cfc7a-d0e6-41dc-a73e-823214a35558" }];
         organizationOptions = organizationOptions ?? [];
@@ -441,9 +443,9 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         //                 if (cardId) {
         //                     refreshData()
         //                         .then(result => {
-        //                             setPaymentMethods(result.data);
+        //                             setStripePaymentMethods(result.data);
         //                             console.log(result.data)
-        //                             result.data && result.data.length > 0 && setSelectedPM(result.data.find(pm => pm.id === cardId))
+        //                             // result.data && result.data.length > 0 && setSelectedPM(result.data.find(pm => pm.id === cardId))
         //                         });
         //                 }
         //             }}
@@ -562,6 +564,7 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             type={TKUIButtonType.PRIMARY}
                             disabled={!newPaymentMethodAndPay && !selectedMethod}
                             onClick={handleSubmit}
+                            name={"confirm-payment-btn"}
                         />
                     </div>
                 </div>
