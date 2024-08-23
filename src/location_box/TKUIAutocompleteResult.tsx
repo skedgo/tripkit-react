@@ -97,7 +97,7 @@ class TKUIAutocompleteResult extends Component<IProps, {}> {
             </div>
         );
 
-        function renderAddressComponents(text: string, matchedSubstrings: PredictionSubstring[]): JSX.Element[] {
+        function renderAddressComponents(text: string, matchedSubstrings: PredictionSubstring[] = []): JSX.Element[] {
             let offset: number = 0;
             const mainAddressComponents: JSX.Element[] = [];
             for (const matchedSubstring of matchedSubstrings) {

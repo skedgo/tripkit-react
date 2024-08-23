@@ -15,10 +15,10 @@ class FavouriteLocation extends Favourite {
     @JsonProperty('location', LocationConverter)
     public location: Location = new Location();
 
-    public static create(location: Location, type: "location" | "home" | "work" = "location"): FavouriteLocation {
+    public static create(location: Location, { type = "location", name = LocationUtil.getMainText(location, i18n.t) }: { type?: "location" | "home" | "work", name?: string } = {}): FavouriteLocation {
         const instance = new FavouriteLocation();
         instance.location = location;
-        instance.name = LocationUtil.getMainText(location, i18n.t);
+        instance.name = name;
         instance.type = type;
         return instance;
     }

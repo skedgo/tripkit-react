@@ -153,6 +153,13 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                     onRemove={editingFav ? () => handleRemoveFavourite(editingFav) : undefined}
                     cardPresentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
                     slideUpOptions={{ draggable: false }}
+                    styles={{
+                        formGroup: overrideClass({
+                            '& label[for="address"]': {
+                                display: 'none'
+                            }
+                        })
+                    }}
                 />}
         </>
     );

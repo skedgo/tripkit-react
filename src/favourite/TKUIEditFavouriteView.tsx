@@ -41,19 +41,23 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
             ...genStyles.borderRadius(4),
             ...theme.textSizeBody,
             padding: '10px'
+        },
+        '&:not(:first-child)': {
+            marginTop: '16px'
         }
     },
     map: {
         height: '350px',
-        marginTop: '16px',
         borderRadius: '4px',
         border: '1px solid ' + black(2, theme.isDark),
         '& input': {
             ...theme.textSizeBody,
-            padding: '10px'
+            padding: '10px',
+            borderTop: '1px solid ' + black(2, theme.isDark) + ' !important'
         },
         ...genStyles.flex,
-        ...genStyles.column
+        ...genStyles.column,
+        ...genStyles.grow
     },
     buttonsPanel: {
         marginTop: 'auto',
@@ -86,6 +90,9 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasC
 }
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
+export type TKUIEditFavouriteViewProps = IProps;
+export type TKUIEditFavouriteViewStyle = IStyle;
+
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIEditFavouriteView {...props} />,
     styles: tKUIEditFavouriteViewJss,
@@ -95,7 +102,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) => {
     const { value, onRequestClose, onRemove, cardPresentation, slideUpOptions, classes, t, theme } = props;
     const isCreate = value === undefined;
-    const [update, setUpdate] = useState<Favourite>(isCreate ? Util.iAssign(FavouriteLocation.create(Location.create(new LatLng(), "", "", "")), { name: "" }) : value);
+    const [update, setUpdate] = useState<Favourite>(isCreate ? FavouriteLocation.create(Location.create(new LatLng(), "", "", ""), { name: "" }) : value);
     // Use this to track location input value, which can be null, in which case `Save` button is disabled.
     const [searchValue, setSearchValue] = useState<Location | null>(isCreate ? null : update instanceof FavouriteLocation ? update.location : (update instanceof FavouriteStop) ? update.stop! : null);
     const [highlightValue, setHighlightValue] = useState<Location | null>(null);
@@ -141,44 +148,53 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                     <label>Name</label>
                     <input type="text" value={update.name} placeholder={placeholder} onChange={handleNameChange} />
                 </div>
-                <div className={classes.map}>
-                    <TKUIMapView
-                        to={highlightValue ?? searchValue ?? undefined}
-                        hideLocations={true}
-                        showCurrLocBtn={false}
-                        rightClickMenu={[{
-                            label: t("set_location"),
-                            effect: "SET_TO"
-                        }]}
-                        onToChange={(location: Location | null) => {
-                            setSearchValue(location);
-                            if (location === null || location.isDroppedPin()) {
-                                return;
-                            }
-                            onLocationUpdate(location);
-                        }}
-                        mapClickBehaviour="SET_TO"
-                        ref={mapRef}
-                    />
-                    <TKUILocationBox
-                        value={searchValue}
-                        onResultHighlight={(value: Location | null) => {
-                            setHighlightValue(value);
-                        }}
-                        onChange={(value: Location | null) => {
-                            setSearchValue(value);
-                            if (value) {
-                                onLocationUpdate(value);
-                                // setSearchValue(Location.create(LatLng.createLatLng(0, 0), "", "", ""));
-                                // setTimeout(() => setSearchValue(null), 10);
-                            }
-                        }}
-                        showCurrLoc={false}
-                        // Maybe this is not necessary given the logic in TKUILocationBox connector.
-                        bounds={RegionsData.instance.getCoverageBounds()}
-                        focus={closerCity}
-                        placeholder={"Search location or drop pin on map"}
-                    />
+                <div className={classes.formGroup}>
+                    <label htmlFor="address">Address</label>
+                    <div className={classes.map}>
+                        <TKUIMapView
+                            to={highlightValue ?? searchValue ?? undefined}
+                            hideLocations={true}
+                            showCurrLocBtn={false}
+                            rightClickMenu={[{
+                                label: t("set_location"),
+                                effect: "SET_TO"
+                            }]}
+                            onToChange={(location: Location | null) => {
+                                setSearchValue(location);
+                                if (location === null || location.isDroppedPin()) {
+                                    return;
+                                }
+                                onLocationUpdate(location);
+                            }}
+                            mapClickBehaviour="SET_TO"
+                            ref={mapRef}
+                        />
+                        <TKUILocationBox
+                            value={searchValue}
+                            onResultHighlight={(value: Location | null) => {
+                                setHighlightValue(value);
+                            }}
+                            onChange={(value: Location | null) => {
+                                setSearchValue(value);
+                                if (value) {
+                                    onLocationUpdate(value);
+                                    // setSearchValue(Location.create(LatLng.createLatLng(0, 0), "", "", ""));
+                                    // setTimeout(() => setSearchValue(null), 10);
+                                } else {
+                                    const hasDefaultName = update.name === (update instanceof FavouriteStop ? (update.stop ? FavouriteStop.create(update.stop).name : "") : FavouriteLocation.create((update as FavouriteLocation).location).name);
+                                    if (hasDefaultName) {
+                                        setUpdate(Util.iAssign(update, { name: "" }));
+                                    }
+                                }
+                            }}
+                            showCurrLoc={false}
+                            // Maybe this is not necessary given the logic in TKUILocationBox connector.
+                            bounds={RegionsData.instance.getCoverageBounds()}
+                            focus={closerCity}
+                            placeholder={"Search location or drop pin on map"}
+                            name="address"
+                        />
+                    </div>
                 </div>
             </>
         );
@@ -190,14 +206,16 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                     <label>Name</label>
                     <input type="text" value={update.name} placeholder={placeholder} onChange={handleNameChange} />
                 </div>
-                <div className={classes.map}>
-                    <TKUIMapView
-                        from={(value as FavouriteTrip).startLocation}
-                        to={(value as FavouriteTrip).endLocation}
-                        hideLocations={true}
-                        showCurrLocBtn={false}
-                        readonly={true}
-                    />
+                <div className={classes.formGroup}>
+                    <div className={classes.map}>
+                        <TKUIMapView
+                            from={(value as FavouriteTrip).startLocation}
+                            to={(value as FavouriteTrip).endLocation}
+                            hideLocations={true}
+                            showCurrLocBtn={false}
+                            readonly={true}
+                        />
+                    </div>
                 </div>
             </>
         );
@@ -233,5 +251,5 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
     );
 };
 
-export default connect(() => undefined, config,
+export default connect(config => config.TKUIEditFavouriteView, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
