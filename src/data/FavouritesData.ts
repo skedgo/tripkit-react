@@ -31,13 +31,12 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     protected deserialize(itemJson: any): Favourite[] {
         return (itemJson as any[]).map((item: any) =>
-            item.stop ? Util.deserialize(item, FavouriteStop) :
-                item.location ? Util.deserialize(item, FavouriteLocation) :
-                    Util.deserialize(item, FavouriteTrip)
-        )
+            item.type === "stop" ? Util.deserialize(item, FavouriteStop) :
+                item.type === "trip" ? Util.deserialize(item, FavouriteTrip) :
+                    Util.deserialize(item, FavouriteLocation));  // Home and work favs falls under FavouriteLocation.
     }
 
-    public save(update: FavouriteTrip[]) {
+    public save(update: Favourite[]) {
         super.save(this.limit ? update.slice(0, this.limit) : update);
     }
 

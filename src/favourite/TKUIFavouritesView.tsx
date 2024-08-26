@@ -102,15 +102,16 @@ const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
                                 main: overrideClass(injectedStyles.editBtn)
                             }}
                         />
-                        <button className={classes.refresh}
-                            onClick={() => {
-                                // if (resultsRef.current) {
-                                //     resultsRef.current.scrollTop = 0;
-                                // };
-                                onRefreshFavourites({ refreshStops: true });
-                            }}>
-                            <IconRefresh />
-                        </button>
+                        {onRefreshFavourites &&
+                            <button className={classes.refresh}
+                                onClick={() => {
+                                    // if (resultsRef.current) {
+                                    //     resultsRef.current.scrollTop = 0;
+                                    // };
+                                    onRefreshFavourites({ shouldRefreshStops: true });
+                                }}>
+                                <IconRefresh />
+                            </button>}
                         <button className={classes.add}
                             onClick={() => {
                                 setIsCreatingFav(true);

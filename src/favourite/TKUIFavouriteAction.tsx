@@ -34,7 +34,7 @@ const tKUIFavouriteActionJss = (theme: TKUITheme) => ({
 const TKUIFavouriteAction: React.FunctionComponent<IProps> = (props) => {
 
     const { favourite, vertical, classes } = props;
-    const { favouriteList, onAddFavourite, onRemoveFavourite } = React.useContext(TKFavouritesContext);
+    const { favouriteList, onAddFavourite, onRemoveFavourite, isSupportedFavourites } = React.useContext(TKFavouritesContext);
     const [isWaiting, setIsWaiting] = React.useState<boolean>(false);
     const { t } = React.useContext(TKI18nContext);
 
@@ -68,6 +68,10 @@ const TKUIFavouriteAction: React.FunctionComponent<IProps> = (props) => {
             await onAddFavourite(favourite);
         }
         setIsWaiting(false);
+    }
+
+    if (!isSupportedFavourites) {
+        return null;
     }
 
     return (

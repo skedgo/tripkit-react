@@ -11,7 +11,8 @@ export const tKUIFavouritesViewDefaultStyle = (theme: TKUITheme) => ({
         marginTop: '10px'
     },
     editBtn: {
-        padding: '0'
+        padding: '0',
+        marginRight: 'auto'
     },
     loadingPanel: {
         ...genStyles.flex,
@@ -25,7 +26,6 @@ export const tKUIFavouritesViewDefaultStyle = (theme: TKUITheme) => ({
         height: '24px',
         padding: '1px',
         border: 'none',
-        marginLeft: 'auto',
         marginRight: '20px',
         '& path': {
             fill: theme.colorPrimary,

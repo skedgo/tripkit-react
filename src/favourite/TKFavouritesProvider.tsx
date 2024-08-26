@@ -23,7 +23,7 @@ export interface IFavouritesContext {
     onReorderFavourite: (from: number, to: number) => void;
     onAddRecent: (value: Favourite) => void;
     onRemoveRecent: (value: Favourite) => void;
-    onRefreshFavourites: (props?: { silent?: boolean, refreshStops?: boolean }) => void;
+    onRefreshFavourites?: (props?: { silent?: boolean, shouldRefreshStops?: boolean }) => void;
 }
 
 export const TKFavouritesContext = React.createContext<IFavouritesContext>({
@@ -36,8 +36,7 @@ export const TKFavouritesContext = React.createContext<IFavouritesContext>({
     onAddRecent: (value: Favourite) => { },
     onRemoveFavourite: (value: Favourite) => { return Promise.resolve([]) },
     onRemoveRecent: (value: Favourite) => { },
-    onReorderFavourite: (from: number, to: number) => { },
-    onRefreshFavourites: () => { }
+    onReorderFavourite: (from: number, to: number) => { }
 });
 
 interface IProps {
@@ -67,13 +66,17 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     const { children } = props;
     const { accountsSupported, status } = useContext(TKAccountContext);   // Notice this will just provide empty context if accounts is not supported.
     function isSupportedDefault({ signInStatus }: { signInStatus: SignInStatus }) {
-        return signInStatus === SignInStatus.signedIn;
+        return accountsSupported ? signInStatus === SignInStatus.signedIn : true;
     }
-    const [isLoading, setIsLoading] = useState<boolean>(true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
+    const storageType: "cloud" | "local" = accountsSupported ? "cloud" : "local";
+    const [isLoading, setIsLoading] = useState<boolean>(storageType === "local" ? false : true);  // May want to distinguish other statuses, as: UNSUPPORTED, REFRESHING, LOADING, AVAILABLE
     const [isSupported, setIsSupported] = useState<boolean>(isSupportedDefault({ signInStatus: status }));
-    const [favourites, setFavourites] = useState<Favourite[]>([]);
+    const [favourites, setFavourites] = useState<Favourite[]>(storageType === "local" ? FavouritesData.instance.get() : []);
     const [recents, setRecents] = useState<Favourite[]>(FavouritesData.recInstance.get());
     useEffect(() => {
+        if (storageType === "local") {
+            return;
+        }
         // if (process.env.NODE_ENV === "development") {   // TODO: remove
         refreshFavourites();
         // }
@@ -94,7 +97,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
         fireChangeEvent(favourites);
     }, [favourites])
 
-    async function refreshFavourites({ silent, refreshStops }: { silent?: boolean, refreshStops?: boolean } = {}) {
+    async function refreshFavourites({ silent, shouldRefreshStops }: { silent?: boolean, shouldRefreshStops?: boolean } = {}) {
         if (!silent) {
             setIsLoading(true);
             setFavourites([]);
@@ -111,45 +114,55 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 console.log(e);
                 favouritesResult = [];
             }
-            await Promise.all(favouritesResult.map(async fav => {
-                if (!(fav instanceof FavouriteStop)) return;
-                if (fav.stop && !refreshStops) return;
-                try {
-                    const { stop: stopJson } = await TripGoApi.fetchAPI(
-                        TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
-                        {
-                            method: "GET",
-                            tkcache: true,
-                            cacheRefreshCallback: (response: any) => {
-                                fav.stop = Util.deserialize(response.stop, StopLocation);
-                                setFavourites((favourites) => [...favourites]);
-                            },
-                            headers: {
-                                "x-fetch-policy": refreshStops ? "cache-and-network" : "cache-first",
-                                "x-cache-control": `max-age=${24 * 60 * 60}`,
-                                "x-date": new Date().toUTCString()
-                            }
-                        }
-                    );
-                    if (stopJson) {
-                        fav.stop = Util.deserialize(stopJson, StopLocation);
-                        setFavourites(favourites => [...favourites]); // Update each fav stop immediatly when the request arrives, so those that hit caché are displayed immediatly in the UI.
-                    }
-                    return;
-                } catch (error) {
-                    console.log(error);
-                    return;
-                }
-            }));
+            await fetchStops(favouritesResult, shouldRefreshStops);
             setFavourites([...favouritesResult]);   // No longer necessary given setFavourites(favourites => [...favourites]) above.            
         } else {
             setFavourites([]);
         }
     }
 
+    async function fetchStops(favouritesResult: Favourite[], shouldRefreshStops: boolean | undefined) {
+        await Promise.all(favouritesResult.map(async (fav) => {
+            if (!(fav instanceof FavouriteStop)) return;
+            if (fav.stop && !shouldRefreshStops) return;
+            try {
+                const { stop: stopJson } = await TripGoApi.fetchAPI(
+                    TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
+                    {
+                        method: "GET",
+                        tkcache: true,
+                        cacheRefreshCallback: (response: any) => {
+                            fav.stop = Util.deserialize(response.stop, StopLocation);
+                            setFavourites((favourites) => [...favourites]);
+                        },
+                        headers: {
+                            "x-fetch-policy": shouldRefreshStops ? "cache-and-network" : "cache-first",
+                            "x-cache-control": `max-age=${24 * 60 * 60}`,
+                            "x-date": new Date().toUTCString()
+                        }
+                    }
+                );
+                if (stopJson) {
+                    fav.stop = Util.deserialize(stopJson, StopLocation);
+                    setFavourites(favourites => [...favourites]); // Update each fav stop immediatly when the request arrives, so those that hit caché are displayed immediatly in the UI.
+                }
+                return;
+            } catch (error) {
+                console.log(error);
+                return;
+            }
+        }));
+    }
+
     async function addFavouriteHandler(value: Favourite): Promise<Favourite[]> {
         value.order = favourites.length;
         value.uuid = uuidv4();
+        if (storageType === "local") {
+            FavouritesData.instance.add(value);
+            const update = FavouritesData.instance.get();
+            setFavourites(update);
+            return Promise.resolve(update);
+        }
         const addedFav = deserialize(await TripGoApi.apiCall("/data/user/favorite", "POST", Util.serialize(value)));
         // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
         // TODO: consider calling fetching stops for favourites, to cache locationInfo request.
@@ -159,6 +172,14 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }
 
     async function updateFavouriteHandler(value: Favourite): Promise<Favourite[]> {
+        if (storageType === "local") {
+            const favouritesUpdate = [...favourites];
+            favouritesUpdate.splice(favourites.findIndex(fav => fav.uuid === value.uuid), 1, value);
+            FavouritesData.instance.save(favouritesUpdate);
+            const update = FavouritesData.instance.get();
+            setFavourites(update);
+            return Promise.resolve(update);
+        }
         const addedFav = deserialize(await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "PUT", Util.serialize(value)));
         const favouritesUpdate = [...favourites];
         // Add value instead of addedFav since it has the stop, for FavouriteStop/s.
@@ -169,6 +190,12 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     }
 
     async function removeFavouriteHandler(value: Favourite): Promise<Favourite[]> {
+        if (storageType === "local") {
+            FavouritesData.instance.remove(value);
+            const update = FavouritesData.instance.get();
+            setFavourites(update);
+            return Promise.resolve(update);
+        }
         console.assert(favourites.indexOf(value) !== -1);
         await TripGoApi.apiCall(`/data/user/favorite/${value.uuid}`, "DELETE");
         const updatedFavourites = [...favourites];
@@ -179,6 +206,12 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
 
     function reorderFavouriteHandler(from: number, to: number) {
         const reordered = moveFromTo([...favourites], from, to);
+        if (storageType === "local") {
+            reordered.forEach((fav, i) => fav.order = i);
+            FavouritesData.instance.save(reordered);
+            setFavourites(reordered);
+            return;
+        }
         reordered.forEach((fav, i) => {
             const update = fav.order !== i;
             fav.order = i;
@@ -192,7 +225,10 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
     useEffect(() => {
         // In case favourites are changed directly through FavouritesData. In the future probably the provider should be
         // the only way to update options, so next line will no longer be needed.
-        // FavouritesData.instance.addChangeListener(setFavourites);        
+        if (storageType === "local") {
+            //     FavouritesData.instance.addChangeListener(setFavourites);
+            fetchStops(favourites, true);
+        }
         FavouritesData.recInstance.addChangeListener(setRecents);
     }, []);
 
@@ -209,7 +245,7 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
                 onRemoveFavourite: removeFavouriteHandler,
                 onRemoveRecent: (value: Favourite) => { FavouritesData.recInstance.remove(value) },
                 onReorderFavourite: reorderFavouriteHandler,
-                onRefreshFavourites: refreshFavourites
+                onRefreshFavourites: storageType === "local" ? undefined : refreshFavourites
             }}>
             {children}
         </TKFavouritesContext.Provider>
