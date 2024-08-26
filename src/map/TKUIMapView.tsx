@@ -324,7 +324,9 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     constructor(props: Readonly<IProps & IDefaultProps>) {
         super(props);
-        this.state = {};
+        this.state = {
+            coveragePolygon: props.coverageGeoJson ? MapUtil.toLeafletMultiPolygon(props.coverageGeoJson) : undefined
+        };
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);

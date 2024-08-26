@@ -83,7 +83,7 @@ const tKUIEditFavouriteViewJss = (theme: TKUITheme) => ({
 });
 
 type IStyle = ReturnType<typeof tKUIEditFavouriteViewJss>
-interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<HasCard, HasCardKeys.cardPresentation | HasCardKeys.slideUpOptions | HasCardKeys.title> {
     value?: Favourite;
     onRequestClose: (update?: Favourite) => void;
     onRemove?: () => void;
@@ -100,7 +100,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { value, onRequestClose, onRemove, cardPresentation, slideUpOptions, classes, t, theme } = props;
+    const { value, onRequestClose, onRemove, cardPresentation, slideUpOptions, title, classes, t, theme } = props;
     const isCreate = value === undefined;
     const [update, setUpdate] = useState<Favourite>(isCreate ? FavouriteLocation.create(Location.create(new LatLng(), "", "", ""), { name: "" }) : value);
     // Use this to track location input value, which can be null, in which case `Save` button is disabled.
@@ -222,7 +222,7 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
     }
     return (
         <TKUICard
-            title={t("Favourite")}
+            title={title ?? t("Favourite")}
             presentation={cardPresentation}
             onRequestClose={() => onRequestClose()}
             slideUpOptions={slideUpOptions}
