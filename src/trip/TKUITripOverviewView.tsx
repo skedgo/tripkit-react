@@ -115,14 +115,10 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
                     onClick={() => onTripSegmentSelected?.(value.getSegments(Visibility.IN_DETAILS)[0])}
                     key={"actionGo"}
                 />] : []),
-            <RoutingResultsContext.Consumer key={"actionFavourite"}>
-                {(routingResultsContext: IRoutingResultsContext) => // Avoid this connection with the routing context, maybe get this value from the trip.
-                    routingResultsContext.query.from && routingResultsContext.query.to &&
-                    <TKUIFavouriteAction
-                        favourite={FavouriteTrip.create(trip)}
-                        vertical={true}
-                    />}
-            </RoutingResultsContext.Consumer>,
+            <TKUIFavouriteAction
+                favourite={FavouriteTrip.create(trip)}
+                vertical={true}
+            />,
             <TKUIShareAction
                 title={t("Share.Trip")}
                 message={""}

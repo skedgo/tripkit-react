@@ -24,6 +24,7 @@ export const tKUIFavouriteRowDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.alignCenter
     },
     iconBackground: {
+        ...genStyles.noShrink,
         background: colorWithOpacity(theme.colorPrimary, .15),
         borderRadius: '50%',
         '& svg path': {
