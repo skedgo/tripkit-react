@@ -91,6 +91,7 @@ import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
 import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
 import { TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle } from "../favourite/TKUIEditFavouriteView";
 import { TKUIBookingCardProps, TKUIBookingCardStyle } from "../booking/TKUIBookingCard";
+import { TKUIBookingFormProps, TKUIBookingFormStyle } from "../booking/TKUIBookingForm";
 
 /**
  * SDK configuration
@@ -302,6 +303,7 @@ export interface ITKUIConfigOptional {
     TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIBookingCard: TKComponentConfig<TKUIBookingCardProps, TKUIBookingCardStyle>;
+    TKUIBookingForm: TKComponentConfig<TKUIBookingFormProps, TKUIBookingFormStyle>;
     TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;
