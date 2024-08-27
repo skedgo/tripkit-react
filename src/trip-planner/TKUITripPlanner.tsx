@@ -21,7 +21,7 @@ import { Subtract } from "utility-types";
 import TKUILocationSearch, { TKUILocationSearchHelpers } from "../query/TKUILocationSearch";
 import Location from "../model/Location";
 import RoutingQuery, { TimePreference } from "../model/RoutingQuery";
-import TKUIFavouritesView from "../favourite/TKUIFavouritesView";
+import TKUIFavouritesView, { TKUIFavouritesViewHelpers } from "../favourite/TKUIFavouritesView";
 import Favourite from "../model/favourite/Favourite";
 import FavouriteStop from "../model/favourite/FavouriteStop";
 import FavouriteLocation from "../model/favourite/FavouriteLocation";
@@ -64,6 +64,7 @@ import TKUIVehicleAvailability from "../location/TKUIVehicleAvailability";
 import ModeLocation from "../model/location/ModeLocation";
 import LocationsResult from "../model/location/LocationsResult";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
+import { IFavouritesContext, TKFavouritesContext } from "../favourite/TKFavouritesProvider";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -75,7 +76,7 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext {
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext {
     directionsView: boolean,
     onDirectionsView: (onDirectionsView: boolean) => void
 }
@@ -169,6 +170,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.onShowBookingTrip = this.onShowBookingTrip.bind(this);
         this.pushCardView = this.pushCardView.bind(this);
         this.popCardView = this.popCardView.bind(this);
+        this.onFavouriteTripQuery = this.onFavouriteTripQuery.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -192,6 +194,59 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.setState({ showTransportSettings: true });
     }
 
+    private async onFavouriteTripQuery(favourite: FavouriteTrip) {
+        const segmentsCopy = JSON.parse(JSON.stringify(favourite.pattern));
+        segmentsCopy[0].startTime = DateTimeUtil.getNow().valueOf() / 1000;
+        const requestBody = {
+            config: { v: TripGoApi.apiVersion },
+            segments: segmentsCopy
+        };
+        try {
+            this.props.onWaitingStateLoad(true);
+            const routingResults = await TripGoApi.apiCallT("waypoint.json", NetworkUtil.MethodType.POST, RoutingResults, requestBody);
+            this.props.onWaitingStateLoad(false);
+            if (this.state.showFavourites) {
+                this.setState({ showFavourites: false });
+            }
+            const trips = routingResults.groups;
+            const selectedTrip = trips[0];
+            if (trips && trips.length > 0) {
+                // Need to do this since TKUIMxMView doesn't render if there's no selected trip.
+                // TODO: consider removing that limitation.
+                this.props.onSelectedTripChange(selectedTrip);
+                this.pushCardView({
+                    viewId: "RELATED_TRIP",
+                    renderCard: () =>
+                        <TKUITripOverviewView
+                            value={selectedTrip}
+                            onTripSegmentSelected={this.props.setSelectedTripSegment}
+                            cardProps={{
+                                onRequestClose: () => {
+                                    this.popCardView();
+                                    this.props.onSelectedTripChange(undefined);
+                                },
+                                slideUpOptions: {
+                                    position: this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
+                                    initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                                    draggable: true,
+                                    modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                                    modalMiddle: { top: 55, unit: '%' },
+                                    modalDown: { top: 90, unit: '%' }
+                                },
+                                presentation: CardPresentation.SLIDE_UP
+                            }}
+                        />,
+                    mapProps: {
+                        trip: selectedTrip,
+                        readonly: true
+                    }
+                })
+            }
+        } catch (e) {
+            this.props.onWaitingStateLoad(false, new TKError("Error loading trip", "", false));
+        }
+    }
+
     private onFavouriteClicked(favourite: Favourite) {
         if (favourite instanceof FavouriteStop) {
             this.props.onQueryUpdate({ to: favourite.stop });
@@ -200,8 +255,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             this.props.onQueryUpdate({ from: Location.createCurrLoc(), to: favourite.location, timePref: TimePreference.NOW });
             this.props.onDirectionsView(true);
         } else if (favourite instanceof FavouriteTrip) {
-            this.props.onQueryUpdate({ from: favourite.from, to: favourite.to, timePref: TimePreference.NOW });
-            this.props.onDirectionsView(true);
+            this.onFavouriteTripQuery(favourite);
         }
         FavouritesData.recInstance.add(favourite);
     }
@@ -517,17 +571,22 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />}
             </TKUIServiceViewHelpers.TKStateProps> : null;
         const favouritesView = this.state.showFavourites && !directionsView &&
-            <TKUIFavouritesView
-                onFavouriteClicked={this.onFavouriteClicked}
-                onRequestClose={() => { this.setState({ showFavourites: false }) }}
-                slideUpOptions={{
-                    initPosition: TKUISlideUpPosition.UP,
-                    draggable: DeviceUtil.isTouch(),
-                    modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                    modalMiddle: { top: 55, unit: '%' },
-                    modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
-                }}
-            />;
+            <TKUIFavouritesViewHelpers.TKStateProps>
+                {stateProps =>
+                    <TKUIFavouritesView
+                        onFavouriteClicked={this.onFavouriteClicked}
+                        onRequestClose={() => { this.setState({ showFavourites: false }) }}
+                        slideUpOptions={{
+                            initPosition: TKUISlideUpPosition.UP,
+                            draggable: DeviceUtil.isTouch(),
+                            modalUp: this.props.landscape ? { top: 48 + 2 * cardSpacing(), unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalMiddle: { top: 55, unit: '%' },
+                            modalDown: { top: this.getContainerHeight() - 80, unit: 'px' }
+                        }}
+                        {...stateProps}
+                    />
+                }
+            </TKUIFavouritesViewHelpers.TKStateProps>;
         const routingResultsView = directionsView && this.props.query.isComplete(true) && this.props.trips ?
             <TKUIRoutingResultsViewHelpers.TKStateProps>
                 {stateProps =>
@@ -802,6 +861,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 this.setState({ showMyBookings: true });
                 e.preventDefault();
             }
+            if (e.shiftKey && e.metaKey && e.key === "f") {
+                this.setState({ showFavourites: true });
+                e.preventDefault();
+            }
         });
 
         // Focus location search box on web-app load.
@@ -870,6 +933,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         if (!this.isShowTimetable(prevProps) && this.isShowTimetable() // Start displaying timetable
             || (this.isShowTimetable() && prevProps.stop !== this.props.stop) // Already displaying timetable, but clicked other stop
             || !prevState.showLocationDetailsFor && this.state.showLocationDetailsFor // Start displaying location details
+            || prevProps.isSupportedFavourites && !this.props.isSupportedFavourites // Favourites became unsupported (e.g. on signout)
         ) {
             this.setState({ showFavourites: false });
         }
@@ -955,6 +1019,7 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
         const optionsContext = useContext(OptionsContext);
         const routingContext = useContext(RoutingResultsContext);
         const serviceContext = useContext(ServiceResultsContext);
+        const favouritesContext = useContext(TKFavouritesContext);
         return (
             <>
                 {props.children!({
@@ -964,7 +1029,8 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                     ...serviceContext,
                     ...viewportProps,
                     ...optionsContext,
-                    ...accessibilityContext
+                    ...accessibilityContext,
+                    ...favouritesContext
                 })}
             </>
         );

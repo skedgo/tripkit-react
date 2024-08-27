@@ -31,26 +31,16 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     protected deserialize(itemJson: any): Favourite[] {
         return (itemJson as any[]).map((item: any) =>
-            item.stop ? Util.deserialize(item, FavouriteStop) :
-                item.location ? Util.deserialize(item, FavouriteLocation) :
-                Util.deserialize(item, FavouriteTrip)
-        )
+            item.type === "stop" ? Util.deserialize(item, FavouriteStop) :
+                item.type === "trip" ? Util.deserialize(item, FavouriteTrip) :
+                    Util.deserialize(item, FavouriteLocation));  // Home and work favs falls under FavouriteLocation.
     }
 
-    public save(update: FavouriteTrip[]) {
+    public save(update: Favourite[]) {
         super.save(this.limit ? update.slice(0, this.limit) : update);
     }
 
     public add(elem: Favourite): void {
-        if (elem instanceof FavouriteTrip) {
-            const favouriteTrip = (elem as FavouriteTrip);
-            if (favouriteTrip.from.isCurrLoc()) {
-                elem = Util.iAssign(favouriteTrip, {from: Location.createCurrLoc()})
-            }
-            if (favouriteTrip.to.isCurrLoc()) {
-                elem = Util.iAssign(favouriteTrip, {to: Location.createCurrLoc()})
-            }
-        }
         super.add(elem);
     }
 
@@ -60,8 +50,10 @@ class FavouritesData extends LocalStorageItemArray<Favourite> {
 
     public getLocations(): Location[] {
         return this.get()
-            .map((favouriteLoc: Favourite) => favouriteLoc instanceof FavouriteStop ? favouriteLoc.stop :
-                (favouriteLoc as FavouriteTrip).to);
+            .filter(fav => fav instanceof FavouriteStop ? fav.stop : true)
+            .map((favouriteLoc: Favourite) => favouriteLoc instanceof FavouriteStop ? favouriteLoc.stop! :
+                favouriteLoc instanceof FavouriteLocation ? favouriteLoc.location :
+                    (favouriteLoc as FavouriteTrip).endLocation);
     }
 
     // private static getTestFavourites(): FavouriteTrip[] {

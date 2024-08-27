@@ -1,4 +1,4 @@
-import {JsonObject, JsonProperty} from "json2typescript";
+import { JsonObject, JsonProperty } from "json2typescript";
 import ModeLocation from "./location/ModeLocation";
 
 @JsonObject
@@ -14,7 +14,7 @@ class StopLocation extends ModeLocation {
     @JsonProperty('shortName', String, true)    // In api docs it's named "shortName"
     private _shortName: string | undefined = undefined;
     @JsonProperty('services', String, true)
-    public services?: string; 
+    public services?: string = undefined;
 
     get code(): string {
         return this._code;

@@ -26,22 +26,23 @@ type IStyle = ReturnType<typeof userAccountSettingJss>
 
 interface IProps extends TKUIWithClasses<IStyle, IProps> {
     phoneNote?: ReactNode;
+    moreSettings?: ReactNode;
 }
 
 const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
+    const { moreSettings, classes } = props;
     const { userAccount } = useContext(TKAccountContext);
     const { t } = useContext(TKI18nContext);
     const [showAccountView, setShowAccountView] = useState<boolean>(false);
     if (!userAccount) {
         return null;
     }
-    const classes = props.classes;
     const title = userAccount.givenName ?
         userAccount.givenName + (userAccount.surname ? " " + userAccount.surname : "") :
         userAccount.email;
     const subtitle = t("My.Account");
     return (
-        <React.Fragment>
+        <>
             <TKUISettingLink
                 text={
                     <div className={classes.main}>
@@ -52,9 +53,10 @@ const TKUIUserAccountSetting: React.FunctionComponent<IProps> = props => {
                 }
                 onClick={() => setShowAccountView(true)}
             />
+            {moreSettings}
             {showAccountView &&
                 <TKUIUserAccountView onRequestClose={() => setShowAccountView(false)} phoneNote={props.phoneNote} />}
-        </React.Fragment>
+        </>
     )
 };
 

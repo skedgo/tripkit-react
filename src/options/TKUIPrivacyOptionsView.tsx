@@ -1,19 +1,19 @@
 import * as React from "react";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKUIViewportUtilProps, TKUIViewportUtil} from "../util/TKUIResponsiveUtil";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
-import {tKUIPrivacyOptionsViewDefaultStyle} from "./TKUIPrivacyOptionsView.css";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
+import { CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKUIViewportUtilProps, TKUIViewportUtil } from "../util/TKUIResponsiveUtil";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { Subtract } from "utility-types";
+import { tKUIPrivacyOptionsViewDefaultStyle } from "./TKUIPrivacyOptionsView.css";
+import { CardPresentation, default as TKUICard } from "../card/TKUICard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import classNames from "classnames";
-import {black} from "../jss/TKUITheme";
+import { black } from "../jss/TKUITheme";
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
-import Util from "../util/Util";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
+import Util, { SKEDGO_PRIVACY_POLICY_URL } from "../util/Util";
+import { TKUISlideUpOptions } from "../card/TKUISlideUp";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     value: TKUserProfile,
@@ -24,7 +24,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     privacyPolicyUrl?: string;
 }
 
-interface IConsumedProps extends TKUIViewportUtilProps {}
+interface IConsumedProps extends TKUIViewportUtilProps { }
 
 export interface IStyle {
     main: CSSProps<IProps>;
@@ -39,13 +39,13 @@ export interface IStyle {
     checkboxRow: CSSProps<IProps>;
 }
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIPrivacyOptionsViewProps = IProps;
 export type TKUIPrivacyOptionsViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIPrivacyOptionsView {...props}/>,
+    render: props => <TKUIPrivacyOptionsView {...props} />,
     styles: tKUIPrivacyOptionsViewDefaultStyle,
     classNamePrefix: "TKUIPrivacyOptionsView"
 };
@@ -91,11 +91,11 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         {t("To.show.transport.options,.we.may.share.per-query.information.of.start.location,.end.location,.and.query.time.with.transport.providers..You.can.disable.each.mode.individually,.where.you.dont.want.to.share.this.data.")}
                                     </div>
                                     <TKUIButton text={t("Edit.transport.modes")}
-                                                type={TKUIButtonType.PRIMARY_LINK}
-                                                styles={{
-                                                    main: overrideClass(this.props.injectedStyles.optionLink)
-                                                }}
-                                                onClick={this.props.onShowTransportOptions}
+                                        type={TKUIButtonType.PRIMARY_LINK}
+                                        styles={{
+                                            main: overrideClass(this.props.injectedStyles.optionLink)
+                                        }}
+                                        onClick={this.props.onShowTransportOptions}
                                     />
                                 </div>
                             </div>
@@ -116,7 +116,7 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                                         update.trackTripSelections = checked;
                                         this.props.onChange(update);
                                     }}
-                                    inputProps={{'aria-label': 'Trip selections'}}
+                                    inputProps={{ 'aria-label': 'Trip selections' }}
                                 />
                             </div>
                         </div>
@@ -124,16 +124,16 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
                             {t("We.keep.this.data.on.servers.in.Australia,.Europe,.or.the.US..We.retain.this.data.to.be.able.to.create.long-term.trends..For.more.details,.see.our.Privacy.Policy.")}
                         </div>
                     </div>
-                    <div style={this.props.theme.divider as any}/>
+                    <div style={this.props.theme.divider as any} />
                     <div className={classes.section}>
                         <div className={classes.sectionBody}>
                             <div className={classes.optionRow}>
                                 <TKUIButton text={t("Show.our.Privacy.Policy")}
-                                            type={TKUIButtonType.PRIMARY_LINK}
-                                            styles={{
-                                                main: overrideClass(this.props.injectedStyles.optionLink)
-                                            }}
-                                            onClick={() => window.open(this.props.privacyPolicyUrl || "https://skedgo.com/privacy-policy", '_blank')}
+                                    type={TKUIButtonType.PRIMARY_LINK}
+                                    styles={{
+                                        main: overrideClass(this.props.injectedStyles.optionLink)
+                                    }}
+                                    onClick={() => window.open(this.props.privacyPolicyUrl ?? SKEDGO_PRIVACY_POLICY_URL, '_blank')}
                                 />
                             </div>
                         </div>
@@ -146,9 +146,9 @@ class TKUIPrivacyOptionsView extends React.Component<IProps, {}> {
 }
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
+    ({ inputProps, children }) =>
         <TKUIViewportUtil>
-            {(viewportProps: TKUIViewportUtilProps) => children!({...inputProps, ...viewportProps})}
+            {(viewportProps: TKUIViewportUtilProps) => children!({ ...inputProps, ...viewportProps })}
         </TKUIViewportUtil>;
 
 export default connect((config: TKUIConfig) => config.TKUIPrivacyOptionsView, config, Mapper);

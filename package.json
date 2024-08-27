@@ -43,6 +43,7 @@
         "@types/react-leaflet": "^1.1.6",
         "@types/react-resize-detector": "^3.1.0",
         "@wojtekmaj/react-timerange-picker": "^3.5.0",
+        "aws-amplify": "^6.3.1",
         "babel-plugin-transform-typescript-metadata": "^0.3.0",
         "chart.js": "^3.9.1",
         "classnames": "^2.2.6",
@@ -88,7 +89,8 @@
         "react-time-picker": "^4.1.2",
         "reflect-metadata": "^0.1.13",
         "rxjs": "^6.5.3",
-        "utility-types": "^2.1.0"
+        "utility-types": "^2.1.0",
+        "uuidv4": "^6.2.13"
     },
     "peerDependencies": {
         "react": ">=16.13.1",

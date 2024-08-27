@@ -36,7 +36,7 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
             backgroundColor: colorWithOpacity(theme.colorPrimary, .8), // To get >= 4.5:1 contrast
             cursor: 'initial'
         },
-        '&:active': {
+        '&:active:not(:disabled)': {
             // Until integrate library to decrease color luminosity.
             // backgroundColor: '#079541'
             backgroundColor: theme.colorPrimary
@@ -62,7 +62,7 @@ export const tKUIButtonDefaultStyle = (theme: TKUITheme) => ({
             opacity: '.7',
             cursor: 'initial'
         },
-        '&:active': {
+        '&:active:not(:disabled)': {
             borderColor: black(4, theme.isDark),
             backgroundColor: black(5, theme.isDark)
         },

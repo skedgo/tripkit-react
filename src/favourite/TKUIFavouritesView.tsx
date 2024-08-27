@@ -1,127 +1,180 @@
-import * as React from "react";
-import {CSSProps, overrideClass, TKUIWithClasses, TKUIWithStyle} from "../jss/StyleHelper";
-import {TKComponentDefaultConfig, TKUIConfig} from "../config/TKUIConfig";
-import {tKUIFavouritesViewDefaultStyle} from "./TKUIFavouritesView.css";
+import React, { FunctionComponent, useContext, useEffect } from "react";
+import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
+import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
+import { tKUIFavouritesViewDefaultStyle } from "./TKUIFavouritesView.css";
 import Favourite from "../model/favourite/Favourite";
-import {CardPresentation, default as TKUICard} from "../card/TKUICard";
-import {connect, PropsMapper} from "../config/TKConfigHelper";
-import {Subtract} from "utility-types";
-import {IFavouritesContext, TKFavouritesContext} from "./TKFavouritesProvider";
+import { CardPresentation, default as TKUICard } from "../card/TKUICard";
+import { connect, mapperFromFunction } from "../config/TKConfigHelper";
+import { IFavouritesContext, TKFavouritesContext } from "./TKFavouritesProvider";
 import TKUIFavouriteRow from "./TKUIFavouriteRow";
-import TKUIButton, {TKUIButtonType} from "../buttons/TKUIButton";
-import {TKUISlideUpOptions} from "../card/TKUISlideUp";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
+import { TKUISlideUpOptions } from "../card/TKUISlideUp";
+import TKUIReorderList from "../util_components/TKUIReorderList";
+import TKUIEditFavouriteView from "./TKUIEditFavouriteView";
+import FavouriteStop from "../model/favourite/FavouriteStop";
+import TKLoading from "../card/TKLoading";
+import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
+import { ReactComponent as IconAdd } from '../images/ic-plus-circle.svg';
+import { RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
+import UIUtil from "../util/UIUtil";
+import { TKError } from "../error/TKError";
+import { useResponsiveUtil } from "../util/TKUIResponsiveUtil";
 
-export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
+export interface IClientProps extends IConsumedProps, TKUIWithStyle<IStyle, IProps> {
     title?: string;
-    filter?: (favouriteList: Favourite[], recentList: Favourite[]) => Favourite[];
     onFavouriteClicked?: (item: Favourite) => void;
     onRequestClose?: () => void;
     slideUpOptions?: TKUISlideUpOptions;
 }
 
-interface IConsumedProps {
-    favouriteList: Favourite[];
-    recentList: Favourite[];
-    onRemoveFavourite: (value: Favourite) => void;
-}
+interface IConsumedProps extends IFavouritesContext { }
 
-export interface IStyle {
-    main: CSSProps<IProps>;
-    subHeader: CSSProps<IProps>;
-    editBtn: CSSProps<IProps>;
-}
+export type IStyle = ReturnType<typeof tKUIFavouritesViewDefaultStyle>
 
-interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> {}
+interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIFavouritesViewProps = IProps;
 export type TKUIFavouritesViewStyle = IStyle;
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
-    render: props => <TKUIFavouritesView {...props}/>,
+    render: props => <TKUIFavouritesView {...props} />,
     styles: tKUIFavouritesViewDefaultStyle,
     classNamePrefix: "TKUIFavouritesView"
 };
 
-interface IState {
-    editing: boolean
-}
-
-class TKUIFavouritesView extends React.Component<IProps, IState> {
-
-
-    constructor(props: IProps) {
-        super(props);
-        this.state = {editing: false}
+const TKUIFavouritesView: FunctionComponent<IProps> = (props) => {
+    const { classes, t, slideUpOptions = {}, title = t("Favourites"), injectedStyles, onRequestClose, onFavouriteClicked, favouriteList, onRemoveFavourite, onReorderFavourite, isLoadingFavourites, onRefreshFavourites } = props;
+    const { landscape } = useResponsiveUtil();
+    const [editing, setEditing] = React.useState<boolean>(false);
+    const [editingFav, setEditingFav] = React.useState<Favourite | undefined>(undefined);
+    const [isCreatingFav, setIsCreatingFav] = React.useState<boolean>(false);
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
+    if (process.env.NODE_ENV === "development") {
+        useEffect(() => {   // TODO: remove, just for development.
+            if (favouriteList.length !== 0) {
+                // setEditingFav(favouriteList[0]);
+                console.log(favouriteList);
+            }
+        }, [favouriteList]);
     }
-
-    public static defaultProps: Partial<IProps> = {
-        filter: (favouriteList: Favourite[], recentList: Favourite[]) => {
-            // Sort favourites based on recent list:
-            // - filter (in) those recent that are also favourites.
-            const sortedFavs = recentList.filter((recent: Favourite) => favouriteList.find((fav: Favourite) => fav.equals(recent)));
-            // - append the remaining favourites
-            return sortedFavs.concat(favouriteList.filter((fav: Favourite) => !sortedFavs.find((sfav: Favourite) => sfav.equals(fav))));
+    const handleEditClose = async (update?: Favourite) => {
+        setEditingFav(undefined);
+        if (update) {
+            try {
+                onWaitingStateLoad(true);
+                await (isCreatingFav ? props.onAddFavourite(update) : props.onUpdateFavourite(update));
+            } catch (e) {
+                UIUtil.errorMsg(new TKError(isCreatingFav ? "Failed to create favourite." : "Failed to update favourite."));
+            } finally {
+                onWaitingStateLoad(false);
+            }
         }
+        setIsCreatingFav(false);
     };
-
-    public render(): React.ReactNode {
-        const classes = this.props.classes;
-        const t = this.props.t;
-        const slideUpOptions = this.props.slideUpOptions ? this.props.slideUpOptions : {};
-        const title = this.props.title || t("Favourites");
-        return (
+    const handleRemoveFavourite = (favourite: Favourite) => {
+        UIUtil.confirmMsg({
+            title: "Delete",
+            message: "Are you sure you want to delete this favourite?",
+            onConfirm: async () => {
+                try {
+                    onWaitingStateLoad(true);
+                    await onRemoveFavourite?.(favourite);
+                } catch (e) {
+                    UIUtil.errorMsg(new TKError("Failed to delete favourite."));
+                } finally {
+                    onWaitingStateLoad(false);
+                    setEditingFav(undefined);
+                }
+            }
+        });
+    }
+    return (
+        <>
             <TKUICard
                 title={title}
                 presentation={CardPresentation.SLIDE_UP}
                 renderSubHeader={() =>
                     <div className={classes.subHeader}>
-                        <TKUIButton text={this.state.editing ? t("Done") : t("edit")}
-                                    onClick={() => this.setState((prev: IState) => ({editing: !prev.editing}))}
-                                    type={TKUIButtonType.PRIMARY_LINK}
-                                    styles={{
-                                        main: overrideClass(this.props.injectedStyles.editBtn)
-                                    }}
+                        <TKUIButton text={editing ? t("Done") : t("edit")}
+                            onClick={() => setEditing(!editing)}
+                            type={TKUIButtonType.PRIMARY_LINK}
+                            styles={{
+                                main: overrideClass(injectedStyles.editBtn)
+                            }}
                         />
+                        {onRefreshFavourites &&
+                            <button className={classes.refresh}
+                                onClick={() => {
+                                    // if (resultsRef.current) {
+                                    //     resultsRef.current.scrollTop = 0;
+                                    // };
+                                    onRefreshFavourites({ shouldRefreshStops: true });
+                                }}>
+                                <IconRefresh />
+                            </button>}
+                        <button className={classes.add}
+                            onClick={() => {
+                                setIsCreatingFav(true);
+                            }}>
+                            <IconAdd />
+                        </button>
                     </div>}
-                onRequestClose={this.props.onRequestClose}
+                onRequestClose={onRequestClose}
                 slideUpOptions={slideUpOptions}
+                styles={{
+                    subHeader: overrideClass({ padding: '0 16px' })
+                }}
             >
                 <div className={classes.main}>
-                    {this.props.filter!(this.props.favouriteList, this.props.recentList)
-                        .map((item: Favourite, i: number) =>
-                            <TKUIFavouriteRow
-                                value={item}
-                                onClick={() => this.props.onFavouriteClicked && this.props.onFavouriteClicked(item)}
-                                onRemove={this.state.editing ? () => this.props.onRemoveFavourite(item) : undefined}
-                                key={i}
-                            />)}
+                    <TKUIReorderList
+                        onDragEnd={onReorderFavourite}
+                    >
+                        {(onHandleMouseDown) =>
+                            favouriteList.map((item, i) =>
+                                <TKUIFavouriteRow
+                                    value={item}
+                                    onClick={editing ? undefined : () => onFavouriteClicked?.(item)}
+                                    onRemove={editing ? () => handleRemoveFavourite(item) : undefined}
+                                    onEdit={!editing && (item instanceof FavouriteStop ? item.stop : true) ? () => setEditingFav(item) : undefined}
+                                    onHandleMouseDown={editing ? (e: any) => onHandleMouseDown(e, i) : undefined}
+                                    key={i}
+                                />)
+                        }
+                    </TKUIReorderList>
+                    {isLoadingFavourites &&
+                        <div className={classes.loadingPanel}>
+                            <TKLoading />
+                        </div>}
                 </div>
             </TKUICard>
-        );
-    }
+            {(editingFav || isCreatingFav) &&
+                <TKUIEditFavouriteView
+                    value={editingFav}
+                    onRequestClose={handleEditClose}
+                    onRemove={editingFav ? () => handleRemoveFavourite(editingFav) : undefined}
+                    cardPresentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
+                    slideUpOptions={{ draggable: false }}
+                    styles={{
+                        formGroup: overrideClass({
+                            '& label[for="address"]': {
+                                display: 'none'
+                            }
+                        })
+                    }}
+                />}
+        </>
+    );
 }
 
-const Consumer: React.SFC<{children: (props: IConsumedProps) => React.ReactNode}> =
-    (props: {children: (props: IConsumedProps) => React.ReactNode}) => {
-        return (
-            <TKFavouritesContext.Consumer>
-                {(favouriteContext: IFavouritesContext) => {
-                    const consumerProps: IConsumedProps = {
-                        favouriteList: favouriteContext.favouriteList,
-                        recentList: favouriteContext.recentList,
-                        onRemoveFavourite: favouriteContext.onRemoveFavourite
-                    };
-                    return props.children!(consumerProps);
-                }}
-            </TKFavouritesContext.Consumer>
-        );
-    };
 
-const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =
-    ({inputProps, children}) =>
-        <Consumer>
-            {(consumedProps: IConsumedProps) =>
-                children!({...inputProps, ...consumedProps})}
-        </Consumer>;
+const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => React.ReactNode }> = (props) => {
+    const favouritesContext = useContext(TKFavouritesContext);
+    return <>{props.children!({ ...favouritesContext })}</>;
+};
 
-export default connect((config: TKUIConfig) => config.TKUIFavouritesView, config, Mapper);
+export default connect((config: TKUIConfig) => config.TKUIFavouritesView, config, mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+export const TKUIFavouritesViewHelpers = {
+    TKStateProps: Consumer,
+    useTKStateProps: () => { }   // Hook version of TKStateProps, not defined for now.
+}

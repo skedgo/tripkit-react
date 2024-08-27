@@ -25,18 +25,20 @@ const accountBtnJss = (theme: TKUITheme) => ({
 
 type IStyle = ReturnType<typeof accountBtnJss>
 
-interface IProps extends TKUIWithClasses<IStyle, IProps> { }
+interface IProps extends TKUIWithClasses<IStyle, IProps> {
+    onSignInClick?: () => void;
+}
 
-const TKUIAccountBtn: React.SFC<IProps> = (props: IProps) => {
+const TKUIAccountBtn: React.FunctionComponent<IProps> = (props: IProps) => {
     const { status } = useContext(TKAccountContext);
     const { setShowUserProfile } = useContext(OptionsContext);
-    const classes = props.classes;
+    const { onSignInClick, classes } = props;
     return (
         status === SignInStatus.signedIn ?
             <button className={classes.main} onClick={() => setShowUserProfile(true)}>
                 <IconProfile />
             </button>
-            : <TKUISignInBtn />
+            : <TKUISignInBtn onSignInClick={onSignInClick} />
     )
 };
 

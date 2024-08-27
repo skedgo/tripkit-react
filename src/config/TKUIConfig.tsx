@@ -89,6 +89,7 @@ import { TKUIBookingActionsProps, TKUIBookingActionsStyle } from "../booking/TKU
 import { TKUIBicycleInfoProps, TKUIBicycleInfoStyle } from "../service/TKUIBicycleInfo";
 import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
 import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
+import { TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle } from "../favourite/TKUIEditFavouriteView";
 
 /**
  * SDK configuration
@@ -233,6 +234,7 @@ export interface ITKUIConfigOptional {
     TKUILocationSearch: TKComponentConfig<TKUILocationSearchProps, TKUILocationSearchStyle>;
     TKUIFavouritesView: TKComponentConfig<TKUIFavouritesViewProps, TKUIFavouritesViewStyle>;
     TKUIFavouriteRow: TKComponentConfig<TKUIFavouriteRowProps, TKUIFavouriteRowStyle>;
+    TKUIEditFavouriteView: TKComponentConfig<TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle>;
     TKUIRoutingQueryInput: TKComponentConfig<TKUIRoutingQueryInputProps, TKUIRoutingQueryInputStyle>;
     TKUIButton: TKComponentConfig<TKUIButtonProps, TKUIButtonStyle>;
     TKUISelect: TKComponentConfig<TKUISelectProps, TKUISelectStyle>;

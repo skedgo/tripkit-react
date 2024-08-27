@@ -21,22 +21,20 @@ class NetworkUtil {
             const contentType = response.headers.get("content-type");
             if (contentType && contentType.indexOf("application/json") !== -1) {
                 return response.json()
-                    .catch(_e => {  // E.g. if "content-type" header is "application/json", but the body is actually not a valid json.                    
-                        throw new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false);
+                    .catch(_e => {  // E.g. if "content-type" header is "application/json", but the body is actually not a valid json.                                            
+                        throw TKError.create({ message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), code: response.status, usererror: false, response });
                     })
                     .then(jsonData => {
                         if (jsonData.error || jsonData.errorCode) {    // To contemplate new error format, which comes with fields `errorCode`, `title`, `subtitle`, and `userError`.
                             const messageElems = jsonData.error ? [jsonData.error] : [jsonData.title, jsonData.subtitle].filter(text => text);
-                            const tkError = new TKError(messageElems.join(". "), jsonData.errorCode?.toString(), jsonData.usererror);
-                            tkError.title = jsonData.title;
-                            tkError.subtitle = jsonData.subtitle;
+                            const tkError = TKError.create({ message: messageElems.join(". "), code: jsonData.errorCode?.toString(), usererror: jsonData.usererror, response });
                             throw tkError;
                         } else {
-                            return Promise.reject(new Error(response.statusText ? response.statusText : response.status));
+                            return Promise.reject(TKError.create({ message: response.statusText ? response.statusText : response.status, code: response.status, usererror: false, response }));
                         }
                     })
             } else {
-                return Promise.reject(new TKError(i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), response.status, false));
+                return Promise.reject(TKError.create({ message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), code: response.status, usererror: false, response }));
             }
         }
     }
@@ -50,9 +48,7 @@ class NetworkUtil {
         }
         return response.json().then(jsonData => {
             if (jsonData.error) {
-                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
-                tkError.title = jsonData.title;
-                tkError.subtitle = jsonData.subtitle;
+                const tkError = TKError.create({ message: jsonData.error, code: jsonData.errorCode ? jsonData.errorCode.toString() : undefined, usererror: jsonData.usererror, response, title: jsonData.title, subtitle: jsonData.subtitle });
                 throw tkError;
             }
             return jsonData;
@@ -81,9 +77,7 @@ class NetworkUtil {
         }).then(content => {
             if (typeof content === 'object' && content?.error) {
                 const jsonData = content;
-                const tkError = new TKError(jsonData.error, jsonData.errorCode && jsonData.errorCode.toString(), jsonData.usererror);
-                tkError.title = jsonData.title;
-                tkError.subtitle = jsonData.subtitle;
+                const tkError = TKError.create({ message: jsonData.error, code: jsonData.errorCode ? jsonData.errorCode.toString() : undefined, usererror: jsonData.usererror, response });
                 throw tkError;
             }
             return content;
@@ -170,26 +164,80 @@ class NetworkUtil {
     //     return options.headers?.['Accept']?.contains("html") ? fetchPromise.then(result => result.text()) : fetchPromise.then(NetworkUtil.jsonCallback);
     // }
 
-    public static fetch(url: string, options: any, cache: boolean = true): Promise<any> {
-        if (!cache) {
-            return fetch(url, options).then(NetworkUtil.fetchApiCallback);
+    private static isExpired(request: Request): boolean {
+        const cacheControl = request.headers.get("x-cache-control");
+        if (!cacheControl) {
+            return false;
         }
-        const cacheKey = url + JSON.stringify(options);
-        if (!NetworkUtil.getCache().has(cacheKey)) {
-            const fetchPromise = fetch(url, options).then(NetworkUtil.jsonCallback);
-            fetchPromise
-                .then((json: any) => NetworkUtil.setCache(cacheKey, json))
-                .catch((reason: Error) => {
-                    // Our api answers 200 with a null json when there is no update, so return undefined;
-                    if (reason.message.includes("Unexpected end of JSON input")) {
-                        return undefined;
-                    }
-                    Util.log(reason, Env.PRODUCTION);
-                    throw reason;
+        const maxAge = cacheControl.match(/max-age=(\d+)/);
+        if (!maxAge) {
+            return false;
+        }
+        const maxAgeValue = parseInt(maxAge[1]);
+        const date = request.headers.get("x-date");
+        if (!date) {
+            return false;
+        }
+        const dateValue = new Date(date).getTime();
+        const now = new Date().getTime();
+        return now - dateValue > maxAgeValue * 1000
+    }
+
+    public static async fetch(url: string, options: any, useCache: boolean = true, cacheRefreshCallback: (response: any) => void = () => { }): Promise<any> {
+        if (!useCache) {
+            try {
+                const response = await fetch(url, options);
+                return this.fetchApiCallback(response);
+            } catch (e) {
+                if (e instanceof TKError) {
+                    throw e;
+                }
+                throw TKError.create({
+                    message: i18n.t("Something.went.wrong.") + " " + i18n.t("Contact.support"), usererror: false, requestUrl: url
                 });
-            return fetchPromise;
+            }
         }
-        return Promise.resolve(NetworkUtil.getCache().get(cacheKey));
+        options.headers = options.headers || {};
+        const fetchRequest = new Request(url, options);
+        const cacheName = new URL(fetchRequest.url).hostname;
+        const cache = await caches.open(cacheName);
+        const cacheResponse = await cache.match(fetchRequest);
+        const cacheAndNetwork = options.headers["x-fetch-policy"] === "cache-and-network";
+        if (cacheResponse && !NetworkUtil.isExpired(fetchRequest) && !cacheAndNetwork) {
+            return NetworkUtil.fetchApiCallback(cacheResponse);
+        }
+        // Remove custom browser cache headers, they shouldn't be sent to the server (e.g. CORS can complain).
+        options.headers = { ...options.headers };
+        delete options.headers["x-fetch-policy"];
+        delete options.headers["x-cache-control"];
+        delete options.headers["x-date"];
+        // Alternative behaviour when "cache-and-network" always return immediatly with caché result, with undefined if it's a miss, and the network
+        // call on the callback.
+        // if (cacheAndNetwork) {
+        //     fetch(url, options)
+        //         .then(response => {
+        //             cache.put(fetchRequest, response.clone());
+        //             return response;
+        //         })
+        //         .then(NetworkUtil.fetchApiCallback)
+        //         .then(cacheRefreshCallback)
+        //         .catch(e => { });
+        //     return cacheResponse && !NetworkUtil.isExpired(fetchRequest) ? NetworkUtil.fetchApiCallback(cacheResponse) : undefined;
+        // }
+        if (cacheResponse && !NetworkUtil.isExpired(fetchRequest) && cacheAndNetwork) {
+            fetch(url, options)
+                .then(response => {
+                    cache.put(fetchRequest, response.clone());
+                    return response;
+                })
+                .then(NetworkUtil.fetchApiCallback)
+                .then(cacheRefreshCallback)
+                .catch(e => { });
+            return NetworkUtil.fetchApiCallback(cacheResponse);
+        }
+        const response = await fetch(url, options);
+        cache.put(fetchRequest, response.clone());
+        return NetworkUtil.fetchApiCallback(response);
     }
 
     public static delayPromise<T>(duration: number): ((data: T) => Promise<T>) {

@@ -324,11 +324,16 @@ class TKUIMapView extends React.Component<IProps & IDefaultProps, IState> {
 
     constructor(props: Readonly<IProps & IDefaultProps>) {
         super(props);
-        this.state = {};
+        this.state = {
+            coveragePolygon: props.coverageGeoJson ? MapUtil.toLeafletMultiPolygon(props.coverageGeoJson) : undefined
+        };
         this.onTrackUserLocation = this.onTrackUserLocation.bind(this);
         this.showUserLocTooltip = this.showUserLocTooltip.bind(this);
         this.getLocationPopup = this.getLocationPopup.bind(this);
         NetworkUtil.loadCss("https://unpkg.com/leaflet@1.6.0/dist/leaflet.css");
+        if (this.props.reference && !Util.isFunction(this.props.reference)) {
+            (this.props.reference as MutableRefObject<TKUIMapView | null>).current = this;
+        }
     }
 
     public registerLayer(layer: MapLayer) {
