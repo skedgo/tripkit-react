@@ -94,7 +94,7 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripPlanner"
 };
 
-interface CardViewData {
+export interface CardViewData {
     viewId: string;
     renderCard: () => ReactNode;
     mapProps?: TKUIMapViewClientProps;
@@ -640,6 +640,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             },
                             presentation: CardPresentation.SLIDE_UP
                         }}
+                        pushCardView={this.pushCardView}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -675,6 +676,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 },
                                                 presentation: CardPresentation.NONE
                                             }}
+                                            pushCardView={this.pushCardView}
                                         />
                                     </div>
                                 )}

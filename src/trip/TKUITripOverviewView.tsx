@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent, useContext } from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
@@ -17,11 +17,14 @@ import NetworkUtil from "../util/NetworkUtil";
 import TKShareHelper from "../share/TKShareHelper";
 import genStyles from "../css/GenStyle.css";
 import TKUIShareAction from "../action/TKUIShareAction";
-import { IRoutingResultsContext, RoutingResultsContext } from "../trip-planner/RoutingResultsProvider";
 import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
 import TKUITripTime from "./TKUITripTime";
 import TripRowTrack from "./TripRowTrack";
 import TKUICardHeader from "../card/TKUICardHeader";
+import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
+import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
+import { CardViewData } from "../trip-planner/TKUITripPlanner";
 
 type IStyle = ReturnType<typeof tKUITripOverviewViewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -84,6 +87,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     handleRef?: (ref: any) => void;
+
+    pushCardView?: (props: CardViewData) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -97,22 +102,47 @@ export const config: TKComponentDefaultConfig<IProps, IStyle> = {
     classNamePrefix: "TKUITripOverviewView"
 };
 
-class TKUITripOverviewView extends React.Component<IProps, {}> {
+export function getBookingSegment(trip: Trip, tkconfig: TKUIConfig, signInStatus: SignInStatus) {
+    return trip.segments.find(segment => {
+        if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
+            return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && signInStatus === SignInStatus.signedIn;
+        }
+        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking;
+    });
+}
 
-    constructor(props: IProps) {
-        super(props);
-        this.getDefaultActions = this.getDefaultActions.bind(this);
-        this.getDefaultSegmentActions = this.getDefaultSegmentActions.bind(this);
-    }
-
-    private getDefaultActions(trip: Trip) {
-        const { value, onTripSegmentSelected, t } = this.props;
+const TKUITripOverviewView: FunctionComponent<IProps> = props => {
+    const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack, pushCardView } = props;
+    const tkconfig = useContext(TKUIConfigContext);
+    const { accountsSupported, status } = useContext(TKAccountContext);
+    function getDefaultActions() {
+        const bookingSegment = getBookingSegment(trip, tkconfig, status);
+        const renderBookingCard = bookingSegment && accountsSupported && status === SignInStatus.signedIn && tkconfig.booking?.renderBookingCard;
         return [
+            ...renderBookingCard && pushCardView ? [
+                <TKUIButton
+                    icon={<IconTicket />}
+                    text={bookingSegment.booking!.title}
+                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                    key={"actionTicket"}
+                    onClick={() => {
+                        pushCardView({
+                            viewId: "BOOKING_CARD",
+                            renderCard: () => renderBookingCard({
+                                segment: bookingSegment,
+                                // onRequestClose,
+                                refreshSelectedTrip: () => Promise.resolve(true),
+                                trip
+                            })
+                        })
+                    }}
+                />
+            ] : [],
             ...(onTripSegmentSelected ?
                 [<TKUIButton text={t("Go")}
                     icon={<IconNavigation />}
                     type={TKUIButtonType.SECONDARY_VERTICAL}
-                    onClick={() => onTripSegmentSelected?.(value.getSegments(Visibility.IN_DETAILS)[0])}
+                    onClick={() => onTripSegmentSelected?.(trip.getSegments(Visibility.IN_DETAILS)[0])}
                     key={"actionGo"}
                 />] : []),
             <TKUIFavouriteAction
@@ -128,9 +158,7 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
             />
         ];
     }
-
-    private getDefaultSegmentActions(segment: Segment) {
-        const props = this.props;
+    function getDefaultSegmentActions(segment: Segment) {
         return segment.arrival ? [
             <TKUIShareAction title={props.t("Share.Arrival")}
                 link={TKShareHelper.getShareSegmentArrival(segment)}
@@ -144,61 +172,56 @@ class TKUITripOverviewView extends React.Component<IProps, {}> {
             />
         ] : []
     }
-
-    public render(): React.ReactNode {
-        const segments = this.props.value.getSegments(Visibility.IN_DETAILS);
-        const { value: trip, cardProps, classes } = this.props;
-        const defaultActions = this.getDefaultActions(trip);
-        const actions = this.props.actions ? this.props.actions(trip, defaultActions) : defaultActions;
-        const hideTimes = trip.hideExactTimes;
-        const subHeader = () =>
-            <div className={classes.header}>
-                <div style={{ marginLeft: '10px' }}>
-                    <TripRowTrack value={trip} />
-                </div>
-                {actions &&
-                    <TKUIActionsView actions={actions} className={classes.actionsPanel} />}
-            </div>;
-        const segmentsAndArrival = segments.concat(this.props.value.arrivalSegment);
-        return (
-            <TKUICard
-                renderHeader={props =>
-                    <TKUICardHeader {...props}
-                        title={!hideTimes &&
-                            <TKUITripTime
-                                styles={{
-                                    timePrimary: overrideClass({ lineHeight: '28px' }),
-                                    timeSecondary: overrideClass({ lineHeight: '28px' })
-                                }}
-                                value={trip}
-                            />
-                        }
-                    />}
-                renderSubHeader={subHeader}
-                handleRef={this.props.handleRef}
-                ariaLabel={trip.mainSegment?.modeInfo ? trip.mainSegment.modeInfo.alt + " Trip Details" : undefined}
-                shouldFocusAfterRender={this.props.shouldFocusAfterRender}
-                doNotStack={this.props.doNotStack}
-                {...cardProps}
-            >
-                <div className={classes.main}>
-                    {segmentsAndArrival.map((segment: Segment, index: number) => {
-                        const defaultSegmentActions = this.getDefaultSegmentActions(segment);
-                        const segmentActions = this.props.segmentActions ?
-                            this.props.segmentActions(segment, defaultSegmentActions) : defaultSegmentActions;
-                        return <TKUISegmentOverview
-                            value={segment}
-                            key={index}
-                            actions={segmentActions}
-                            onRequestAlternativeRoutes={this.props.onRequestAlternativeRoutes}
-                            onClick={() => this.props.onTripSegmentSelected?.(segment)}
-                        />;
+    const segments = trip.getSegments(Visibility.IN_DETAILS);
+    const defaultActions = getDefaultActions();
+    const actions = props.actions ? props.actions(trip, defaultActions) : defaultActions;
+    const hideTimes = trip.hideExactTimes;
+    const subHeader = () =>
+        <div className={classes.header}>
+            <div style={{ marginLeft: '10px' }}>
+                <TripRowTrack value={trip} />
+            </div>
+            {actions &&
+                <TKUIActionsView actions={actions} className={classes.actionsPanel} />}
+        </div>;
+    const segmentsAndArrival = segments.concat(trip.arrivalSegment);
+    return (
+        <TKUICard
+            renderHeader={props =>
+                <TKUICardHeader {...props}
+                    title={!hideTimes &&
+                        <TKUITripTime
+                            styles={{
+                                timePrimary: overrideClass({ lineHeight: '28px' }),
+                                timeSecondary: overrideClass({ lineHeight: '28px' })
+                            }}
+                            value={trip}
+                        />
                     }
-                    )}
-                </div>
-            </TKUICard>
-        )
-    }
+                />}
+            renderSubHeader={subHeader}
+            handleRef={handleRef}
+            ariaLabel={trip.mainSegment?.modeInfo ? trip.mainSegment.modeInfo.alt + " Trip Details" : undefined}
+            shouldFocusAfterRender={shouldFocusAfterRender}
+            doNotStack={doNotStack}
+            {...cardProps}
+        >
+            <div className={classes.main}>
+                {segmentsAndArrival.map((segment: Segment, index: number) => {
+                    const defaultSegmentActions = getDefaultSegmentActions(segment);
+                    const segmentActions = props.segmentActions ?
+                        props.segmentActions(segment, defaultSegmentActions) : defaultSegmentActions;
+                    return <TKUISegmentOverview
+                        value={segment}
+                        key={index}
+                        actions={segmentActions}
+                        onRequestAlternativeRoutes={props.onRequestAlternativeRoutes}
+                        onClick={() => props.onTripSegmentSelected?.(segment)}
+                    />;
+                })}
+            </div>
+        </TKUICard>
+    )
 }
 
 /**
