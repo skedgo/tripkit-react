@@ -62,6 +62,8 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     onRequestClose?: () => void;
 
+    closeButtonText?: string;
+
     /**
      * Values: CardPresentation.MODAL, CardPresentation.SLIDE_UP, CardPresentation.NONE.
      * @ctype
@@ -234,7 +236,7 @@ class TKUICard extends React.Component<IProps, IState> {
     }
 
     public render(): React.ReactNode {
-        const { title, subtitle, onRequestClose, closeAriaLabel, className, children, presentation, classes } = this.props;
+        const { title, subtitle, onRequestClose, closeButtonText, closeAriaLabel, className, children, presentation, classes } = this.props;
         if (presentation === CardPresentation.CONTENT) {
             return children;
         }
@@ -280,7 +282,7 @@ class TKUICard extends React.Component<IProps, IState> {
                                         <div className={classes.handleLine} />
                                     </div>}
                                 {showHeader &&
-                                    renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeAriaLabel, noPaddingTop: showHandle })}
+                                    renderHeader({ title, subtitle, onRequestClose: onRequestClose ? this.close : undefined, closeButtonText, closeAriaLabel, noPaddingTop: showHandle })}
                             </div>}
                         {this.props.renderSubHeader &&
                             <div className={classes.subHeader}>

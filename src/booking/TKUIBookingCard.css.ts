@@ -3,13 +3,22 @@ import { black, TKUITheme, white } from "../jss/TKUITheme";
 
 export const tKUIBookingCardDefaultStyle = (theme: TKUITheme) => ({
     main: {
-        position: 'relative',
         ...genStyles.flex,
         ...genStyles.column,
-        '&:last-child button': {
-            borderBottom: 'none!important'
-        }
+        height: '100%'
     },
+    loadingPanel: {
+        ...genStyles.flex,
+        ...genStyles.grow,
+        ...genStyles.center,
+        position: 'absolute',
+        top: '0',
+        backgroundColor: '#ffffffbf',
+        height: '100%',
+        width: '100%',
+        zIndex: 5
+    },
+    // TODO: delete below   
     form: {
         ...genStyles.flex,
         ...genStyles.column,
@@ -19,16 +28,6 @@ export const tKUIBookingCardDefaultStyle = (theme: TKUITheme) => ({
         '&>*:not(:last-child)': {
             ...theme.divider
         }
-    },
-    loadingPanel: {
-        ...genStyles.flex,
-        ...genStyles.center,
-        ...genStyles.alignCenter,
-        height: '100%',
-        width: '100%',
-        position: 'absolute',
-        top: '0',
-        background: white(1, theme.isDark)
     },
     iconLoading: {
         margin: '0 5px',

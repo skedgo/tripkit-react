@@ -87,13 +87,8 @@ const TKUIStripePaymentCard: React.FunctionComponent<IProps> = ({ onRequestClose
                                 paymentOptions={paymentOptions}
                                 setWaiting={setWaiting}
                                 ephemeralKeyObj={ephemeralKeyObj}
-                                onClose={success => {
-                                    if (!success) {
-                                        setShowPaymentForm(false);
-                                    } else {
-                                        onRequestClose(true);
-                                    }
-                                }}
+                                onSubmit={() => onRequestClose(true)}
+                                onClose={() => setShowPaymentForm(false)}
                             />}
                     </div>
                     {waiting &&

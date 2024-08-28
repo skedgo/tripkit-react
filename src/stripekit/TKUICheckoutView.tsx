@@ -1,7 +1,7 @@
 import React, { Fragment, ReactNode, useEffect, useMemo, useState } from 'react';
 import { useElements, Elements, CardElement } from '@stripe/react-stripe-js';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
-import { TKUIWithClasses, overrideClass, withStyles } from '../jss/StyleHelper';
+import { TKUIWithClasses, TKUIWithStyle, overrideClass } from '../jss/StyleHelper';
 import { black, colorWithOpacity, TKUITheme } from '../jss/TKUITheme';
 import genStyles from '../css/GenStyle.css';
 import TKUIPaymentMethodSelect, { SGPaymentMethod } from './TKUIPaymentMethodSelect';
@@ -22,7 +22,9 @@ import FormatUtil from '../util/FormatUtil';
 import classNames from 'classnames';
 import { SelectOption } from '../buttons/TKUISelect';
 import { i18n } from '../i18n/TKI18nConstants';
-import TKUINewCardView from './TKUINewCardView';
+import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
+import { connect, mapperFromFunction } from '../config/TKConfigHelper';
+import { TKUIConfig } from '../config/TKUIConfig';
 
 const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     main: {
@@ -140,20 +142,36 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
     }
 });
 
-type IStyle = ReturnType<typeof tKUICheckoutFormPropsDefaultStyle>
-
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     publicKey: string;
     paymentOptions: PaymentOption[];
     ephemeralKeyObj: EphemeralResult;
-    onClose: (success?: boolean, data?: { updateURL?: string }) => void;
+    onSubmit: (data: { updateURL?: string }) => void;
+    onClose?: () => void;
     setWaiting?: (waiting: boolean) => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
     defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
 }
 
-function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, data?: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+type IStyle = ReturnType<typeof tKUICheckoutFormPropsDefaultStyle>
+
+export type TKUICheckoutViewProps = IProps;
+export type TKUICheckoutViewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUICheckoutView {...props} />,
+    styles: tKUICheckoutFormPropsDefaultStyle,
+    classNamePrefix: "TKUICheckoutView"
+};
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+export type TKUICheckoutViewClientProps = IClientProps;
+
+function handlePayResponse(request: Promise<any>, onSubmit: (data: { updateURL?: string }) => void, setWaiting?: (waiting: boolean) => void) {
     setWaiting?.(true);
     request.then(data => {
         if (data.warning) {
@@ -168,13 +186,13 @@ function handlePayResponse(request: Promise<any>, onClose: (success?: boolean, d
         }
         return data;
     })
-        .then(data => onClose(true, data))
+        .then(data => onSubmit(data))
         .catch(UIUtil.errorMsg)
         .finally(() => setWaiting?.(false));
 }
 
 const TKUICheckoutView: React.FunctionComponent<IProps> =
-    ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onClose, ...remainingProps }) => {
+    ({ publicKey, paymentOptions, ephemeralKeyObj, setWaiting, onSubmit, onClose, ...remainingProps }) => {
         const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | undefined>(undefined);
         const [paymentIntentSecret, setPaymentIntentSecret] = useState<string | undefined>(undefined);
         const [paidUrl, setPaidUrl] = useState<string | undefined>(undefined);
@@ -210,9 +228,9 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                 const paymentOption = paymentMethod.paymentOption;
                 let stripePaymentMethod = paymentMethod.data?.stripePaymentMethod;
                 if (paymentOption.paymentMode === "WALLET") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INVOICE") {
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value }), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { organizationID: paymentMethod.data!.selectedSubOption!.value }), onSubmit, setWaiting);
                 } else if (paymentOption.paymentMode === "INTERNAL") {
                     const stripe = await stripePromise;
                     if (!stripe || !stripePaymentMethod && !elements) {
@@ -252,7 +270,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                         setWaiting?.(false);
                         UIUtil.errorMsg(new TKError("The payment was not successful. Please try again.", undefined, true));
                     } else {
-                        handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onClose, setWaiting);
+                        handlePayResponse(TripGoApi.apiCallUrl(paidUrl!, NetworkUtil.MethodType.GET), onSubmit, setWaiting);
                     }
                 } else {    // paymentOption.paymentMode === "EXTERNAL"
                     const stripe = await stripePromise;
@@ -285,7 +303,7 @@ const TKUICheckoutView: React.FunctionComponent<IProps> =
                                 .then(NetworkUtil.jsonCallback);
                         }
                     }
-                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id }), onClose, setWaiting);
+                    handlePayResponse(TripGoApi.apiCallUrl(paymentOption.url, paymentOption.method, { paymentMethod: stripePaymentMethod.id }), onSubmit, setWaiting);
                 }
             }
         return (
@@ -307,7 +325,7 @@ interface CheckoutFormProps extends TKUIWithClasses<IStyle, IProps> {
     paymentOptions: PaymentOption[];
     onConfirmPayment: (props: { paymentMethod: SGPaymentMethod, elements?: StripeElements, saveForFuture?: boolean }) => void;
     setWaiting?: (waiting: boolean) => void;
-    onClose: (success?: boolean) => void;
+    onClose?: () => void;
     organizationOptions?: SelectOption[];
     defaultOrganizationOption?: SelectOption;
     defaultPaymentMethodFc?: (paymentMethods: SGPaymentMethod[]) => SGPaymentMethod | undefined;
@@ -554,11 +572,12 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                         {review}
                     </div>
                     <div className={classes.buttonsPanel}>
-                        <TKUIButton
-                            text={t("Back")}
-                            type={TKUIButtonType.SECONDARY}
-                            onClick={() => onClose()}
-                        />
+                        {onClose &&
+                            <TKUIButton
+                                text={t("Back")}
+                                type={TKUIButtonType.SECONDARY}
+                                onClick={() => onClose()}
+                            />}
                         <TKUIButton
                             text={"Purchase"}
                             type={TKUIButtonType.PRIMARY}
@@ -573,4 +592,5 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         )
     }
 
-export default withStyles(TKUICheckoutView, tKUICheckoutFormPropsDefaultStyle);
+export default connect((config: TKUIConfig) => config.TKUICheckoutView, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

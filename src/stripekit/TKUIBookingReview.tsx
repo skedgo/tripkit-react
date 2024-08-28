@@ -1,7 +1,7 @@
 import React from 'react';
 import TKUIFromTo from '../booking/TKUIFromTo';
 import genStyles from '../css/GenStyle.css';
-import { TKUIWithClasses, withStyles } from '../jss/StyleHelper';
+import { TKUIWithClasses, TKUIWithStyle } from '../jss/StyleHelper';
 import { black, TKUITheme } from '../jss/TKUITheme';
 import BookingReview from '../model/trip/BookingReview';
 import PaymentOption from '../model/trip/PaymentOption';
@@ -10,6 +10,9 @@ import FormatUtil from '../util/FormatUtil';
 import { ReactComponent as IconPassenger } from '../images/ic-booking-passenger.svg';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKUIViewportUtilProps } from '../util/TKUIResponsiveUtil';
+import { TKComponentDefaultConfig } from '../config/TKComponentConfig';
+import { TKUIConfig } from '../config/TKUIConfig';
+import { connect, mapperFromFunction } from '../config/TKConfigHelper';
 
 const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
     main: {
@@ -102,16 +105,29 @@ const tKUIBookingReviewStyle = (theme: TKUITheme) => ({
     }
 })
 
-type IStyle = ReturnType<typeof tKUIBookingReviewStyle>
-
-interface IProps extends TKUIWithClasses<IStyle, IProps> {
+interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     reviews: BookingReview[];
     paymentOptions: PaymentOption[];
     onContinue: () => void;
-    onClose: () => void;
+    onClose?: () => void;
     viewportProps?: TKUIViewportUtilProps;
     cancelText?: string;
 }
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
+
+type IStyle = ReturnType<typeof tKUIBookingReviewStyle>
+
+export type TKUIBookingReviewProps = IProps;
+export type TKUIBookingReviewStyle = IStyle;
+
+const config: TKComponentDefaultConfig<IProps, IStyle> = {
+    render: props => <TKUIBookingReview {...props} />,
+    styles: tKUIBookingReviewStyle,
+    classNamePrefix: "TKUIBookingReview"
+};
+
+interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 const TKUIBookingReview: React.FunctionComponent<IProps> =
     ({ reviews, paymentOptions, cancelText, classes, theme, onContinue, onClose, t, viewportProps }) => {
@@ -162,11 +178,12 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
                     </div>
                 </div>
                 <div className={classes.buttonsPanel}>
-                    <TKUIButton
-                        text={cancelText ?? t("Cancel")}
-                        type={TKUIButtonType.SECONDARY}
-                        onClick={() => onClose()}
-                    />
+                    {onClose &&
+                        <TKUIButton
+                            text={cancelText ?? t("Cancel")}
+                            type={TKUIButtonType.SECONDARY}
+                            onClick={() => onClose()}
+                        />}
                     <TKUIButton text={paymentOptions[0]?.paymentMode === "FREE" ? "Confirm Booking" : "Continue to Payment"} onClick={() => onContinue()} name={"confirm-review-btn"} />
                 </div>
             </div>
@@ -174,4 +191,5 @@ const TKUIBookingReview: React.FunctionComponent<IProps> =
     };
 
 
-export default withStyles(TKUIBookingReview, tKUIBookingReviewStyle);
+export default connect((config: TKUIConfig) => config.TKUIBookingReview, config,
+    mapperFromFunction((clientProps: IClientProps) => clientProps));

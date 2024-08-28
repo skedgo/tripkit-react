@@ -450,23 +450,24 @@ const TKUIMxMBookingCard: React.FunctionComponent<IProps> = ({ segment, trip, on
             </div>
         );
     }
-    const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({
-        ...reviewAndPaymentForm,
-        publicKey: reviewAndPaymentForm.publicKey ?? config.payment.stripePublicKey,
-        onRequestClose: success => {
-            if (success) {
-                setWaiting?.(true);
-                refreshSelectedTrip()
-                    .catch(UIUtil.errorMsg)
-                    .finally(() => {
-                        const bookingUrl = segmentGlobal.booking?.confirmation?.actions.find(action => action.type === "CANCEL")?.internalURL;
-                        bookingUrl && onSuccess?.(bookingUrl);
-                        setWaiting?.(false);
-                    });
-            }
-            setReviewAndPaymentForm(undefined);
-        }
-    });
+    const reviewAndPaymentUI = null;
+    // const reviewAndPaymentUI = reviewAndPaymentForm && config.payment?.renderPaymentCard({
+    //     ...reviewAndPaymentForm,
+    //     publicKey: reviewAndPaymentForm.publicKey ?? config.payment.stripePublicKey,
+    //     onRequestClose: success => {
+    //         if (success) {
+    //             setWaiting?.(true);
+    //             refreshSelectedTrip()
+    //                 .catch(UIUtil.errorMsg)
+    //                 .finally(() => {
+    //                     const bookingUrl = segmentGlobal.booking?.confirmation?.actions.find(action => action.type === "CANCEL")?.internalURL;
+    //                     bookingUrl && onSuccess?.(bookingUrl);
+    //                     setWaiting?.(false);
+    //                 });
+    //         }
+    //         setReviewAndPaymentForm(undefined);
+    //     }
+    // });
     return (
         <TKUICard
             title={segment.getAction()}

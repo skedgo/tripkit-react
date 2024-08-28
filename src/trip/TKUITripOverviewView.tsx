@@ -89,6 +89,7 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     handleRef?: (ref: any) => void;
 
     pushCardView?: (props: CardViewData) => void;
+    popCardView?: () => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -112,7 +113,7 @@ export function getBookingSegment(trip: Trip, tkconfig: TKUIConfig, signInStatus
 }
 
 const TKUITripOverviewView: FunctionComponent<IProps> = props => {
-    const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack, pushCardView } = props;
+    const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack, pushCardView, popCardView } = props;
     const tkconfig = useContext(TKUIConfigContext);
     const { accountsSupported, status } = useContext(TKAccountContext);
     function getDefaultActions() {
@@ -123,14 +124,16 @@ const TKUITripOverviewView: FunctionComponent<IProps> = props => {
                 <TKUIButton
                     icon={<IconTicket />}
                     text={bookingSegment.booking!.title}
-                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                    type={TKUIButtonType.PRIMARY_VERTICAL}
                     key={"actionTicket"}
                     onClick={() => {
                         pushCardView({
                             viewId: "BOOKING_CARD",
                             renderCard: () => renderBookingCard({
                                 segment: bookingSegment,
-                                // onRequestClose,
+                                onRequestClose: () => {
+                                    popCardView?.();
+                                },
                                 refreshSelectedTrip: () => Promise.resolve(true),
                                 trip
                             })
@@ -141,7 +144,7 @@ const TKUITripOverviewView: FunctionComponent<IProps> = props => {
             ...(onTripSegmentSelected ?
                 [<TKUIButton text={t("Go")}
                     icon={<IconNavigation />}
-                    type={TKUIButtonType.SECONDARY_VERTICAL}
+                    type={TKUIButtonType.PRIMARY_VERTICAL}
                     onClick={() => onTripSegmentSelected?.(trip.getSegments(Visibility.IN_DETAILS)[0])}
                     key={"actionGo"}
                 />] : []),

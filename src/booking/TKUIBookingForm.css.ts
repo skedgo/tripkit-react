@@ -5,7 +5,7 @@ export const tKUIBookingFormDefaultStyle = (theme: TKUITheme) => ({
     main: {
         ...genStyles.flex,
         ...genStyles.column,
-        padding: '16px'
+        padding: '16px 16px 100px'  // 100px is the height of the floating footer
     },
     form: {
         ...genStyles.flex,
@@ -290,5 +290,15 @@ export const tKUIBookingFormDefaultStyle = (theme: TKUITheme) => ({
             ...theme.textWeightBold
         },
         marginBottom: '20px'
+    },
+    footer: {
+        position: 'absolute',
+        bottom: '0',
+        left: '0',
+        width: '100%',
+        padding: '16px',
+        ...genStyles.flex,
+        ...genStyles.column,
+        background: white(0, theme.isDark),
     }
 });

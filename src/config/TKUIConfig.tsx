@@ -92,6 +92,9 @@ import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
 import { TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle } from "../favourite/TKUIEditFavouriteView";
 import { TKUIBookingCardProps, TKUIBookingCardStyle } from "../booking/TKUIBookingCard";
 import { TKUIBookingFormProps, TKUIBookingFormStyle } from "../booking/TKUIBookingForm";
+import { TKUICheckoutViewClientProps, TKUICheckoutViewProps, TKUICheckoutViewStyle } from "../stripekit/TKUICheckoutView";
+import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKUIBookingDetails";
+import { TKUIBookingReviewProps, TKUIBookingReviewStyle } from "../stripekit/TKUIBookingReview";
 
 /**
  * SDK configuration
@@ -216,7 +219,7 @@ export interface ITKUIConfigOptional {
      * @ignore     
      */
     payment: {
-        renderPaymentCard: (props: TKUIStripePaymentCardClientProps) => React.ReactNode;
+        renderPaymentCard: (props: TKUICheckoutViewClientProps) => React.ReactNode; // TODO: rename to renderCheckoutView, or something else.
         stripePublicKey?: string;
     };
     /**
@@ -304,6 +307,9 @@ export interface ITKUIConfigOptional {
     TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIBookingCard: TKComponentConfig<TKUIBookingCardProps, TKUIBookingCardStyle>;
     TKUIBookingForm: TKComponentConfig<TKUIBookingFormProps, TKUIBookingFormStyle>;
+    TKUIBookingReview: TKComponentConfig<TKUIBookingReviewProps, TKUIBookingReviewStyle>;
+    TKUICheckoutView: TKComponentConfig<TKUICheckoutViewProps, TKUICheckoutViewStyle>;
+    TKUIBookingDetails: TKComponentConfig<TKUIBookingDetailsProps, TKUIBookingDetailsStyle>;
     TKUIMxMCollectNearbyCard: TKComponentConfig<TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle>;
     TKUIModeLocationRow: TKComponentConfig<TKUIModeLocationRowProps, TKUIModeLocationRowStyle>;
     TKUIHomeCard: TKComponentConfig<TKUIHomeCardProps, TKUIHomeCardStyle>;

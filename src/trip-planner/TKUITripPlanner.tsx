@@ -641,6 +641,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             presentation: CardPresentation.SLIDE_UP
                         }}
                         pushCardView={this.pushCardView}
+                        popCardView={this.popCardView}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -677,6 +678,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 presentation: CardPresentation.NONE
                                             }}
                                             pushCardView={this.pushCardView}
+                                            popCardView={this.popCardView}
                                         />
                                     </div>
                                 )}

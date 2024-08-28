@@ -1,7 +1,7 @@
 import genStyles from "../css/GenStyle.css";
-import {black, TKUITheme} from "../jss/TKUITheme";
-import {resetStyles} from "../css/ResetStyle.css";
-import {TKUICardHeaderProps} from "./TKUICardHeader";
+import { black, TKUITheme } from "../jss/TKUITheme";
+import { resetStyles } from "../css/ResetStyle.css";
+import { TKUICardHeaderProps } from "./TKUICardHeader";
 
 export const tKUICardHeaderJss = (theme: TKUITheme) => ({
     main: {
@@ -21,8 +21,9 @@ export const tKUICardHeaderJss = (theme: TKUITheme) => ({
     headerTop: {
         ...genStyles.flex,
         ...genStyles.grow,
-        ...genStyles.spaceBetween,
-        ...genStyles.alignCenter
+        justifyContent: (props: TKUICardHeaderProps) => props.closeButtonText ? 'center' : 'space-between',
+        ...genStyles.alignCenter,
+        position: 'relative'
     },
     btnClear: {
         ...resetStyles.button,
@@ -37,6 +38,10 @@ export const tKUICardHeaderJss = (theme: TKUITheme) => ({
         '&:hover path, &:active path': {
             fill: black(0, theme.isDark)
         }
+    },
+    btnWithText: {
+        position: 'absolute',
+        left: '0'
     },
     iconClear: {
         width: '100%',

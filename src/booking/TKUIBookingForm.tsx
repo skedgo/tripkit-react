@@ -26,7 +26,6 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onChange: (bookingForm: BookingInfo) => void;
     trip: Trip;
     onSubmit: () => void;
-    onRequestClose?: (success?: boolean, data?: { updateURL?: string, refreshURLForSourceObject?: string, userId: string }) => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -251,18 +250,20 @@ const TKUIBookingForm: React.FunctionComponent<IProps> = (props: IProps) => {
                         segment={segment}
                     />
                 </Fragment>}
-            <div className={classes.separator} />
-            {null && value.tickets && value.tickets?.length > 0 &&    // Disabled as requested in #18575: to avoid confusion, since it is not considering the round trip, and we have the confirm screen for the pricing to be computed in the BE.
-                <div className={classes.paySummary}>
-                    <div>{value.tickets.reduce((totalTickets, ticket) => totalTickets + ticket.value, 0) + " tickets"}</div>
-                    <div>{FormatUtil.toMoney(value.tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
-                        { currency: value.tickets[0].currency + " ", nInCents: true, forceDecimals: true })}</div>
-                </div>}
-            <TKUIButton
-                text={t("Book")}
-                onClick={onSubmit}
-                disabled={!canBook(value)}
-            />
+            <div className={classes.footer}>
+                <div className={classes.separator} />
+                {null && value.tickets && value.tickets?.length > 0 &&    // Disabled as requested in #18575: to avoid confusion, since it is not considering the round trip, and we have the confirm screen for the pricing to be computed in the BE.
+                    <div className={classes.paySummary}>
+                        <div>{value.tickets.reduce((totalTickets, ticket) => totalTickets + ticket.value, 0) + " tickets"}</div>
+                        <div>{FormatUtil.toMoney(value.tickets.reduce((totalPrice, ticket) => totalPrice + ticket.price * ticket.value, 0),
+                            { currency: value.tickets[0].currency + " ", nInCents: true, forceDecimals: true })}</div>
+                    </div>}
+                <TKUIButton
+                    text={t("Book")}
+                    onClick={onSubmit}
+                    disabled={!canBook(value)}
+                />
+            </div>
         </div>
     );
 };
