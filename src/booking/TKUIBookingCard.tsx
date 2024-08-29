@@ -19,6 +19,8 @@ import { useResponsiveUtil } from '../util/TKUIResponsiveUtil';
 import Features from '../env/Features';
 import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 import TKUIBookingDetails from './TKUIBookingDetails';
+import TKUICardHeader from '../card/TKUICardHeader';
+import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     segment: Segment;
@@ -65,6 +67,15 @@ function screenCloseButton(screen: Screens): string {
             return "Back";
         case "DETAILS":
             return "Done";
+    }
+}
+
+function screenRightButtonProps(screen: Screens): { text: string, onClick: () => void } | undefined {
+    switch (screen) {
+        case "DETAILS":
+            return { text: "Show Trip", onClick: () => { } };
+        default:
+            return undefined;
     }
 }
 
@@ -143,14 +154,19 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
         }
     }
 
+    const screenRightBtnProps = screenRightButtonProps(topScreen());
+
     return (
         <TKUICard
             title={screenTitle(topScreen())}
             presentation={viewportProps.landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={{ draggable: false }}
             focusTrap={true}
-            closeButtonText={screenCloseButton(topScreen())}
-            onRequestClose={handleRequestClose}
+            renderHeader={props =>
+                <TKUICardHeader {...props}
+                    renderLeft={<TKUIButton text={screenCloseButton(topScreen())} type={TKUIButtonType.PRIMARY_LINK} onClick={handleRequestClose} />}
+                    renderRight={screenRightBtnProps && <TKUIButton type={TKUIButtonType.PRIMARY_LINK} {...screenRightBtnProps} />}
+                />}
             styles={{
                 modalContent: overrideClass({
                     width: '700px'

@@ -8,10 +8,6 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         ...genStyles.column,
         height: '100%'
     },
-    title: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter
-    },
     tabs: {
         '& .MuiTabs-root': {
             borderBottom: '1px solid ' + black(4)
@@ -69,8 +65,7 @@ export const tKUIMyBookingsDefaultStyle = (theme: TKUITheme) => ({
         height: '24px',
         padding: '2px',
         border: 'none',
-        marginLeft: 'auto',
-        marginRight: '24px',
+        marginRight: '8px',
         marginTop: '2px',
         '& path': {
             fill: black(1, theme.isDark),

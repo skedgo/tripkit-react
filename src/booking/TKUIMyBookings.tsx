@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
+import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, PropsMapper } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
@@ -18,7 +18,6 @@ import Segment from "../model/trip/Segment";
 import Tabs from '@material-ui/core/Tabs/Tabs';
 import Tab from '@material-ui/core/Tab/Tab';
 import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
-import genStyles from '../css/GenStyle.css';
 import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIMyBooking from './TKUIMyBooking';
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext"
@@ -182,32 +181,26 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
     const waiting = section === Sections.Valid ? waitingValid : waitingExpired;
     return (
         <TKUICard
-            title={
-                <div className={classes.title}>
-                    {t("My.Bookings")}
-                    <button className={classes.refresh}
-                        onClick={() => {
-                            if (resultsRef.current) {
-                                resultsRef.current.scrollTop = 0;
-                            };
-                            refreshBookings({ silent: false });
-                            refreshBookings({ valid: false, silent: false });
-                        }}>
-                        {signedIn ?
-                            <IconRefresh /> : null}
-                    </button>
-                </div>}
+            title={t("My.Bookings")}
             onRequestClose={onRequestClose}
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={slideUpOptions}
             focusTrap={true}
             renderHeader={props =>
                 <TKUICardHeader {...props}
-                    styles={{
-                        title: overrideClass({
-                            ...genStyles.grow
-                        })
-                    }}
+                    renderRight={
+                        <button className={classes.refresh}
+                            onClick={() => {
+                                if (resultsRef.current) {
+                                    resultsRef.current.scrollTop = 0;
+                                };
+                                refreshBookings({ silent: false });
+                                refreshBookings({ valid: false, silent: false });
+                            }}>
+                            {signedIn ?
+                                <IconRefresh /> : null}
+                        </button>
+                    }
                 />
             }
         >

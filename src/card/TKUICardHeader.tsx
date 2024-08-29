@@ -4,7 +4,6 @@ import { ReactComponent as IconRemove } from '../images/ic-cross2.svg';
 import { tKUICardHeaderJss } from "./TKUICardHeader.css";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
-import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 
 type IStyle = ReturnType<typeof tKUICardHeaderJss>
 
@@ -12,7 +11,8 @@ export interface TKUICardHeaderClientProps {
     title?: React.ReactNode;
     subtitle?: React.ReactNode;
     onRequestClose?: () => void;
-    closeButtonText?: string;
+    renderLeft?: React.ReactNode;
+    renderRight?: React.ReactNode;
     closeAriaLabel?: string;
     noPaddingTop?: boolean;
 }
@@ -32,32 +32,28 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 
 
 const TKUICardHeader: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { title, subtitle, onRequestClose, closeButtonText, classes, closeAriaLabel } = props;
+    const { title, subtitle, onRequestClose, classes, closeAriaLabel } = props;
     return (
         <div className={classes.main}>
             <div className={classes.headerTop}>
-                {onRequestClose && closeButtonText &&
-                    <div className={classes.btnWithText}>
-                        <TKUIButton
-                            text={closeButtonText}
-                            onClick={onRequestClose}
-                            type={TKUIButtonType.PRIMARY_LINK}
-                            aria-label={closeAriaLabel ?? closeButtonText ?? "Close"}
-                        />
-                    </div>}
+                {props.renderLeft && <div className={classes.leftContainer}>{props.renderLeft}</div>}
                 {title &&
                     <div className={classes.title} id={"tkui-card-title"}>
                         {title}
                     </div>}
-                {onRequestClose && !closeButtonText &&
-                    <button
-                        onClick={onRequestClose}
-                        className={classes.btnClear}
-                        aria-label={closeAriaLabel ?? "Close"}>
-                        <IconRemove aria-hidden={true}
-                            className={classes.iconClear}
-                            focusable="false" />
-                    </button>}
+                {(props.renderRight || onRequestClose) &&
+                    <div className={classes.rightContainer}>
+                        {props.renderRight}
+                        {onRequestClose &&
+                            <button
+                                onClick={onRequestClose}
+                                className={classes.btnClear}
+                                aria-label={closeAriaLabel ?? "Close"}>
+                                <IconRemove aria-hidden={true}
+                                    className={classes.iconClear}
+                                    focusable="false" />
+                            </button>}
+                    </div>}
             </div>
             {subtitle &&
                 <div className={classes.subtitle}>
