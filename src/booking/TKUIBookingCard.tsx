@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { Key, useContext, useEffect, useState } from 'react';
 import { overrideClass, TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIBookingCardDefaultStyle } from "./TKUIBookingCard.css";
-import Segment from '../model/trip/Segment';
 import Trip from '../model/trip/Trip';
 import TKUICard, { CardPresentation, TKUICardClientProps } from '../card/TKUICard';
 import TripGoApi from '../api/TripGoApi';
@@ -21,13 +20,15 @@ import { TKUIConfigContext } from '../config/TKUIConfigProvider';
 import TKUIBookingDetails from './TKUIBookingDetails';
 import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
+import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
-    segment: Segment;
-    refreshSelectedTrip: () => Promise<boolean>;
-    onSuccess?: (bookingTripUpdateURL: string) => void;
-    trip?: Trip;
+    trip: Trip; // The component is controlled w.r.t. trip prop.
+    onRequestTripRefresh: () => Promise<boolean>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
+    onSuccess?: (bookingTripUpdateURL: string) => void; // ***TODO:*** Remove.
 }
+
+export type TKUIBookingCardClientProps = IClientProps & { key?: Key };
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
@@ -79,17 +80,28 @@ function screenRightButtonProps(screen: Screens): { text: string, onClick: () =>
     }
 }
 
-const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
+// ***TODO:*** REMOVE
+if (process.env.NODE_ENV === 'development') {
+    Features.instance.realtimeEnabled = false;
+}
 
-    const { segment, refreshSelectedTrip, onSuccess, trip, onRequestClose, classes } = props;
-    const booking = segment.booking!;
+const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
+    const { trip, onRequestTripRefresh, onSuccess, onRequestClose, classes } = props;
+    const booking = trip.segments.find(segment => segment.booking)!.booking!;
+    console.assert(!!booking);
     const [waiting, setWaiting] = useState<boolean>(false);
     const viewportProps = useResponsiveUtil();
     const config = useContext(TKUIConfigContext);
-
     const [screensStack, setScreensStack] = useState<Screens[]>([
         booking.confirmation ? "DETAILS" : "BOOKING"
     ]);
+
+    useEffect(() => {
+        if (booking.confirmation) {
+            pushScreen("DETAILS");
+            setWaiting(false);
+        }
+    }, [booking.confirmation]);
 
     // BOOKING screen data
     const [bookingForm, setBookingForm] = useState<BookingInfo | undefined>(undefined);
@@ -250,18 +262,15 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                         paymentOptions: bookingResult!.paymentOptions!,
                         setWaiting,
                         ephemeralKeyObj: bookingResult!.ephemeralKey,
-                        onSubmit: () => {
-                            // if (success) {
-                            //     setWaiting?.(true);
-                            //     refreshSelectedTrip()
-                            //         .catch(UIUtil.errorMsg)
-                            //         .finally(() => {
-                            //             const bookingUrl = segmentGlobal.booking?.confirmation?.actions.find(action => action.type === "CANCEL")?.internalURL;
-                            //             bookingUrl && onSuccess?.(bookingUrl);
-                            //             setWaiting?.(false);
-                            //         });
-                            // }
-                            // setReviewAndPaymentForm(undefined);
+                        // Rename to onPaymentDone?
+                        onSubmit: async ({ }) => {
+                            setWaiting?.(true);
+                            try {
+                                await onRequestTripRefresh();
+                            } catch (error) {
+                                UIUtil.errorMsg(error as Error);     // TODO: is that ok?
+                                setWaiting?.(false);
+                            }
                         },
                         styles: {
                             main: overrideClass({
@@ -271,7 +280,6 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                     })}
                 {topScreen() === "DETAILS" &&
                     <TKUIBookingDetails
-                        segment={segment}
                         trip={trip}
                     />}
             </div>
@@ -281,3 +289,21 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
 
 export default connect((config: TKUIConfig) => config.TKUIBookingCard, config,
     mapperFromFunction((clientProps: IClientProps) => clientProps));
+
+const Consumer: React.FunctionComponent<{ children: (props: Pick<IClientProps, "trip" | "onRequestTripRefresh">) => React.ReactNode }> = ({ children }) => {
+    const { selectedTrip, refreshSelectedTrip } = useContext(RoutingResultsContext);
+    return (
+        <>
+            {children({
+                trip: selectedTrip!,
+                onRequestTripRefresh: async () => {
+                    return refreshSelectedTrip();
+                }
+            })}
+        </>
+    );
+}
+
+export const TKUIBookingCardHelpers = {
+    TKStateProps: Consumer
+}

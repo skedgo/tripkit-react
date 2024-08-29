@@ -70,9 +70,9 @@ import { TKUIMyBookingProps, TKUIMyBookingStyle } from "../booking/TKUIMyBooking
 import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
 import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
-import { TKUIBookingCardClientProps, TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
+import { TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
-import { TKUIStripePaymentCardClientProps, TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
+import { TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
 import { TKUIModeLocationRowProps, TKUIModeLocationRowStyle } from "../mxm/TKUIModeLocationRow";
 import Trip from "../model/trip/Trip";
@@ -90,7 +90,7 @@ import { TKUIBicycleInfoProps, TKUIBicycleInfoStyle } from "../service/TKUIBicyc
 import { TKUIIconProps, TKUIIconStyle } from "../service/TKUIIcon";
 import { TKUIFromToProps, TKUIFromToStyle } from "../booking/TKUIFromTo";
 import { TKUIEditFavouriteViewProps, TKUIEditFavouriteViewStyle } from "../favourite/TKUIEditFavouriteView";
-import { TKUIBookingCardProps, TKUIBookingCardStyle } from "../booking/TKUIBookingCard";
+import { TKUIBookingCardClientProps, TKUIBookingCardProps, TKUIBookingCardStyle } from "../booking/TKUIBookingCard";
 import { TKUIBookingFormProps, TKUIBookingFormStyle } from "../booking/TKUIBookingForm";
 import { TKUICheckoutViewClientProps, TKUICheckoutViewProps, TKUICheckoutViewStyle } from "../stripekit/TKUICheckoutView";
 import { TKUIBookingDetailsProps, TKUIBookingDetailsStyle } from "../booking/TKUIBookingDetails";

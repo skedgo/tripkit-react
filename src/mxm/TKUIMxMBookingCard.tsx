@@ -52,7 +52,6 @@ interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
 
 export type TKUIMxMBookingCardProps = IProps;
 export type TKUIMxMBookingCardStyle = IStyle;
-export type TKUIBookingCardClientProps = IClientProps & { key?: Key };
 
 const config: TKComponentDefaultConfig<IProps, IStyle> = {
     render: props => <TKUIMxMBookingCard {...props} />,

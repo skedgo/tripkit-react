@@ -5,7 +5,6 @@ import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { tKUIBookingDetailsDefaultStyle } from "./TKUIBookingDetails.css";
 import DateTimeUtil from '../util/DateTimeUtil';
 import TKUIFromTo from './TKUIFromTo';
-import Segment from '../model/trip/Segment';
 import Trip from '../model/trip/Trip';
 import classNames from 'classnames';
 import TKUITicketSelect from '../stripekit/TKUITicketSelect';
@@ -17,8 +16,7 @@ import { ReactComponent as IconPerson } from '../images/ic-person-circle.svg';
 import { ReactComponent as IconShuttle } from '../images/ic-shuttle-circle.svg';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
-    segment: Segment;
-    trip?: Trip;
+    trip: Trip;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -35,8 +33,10 @@ const config: TKComponentDefaultConfig<IProps, IStyle> = {
 };
 
 const TKUIBookingDetails: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { segment, trip, classes, injectedStyles } = props;
+    const { trip, classes, injectedStyles } = props;
+    const segment = trip.segments.find(segment => segment.booking)!;
     const booking = segment.booking!;
+    console.assert(!!booking);
     const confirmation = booking.confirmation!;
     const status = confirmation.status!;
     return (

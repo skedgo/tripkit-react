@@ -182,13 +182,14 @@ function getPTSegmentMxMCards(props: SegmentMxMCardsProps, generateCardIndex: ()
                 />}
         </TKUICard>
     );
-    if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
-        && segment.booking && accountsSupported && tkconfig.booking.renderBookingCard && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
-        signInStatus === SignInStatus.signedIn) {
-        cards.push(tkconfig.booking.renderBookingCard({
-            segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
-        }));
-    }
+    // ***TODO:*** Need to re-enable?
+    // if (tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
+    //     && segment.booking && accountsSupported && tkconfig.booking.renderBookingCard && (segment.booking.confirmation || segment.booking.quickBookingsUrl) &&
+    //     signInStatus === SignInStatus.signedIn) {
+    //     cards.push(tkconfig.booking.renderBookingCard({
+    //         segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
+    //     }));
+    // }
     return cards;
 }
 
@@ -226,12 +227,14 @@ function getSegmentMxMCards(
     const { segment, onRequestClose, refreshSelectedTrip, trip, accountsSupported, mapAsync, tkconfig, onShowVehicleAvailabilityForSegment } = props;
     if (segment.isPT()) {
         return getPTSegmentMxMCards(props, generateCardIndex);
-    } else if (tkconfig.booking && tkconfig.booking.renderBookingCard && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
-        return [
-            tkconfig.booking.renderBookingCard({
-                segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
-            })
-        ];
+        // **TODO:** Need to re-enable?
+        // } 
+        // else if (tkconfig.booking && tkconfig.booking.renderBookingCard && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking && accountsSupported && (segment.booking.confirmation || segment.booking.quickBookingsUrl)) {
+        //     return [
+        //         tkconfig.booking.renderBookingCard({
+        //             segment, onRequestClose, refreshSelectedTrip, trip, key: generateCardIndex()
+        //         })
+        //     ];
     } else if (segment.modeInfo?.identifier === "stationary_vehicle-collect" && segment.modeIdentifier === "me_car-s_sgfleet-sydney" && segment.sharedVehicle) {
         // Notice car share vehicles (as CND or GoGet) will also be modelled as FreeFloatingVehicleLocation/s , since segment.sharedVehicle
         // matches fields of VehicleInfo, and not CarPodVehicle.

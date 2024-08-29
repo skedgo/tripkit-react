@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useContext } from "react";
+import React, { FunctionComponent } from "react";
 import Trip from "../model/trip/Trip";
 import Segment from "../model/trip/Segment";
 import TKUICard, { TKUICardClientProps } from "../card/TKUICard";
@@ -21,10 +21,7 @@ import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
 import TKUITripTime from "./TKUITripTime";
 import TripRowTrack from "./TripRowTrack";
 import TKUICardHeader from "../card/TKUICardHeader";
-import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
-import { TKUIConfigContext } from "../config/TKUIConfigProvider";
-import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
-import { CardViewData } from "../trip-planner/TKUITripPlanner";
+import { SignInStatus } from "../account/TKAccountContext";
 
 type IStyle = ReturnType<typeof tKUITripOverviewViewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -88,8 +85,9 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      */
     handleRef?: (ref: any) => void;
 
-    pushCardView?: (props: CardViewData) => void;
-    popCardView?: () => void;
+    // pushCardView?: (props: CardViewData) => void;
+    // popCardView?: () => void;
+    // onShowBookingCard?: () => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }
@@ -113,34 +111,9 @@ export function getBookingSegment(trip: Trip, tkconfig: TKUIConfig, signInStatus
 }
 
 const TKUITripOverviewView: FunctionComponent<IProps> = props => {
-    const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack, pushCardView, popCardView } = props;
-    const tkconfig = useContext(TKUIConfigContext);
-    const { accountsSupported, status } = useContext(TKAccountContext);
+    const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack } = props;
     function getDefaultActions() {
-        const bookingSegment = getBookingSegment(trip, tkconfig, status);
-        const renderBookingCard = bookingSegment && accountsSupported && status === SignInStatus.signedIn && tkconfig.booking?.renderBookingCard;
         return [
-            ...renderBookingCard && pushCardView ? [
-                <TKUIButton
-                    icon={<IconTicket />}
-                    text={bookingSegment.booking!.title}
-                    type={TKUIButtonType.PRIMARY_VERTICAL}
-                    key={"actionTicket"}
-                    onClick={() => {
-                        pushCardView({
-                            viewId: "BOOKING_CARD",
-                            renderCard: () => renderBookingCard({
-                                segment: bookingSegment,
-                                onRequestClose: () => {
-                                    popCardView?.();
-                                },
-                                refreshSelectedTrip: () => Promise.resolve(true),
-                                trip
-                            })
-                        })
-                    }}
-                />
-            ] : [],
             ...(onTripSegmentSelected ?
                 [<TKUIButton text={t("Go")}
                     icon={<IconNavigation />}

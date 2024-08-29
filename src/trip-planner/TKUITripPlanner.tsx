@@ -7,7 +7,7 @@ import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/T
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
 import TKUIServiceView, { TKUIServiceViewHelpers } from "../service/TKUIServiceView";
-import TKUITripOverviewView from "../trip/TKUITripOverviewView";
+import TKUITripOverviewView, { getBookingSegment } from "../trip/TKUITripOverviewView";
 import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
 import { tKUITripPlannerDefaultStyle, wideCardWidth } from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
@@ -65,6 +65,11 @@ import ModeLocation from "../model/location/ModeLocation";
 import LocationsResult from "../model/location/LocationsResult";
 import PlannedTripsTracker from "../analytics/PlannedTripsTracker";
 import { IFavouritesContext, TKFavouritesContext } from "../favourite/TKFavouritesProvider";
+import { TKUIBookingCardHelpers } from "../booking/TKUIBookingCard";
+import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { IAccountContext, SignInStatus, TKAccountContext } from "../account/TKAccountContext";
+import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
+import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -76,9 +81,10 @@ interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     hideSearch?: boolean;
 }
 
-interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext {
+interface IConsumedProps extends IRoutingResultsContext, IServiceResultsContext, TKUIViewportUtilProps, IOptionsContext, IAccessibilityContext, IFavouritesContext, IAccountContext {
     directionsView: boolean,
-    onDirectionsView: (onDirectionsView: boolean) => void
+    onDirectionsView: (onDirectionsView: boolean) => void,
+    tkconfig: TKUIConfig
 }
 
 export interface IProps extends IClientProps, IConsumedProps, TKUIWithClasses<IStyle, IProps> { }
@@ -171,6 +177,8 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         this.pushCardView = this.pushCardView.bind(this);
         this.popCardView = this.popCardView.bind(this);
         this.onFavouriteTripQuery = this.onFavouriteTripQuery.bind(this);
+        this.onShowBookingCard = this.onShowBookingCard.bind(this);
+        this.getBookingActions = this.getBookingActions.bind(this);
 
         // For development:
         // RegionsData.instance.requireRegions().then(()=> {
@@ -235,6 +243,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 },
                                 presentation: CardPresentation.SLIDE_UP
                             }}
+                            actions={this.getBookingActions()}
                         />,
                     mapProps: {
                         trip: selectedTrip,
@@ -411,6 +420,44 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         } else if (action.externalURL) {
             window.open(action.externalURL, "_self");
         }
+    }
+
+    // **TODO:** Check how to better modularize / re-use this on:
+    // - TKUITripRow 'Book' button
+    // - TKUITripOverviewView actions
+    // - TKUIMxMView 'Book' button
+
+    private getBookingActions() {
+        const { selectedTrip, accountsSupported, status, tkconfig } = this.props;
+        const bookingSegment = selectedTrip && getBookingSegment(selectedTrip, tkconfig, status);
+        const bookAction = bookingSegment && accountsSupported && status === SignInStatus.signedIn && tkconfig.booking?.renderBookingCard &&
+            <TKUIButton
+                icon={<IconTicket />}
+                text={bookingSegment!.booking!.title}
+                type={TKUIButtonType.PRIMARY_VERTICAL}
+                key={"actionTicket"}
+                onClick={this.onShowBookingCard}
+            />
+        const tripOverviewActions = (_trip: Trip, defaultActions: JSX.Element[]): JSX.Element[] => [
+            ...bookAction ? [bookAction] : [],
+            ...defaultActions
+        ];
+        return tripOverviewActions
+    }
+
+    private onShowBookingCard() {
+        const { selectedTrip, accountsSupported, status, tkconfig } = this.props;
+        const bookingSegment = selectedTrip && getBookingSegment(selectedTrip, tkconfig, status);
+        if (!bookingSegment || !accountsSupported || status !== SignInStatus.signedIn || !tkconfig.booking?.renderBookingCard) {
+            return; // Precodition for showing booking card not met.
+        }
+        this.pushCardView({
+            viewId: "BOOKING_CARD",
+            renderCard: () =>
+                <TKUIBookingCardHelpers.TKStateProps>
+                    {props => tkconfig.booking!.renderBookingCard!({ ...props, onRequestClose: () => this.popCardView?.() })}
+                </TKUIBookingCardHelpers.TKStateProps>
+        });
     }
 
     public render(): React.ReactNode {
@@ -620,6 +667,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     }}
                 />
             </div>
+
         let tripDetailView: any;
         if (this.isShowTripDetail()) {
             if (DeviceUtil.isTouch()) {
@@ -640,8 +688,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             },
                             presentation: CardPresentation.SLIDE_UP
                         }}
-                        pushCardView={this.pushCardView}
-                        popCardView={this.popCardView}
+                        // pushCardView={this.pushCardView}
+                        // popCardView={this.popCardView}
+                        // onShowBookingCard={this.onShowBookingCard}
+                        actions={this.getBookingActions()}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -677,8 +727,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 },
                                                 presentation: CardPresentation.NONE
                                             }}
-                                            pushCardView={this.pushCardView}
-                                            popCardView={this.popCardView}
+                                            // pushCardView={this.pushCardView}
+                                            // popCardView={this.popCardView}
+                                            // onShowBookingCard={this.onShowBookingCard}
+                                            actions={this.getBookingActions()}
                                         />
                                     </div>
                                 )}
@@ -1024,6 +1076,8 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
         const routingContext = useContext(RoutingResultsContext);
         const serviceContext = useContext(ServiceResultsContext);
         const favouritesContext = useContext(TKFavouritesContext);
+        const tkconfig = useContext(TKUIConfigContext);
+        const accountContext = useContext(TKAccountContext);
         return (
             <>
                 {props.children!({
@@ -1034,7 +1088,9 @@ const Consumer: React.FunctionComponent<{ children: (props: IConsumedProps) => R
                     ...viewportProps,
                     ...optionsContext,
                     ...accessibilityContext,
-                    ...favouritesContext
+                    ...favouritesContext,
+                    ...accountContext,
+                    tkconfig
                 })}
             </>
         );
