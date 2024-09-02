@@ -1,0 +1,10 @@
+[
+  {
+    "mode": "ps_drt",
+    "rules": {
+      "replaceWith": [
+        "ps_drt"
+      ]
+    }
+  }
+]

@@ -1,0 +1,1233 @@
+{
+  "groups": [
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "budgetPoints": 1386,
+          "bundleId": "253e07a1-46b4-4235-b1b7-e20cb2f0442cD0",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/b228246f-feb8-442c-9966-d939afc76994",
+          "id": "b228246f-feb8-442c-9966-d939afc76994",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/b228246f-feb8-442c-9966-d939afc76994",
+          "mainSegmentHashCode": 1048097244,
+          "moneyCost": 13.86,
+          "moneyUSDCost": 13.86,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/b228246f-feb8-442c-9966-d939afc76994",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/b228246f-feb8-442c-9966-d939afc76994",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/b228246f-feb8-442c-9966-d939afc76994/i8bP9Q1O/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": 1184451259,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "i8bP9Q1O",
+              "segmentTemplateHashCode": 1048097244,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "ZtqZnyGM",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/b228246f-feb8-442c-9966-d939afc76994",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/b228246f-feb8-442c-9966-d939afc76994",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/b228246f-feb8-442c-9966-d939afc76994",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/b228246f-feb8-442c-9966-d939afc76994?hash=495555300",
+          "weightedScore": 28.9
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "budgetPoints": 1667,
+          "bundleId": "253e07a1-46b4-4235-b1b7-e20cb2f0442cD0",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "id": "8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "mainSegmentHashCode": 835336343,
+          "moneyCost": 16.67,
+          "moneyUSDCost": 16.67,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Uber",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/8c6ecea3-746f-40f7-99a5-571d14523e87/Xcj75E5V/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": 918258834,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "Xcj75E5V",
+              "segmentTemplateHashCode": 835336343,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "8ioGjkye",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/8c6ecea3-746f-40f7-99a5-571d14523e87",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/8c6ecea3-746f-40f7-99a5-571d14523e87?hash=-1327922170",
+          "weightedScore": 31.7
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "budgetPoints": 2344,
+          "bundleId": "253e07a1-46b4-4235-b1b7-e20cb2f0442cD0",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "id": "65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "mainSegmentHashCode": -637887899,
+          "moneyCost": 23.44,
+          "moneyUSDCost": 23.44,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Stadium Taxi",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/65158d4b-cac1-4505-a9c0-2fa9f009e6c0/AH8iTEZ6/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": 1259873734,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "AH8iTEZ6",
+              "segmentTemplateHashCode": -637887899,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "SRNh08jq",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/65158d4b-cac1-4505-a9c0-2fa9f009e6c0",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/65158d4b-cac1-4505-a9c0-2fa9f009e6c0?hash=1779833682",
+          "weightedScore": 38.5
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "id": "52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "mainSegmentHashCode": -1542658965,
+          "moneyCost": 58.85,
+          "moneyUSDCost": 58.85,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Care On Wheels Transportation",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/52548ce8-0f67-46c2-a3cd-3bd19133f915/zDe5i1m4/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -912121132,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "zDe5i1m4",
+              "segmentTemplateHashCode": -1542658965,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "BwLb5Cqu",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/52548ce8-0f67-46c2-a3cd-3bd19133f915",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/52548ce8-0f67-46c2-a3cd-3bd19133f915?hash=-1294405",
+          "weightedScore": 73.9
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "id": "03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "mainSegmentHashCode": 802093905,
+          "moneyCost": 67.25,
+          "moneyUSDCost": 67.25,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Loving Touch Transportation Service LLC",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/03e2817a-259e-44b8-8c99-3dbf50733de9/IodviJfr/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -791954072,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "IodviJfr",
+              "segmentTemplateHashCode": 802093905,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "HB3TJ92b",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/03e2817a-259e-44b8-8c99-3dbf50733de9",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/03e2817a-259e-44b8-8c99-3dbf50733de9?hash=-530012103",
+          "weightedScore": 82.3
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/2c9bbfff-75c4-4355-8569-0db926912619",
+          "id": "2c9bbfff-75c4-4355-8569-0db926912619",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/2c9bbfff-75c4-4355-8569-0db926912619",
+          "mainSegmentHashCode": 1098115653,
+          "moneyCost": 102.03,
+          "moneyUSDCost": 102.03,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/2c9bbfff-75c4-4355-8569-0db926912619",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/2c9bbfff-75c4-4355-8569-0db926912619",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Ready Ride Transportation LLC",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/2c9bbfff-75c4-4355-8569-0db926912619/Fpi0SSfM/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": 1902424662,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "Fpi0SSfM",
+              "segmentTemplateHashCode": 1098115653,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "s4r47f5W",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/2c9bbfff-75c4-4355-8569-0db926912619",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/2c9bbfff-75c4-4355-8569-0db926912619",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/2c9bbfff-75c4-4355-8569-0db926912619",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/2c9bbfff-75c4-4355-8569-0db926912619?hash=2119958446",
+          "weightedScore": 117.1
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "id": "99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "mainSegmentHashCode": 2086033962,
+          "moneyCost": 520.44,
+          "moneyUSDCost": 520.44,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Ride Your Way",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/99be2072-abb0-4b16-b54d-c8681deb1b29/KTb7tk8x/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -1467404120,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "KTb7tk8x",
+              "segmentTemplateHashCode": 2086033962,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "9h3GcXfe",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/99be2072-abb0-4b16-b54d-c8681deb1b29",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/99be2072-abb0-4b16-b54d-c8681deb1b29?hash=-816704682",
+          "weightedScore": 535.5
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "id": "6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "mainSegmentHashCode": -1727489933,
+          "moneyCost": 520.44,
+          "moneyUSDCost": 520.44,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/6a19ff78-feb4-4b50-96cc-02af84cd7a88/8h2JDovF/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -1899845804,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "8h2JDovF",
+              "segmentTemplateHashCode": -1727489933,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "uyqiymh2",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/6a19ff78-feb4-4b50-96cc-02af84cd7a88",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/6a19ff78-feb4-4b50-96cc-02af84cd7a88?hash=-160970552",
+          "weightedScore": 535.5
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "disclaimer": "\u00a9 OpenStreetMap contributors\n\nMap data available under the Open Database License. For more information, see http://www.openstreetmap.org/copyright.",
+          "provider": {
+            "name": "OpenStreetMap",
+            "website": "https://www.openstreetmap.org"
+          }
+        }
+      ],
+      "trips": [
+        {
+          "arrive": "2024-05-28T16:02:50-04:00",
+          "availability": "AVAILABLE",
+          "caloriesCost": 5,
+          "carbonCost": 4.4,
+          "currency": "USD",
+          "currencySymbol": "$",
+          "depart": "2024-05-28T15:49:00-04:00",
+          "hassleCost": 0,
+          "hideExactTimes": true,
+          "hookURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/hook/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "id": "9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "logURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/log/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "mainSegmentHashCode": 2098070075,
+          "moneyCost": 520.44,
+          "moneyUSDCost": 520.44,
+          "plannedURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/planned/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "queryIsLeaveAfter": true,
+          "queryMinimumTransferSeconds": 0,
+          "queryTime": "2024-05-28T15:49:00-04:00",
+          "saveURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/save/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "segments": [
+            {
+              "availability": "AVAILABLE",
+              "booking": {
+                "accessibilityLabel": "Book with Ride Your Way TEST",
+                "quickBookingsUrl": "https://galaxies.skedgo.com/lab/beta/satapp/booking/v1/9e55181c-a6e4-410e-8675-4b6078140ef3/9gtLmyQ8/quick?bsb=1&psb=1",
+                "title": "Book"
+              },
+              "bookingHashCode": -1094670001,
+              "endTime": "2024-05-28T16:00:56-04:00",
+              "id": "9gtLmyQ8",
+              "segmentTemplateHashCode": 2098070075,
+              "startTime": "2024-05-28T15:49:00-04:00"
+            },
+            {
+              "availability": "AVAILABLE",
+              "endTime": "2024-05-28T16:02:50-04:00",
+              "id": "rPyB2Wnz",
+              "segmentTemplateHashCode": 738632033,
+              "startTime": "2024-05-28T16:00:56-04:00"
+            }
+          ],
+          "subscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/subscribe/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "temporaryURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "unsubscribeURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/unsubscribe/9e55181c-a6e4-410e-8675-4b6078140ef3",
+          "updateURL": "https://galaxies.skedgo.com/lab/beta/satapp/trip/update/9e55181c-a6e4-410e-8675-4b6078140ef3?hash=-1189831506",
+          "weightedScore": 535.5
+        }
+      ]
+    }
+  ],
+  "query": {
+    "depart": "2024-05-28T19:49:00Z",
+    "from": {
+      "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+      "class": "Location",
+      "lat": 42.35217,
+      "lng": -83.02025,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    },
+    "to": {
+      "address": "1119 Clark Ave, Detroit, MI 48209, USA",
+      "class": "Location",
+      "lat": 42.31537,
+      "lng": -83.09269,
+      "region": "US_MI_Detroit",
+      "timezone": "US/Eastern"
+    }
+  },
+  "region": "US_MI_Detroit",
+  "regions": [
+    "US_MI_Detroit"
+  ],
+  "segmentTemplates": [
+    {
+      "action": "Take Volunteers - Detroit about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 1048097244,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "budget": 1386,
+        "cost": 13.86,
+        "costComponents": [
+          {
+            "cost": 5,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 8.86,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Volunteers - Detroit",
+        "mainValue": "$14"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 243,
+          "green": 169,
+          "red": 115
+        },
+        "description": "Detroit - Volunteers",
+        "identifier": "ps_drt_mi-detroit-spedsta",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $14 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Walk<DURATION>",
+      "from": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 738632033,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 0,
+        "currency": "USD"
+      },
+      "metres": 127,
+      "metresDown": 0,
+      "metresFlat": 0,
+      "metresUp": 0,
+      "mini": {
+        "description": "1119 Clark Ave, Detroit, MI 48209, USA",
+        "instruction": "Walk",
+        "mainValue": "<1/4 miles"
+      },
+      "modeIdentifier": "wa_wal",
+      "modeInfo": {
+        "alt": "Walk",
+        "color": {
+          "blue": 99,
+          "green": 199,
+          "red": 30
+        },
+        "identifier": "wa_wal",
+        "localIcon": "walk"
+      },
+      "notes": "<1/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "{|gaGrcdzNLG|DgC",
+          "instruction": "HEAD_TOWARDS",
+          "metres": 127,
+          "name": ""
+        }
+      ],
+      "to": {
+        "address": "1119 Clark Ave, Detroit, MI 48209, USA",
+        "class": "Location",
+        "lat": 42.31545,
+        "lng": -83.09249,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 144,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Uber about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 835336343,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "budget": 1667,
+        "cost": 16.67,
+        "costComponents": [
+          {
+            "cost": 5.36,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 11.31,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Uber",
+        "mainValue": "$17"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 186,
+          "green": 213,
+          "red": 47
+        },
+        "description": "Uber",
+        "identifier": "ps_drt_michigan-uber",
+        "localIcon": "shuttlebus",
+        "remoteIcon": "uber",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $17 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Stadium Taxi about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": -637887899,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "budget": 2344,
+        "cost": 23.44,
+        "costComponents": [
+          {
+            "cost": 23.44,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Stadium Taxi",
+        "mainValue": "$24"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 102,
+          "green": 255,
+          "red": 51
+        },
+        "description": "Stadium Taxi",
+        "identifier": "ps_drt_washtenaw-stadium-taxi",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $24 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Care On Wheels Transportation about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": -1542658965,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 58.85,
+        "costComponents": [
+          {
+            "cost": 35,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 23.85,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Care On Wheels Transportation",
+        "mainValue": "$59"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 54,
+          "green": 62,
+          "red": 199
+        },
+        "description": "Care On Wheels",
+        "identifier": "ps_drt_mi-care-on-wheels",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $59 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Loving Touch Transportation Service LLC about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 802093905,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 67.25,
+        "costComponents": [
+          {
+            "cost": 40,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 27.25,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Loving Touch Transportation Service LLC",
+        "mainValue": "$68"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 102,
+          "green": 255,
+          "red": 51
+        },
+        "description": "Loving Touch",
+        "identifier": "ps_drt_mi-loving-touch",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $68 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Ready Ride Transportation LLC about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 1098115653,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 102.03,
+        "costComponents": [
+          {
+            "cost": 75,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 27.03,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Ready Ride Transportation LLC",
+        "mainValue": "$103"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 142,
+          "green": 79,
+          "red": 100
+        },
+        "description": "Ready Ride Transportation LLC",
+        "identifier": "ps_drt_mi-ready-ride",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $103 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Ride Your Way about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 2086033962,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 520.44,
+        "costComponents": [
+          {
+            "cost": 500,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 20.44,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Ride Your Way",
+        "mainValue": "$521"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 196,
+          "green": 113,
+          "red": 51
+        },
+        "description": "Ride your Way",
+        "identifier": "ps_drt_mi-ride-your-way",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $521 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Ride Your Way - RG about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": -1727489933,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 520.44,
+        "costComponents": [
+          {
+            "cost": 500,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 20.44,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Ride Your Way - RG",
+        "mainValue": "$521"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 196,
+          "green": 113,
+          "red": 51
+        },
+        "description": "Ride your Way RG",
+        "identifier": "ps_drt_mi-ride-your-way-rg",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $521 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    },
+    {
+      "action": "Take Ride Your Way TEST about 6 3/4 miles",
+      "durationWithoutTraffic": 753,
+      "from": {
+        "address": "2820 Elmwood St, Detroit, MI 48207, USA",
+        "class": "Location",
+        "lat": 42.35208,
+        "lng": -83.02018,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "hashCode": 2098070075,
+      "hideExactTimes": true,
+      "localCost": {
+        "accuracy": "internal_estimate",
+        "cost": 520.44,
+        "costComponents": [
+          {
+            "cost": 500,
+            "type": "TAXI_FLAG_FALL"
+          },
+          {
+            "cost": 20.44,
+            "type": "TAXI_COST"
+          }
+        ],
+        "currency": "USD"
+      },
+      "metres": 10965,
+      "mini": {
+        "description": "Near Porter Street",
+        "instruction": "Take Ride Your Way TEST",
+        "mainValue": "$521"
+      },
+      "modeIdentifier": "ps_drt",
+      "modeInfo": {
+        "alt": "Shuttle",
+        "color": {
+          "blue": 196,
+          "green": 113,
+          "red": 51
+        },
+        "description": "Ride your Way TEST",
+        "identifier": "ps_drt_mi-ride-your-way-test",
+        "localIcon": "shuttlebus",
+        "remoteIconIsBranding": true
+      },
+      "notes": "Fare: from $521 (estimate)\n6 3/4 miles",
+      "streets": [
+        {
+          "encodedWaypoints": "m{naGd{uyNc@_BB}@Ny@`@m@p@q@xAy@h@W\\AF@DGLMlBsAx@c@LGl@?F@D@PMJUJ[JKNIPAN@Zc@~@o@hAm@h@U`@Wj@c@rBmAf@Yl@?VRRVT\\FRRp@Hl@Fl@PAXBXZRx@D\\Bb@@t@@R@FAd@OF?FBFPXP@PPHTHGJAL?PDRf@DNFR??d@YNI~@e@LC??JXPh@tAfEHTDNFPHT`@pARp@|ArEvAnEPd@xBzGFTHRNb@DNFRz@dClAvDHVbBbFDLn@pBNf@p@nBZz@FNDPNb@FR@@HVPv@Pd@HRJ\\b@pAvAlE^jAPh@HTtBnGDNpA~Dr@vBFPHRFRnAlDDLDN??OHuCbBIFOHcBzAyCdC_@^m@v@??_Az@a@ZmArAmFlH}@fA[X[Xe@Lk@XcCp@i@JQB]Cs@U][[_@Yc@UWSQ[Oo@G_@B]N[V[`@Uj@Kd@Cj@?d@B`@DTH\\Pb@T\\`@\\p@^l@\\f@^b@`@h@j@`@j@l@tAPf@LXTh@??rAnFd@~A~@dD~@tCjCbIl@dCrCtIhB|FfA|C^x@xChFrBrDf@~@b@bAlAlDFNt@vDnB`PP|At@nFlCpSjBlNj@|Dr@~DtAtGp@xCXdBNdAJdAHdAB|@Bv@@`B?`ACnAEhAMnBSfD??]zGE~@Av@@|AH~APxAHb@XtA^hATl@Tf@^n@T`@b@j@VXX`@??~@p@f@\\ZPdAZd@LjANb@BX?x@Ax@I`AQv@Yx@]d@Y|@c@pAw@tAs@p@[fBcAxFsCzAcAn@]p@[TMzB{@nCo@z@QrBYrAO|AA~AC|@@v@Bl@Hz@PlC|@f@TfAh@p@d@fAnA^\\`@d@x@hAn@dAf@|@Xz@^pA\\nAf@vBTlAz@jE^hB??^xA`ChIV|@??KH{@j@iG~DkD|B??DN"
+        }
+      ],
+      "to": {
+        "address": "Near Porter Street",
+        "class": "Location",
+        "lat": 42.31646,
+        "lng": -83.09322,
+        "region": "US_MI_Detroit",
+        "timezone": "US/Eastern"
+      },
+      "travelDirection": 169,
+      "type": "unscheduled",
+      "visibility": "in summary"
+    }
+  ]
+}
