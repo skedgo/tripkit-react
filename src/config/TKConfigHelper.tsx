@@ -183,20 +183,16 @@ export function replaceProps<ST, PR extends TKUIWithClasses<ST, PR>>
 // type TKComponentKeys = FilterKeysOfType<ITKUIConfigOptional, TKComponentConfig<any, any>>;
 
 // export const TKPropsOverride = (props: { componentKey: TKComponentKeys, propsOverride: any, children: any }) => (
-export const TKPropsOverride = (props: { componentKey: string, propsOverride: any, children: any }) => (
-    <TKUIConfigContext.Consumer>
-        {(config: TKUIConfig) => {
-            const configOverride = replaceProps(config, props.componentKey, props.propsOverride);
-            return (
-                // <TKUIConfigProvider config={configOverride}> // Replace this since re-injects styles
-                <TKUIConfigContext.Provider value={configOverride}>
-                    {props.children}
-                </TKUIConfigContext.Provider>
-                // </TKUIConfigProvider>
-            )
-        }}
-    </TKUIConfigContext.Consumer>
-);
+export const TKPropsOverride = (props: { componentKey: string, propsOverride: any, children: any }) => {
+    const config = useContext(TKUIConfigContext);
+    const configOverride = replaceProps(config, props.componentKey, props.propsOverride);
+    // Use this instead of TKUIConfigProvider to avoid re-injecting styles
+    return (
+        <TKUIConfigContext.Provider value={configOverride}>
+            {props.children}
+        </TKUIConfigContext.Provider>
+    );
+};
 
 export const TKRandomizeClassNamesOverride = (props: { componentKey: string, randomizeOverride?: boolean, verboseOverride?: boolean, children: any }) => (
     <TKUIConfigContext.Consumer>

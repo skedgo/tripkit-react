@@ -129,7 +129,7 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
                 pushScreen("BOOKING");
                 setBookingForm(bookingInfos[0]);
             })
-            .catch(UIUtil.errorMsg)
+            .catch(e => UIUtil.errorMsg(e, { onClose: onRequestClose }))
             .finally(() => setWaiting(false));
     }, []);
 

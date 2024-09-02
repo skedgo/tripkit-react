@@ -1,4 +1,4 @@
-import {TKUITheme} from "../jss/TKUITheme";
+import { TKUITheme } from "../jss/TKUITheme";
 import genStyles from "../css/GenStyle.css";
 
 export const tKUIMxMIndexDefaultStyle = (theme: TKUITheme) => ({
@@ -11,6 +11,11 @@ export const tKUIMxMIndexDefaultStyle = (theme: TKUITheme) => ({
     track: {
         ...genStyles.flex,
         ...genStyles.alignCenter
+    },
+    trackAndAction: {
+        ...genStyles.flex,
+        ...genStyles.spaceBetween,
+        width: '100%'
     },
     transport: {
         margin: '0 5px',
