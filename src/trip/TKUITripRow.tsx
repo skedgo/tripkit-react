@@ -226,7 +226,8 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
         if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
             return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && status === SignInStatus.signedIn;
         }
-        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking;
+        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
+            && segment.booking;    // **TODO:** Notice this includes external bookings (segment.booking?.externalActions). See TKUIMxMView::260
     });
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
