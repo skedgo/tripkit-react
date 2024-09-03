@@ -313,6 +313,13 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         });
     }
 
+    private clearCardStack() {
+        this.state.cardStack.slice().forEach(card => this.popCardView());
+        // this.setState({
+        //     cardStack: []
+        // })
+    }
+
     private onShowTripUrl(tripUrl: string) {
         const { onWaitingStateLoad } = this.props;
         onWaitingStateLoad(true);
@@ -396,12 +403,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             onRequestAnother: () => {
                                 this.props.onQueryChange(RoutingQuery.create());
                                 this.props.onComputeTripsForQuery(false);
-                                this.popCardView({ viewId: "BOOKING_CARD" });
+                                this.props.setSelectedTripSegment(undefined);
+                                this.clearCardStack();
                             },
                             onShowRelatedTrip: () => {
                                 this.popCardView({ viewId: "BOOKING_CARD" });
                                 this.onShowTripUrl(action.internalURL);
-                            }
+                            },
+                            setWaitingFor: action => this.props.onWaitingStateLoad(!!action)
                         })
                     }}
                 >
@@ -410,7 +419,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                         onRequestTripRefresh: handleRequestTripRefresh,
                         onRequestClose: () => this.popCardView?.(),
                         onShowTrip: (trip) => {
-                            // this.props.onSelectedTripChange(undefined);
                             if (this.state.showMyBookings) {
                                 this.setState({ showMyBookings: false });
                             }
@@ -431,6 +439,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         // Need to do this since TKUIMxMView doesn't render if there's no selected trip.
         // **TODO:** consider removing that limitation.                
         this.props.onSelectedTripChange(trip);
+        this.props.setSelectedTripSegment(undefined);
         this.pushCardView({
             viewId: "RELATED_TRIP",
             renderCard: () => (
@@ -442,12 +451,12 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             this.popCardView();
                         },
                         slideUpOptions: {
-                            //     position: props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
-                            //     initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
-                            //     draggable: true,
-                            //     modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
-                            //     modalMiddle: { top: 55, unit: '%' },
-                            //     modalDown: { top: 90, unit: '%' }
+                            position: this.props.selectedTripSegment ? TKUISlideUpPosition.HIDDEN : undefined,
+                            initPosition: this.props.portrait ? TKUISlideUpPosition.MIDDLE : TKUISlideUpPosition.UP,
+                            draggable: true,
+                            modalUp: this.props.landscape ? { top: 5, unit: 'px' } : { top: cardSpacing(false), unit: 'px' },
+                            modalMiddle: { top: 55, unit: '%' },
+                            modalDown: { top: 90, unit: '%' }
                         },
                         presentation: CardPresentation.SLIDE_UP
                     }}
