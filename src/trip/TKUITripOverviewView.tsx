@@ -84,10 +84,6 @@ export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
      * @ignore
      */
     handleRef?: (ref: any) => void;
-
-    // pushCardView?: (props: CardViewData) => void;
-    // popCardView?: () => void;
-    // onShowBookingCard?: () => void;
 }
 
 interface IProps extends IClientProps, TKUIWithClasses<IStyle, IProps> { }

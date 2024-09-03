@@ -375,22 +375,22 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                 tripA.segments.length === tripB.segments.length;
         }
 
-        public refreshSelectedTrip(): Promise<boolean> {
+        public refreshSelectedTrip(): Promise<Trip | undefined> {
             return this.state.selected ?
-                this.refreshTrip(this.state.selected) : Promise.resolve(false);
+                this.refreshTrip(this.state.selected) : Promise.resolve(undefined);
         }
 
-        public refreshTrip(trip: Trip): Promise<boolean> {
+        public refreshTrip(trip: Trip): Promise<Trip | undefined> {
             const updateURL = trip.updateURL;
             if (!updateURL) {
-                return Promise.resolve(false);
+                return Promise.resolve(undefined);
             }
             return TripGoApi.updateRT(trip, this.state.query)
                 .then((tripUpdate: Trip | undefined) => {
                     // updateURL !== selected.updateURL will happen if selected trip group changed selected
                     // alternative, so shouldn't update.
                     if (!tripUpdate || updateURL !== trip.updateURL) {
-                        return false;
+                        return undefined;
                     }
                     const selectedTGroup = trip as TripGroup;
                     selectedTGroup.replaceAlternative(selectedTGroup.getSelectedTrip(), tripUpdate);
@@ -402,7 +402,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
                         // Force update anyway
                         this.setState({});
                     }
-                    return true;
+                    return tripUpdate;
                 });
         }
 

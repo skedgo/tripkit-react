@@ -133,7 +133,7 @@ class TripGoApi {
         );
     }
 
-    public static updateRT(trip: Trip, query: RoutingQuery): Promise<Trip | undefined> {
+    public static updateRT(trip: Trip, query: RoutingQuery = new RoutingQuery()): Promise<Trip | undefined> {
         const updateURL = trip.updateURL;
         return TripGoApi.apiCallUrl(TripGoApi.defaultToVersion(updateURL, TripGoApi.apiVersion) + '&includeStops=true', NetworkUtil.MethodType.GET)
             .then((routingResultsJson: any) => {

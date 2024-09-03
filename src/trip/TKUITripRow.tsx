@@ -19,8 +19,7 @@ import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import { TranslationFunction } from "../i18n/TKI18nProvider";
 import DeviceUtil from "../util/DeviceUtil";
 import Segment, { TripAvailability } from "../model/trip/Segment";
-import { SignInStatus, TKAccountContext } from "../account/TKAccountContext";
-import { TKUIConfigContext } from "../config/TKUIConfigProvider";
+import { TKAccountContext } from "../account/TKAccountContext";
 import { ReactComponent as AlertIcon } from "../images/ic-alert.svg";
 
 export enum TKTripCostType {
@@ -218,17 +217,6 @@ const TKUITripRow: React.FunctionComponent<IProps> = props => {
     }
     const visibleAlternatives = visiblePastAlternatives.concat(visibleFutureAlternatives);
     const collapsed = !props.expanded;
-    const tkconfig = useContext(TKUIConfigContext);
-    // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
-    // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
-    // by default.
-    const bookingSegment = trip.segments.find(segment => {
-        if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
-            return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && status === SignInStatus.signedIn;
-        }
-        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
-            && segment.booking;    // **TODO:** Notice this includes external bookings (segment.booking?.externalActions). See TKUIMxMView::260
-    });
     const metricsS = tripMetricsToShow!
         .map(metric => tripMetricString(metric, trip, t))
         .filter(metricS => metricS !== undefined)

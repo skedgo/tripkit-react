@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { TKUIWithClasses, TKUIWithStyle } from "../jss/StyleHelper";
-import { connect, PropsMapper } from "../config/TKConfigHelper";
+import { connect, PropsMapper, TKPropsOverride } from "../config/TKConfigHelper";
 import { TKComponentDefaultConfig, TKUIConfig } from "../config/TKUIConfig";
 import { TKUIViewportUtil, TKUIViewportUtilProps } from "../util/TKUIResponsiveUtil";
 import { Subtract } from 'utility-types';
@@ -21,6 +21,7 @@ import { ReactComponent as IconRefresh } from '../images/ic-refresh.svg';
 import TKUICardHeader from '../card/TKUICardHeader';
 import TKUIMyBooking from './TKUIMyBooking';
 import { SignInStatus, TKAccountContext } from "../account/TKAccountContext"
+import { bookingActionToHandler } from './TKUIBookingActions';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     onRequestClose: (closeAll?: boolean) => void;
@@ -67,6 +68,7 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
     const [countExpired, setCountExpired] = useState<number | undefined>();
     const [waitingExpired, setWaitingExpired] = useState<boolean>(false);
     const [bookingsExpired, setBookingsExpired] = useState<ConfirmedBookingData[] | undefined>(undefined);
+    const { onWaitingStateLoad } = useContext(RoutingResultsContext);
     async function requestBookings({ valid = true, start = 1, max = 5 }: { valid?: boolean, start?: number, max?: number } = {}): Promise<ConfirmedBookingsResult> {
         const bookingsResult = await TripGoApi.apiCallT(`booking?valid=${valid}&first=${start}&max=${max}`, NetworkUtil.MethodType.GET, ConfirmedBookingsResult);
         bookingsResult.bookings = bookingsResult.bookings && flattenRelatedBookings(bookingsResult.bookings);   // Flatten bookings coming from the BE.
@@ -172,37 +174,26 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
             <Tab value={Sections.Expired} label={t(Sections.Expired)} disableFocusRipple disableTouchRipple disabled={!signedIn} />
         </Tabs>;
     const tabBookings = section === Sections.Valid ? bookingsValid : bookingsExpired;
-    // const tabBookings = useMemo(() => {
-    //     const tabBookings = section === Sections.Valid ? bookingsValid : bookingsExpired;
-    //     return tabBookings?.reduce((flatten: ConfirmedBookingData[], booking: ConfirmedBookingData) => {
-    //         return flatten.concat([booking, ...booking.relatedBookings?.map(rb => rb.confirmedBookingData!) ?? []])
-    //     }, []);
-    // }, [section, bookingsValid, bookingsExpired]);
     const waiting = section === Sections.Valid ? waitingValid : waitingExpired;
-    return (
+    let content = (
         <TKUICard
             title={t("My.Bookings")}
             onRequestClose={onRequestClose}
             presentation={landscape ? CardPresentation.MODAL : CardPresentation.SLIDE_UP}
             slideUpOptions={slideUpOptions}
             focusTrap={true}
-            renderHeader={props =>
-                <TKUICardHeader {...props}
-                    renderRight={
-                        <button className={classes.refresh}
-                            onClick={() => {
-                                if (resultsRef.current) {
-                                    resultsRef.current.scrollTop = 0;
-                                };
-                                refreshBookings({ silent: false });
-                                refreshBookings({ valid: false, silent: false });
-                            }}>
-                            {signedIn ?
-                                <IconRefresh /> : null}
-                        </button>
-                    }
-                />
-            }
+            renderHeader={props => <TKUICardHeader {...props}
+                renderRight={<button className={classes.refresh}
+                    onClick={() => {
+                        if (resultsRef.current) {
+                            resultsRef.current.scrollTop = 0;
+                        };
+                        refreshBookings({ silent: false });
+                        refreshBookings({ valid: false, silent: false });
+                    }}>
+                    {signedIn ?
+                        <IconRefresh /> : null}
+                </button>} />}
         >
             <div className={classes.main}>
                 <div className={classes.tabs}>
@@ -229,18 +220,31 @@ const TKUIMyBookings: React.FunctionComponent<IProps> = (props: IProps) => {
                                         <TKUIMyBooking
                                             booking={booking}
                                             type={booking.type}
-                                            key={booking.id}
-                                        />
+                                            key={booking.id} />
                                     </div>)}
                                 {waiting ?
                                     <div className={classes.loadingMore}>
                                         <TKLoading />
                                     </div> : null}
-                            </div>
-                }
+                            </div>}
             </div>
         </TKUICard>
     );
+    content =
+        <TKPropsOverride
+            componentKey="TKUIBookingActions"
+            propsOverride={{
+                actionToHandler: action => bookingActionToHandler(action, {
+                    requestRefresh: async () => {
+                        await refreshBookings({ silent: true, valid: true }).then(() => { });
+                    },
+                    setWaitingFor: action => onWaitingStateLoad(!!action)   //**TODO:** Consider moving this to TKUIMyBooking, passing to it onRefreshBookings
+                })
+            }}
+        >
+            {content}
+        </TKPropsOverride>;
+    return content;
 };
 
 const Mapper: PropsMapper<IClientProps, Subtract<IProps, TKUIWithClasses<IStyle, IProps>>> =

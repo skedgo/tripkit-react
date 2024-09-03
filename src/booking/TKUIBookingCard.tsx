@@ -24,8 +24,9 @@ import { RoutingResultsContext } from '../trip-planner/RoutingResultsProvider';
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps>, Pick<TKUICardClientProps, "onRequestClose"> {
     trip: Trip; // The component is controlled w.r.t. trip prop.
-    onRequestTripRefresh: () => Promise<boolean>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
-    onSuccess?: (bookingTripUpdateURL: string) => void; // ***TODO:*** Remove.
+    onRequestTripRefresh: () => Promise<any>;    // This prop is called when the booking was successful, to indicate the client that the trip needs to be refreshed
+    onSuccess?: (bookingTripUpdateURL: string) => void; // ***TODO:*** Remove?
+    onShowTrip?: (trip: Trip) => void;
 }
 
 export type TKUIBookingCardClientProps = IClientProps & { key?: Key };
@@ -71,22 +72,13 @@ function screenCloseButton(screen: Screens): string {
     }
 }
 
-function screenRightButtonProps(screen: Screens): { text: string, onClick: () => void } | undefined {
-    switch (screen) {
-        case "DETAILS":
-            return { text: "Show Trip", onClick: () => { } };
-        default:
-            return undefined;
-    }
-}
-
 // ***TODO:*** REMOVE
 if (process.env.NODE_ENV === 'development') {
     Features.instance.realtimeEnabled = false;
 }
 
 const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
-    const { trip, onRequestTripRefresh, onSuccess, onRequestClose, classes } = props;
+    const { trip, onRequestTripRefresh, onSuccess, onRequestClose, classes, onShowTrip } = props;
     const booking = trip.segments.find(segment => segment.booking)!.booking!;
     console.assert(!!booking);
     const [waiting, setWaiting] = useState<boolean>(false);
@@ -95,6 +87,15 @@ const TKUIBookingCard: React.FunctionComponent<IProps> = (props: IProps) => {
     const [screensStack, setScreensStack] = useState<Screens[]>([
         booking.confirmation ? "DETAILS" : "BOOKING"
     ]);
+
+    function screenRightButtonProps(screen: Screens): { text: string, onClick: () => void } | undefined {
+        switch (screen) {
+            case "DETAILS":
+                return onShowTrip ? { text: "Show Trip", onClick: () => { onShowTrip(trip) } } : undefined;
+            default:
+                return undefined;
+        }
+    }
 
     useEffect(() => {
         if (booking.confirmation) {
