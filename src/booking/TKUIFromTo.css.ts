@@ -1,9 +1,9 @@
 import genStyles from "../css/GenStyle.css";
-import { tKUIMxMBookingCardDefaultStyle } from "../mxm/TKUIMxMBookingCard.css";
 import { TKUITheme } from "../jss/TKUITheme";
+import { tKUIBookingFormDefaultStyle } from "./TKUIBookingForm.css";
 
 export const tKUIFromToDefaultStyle = (theme: TKUITheme) => {
-    const { value, label } = tKUIMxMBookingCardDefaultStyle(theme);
+    const { value, label } = tKUIBookingFormDefaultStyle(theme);
     return ({
         groupRight: {
             ...genStyles.flex,

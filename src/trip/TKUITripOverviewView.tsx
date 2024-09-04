@@ -21,7 +21,6 @@ import { ReactComponent as IconNavigation } from "../images/ic-navigation.svg";
 import TKUITripTime from "./TKUITripTime";
 import TripRowTrack from "./TripRowTrack";
 import TKUICardHeader from "../card/TKUICardHeader";
-import { SignInStatus } from "../account/TKAccountContext";
 
 type IStyle = ReturnType<typeof tKUITripOverviewViewDefaultStyle>;
 export interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
@@ -96,15 +95,6 @@ export const config: TKComponentDefaultConfig<IProps, IStyle> = {
     styles: tKUITripOverviewViewDefaultStyle,
     classNamePrefix: "TKUITripOverviewView"
 };
-
-export function getBookingSegment(trip: Trip, tkconfig: TKUIConfig, signInStatus: SignInStatus) {
-    return trip.segments.find(segment => {
-        if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
-            return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && signInStatus === SignInStatus.signedIn;
-        }
-        return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && segment.booking;
-    });
-}
 
 const TKUITripOverviewView: FunctionComponent<IProps> = props => {
     const { value: trip, cardProps, classes, onTripSegmentSelected, t, handleRef, shouldFocusAfterRender, doNotStack } = props;

@@ -7,7 +7,7 @@ import TKUIRoutingResultsView, { TKUIRoutingResultsViewHelpers } from "../trip/T
 import { IServiceResultsContext, ServiceResultsContext } from "../service/ServiceResultsProvider";
 import { IRoutingResultsContext, RoutingResultsContext } from "./RoutingResultsProvider";
 import TKUIServiceView, { TKUIServiceViewHelpers } from "../service/TKUIServiceView";
-import TKUITripOverviewView, { getBookingSegment } from "../trip/TKUITripOverviewView";
+import TKUITripOverviewView from "../trip/TKUITripOverviewView";
 import { TKUIWithClasses, TKUIWithStyle, overrideClass } from "../jss/StyleHelper";
 import { tKUITripPlannerDefaultStyle, wideCardWidth } from "./TKUITripPlanner.css";
 import TKUIRoutingQueryInput, { TKUIRoutingQueryInputHelpers } from "../query/TKUIRoutingQueryInput";
@@ -68,6 +68,7 @@ import { IAccountContext, SignInStatus, TKAccountContext } from "../account/TKAc
 import TKUIButton, { TKUIButtonType } from "../buttons/TKUIButton";
 import { ReactComponent as IconTicket } from "../images/ic-ticket.svg";
 import { bookingActionToHandler } from "../booking/TKUIBookingActions";
+import { getTripBookingInfo } from "../trip/TripUtil";
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     /**
@@ -240,7 +241,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 },
                                 presentation: CardPresentation.SLIDE_UP
                             }}
-                            actions={this.getBookingActions(this.props.selectedTrip)}
+                            actions={this.getBookingActions(selectedTrip)}
                         />,
                     mapProps: {
                         trip: selectedTrip,
@@ -314,7 +315,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private clearCardStack() {
-        this.state.cardStack.slice().forEach(card => this.popCardView());
+        this.state.cardStack.slice().forEach(() => this.popCardView());
         // this.setState({
         //     cardStack: []
         // })
@@ -344,7 +345,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
     }
 
     private onShowBookingTrip(booking: ConfirmedBookingData) {
-        const { onWaitingStateLoad, onTripJsonUrl, onTripDetailsView, setSelectedTripSegment } = this.props;
+        const { onWaitingStateLoad } = this.props;
         const tripUrl = booking.trips?.[0]!;
         onWaitingStateLoad(true);
         TripGoApi.apiCallUrlT(TripGoApi.defaultToVersion(tripUrl, TripGoApi.apiVersion), NetworkUtil.MethodType.GET, RoutingResults)
@@ -360,9 +361,9 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 new TKError("Error loading trip", ERROR_LOADING_DEEP_LINK, false, error.stack)));
     }
 
-    private getBookingActions(selectedTrip?: Trip) {
+    private getBookingActions(selectedTrip: Trip) {
         const { accountsSupported, status, tkconfig } = this.props;
-        const bookingSegment = selectedTrip && getBookingSegment(selectedTrip, tkconfig, status);
+        const { bookingSegment } = getTripBookingInfo(selectedTrip, tkconfig, status);
         const bookAction = bookingSegment && accountsSupported && status === SignInStatus.signedIn && tkconfig.booking?.renderBookingCard &&
             <TKUIButton
                 icon={<IconTicket />}
@@ -383,9 +384,10 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
 
     private onShowBookingCard(trip: Trip) {
         const onRequestTripRefresh = trip === this.props.selectedTrip ? this.props.refreshSelectedTrip : TripGoApi.updateRT;
-        const { accountsSupported, status, tkconfig } = this.props;
-        const bookingSegment = trip && getBookingSegment(trip, tkconfig, status);
-        if (!bookingSegment || !accountsSupported || status !== SignInStatus.signedIn || !tkconfig.booking?.renderBookingCard) {
+        const { status, tkconfig } = this.props;
+        const { showBooking, bookingType, bookingSegment } = getTripBookingInfo(trip, tkconfig, status);
+        const isCreateBooking = !bookingSegment?.booking?.confirmation;
+        if (!showBooking || bookingType === "external" || status !== SignInStatus.signedIn || !tkconfig.booking?.renderBookingCard) {
             return; // Precodition for showing booking card not met.
         }
         const BookingCardWithTripState = () => {
@@ -404,6 +406,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                 this.props.onQueryChange(RoutingQuery.create());
                                 this.props.onComputeTripsForQuery(false);
                                 this.props.setSelectedTripSegment(undefined);
+                                if (this.state.showMyBookings) {
+                                    this.setState({ showMyBookings: false });
+                                }
+                                if (this.props.showUserProfile) {
+                                    this.props.setShowUserProfile(false);
+                                }
+                                setTimeout(() => !this.props.directionsView && !this.props.query.to &&
+                                    this.locSearchBoxRef && this.locSearchBoxRef.focus(), 100);
                                 this.clearCardStack();
                             },
                             onShowRelatedTrip: () => {
@@ -417,7 +427,14 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     {tkconfig.booking!.renderBookingCard!({
                         trip: tripS,
                         onRequestTripRefresh: handleRequestTripRefresh,
-                        onRequestClose: () => this.popCardView?.(),
+                        onRequestClose: () => {
+                            this.popCardView?.();
+                            const { bookingSegment: tripSBookingSegment } = getTripBookingInfo(tripS, tkconfig, status);
+                            // If booking was created, show trip details.
+                            if (isCreateBooking && tripSBookingSegment?.booking?.confirmation) {
+                                this.onShowTrip(tripS);
+                            }
+                        },
                         onShowTrip: (trip) => {
                             if (this.state.showMyBookings) {
                                 this.setState({ showMyBookings: false });
@@ -700,7 +717,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                             },
                             presentation: CardPresentation.SLIDE_UP
                         }}
-                        actions={this.getBookingActions(this.props.selectedTrip)}
+                        actions={this.getBookingActions(this.props.selectedTrip!)}
                     />
             } else {
                 const sortedTrips = this.props.trips || [];
@@ -736,7 +753,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                                                 },
                                                 presentation: CardPresentation.NONE
                                             }}
-                                            actions={this.getBookingActions(this.props.selectedTrip)}
+                                            actions={this.getBookingActions(this.props.selectedTrip!)}
                                         />
                                     </div>
                                 )}
@@ -830,24 +847,6 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     />}
             </TKUIMxMViewHelpers.TKStateProps>
 
-        function getTripBookingInfo(trip: Trip): { showBooking: boolean, bookingType?: "external" | "inapp", bookingSegment?: Segment } {
-            // The first booking segment such that booking is enabled for that kind of segment. If not booking config or
-            // booking.enabled function was specified then consider as true, so the button is displayed for external bookings
-            // by default.
-            const bookingSegment = trip.segments.find(segment => {
-                if (segment.booking?.externalActions?.includes("showTicket")) { // If a show ticket action, then show booking btn just if booking is enabled (for that segment if enabled function is provided) and signed in.
-                    return tkconfig.booking && (!tkconfig.booking.enabled || tkconfig.booking.enabled(segment)) && status === SignInStatus.signedIn;
-                }
-                return (!tkconfig.booking || !tkconfig.booking.enabled || tkconfig.booking.enabled(segment))
-                    && segment.booking;
-            });
-
-            if (!bookingSegment) {
-                return { showBooking: false };
-            }
-            return { showBooking: true, bookingType: bookingSegment.booking?.externalActions ? "external" : "inapp", bookingSegment };
-        }
-
         const topCardView = this.state.cardStack.length > 0 ? this.state.cardStack[this.state.cardStack.length - 1] : undefined;
         let content = (
             <div id={modalContainerId} className={classNames(classes.modalMain, genClassNames.root, isUserTabbing && classes.ariaFocusEnabled)}
@@ -907,7 +906,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                     {mxMView}
                 </div>
                 {/* {topCardView?.renderCard()} */}
-                {this.state.cardStack.map((card, i) => card.renderCard())}
+                {this.state.cardStack.map((card) => card.renderCard())}
             </div>
         );
         content =
@@ -924,7 +923,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
             <TKPropsOverride
                 componentKey="TKUITripRow"
                 propsOverride={props => {
-                    const { showBooking, bookingType, bookingSegment } = getTripBookingInfo(props.value);
+                    const { showBooking, bookingType, bookingSegment } = getTripBookingInfo(props.value, tkconfig, status);
                     return ({
                         renderAction: showBooking ? (trip => {
                             const booking = bookingSegment!.booking!;
@@ -985,7 +984,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
                 componentKey="TKUIMxMIndex"
                 propsOverride={props => {
                     const trip = props.segments[0].trip;
-                    const { showBooking, bookingType, bookingSegment } = getTripBookingInfo(trip);
+                    const { showBooking, bookingType, bookingSegment } = getTripBookingInfo(trip, tkconfig, status);
                     return ({
                         renderAction: showBooking && bookingType === "inapp" ? (trip => {
                             const booking = bookingSegment!.booking!;

@@ -11,80 +11,83 @@ import TKUIButton, { TKUIButtonType } from '../buttons/TKUIButton';
 import { TKComponentDefaultConfig } from '../config/TKUIConfig';
 import { connect, mapperFromFunction } from "../config/TKConfigHelper";
 import Util from '../util/Util';
-import { tKUIMxMBookingCardDefaultStyle } from '../mxm/TKUIMxMBookingCard.css';
 import { black, TKUITheme } from '../jss/TKUITheme';
 import TKUIHTMLTicketView from './TKUIHTMLTicketView';
+import { tKUIBookingFormDefaultStyle } from '../booking/TKUIBookingForm.css';
 
-const ticketSelectJss = (theme: TKUITheme) => ({
-    main: {
-        ...genStyles.flex,
-        ...genStyles.column
-    },
-    title: {
-        ...theme.textColorGray,
-        ...theme.textWeightSemibold,
-        marginBottom: '16px'
-    },
-    form: tKUIMxMBookingCardDefaultStyle(theme).form,
-    option: tKUIMxMBookingCardDefaultStyle(theme).group,
-    icon: tKUIMxMBookingCardDefaultStyle(theme).icon,
-    row: {
-        padding: 0,
-        ...genStyles.grow
-    },
-    formButton: {
-        padding: '4px 16px',
-        color: theme.colorPrimary
-    },
-    mainReadOnly: {
-        ...genStyles.flex,
-        ...genStyles.column,
-        ...genStyles.grow,
-        '&>*:not(:first-child)': {
-            marginTop: '10px'
-        }
-    },
-    infoReadonly: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        ...genStyles.grow
-    },
-    ticketsReadonly: {
-        ...genStyles.grow,
-        ...genStyles.flex,
-        ...genStyles.column,
-        '&>*:not(:first-child)': {
-            marginTop: '5px'
-        }
-    },
-    priceReadOnly: {
-        whiteSpace: 'nowrap'
-    },
-    passengersStepper: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        ...theme.textSizeBody
-    },
-    stepperButtons: {
-        ...genStyles.flex,
-        ...genStyles.alignCenter,
-        '&>*:not(:last-child)': {
-            marginRight: '10px'
-        }
-    },
-    stepperBtn: {
-        padding: '2px',
-        height: '32px',
-        width: '32px',
-        '& svg': {
-            width: '14px',
-            height: '14px',
-            '& path': {
-                fill: black(0, theme.isDark)
+const ticketSelectJss = (theme: TKUITheme) => {
+    const { form, group, icon } = tKUIBookingFormDefaultStyle(theme);
+    return ({
+        main: {
+            ...genStyles.flex,
+            ...genStyles.column
+        },
+        title: {
+            ...theme.textColorGray,
+            ...theme.textWeightSemibold,
+            marginBottom: '16px'
+        },
+        form,
+        option: group,
+        icon,
+        row: {
+            padding: 0,
+            ...genStyles.grow
+        },
+        formButton: {
+            padding: '4px 16px',
+            color: theme.colorPrimary
+        },
+        mainReadOnly: {
+            ...genStyles.flex,
+            ...genStyles.column,
+            ...genStyles.grow,
+            '&>*:not(:first-child)': {
+                marginTop: '10px'
+            }
+        },
+        infoReadonly: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...genStyles.grow
+        },
+        ticketsReadonly: {
+            ...genStyles.grow,
+            ...genStyles.flex,
+            ...genStyles.column,
+            '&>*:not(:first-child)': {
+                marginTop: '5px'
+            }
+        },
+        priceReadOnly: {
+            whiteSpace: 'nowrap'
+        },
+        passengersStepper: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            ...theme.textSizeBody
+        },
+        stepperButtons: {
+            ...genStyles.flex,
+            ...genStyles.alignCenter,
+            '&>*:not(:last-child)': {
+                marginRight: '10px'
+            }
+        },
+        stepperBtn: {
+            padding: '2px',
+            height: '32px',
+            width: '32px',
+            '& svg': {
+                width: '14px',
+                height: '14px',
+                '& path': {
+                    fill: black(0, theme.isDark)
+                }
             }
         }
-    }
-});
+    });
+};
 
 interface IClientProps extends TKUIWithStyle<IStyle, IProps> {
     tickets: TicketOption[];

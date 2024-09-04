@@ -70,7 +70,6 @@ import { TKUIMyBookingProps, TKUIMyBookingStyle } from "../booking/TKUIMyBooking
 import { TKUIHomeCardProps, TKUIHomeCardStyle } from "../sidebar/TKUIHomeCard";
 import { TKUIActiveTripProps, TKUIActiveTripStyle } from "../sidebar/TKUIActiveTrip";
 import { TKUIStreetStepProps, TKUIStreetStepStyle } from "../trip/TKUIStreetStep";
-import { TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle } from "../mxm/TKUIMxMBookingCard";
 import TKUserProfile from "../model/options/TKUserProfile";
 import { TKUIStripePaymentCardProps, TKUIStripePaymentCardStyle } from "../stripekit/TKUIStripePaymentCard";
 import { TKUIMxMCollectNearbyCardProps, TKUIMxMCollectNearbyCardStyle } from "../mxm/TKUIMxMCollectNearbyCard";
@@ -304,7 +303,6 @@ export interface ITKUIConfigOptional {
     TKUIMyBookings: TKComponentConfig<TKUIMyBookingsProps, TKUIMyBookingsStyle>;
     TKUIMyBooking: TKComponentConfig<TKUIMyBookingProps, TKUIMyBookingStyle>;
     TKUIMyBookingGroup: TKComponentConfig<TKUIMyBookingGroupProps, TKUIMyBookingGroupStyle>;
-    TKUIMxMBookingCard: TKComponentConfig<TKUIMxMBookingCardProps, TKUIMxMBookingCardStyle>;
     TKUIBookingCard: TKComponentConfig<TKUIBookingCardProps, TKUIBookingCardStyle>;
     TKUIBookingForm: TKComponentConfig<TKUIBookingFormProps, TKUIBookingFormStyle>;
     TKUIBookingReview: TKComponentConfig<TKUIBookingReviewProps, TKUIBookingReviewStyle>;
