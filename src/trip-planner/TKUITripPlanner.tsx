@@ -448,7 +448,7 @@ class TKUITripPlanner extends React.Component<IProps, IState> {
         };
         this.pushCardView({
             viewId: "BOOKING_CARD",
-            renderCard: () => <BookingCardWithTripState />
+            renderCard: () => <BookingCardWithTripState key={"bookingCard"} />
         });
     }
 
