@@ -114,9 +114,6 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         border: '1px solid ' + black(4, theme.isDark),
         ...genStyles.borderRadius(8)
     },
-    imageSection: {
-        border: 'none!important'
-    },
     sectionTitle: {
         textTransform: 'capitalize',
         ...theme.textWeightSemibold
@@ -139,6 +136,11 @@ const tKUICheckoutFormPropsDefaultStyle = (theme: TKUITheme) => ({
         margin: '12px 15px 0',
         color: 'red',
         textAlign: 'center'
+    },
+    sponsorDescription: {
+        ...genStyles.flex,
+        ...genStyles.center,
+        ...genStyles.alignCenter
     }
 });
 
@@ -472,11 +474,22 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
         // }
 
         const sectionStyles = { sectionBody: overrideClass(injectedStyles.section), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
-        const imageSectionStyles = { sectionBody: overrideClass(injectedStyles.imageSection), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
+        const imageSectionStyles = { sectionBody: overrideClass(injectedStyles.section), sectionTitle: overrideClass(injectedStyles.sectionTitle) };
 
         let review: ReactNode = null;
         if (selectedMethod || newPaymentMethodAndPay) {
             const paymentOption = newPaymentMethodAndPay ? cardPaymentOption! : selectedMethod!.paymentOption;
+            let sponsorImgAlt;
+            if (paymentOption.paymentMode === "WALLET") {
+                const sponsorImgAltSentences: string[] = [];
+                if (paymentOption.sponsorTitle) {
+                    sponsorImgAltSentences.push(paymentOption.sponsorTitle);
+                }
+                if (paymentOption.sponsorDescription) {
+                    sponsorImgAltSentences.push(paymentOption.sponsorDescription);
+                }
+                sponsorImgAlt = sponsorImgAltSentences.length === 0 ? undefined : sponsorImgAltSentences.join("\n");
+            }
             review =
                 <div className={classes.review}>
                     <TKUISettingSection styles={sectionStyles} title={paymentOption.paymentMode === "WALLET" ? "Balance" : undefined}>
@@ -509,8 +522,12 @@ const TKUICheckoutForm: React.FunctionComponent<CheckoutFormProps> =
                             </div>}
                     </TKUISettingSection>
                     {paymentOption.paymentMode === "WALLET" && paymentOption.sponsorImageURL &&
-                        <TKUISettingSection styles={imageSectionStyles} title='Sponsored by'>
-                            <img src={paymentOption.sponsorImageURL} alt={paymentOption.sponsorTitle} />
+                        <TKUISettingSection styles={sectionStyles} title='Sponsored by'>
+                            <img src={paymentOption.sponsorImageURL} alt={sponsorImgAlt} style={{ borderBottom: 'none' }} />
+                            {paymentOption.sponsorDescription &&
+                                <div className={classes.sponsorDescription}>
+                                    {paymentOption.sponsorDescription}
+                                </div>}
                         </TKUISettingSection>}
                 </div>
         }
