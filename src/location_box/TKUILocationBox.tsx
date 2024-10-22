@@ -208,6 +208,7 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.isDDOpen = this.isDDOpen.bind(this);
         this.getHighlightedItem = this.getHighlightedItem.bind(this);
         this.updateResolvedItem = this.updateResolvedItem.bind(this);
+        this.refreshDisplayingResults = this.refreshDisplayingResults.bind(this);
     }
 
     public focus() {
@@ -400,7 +401,12 @@ class TKUILocationBox extends Component<IProps, IState> {
         this.getLimitBounds().then(limitBounds =>
             this.geocodingData.geocode(inputText, true, limitBounds, this.props.focus ? this.props.focus : null,
                 this.handleAutocompleteResults));
+    }
 
+    public refreshDisplayingResults() {
+        if (this.state.focus) {
+            this.refreshResults(this.state.inputText);
+        }
     }
 
     // noinspection JSUnusedLocalSymbols
@@ -414,7 +420,8 @@ class TKUILocationBox extends Component<IProps, IState> {
             if (results.hasOwnProperty(i)) {
                 const item = {
                     label: LocationUtil.getMainText(results[i], this.props.t),
-                    location: results[i]
+                    location: results[i],
+                    query: query
                 };
                 items.push(item);
             }
