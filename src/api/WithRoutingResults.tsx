@@ -362,17 +362,7 @@ function withRoutingResults<P extends RResultsConsumerProps>(Consumer: any) {
         }
 
         public alreadyAnEquivalent(newTrip: Trip, trips: Trip[]): boolean {
-            return !!trips.find((trip: Trip) => this.equivalentTrips(trip, newTrip));
-        }
-
-        public equivalentTrips(tripA: Trip, tripB: Trip): boolean {
-            return tripA.departSeconds === tripB.departSeconds &&
-                tripA.arriveSeconds === tripB.arriveSeconds &&
-                tripA.weightedScore === tripB.weightedScore &&
-                tripA.caloriesCost === tripB.caloriesCost &&
-                tripA.carbonCost === tripB.carbonCost &&
-                tripA.hassleCost === tripB.hassleCost &&
-                tripA.segments.length === tripB.segments.length;
+            return !!trips.find((trip: Trip) => TripGoApi.equivalentTrips(trip, newTrip));
         }
 
         public refreshSelectedTrip(): Promise<Trip | undefined> {

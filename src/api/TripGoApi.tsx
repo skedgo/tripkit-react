@@ -215,6 +215,16 @@ class TripGoApi {
         });
     }
 
+    public static equivalentTrips(tripA: Trip, tripB: Trip): boolean {
+        return tripA.departSeconds === tripB.departSeconds &&
+            tripA.arriveSeconds === tripB.arriveSeconds &&
+            tripA.weightedScore === tripB.weightedScore &&
+            tripA.caloriesCost === tripB.caloriesCost &&
+            tripA.carbonCost === tripB.carbonCost &&
+            tripA.hassleCost === tripB.hassleCost &&
+            tripA.segments.length === tripB.segments.length;
+    }
+
 }
 
 export default TripGoApi;
