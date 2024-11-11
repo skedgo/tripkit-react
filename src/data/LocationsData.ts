@@ -145,7 +145,7 @@ class LocationsData {
             return cachedResult;
         } else {
             const endpoint = "locationInfo.json?" +
-                (id instanceof LatLng ? "lat=" + id.lat + "&lng=" + id.lng : "identifier=" + id) +
+                (id instanceof LatLng ? "lat=" + id.lat + "&lng=" + id.lng : "identifier=" + encodeURIComponent(id)) +
                 (region ? '&region=' + region : "");
             const result = TripGoApi.apiCallT(endpoint, NetworkUtil.MethodType.GET, TKLocationInfo);
             this.locationInfoCache.set(cacheKey, result);

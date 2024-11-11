@@ -110,6 +110,7 @@ const TKUITripOverviewView: FunctionComponent<IProps> = props => {
             <TKUIFavouriteAction
                 favourite={FavouriteTrip.create(trip)}
                 vertical={true}
+                key={"actionFavorite"}
             />,
             <TKUIShareAction
                 title={t("Share.Trip")}

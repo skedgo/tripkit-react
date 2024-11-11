@@ -126,8 +126,9 @@ const TKFavouritesProvider: React.FunctionComponent<IProps> = (props: IProps) =>
             if (!(fav instanceof FavouriteStop)) return;
             if (fav.stop && !shouldRefreshStops) return;
             try {
+                const stopId = `pt_pub|${fav.region}|${fav.stopCode}`;
                 const { stop: stopJson } = await TripGoApi.fetchAPI(
-                    TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=pt_pub|${fav.region}|${fav.stopCode}&region=${fav.region}`,
+                    TripGoApi.getSatappUrl("locationInfo.json") + `?identifier=${encodeURIComponent(stopId)}&region=${fav.region}`,
                     {
                         method: "GET",
                         tkcache: true,
