@@ -52,8 +52,10 @@ class TKI18nProvider extends React.Component<IProps, IState> {
 
     constructor(props: IProps) {
         super(props);
-        // Compose messages by overriding untranslated with messages_en.
-        const messages = Object.assign({}, untranslated, messages_en);
+        // Compose messages by overriding untranslated with messages_en and then with config translations 
+        // (if it's not a promise, address the promise case after component mounted).
+        const configTranslations = (!props.dataPromise || props.dataPromise instanceof Promise) ? {} : props.dataPromise?.translations;
+        const messages = Object.assign({}, untranslated, messages_en, configTranslations);
         const defaultLocale = 'en';
         this.state = {
             locale: defaultLocale,
@@ -91,8 +93,8 @@ class TKI18nProvider extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
-        if (this.props.dataPromise) {
-            Promise.resolve(this.props.dataPromise)
+        if (this.props.dataPromise && this.props.dataPromise instanceof Promise) {
+            this.props.dataPromise
                 .then((data: { locale: string, translations: TKI18nMessages }) => {
                     // Compose messages by overriding untranslated, with messages_en, and then with data.translations
                     // TODO: maybe it makes sense to compose also language-only resource when language+country is
