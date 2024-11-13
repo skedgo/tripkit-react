@@ -244,7 +244,7 @@ const TKUIEditFavouriteView: React.FunctionComponent<IProps> = (props: IProps) =
                             }}
                         />}
                     <TKUIButton text={t("Cancel")} onClick={() => onRequestClose()} type={TKUIButtonType.SECONDARY} />
-                    <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={value instanceof FavouriteTrip ? false : !searchValue} />
+                    <TKUIButton text={Util.toFirstUpperCase(t("save"))} onClick={() => onRequestClose(update)} disabled={!update.name || (value instanceof FavouriteTrip ? false : !searchValue?.isResolved() || searchValue.isDroppedPin())} />
                 </div>
             </div>
         </TKUICard>
